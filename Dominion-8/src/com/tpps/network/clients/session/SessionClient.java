@@ -31,8 +31,9 @@ public final class SessionClient {
 
 	private static Timer scheduler = null;
 	private static boolean connected;
-	private static boolean reloading = false;
+	private static boolean connecting = false;
 	private static ConnectedClient connectedClient;
+	private static Thread tryToConnectThread = null;
 
 	static final boolean DEBUG_PACKETS = true;
 
@@ -107,6 +108,8 @@ public final class SessionClient {
 			}
 		}
 		scanInput.close();
+		tryToConnectThread.interrupt();
+		System.exit(0);
 	}
 
 	/**
@@ -116,6 +119,7 @@ public final class SessionClient {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public static void setup() {
+		System.out.println("Enter 'help' to see all available commands.");
 		loadConnectionProperties(FILE_SERVER_PROPERTIES);
 		connectAndLoop();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> onStop()));
@@ -128,11 +132,17 @@ public final class SessionClient {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	static void connectAndLoop() {
+
 		final long CONNECTION_TIMEOUT = 5000;
-		if (!reloading) {
-			reloading = true;
-			new Thread(() -> {
-				while (!isConnected()) {
+
+		if (!connecting) {
+			connecting = true;
+
+			if (tryToConnectThread != null)
+				tryToConnectThread.interrupt();
+
+			tryToConnectThread = new Thread(() -> {
+				while (!Thread.interrupted() && !isConnected()) {
 					setConnected(false);
 					try {
 						connectedClient = new ConnectedClient(new InetSocketAddress(ipAddress, serverPort),
@@ -147,7 +157,6 @@ public final class SessionClient {
 
 						Thread.sleep(50);
 						if (isConnected()) {
-							// PacketSender.sendHandshakePacket();
 							break;
 						} else {
 							Thread.sleep(CONNECTION_TIMEOUT);
@@ -155,11 +164,12 @@ public final class SessionClient {
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						//do nothing: is normal when programm exits.
 					}
 				}
-				reloading = false;
-			}).start();
+				connecting = false;
+			});
+			tryToConnectThread.start();
 		}
 	}
 
@@ -215,9 +225,11 @@ public final class SessionClient {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public static void onStop() {
-		PacketSenderAPI.disconnect();
-		scheduler.cancel();
-		scheduler.purge();
+		PacketSenderAPI.disconnect(true);
+		if (scheduler != null) {
+			scheduler.cancel();
+			scheduler.purge();
+		}
 		connected = false;
 	}
 

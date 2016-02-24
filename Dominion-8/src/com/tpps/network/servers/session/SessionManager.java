@@ -19,8 +19,9 @@ public class SessionManager {
 
 	// represents a cache which entries will be auto-removed after
 	// EXPIRATION_TIME_SECONDS
-	//using Guava for the cache. Project: https://github.com/google/guava
-	//Download for you guys until the dependencies are working: https://github.com/google/guava/wiki/Release19
+	// using Guava for the cache. Project: https://github.com/google/guava
+	// Download for you guys until the dependencies are working:
+	// https://github.com/google/guava/wiki/Release19
 	private static Cache<String, UUID> validSessions;
 
 	static {
@@ -69,6 +70,8 @@ public class SessionManager {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public static boolean isValid(String username, UUID uuid) {
+		if (uuid == null)
+			return false;
 		if (uuid.equals(validSessions.getIfPresent(username)))
 			return true;
 

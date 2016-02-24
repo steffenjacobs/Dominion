@@ -77,12 +77,13 @@ public final class PacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	static void disconnect() {
+	static void disconnect(boolean shuttingDown) {
 		if (SessionClient.isConnected()) {
 			SessionClient.getConnection().close();
 			SessionClient.setConnected(false);
 		} else {
-			System.err.println("Network Error: No Connection");
+			if (!shuttingDown)
+				System.err.println("Network Error: No Connection");
 		}
 	}
 }
