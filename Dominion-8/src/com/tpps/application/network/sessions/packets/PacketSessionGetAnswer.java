@@ -26,7 +26,7 @@ public class PacketSessionGetAnswer extends Packet {
 	 * @return the generated Game-Session
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public UUID getSessionID() {
+	public UUID getLoginSessionID() {
 		return this.sessionID;
 	}
 
@@ -49,6 +49,6 @@ public class PacketSessionGetAnswer extends Packet {
 	@Override
 	public String toString() {
 		return this.getClass().getSimpleName() + ": " + this.getRequest().getUsername() + " - "
-				+ this.getSessionID().toString();
+				+ this.getLoginSessionID().toString();
 	}
 }

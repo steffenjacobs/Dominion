@@ -88,7 +88,7 @@ public class SessionManager {
 	public static UUID getValidSession(String username) {
 		UUID sessionID = validSessions.getIfPresent(username);
 		if (sessionID == null) {
-			PacketHandler.output("Generating new UUID for player " + username + "...");
+			System.out.println("Generating new UUID for player " + username + "...");
 			sessionID = generateUUID();
 			validSessions.put(username, sessionID);
 		}

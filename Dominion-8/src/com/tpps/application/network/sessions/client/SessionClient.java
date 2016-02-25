@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.packet.Packet;
 import com.tpps.application.network.packet.PacketType;
 import com.tpps.application.network.sessions.packets.PacketSessionCheckAnswer;
@@ -20,47 +21,17 @@ import com.tpps.technicalServices.util.FileParser;
  * 
  * @author sjacobs - Steffen Jacobs
  */
-public final class SessionClient {
+public final class SessionClient extends PacketHandler {
 
 	public static final String FILE_SERVER_PROPERTIES = "./server.cfg";
 
-	private static int DELTA_SEND_KEEP_ALIVE_MILLISECONDS = 5000;
+	private static final int DELTA_SEND_KEEP_ALIVE_MILLISECONDS = 5000;
+	private static SessionClient instance;
 
-	private static String ipAddress = "127.0.0.1";
-	private static int serverPort = 1337;
-
-	private static Timer scheduler = null;
-	private static boolean connected;
-	private static boolean connecting = false;
-	private static ConnectedClient connectedClient;
-	private static Thread tryToConnectThread = null;
+	private Timer scheduler = null;
+	private Client client;
 
 	static final boolean DEBUG_PACKETS = true;
-
-	/**
-	 * @return wheter the client is connected to the server
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	public static boolean isConnected() {
-		return connected && connectedClient != null;
-	}
-
-	/**
-	 * @return the client-side object with is connected to the server
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	public static ConnectedClient getConnection() {
-		return connectedClient;
-	}
-
-	/**
-	 * sets the connected-boolean to state
-	 * 
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	public static void setConnected(boolean state) {
-		connected = state;
-	}
 
 	/**
 	 * Main Entry-Point for Connection-Tester
@@ -68,8 +39,35 @@ public final class SessionClient {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public static void main(String[] args) {
-		setup();
+		new SessionClient("127.0.0.1", 1337);
+	}
+
+	/**
+	 * @return instance of the SessionClient (There will be only one)
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public static SessionClient getInstance() {
+		return instance;
+	}
+
+	/**
+	 * constructor, automatically tries to connect to give server
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public SessionClient(String ipAddress, int port) {
+		instance = this;
+		setup(loadConnectionProperties(FILE_SERVER_PROPERTIES));
 		setupScanner();
+	}
+
+	/**
+	 * @return the Client-Object
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public Client getClient() {
+		return this.client;
 	}
 
 	/**
@@ -77,7 +75,7 @@ public final class SessionClient {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public static void setupScanner() {
+	public void setupScanner() {
 		Scanner scanInput = new Scanner(System.in);
 		String line = null;
 		while (true) {
@@ -86,9 +84,9 @@ public final class SessionClient {
 				if (line.equals("exit"))
 					break;
 				else if (line.startsWith("get")) {
-					PacketSenderAPI.sendGetRequest(line.split("\\s")[1]);
+					SessionPacketSenderAPI.sendGetRequest(line.split("\\s")[1]);
 				} else if (line.startsWith("check")) {
-					PacketSenderAPI.sendCheckRequest(line.split("\\s")[1], UUID.fromString(line.split(" ")[2]));
+					SessionPacketSenderAPI.sendCheckRequest(line.split("\\s")[1], UUID.fromString(line.split(" ")[2]));
 				} else if (line.startsWith("keep-alive")) {
 					keepAlive(line.split("\\s")[1], Boolean.parseBoolean(line.split("\\s")[2]));
 				} else if (line.startsWith("help")) {
@@ -108,7 +106,7 @@ public final class SessionClient {
 			}
 		}
 		scanInput.close();
-		tryToConnectThread.interrupt();
+		client.disconnect();
 		System.exit(0);
 	}
 
@@ -118,59 +116,14 @@ public final class SessionClient {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public static void setup() {
+	public void setup(InetSocketAddress address) {
 		System.out.println("Enter 'help' to see all available commands.");
-		loadConnectionProperties(FILE_SERVER_PROPERTIES);
-		connectAndLoop();
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> onStop()));
-	}
-
-	/**
-	 * Tries to connect to the loaded server asynchronously until a connection
-	 * is established.
-	 * 
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	static void connectAndLoop() {
-
-		final long CONNECTION_TIMEOUT = 5000;
-
-		if (!connecting) {
-			connecting = true;
-
-			if (tryToConnectThread != null)
-				tryToConnectThread.interrupt();
-
-			tryToConnectThread = new Thread(() -> {
-				while (!Thread.interrupted() && !isConnected()) {
-					setConnected(false);
-					try {
-						connectedClient = new ConnectedClient(new InetSocketAddress(ipAddress, serverPort),
-								new ConnectedClient.Receiver() {
-							@Override
-							public void received(byte[] data) {
-								new Thread(() -> {
-									SessionClient.onPacketReceived(data);
-								}).start();
-							}
-						});
-
-						Thread.sleep(50);
-						if (isConnected()) {
-							break;
-						} else {
-							Thread.sleep(CONNECTION_TIMEOUT);
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (InterruptedException e) {
-						//do nothing: is normal when programm exits.
-					}
-				}
-				connecting = false;
-			});
-			tryToConnectThread.start();
+		try {
+			this.client = new Client(address, this);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> onStop()));
 	}
 
 	/**
@@ -178,14 +131,18 @@ public final class SessionClient {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public static void loadConnectionProperties(String path) {
+	public InetSocketAddress loadConnectionProperties(String path) {
 		ArrayList<String> lines = FileParser.loadLines(path);
 		if (lines.size() < 2) {
 			System.err.println("Bad config file: " + new File(path).getAbsolutePath());
 		} else {
-			ipAddress = lines.get(0);
-			serverPort = Integer.parseInt(lines.get(1));
+			try {
+				return new InetSocketAddress(lines.get(0), Integer.parseInt(lines.get(1)));
+			} catch (NumberFormatException ex) {
+
+			}
 		}
+		return null;
 	}
 
 	/**
@@ -194,7 +151,7 @@ public final class SessionClient {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	private static void keepAlive(final String username, boolean state) {
+	private void keepAlive(final String username, boolean state) {
 		if (state) {
 			if (scheduler != null) {
 				scheduler.cancel();
@@ -207,7 +164,7 @@ public final class SessionClient {
 			scheduler.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					PacketSenderAPI.sendKeepAlive(username);
+					SessionPacketSenderAPI.sendKeepAlive(username);
 				}
 			}, 0, DELTA_SEND_KEEP_ALIVE_MILLISECONDS);
 		} else {
@@ -224,13 +181,12 @@ public final class SessionClient {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public static void onStop() {
-		PacketSenderAPI.disconnect(true);
+	public void onStop() {
+		this.client.disconnect();
 		if (scheduler != null) {
 			scheduler.cancel();
 			scheduler.purge();
 		}
-		connected = false;
 	}
 
 	/**
@@ -238,7 +194,9 @@ public final class SessionClient {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public static void onPacketReceived(byte[] bytes) {
+
+	@Override
+	public void handleReceivedPacket(int port, byte[] bytes) {
 		Packet packet = PacketType.getPacket(bytes);
 		if (packet == null) {
 			System.out.println("Bad packet.");
@@ -247,24 +205,14 @@ public final class SessionClient {
 				System.out.println(packet.toString());
 			switch (packet.getType()) {
 			case SESSION_CHECK_ANSWER:
-				PacketReceiverAPI.onPacketSessionCheckAnswer((PacketSessionCheckAnswer) packet);
+				SessionPacketReceiverAPI.onPacketSessionCheckAnswer((PacketSessionCheckAnswer) packet);
 				break;
 			case SESSION_GET_ANSWER:
-				PacketReceiverAPI.onPacketSessionGetAnswer((PacketSessionGetAnswer) packet);
+				SessionPacketReceiverAPI.onPacketSessionGetAnswer((PacketSessionGetAnswer) packet);
 				break;
 			default:
 				break;
 			}
 		}
-	}
-
-	/**
-	 * tries to reconnect to the server
-	 * 
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	public static void tryReconnect() {
-		connected = false;
-		connectAndLoop();
 	}
 }
