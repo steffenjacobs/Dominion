@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
+import com.tpps.application.network.core.PacketHandler;
+
 /**
  * represents the connectoin-thread on the client (very similar to the server
  * one)
@@ -15,19 +17,22 @@ import java.nio.ByteBuffer;
  */
 public class ClientConnectionThread extends Thread {
 
-	private Receiver receiver;
-	private Socket clientSocket;
 	private DataInputStream inStream;
 	private DataOutputStream outStream;
+
+	private final Socket clientSocket;
+	private final Client parent;
+	private final PacketHandler receiver;
 
 	/**
 	 * constructor for ConnectionThread
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	ClientConnectionThread(Socket clientSocket, Receiver receiver) {
+	ClientConnectionThread(Socket clientSocket, PacketHandler receiver, Client _parent) {
 		this.receiver = receiver;
 		this.clientSocket = clientSocket;
+		this.parent = _parent;
 	}
 
 	/**
@@ -46,17 +51,17 @@ public class ClientConnectionThread extends Thread {
 					System.out.println(length);
 					byte[] data = new byte[length];
 					inStream.readFully(data);
-					receiver.received(clientSocket, data);
+					receiver.handleReceivedPacket(clientSocket.getLocalPort(), data);
 				} catch (IOException e) {
 					System.out.println("Network Error: Connection Lost.");
 					interrupt();
-					SessionClient.tryReconnect();
+					parent.tryReconnect();
 				}
 			}
 		} catch (IOException e) {
 			System.out.println("Network Error: Connection Lost.");
 			interrupt();
-			SessionClient.tryReconnect();
+			parent.tryReconnect();
 		}
 
 		if (!clientSocket.isClosed()) {
@@ -66,7 +71,7 @@ public class ClientConnectionThread extends Thread {
 				System.out.println("Could not close client-socket: " + e.getMessage());
 			}
 		}
-		SessionClient.setConnected(false);
+		parent.setDisconnected();
 	}
 
 	/**
@@ -75,34 +80,18 @@ public class ClientConnectionThread extends Thread {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public void sendPacket(byte[] data) throws IOException {
-		if (SessionClient.isConnected()) {
+		if (parent.isConnected()) {
 			try {
 				outStream.write(ByteBuffer.allocate(4).putInt(data.length).array());
 				outStream.write(data);
 				outStream.flush();
 			} catch (SocketException | NullPointerException e) {
-				SessionClient.setConnected(false);
+				parent.setDisconnected();
 				System.out.println("Connection to Cloud-Server lost! Reconnecting...");
-				SessionClient.connectAndLoop();
+				parent.connectAndLoop();
 			}
 		} else {
 			System.out.println("Could not send packet: Server not connected.");
 		}
-	}
-
-	/**
-	 * represents a receiver
-	 * 
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	public interface Receiver {
-		/**
-		 * Is called when a message is received
-		 *
-		 * @param data
-		 *            the data received
-		 * @author sjacobs - Steffen Jacobs
-		 */
-		public void received(Socket socket, byte[] data);
 	}
 }
