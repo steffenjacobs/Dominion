@@ -1,7 +1,7 @@
-package com.tpps.technicalServices.network.clients.session;
+package com.tpps.application.network.sessions.client;
 
-import com.tpps.technicalServices.network.packets.session.PacketSessionCheckAnswer;
-import com.tpps.technicalServices.network.packets.session.PacketSessionGetAnswer;
+import com.tpps.application.network.sessions.packets.PacketSessionCheckAnswer;
+import com.tpps.application.network.sessions.packets.PacketSessionGetAnswer;
 
 /**
  * represents some kind of API-like interface where the answered requests will

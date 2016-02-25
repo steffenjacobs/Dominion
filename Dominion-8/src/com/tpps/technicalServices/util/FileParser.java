@@ -1,4 +1,4 @@
-package com.tpps.util;
+package com.tpps.technicalServices.util;
 
 import java.io.BufferedReader;
 import java.io.File;
