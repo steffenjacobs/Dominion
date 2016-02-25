@@ -1,4 +1,4 @@
-package com.tpps.network.packets;
+package com.tpps.technicalServices.network.packets;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

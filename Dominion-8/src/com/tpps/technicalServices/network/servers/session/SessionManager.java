@@ -1,4 +1,4 @@
-package com.tpps.network.servers.session;
+package com.tpps.technicalServices.network.servers.session;
 
 import java.io.PrintStream;
 import java.util.Map.Entry;

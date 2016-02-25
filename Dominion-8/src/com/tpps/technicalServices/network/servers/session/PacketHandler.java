@@ -1,17 +1,17 @@
-package com.tpps.network.servers.session;
+package com.tpps.technicalServices.network.servers.session;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
-import com.tpps.network.packets.Packet;
-import com.tpps.network.packets.PacketType;
-import com.tpps.network.packets.session.PacketSessionCheckAnswer;
-import com.tpps.network.packets.session.PacketSessionCheckRequest;
-import com.tpps.network.packets.session.PacketSessionGetAnswer;
-import com.tpps.network.packets.session.PacketSessionKeepAlive;
-import com.tpps.network.packets.session.PacketSessionGetRequest;
+import com.tpps.technicalServices.network.packets.Packet;
+import com.tpps.technicalServices.network.packets.PacketType;
+import com.tpps.technicalServices.network.packets.session.PacketSessionCheckAnswer;
+import com.tpps.technicalServices.network.packets.session.PacketSessionCheckRequest;
+import com.tpps.technicalServices.network.packets.session.PacketSessionGetAnswer;
+import com.tpps.technicalServices.network.packets.session.PacketSessionGetRequest;
+import com.tpps.technicalServices.network.packets.session.PacketSessionKeepAlive;
 
 /**
  * this class handles all the packet-stuff

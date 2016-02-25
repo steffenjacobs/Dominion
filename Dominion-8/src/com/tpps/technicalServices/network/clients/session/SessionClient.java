@@ -1,4 +1,4 @@
-package com.tpps.network.clients.session;
+package com.tpps.technicalServices.network.clients.session;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,10 +9,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import com.tpps.network.packets.Packet;
-import com.tpps.network.packets.PacketType;
-import com.tpps.network.packets.session.PacketSessionCheckAnswer;
-import com.tpps.network.packets.session.PacketSessionGetAnswer;
+import com.tpps.technicalServices.network.packets.Packet;
+import com.tpps.technicalServices.network.packets.PacketType;
+import com.tpps.technicalServices.network.packets.session.PacketSessionCheckAnswer;
+import com.tpps.technicalServices.network.packets.session.PacketSessionGetAnswer;
 import com.tpps.util.FileParser;
 
 /**

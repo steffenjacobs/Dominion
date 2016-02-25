@@ -1,9 +1,9 @@
-package com.tpps.network.packets.session;
+package com.tpps.technicalServices.network.packets.session;
 
 import java.util.UUID;
 
-import com.tpps.network.packets.Packet;
-import com.tpps.network.packets.PacketType;
+import com.tpps.technicalServices.network.packets.Packet;
+import com.tpps.technicalServices.network.packets.PacketType;
 
 /**
  * This packet is send as a request from a (game-)server to the Session-Server
