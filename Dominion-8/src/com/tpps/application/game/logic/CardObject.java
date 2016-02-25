@@ -17,7 +17,7 @@ public class CardObject extends GameObject {
 	}
 
 	/**
-	 * calls the static method which executes the actions* 
+	 * calls the static method which executes the actions*W
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
