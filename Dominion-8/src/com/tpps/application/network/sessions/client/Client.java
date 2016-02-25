@@ -9,13 +9,19 @@ import javax.net.SocketFactory;
 
 import com.tpps.application.network.core.PacketHandler;
 
+/**
+ * represents a client connected to a server on a higher layer then
+ * ClientConnectionThread
+ * 
+ * @author sjacobs - Steffen Jacobs
+ */
 public class Client {
 
 	private boolean connecting = false, connected = false;
 	private Thread tryToConnectThread = null;
 	private PacketHandler handler;
 	private ClientConnectionThread thread;
-	private SocketAddress address;	
+	private SocketAddress address;
 
 	/**
 	 * Tries to connect to the loaded server asynchronously until a connection
@@ -60,7 +66,8 @@ public class Client {
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (InterruptedException e) {
-						// do nothing: this exception is normal when the program exits.
+						// do nothing: this exception is normal when the program
+						// exits.
 					}
 				}
 				connecting = false;
@@ -87,7 +94,7 @@ public class Client {
 	public boolean isConnected() {
 		return connected;
 	}
-	
+
 	/**
 	 * sets the connected-boolean to false
 	 *

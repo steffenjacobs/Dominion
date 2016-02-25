@@ -10,7 +10,7 @@ import java.nio.ByteBuffer;
 import com.tpps.application.network.core.PacketHandler;
 
 /**
- * represents the connectoin-thread on the client (very similar to the server
+ * represents the connection-thread on the client (very similar to the server
  * one)
  * 
  * @author sjacobs - Steffen Jacobs
