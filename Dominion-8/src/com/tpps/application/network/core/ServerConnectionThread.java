@@ -1,4 +1,4 @@
-package com.tpps.application.network.sessions.server;
+package com.tpps.application.network.core;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -19,15 +19,17 @@ public class ServerConnectionThread extends Thread {
 	private Socket clientSocket;
 	private DataInputStream inStream;
 	private DataOutputStream outStream;
+	private final Server parent;
 
 	/**
 	 * constructor
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	ServerConnectionThread(Socket clientSocket, Receiver receiver) {
+	ServerConnectionThread(Socket clientSocket, Receiver receiver, Server _parent) {
 		this.receiver = receiver;
 		this.clientSocket = clientSocket;
+		this.parent = _parent;
 	}
 
 	/**
@@ -67,16 +69,16 @@ public class ServerConnectionThread extends Thread {
 					inStream.readFully(data);
 					receiver.received(clientSocket, data);
 				} catch (IOException e) {
-					PacketHandler.output("Connection Lost with " + this.clientSocket.getInetAddress() + ":"
+					parent.getHandler().output("Connection Lost with " + this.clientSocket.getInetAddress() + ":"
 							+ this.clientSocket.getPort());
-					SessionServer.getSessionServer().removeClientThread(this.clientSocket.getPort());
+					parent.removeClientThread(this.clientSocket.getPort());
 					interrupt();
 				}
 			}
 		} catch (IOException e) {
-			PacketHandler.output(
+			parent.getHandler().output(
 					"Connection Lost with " + this.clientSocket.getInetAddress() + ":" + this.clientSocket.getPort());
-			SessionServer.getSessionServer().removeClientThread(this.clientSocket.getPort());
+			parent.removeClientThread(this.clientSocket.getPort());
 			interrupt();
 		}
 
@@ -84,7 +86,7 @@ public class ServerConnectionThread extends Thread {
 			try {
 				clientSocket.close();
 			} catch (IOException e) {
-				PacketHandler.output("Could not close client-socket: " + e.getMessage());
+				parent.getHandler().output("Could not close client-socket: " + e.getMessage());
 			}
 		}
 	}

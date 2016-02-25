@@ -12,7 +12,7 @@ import com.tpps.application.network.sessions.packets.PacketSessionGetAnswer;
  * 
  * @author sjacobs - Steffen Jacobs
  */
-public final class PacketReceiverAPI {
+public final class SessionPacketReceiverAPI {
 
 	/**
 	 * the answer to a session validity request will be deployed here.

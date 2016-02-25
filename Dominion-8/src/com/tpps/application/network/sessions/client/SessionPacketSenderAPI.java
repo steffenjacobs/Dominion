@@ -18,7 +18,7 @@ import com.tpps.application.network.sessions.packets.PacketSessionKeepAlive;
  * 
  * @author sjacobs - Steffen Jacobs
  */
-public final class PacketSenderAPI {
+public final class SessionPacketSenderAPI {
 
 	/**
 	 * sends a general packet to the session-server
@@ -26,12 +26,12 @@ public final class PacketSenderAPI {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	private static void sendPacket(Packet packet) {
-		if (SessionClient.isConnected()) {
+		if (SessionClient.getInstance().getClient().isConnected()) {
 			try {
 				if (SessionClient.DEBUG_PACKETS) {
 					System.out.println(packet.toString());
 				}
-				SessionClient.getConnection().sendMessage(PacketType.getBytes(packet));
+				SessionClient.getInstance().getClient().sendMessage(PacketType.getBytes(packet));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -69,20 +69,5 @@ public final class PacketSenderAPI {
 	 */
 	static void sendKeepAlive(String username) {
 		sendPacket(new PacketSessionKeepAlive(username));
-	}
-
-	/**
-	 * disconnects from the server
-	 * 
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	static void disconnect(boolean shuttingDown) {
-		if (SessionClient.isConnected()) {
-			SessionClient.getConnection().close();
-			SessionClient.setConnected(false);
-		} else {
-			if (!shuttingDown)
-				System.err.println("Network Error: No Connection");
-		}
 	}
 }
