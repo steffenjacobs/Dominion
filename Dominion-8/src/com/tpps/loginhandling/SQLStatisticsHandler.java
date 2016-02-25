@@ -34,7 +34,7 @@ public class SQLStatisticsHandler {
 		}		
 	}
 	
-	
+	//public void insert
 	
 	
 	
