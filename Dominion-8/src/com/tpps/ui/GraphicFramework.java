@@ -1,6 +1,7 @@
 package com.tpps.ui;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -11,15 +12,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.JPanel;
 
+import com.tpps.technicalServices.util.PhysicsUtil;
 import com.tpps.ui.GameObject.CompareByLayer;
 
+/** @author sjacobs - Steffen Jacobs */
 public class GraphicFramework extends JPanel {
 	private static final long serialVersionUID = 5135999956197786309L;
 
-	private JPanel canvas;
 	private Mouse mouseListener;
 
-	//Integer represents ID
+	// Integer represents ID
 	private ConcurrentHashMap<Integer, GameObject> gameObjects = new ConcurrentHashMap<>();
 
 	public GameObject getTopObject(int x, int y) {
@@ -38,17 +40,34 @@ public class GraphicFramework extends JPanel {
 		return highest;
 	}
 
+	public ArrayList<GameObject> getAllCollisions(Rectangle area) {
+		ArrayList<GameObject> objects = new ArrayList<>();
+		for (GameObject go : gameObjects.values()) {
+			if (go.overlap(area)) {
+				objects.add(go);
+			}
+		}
+		return objects;
+	}
+
+	public void repaintSpecificArea(Rectangle area) {
+		for (GameObject go : getAllCollisions(area)) {
+			this.redrawWithoutRaytrace(go);
+		}
+		this.repaint(area);
+	}
+
 	public void moveObject(GameObject obj, Location2D location) {
-		Location2D old = obj.getLocation().clone();
+		Rectangle old = (Rectangle) obj.getHitbox().clone();
 		obj.setVisable(false);
-		this.repaint();
 		obj.moveTo(location);
 		obj.setVisable(true);
-		this.repaint();
+		Rectangle area = PhysicsUtil.getBigBox(new Rectangle[] { old, obj.getHitbox() });
+		this.repaint(area);
 	}
 
 	protected ArrayList<GameObject> raytrace(Location2D location) {
-		GameObject[] objects = (GameObject[]) gameObjects.values().toArray();
+		GameObject[] objects = gameObjects.values().toArray(new GameObject[]{});
 
 		ArrayList<GameObject> hits = new ArrayList<>();
 		for (GameObject obj : objects) {
@@ -60,7 +79,7 @@ public class GraphicFramework extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		GameObject[] objects = (GameObject[]) gameObjects.values().toArray();
+		GameObject[] objects = gameObjects.values().toArray(new GameObject[]{});
 		Arrays.sort(objects, new CompareByLayer());
 
 		for (GameObject obj : objects) {
@@ -68,27 +87,27 @@ public class GraphicFramework extends JPanel {
 		}
 	}
 
-	public void redrawWithoutRaytrace(GameObject obj) {
+	private void redrawWithoutRaytrace(GameObject obj) {
 		this.repaint(obj.getLocation().getX(), obj.getLocation().getY(), obj.getWidth(), obj.getHeight());
 	}
 
-	public GraphicFramework(JPanel _canvas) {
-		this.canvas = _canvas;
+	public GraphicFramework() {
 		this.mouseListener = new Mouse(this);
-		this.canvas.addMouseListener(mouseListener);
+		this.addMouseListener(mouseListener);
 	}
 
 	public void addComponent(GameObject obj) {
 		gameObjects.put(obj.getID(), obj);
-		this.repaint();
-	}
-	
-	public void removeComponent(GameObject obj) {
-		gameObjects.remove(obj.getID());
-		this.repaint();
+		this.redrawWithoutRaytrace(obj);
+		this.repaint(obj.getHitbox());
 	}
 
-	public void redrawObjectsWithoutRaytrace(GameObject[] gameObjects) {
+	public void removeComponent(GameObject obj) {
+		gameObjects.remove(obj.getID());
+		this.repaint(obj.getHitbox());
+	}
+
+	public void redrawObjectsWithoutRaytrace(GameObject... gameObjects) {
 		Arrays.sort(gameObjects, new GameObject.CompareByLayer());
 		for (GameObject go : gameObjects) {
 			this.redrawWithoutRaytrace(go);

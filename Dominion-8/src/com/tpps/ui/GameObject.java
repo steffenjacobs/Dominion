@@ -1,5 +1,6 @@
 package com.tpps.ui;
 
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.io.Serializable;
@@ -8,7 +9,8 @@ import java.util.Comparator;
 import com.tpps.technicalServices.util.MathUtil;
 import com.tpps.technicalServices.util.PhysicsUtil;
 
-public abstract class GameObject implements Comparable<GameObject>, Cloneable, Serializable {
+/** @author sjacobs - Steffen Jacobs */
+public abstract class GameObject implements Cloneable, Serializable {
 	private static final long serialVersionUID = 3954559836391148293L;
 
 	private static int objectCounter = 0;
@@ -39,8 +41,21 @@ public abstract class GameObject implements Comparable<GameObject>, Cloneable, S
 				new Rectangle(go2.location.getX(), go2.location.getY(), go2.width, go2.height));
 	}
 
+	public boolean overlap(Rectangle area) {
+		return PhysicsUtil.collides(area,
+				new Rectangle(this.location.getX(), this.location.getY(), this.width, this.height));
+	}
+
 	public Location2D getLocation() {
 		return this.location;
+	}
+
+	public Dimension getDimension() {
+		return new Dimension(this.width, this.height);
+	}
+
+	public Rectangle getHitbox() {
+		return new Rectangle(this.location.getPoint(), this.getDimension());
 	}
 
 	public int getHeight() {
@@ -51,7 +66,7 @@ public abstract class GameObject implements Comparable<GameObject>, Cloneable, S
 		return this.width;
 	}
 
-	public int getID() {
+	protected int getID() {
 		return this.id;
 	}
 
@@ -61,6 +76,16 @@ public abstract class GameObject implements Comparable<GameObject>, Cloneable, S
 
 	public Image getImage() {
 		return this.image;
+	}
+
+	protected GraphicFramework getParent() {
+		return this.parent;
+	}
+
+	@Override
+	public String toString() {
+		return this.location.toString() + " - " + this.getDimension().toString() + " - Layer: " + this.getLayer()
+				+ " - " + this.getParent() + " - " + this.isVisible();
 	}
 
 	public GameObject(int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
@@ -88,7 +113,7 @@ public abstract class GameObject implements Comparable<GameObject>, Cloneable, S
 		this.image = newImage;
 		this.height = this.image.getHeight(null);
 		this.width = this.image.getWidth(null);
-		parent.redrawWithoutRaytrace(this);
+		parent.redrawObjectsWithoutRaytrace(this);
 	}
 
 	public void setID(int _id) {
@@ -111,9 +136,6 @@ public abstract class GameObject implements Comparable<GameObject>, Cloneable, S
 
 	@Override
 	public abstract GameObject clone();
-
-	@Override
-	public abstract int compareTo(GameObject go);
 
 	public abstract void onMouseEnter();
 

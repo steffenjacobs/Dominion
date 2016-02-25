@@ -1,5 +1,8 @@
 package com.tpps.ui;
 
+import java.awt.Point;
+
+/** @author sjacobs - Steffen Jacobs */
 public class Location2D implements Cloneable{
 	private int x, y;	
 	public int getX(){
@@ -31,6 +34,10 @@ public class Location2D implements Cloneable{
 	
 	public void setY(int newY){
 		this.y = newY;
+	}
+	
+	public Point getPoint(){
+		return new Point(this.x, this.y);
 	}
 	
 	@Override
