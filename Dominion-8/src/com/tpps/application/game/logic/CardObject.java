@@ -25,19 +25,19 @@ public class CardObject extends GameObject {
 		for (int i = 0; i < actions.length; i++) {
 
 			switch (actions[i]) {
-			case ADDACTIONTOPLAYER:
+			case ADD_ACTION_TO_PLAYER:
 				// call
 				break;
-			case ADDPURCHASE:
+			case ADD_PURCHASE:
 				// call
 				break;
-			case DRAWCARDS:
+			case DRAW_CARDS:
 				// call
 				break;
 			case DISCARD:
 				// call
 				break;
-			case ADDTEMPORARYMONEYFORTURN:
+			case ADD_TEMPORARY_MONEY_FOR_TURN:
 				// call
 				break;
 			case TRASH:
