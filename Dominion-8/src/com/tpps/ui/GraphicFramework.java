@@ -7,7 +7,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.swing.JPanel;
@@ -15,22 +14,26 @@ import javax.swing.JPanel;
 import com.tpps.technicalServices.util.PhysicsUtil;
 import com.tpps.ui.GameObject.CompareByLayer;
 
-/** @author sjacobs - Steffen Jacobs */
+/**
+ * general framework handling all the graphic objects@author sjacobs - Steffen
+ * Jacobs
+ */
 public class GraphicFramework extends JPanel {
 	private static final long serialVersionUID = 5135999956197786309L;
 
 	private Mouse mouseListener;
-
 	// Integer represents ID
 	private ConcurrentHashMap<Integer, GameObject> gameObjects = new ConcurrentHashMap<>();
 
+	/**
+	 * @return the top object (sorted by layers)
+	 * @author sjacobs - Steffen Jacobs
+	 */
 	public GameObject getTopObject(int x, int y) {
-		LinkedList<GameObject> objects = new LinkedList<>();
-		for (GameObject obj : gameObjects.values()) {
-			objects.add(obj);
-		}
 		GameObject highest = null;
-		for (GameObject obj : objects) {
+		for (GameObject obj : gameObjects.values()) {
+			if (!obj.isVisible() || !obj.isInside(x, y))
+				continue;
 			if (highest == null)
 				highest = obj;
 			else {
@@ -40,6 +43,10 @@ public class GraphicFramework extends JPanel {
 		return highest;
 	}
 
+	/**
+	 * @return all game-objects which collide with the given area
+	 * @author sjacobs - Steffen Jacobs
+	 */
 	public ArrayList<GameObject> getAllCollisions(Rectangle area) {
 		ArrayList<GameObject> objects = new ArrayList<>();
 		for (GameObject go : gameObjects.values()) {
@@ -50,6 +57,12 @@ public class GraphicFramework extends JPanel {
 		return objects;
 	}
 
+	/**
+	 * repaints the specific area and finds out which game-objects need to be
+	 * redrawed
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
 	public void repaintSpecificArea(Rectangle area) {
 		for (GameObject go : getAllCollisions(area)) {
 			this.redrawWithoutRaytrace(go);
@@ -57,6 +70,11 @@ public class GraphicFramework extends JPanel {
 		this.repaint(area);
 	}
 
+	/**
+	 * moves the game-object to the desired location and updates the area
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
 	public void moveObject(GameObject obj, Location2D location) {
 		Rectangle old = (Rectangle) obj.getHitbox().clone();
 		obj.setVisable(false);
@@ -66,8 +84,12 @@ public class GraphicFramework extends JPanel {
 		this.repaint(area);
 	}
 
+	/**
+	 * @return all GameObject which the location is on top of
+	 * @author sjacobs - Steffen Jacobs
+	 */
 	protected ArrayList<GameObject> raytrace(Location2D location) {
-		GameObject[] objects = gameObjects.values().toArray(new GameObject[]{});
+		GameObject[] objects = gameObjects.values().toArray(new GameObject[] {});
 
 		ArrayList<GameObject> hits = new ArrayList<>();
 		for (GameObject obj : objects) {
@@ -76,10 +98,15 @@ public class GraphicFramework extends JPanel {
 		return hits;
 	}
 
+	/**
+	 * paints the component and layers the GameObjects
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		GameObject[] objects = gameObjects.values().toArray(new GameObject[]{});
+		GameObject[] objects = gameObjects.values().toArray(new GameObject[] {});
 		Arrays.sort(objects, new CompareByLayer());
 
 		for (GameObject obj : objects) {
@@ -87,26 +114,52 @@ public class GraphicFramework extends JPanel {
 		}
 	}
 
+	/**
+	 * force-redraw the GameObject without raytrace
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
 	private void redrawWithoutRaytrace(GameObject obj) {
 		this.repaint(obj.getLocation().getX(), obj.getLocation().getY(), obj.getWidth(), obj.getHeight());
 	}
 
+	/**
+	 * creates a new instance of the GraphicFramework-JPanel, adds
+	 * mouse-listeners
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
 	public GraphicFramework() {
 		this.mouseListener = new Mouse(this);
 		this.addMouseListener(mouseListener);
 	}
 
+	/**
+	 * adds the game object to the framework and updates the visuals
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
 	public void addComponent(GameObject obj) {
 		gameObjects.put(obj.getID(), obj);
 		this.redrawWithoutRaytrace(obj);
 		this.repaint(obj.getHitbox());
 	}
 
+	/**
+	 * removes the game object from the framework and updates the visuals
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
 	public void removeComponent(GameObject obj) {
 		gameObjects.remove(obj.getID());
 		this.repaint(obj.getHitbox());
 	}
 
+	/**
+	 * redraws all given GameObjects
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
 	public void redrawObjectsWithoutRaytrace(GameObject... gameObjects) {
 		Arrays.sort(gameObjects, new GameObject.CompareByLayer());
 		for (GameObject go : gameObjects) {
