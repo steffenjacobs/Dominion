@@ -59,7 +59,7 @@ public class SQLHandler {
 			System.out.println("Could not connect to MySQL server! Exception: " + e.getMessage());
 		}
 		catch (ClassNotFoundException e) {
-			System.out.println("JDBC Driver not found!");
+			System.out.println("Driver not found!");
 		}
 		System.out.println("Connected to MySQL-Server successfully");
 	}
