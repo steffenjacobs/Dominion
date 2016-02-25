@@ -1,7 +1,7 @@
-package com.tpps.technicalServices.network.packets.session;
+package com.tpps.application.network.sessions.packets;
 
-import com.tpps.technicalServices.network.packets.Packet;
-import com.tpps.technicalServices.network.packets.PacketType;
+import com.tpps.application.network.packet.Packet;
+import com.tpps.application.network.packet.PacketType;
 
 /**
  * This packet is send from the Login-Server to the Session-Server to retrieve a

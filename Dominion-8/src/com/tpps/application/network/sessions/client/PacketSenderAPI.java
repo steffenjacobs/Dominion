@@ -1,13 +1,13 @@
-package com.tpps.technicalServices.network.clients.session;
+package com.tpps.application.network.sessions.client;
 
 import java.io.IOException;
 import java.util.UUID;
 
-import com.tpps.technicalServices.network.packets.Packet;
-import com.tpps.technicalServices.network.packets.PacketType;
-import com.tpps.technicalServices.network.packets.session.PacketSessionCheckRequest;
-import com.tpps.technicalServices.network.packets.session.PacketSessionGetRequest;
-import com.tpps.technicalServices.network.packets.session.PacketSessionKeepAlive;
+import com.tpps.application.network.packet.Packet;
+import com.tpps.application.network.packet.PacketType;
+import com.tpps.application.network.sessions.packets.PacketSessionCheckRequest;
+import com.tpps.application.network.sessions.packets.PacketSessionGetRequest;
+import com.tpps.application.network.sessions.packets.PacketSessionKeepAlive;
 
 /**
  * represents some kind of API-like interface to send check- and get-requests to

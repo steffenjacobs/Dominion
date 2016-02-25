@@ -1,4 +1,4 @@
-package com.tpps.technicalServices.network.clients.session;
+package com.tpps.application.network.sessions.client;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
