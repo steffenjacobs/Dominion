@@ -2,6 +2,7 @@ package com.tpps.technicalServices.util;
 
 /** provides some useful mathematical-calculations @author sjacobs */
 public final class MathUtil {
+	
 	/**
 	 * @return the signum
 	 * @author sjacobs

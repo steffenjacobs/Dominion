@@ -8,6 +8,7 @@ import java.awt.Rectangle;
  * @author sjacobs
  */
 public final class PhysicsUtil {
+	
 	/**
 	 * checks wheter two 2D rectangular areas overlap
 	 * 
