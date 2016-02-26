@@ -15,17 +15,19 @@ import com.tpps.ui.GraphicFramework;
 public class CardObject extends GameObject {
 	
 	private static final long serialVersionUID = 1L;
-	private final Actions[] actions;
+	private final ArrayList<Action> actions;
+	private final ArrayList<Type> types;
 	private final int costs;
 
 	/**
 	 * sets the actions array containing the actions which the cardObject will execute
 	 */
-	public CardObject(Actions[] actions, int costs, int locX, int locY,
+	public CardObject(ArrayList<Action> actions, ArrayList<Type> types, int costs, int locX, int locY,
 			int _layer, Image sourceImage, GraphicFramework _parent) {
 		super(locX, locY, _layer, sourceImage,_parent);
 		this.actions = actions;
 		this.costs = costs;
+		this.types = types;
 	}
 
 	/**
@@ -34,9 +36,9 @@ public class CardObject extends GameObject {
 	 * @author ladler - Lukas Adler
 	 */
 	public void doAction() {
-		for (int i = 0; i < actions.length; i++) {
+		for (int i = 0; i < actions.size(); i++) {
 			
-			switch (actions[i]) {
+			switch (actions.get(i)) {
 			case ADD_ACTION_TO_PLAYER:
 				// call
 				break;
