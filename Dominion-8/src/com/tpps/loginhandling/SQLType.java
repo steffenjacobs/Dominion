@@ -1,5 +1,9 @@
 package com.tpps.loginhandling;
 
+/**
+ * @author jhuhn - Johannes Huhn
+ * This class represents one Datatype in the mysql database like VARCHAR or FLOAT
+ */
 public enum SQLType {
 	VARCHAR,
 	TEXT,
@@ -7,6 +11,10 @@ public enum SQLType {
 	FLOAT,
 	DATE;
 	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * overrides the toString() method to get the name of the enumtype
+	 */
 	public String toString(){
 		return name();
 	}

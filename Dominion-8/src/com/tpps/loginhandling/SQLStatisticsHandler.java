@@ -7,15 +7,30 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-//TODO: comment
+/**
+ * This class delivers all functionalities that is needed to handle
+ * all player statistics in mysql database
+ * @author jhuhn - Johannes Huhn
+ *
+ */
 public class SQLStatisticsHandler {
 
 	private SQLHandler sql;
 	
+	/**
+	 * initializes the Object
+	 * @param sql SQLHandler which is needed to get basic mysql functionalities like getConnection()
+	 */
 	public SQLStatisticsHandler(SQLHandler sql){
 		this.sql = sql;
 	}
 	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * @param statistics An ArrayList of Statistic, which contains all
+	 * columns(included types e.g. VARCHAR) that should implement the
+	 * statistics table in the database (PRIMARY KEY is nickname, hardcoded) 
+	 */
 	public void createStatisticsTable(ArrayList<Statistic> statistics){
 		StringBuffer buf = new StringBuffer();
 		buf.append("CREATE TABLE statistics ( \n");
@@ -39,6 +54,11 @@ public class SQLStatisticsHandler {
 		}		
 	}
 	
+	/**
+	 * This method inserts the initial row in the statistics table. Needed for creating an account.
+	 * @author jhuhn - Johannes Huhn
+	 * @param nickname String representation of the account name, that is used to initial the row
+	 */
 	public void insertRowForFirstLogin(String nickname){
 		try {
 			PreparedStatement stmt = this.sql.getConnection().prepareStatement("INSERT INTO statistics (nickname, description, wins, losses) VALUES (?, '', 0, 0)");
@@ -50,6 +70,12 @@ public class SQLStatisticsHandler {
 		}
 	}
 	
+	/**
+	 * This method updates the wins and losses for the player statistics in the mysql database (including the ratio)
+	 * @author jhuhn - Johannes Huhn
+	 * @param nickname String representation of the account name
+	 * @param win boolean value, true for win, false for loss
+	 */
 	public void addWinOrLoss(String nickname, boolean win){
 		PreparedStatement stmt = null;
 		try{
@@ -68,6 +94,12 @@ public class SQLStatisticsHandler {
 		}		
 	}
 	
+	/**
+	 * This method sets a description for a user, can be used to save more information about the player
+	 * @author jhuhn - Johannes Huhn
+	 * @param nickname String representation of the account name
+	 * @param description String representation that delivers more detailed information about the nickname
+	 */
 	public void setDescription(String nickname, String description){
 		try {
 			PreparedStatement stmt = this.sql.getConnection().prepareStatement("UPDATE statistics SET description = ? WHERE nickname = ?;");
@@ -80,7 +112,12 @@ public class SQLStatisticsHandler {
 		}
 	}
 	
-	public void updateWinLoss(String nickname){
+	/**
+	 * This method updates the win - loss ratio in the mysql database
+	 * @author jhuhn - Johannes Huhn
+	 * @param nickname String representation of the account name
+	 */
+	private void updateWinLoss(String nickname){
 		try {
 			PreparedStatement stmtgetwinquery = this.sql.getConnection().prepareStatement("SELECT wins FROM statistics WHERE nickname = ?");
 			stmtgetwinquery.setString(1, nickname);
