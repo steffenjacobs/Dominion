@@ -8,7 +8,6 @@ import com.tpps.ui.GraphicFramework;
 /**
  * 
  * @author ladler - Lukas Adler
- *
  */
 
 public class CardObject extends GameObject {
