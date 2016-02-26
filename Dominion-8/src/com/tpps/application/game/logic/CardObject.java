@@ -1,6 +1,7 @@
 package com.tpps.application.game.logic;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -34,7 +35,7 @@ public class CardObject extends GameObject {
 	 */
 	public void doAction() {
 		for (int i = 0; i < actions.length; i++) {
-
+			
 			switch (actions[i]) {
 			case ADD_ACTION_TO_PLAYER:
 				// call
