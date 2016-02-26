@@ -34,9 +34,11 @@ public class GameWindow extends JFrame {
 		this.setVisible(true);
 		framework = new GraphicFramework(this);
 		this.add(framework);
+
 		BufferedImage im = ImageIO
 				.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
 		im = resize(im, (int) (im.getWidth() * .4), (int) (im.getHeight() * 0.8));
+
 		framework.addComponent(new GFButton(50, 50, 6, im, framework));
 		framework.addComponent(new GFButton(80, 80, 4, im, framework));
 		GFButton gfb = new GFButton(110, 110, 5, im, framework);

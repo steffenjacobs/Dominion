@@ -204,6 +204,10 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.id = _id;
 	}
 
+	public boolean equals(GameObject go) {
+		return this.id == go.id;
+	}
+
 	/**
 	 * moves the object to the newLocation and redraws it on the framework
 	 * 
