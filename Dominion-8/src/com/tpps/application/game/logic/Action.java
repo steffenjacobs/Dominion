@@ -8,7 +8,7 @@ package com.tpps.application.game.logic;
  */
 public enum Action {
 	ADD_ACTION_TO_PLAYER(-1), ADD_TEMPORARY_MONEY_FOR_TURN(-1), ADD_PURCHASE(-1), DRAW(-1), PUT_BACK(null), 
-	GAIN(-1), DISCARD(-1), TRASH(null), REVEAL(-1), /* ab hier DLC CHOOSE, PASS, NAME, COST_LESS */;
+	GAIN(-1), DISCARD(-1), TRASH(null), REVEAL(-1), /* ab hier DLC: CHOOSE, PASS, NAME, COST_LESS */;
 
 	private int amount;
 	private Type type;

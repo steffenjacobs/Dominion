@@ -45,12 +45,12 @@ public class Password {
 //	public Password(String plaintext){
 //		this.plaintext = plaintext;
 //	}
-//	
+
 //	public Password(String plaintext, byte[] salt){
 //		this.plaintext = plaintext;
 //		this.salt = salt;
 //	}
-//	
+
 //	public Password(String plaintext, byte[] salt, byte[] hashedPassword){
 //		this.plaintext = plaintext;
 //		this.salt = salt;
