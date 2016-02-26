@@ -2,6 +2,7 @@ package com.tpps.application.network.sessions.client;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 import com.tpps.application.network.packet.Packet;
 import com.tpps.application.network.packet.PacketType;
@@ -47,8 +48,9 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public static void sendGetRequest(Client c, String username) {
+	public static void sendGetRequest(Client c, String username, Callable<Void> callable) {
 		sendPacket(c, new PacketSessionGetRequest( username));
+		SessionPacketReceiverAPI.addGetRequest(username, callable);
 	}
 
 	/**

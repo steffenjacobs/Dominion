@@ -8,6 +8,7 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.packet.Packet;
@@ -84,7 +85,15 @@ public final class SessionClient extends PacketHandler {
 				if (line.equals("exit"))
 					break;
 				else if (line.startsWith("get")) {
-					SessionPacketSenderAPI.sendGetRequest(getClient(), line.split("\\s")[1]);
+					SessionPacketSenderAPI.sendGetRequest(getClient(), line.split("\\s")[1], new Callable<Void>(){
+
+						@Override
+						public Void call() throws Exception {
+							System.out.println("lalaland");
+							return null;
+						}
+						
+					});
 				} else if (line.startsWith("check")) {
 					SessionPacketSenderAPI.sendCheckRequest(getClient(), line.split("\\s")[1], UUID.fromString(line.split(" ")[2]));
 				} else if (line.startsWith("keep-alive")) {
