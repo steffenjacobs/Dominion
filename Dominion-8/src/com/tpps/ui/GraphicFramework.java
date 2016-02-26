@@ -2,6 +2,8 @@ package com.tpps.ui;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import com.tpps.ui.GameObject.CompareByLayer;
  */
 public class GraphicFramework extends JPanel {
 	private static final long serialVersionUID = 5135999956197786309L;
+	private JFrame parent;
 
 	private Mouse mouseListener;
 	// Integer represents ID
@@ -75,7 +78,7 @@ public class GraphicFramework extends JPanel {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public void moveObject(GameObject obj, Location2D location) {
+	public void moveObject(GameObject obj, RelativeGeom2D location) {
 		Rectangle old = (Rectangle) obj.getHitbox().clone();
 		obj.setVisible(false);
 		obj.moveTo(location);
@@ -88,7 +91,7 @@ public class GraphicFramework extends JPanel {
 	 * @return all GameObject which the location is on top of
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	protected ArrayList<GameObject> raytrace(Location2D location) {
+	protected ArrayList<GameObject> raytrace(RelativeGeom2D location) {
 		GameObject[] objects = gameObjects.values().toArray(new GameObject[] {});
 
 		ArrayList<GameObject> hits = new ArrayList<>();
@@ -111,7 +114,7 @@ public class GraphicFramework extends JPanel {
 
 		for (GameObject obj : objects) {
 			if (obj.isVisible())
-				g.drawImage(obj.getImage(), obj.getLocation().getX(), obj.getLocation().getY(), null);
+				g.drawImage(obj.getImage(), (int)obj.getLocation().getX(), (int)obj.getLocation().getY(), null);
 		}
 	}
 
@@ -121,7 +124,7 @@ public class GraphicFramework extends JPanel {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	private void redrawWithoutRaytrace(GameObject obj) {
-		this.repaint(obj.getLocation().getX(), obj.getLocation().getY(), obj.getWidth(), obj.getHeight());
+		this.repaint((int)obj.getLocation().getX(), (int)obj.getLocation().getY(), obj.getWidth(), obj.getHeight());
 	}
 
 	/**
@@ -130,10 +133,25 @@ public class GraphicFramework extends JPanel {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public GraphicFramework(JFrame parent) {
+	public GraphicFramework(JFrame _parent) {
+		this.parent = _parent;
 		this.mouseListener = new Mouse(this);
-		parent.getContentPane().addMouseListener(mouseListener);
-		parent.getContentPane().addMouseMotionListener(mouseListener);
+		_parent.getContentPane().addMouseListener(mouseListener);
+		_parent.getContentPane().addMouseMotionListener(mouseListener);
+		_parent.addComponentListener(new ComponentAdapter() {
+
+			@Override
+			public void componentResized(ComponentEvent e) {
+				onWindowResize();
+			}
+		});
+	}
+	
+	private void onWindowResize(){
+		System.out.println("window resized to " + parent.getWidth() + "/" + parent.getHeight());
+		for(GameObject go : gameObjects.values()){
+			go.onResize(parent.getWidth(), parent.getHeight());
+		}
 	}
 
 	/**

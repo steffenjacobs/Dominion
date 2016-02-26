@@ -2,10 +2,13 @@ package com.tpps.ui;
 
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.MathUtil;
 import com.tpps.technicalServices.util.PhysicsUtil;
 
@@ -20,9 +23,10 @@ public abstract class GameObject implements Cloneable, Serializable {
 	private static int objectCounter = 0;
 
 	private int id;
-	private Image image;
-	private Location2D location;
-	private int height, width;
+	private Image image, originalImage;
+	private RelativeGeom2D location;
+	private RelativeGeom2D dimension;
+	private int x, y, height, width;
 	private GraphicFramework parent;
 	private int layer;
 	private boolean visable = true;
@@ -58,8 +62,8 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public boolean overlap(GameObject go2) {
-		return PhysicsUtil.collides(new Rectangle(this.location.getX(), this.location.getY(), this.width, this.height),
-				new Rectangle(go2.location.getX(), go2.location.getY(), go2.width, go2.height));
+		return PhysicsUtil.collides(new Rectangle(this.x, this.y, this.width, this.height),
+				new Rectangle(go2.x, go2.y, go2.width, go2.height));
 	}
 
 	/**
@@ -67,32 +71,31 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public boolean overlap(Rectangle area) {
-		return PhysicsUtil.collides(area,
-				new Rectangle(this.location.getX(), this.location.getY(), this.width, this.height));
+		return PhysicsUtil.collides(area, new Rectangle(this.x, this.y, this.width, this.height));
 	}
 
-	/**
+	 /**
 	 * @return the location (x, y)
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public Location2D getLocation() {
-		return this.location;
+	public Point getLocation(){
+		return new Point(this.x, this.y);
 	}
 
-	/**
+	 /**
 	 * @return the dimension (width and height)
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public Dimension getDimension() {
-		return new Dimension(this.width, this.height);
-	}
+	 public Dimension getDimension() {
+	 return new Dimension(this.width, this.height);
+	 }
 
 	/**
 	 * @return the hitbox of the game-object
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public Rectangle getHitbox() {
-		return new Rectangle(this.location.getPoint(), this.getDimension());
+		return new Rectangle(this.x, this.y, this.width, this.height);
 	}
 
 	/**
@@ -149,8 +152,8 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 */
 	@Override
 	public String toString() {
-		return this.location.toString() + " - " + this.getDimension().toString() + " - Layer: " + this.getLayer()
-				+ " - " + this.getParent() + " - " + this.isVisible();
+		return this.location.toString() + " - " + this.dimension.toString() + " - Layer: " + this.getLayer() + " - "
+				+ this.getParent() + " - " + this.isVisible();
 	}
 
 	/**
@@ -158,14 +161,24 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 **/
-	protected GameObject(int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
-		this.location = new Location2D(locX, locY);
-		this.image = sourceImage;
+	protected GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
+			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
+		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
+		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
+		this.originalImage = sourceImage;
 		this.parent = _parent;
-		this.height = this.image.getHeight(null);
-		this.width = this.image.getWidth(null);
 		this.layer = _layer;
 		this.id = _id;
+		this.onResize(absWidth, absHeight);
+	}
+
+	public void onResize(int absWidth, int absHeight) {
+		this.x = this.location.getAbsoluteX(absWidth);
+		this.y = this.location.getAbsoluteY(absHeight);
+		this.width = this.dimension.getAbsoluteX(absWidth);
+		this.height = this.dimension.getAbsoluteY(absHeight);
+		System.out.println(this.dimension.getRelativeX());
+		this.image = GraphicsUtil.resize((BufferedImage)this.originalImage, this.width, this.height);
 	}
 
 	/**
@@ -173,15 +186,16 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public GameObject(int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent) {
-		this.location = new Location2D(locX, locY);
-		this.image = sourceImage;
+	public GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
+			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent) {
+		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
+		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
+		this.originalImage = sourceImage;
 		this.parent = _parent;
-		this.height = this.image.getHeight(null);
-		this.width = this.image.getWidth(null);
 		this.layer = _layer;
 		this.id = GameObject.objectCounter;
 		GameObject.objectCounter++;
+		this.onResize(absWidth, absHeight);
 	}
 
 	/**
@@ -189,12 +203,22 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public void updateImage(Image newImage) {
+	public void updateImage(Image newImage, int absWidth, int absHeight) {
 		this.image = newImage;
 		this.height = this.image.getHeight(null);
 		this.width = this.image.getWidth(null);
-		if(this.isVisible())
+		if (this.isVisible())
 			parent.repaintSpecificArea(this.getHitbox());
+		this.onResize(absWidth, absHeight);
+	}
+	
+	/**
+	 * replaces the image with the newImage and udpates the framework with auto-size
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public void updateImage(Image newImage){
+		updateImage(newImage, GameWindow.getInstance().getWidth(), GameWindow.getInstance().getHeight());
 	}
 
 	/**
@@ -215,7 +239,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public void moveTo(Location2D newLocation) {
+	public void moveTo(RelativeGeom2D newLocation) {
 		parent.moveObject(this, newLocation);
 	}
 

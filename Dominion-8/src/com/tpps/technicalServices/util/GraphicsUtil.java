@@ -9,6 +9,8 @@ import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+import com.sun.javafx.iio.ImageStorage.ImageType;
+
 /**
  * provides some useful methods for manipulating graphic objects
  * 
@@ -83,5 +85,24 @@ public final class GraphicsUtil {
 	 */
 	public static Image drawStringCentered(Image img, String caption, Font font, Color fontColor) {
 		return drawStringCentered(img, caption, font, fontColor, 0, 0);
+	}
+
+	/**
+	 * resizes the image
+	 * 
+	 * @param buffImg
+	 *            image to resize
+	 * @param newWidth
+	 *            new width to resize to
+	 * @param newHeight
+	 *            new height to resize to
+	 * @return the resized image
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public static BufferedImage resize(BufferedImage buffImg, int newWidth, int newHeight) {
+		BufferedImage result = new BufferedImage(newWidth, newHeight, ImageType.RGBA.ordinal());
+		result.createGraphics();
+		result.getGraphics().drawImage(buffImg, 0, 0, newWidth, newHeight, null);
+		return result;
 	}
 }

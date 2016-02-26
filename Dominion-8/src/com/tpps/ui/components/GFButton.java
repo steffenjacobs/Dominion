@@ -8,61 +8,92 @@ import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 
-public class GFButton extends GameObject {
-	private boolean isOverButton = false;
-	private String caption;
-
-	private GFButton(int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent, int _id,
-			boolean overButtonFlag, String caption) {
-		super(locX, locY, _layer, sourceImage, _parent, _id);
-		this.isOverButton = overButtonFlag;
-		this.caption = caption;
-	}
-
-	public GFButton(int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
-		super(locX, locY, _layer, sourceImage, _parent);
-		this.caption = caption;
-		System.out.println("rendering text...");        
-		super.updateImage(GraphicsUtil.drawStringCentered(super.getImage(), this.caption, new Font("Blackadder ITC", Font.BOLD, 80), Color.BLACK));
-	}
-
+/**
+ * an abstract class representing any button
+ * 
+ * @author sjacobs
+ */
+public abstract class GFButton extends GameObject {
 	private static final long serialVersionUID = -5419554206946431577L;
 
-	@Override
-	public GameObject clone() {
-		return new GFButton(super.getLocation().getX(), super.getLocation().getY(), super.getLayer(), super.getImage(),
-				super.getParent(), super.getID(), this.isOverButton, this.caption);
+	private String caption;
+
+	/**
+	 * clone-constructor
+	 * 
+	 * @author sjacobs
+	 */
+	private GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id,
+			String caption) {
+		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight,  _layer, sourceImage, _parent, _id);
+		this.caption = caption;
 	}
 
-	@Override
-	public void onMouseEnter() {
-		this.isOverButton = true;
-		System.out.println("enter " + toString());
-
-		// super.updateImage(GraphicsUtil.setAlpha(super.getImage(), 0.6f));
-
+	/**
+	 * normal constructor
+	 * 
+	 * @author sjacobs
+	 */
+	public GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
+		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight,  _layer, sourceImage, _parent);
+		this.caption = caption;
+		System.out.println("rendering text...");
+		super.updateImage(GraphicsUtil.drawStringCentered(super.getImage(), this.caption,
+				new Font("Blackadder ITC", Font.BOLD, 80), Color.BLACK), absWidth, absHeight);
 	}
 
-	@Override
-	public void onMouseExit() {
-		this.isOverButton = false;
-		System.out.println("exit " + toString());
+	/**
+	 * @author sjacobs
+	 * @return the object-caption
+	 */
+	public String getCaption() {
+		return this.caption;
 	}
 
+	/**
+	 * } is called to clone the entire object
+	 * 
+	 * @author sjacobs
+	 */
 	@Override
-	public void onMouseClick() {
-		System.out.println("Clicked " + this.toString());
-	}
+	public abstract GameObject clone();
 
+	/**
+	 * is called when the user enters the object with the mouse
+	 * 
+	 * @author sjacobs
+	 */
 	@Override
-	public void onMouseDrag() {
-		System.out.println("drag");
-		// do nothing
-	}
+	public abstract void onMouseEnter();
 
+	/**
+	 * is called when the user exits the object with the mouse
+	 * 
+	 * @author sjacobs
+	 */
 	@Override
-	public String toString() {
-		return "GFButton: " + super.toString();
-	}
+	public abstract void onMouseExit();
 
+	/**
+	 * is called when the user clicks on the object
+	 * 
+	 * @author sjacobs
+	 */
+	@Override
+	public abstract void onMouseClick();
+
+	/**
+	 * is called when the users drags the mouse across the object
+	 * 
+	 * @author sjacobs
+	 */
+	@Override
+	public abstract void onMouseDrag();
+
+	/**
+	 * @author sjacobs
+	 * @return a readable representation of the object
+	 */
+	@Override
+	public abstract String toString();
 }
