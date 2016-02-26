@@ -1,6 +1,7 @@
 package com.tpps.application.game.logic;
 
 import java.awt.Image;
+import java.util.ArrayList;
 
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -13,8 +14,8 @@ import com.tpps.ui.GraphicFramework;
 public class CardObject extends GameObject {
 
 	private static final long serialVersionUID = 1L;
-	private final Actions[] actions;
-	private final Types[] types;
+	private final ArrayList<Action> actions;
+	private final ArrayList<Type> types;
 	private final int cost;
 
 	/**
@@ -22,7 +23,7 @@ public class CardObject extends GameObject {
 	 * execute
 	 */
 	public CardObject(int costs, int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent,
-			Actions[] actions, Types[] types) {
+			ArrayList<Action> actions, ArrayList<Type> types) {
 		super(locX, locY, _layer, sourceImage, _parent);
 		this.actions = actions;
 		this.cost = costs;
@@ -35,9 +36,9 @@ public class CardObject extends GameObject {
 	 * @author ladler - Lukas Adler
 	 */
 	public void doAction() {
-		for (int i = 0; i < actions.length; i++) {
+		for (int i = 0; i < actions.size(); i++) {
 
-			switch (actions[i]) {
+			switch (actions.get(i)) {
 			case DRAW_CARDS:
 				// call
 				break;
