@@ -47,10 +47,14 @@ public final class SessionPacketReceiverAPI {
 		}
 	}
 
+	/**adds a get-Request
+	 * @author sjacobs - Steffen Jacobs*/
 	static void addGetRequest(String username, SuperCallable<PacketSessionGetAnswer> callable) {
 		getRequests.putIfAbsent(username, callable);
 	}
 
+	/** adds a check-Request
+	 * @author sjacobs - Steffen Jacobs*/
 	static void addCheckRequest(String username, SuperCallable<PacketSessionCheckAnswer> callable) {
 		checkRequests.putIfAbsent(username, callable);
 	}
