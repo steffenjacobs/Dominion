@@ -15,13 +15,16 @@ public class CardObject extends GameObject {
 	
 	private static final long serialVersionUID = 1L;
 	private final Actions[] actions;
+	private final int costs;
 
 	/**
 	 * sets the actions array containing the actions which the cardObject will execute
 	 */
-	public CardObject(Actions[] actions, int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent) {
+	public CardObject(Actions[] actions, int costs, int locX, int locY,
+			int _layer, Image sourceImage, GraphicFramework _parent) {
 		super(locX, locY, _layer, sourceImage,_parent);
 		this.actions = actions;
+		this.costs = costs;
 	}
 
 	/**
@@ -50,6 +53,9 @@ public class CardObject extends GameObject {
 				break;
 			case TRASH:
 				// call
+				break;
+			case GAIN:
+//				call
 				break;
 
 			}
