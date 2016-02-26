@@ -3,12 +3,10 @@ package com.tpps.ui.components;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Image;
-import java.util.concurrent.Callable;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
-import com.tpps.ui.animations.FadeOutAnimation;
 
 public class GFButton extends GameObject {
 	private boolean isOverButton = false;
