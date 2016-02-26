@@ -6,12 +6,14 @@ import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 
 public class GFButton extends GameObject {
-	private boolean isOverButton = false;	
+	private boolean isOverButton = false;
 
-	public GFButton(int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent, int _id, boolean overButtonFlag) {
+	public GFButton(int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent, int _id,
+			boolean overButtonFlag) {
 		super(locX, locY, _layer, sourceImage, _parent, _id);
 		this.isOverButton = overButtonFlag;
 	}
+
 	public GFButton(int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent) {
 		super(locX, locY, _layer, sourceImage, _parent);
 	}
@@ -20,17 +22,20 @@ public class GFButton extends GameObject {
 
 	@Override
 	public GameObject clone() {
-		return new GFButton(super.getLocation().getX(), super.getLocation().getY(), super.getLayer(), super.getImage(), super.getParent(), super.getID(), this.isOverButton);
+		return new GFButton(super.getLocation().getX(), super.getLocation().getY(), super.getLayer(), super.getImage(),
+				super.getParent(), super.getID(), this.isOverButton);
 	}
 
 	@Override
 	public void onMouseEnter() {
 		this.isOverButton = true;
+		System.out.println("enter " + toString());
 	}
 
 	@Override
 	public void onMouseExit() {
 		this.isOverButton = false;
+		System.out.println("exit " + toString());
 	}
 
 	@Override
@@ -41,8 +46,10 @@ public class GFButton extends GameObject {
 
 	@Override
 	public void onMouseDrag() {
-		//do nothing
+		System.out.println("drag");
+		// do nothing
 	}
+
 	@Override
 	public String toString() {
 		return "GFButton: " + super.toString();

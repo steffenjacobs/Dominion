@@ -32,7 +32,7 @@ public class GameWindow extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(500, 300);
 		this.setVisible(true);
-		framework = new GraphicFramework();
+		framework = new GraphicFramework(this);
 		this.add(framework);
 		BufferedImage im = ImageIO
 				.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.tpps.technicalServices.util.PhysicsUtil;
@@ -128,9 +129,9 @@ public class GraphicFramework extends JPanel {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public GraphicFramework() {
+	public GraphicFramework(JFrame parent) {
 		this.mouseListener = new Mouse(this);
-		this.addMouseListener(mouseListener);
+		parent.addMouseListener(mouseListener);
 	}
 
 	/**
@@ -171,6 +172,7 @@ public class GraphicFramework extends JPanel {
 	 */
 	private class Mouse extends MouseAdapter {
 		private GraphicFramework framework;
+		private GameObject underCursor, tmpCursor = null;
 
 		public Mouse(GraphicFramework fw) {
 			framework = fw;
@@ -184,24 +186,23 @@ public class GraphicFramework extends JPanel {
 		}
 
 		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			GameObject obj = framework.getTopObject(arg0.getX(), arg0.getY());
-			if (obj != null)
-				obj.onMouseEnter();
-		}
+		public void mouseMoved(MouseEvent arg0) {
+			System.out.println("moved!");
+			tmpCursor = framework.getTopObject(arg0.getX(), arg0.getY());
+			if (tmpCursor != underCursor) {
+				tmpCursor.onMouseExit();
+				underCursor.onMouseEnter();
+				tmpCursor = underCursor;
+			}
 
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			GameObject obj = framework.getTopObject(arg0.getX(), arg0.getY());
-			if (obj != null)
-				obj.onMouseExit();
 		}
 
 		@Override
 		public void mouseDragged(MouseEvent arg0) {
 			GameObject obj = framework.getTopObject(arg0.getX(), arg0.getY());
 			if (obj != null)
-				obj.onMouseDrag();
+				System.out.println(arg0.getPoint() + " " + arg0.getX() + "/" + arg0.getY());
+			obj.onMouseDrag();
 		}
 	}
 }
