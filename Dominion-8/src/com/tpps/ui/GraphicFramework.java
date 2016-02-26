@@ -150,7 +150,7 @@ public class GraphicFramework extends JPanel {
 	private void onWindowResize(){
 		System.out.println("window resized to " + parent.getWidth() + "/" + parent.getHeight());
 		for(GameObject go : gameObjects.values()){
-			go.onResize(parent.getWidth(), parent.getHeight());
+			go.resizeObject(parent.getWidth(), parent.getHeight());
 		}
 	}
 

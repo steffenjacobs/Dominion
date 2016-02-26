@@ -114,6 +114,11 @@ public class GameWindow extends JFrame {
 					+ super.getParent() + " , " + super.getCaption();
 		}
 
+		@Override
+		public void onResize(int absWidth, int absHeight) {
+			super.onResize(absWidth, absHeight);			
+		}
+
 	}
 
 }

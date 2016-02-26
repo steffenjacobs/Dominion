@@ -23,10 +23,12 @@ public abstract class GFButton extends GameObject {
 	 * 
 	 * @author sjacobs
 	 */
-	private GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id,
-			String caption) {
-		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight,  _layer, sourceImage, _parent, _id);
+	private GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
+			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id, String caption) {
+		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,
+				_id);
 		this.caption = caption;
+		this.onResize(absWidth, absHeight);
 	}
 
 	/**
@@ -34,12 +36,18 @@ public abstract class GFButton extends GameObject {
 	 * 
 	 * @author sjacobs
 	 */
-	public GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
-		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight,  _layer, sourceImage, _parent);
+	public GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
+			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
+		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent);
 		this.caption = caption;
-		System.out.println("rendering text...");
-		super.updateImage(GraphicsUtil.drawStringCentered(super.getImage(), this.caption,
-				new Font("Blackadder ITC", Font.BOLD, 80), Color.BLACK), absWidth, absHeight);
+		onResize(absWidth, absHeight);
+	}
+
+	@Override
+	public void onResize(int absWidth, int absHeight) {
+		if (this.caption != null)
+			super.forceSetImage(GraphicsUtil.drawStringCentered(super.getImage(), this.caption,
+					new Font("Blackadder ITC", Font.BOLD, 80), Color.BLACK));
 	}
 
 	/**

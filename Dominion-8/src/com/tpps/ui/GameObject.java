@@ -169,16 +169,16 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.parent = _parent;
 		this.layer = _layer;
 		this.id = _id;
-		this.onResize(absWidth, absHeight);
+		this.resizeObject(absWidth, absHeight);
 	}
 
-	public void onResize(int absWidth, int absHeight) {
+	public void resizeObject(int absWidth, int absHeight) {
 		this.x = this.location.getAbsoluteX(absWidth);
 		this.y = this.location.getAbsoluteY(absHeight);
 		this.width = this.dimension.getAbsoluteX(absWidth);
 		this.height = this.dimension.getAbsoluteY(absHeight);
-		System.out.println(this.dimension.getRelativeX());
 		this.image = GraphicsUtil.resize((BufferedImage)this.originalImage, this.width, this.height);
+		this.onResize(absWidth, absHeight);
 	}
 
 	/**
@@ -195,11 +195,11 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.layer = _layer;
 		this.id = GameObject.objectCounter;
 		GameObject.objectCounter++;
-		this.onResize(absWidth, absHeight);
+		this.resizeObject(absWidth, absHeight);
 	}
 
 	/**
-	 * replaces the image with the newImage and udpates the framework
+	 * resizes the new image to the relative layout, replaces the image with the newImage and udpates the framework
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
@@ -209,11 +209,20 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.width = this.image.getWidth(null);
 		if (this.isVisible())
 			parent.repaintSpecificArea(this.getHitbox());
-		this.onResize(absWidth, absHeight);
+		this.resizeObject(absWidth, absHeight);
 	}
 	
 	/**
-	 * replaces the image with the newImage and udpates the framework with auto-size
+	 * replaces the image with the newImage and udpates the framework without recalculating the size
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public void forceSetImage(Image newImage){
+		this.image = newImage;
+	}
+	
+	/**
+	 * resizes the new image to the relative layout, replaces the image with the newImage and udpates the framework
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
@@ -297,4 +306,13 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public abstract void onMouseDrag();
+	
+	/**
+	 * is called directly when the game window is resized
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public abstract void onResize(int absWidth, int absHeight);
+	
+	
 }
