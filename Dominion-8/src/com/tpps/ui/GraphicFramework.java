@@ -50,7 +50,7 @@ public class GraphicFramework extends JPanel {
 	public ArrayList<GameObject> getAllCollisions(Rectangle area) {
 		ArrayList<GameObject> objects = new ArrayList<>();
 		for (GameObject go : gameObjects.values()) {
-			if (go.overlap(area)) {
+			if (go.isVisible() && go.overlap(area)) {
 				objects.add(go);
 			}
 		}
@@ -77,9 +77,9 @@ public class GraphicFramework extends JPanel {
 	 */
 	public void moveObject(GameObject obj, Location2D location) {
 		Rectangle old = (Rectangle) obj.getHitbox().clone();
-		obj.setVisable(false);
+		obj.setVisible(false);
 		obj.moveTo(location);
-		obj.setVisable(true);
+		obj.setVisible(true);
 		Rectangle area = PhysicsUtil.getBigBox(new Rectangle[] { old, obj.getHitbox() });
 		this.repaint(area);
 	}
@@ -110,7 +110,8 @@ public class GraphicFramework extends JPanel {
 		Arrays.sort(objects, new CompareByLayer());
 
 		for (GameObject obj : objects) {
-			g.drawImage(obj.getImage(), obj.getLocation().getX(), obj.getLocation().getY(), null);
+			if (obj.isVisible())
+				g.drawImage(obj.getImage(), obj.getLocation().getX(), obj.getLocation().getY(), null);
 		}
 	}
 
@@ -192,22 +193,22 @@ public class GraphicFramework extends JPanel {
 		public void mouseMoved(MouseEvent arg0) {
 			underCursor = framework.getTopObject(arg0.getX(), arg0.getY());
 			if (bufferedCursor == null && underCursor == null) {
-				//outside
+				// outside
 				return;
 			}
 			if (bufferedCursor == null && underCursor != null) {
-				//enter
+				// enter
 				underCursor.onMouseEnter();
 				bufferedCursor = underCursor;
 			} else if (underCursor == null && bufferedCursor != null) {
-				//exit
+				// exit
 				bufferedCursor.onMouseExit();
 				bufferedCursor = underCursor;
 			} else if (bufferedCursor == underCursor) {
-				//inside
+				// inside
 				return;
 			} else {
-				//changed
+				// changed
 				bufferedCursor.onMouseExit();
 				underCursor.onMouseEnter();
 				bufferedCursor = underCursor;

@@ -39,9 +39,9 @@ public class GameWindow extends JFrame {
 				.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
 		im = resize(im, (int) (im.getWidth() * .4), (int) (im.getHeight() * 0.8));
 
-		framework.addComponent(new GFButton(50, 50, 6, im, framework));
-		framework.addComponent(new GFButton(80, 80, 4, im, framework));
-		GFButton gfb = new GFButton(110, 110, 5, im, framework);
+		framework.addComponent(new GFButton(50, 50, 6, im, framework, "first"));
+		framework.addComponent(new GFButton(80, 80, 4, im, framework, "second"));
+		GFButton gfb = new GFButton(110, 110, 5, im, framework, "third");
 
 		framework.addComponent(gfb);
 

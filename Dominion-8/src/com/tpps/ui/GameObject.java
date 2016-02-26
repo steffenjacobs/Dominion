@@ -32,8 +32,9 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public void setVisable(boolean state) {
+	public void setVisible(boolean state) {
 		this.visable = state;
+		parent.repaint(this.getHitbox());
 	}
 
 	/**
@@ -153,11 +154,11 @@ public abstract class GameObject implements Cloneable, Serializable {
 	}
 
 	/**
-	 * creates a game object
+	 * creates a game object, only used for cloning
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 **/
-	public GameObject(int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
+	protected GameObject(int locX, int locY, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
 		this.location = new Location2D(locX, locY);
 		this.image = sourceImage;
 		this.parent = _parent;
@@ -192,7 +193,8 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.image = newImage;
 		this.height = this.image.getHeight(null);
 		this.width = this.image.getWidth(null);
-		parent.redrawObjectsWithoutRaytrace(this);
+		if(this.isVisible())
+			parent.repaintSpecificArea(this.getHitbox());
 	}
 
 	/**
