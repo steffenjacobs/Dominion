@@ -45,6 +45,7 @@ public class GFButton extends GameObject {
 	@Override
 	public void onMouseClick() {
 		System.out.println("Clicked @" + this.toString());
+		//TODO: fix here
 		new Thread(new Runnable() {
 			float transparency = 1f;
 
