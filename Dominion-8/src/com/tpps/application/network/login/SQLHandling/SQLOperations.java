@@ -187,11 +187,18 @@ public class SQLOperations {
 
 	public boolean rightDoubleHashedPassword(String nickname, String doublehashedpw){
 		try {
-			PreparedStatement stmt = this.sql.getConnection().prepareStatement("SELECT ");
+			PreparedStatement stmt = this.sql.getConnection().prepareStatement("SELECT salt_hashed_pw FROM accountdetails WHERE nickname = ?");
+			stmt.setString(1, nickname);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			String databasepw = rs.getString("salt_hashed_pw");
+			if(databasepw.equals(doublehashedpw)){
+				return true;
+			}
 		} catch (SQLException e) {		
 			e.printStackTrace();
 		}
-		return true;
+		return false;
 	}
 
 }

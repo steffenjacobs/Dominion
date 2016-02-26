@@ -48,7 +48,7 @@ public class PacketLoginCheckAnswer extends Packet {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public PacketLoginCheckAnswer(PacketLoginCheckRequest req, boolean _state, UUID _sessionID) {
-		super(PacketType.SESSION_CHECK_ANSWER);
+		super(PacketType.LOGIN_CHECK_ANSWER);
 		this.request = req;
 		this.state = _state;
 		this.sessionID = _sessionID;

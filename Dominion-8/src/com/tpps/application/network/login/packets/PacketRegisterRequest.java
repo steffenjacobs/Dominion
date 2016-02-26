@@ -43,7 +43,7 @@ public class PacketRegisterRequest extends Packet {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public PacketRegisterRequest(String name, String _hashedPW, String _emailAddress) {
-		super(PacketType.SESSION_CHECK_REQUEST);
+		super(PacketType.LOGIN_CHECK_REQUEST);
 		this.username = name;
 		this.hashedPW = _hashedPW;
 		this.emailAddress = _emailAddress;

@@ -33,23 +33,26 @@ public class LoginPacketHandler extends PacketHandler{
 	@Override
 	public void handleReceivedPacket(int port, byte[] bytes) {
 		// TODO Auto-generated method stub
+		System.out.println("Server received packet: ");
 		Packet packet = PacketType.getPacket(bytes);
+		System.out.println("Server received" + packet);
 		switch(packet.getType()){
 		case LOGIN_CHECK_REQUEST: //check username, if valid genereate SESSION ID
 			PacketLoginCheckRequest pac = (PacketLoginCheckRequest) packet;
+			System.out.println("yolo holo : " +pac);
 			String salt = sql.getSaltForLogin(pac.getUsername());			
 			Password pw = new Password(pac.getHashedPW(), salt.getBytes());
 			try {
 				pw.createHashedPassword();
 				String doublehashed = pw.getHashedPasswordAsString();
-				//TODO: vergleiche doublehashed pw mit db boolean x
-				boolean x = true;
-				if(x){
+				if(sql.rightDoubleHashedPassword(pac.getUsername(), doublehashed)){
+					System.out.println("im in if");
 					SessionPacketSenderAPI.sendGetRequest(sessionclient, pac.getUsername(), new SuperCallable<PacketSessionGetAnswer>() {						
 						@Override
 						public PacketSessionGetAnswer call(PacketSessionGetAnswer answer) {							
 							PacketLoginCheckAnswer checkAnswer = new PacketLoginCheckAnswer(pac, true, answer.getLoginSessionID());
 							try {
+								System.out.println("super callable");
 								server.sendMessage(port, PacketType.getBytes(checkAnswer));
 							} catch (IOException e) {
 								e.printStackTrace();
@@ -58,6 +61,7 @@ public class LoginPacketHandler extends PacketHandler{
 						}
 					});
 				}else{
+					System.out.println("im in else");
 					PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, false, null);
 					server.sendMessage(port, PacketType.getBytes(answer));
 				}

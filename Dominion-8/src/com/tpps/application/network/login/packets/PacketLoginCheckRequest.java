@@ -36,7 +36,7 @@ public class PacketLoginCheckRequest extends Packet {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public PacketLoginCheckRequest(String name, String _hashedPW) {
-		super(PacketType.SESSION_CHECK_REQUEST);
+		super(PacketType.LOGIN_CHECK_REQUEST);
 		this.username = name;
 		this.hashedPW = _hashedPW;
 	}
