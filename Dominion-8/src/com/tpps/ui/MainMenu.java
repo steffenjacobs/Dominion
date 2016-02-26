@@ -7,94 +7,132 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import com.tpps.ui.components.MainMenuButton;
 
-import java.awt.Image;
 
-public class MainMenu extends JFrame{
+
+public class MainMenu extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private final Container c;
-	private Image background;
-	private MainMenuButton singlePlayer, multiPlayer, settings, community;
+	private BufferedImage background;
+	private MainMenuButton[] buttons;
 	private int width, height;
+	private float[] alpha;
+	private Panel pan;
+	private final float INITIALIZE_ALPHA;
 
-	public MainMenu(){
+	public MainMenu() {
+		this.INITIALIZE_ALPHA = 0.6F;
 		c = this.getContentPane();
 		this.width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		this.height = Toolkit.getDefaultToolkit().getScreenSize().height;
+		initializeAlpha();
+
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		loadImage();
 		registrateMouseListener();
 		
-		try {			
-			Image singlePlayerImg = ImageIO.read(ClassLoader.getSystemResource("resources/img/gameObjects/testButton.png"));
-			Image multiPlayerImg = ImageIO.read(ClassLoader.getSystemResource("resources/img/gameObjects/testButton.png"));
-			
-			singlePlayer = new MainMenuButton((width/2) - (singlePlayerImg.getWidth(null) / 2), 0 + height/5, singlePlayerImg);
-			multiPlayer = new MainMenuButton((width/2) - (singlePlayerImg.getWidth(null) / 2), 0 + (height/5)*2, multiPlayerImg);
-			
+		
+		try {
+			BufferedImage[] images = new BufferedImage[4];
+			for (int i = 0; i < images.length; i++) {
+				images[i] = ImageIO.read(ClassLoader.getSystemResource("resources/img/gameObjects/testButton.png"));
+			}
+
+			buttons = new MainMenuButton[4];
+
+			buttons[0] = new MainMenuButton((width / 2) - (images[0].getWidth(null) / 2), height / 6, images[0],
+					"Single Player");
+			buttons[1] = new MainMenuButton((width / 2) - (images[1].getWidth(null) / 2), (height / 6) * 2, images[1],
+					"Multi Player");
+			buttons[2] = new MainMenuButton((width / 2) - (images[2].getWidth(null) / 2), (height / 6) * 3, images[2],
+					"Settings");
+			buttons[3] = new MainMenuButton((width / 2) - (images[3].getWidth(null) / 2), (height / 6) * 4, images[3],
+					"Community");
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		c.repaint();
+		this.pan = new Panel(this.background, this.alpha, this.buttons);
+		c.add(pan);
+		this.pan.repaint();
+	}
+
+	private void initializeAlpha() {
+		this.alpha = new float[4];
+
+		for (int i = 0; i < 4; i++) {
+			alpha[i] = INITIALIZE_ALPHA;
+		}
 	}
 
 	private void loadImage() {
-		try {			
+		try {
 			this.background = ImageIO.read(ClassLoader.getSystemResource("resources/img/mainMenu/Dominion.jpg"));
 		} catch (IOException e) {
-			
 			e.printStackTrace();
 		}
 	}
 
 	private void registrateMouseListener() {
-		Mouse m = new Mouse();		
+		Mouse m = new Mouse();
 		c.addMouseListener(m);
 		c.addMouseMotionListener(m);
-	}	
-	
-	public void paint(Graphics g) {		
-		g.drawImage(background, 0, 0, null);
-		
-		AlphaComposite ac = java.awt.AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.6F);
-		Graphics2D g2 = (Graphics2D)g;
-		g2.setComposite(ac);
-	    
-		
-		g2.drawImage(singlePlayer.getSourceImage(), singlePlayer.getX(), singlePlayer.getY(), null);
-		g2.drawImage(multiPlayer.getSourceImage(), multiPlayer.getX(), multiPlayer.getY(), null);
-		
 	}
-	
-	
-	private class Mouse extends MouseAdapter{
+
+
+
+		
+		
+		
+
+		
+
+
+	private class Mouse extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			
+
 		}
 
 		int counter = 0;
+
 		@Override
-		public void mouseMoved(MouseEvent e) {			
-			System.out.println(counter++);			
+		public void mouseMoved(MouseEvent e) {
+
+			makeTransparent(e);
 		}
-		
+
+		private void makeTransparent(MouseEvent e) {
+			for (int i = 0; i < alpha.length; i++) {
+
+				if (buttons[i].isIn(e.getX(), e.getY())) {
+					if (MainMenu.this.alpha[i] != 1.0F) {
+						MainMenu.this.alpha[i] = (float) 1;
+						MainMenu.this.pan.repaint();
+					}
+				} else {
+					if (MainMenu.this.alpha[i] != INITIALIZE_ALPHA) {
+						alpha[i] = (float) INITIALIZE_ALPHA;
+						MainMenu.this.pan.repaint();
+					}
+				}
+			}
+		}
+
 	}
 
-	
-	
 	public static void main(String[] args) {
 		MainMenu menu = new MainMenu();
 		menu.setVisible(true);
 	}
-	
-	
+
 }
