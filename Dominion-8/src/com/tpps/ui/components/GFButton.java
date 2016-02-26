@@ -2,6 +2,7 @@ package com.tpps.ui.components;
 
 import java.awt.Image;
 
+import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 
@@ -30,6 +31,9 @@ public class GFButton extends GameObject {
 	public void onMouseEnter() {
 		this.isOverButton = true;
 		System.out.println("enter " + toString());
+
+		// super.updateImage(GraphicsUtil.setAlpha(super.getImage(), 0.6f));
+
 	}
 
 	@Override
@@ -41,7 +45,31 @@ public class GFButton extends GameObject {
 	@Override
 	public void onMouseClick() {
 		System.out.println("Clicked @" + this.toString());
+		//TODO: fix here
+		new Thread(new Runnable() {
+			float transparency = 1f;
 
+			@Override
+			public void run() {
+				while (true) {
+					// System.out.println("tick " + transparency);
+
+					if (transparency <.6f){
+						System.out.println("lu");
+						return;
+					}
+					transparency *= .99f;
+					updateImage(GraphicsUtil.setAlpha(getImage(), transparency));
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			}
+		}).start();
 	}
 
 	@Override
