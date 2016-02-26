@@ -131,7 +131,8 @@ public class GraphicFramework extends JPanel {
 	 */
 	public GraphicFramework(JFrame parent) {
 		this.mouseListener = new Mouse(this);
-		parent.addMouseListener(mouseListener);
+		parent.getContentPane().addMouseListener(mouseListener);
+		parent.getContentPane().addMouseMotionListener(mouseListener);
 	}
 
 	/**
@@ -169,10 +170,12 @@ public class GraphicFramework extends JPanel {
 
 	/**
 	 * listenes to the mouse-input and tunnels it to the underlying game-objects
+	 * 
+	 * @author sjacobs - Steffen Jacobs
 	 */
 	private class Mouse extends MouseAdapter {
 		private GraphicFramework framework;
-		private GameObject underCursor, tmpCursor = null;
+		private GameObject underCursor, bufferedCursor = null;
 
 		public Mouse(GraphicFramework fw) {
 			framework = fw;
@@ -187,12 +190,27 @@ public class GraphicFramework extends JPanel {
 
 		@Override
 		public void mouseMoved(MouseEvent arg0) {
-			System.out.println("moved!");
-			tmpCursor = framework.getTopObject(arg0.getX(), arg0.getY());
-			if (tmpCursor != underCursor) {
-				tmpCursor.onMouseExit();
+			underCursor = framework.getTopObject(arg0.getX(), arg0.getY());
+			if (bufferedCursor == null && underCursor == null) {
+				//outside
+				return;
+			}
+			if (bufferedCursor == null && underCursor != null) {
+				//enter
 				underCursor.onMouseEnter();
-				tmpCursor = underCursor;
+				bufferedCursor = underCursor;
+			} else if (underCursor == null && bufferedCursor != null) {
+				//exit
+				bufferedCursor.onMouseExit();
+				bufferedCursor = underCursor;
+			} else if (bufferedCursor == underCursor) {
+				//inside
+				return;
+			} else {
+				//changed
+				bufferedCursor.onMouseExit();
+				underCursor.onMouseEnter();
+				bufferedCursor = underCursor;
 			}
 
 		}
@@ -200,9 +218,9 @@ public class GraphicFramework extends JPanel {
 		@Override
 		public void mouseDragged(MouseEvent arg0) {
 			GameObject obj = framework.getTopObject(arg0.getX(), arg0.getY());
-			if (obj != null)
-				System.out.println(arg0.getPoint() + " " + arg0.getX() + "/" + arg0.getY());
-			obj.onMouseDrag();
+			if (obj != null) {
+				obj.onMouseDrag();
+			}
 		}
 	}
 }
