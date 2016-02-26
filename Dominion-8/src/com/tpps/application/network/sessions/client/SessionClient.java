@@ -8,10 +8,10 @@ import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
+import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.network.packet.Packet;
 import com.tpps.application.network.packet.PacketType;
 import com.tpps.application.network.sessions.packets.PacketSessionCheckAnswer;
@@ -86,17 +86,27 @@ public final class SessionClient extends PacketHandler {
 				if (line.equals("exit"))
 					break;
 				else if (line.startsWith("get")) {
-					SessionPacketSenderAPI.sendGetRequest(getClient(), line.split("\\s")[1], new Callable<Void>(){
+					SessionPacketSenderAPI.sendGetRequest(getClient(), line.split("\\s")[1],
+							new SuperCallable<PacketSessionGetAnswer>() {
 
-						@Override
-						public Void call() throws Exception {
-							System.out.println("lalaland");
-							return null;
-						}
-						
-					});
+								@Override
+								public PacketSessionGetAnswer call(PacketSessionGetAnswer answer) {
+									System.out.println("Answer received: " + answer.toString());
+									return null;
+								}
+
+							});
 				} else if (line.startsWith("check")) {
-					SessionPacketSenderAPI.sendCheckRequest(getClient(), line.split("\\s")[1], UUID.fromString(line.split(" ")[2]));
+					SessionPacketSenderAPI.sendCheckRequest(getClient(), line.split("\\s")[1],
+							UUID.fromString(line.split(" ")[2]), new SuperCallable<PacketSessionCheckAnswer>() {
+
+								@Override
+								public PacketSessionCheckAnswer call(PacketSessionCheckAnswer object) {
+									System.out.println("Answer received: " + object.toString());
+									return null;
+								}
+
+							});
 				} else if (line.startsWith("keep-alive")) {
 					keepAlive(getClient(), line.split("\\s")[1], Boolean.parseBoolean(line.split("\\s")[2]));
 				} else if (line.startsWith("help")) {

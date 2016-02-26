@@ -2,12 +2,14 @@ package com.tpps.application.network.sessions.client;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import com.tpps.application.network.core.Client;
+import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.network.packet.Packet;
 import com.tpps.application.network.packet.PacketType;
+import com.tpps.application.network.sessions.packets.PacketSessionCheckAnswer;
 import com.tpps.application.network.sessions.packets.PacketSessionCheckRequest;
+import com.tpps.application.network.sessions.packets.PacketSessionGetAnswer;
 import com.tpps.application.network.sessions.packets.PacketSessionGetRequest;
 import com.tpps.application.network.sessions.packets.PacketSessionKeepAlive;
 
@@ -49,7 +51,7 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public static void sendGetRequest(Client c, String username, Callable<Void> callable) {
+	public static void sendGetRequest(Client c, String username, SuperCallable<PacketSessionGetAnswer> callable) {
 		sendPacket(c, new PacketSessionGetRequest( username));
 		SessionPacketReceiverAPI.addGetRequest(username, callable);
 	}
@@ -61,8 +63,9 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public static void sendCheckRequest(Client c, String username, UUID sessionID) {
+	public static void sendCheckRequest(Client c, String username, UUID sessionID, SuperCallable<PacketSessionCheckAnswer> callable) {
 		sendPacket(c, new PacketSessionCheckRequest(username, sessionID));
+		SessionPacketReceiverAPI.addCheckRequest(username, callable);
 	}
 
 	/**

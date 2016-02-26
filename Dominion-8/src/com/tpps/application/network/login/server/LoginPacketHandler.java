@@ -2,17 +2,16 @@ package com.tpps.application.network.login.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.concurrent.Callable;
 
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
+import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.network.login.SQLHandling.Password;
 import com.tpps.application.network.login.SQLHandling.SQLOperations;
 import com.tpps.application.network.login.packets.PacketLoginCheckAnswer;
 import com.tpps.application.network.login.packets.PacketLoginCheckRequest;
 import com.tpps.application.network.packet.Packet;
 import com.tpps.application.network.packet.PacketType;
-import com.tpps.application.network.sessions.client.SessionPacketReceiverAPI;
 import com.tpps.application.network.sessions.client.SessionPacketSenderAPI;
 import com.tpps.application.network.sessions.packets.PacketSessionGetAnswer;
 
@@ -46,12 +45,15 @@ public class LoginPacketHandler extends PacketHandler{
 				//TODO: vergleiche doublehashed pw mit db boolean x
 				boolean x = true;
 				if(x){
-					SessionPacketSenderAPI.sendGetRequest(sessionclient, pac.getUsername(), new Callable<Void>() {						
+					SessionPacketSenderAPI.sendGetRequest(sessionclient, pac.getUsername(), new SuperCallable<PacketSessionGetAnswer>() {						
 						@Override
-						public Void call() throws Exception {
-							PacketSessionGetAnswer answer = SessionPacketReceiverAPI.getGetAnswer(pac.getUsername());							
+						public PacketSessionGetAnswer call(PacketSessionGetAnswer answer) {							
 							PacketLoginCheckAnswer checkAnswer = new PacketLoginCheckAnswer(pac, true, answer.getLoginSessionID());
-							server.sendMessage(port, PacketType.getBytes(checkAnswer));
+							try {
+								server.sendMessage(port, PacketType.getBytes(checkAnswer));
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 							return null;
 						}
 					});
