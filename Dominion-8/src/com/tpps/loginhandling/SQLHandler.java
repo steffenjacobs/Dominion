@@ -4,6 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * 
+ * @author jhuhn - Johannes Huhn
+ * This class delivers basic functionalities required to handle a MYSQL database like connecting or disconnecting to a specific mysql server 
+ */
 public class SQLHandler {
 		
 	private String host;
@@ -11,9 +16,17 @@ public class SQLHandler {
 	private String username;
 	private String password;
 	private String database;
-	
 	private Connection connection;
 	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * Initialize the Object
+	 * @param host
+	 * @param port
+	 * @param username
+	 * @param password
+	 * @param database
+	 */
 	public SQLHandler(String host, String port, String username, String password, String database){
 		this.host = host;
 		this.port = port;
@@ -31,7 +44,11 @@ public class SQLHandler {
 //		this.database = database;
 //	}
 	
-	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * test if the client is still connected with the mysql database
+	 * @return true if the connection is valid, false else
+	 */
 	public boolean isConnected() {
 		try {
 			return (connection != null) && (connection.isValid(1));
@@ -43,6 +60,11 @@ public class SQLHandler {
 	}
 	
 	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * This method connects to the mysql server and to a specific database
+	 * Furthermore this method tests if there is still a valid connection, if not the method connects again.
+	 */
 	public void connect() {
 		if (isConnected()) {
 			try {
@@ -64,7 +86,10 @@ public class SQLHandler {
 		System.out.println("Connected to MySQL-Server successfully");
 	}
 	
-	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * This method closes the connection to the mysql server properly
+	 */
 	public void closeConnection() {
 		if (this.connection != null) {
 			try {
@@ -79,6 +104,11 @@ public class SQLHandler {
 		}
 	}
 	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * gets the connection
+	 * @return a valif connection object, that is used to query mysql statements
+	 */
 	public Connection getConnection() {
 		if (isConnected()) {
 			return connection;

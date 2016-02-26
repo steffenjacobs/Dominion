@@ -3,7 +3,6 @@ package com.tpps.ui.components;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -25,7 +24,7 @@ public class MainMenuButton {
 		g.setFont(new Font("Comic Sans MS", Font.PLAIN, 100));
 		
 		g.setColor(Color.BLACK);
-		g.drawString(name, (sourceImage.getWidth(null) / 2) - name.length() * 22, (int)(sourceImage.getHeight(null) / 1.4));
+		g.drawString(this.name, (sourceImage.getWidth(null) / 2) - this.name.length() * 22, (int)(sourceImage.getHeight(null) / 1.4));
 		
 	}
 	

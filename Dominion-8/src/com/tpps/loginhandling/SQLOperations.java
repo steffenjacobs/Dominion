@@ -6,10 +6,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * @author jhuhn - Johannes Huhn
+ * This class delivers functionalities that is used to handle databases
+ * The main focus of this class is handling the table of the account details
+ */
 public class SQLOperations {
 	
 	private SQLHandler sql;
 	
+	/**
+	 * initializes the Object
+	 * @param sql SQLHandler which is needed to get basic mysql functionalities like getConnection()
+	 */
 	public SQLOperations(SQLHandler sql){
 		this.sql = sql;
 	}
@@ -81,8 +90,9 @@ public class SQLOperations {
 	}
 	
 	/**
+	 * @author jhuhn - Johannes Huhn
 	 *  @param nickname plaintext representation of the claimed username,
-	 *  		email plaintext representation of the claimed email...to be continued
+	 *  @param	email plaintext representation of the claimed email
 	 *  @return 1 if account created successfully,
 	 *  		2 if nickname already in use,
 	 *  		3 if email already in use 
@@ -110,6 +120,7 @@ public class SQLOperations {
 	}
 	
 	/** 
+	 * @author jhuhn - Johannes Huhn
 	 * @param email String representation of the plaintext of requested email
 	 * @return 1 if email already exists in database, 0 if not.
 	 */
@@ -129,6 +140,7 @@ public class SQLOperations {
 		return 1;
 	}
 	/**
+	 * @author jhuhn - Johannes Huhn
 	 * @param database String representation of the database to be created
 	 * This method creates a database 
 	 */
@@ -148,6 +160,7 @@ public class SQLOperations {
 	}
 	
 	/**
+	 * @author jhuhn - Johannes Huhn
 	 * @param identification is the nickname or the email of the user
 	 * @return a String representation of the requested salt, null for failure
 	 */

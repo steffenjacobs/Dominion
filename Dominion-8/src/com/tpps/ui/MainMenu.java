@@ -1,9 +1,6 @@
 package com.tpps.ui;
 
-import java.awt.AlphaComposite;
 import java.awt.Container;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -23,7 +20,7 @@ public class MainMenu extends JFrame {
 	private MainMenuButton[] buttons;
 	private int width, height;
 	private float[] alpha;
-	private Panel pan;
+	private Panel panel;
 	private final float INITIALIZE_ALPHA;
 
 	public MainMenu() {
@@ -60,9 +57,9 @@ public class MainMenu extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.pan = new Panel(this.background, this.alpha, this.buttons);
-		c.add(pan);
-		this.pan.repaint();
+		this.panel = new Panel(this.background, this.alpha, this.buttons);
+		c.add(panel);
+		this.panel.repaint();
 	}
 
 	private void initializeAlpha() {
@@ -100,14 +97,15 @@ public class MainMenu extends JFrame {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-
+			if (buttons[0].isIn(e.getX(), e.getY())){
+				
+			}
 		}
 
-		int counter = 0;
+		
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
-
 			makeTransparent(e);
 		}
 
@@ -117,12 +115,12 @@ public class MainMenu extends JFrame {
 				if (buttons[i].isIn(e.getX(), e.getY())) {
 					if (MainMenu.this.alpha[i] != 1.0F) {
 						MainMenu.this.alpha[i] = (float) 1;
-						MainMenu.this.pan.repaint();
+						MainMenu.this.panel.repaint();
 					}
 				} else {
 					if (MainMenu.this.alpha[i] != INITIALIZE_ALPHA) {
 						alpha[i] = (float) INITIALIZE_ALPHA;
-						MainMenu.this.pan.repaint();
+						MainMenu.this.panel.repaint();
 					}
 				}
 			}

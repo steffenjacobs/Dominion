@@ -4,13 +4,8 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-
 import javax.swing.JPanel;
-
 import com.tpps.ui.components.MainMenuButton;
-
-
-
 
 public class Panel extends JPanel{
 	

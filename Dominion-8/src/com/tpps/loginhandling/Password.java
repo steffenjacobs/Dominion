@@ -7,6 +7,12 @@ import java.util.Arrays;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+/**
+ * 
+ * @author jhuhn - Johannes Huhn
+ * This class delivers all functionalities that is needed to create or validate an used account
+ * This classes uses  hashing
+ */
 public class Password {
 	
 	private String plaintext;
@@ -14,6 +20,7 @@ public class Password {
 	private byte[] hashedPassword;
 	
 	/**
+	 * @author jhuhn - Johannes Huhn
 	 * creates salt & hashed password for a given plaintext
 	 * @param plaintext password in clear characters
 	 */
@@ -28,6 +35,7 @@ public class Password {
 	}
 	
 	/**
+	 * @author jhuhn - Johannes Huhn
 	 * creates the hashed password for given plaintext and salt
 	 * @param plaintext password in clear characters
 	 * @param salt	
@@ -45,24 +53,35 @@ public class Password {
 //	public Password(String plaintext){
 //		this.plaintext = plaintext;
 //	}
-
+//	
 //	public Password(String plaintext, byte[] salt){
 //		this.plaintext = plaintext;
 //		this.salt = salt;
 //	}
-
+//	
 //	public Password(String plaintext, byte[] salt, byte[] hashedPassword){
 //		this.plaintext = plaintext;
 //		this.salt = salt;
 //		this.hashedPassword = hashedPassword;
 //	}
 	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * Creates random bytes requires to generate a salt
+	 * @return a byte array of a random generated salt value
+	 */
 	public byte[] generateSalt(){
 		return com.tpps.loginhandling.Utilties.createRandomBytes(8);
 	}
 	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * This method generates with the plaintext and a salt a hashed value for security reasons
+	 * @return a byte array of unique created hash
+	 * @throws Exception
+	 */
 	public byte[] createHashedPassword() throws Exception{
-		PBEKeySpec keySpec = new PBEKeySpec(this.plaintext.toCharArray(), this.salt, 1000, 256);	//TODO: 1000 is Iterations, 256 is KeyLength
+		PBEKeySpec keySpec = new PBEKeySpec(this.plaintext.toCharArray(), this.salt, 1000, 256);	//1000 is Iterations, 256 is KeyLength
 		try {
 			SecretKeyFactory fac = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
 			return fac.generateSecret(keySpec).getEncoded();
@@ -75,38 +94,78 @@ public class Password {
 		}
 	}
 	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * @param externalHashedPassword byte array that should be compared with the hashed value of this object
+	 * @return true, if the hashes are equal, false, else
+	 */
 	public boolean SameHashedPassword(byte[] externalHashedPassword){
 		return Arrays.equals(this.hashedPassword, externalHashedPassword); 
 	}
 
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * @return a String representation of the password as a plaintext 
+	 */
 	public String getPlaintext() {
 		return plaintext;
 	}
 
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * sets the plaintext (password)
+	 * @param plaintext String representation of the password to set
+	 */
 	public void setPlaintext(String plaintext) {
 		this.plaintext = plaintext;
 	}
 
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * @return a byte array representaion of the used salt
+	 */
 	public byte[] getSalt() {
 		return salt;
 	}
 
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * sets the salt
+	 * @param salt to set
+	 */
 	public void setSalt(byte[] salt) {
 		this.salt = salt;
 	}
 
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * @return the hashed value of the password
+	 */
 	public byte[] getHashedPassword() {
 		return hashedPassword;
 	}
-
+	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * @param hashedPassword sets the hashed password
+	 */
 	public void setHashedPassword(byte[] hashedPassword) {
 		this.hashedPassword = hashedPassword;
 	}
 	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * @return a String representaion of the salt
+	 */
 	public String getSaltAsString(){		
 		return new String(this.salt);
 	}
 	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * used to write the hash in the database
+	 * @return a String representation of the hashed value
+	 */
 	public String getHashedPasswordAsString(){
 		return new String(this.hashedPassword);
 	}	
