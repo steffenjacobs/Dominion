@@ -184,4 +184,14 @@ public class SQLOperations {
 		}		
 		return null;
 	}
+
+	public boolean rightDoubleHashedPassword(String nickname, String doublehashedpw){
+		try {
+			PreparedStatement stmt = this.sql.getConnection().prepareStatement("SELECT ");
+		} catch (SQLException e) {		
+			e.printStackTrace();
+		}
+		return true;
+	}
+
 }
