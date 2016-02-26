@@ -28,7 +28,7 @@ public final class SessionClient extends PacketHandler {
 	private static final int DELTA_SEND_KEEP_ALIVE_MILLISECONDS = 5000;
 	private static SessionClient instance;
 
-	private Timer scheduler = null;
+	private static Timer scheduler = null;
 	private Client client;
 
 	static final boolean DEBUG_PACKETS = true;
@@ -84,11 +84,11 @@ public final class SessionClient extends PacketHandler {
 				if (line.equals("exit"))
 					break;
 				else if (line.startsWith("get")) {
-					SessionPacketSenderAPI.sendGetRequest(line.split("\\s")[1]);
+					SessionPacketSenderAPI.sendGetRequest(getClient(), line.split("\\s")[1]);
 				} else if (line.startsWith("check")) {
-					SessionPacketSenderAPI.sendCheckRequest(line.split("\\s")[1], UUID.fromString(line.split(" ")[2]));
+					SessionPacketSenderAPI.sendCheckRequest(getClient(), line.split("\\s")[1], UUID.fromString(line.split(" ")[2]));
 				} else if (line.startsWith("keep-alive")) {
-					keepAlive(line.split("\\s")[1], Boolean.parseBoolean(line.split("\\s")[2]));
+					keepAlive(getClient(), line.split("\\s")[1], Boolean.parseBoolean(line.split("\\s")[2]));
 				} else if (line.startsWith("help")) {
 					System.out.println("-------- Available Commands --------");
 					System.out.println("get <username>");
@@ -142,7 +142,7 @@ public final class SessionClient extends PacketHandler {
 
 			}
 		}
-		return null;
+		return new InetSocketAddress("127.0.0.1", 1337);
 	}
 
 	/**
@@ -151,7 +151,7 @@ public final class SessionClient extends PacketHandler {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	private void keepAlive(final String username, boolean state) {
+	public static void keepAlive(Client c, final String username, boolean state) {
 		if (state) {
 			if (scheduler != null) {
 				scheduler.cancel();
@@ -164,7 +164,7 @@ public final class SessionClient extends PacketHandler {
 			scheduler.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					SessionPacketSenderAPI.sendKeepAlive(username);
+					SessionPacketSenderAPI.sendKeepAlive(c, username);
 				}
 			}, 0, DELTA_SEND_KEEP_ALIVE_MILLISECONDS);
 		} else {

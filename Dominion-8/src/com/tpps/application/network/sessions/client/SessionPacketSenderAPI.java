@@ -25,13 +25,13 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	private static void sendPacket(Packet packet) {
-		if (SessionClient.getInstance().getClient().isConnected()) {
+	private static void sendPacket(Client c, Packet packet) {
+		if (c.isConnected()) {
 			try {
 				if (SessionClient.DEBUG_PACKETS) {
 					System.out.println(packet.toString());
 				}
-				SessionClient.getInstance().getClient().sendMessage(PacketType.getBytes(packet));
+				c.sendMessage(PacketType.getBytes(packet));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -47,8 +47,8 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public static void sendGetRequest(String username) {
-		sendPacket(new PacketSessionGetRequest(username));
+	public static void sendGetRequest(Client c, String username) {
+		sendPacket(c, new PacketSessionGetRequest( username));
 	}
 
 	/**
@@ -58,8 +58,8 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public static void sendCheckRequest(String username, UUID sessionID) {
-		sendPacket(new PacketSessionCheckRequest(username, sessionID));
+	public static void sendCheckRequest(Client c, String username, UUID sessionID) {
+		sendPacket(c, new PacketSessionCheckRequest(username, sessionID));
 	}
 
 	/**
@@ -67,7 +67,7 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	static void sendKeepAlive(String username) {
-		sendPacket(new PacketSessionKeepAlive(username));
+	static void sendKeepAlive(Client c, String username) {
+		sendPacket(c, new PacketSessionKeepAlive(username));
 	}
 }
