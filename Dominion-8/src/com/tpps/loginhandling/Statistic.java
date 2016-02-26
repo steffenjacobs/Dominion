@@ -28,6 +28,8 @@ public class Statistic {
 	public String getTypeAsString() {
 		if(enumvalue != null && (this.type == SQLType.VARCHAR)){
 			return type + "(" + enumvalue + ")";
+		}else if(enumvalue != null && (this.type == SQLType.FLOAT)){
+			return type + "(" + enumvalue + ")";
 		}else{
 			return type.toString();
 		}
