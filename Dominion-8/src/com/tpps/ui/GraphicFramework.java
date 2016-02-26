@@ -2,9 +2,8 @@ package com.tpps.ui;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
@@ -167,29 +166,14 @@ public class GraphicFramework extends JPanel {
 		}
 	}
 
-	class Mouse implements MouseListener, MouseMotionListener {
+	/**
+	 * listenes to the mouse-input and tunnels it to the underlying game-objects
+	 */
+	private class Mouse extends MouseAdapter {
 		private GraphicFramework framework;
 
 		public Mouse(GraphicFramework fw) {
 			framework = fw;
-		}
-
-		@Override
-		public void mouseMoved(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
