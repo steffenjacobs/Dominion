@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import com.tpps.application.network.core.Client;
 import com.tpps.application.network.packet.Packet;
 import com.tpps.application.network.packet.PacketType;
 import com.tpps.application.network.sessions.packets.PacketSessionCheckRequest;

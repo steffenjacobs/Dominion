@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Callable;
 
+import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.login.SQLHandling.Password;
 import com.tpps.application.network.login.SQLHandling.SQLOperations;
@@ -11,7 +12,6 @@ import com.tpps.application.network.login.packets.PacketLoginCheckAnswer;
 import com.tpps.application.network.login.packets.PacketLoginCheckRequest;
 import com.tpps.application.network.packet.Packet;
 import com.tpps.application.network.packet.PacketType;
-import com.tpps.application.network.sessions.client.Client;
 import com.tpps.application.network.sessions.client.SessionPacketReceiverAPI;
 import com.tpps.application.network.sessions.client.SessionPacketSenderAPI;
 import com.tpps.application.network.sessions.packets.PacketSessionGetAnswer;

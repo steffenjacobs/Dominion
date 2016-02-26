@@ -10,6 +10,7 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.packet.Packet;
 import com.tpps.application.network.packet.PacketType;

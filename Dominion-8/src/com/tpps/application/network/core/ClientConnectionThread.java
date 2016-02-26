@@ -1,4 +1,4 @@
-package com.tpps.application.network.sessions.client;
+package com.tpps.application.network.core;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
-
-import com.tpps.application.network.core.PacketHandler;
 
 /**
  * represents the connection-thread on the client (very similar to the server

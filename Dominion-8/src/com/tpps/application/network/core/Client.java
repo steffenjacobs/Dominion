@@ -1,4 +1,4 @@
-package com.tpps.application.network.sessions.client;
+package com.tpps.application.network.core;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -6,8 +6,6 @@ import java.net.Socket;
 import java.net.SocketAddress;
 
 import javax.net.SocketFactory;
-
-import com.tpps.application.network.core.PacketHandler;
 
 /**
  * represents a client connected to a server on a higher layer then
