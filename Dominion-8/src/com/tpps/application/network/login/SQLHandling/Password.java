@@ -1,4 +1,4 @@
-package com.tpps.loginhandling;
+package com.tpps.application.network.login.SQLHandling;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -19,51 +19,51 @@ public class Password {
 	private byte[] salt;
 	private byte[] hashedPassword;
 	
-	/**
-	 * @author jhuhn - Johannes Huhn
-	 * creates salt & hashed password for a given plaintext
-	 * @param plaintext password in clear characters
-	 */
-	public Password(String plaintext){
-		this.plaintext = plaintext;
-		this.salt = this.generateSalt();
-		try {
-			this.hashedPassword = this.createHashedPassword();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * @author jhuhn - Johannes Huhn
-	 * creates the hashed password for given plaintext and salt
-	 * @param plaintext password in clear characters
-	 * @param salt	
-	 */
-	public Password(String plaintext, byte[] salt){
-		this.plaintext = plaintext;
-		this.salt = salt;
-		try {
-			this.hashedPassword = this.createHashedPassword();
-		} catch (Exception e) {		
-			e.printStackTrace();
-		}
-	}
-//	
+//	/**
+//	 * @author jhuhn - Johannes Huhn
+//	 * creates salt & hashed password for a given plaintext
+//	 * @param plaintext password in clear characters
+//	 */
 //	public Password(String plaintext){
 //		this.plaintext = plaintext;
+//		this.salt = this.generateSalt();
+//		try {
+//			this.hashedPassword = this.createHashedPassword();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 //	}
 //	
+//	/**
+//	 * @author jhuhn - Johannes Huhn
+//	 * creates the hashed password for given plaintext and salt
+//	 * @param plaintext password in clear characters
+//	 * @param salt	
+//	 */
 //	public Password(String plaintext, byte[] salt){
 //		this.plaintext = plaintext;
 //		this.salt = salt;
+//		try {
+//			this.hashedPassword = this.createHashedPassword();
+//		} catch (Exception e) {		
+//			e.printStackTrace();
+//		}
 //	}
 //	
-//	public Password(String plaintext, byte[] salt, byte[] hashedPassword){
-//		this.plaintext = plaintext;
-//		this.salt = salt;
-//		this.hashedPassword = hashedPassword;
-//	}
+	public Password(String plaintext){
+		this.plaintext = plaintext;
+	}
+	
+	public Password(String plaintext, byte[] salt){
+		this.plaintext = plaintext;
+		this.salt = salt;
+	}
+	
+	public Password(String plaintext, byte[] salt, byte[] hashedPassword){
+		this.plaintext = plaintext;
+		this.salt = salt;
+		this.hashedPassword = hashedPassword;
+	}
 	
 	/**
 	 * @author jhuhn - Johannes Huhn
@@ -71,7 +71,7 @@ public class Password {
 	 * @return a byte array of a random generated salt value
 	 */
 	public byte[] generateSalt(){
-		return com.tpps.loginhandling.Utilties.createRandomBytes(8);
+		return com.tpps.application.network.login.SQLHandling.Utilties.createRandomBytes(8);
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-package com.tpps.loginhandling;
+package com.tpps.application.network.login.SQLHandling;
 
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
