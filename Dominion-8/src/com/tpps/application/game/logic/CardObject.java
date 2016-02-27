@@ -27,9 +27,13 @@ public class CardObject extends GameObject {
 	 * sets the actions array containing the actions which the cardObject will
 	 * execute
 	 */
-	public CardObject(ArrayList<Action> actions, ArrayList<Type> types, String name, int costs, int locX, int locY,
-			int _layer, Image sourceImage, GraphicFramework _parent) {
-		super(locX, locY, _layer, sourceImage, _parent);
+	public CardObject(ArrayList<Action> actions, ArrayList<Type> types,
+			String name, int costs, double relativeLocX, double relativeLocY,
+			double relativeWidth, double relativeHeight, int absWidth,
+			int absHeight, int _layer, Image sourceImage,
+			GraphicFramework _parent, int _id) {
+		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight,
+				absWidth, absHeight, _layer, sourceImage, _parent, _id);
 		this.name = name;
 		this.actions = actions;
 		this.cost = costs;
@@ -42,8 +46,8 @@ public class CardObject extends GameObject {
 	 * @author ladler - Lukas Adler
 	 */
 	public void doAction() {
-		for (int i = 0; i < actions.size(); i++) {
 
+		for (int i = 0; i < actions.size(); i++) {
 			switch (actions.get(i)) {
 			case ADD_ACTION_TO_PLAYER:
 				// call
@@ -106,13 +110,20 @@ public class CardObject extends GameObject {
 
 	}
 
+	@Override
+	public void onResize(int absWidth, int absHeight) {
+		// TODO Auto-generated method stub
+	}
+
 	/**
 	 * @override toString()
 	 */
 	public String toString() {
 		StringBuffer sBuf = new StringBuffer();
-		sBuf.append("CardObject: " + "'" + this.name
-				+ "'"/* \nsuper.toString():\n- " + super.toString() */);
+		sBuf.append("CardObject: " + "'" + this.name + "'"/*
+														 * \nsuper.toString():\n-
+														 * " + super.toString()
+														 */);
 		sBuf.append("\nCost: " + this.cost);
 		sBuf.append("\nAction(s):");
 		for (Action act : actions) {
@@ -136,8 +147,9 @@ public class CardObject extends GameObject {
 		act.add(Action.DRAW);
 		ArrayList<Type> type = new ArrayList<Type>();
 		type.add(Type.ACTION);
-		CardObject card = new CardObject(act, type, "Market", 5, 300, 300, -1, new BufferedImage(1, 1, 2),
-				new GraphicFramework(new JFrame("Hallo")));
+		CardObject card = new CardObject(act, type, "Market", 5, 300, 300, 300,
+				300, 300, 300, 1, new BufferedImage(1, 1, 2),
+				new GraphicFramework(new JFrame("Hallo")), 10);
 		System.out.println(card.toString());
 	}
 }

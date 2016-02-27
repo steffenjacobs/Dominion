@@ -29,15 +29,15 @@ public abstract class GameObject implements Cloneable, Serializable {
 	private int x, y, height, width;
 	private GraphicFramework parent;
 	private int layer;
-	private boolean visable = true;
+	private boolean visible = true;
 
 	/**
-	 * changes the visability of the game object
+	 * changes the visibility of the game object
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public void setVisible(boolean state) {
-		this.visable = state;
+		this.visible = state;
 		parent.repaint(this.getHitbox());
 	}
 
@@ -46,7 +46,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public boolean isVisible() {
-		return this.visable;
+		return this.visible;
 	}
 
 	/**
@@ -193,8 +193,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.originalImage = sourceImage;
 		this.parent = _parent;
 		this.layer = _layer;
-		this.id = GameObject.objectCounter;
-		GameObject.objectCounter++;
+		this.id = GameObject.objectCounter++;
 		this.resizeObject(absWidth, absHeight);
 	}
 

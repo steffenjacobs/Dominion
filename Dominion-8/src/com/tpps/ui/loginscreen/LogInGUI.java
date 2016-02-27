@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,10 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-
-//TODO: underline Header, set Background, set transparent
+//TODO: underline Header, set Background, set transparent, map 'RETURN' key to Login
 public class LogInGUI extends JFrame {
 	
 	private static final long serialVersionUID = 1L;

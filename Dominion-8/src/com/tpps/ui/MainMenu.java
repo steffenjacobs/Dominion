@@ -6,11 +6,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
+
 import com.tpps.ui.components.MainMenuButton;
-
-
 
 public class MainMenu extends JFrame {
 
@@ -35,24 +35,29 @@ public class MainMenu extends JFrame {
 
 		loadImage();
 		registrateMouseListener();
-		
-		
+
 		try {
 			BufferedImage[] images = new BufferedImage[4];
 			for (int i = 0; i < images.length; i++) {
-				images[i] = ImageIO.read(ClassLoader.getSystemResource("resources/img/gameObjects/testButton.png"));
+				images[i] = ImageIO
+						.read(ClassLoader
+								.getSystemResource("resources/img/gameObjects/testButton.png"));
 			}
 
 			buttons = new MainMenuButton[4];
 
-			buttons[0] = new MainMenuButton((width / 2) - (images[0].getWidth(null) / 2), height / 6, images[0],
+			buttons[0] = new MainMenuButton((width / 2)
+					- (images[0].getWidth(null) / 2), height / 6, images[0],
 					"Single Player");
-			buttons[1] = new MainMenuButton((width / 2) - (images[1].getWidth(null) / 2), (height / 6) * 2, images[1],
-					"Multi Player");
-			buttons[2] = new MainMenuButton((width / 2) - (images[2].getWidth(null) / 2), (height / 6) * 3, images[2],
-					"Settings");
-			buttons[3] = new MainMenuButton((width / 2) - (images[3].getWidth(null) / 2), (height / 6) * 4, images[3],
-					"Community");
+			buttons[1] = new MainMenuButton((width / 2)
+					- (images[1].getWidth(null) / 2), (height / 6) * 2,
+					images[1], "Multi Player");
+			buttons[2] = new MainMenuButton((width / 2)
+					- (images[2].getWidth(null) / 2), (height / 6) * 3,
+					images[2], "Settings");
+			buttons[3] = new MainMenuButton((width / 2)
+					- (images[3].getWidth(null) / 2), (height / 6) * 4,
+					images[3], "Community");
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -72,7 +77,8 @@ public class MainMenu extends JFrame {
 
 	private void loadImage() {
 		try {
-			this.background = ImageIO.read(ClassLoader.getSystemResource("resources/img/mainMenu/Dominion.jpg"));
+			this.background = ImageIO.read(ClassLoader
+					.getSystemResource("resources/img/mainMenu/Dominion.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -84,25 +90,14 @@ public class MainMenu extends JFrame {
 		c.addMouseMotionListener(m);
 	}
 
-
-
-		
-		
-		
-
-		
-
-
 	private class Mouse extends MouseAdapter {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if (buttons[0].isIn(e.getX(), e.getY())){
-				
+			if (buttons[0].isIn(e.getX(), e.getY())) {
+
 			}
 		}
-
-		
 
 		@Override
 		public void mouseMoved(MouseEvent e) {
