@@ -45,6 +45,15 @@ public class LogInGUI extends JFrame {
 	private Font smallfont,customFont;
 	
 	public LogInGUI(){	
+		createdComponent();
+	}
+	public LogInGUI(String text, char[] password) {
+		createdComponent();
+		this.userinfo.setText(text);
+		this.passwordbox.setText(String.valueOf(password));
+	}
+	
+	private void createdComponent(){
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		
@@ -70,6 +79,8 @@ public class LogInGUI extends JFrame {
 		this.createpanel4();
 		this.revalidate();
 	}
+	
+	
 	private void init(){
 		c = this.getContentPane();
 		all = new JLabel(loading);
@@ -93,7 +104,7 @@ public class LogInGUI extends JFrame {
 	//not working why? Path checking!!
 	private void importFont(){
 		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT, new File( System.getProperty("user.dir"), "src/resources/font/xenippa1.TTF")).deriveFont(25f);
+			customFont = Font.createFont(Font.TRUETYPE_FONT, new File( System.getProperty("user.dir"), "src/resources/font/xenippa1.TTF"));
 		     GraphicsEnvironment ge = 
 		         GraphicsEnvironment.getLocalGraphicsEnvironment();
 //		     ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/font/xenippa1.TTF")));
@@ -124,7 +135,7 @@ public class LogInGUI extends JFrame {
 	private void createpanel1(){
 		header = new JLabel();
 		header.setText("Type in Userinformation");	
-		header.setFont(customFont);
+		header.setFont(customFont.deriveFont(25f));
 		header.setForeground(Color.WHITE);
 		
 		panels[0].add(header);
@@ -172,10 +183,13 @@ public class LogInGUI extends JFrame {
 		panels[3].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
 	//	panels[3].setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 		
-		execute = new JButton("Log In");
+		execute = new JButton("Login");
+		execute.setFont(customFont.deriveFont(15f));
 		execute.setPreferredSize(new Dimension(120,30));
 		cancel = new JButton("Cancel");
+		cancel.setFont(customFont.deriveFont(15f));
 		createAccount = new JButton("New Account");
+		createAccount.setFont(customFont.deriveFont(10f));
 		cancel.setPreferredSize(new Dimension(120,30));
 		createAccount.setPreferredSize(new Dimension(120,30));
 		panels[3].add(execute);
@@ -185,6 +199,10 @@ public class LogInGUI extends JFrame {
 		all.add(panels[3]);
 		c.add(all);
 		panels[3].revalidate();
+		
+		createAccount.addActionListener(new LoginListener(createAccount,this));
+		cancel.addActionListener(new LoginListener(cancel,this));
+		execute.addActionListener(new LoginListener(execute,this));
 	}
 	
 	public static void main(String[] args)  {		
