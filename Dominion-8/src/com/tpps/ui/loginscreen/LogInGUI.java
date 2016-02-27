@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Panel;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -35,14 +34,15 @@ public class LogInGUI extends JFrame {
 	private JButton cancel;
 	private ImageIcon loading;
 	private BufferedImage background;
-	
+	private JButton createAccount;
+
 	private JTextField userinfo;
 	private JPasswordField passwordbox;
 	private JLabel[] description;
 	private JLabel header;
 	private JLabel all;
 	private JPanel[] panels;
-	private Font smallfont;
+	private Font smallfont,customFont;
 	
 	public LogInGUI(){	
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -80,7 +80,7 @@ public class LogInGUI extends JFrame {
 		this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		smallfont = new Font("Calibri", Font.PLAIN, 19);
+		smallfont = new Font("Calibri", Font.BOLD, 19);
 		
 		description = new JLabel[2];
 		panels = new JPanel[4];
@@ -93,6 +93,7 @@ public class LogInGUI extends JFrame {
 	//not working why? Path checking!!
 	private void importFont(){
 		try {
+			customFont = Font.createFont(Font.TRUETYPE_FONT, new File( System.getProperty("user.dir"), "src/resources/font/xenippa1.TTF")).deriveFont(25f);
 		     GraphicsEnvironment ge = 
 		         GraphicsEnvironment.getLocalGraphicsEnvironment();
 //		     ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("src/resources/font/xenippa1.TTF")));
@@ -123,7 +124,8 @@ public class LogInGUI extends JFrame {
 	private void createpanel1(){
 		header = new JLabel();
 		header.setText("Type in Userinformation");	
-		header.setFont(new Font("xenippa1", Font.PLAIN, 20));
+		header.setFont(customFont);
+		header.setForeground(Color.WHITE);
 		
 		panels[0].add(header);
 		panels[0].setOpaque(false);
@@ -140,8 +142,8 @@ public class LogInGUI extends JFrame {
 		description[0].setHorizontalAlignment(JLabel.CENTER);
 		userinfo = new JTextField();
 		
-		userinfo.setFont(smallfont);
 		userinfo.setOpaque(false);
+		userinfo.setFont(smallfont);
 		panels[1].add(description[0]);
 		panels[1].add(userinfo);
 		panels[1].setOpaque(false);
@@ -167,14 +169,17 @@ public class LogInGUI extends JFrame {
 	}
 	
 	private void createpanel4(){
-		panels[3].setLayout(new FlowLayout(FlowLayout.CENTER, 80, 0));
+		panels[3].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
 	//	panels[3].setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 		
 		execute = new JButton("Log In");
-		execute.setPreferredSize(new Dimension(100,30));
+		execute.setPreferredSize(new Dimension(120,30));
 		cancel = new JButton("Cancel");
-		cancel.setPreferredSize(new Dimension(100,30));
+		createAccount = new JButton("New Account");
+		cancel.setPreferredSize(new Dimension(120,30));
+		createAccount.setPreferredSize(new Dimension(120,30));
 		panels[3].add(execute);
+		panels[3].add(createAccount);
 		panels[3].add(cancel);
 		panels[3].setOpaque(false);
 		all.add(panels[3]);
