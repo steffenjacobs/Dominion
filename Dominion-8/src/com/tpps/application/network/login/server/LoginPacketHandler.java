@@ -52,7 +52,7 @@ public class LoginPacketHandler extends PacketHandler{
 						public PacketSessionGetAnswer call(PacketSessionGetAnswer answer) {							
 							PacketLoginCheckAnswer checkAnswer = new PacketLoginCheckAnswer(pac, true, answer.getLoginSessionID());
 							try {
-								System.out.println("super callable");
+							//	System.out.println("super callable");
 								server.sendMessage(port, PacketType.getBytes(checkAnswer));
 							} catch (IOException e) {
 								e.printStackTrace();
