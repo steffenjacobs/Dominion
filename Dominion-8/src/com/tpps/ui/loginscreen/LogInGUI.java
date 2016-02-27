@@ -6,8 +6,15 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Panel;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -26,18 +33,25 @@ public class LogInGUI extends JFrame {
 	private Container c;
 	private JButton execute;
 	private JButton cancel;
+	private ImageIcon loading;
+	private BufferedImage background;
 	
 	private JTextField userinfo;
 	private JPasswordField passwordbox;
 	private JLabel[] description;
 	private JLabel header;
+	private JLabel all;
 	private JPanel[] panels;
 	private Font smallfont;
 	
 	public LogInGUI(){	
-		width = 500;
-		height = 280;
+		width = Toolkit.getDefaultToolkit().getScreenSize().width;
+		height = Toolkit.getDefaultToolkit().getScreenSize().height;
+		
+		loadImage();
+		resizeImage();
 		importFont();
+		
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException e) {
@@ -58,9 +72,9 @@ public class LogInGUI extends JFrame {
 	}
 	private void init(){
 		c = this.getContentPane();
-		c.setBackground(Color.white);
-		c.setLayout(new GridLayout(4, 1,0,30));
-		this.setSize(width, height);
+		all = new JLabel(loading);
+		all.setLayout(new GridLayout(4, 1,0,30));
+		this.setSize(width/4, height/4);
 		this.setLocationRelativeTo(null);
 		this.setTitle("Log in !");
 		this.setResizable(false);
@@ -73,6 +87,7 @@ public class LogInGUI extends JFrame {
 		for (int i = 0; i < panels.length; i++) {
 			panels[i] = new JPanel(new FlowLayout());			
 		}
+//		this.setContentPane(new JLabel(loading));
 	}
 	
 	//not working why? Path checking!!
@@ -87,6 +102,24 @@ public class LogInGUI extends JFrame {
 		}
 	}
 	
+	private void loadImage() {
+		try {
+			this.background = ImageIO.read(ClassLoader
+					.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+
+	private void resizeImage(){
+		loading= new ImageIcon(background);
+		Image newing = background.getScaledInstance(width/4, height/4, java.awt.Image.SCALE_SMOOTH);
+		loading = new ImageIcon(newing);
+	}
+
+
+	
 	private void createpanel1(){
 		header = new JLabel();
 		header.setText("Type in Userinformation");	
@@ -95,7 +128,8 @@ public class LogInGUI extends JFrame {
 		panels[0].add(header);
 		panels[0].setOpaque(false);
 	//	panels[0].setBorder(BorderFactory.createLineBorder(Color.GREEN, 4));
-		c.add(panels[0]);
+		all.add(panels[0]);
+//		c.add(panels[0]);
 	}
 	
 	private void createpanel2(){
@@ -105,13 +139,14 @@ public class LogInGUI extends JFrame {
 		description[0].setFont(smallfont);
 		description[0].setHorizontalAlignment(JLabel.CENTER);
 		userinfo = new JTextField();
+		
 		userinfo.setFont(smallfont);
 		userinfo.setOpaque(false);
 		panels[1].add(description[0]);
 		panels[1].add(userinfo);
 		panels[1].setOpaque(false);
 	//	panels[1].setBorder(BorderFactory.createLineBorder(Color.RED, 4));
-		c.add(panels[1]);
+		all.add(panels[1]);
 		panels[0].revalidate();
 	}
 	
@@ -127,7 +162,7 @@ public class LogInGUI extends JFrame {
 		panels[2].add(passwordbox);
 		panels[2].setOpaque(false);
 	//	panels[2].setBorder(BorderFactory.createLineBorder(Color.CYAN, 4));
-		c.add(panels[2]);
+		all.add(panels[2]);
 		panels[2].revalidate();		
 	}
 	
@@ -142,7 +177,8 @@ public class LogInGUI extends JFrame {
 		panels[3].add(execute);
 		panels[3].add(cancel);
 		panels[3].setOpaque(false);
-		c.add(panels[3]);
+		all.add(panels[3]);
+		c.add(all);
 		panels[3].revalidate();
 	}
 	
