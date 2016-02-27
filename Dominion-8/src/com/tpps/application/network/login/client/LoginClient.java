@@ -32,10 +32,12 @@ public class LoginClient extends PacketHandler {
 		this.username = nickname;
 		Password pw = new Password(plaintext, new String("defsalt").getBytes()); //defsalt ist standartsalt
 		try {
+			System.out.println("into handlelogin");
 			pw.createHashedPassword();
 			String pwAsString = pw.getHashedPasswordAsString();
 			PacketLoginCheckRequest check = new PacketLoginCheckRequest(nickname, pwAsString);
 			c.sendMessage(PacketType.getBytes(check));
+			System.out.println("ende handlelogin");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -43,7 +45,8 @@ public class LoginClient extends PacketHandler {
 	
 	@Override
 	//TODO: create Account
-	public void handleReceivedPacket(int port, byte[] bytes) {		
+	public void handleReceivedPacket(int port, byte[] bytes) {
+		System.out.println("into hanleReceivedPacket");
 		Packet answer = PacketType.getPacket(bytes);
 		switch(answer.getType()){
 		case LOGIN_CHECK_ANSWER: 
@@ -57,10 +60,11 @@ public class LoginClient extends PacketHandler {
 			break;
 		default: break;
 		}
+		System.out.println("ende hanleReceivedPacket");
 	}
 
 	public static void main(String[] args) {
-		new LoginClient();
+		new LoginClient().handlelogin("Alex44", "Schokolade");;
 	}
 
 }
