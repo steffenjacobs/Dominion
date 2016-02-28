@@ -15,7 +15,7 @@ public final class CollectionsUtil {
 			}
 			return hashMap;
 		}else{
-			System.err.println("arrayLists nicht gleich lang");
+			System.err.println("arrayLists have not the same size");
 			return null;
 		}
 	}
