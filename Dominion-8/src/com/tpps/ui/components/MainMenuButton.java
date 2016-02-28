@@ -6,6 +6,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+/**
+ * 
+ * @author ladler - Lukas Adler
+ *
+ */
 public class MainMenuButton {
 	private int x, y;
 	private final BufferedImage sourceImage;
@@ -27,7 +32,12 @@ public class MainMenuButton {
 				(int) (sourceImage.getHeight(null) / 1.4));
 	}
 
-	public boolean isIn(double x, double y) {
+	/**
+	 * @param x value of the mouse
+	 * @param y value of the mouse
+	 * @return true if the mouse is on the button false else
+	 */
+	public boolean isOn(double x, double y) {
 		if (this.x <= x && x <= this.sourceImage.getWidth() + this.x
 				&& this.y <= y && y <= this.sourceImage.getHeight() + this.y) {
 			return true;
@@ -48,14 +58,26 @@ public class MainMenuButton {
 		System.out.println("Clicked @" + this.toString());
 	}
 
+	/**
+	 * 
+	 * @return the x coordinate of the button
+	 */
 	public int getX() {
 		return this.x;
 	}
 
+	/**
+	 * 
+	 * @return the y coordinate of the button
+	 */
 	public int getY() {
 		return this.y;
 	}
 
+	/**
+	 * 
+	 * @return the image of the button
+	 */
 	public Image getSourceImage() {
 		return this.sourceImage;
 
