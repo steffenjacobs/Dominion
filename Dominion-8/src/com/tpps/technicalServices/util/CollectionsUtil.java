@@ -1,11 +1,24 @@
 package com.tpps.technicalServices.util;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 
 public final class CollectionsUtil {
+	
+	public static HashMap<CardAction, Integer> hashMapAction(ArrayList<CardAction> actions, ArrayList<Integer> numbers) {
+		if (actions.size() == numbers.size()){
+			HashMap<CardAction, Integer> hashMap = new HashMap<CardAction, Integer>();
+			for (int i = 0; i < actions.size(); i++){
+				hashMap.put(actions.get(i), numbers.get(i));				
+			}
+			return hashMap;
+		}else{
+			System.err.println("arrayLists nicht gleich lang");
+			return null;
+		}
+	}
 
 	public static ArrayList<CardAction> arrayListAction(CardAction... actions) {
 		ArrayList<CardAction> resultList = new ArrayList<CardAction>();
