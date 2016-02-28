@@ -4,11 +4,6 @@ import java.awt.Container;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
 
-/**
- * 
- * @author ladler - Lukas Adler
- *
- */
 public class MainMenu extends JFrame {
 
 	private static final long serialVersionUID = 1L;
