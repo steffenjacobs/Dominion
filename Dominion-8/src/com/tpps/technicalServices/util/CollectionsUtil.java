@@ -19,6 +19,14 @@ public final class CollectionsUtil {
 			return null;
 		}
 	}
+	
+	public static ArrayList<Integer> arrayListInteger(Integer... actions) {
+		ArrayList<Integer> resultList = new ArrayList<Integer>();
+		for (Integer action : actions) {
+			resultList.add(action);
+		}
+		return resultList;
+	}
 
 	public static ArrayList<CardAction> arrayListAction(CardAction... actions) {
 		ArrayList<CardAction> resultList = new ArrayList<CardAction>();

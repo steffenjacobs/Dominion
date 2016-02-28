@@ -27,11 +27,11 @@ public class Deck {
 	// TODO: remove estate and copper (only for testing purposes)
 	// TODO: replace Action.COUNT_FOR_VICTORY with null or create another constructor? Same with Action.NONE
 	// for copper
-	private final Card estate = new Card(
-			CollectionsUtil.arrayListAction(CardAction.COUNT_FOR_VICTORY),
+	private final Card estate = new Card(CollectionsUtil.hashMapAction(
+			CollectionsUtil.arrayListAction(CardAction.COUNT_FOR_VICTORY), CollectionsUtil.arrayListInteger(2)),
 			CollectionsUtil.arrayListType(CardType.VICTORY), "Estate", 2);
-	private final Card copper = new Card(
-			CollectionsUtil.arrayListAction(CardAction.NONE),
+	private final Card copper = new Card(CollectionsUtil.hashMapAction(
+			CollectionsUtil.arrayListAction(CardAction.NONE), CollectionsUtil.arrayListInteger(0)),
 			CollectionsUtil.arrayListType(CardType.COPPER), "Copper", 0);
 	
 	public int getDeckSize() {

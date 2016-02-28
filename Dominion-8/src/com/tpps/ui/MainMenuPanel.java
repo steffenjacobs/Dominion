@@ -52,7 +52,7 @@ public class MainMenuPanel extends JPanel {
 	private void createButtons(MainMenu parent) {
 	
 			buttons = new MainMenuButton[4];
-			String[] names = new String[]{"Single Player", "Multi Player", "Settins", "Community"};
+			String[] names = new String[]{"Single Player", "Multi Player", "Settings", "Community"};
 			try {
 				for (int i = 0; i < buttons.length; i++) {
 					buttons[i] = new MainMenuButton((parent.getWidth() / 2), parent.getHeight() / 6 * (i + 1),

@@ -2,8 +2,9 @@ package com.tpps.application.game.card;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 
@@ -16,7 +17,7 @@ import com.tpps.ui.GraphicFramework;
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = 1L;
-	private final List<CardAction> actions;
+	private final HashMap<CardAction, Integer> actions;
 	private final List<CardType> types;
 	private final int cost;
 	private final String name;
@@ -25,7 +26,7 @@ public class Card extends GameObject {
 	 * sets the actions array containing the actions which the cardObject will
 	 * execute
 	 */
-	public Card(List<CardAction> actions, List<CardType> types, String name,
+	public Card(HashMap<CardAction, Integer> actions, List<CardType> types, String name,
 			int cost, double relativeLocX, double relativeLocY,
 			double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage,
@@ -39,7 +40,7 @@ public class Card extends GameObject {
 	}
 
 	/** dummy constructor for testing of deck class */
-	public Card(List<CardAction> actions, List<CardType> types, String name,
+	public Card(HashMap<CardAction, Integer> actions, List<CardType> types, String name,
 			int cost) {
 		this.actions = actions;
 		this.types = types;
@@ -55,7 +56,7 @@ public class Card extends GameObject {
 		return this.cost;
 	}
 
-	public List<CardAction> getActions() {
+	public HashMap<CardAction, Integer> getActions() {
 		return actions;
 	}
 
@@ -69,9 +70,9 @@ public class Card extends GameObject {
 	 * @author ladler - Lukas Adler
 	 */
 	public void doAction() {
-
-		for (int i = 0; i < actions.size(); i++) {
-			switch (actions.get(i)) {
+		ArrayList<CardAction> actionsList = new ArrayList<CardAction>(actions.keySet());
+		for (int i = 0; i < actionsList.size(); i++) {
+			switch (actionsList.get(i)) {
 			case ADD_ACTION_TO_PLAYER:
 				// call
 				break;
@@ -155,8 +156,10 @@ public class Card extends GameObject {
 		sBuf.append("CardObject: " + "'" + this.name + "'" /* + "\nsuper.toString():\n-" + super.toString()*/);
 		sBuf.append("\nCost: " + this.cost);
 		sBuf.append("\nAction(s):");
-		for (CardAction act : actions) {
-			sBuf.append("\n- " + act.toString());
+		ArrayList<CardAction> actionsList = new ArrayList<CardAction>(actions.keySet()); 
+		ArrayList<Integer> ints = new ArrayList<Integer>(actions.values());
+		for (int i = 0; i < actions.size(); i++) {
+			sBuf.append("\n- " + actionsList.get(i).toString() + " amount: " + ints.get(i));
 		}
 		sBuf.append("\nType(s):");
 		for (CardType type : types) {
@@ -169,14 +172,18 @@ public class Card extends GameObject {
 	 * main method with test case for cardObject
 	 */
 	public static void main(String[] args) {
-		List<CardAction> act = new ArrayList<CardAction>();
+		ArrayList<CardAction> act = new ArrayList<CardAction>();
 		act.add(CardAction.ADD_ACTION_TO_PLAYER);
 		act.add(CardAction.ADD_PURCHASE);
 		act.add(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
 		act.add(CardAction.DRAW);
+		ArrayList<Integer> i = new ArrayList<Integer>();
+		i.add(1); i.add(2); i.add(3); i.add(4);
 		List<CardType> type = new ArrayList<CardType>();
 		type.add(CardType.ACTION);
-		Card card = new Card(act, type, "Market", 5);
+		
+		
+		Card card = new Card(CollectionsUtil.hashMapAction(act, i), type, "Market", 5);
 		System.out.println(card.toString());
 	}
 }
