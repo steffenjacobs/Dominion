@@ -1,4 +1,4 @@
-package com.tpps.application.game.logic;
+package com.tpps.application.game.card;
 
 /**
  * 
@@ -6,7 +6,7 @@ package com.tpps.application.game.logic;
  * @author nwipfler - Nicolas Wipfler
  *
  */
-public enum Action {
+public enum CardAction {
 	// @Lukas, keine Ahnung ob der auskommentierte Code so viel Sinn macht, habs mal vorläufig geändert
 	
 	COUNT_FOR_VICTORY, ADD_ACTION_TO_PLAYER, ADD_TEMPORARY_MONEY_FOR_TURN, ADD_PURCHASE, DRAW, PUT_BACK, GAIN, DISCARD, TRASH, REVEAL, NONE;

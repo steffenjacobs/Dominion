@@ -1,4 +1,4 @@
-package com.tpps.application.game.logic;
+package com.tpps.application.game.card;
 
 public final class CardLogic {
 

@@ -15,9 +15,6 @@ public class LoginServer extends Server{
 		super(new InetSocketAddress("127.0.0.1", 1338), new LoginPacketHandler(sql));
 		((LoginPacketHandler)super.getHandler()).setServer(this);
 	}
-
-	
-	
 	
 	public static void main(String[] args) {
 		try {
@@ -33,5 +30,4 @@ public class LoginServer extends Server{
 			e.printStackTrace();
 		}
 	}
-	
 }

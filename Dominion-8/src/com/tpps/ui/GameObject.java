@@ -62,7 +62,8 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public boolean overlap(GameObject go2) {
-		return PhysicsUtil.collides(new Rectangle(this.x, this.y, this.width, this.height),
+		return PhysicsUtil.collides(new Rectangle(this.x, this.y, this.width,
+				this.height),
 				new Rectangle(go2.x, go2.y, go2.width, go2.height));
 	}
 
@@ -71,24 +72,25 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public boolean overlap(Rectangle area) {
-		return PhysicsUtil.collides(area, new Rectangle(this.x, this.y, this.width, this.height));
+		return PhysicsUtil.collides(area, new Rectangle(this.x, this.y,
+				this.width, this.height));
 	}
 
-	 /**
+	/**
 	 * @return the location (x, y)
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public Point getLocation(){
+	public Point getLocation() {
 		return new Point(this.x, this.y);
 	}
 
-	 /**
+	/**
 	 * @return the dimension (width and height)
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	 public Dimension getDimension() {
-	 return new Dimension(this.width, this.height);
-	 }
+	public Dimension getDimension() {
+		return new Dimension(this.width, this.height);
+	}
 
 	/**
 	 * @return the hitbox of the game-object
@@ -152,8 +154,9 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 */
 	@Override
 	public String toString() {
-		return this.location.toString() + " - " + this.dimension.toString() + " - Layer: " + this.getLayer() + " - "
-				+ this.getParent() + " - " + this.isVisible();
+		return this.location.toString() + " - " + this.dimension.toString()
+				+ " - Layer: " + this.getLayer() + " - " + this.getParent()
+				+ " - " + this.isVisible();
 	}
 
 	/**
@@ -161,8 +164,10 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 **/
-	protected GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
-			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
+	protected GameObject(double relativeLocX, double relativeLocY,
+			double relativeWidth, double relativeHeight, int absWidth,
+			int absHeight, int _layer, Image sourceImage,
+			GraphicFramework _parent, int _id) {
 		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
 		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
 		this.originalImage = sourceImage;
@@ -172,22 +177,15 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.resizeObject(absWidth, absHeight);
 	}
 
-	public void resizeObject(int absWidth, int absHeight) {
-		this.x = this.location.getAbsoluteX(absWidth);
-		this.y = this.location.getAbsoluteY(absHeight);
-		this.width = this.dimension.getAbsoluteX(absWidth);
-		this.height = this.dimension.getAbsoluteY(absHeight);
-		this.image = GraphicsUtil.resize((BufferedImage)this.originalImage, this.width, this.height);
-		this.onResize(absWidth, absHeight);
-	}
-
 	/**
 	 * creates a game object
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
-			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent) {
+	public GameObject(double relativeLocX, double relativeLocY,
+			double relativeWidth, double relativeHeight, int absWidth,
+			int absHeight, int _layer, Image sourceImage,
+			GraphicFramework _parent) {
 		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
 		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
 		this.originalImage = sourceImage;
@@ -197,8 +195,29 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.resizeObject(absWidth, absHeight);
 	}
 
+	// TODO: remove this constructor
 	/**
-	 * resizes the new image to the relative layout, replaces the image with the newImage and udpates the framework
+	 * constructor for testing purposes
+	 * 
+	 * @author nwipfler - Nicolas Wipfler
+	 */
+	public GameObject() {
+
+	}
+
+	public void resizeObject(int absWidth, int absHeight) {
+		this.x = this.location.getAbsoluteX(absWidth);
+		this.y = this.location.getAbsoluteY(absHeight);
+		this.width = this.dimension.getAbsoluteX(absWidth);
+		this.height = this.dimension.getAbsoluteY(absHeight);
+		this.image = GraphicsUtil.resize((BufferedImage) this.originalImage,
+				this.width, this.height);
+		this.onResize(absWidth, absHeight);
+	}
+
+	/**
+	 * resizes the new image to the relative layout, replaces the image with the
+	 * newImage and udpates the framework
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
@@ -210,23 +229,26 @@ public abstract class GameObject implements Cloneable, Serializable {
 			parent.repaintSpecificArea(this.getHitbox());
 		this.resizeObject(absWidth, absHeight);
 	}
-	
+
 	/**
-	 * replaces the image with the newImage and udpates the framework without recalculating the size
+	 * replaces the image with the newImage and udpates the framework without
+	 * recalculating the size
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public void forceSetImage(Image newImage){
+	public void forceSetImage(Image newImage) {
 		this.image = newImage;
 	}
-	
+
 	/**
-	 * resizes the new image to the relative layout, replaces the image with the newImage and udpates the framework
+	 * resizes the new image to the relative layout, replaces the image with the
+	 * newImage and udpates the framework
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public void updateImage(Image newImage){
-		updateImage(newImage, GameWindow.getInstance().getWidth(), GameWindow.getInstance().getHeight());
+	public void updateImage(Image newImage) {
+		updateImage(newImage, GameWindow.getInstance().getWidth(), GameWindow
+				.getInstance().getHeight());
 	}
 
 	/**
@@ -305,13 +327,12 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public abstract void onMouseDrag();
-	
+
 	/**
 	 * is called directly when the game window is resized
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public abstract void onResize(int absWidth, int absHeight);
-	
-	
+
 }

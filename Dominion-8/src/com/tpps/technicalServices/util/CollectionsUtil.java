@@ -2,22 +2,22 @@ package com.tpps.technicalServices.util;
 
 import java.util.ArrayList;
 
-import com.tpps.application.game.logic.Action;
-import com.tpps.application.game.logic.Type;
+import com.tpps.application.game.card.CardAction;
+import com.tpps.application.game.card.CardType;
 
 public final class CollectionsUtil {
 
-	public static ArrayList<Action> arrayListAction(Action... actions) {
-		ArrayList<Action> resultList = new ArrayList<Action>();
-		for (Action action : actions) {
+	public static ArrayList<CardAction> arrayListAction(CardAction... actions) {
+		ArrayList<CardAction> resultList = new ArrayList<CardAction>();
+		for (CardAction action : actions) {
 			resultList.add(action);
 		}
 		return resultList;
 	}
 
-	public static ArrayList<Type> arrayListType(Type... types) {
-		ArrayList<Type> resultList = new ArrayList<Type>();
-		for (Type type : types) {
+	public static ArrayList<CardType> arrayListType(CardType... types) {
+		ArrayList<CardType> resultList = new ArrayList<CardType>();
+		for (CardType type : types) {
 			resultList.add(type);
 		}
 		return resultList;

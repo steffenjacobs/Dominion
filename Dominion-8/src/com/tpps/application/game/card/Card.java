@@ -1,11 +1,8 @@
-package com.tpps.application.game.logic;
+package com.tpps.application.game.card;
 
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JFrame;
 
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -16,11 +13,11 @@ import com.tpps.ui.GraphicFramework;
  * @author nwipfler - Nicolas Wipfler
  */
 
-public class CardObject extends GameObject {
+public class Card extends GameObject {
 
 	private static final long serialVersionUID = 1L;
-	private final List<Action> actions;
-	private final List<Type> types;
+	private final List<CardAction> actions;
+	private final List<CardType> types;
 	private final int cost;
 	private final String name;
 
@@ -28,7 +25,7 @@ public class CardObject extends GameObject {
 	 * sets the actions array containing the actions which the cardObject will
 	 * execute
 	 */
-	public CardObject(List<Action> actions, List<Type> types, String name,
+	public Card(List<CardAction> actions, List<CardType> types, String name,
 			int cost, double relativeLocX, double relativeLocY,
 			double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage,
@@ -39,6 +36,31 @@ public class CardObject extends GameObject {
 		this.actions = actions;
 		this.cost = cost;
 		this.types = types;
+	}
+
+	/** dummy constructor for testing of deck class */
+	public Card(List<CardAction> actions, List<CardType> types, String name,
+			int cost) {
+		this.actions = actions;
+		this.types = types;
+		this.name = name;
+		this.cost = cost;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public int getCost() {
+		return this.cost;
+	}
+
+	public List<CardAction> getActions() {
+		return actions;
+	}
+
+	public List<CardType> getTypes() {
+		return types;
 	}
 
 	/**
@@ -75,6 +97,15 @@ public class CardObject extends GameObject {
 				// call
 				break;
 			case REVEAL:
+				// call
+				break;
+			case NONE:
+				// call
+				break;
+			case COUNT_FOR_VICTORY:
+				// call
+				break;
+			default:
 				// call
 				break;
 			}
@@ -121,17 +152,14 @@ public class CardObject extends GameObject {
 	 */
 	public String toString() {
 		StringBuffer sBuf = new StringBuffer();
-		sBuf.append("CardObject: " + "'" + this.name + "'"/*
-														 * \nsuper.toString():\n-
-														 * " + super.toString()
-														 */);
+		sBuf.append("CardObject: " + "'" + this.name + "'" /* + "\nsuper.toString():\n-" + super.toString()*/);
 		sBuf.append("\nCost: " + this.cost);
 		sBuf.append("\nAction(s):");
-		for (Action act : actions) {
+		for (CardAction act : actions) {
 			sBuf.append("\n- " + act.toString());
 		}
 		sBuf.append("\nType(s):");
-		for (Type type : types) {
+		for (CardType type : types) {
 			sBuf.append("\n- " + type.toString());
 		}
 		return sBuf.toString();
@@ -141,27 +169,14 @@ public class CardObject extends GameObject {
 	 * main method with test case for cardObject
 	 */
 	public static void main(String[] args) {
-		List<Action> act = new ArrayList<Action>();
-		act.add(Action.ADD_ACTION_TO_PLAYER);
-		act.add(Action.ADD_PURCHASE);
-		act.add(Action.ADD_TEMPORARY_MONEY_FOR_TURN);
-		act.add(Action.DRAW);
-		List<Type> type = new ArrayList<Type>();
-		type.add(Type.ACTION);
-		CardObject card = new CardObject(act, type, "Market", 5, 300, 300, 300,
-				300, 300, 300, 1, new BufferedImage(1, 1, 2),
-				new GraphicFramework(new JFrame("Hallo")), 10);
+		List<CardAction> act = new ArrayList<CardAction>();
+		act.add(CardAction.ADD_ACTION_TO_PLAYER);
+		act.add(CardAction.ADD_PURCHASE);
+		act.add(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
+		act.add(CardAction.DRAW);
+		List<CardType> type = new ArrayList<CardType>();
+		type.add(CardType.ACTION);
+		Card card = new Card(act, type, "Market", 5);
 		System.out.println(card.toString());
-	}
-
-	/** dummy constructor for testing of deck class */
-	public CardObject(List<Action> actions, List<Type> types, String name,
-			int cost) {
-		super(300, 300, 300, 300, 300, 300, 1, new BufferedImage(1, 1, 2),
-				new GraphicFramework(new JFrame("Hallo")), 10);
-		this.actions = actions;
-		this.types = types;
-		this.name = name;
-		this.cost = cost;
 	}
 }
