@@ -1,7 +1,7 @@
 package com.tpps.application.game.logic;
 
 /**
- * specify card type
+ * enumeration of all different card types
  * 
  * @author nwipfler - Nicolas Wipfler
  */
