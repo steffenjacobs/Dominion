@@ -12,6 +12,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -96,13 +97,12 @@ public class CreateAccount extends JFrame {
 		try {
 			customFont = Font
 					.createFont(Font.TRUETYPE_FONT,
-							new File(System.getProperty("user.dir"), "src/resources/font/xenippa1.TTF"))
-					.deriveFont(25f);
+							new File(URLDecoder.decode(ClassLoader.getSystemResource("resources/font/xenippa1.TTF").getFile(),"UTF-8")));
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			// ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new
 			// File("src/resources/font/xenippa1.TTF")));
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
-					new File(System.getProperty("user.dir"), "src/resources/font/xenippa1.TTF")));
+					new File(URLDecoder.decode(ClassLoader.getSystemResource("resources/font/xenippa1.TTF").getFile(),"UTF-8"))));
 		} catch (Exception e) {
 			System.err.println(e);
 		}
@@ -126,7 +126,7 @@ public class CreateAccount extends JFrame {
 	private void createpanel1() {
 		header = new JLabel();
 		header.setText("Create Account");
-		header.setFont(customFont);
+		header.setFont(customFont.deriveFont(25f));
 		header.setForeground(Color.WHITE);
 
 		panels[0].add(header);
