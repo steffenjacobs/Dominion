@@ -3,6 +3,7 @@ package com.tpps.ui;
 import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -10,6 +11,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+
+import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.components.MainMenuButton;
 
 /**
@@ -21,9 +24,10 @@ public class MainMenuPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private final float INITIALIZE_ALPHA;
-	private BufferedImage background;
+	private BufferedImage originalBackground, actualBackground;
+	
 	private float[] alpha;
-	private MainMenuButton[] buttons;
+	private MainMenuButton[] buttons;	
 	private final MainMenu parent;
 
 	/**
@@ -46,40 +50,19 @@ public class MainMenuPanel extends JPanel {
 	 * @param parent
 	 */
 	private void createButtons(MainMenu parent) {
-		try {
-			BufferedImage[] images = loadButtonImages();
-
+	
 			buttons = new MainMenuButton[4];
-
-			buttons[0] = new MainMenuButton((parent.getWidth() / 2)
-					- (images[0].getWidth(null) / 2), parent.getHeight() / 6, images[0],
-					"Single Player");
-			buttons[1] = new MainMenuButton((parent.getWidth() / 2)
-					- (images[1].getWidth(null) / 2), (parent.getHeight() / 6) * 2,
-					images[1], "Multi Player");
-			buttons[2] = new MainMenuButton((parent.getWidth() / 2)
-					- (images[2].getWidth(null) / 2), (parent.getHeight() / 6) * 3,
-					images[2], "Settings");
-			buttons[3] = new MainMenuButton((parent.getWidth() / 2)
-					- (images[3].getWidth(null) / 2), (parent.getHeight() / 6) * 4,
-					images[3], "Community");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * @return the BackgroundImages of the Buttons 
-	 * @throws IOException
-	 */
-	private BufferedImage[] loadButtonImages() throws IOException {
-		BufferedImage[] images = new BufferedImage[4];
-		for (int i = 0; i < images.length; i++) {
-			images[i] = ImageIO
-					.read(ClassLoader
-							.getSystemResource("resources/img/gameObjects/testButton.png"));
-		}
-		return images;
+			String[] names = new String[]{"Single Player", "Multi Player", "Settins", "Community"};
+			try {
+				for (int i = 0; i < buttons.length; i++) {
+					buttons[i] = new MainMenuButton((parent.getWidth() / 2), parent.getHeight() / 6 * (i + 1),
+							names[i]);
+				}				
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 	
 	/**
@@ -87,8 +70,12 @@ public class MainMenuPanel extends JPanel {
 	 */
 	private void loadBackgroundImage() {
 		try {
-			this.background = ImageIO.read(ClassLoader
+			this.originalBackground = ImageIO.read(ClassLoader
 					.getSystemResource("resources/img/mainMenu/Dominion.jpg"));
+			
+			int newWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+			int newHeight = Toolkit.getDefaultToolkit().getScreenSize().height;			
+			this.actualBackground = GraphicsUtil.resize(this.originalBackground, newWidth, newHeight);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -134,6 +121,15 @@ public class MainMenuPanel extends JPanel {
 		this.addMouseListener(m);
 		this.addMouseMotionListener(m);
 	}
+	
+	protected void onResize(double sizeFactorWidth, double sizeFactorHeight){
+		this.actualBackground = GraphicsUtil.resize((BufferedImage) this.originalBackground,
+				this.parent.getWidth(), this.parent.getHeight());
+		for (int i = 0; i < buttons.length; i++) {
+			buttons[i].onResize((parent.getWidth() / 2)
+					- (buttons[i].getActualImage().getWidth(null) / 2), (parent.getHeight() / 6) * (i + 1), sizeFactorWidth, sizeFactorHeight);
+		}
+	}
 
 	/**
 	 * inner class for listening mouseEvents
@@ -172,13 +168,13 @@ public class MainMenuPanel extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 
-		g.drawImage(background, 0, 0, null);
+		g.drawImage(actualBackground, 0, 0, null);
 		Graphics2D g2 = (Graphics2D) g;
 
 		for (int i = 0; i < alpha.length; i++) {
 			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha[i]);
 			g2.setComposite(ac);
-			g2.drawImage(buttons[i].getSourceImage(), buttons[i].getX(), buttons[i].getY(), null);
+			g2.drawImage(buttons[i].getActualImage(), buttons[i].getX(), buttons[i].getY(), null);
 		}
 	}
 }
