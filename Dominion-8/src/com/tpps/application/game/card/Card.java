@@ -2,7 +2,9 @@ package com.tpps.application.game.card;
 
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -16,7 +18,7 @@ import com.tpps.ui.GraphicFramework;
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = 1L;
-	private final List<CardAction> actions;
+	private final Map<CardAction, Integer> actions;
 	private final List<CardType> types;
 	private final int cost;
 	private final String name;
@@ -25,13 +27,11 @@ public class Card extends GameObject {
 	 * sets the actions array containing the actions which the cardObject will
 	 * execute
 	 */
-	public Card(List<CardAction> actions, List<CardType> types, String name,
-			int cost, double relativeLocX, double relativeLocY,
-			double relativeWidth, double relativeHeight, int absWidth,
-			int absHeight, int _layer, Image sourceImage,
-			GraphicFramework _parent, int _id) {
-		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight,
-				absWidth, absHeight, _layer, sourceImage, _parent, _id);
+	public Card(Map<CardAction, Integer> actions, List<CardType> types, String name, int cost, double relativeLocX,
+			double relativeLocY, double relativeWidth, double relativeHeight, int absWidth, int absHeight, int _layer,
+			Image sourceImage, GraphicFramework _parent, int _id) {
+		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage,
+				_parent, _id);
 		this.name = name;
 		this.actions = actions;
 		this.cost = cost;
@@ -39,8 +39,7 @@ public class Card extends GameObject {
 	}
 
 	/** dummy constructor for testing of deck class */
-	public Card(List<CardAction> actions, List<CardType> types, String name,
-			int cost) {
+	public Card(Map<CardAction, Integer> actions, List<CardType> types, String name, int cost) {
 		this.actions = actions;
 		this.types = types;
 		this.name = name;
@@ -55,63 +54,14 @@ public class Card extends GameObject {
 		return this.cost;
 	}
 
-	public List<CardAction> getActions() {
+	public Map<CardAction, Integer> getActions() {
 		return actions;
 	}
 
 	public List<CardType> getTypes() {
 		return types;
 	}
-
-	/**
-	 * calls the static method which executes the actions
-	 * 
-	 * @author ladler - Lukas Adler
-	 */
-	public void doAction() {
-
-		for (int i = 0; i < actions.size(); i++) {
-			switch (actions.get(i)) {
-			case ADD_ACTION_TO_PLAYER:
-				// call
-				break;
-			case ADD_PURCHASE:
-				// call
-				break;
-			case ADD_TEMPORARY_MONEY_FOR_TURN:
-				// call
-				break;
-			case DRAW:
-				// call
-				break;
-			case GAIN:
-				// call
-				break;
-			case DISCARD:
-				// call
-				break;
-			case TRASH:
-				// call
-				break;
-			case PUT_BACK:
-				// call
-				break;
-			case REVEAL:
-				// call
-				break;
-			case NONE:
-				// call
-				break;
-			case COUNT_FOR_VICTORY:
-				// call
-				break;
-			default:
-				// call
-				break;
-			}
-		}
-	}
-
+	
 	@Override
 	public GameObject clone() {
 		// TODO Auto-generated method stub
@@ -152,10 +102,11 @@ public class Card extends GameObject {
 	 */
 	public String toString() {
 		StringBuffer sBuf = new StringBuffer();
-		sBuf.append("CardObject: " + "'" + this.name + "'" /* + "\nsuper.toString():\n-" + super.toString()*/);
+		sBuf.append("CardObject: " + "'" + this.name
+				+ "'" /* + "\nsuper.toString():\n-" + super.toString() */);
 		sBuf.append("\nCost: " + this.cost);
 		sBuf.append("\nAction(s):");
-		for (CardAction act : actions) {
+		for (CardAction act : actions.keySet()) {
 			sBuf.append("\n- " + act.toString());
 		}
 		sBuf.append("\nType(s):");
@@ -169,11 +120,11 @@ public class Card extends GameObject {
 	 * main method with test case for cardObject
 	 */
 	public static void main(String[] args) {
-		List<CardAction> act = new ArrayList<CardAction>();
-		act.add(CardAction.ADD_ACTION_TO_PLAYER);
-		act.add(CardAction.ADD_PURCHASE);
-		act.add(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
-		act.add(CardAction.DRAW);
+		Map<CardAction, Integer> act = new HashMap<CardAction, Integer>();
+		act.put(CardAction.ADD_ACTION_TO_PLAYER, 1);
+		act.put(CardAction.ADD_PURCHASE, 1);
+		act.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, 1);
+		act.put(CardAction.DRAW, 1);
 		List<CardType> type = new ArrayList<CardType>();
 		type.add(CardType.ACTION);
 		Card card = new Card(act, type, "Market", 5);

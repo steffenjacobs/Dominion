@@ -5,35 +5,30 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 
 /**
  * @author nwipfler - Nicolas Wipfler
- * */
+ */
 
 public class Deck {
 
 	// - Every player has a deck
 	// - Deck has two Lists with CardObjects: drawPile and discardPile
 	// - Deck provides functionality to manage the deck and shuffle cards etc.
-	
+
 	private int deckSize;
 	private List<Card> drawPile;
 	private List<Card> discardPile;
 
 	// TODO: remove estate and copper (only for testing purposes)
-	// TODO: replace Action.COUNT_FOR_VICTORY with null or create another constructor? Same with Action.NONE
-	// for copper
-	private final Card estate = new Card(
-			CollectionsUtil.arrayListAction(CardAction.COUNT_FOR_VICTORY),
-			CollectionsUtil.arrayListType(CardType.VICTORY), "Estate", 2);
-	private final Card copper = new Card(
-			CollectionsUtil.arrayListAction(CardAction.NONE),
-			CollectionsUtil.arrayListType(CardType.COPPER), "Copper", 0);
-	
+	// TODO: replace Action.COUNT_FOR_VICTORY with null or create another
+	// constructor? Same with Action.NONE for copper
+	private final Card estate = new Card(null, CollectionsUtil.arrayListType(CardType.VICTORY), "Estate", 2);
+	private final Card copper = new Card(null, CollectionsUtil.arrayListType(CardType.COPPER), "Copper", 0);
+
 	public int getDeckSize() {
 		return deckSize;
 	}
