@@ -24,6 +24,9 @@ public class Player {
 		this.deck = deck;
 	}
 
+	/**
+	 * Test
+	 * */
 	public static void main(String[] args) {
 		Player p = new Player();
 		System.out.println(p.deck.toString());
@@ -31,7 +34,7 @@ public class Player {
 		Card silver = new Card(
 				CollectionsUtil.arrayListAction(CardAction.NONE),
 				CollectionsUtil.arrayListType(CardType.SILVER), "Silver", 0);
-		p.deck.addToDiscard(silver);
+		p.deck.addCardToDiscard(silver);
 		System.out.println("\n" + p.deck.toString());
 		p.deck.shuffle();
 		System.out.println("\n" + p.deck.toString());

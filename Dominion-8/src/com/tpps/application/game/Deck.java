@@ -73,8 +73,8 @@ public class Deck {
 
 	protected void init() {
 		if (drawPile != null) {
-			addToDraw(estate, 3);
-			addToDraw(copper, 7);
+			addCardToDraw(estate, 3);
+			addCardToDraw(copper, 7);
 			shuffle();
 		}
 	}
@@ -88,28 +88,28 @@ public class Deck {
 		this.drawPile = cards;
 	}
 
-	public boolean addToDraw(Card card) {
+	public boolean addCardToDraw(Card card) {
 		this.deckSize++;
 		return this.drawPile.add(card);
 	}
 
-	public boolean addToDraw(Card card, int amount) {
+	public boolean addCardToDraw(Card card, int amount) {
 		boolean flag = true;
 		for (int i = 0; i < amount; i++) {
-			flag &= addToDraw(card);
+			flag &= addCardToDraw(card);
 		}
 		return flag;
 	}
 
-	public boolean addToDiscard(Card card) {
+	public boolean addCardToDiscard(Card card) {
 		this.deckSize++;
 		return this.discardPile.add(card);
 	}
 
-	public boolean addToDiscard(Card card, int amount) {
+	public boolean addCardToDiscard(Card card, int amount) {
 		boolean flag = true;
 		for (int i = 0; i < amount; i++) {
-			flag &= addToDiscard(card);
+			flag &= addCardToDiscard(card);
 		}
 		return flag;
 	}
