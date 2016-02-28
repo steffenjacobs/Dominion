@@ -23,24 +23,16 @@ public class MainMenuButton {
 	private final String name;
 	private int letterSize;
 
-	public MainMenuButton(int locX, int locY, String name) throws IOException{
+	public MainMenuButton(int locX, int locY, String name) throws IOException {
 		this.letterSize = 100;
-		this.originalImage = ImageIO
-				.read(ClassLoader
-						.getSystemResource("resources/img/gameObjects/testButton.png"));
-	
-		
-		
-		int newWidth = (int)(Toolkit.getDefaultToolkit().getScreenSize().width / 2.35);
-		int newHeight = (int)(Toolkit.getDefaultToolkit().getScreenSize().height / 6);
-		this.name = name;	
+		this.originalImage = ImageIO.read(ClassLoader.getSystemResource("resources/img/gameObjects/testButton.png"));
+		int newWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().width / 2.35);
+		int newHeight = (int) (Toolkit.getDefaultToolkit().getScreenSize().height / 6);
+		this.name = name;
 		labelImages();
 		this.actualImage = GraphicsUtil.resize(this.originalImage, newWidth, newHeight);
 		this.x = locX - (actualImage.getWidth() / 2);
 		this.y = locY;
-		
-		
-		
 	}
 
 	private void labelImages() {
@@ -49,20 +41,20 @@ public class MainMenuButton {
 		g.setFont(new Font("Comic Sans MS", Font.PLAIN, letterSize));
 
 		g.setColor(Color.BLACK);
-		g.drawString(this.name,
-				(originalImage.getWidth() / 2) - this.name.length() * 22,
+		g.drawString(this.name, (originalImage.getWidth() / 2) - this.name.length() * 22,
 				(int) (originalImage.getHeight() / 1.4));
-
 	}
 
 	/**
-	 * @param x value of the mouse
-	 * @param y value of the mouse
+	 * @param x
+	 *            value of the mouse
+	 * @param y
+	 *            value of the mouse
 	 * @return true if the mouse is on the button false else
 	 */
 	public boolean isOn(double x, double y) {
-		if (this.x <= x && x <= this.actualImage.getWidth() + this.x
-				&& this.y <= y && y <= this.actualImage.getHeight() + this.y) {
+		if (this.x <= x && x <= this.actualImage.getWidth() + this.x && this.y <= y
+				&& y <= this.actualImage.getHeight() + this.y) {
 			return true;
 		} else {
 			return false;
@@ -80,19 +72,18 @@ public class MainMenuButton {
 	public void onMouseClick() {
 		System.out.println("Clicked @" + this.toString());
 	}
-	
-	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight){
+
+	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight) {
 		this.x = x;
 		this.y = y;
 		System.out.println(sizeFactorHeight);
 		System.out.println(sizeFactorWidth);
 		this.actualImage = GraphicsUtil.resize((BufferedImage) this.originalImage,
-				(int)(this.actualImage.getWidth() * sizeFactorWidth), 
-				(int)(this.actualImage.getHeight() * sizeFactorHeight));
-		
+				(int) (this.actualImage.getWidth() * sizeFactorWidth),
+				(int) (this.actualImage.getHeight() * sizeFactorHeight));
 	}
-	
-	public BufferedImage getActualImage(){
+
+	public BufferedImage getActualImage() {
 		return this.actualImage;
 	}
 
