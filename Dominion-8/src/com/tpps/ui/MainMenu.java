@@ -20,7 +20,7 @@ public class MainMenu extends JFrame {
 	private MainMenuButton[] buttons;
 	private int width, height;
 	private float[] alpha;
-	private Panel panel;
+	private MainMenuPanel panel;
 	private final float INITIALIZE_ALPHA;
 
 	public MainMenu() {
@@ -62,7 +62,7 @@ public class MainMenu extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		this.panel = new Panel(this.background, this.alpha, this.buttons);
+		this.panel = new MainMenuPanel(this.background, this.alpha, this.buttons);
 		c.add(panel);
 		this.panel.repaint();
 	}

@@ -7,14 +7,14 @@ import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import com.tpps.ui.components.MainMenuButton;
 
-public class Panel extends JPanel{
+public class MainMenuPanel extends JPanel{
 	
 	private static final long serialVersionUID = 1L;
 	private BufferedImage background;
 	private float[] alpha;
 	private MainMenuButton[] buttons;	
 	
-	public Panel(BufferedImage background, float[] alpha, MainMenuButton[] buttons) {
+	public MainMenuPanel(BufferedImage background, float[] alpha, MainMenuButton[] buttons) {
 		 
 		this.background = background;
 		this.buttons = buttons;
