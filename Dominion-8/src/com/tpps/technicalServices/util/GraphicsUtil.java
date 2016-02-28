@@ -9,7 +9,6 @@ import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
-import com.sun.javafx.iio.ImageStorage.ImageType;
 
 /**
  * provides some useful methods for manipulating graphic objects
@@ -100,7 +99,7 @@ public final class GraphicsUtil {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public static BufferedImage resize(BufferedImage buffImg, int newWidth, int newHeight) {
-		BufferedImage result = new BufferedImage(newWidth, newHeight, ImageType.RGBA.ordinal());
+		BufferedImage result = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
 		result.createGraphics();
 		result.getGraphics().drawImage(buffImg, 0, 0, newWidth, newHeight, null);
 		return result;

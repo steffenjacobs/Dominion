@@ -159,7 +159,7 @@ public class Card extends GameObject {
 		ArrayList<CardAction> actionsList = new ArrayList<CardAction>(actions.keySet()); 
 		ArrayList<Integer> ints = new ArrayList<Integer>(actions.values());
 		for (int i = 0; i < actions.size(); i++) {
-			sBuf.append("\n- " + actionsList.get(i).toString() + " amount: " + ints.get(i));
+			sBuf.append("\n- " + actionsList.get(i).toString() + "amount: " + ints.get(i));
 		}
 		sBuf.append("\nType(s):");
 		for (CardType type : types) {

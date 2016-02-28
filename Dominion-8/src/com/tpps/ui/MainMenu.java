@@ -10,11 +10,10 @@ public class MainMenu extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private final Container c;
-	private int width, height;	
+	private int width, height;
 	private MainMenuPanel panel;
-	
+
 	public MainMenu() {
-		
 		this.c = this.getContentPane();
 		this.width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		this.height = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -24,23 +23,21 @@ public class MainMenu extends JFrame {
 		c.add(panel);
 		this.panel.repaint();
 		this.addComponentListener(new MyComponentAdapter());
-	}	
-	
-	
-	private class MyComponentAdapter extends ComponentAdapter{
-		
+	}
+
+	private class MyComponentAdapter extends ComponentAdapter {
+
 		@Override
 		public void componentResized(ComponentEvent e) {
 			super.componentResized(e);
-			
+
 			MainMenu.this.width = MainMenu.this.panel.getWidth();
 			MainMenu.this.height = MainMenu.this.panel.getHeight();
-			
+
 			int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 			int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-			
-			
-			panel.onResize(width / Double.parseDouble(Integer.toString(maxWidth)), 
+
+			panel.onResize(width / Double.parseDouble(Integer.toString(maxWidth)),
 					height / Double.parseDouble(Integer.toString(maxHeight)));
 		}
 	}
@@ -63,5 +60,4 @@ public class MainMenu extends JFrame {
 		MainMenu menu = new MainMenu();
 		menu.setVisible(true);
 	}
-
 }
