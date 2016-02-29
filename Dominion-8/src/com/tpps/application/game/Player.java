@@ -1,7 +1,7 @@
 package com.tpps.application.game;
 
 import com.tpps.application.game.card.CardAction;
-import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.ServerCard;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 
@@ -31,7 +31,7 @@ public class Player {
 		Player p = new Player();
 		System.out.println(p.deck.toString());
 		p.deck.shuffle();
-		Card silver = new Card(CollectionsUtil.linkedHashMapAction(
+		ServerCard silver = new ServerCard(CollectionsUtil.linkedHashMapAction(
 				CollectionsUtil.arrayList(CardAction.NONE), CollectionsUtil.arrayList(2)),
 				CollectionsUtil.arrayList(CardType.SILVER), "Silver", 0);
 		p.deck.addCardToDiscard(silver);
