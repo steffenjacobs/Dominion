@@ -43,6 +43,8 @@ public class LoginPacketHandler extends PacketHandler{
 		case LOGIN_CHECK_REQUEST: //check username, if valid genereate SESSION ID
 			PacketLoginCheckRequest pac = (PacketLoginCheckRequest) packet;
 			String salt = sql.getSaltForLogin(pac.getUsername());
+
+			System.out.println("salt aus db: " + salt);
 			try {
 				Password pw = new Password(pac.getHashedPW(), salt.getBytes());
 				pw.createHashedPassword();
