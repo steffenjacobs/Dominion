@@ -97,7 +97,7 @@ public class Server {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	private void asyncAcceptor() {
-		this.getHandler().output("Session-Server started on " + ipAddress + ":" + port);
+		this.getHandler().output("Starting Server on " + ipAddress + ":" + port);
 		while (!Thread.interrupted()) {
 			try {
 				Socket client = serverSocket.accept();
