@@ -12,7 +12,11 @@ import com.tpps.application.game.card.CardAction;
  */
 public final class CollectionsUtil {
 
-	public static LinkedHashMap<CardAction, Integer> hashMapAction(
+	/**
+	 * @param
+	 * @return creates a sorted hashmap (LinkedHashMap) from the given parameters
+	 * */
+	public static LinkedHashMap<CardAction, Integer> linkedHashMapAction(
 			ArrayList<CardAction> actions, ArrayList<Integer> numbers) {
 		if (actions.size() == numbers.size()) {
 			LinkedHashMap<CardAction, Integer> hashMap = new LinkedHashMap<CardAction, Integer>();
