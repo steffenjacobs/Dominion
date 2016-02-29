@@ -31,7 +31,7 @@ public class MainMenuButton {
 		this.name = name;
 		labelImages();
 		this.actualImage = GraphicsUtil.resize(this.originalImage, newWidth, newHeight);
-		this.x = locX - (actualImage.getWidth() / 2);
+		this.x = locX - (newWidth / 2);
 		this.y = locY;
 	}
 

@@ -2,7 +2,6 @@ package com.tpps.application.game.card;
 
 import java.awt.Image;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -20,7 +19,7 @@ import com.tpps.ui.GraphicFramework;
 public class ClientCard extends GameObject {
 
 	private static final long serialVersionUID = 1L;
-	private final LinkedHashMap<CardAction, Integer> actions;
+//	private final LinkedHashMap<CardAction, Integer> actions;
 	private final List<CardType> types;
 	private final int cost;
 	private final String name;
@@ -38,7 +37,7 @@ public class ClientCard extends GameObject {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight,
 				absWidth, absHeight, _layer, sourceImage, _parent, _id);
 		this.name = name;
-		this.actions = actions;
+//		this.actions = actions;
 		this.cost = cost;
 		this.types = types;
 	}
@@ -46,7 +45,7 @@ public class ClientCard extends GameObject {
 	/** dummy constructor for testing of deck class */
 	public ClientCard(LinkedHashMap<CardAction, Integer> actions, List<CardType> types,
 			String name, int cost) {
-		this.actions = actions;
+//		this.actions = actions;
 		this.types = types;
 		this.name = name;
 		this.cost = cost;
@@ -60,9 +59,9 @@ public class ClientCard extends GameObject {
 		return this.cost;
 	}
 
-	public HashMap<CardAction, Integer> getActions() {
-		return actions;
-	}
+//	public HashMap<CardAction, Integer> getActions() {
+//		return actions;
+//	}
 
 	public List<CardType> getTypes() {
 		return types;
@@ -89,7 +88,7 @@ public class ClientCard extends GameObject {
 
 	@Override
 	public void onMouseClick() {
-		
+//		sendPackageToServer(CardPlayed)
 	}
 
 	@Override
@@ -109,13 +108,13 @@ public class ClientCard extends GameObject {
 	public String toString() {
 		StringBuffer sBuf = new StringBuffer();
 		sBuf.append("Card: " + "'" + this.name + "'\nActions: <");
-		Iterator<CardAction> actionsIt = actions.keySet().iterator();
-		Iterator<Integer> intsIt = actions.values().iterator();
-		while(actionsIt.hasNext() && intsIt.hasNext()) {
-			sBuf.append("<" + actionsIt.next().toString() + ": " + intsIt.next() + ">");
-			if (actionsIt.hasNext() && intsIt.hasNext()) 
-				sBuf.append(" ");
-		}
+//		Iterator<CardAction> actionsIt = actions.keySet().iterator();
+//		Iterator<Integer> intsIt = actions.values().iterator();
+//		while(actionsIt.hasNext() && intsIt.hasNext()) {
+//			sBuf.append("<" + actionsIt.next().toString() + ": " + intsIt.next() + ">");
+//			if (actionsIt.hasNext() && intsIt.hasNext()) 
+//				sBuf.append(" ");
+//		}
 		Iterator<CardType> typesIt = types.iterator();
 		sBuf.append(">\nTypes: <");
 		while (typesIt.hasNext()) {

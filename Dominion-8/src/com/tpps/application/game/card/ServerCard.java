@@ -17,9 +17,8 @@ import com.tpps.ui.GraphicFramework;
  * @author nwipfler - Nicolas Wipfler
  */
 
-public class ServerCard extends GameObject {
+public class ServerCard {
 
-	private static final long serialVersionUID = 1L;
 	private final LinkedHashMap<CardAction, Integer> actions;
 	private final List<CardType> types;
 	private final int cost;
@@ -35,8 +34,7 @@ public class ServerCard extends GameObject {
 			int absHeight, int _layer, Image sourceImage,
 			GraphicFramework _parent, int _id) {
 		
-		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight,
-				absWidth, absHeight, _layer, sourceImage, _parent, _id);
+		
 		this.name = name;
 		this.actions = actions;
 		this.cost = cost;
@@ -133,34 +131,7 @@ public class ServerCard extends GameObject {
 		return null;
 	}
 
-	@Override
-	public void onMouseEnter() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onMouseExit() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onMouseClick() {
-		doAction();
-	}
-
-	@Override
-	public void onMouseDrag() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onResize(int absWidth, int absHeight) {
-		// TODO Auto-generated method stub
-	}
-
+	
 	/**
 	 * @override toString()
 	 */
