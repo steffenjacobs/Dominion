@@ -52,8 +52,8 @@ public final class SessionPacketSenderAPI {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public static void sendGetRequest(Client c, String username, SuperCallable<PacketSessionGetAnswer> callable) {
-		sendPacket(c, new PacketSessionGetRequest( username));
 		SessionPacketReceiverAPI.addGetRequest(username, callable);
+		sendPacket(c, new PacketSessionGetRequest( username));
 	}
 
 	/**
@@ -64,8 +64,8 @@ public final class SessionPacketSenderAPI {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public static void sendCheckRequest(Client c, String username, UUID sessionID, SuperCallable<PacketSessionCheckAnswer> callable) {
-		sendPacket(c, new PacketSessionCheckRequest(username, sessionID));
 		SessionPacketReceiverAPI.addCheckRequest(username, callable);
+		sendPacket(c, new PacketSessionCheckRequest(username, sessionID));
 	}
 
 	/**

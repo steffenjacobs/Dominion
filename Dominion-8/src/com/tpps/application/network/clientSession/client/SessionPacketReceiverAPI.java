@@ -39,6 +39,7 @@ public final class SessionPacketReceiverAPI {
 	 */
 	public static void onPacketSessionGetAnswer(PacketSessionGetAnswer packet) {
 		SuperCallable<PacketSessionGetAnswer> toCall = getRequests.get(packet.getRequest().getUsername());
+		System.out.println("call: " + toCall);
 		try {
 			if (toCall != null)
 				toCall.call(packet);
