@@ -74,7 +74,7 @@ public class Card extends GameObject {
 		for (int i = 0; i < actionsList.size(); i++) {
 			switch (actionsList.get(i)) {
 			case ADD_ACTION_TO_PLAYER:
-				System.out.println("ADD_ACTION_TO_PLAYER: " + actions.get(CardAction.ADD_ACTION_TO_PLAYER));
+				System.out.println("ADD:ACTION_TO_PLAYER: " + actions.get(CardAction.ADD_ACTION_TO_PLAYER));
 				break;
 			case ADD_PURCHASE:
 				System.out.println("Add_purchase: " + actions.get(CardAction.ADD_PURCHASE));
