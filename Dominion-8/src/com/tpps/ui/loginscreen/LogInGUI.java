@@ -106,12 +106,11 @@ public class LogInGUI extends JFrame {
 	// not working why? Path checking!!
 	private void importFont() {
 
-		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT,
-					new File(URLDecoder.decode(ClassLoader.getSystemResource("resources/font/xenippa1.TTF").getFile(),"UTF-8")));
+		try {		
+			customFont = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF"));
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
-					new File(URLDecoder.decode(ClassLoader.getSystemResource("resources/font/xenippa1.TTF").getFile(),"UTF-8"))));
+					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF")));
 		} catch (Exception e) {
 			System.err.println(e);
 		}
