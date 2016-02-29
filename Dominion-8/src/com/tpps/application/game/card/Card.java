@@ -34,6 +34,7 @@ public class Card extends GameObject {
 			double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage,
 			GraphicFramework _parent, int _id) {
+		
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight,
 				absWidth, absHeight, _layer, sourceImage, _parent, _id);
 		this.name = name;

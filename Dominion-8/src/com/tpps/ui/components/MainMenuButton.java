@@ -77,8 +77,8 @@ public class MainMenuButton {
 		this.x = x;
 		this.y = y;		
 		this.actualImage = GraphicsUtil.resize((BufferedImage) this.originalImage,
-				(int) (this.actualImage.getWidth() * sizeFactorWidth),
-				(int) (this.actualImage.getHeight() * sizeFactorHeight));
+				(int) (this.originalImage.getWidth() * sizeFactorWidth),
+				(int) (this.originalImage.getHeight() * sizeFactorHeight));
 	}
 
 	public BufferedImage getActualImage() {
