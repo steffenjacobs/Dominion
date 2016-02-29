@@ -26,7 +26,7 @@ public final class SessionPacketReceiverAPI {
 		SuperCallable<PacketSessionCheckAnswer> toCall = checkRequests.get(packet.getRequest().getUsername());
 		try {
 			if (toCall != null)
-				toCall.call(packet);
+				toCall.callMeMaybe(packet);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -42,7 +42,7 @@ public final class SessionPacketReceiverAPI {
 		System.out.println("call: " + toCall);
 		try {
 			if (toCall != null)
-				toCall.call(packet);
+				toCall.callMeMaybe(packet);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

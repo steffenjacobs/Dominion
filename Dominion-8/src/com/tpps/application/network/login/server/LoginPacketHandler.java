@@ -2,6 +2,7 @@ package com.tpps.application.network.login.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
 import com.tpps.application.network.clientSession.client.SuperSessionClient;
@@ -22,6 +23,7 @@ public class LoginPacketHandler extends PacketHandler{
 	SQLOperations sql;
 	LoginServer server;
 	SuperSessionClient sessionclient;
+	private ConcurrentHashMap<String, Integer> waitingForSessionAnswer = new ConcurrentHashMap<>();
 	
 	public LoginPacketHandler(SQLOperations sql) {
 		this.sql = sql;
@@ -35,29 +37,24 @@ public class LoginPacketHandler extends PacketHandler{
 	@Override
 	public void handleReceivedPacket(int port, byte[] bytes) {
 		// TODO Auto-generated method stub
-		System.out.println("PORT: " + port);
 		final Packet packet = PacketType.getPacket(bytes);
 		System.out.println("Server received packet: " + packet);
 		switch(packet.getType()){
 		case LOGIN_CHECK_REQUEST: //check username, if valid genereate SESSION ID
 			PacketLoginCheckRequest pac = (PacketLoginCheckRequest) packet;
-			System.out.println("In packet is : " +pac);
 			String salt = sql.getSaltForLogin(pac.getUsername());
-			System.out.println("salt aus db: " + salt);
-			Password pw = new Password(pac.getHashedPW(), salt.getBytes());
 			try {
+				Password pw = new Password(pac.getHashedPW(), salt.getBytes());
 				pw.createHashedPassword();
 				String doublehashed = pw.getHashedPasswordAsString();
+				waitingForSessionAnswer.put(pac.getUsername(), port);
 				if(sql.rightDoubleHashedPassword(pac.getUsername(), doublehashed)){
-					System.out.println("im in if, where calculated hash works :)");
 					SessionPacketSenderAPI.sendGetRequest(sessionclient, pac.getUsername(), new SuperCallable<PacketSessionGetAnswer>() {						
 						@Override
-						public PacketSessionGetAnswer call(PacketSessionGetAnswer answer) {							
+						public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer answer) {							
 							PacketLoginCheckAnswer checkAnswer = new PacketLoginCheckAnswer(pac, true, answer.getLoginSessionID());
 							try {
-								System.out.println("super_PORT: " + port);
-								System.out.println("I'm in super callable");
-								server.sendMessage(port, PacketType.getBytes(checkAnswer));
+								server.sendMessage(waitingForSessionAnswer.remove(pac.getUsername()), PacketType.getBytes(checkAnswer));
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
@@ -71,6 +68,12 @@ public class LoginPacketHandler extends PacketHandler{
 				}
 			} catch (Exception e) {			
 				e.printStackTrace();
+				PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, false, null);
+				try {
+					server.sendMessage(port, PacketType.getBytes(answer));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 			break;
 			
