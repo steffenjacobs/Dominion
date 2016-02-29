@@ -45,7 +45,7 @@ public class Client {
 						try {
 							final Socket clientSocket = SocketFactory.getDefault().createSocket();
 							clientSocket.connect(address, 5000);
-							System.out.println("Connected to Session-Server.");
+							System.out.println("Connected to Server.");
 							this.connected = true;
 							thread = new ClientConnectionThread(clientSocket, handler, this);
 							thread.start();

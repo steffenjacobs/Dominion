@@ -10,7 +10,7 @@ import com.tpps.application.network.core.ServerConnectionThread;
 /** @author sjacobs - Steffen Jacobs */
 public class SessionServer extends Server{
 	public SessionServer() throws IOException{
-		super(new InetSocketAddress("127.0.0.1", 1337), new SessionPacketHandler());
+		super(new InetSocketAddress("0.0.0.0", 1337), new SessionPacketHandler());
 		setConsoleInput();
 	}
 	public static void main(String[] args) {

@@ -12,8 +12,10 @@ public class LoginServer extends Server{
 	private SQLOperations sql;
 	
 	public LoginServer(SQLOperations sql) throws IOException {
-		super(new InetSocketAddress("127.0.0.1", 1338), new LoginPacketHandler(sql));
+		super(new InetSocketAddress("0.0.0.0", 1338), new LoginPacketHandler(sql));
 		((LoginPacketHandler)super.getHandler()).setServer(this);
+		this.sql = sql;
+		checkExistingDatabase();
 	}
 	
 	public static void main(String[] args) {
@@ -21,8 +23,8 @@ public class LoginServer extends Server{
 			String hostname = "localhost";
 			String port = "3306";
 			String database = "accountmanager";
-			String user = "jojo";
-			String password = "password";
+			String user = "root";
+			String password = "root";
 			SQLHandler sql = new SQLHandler(hostname, port, user, password, database);
 			SQLOperations op = new SQLOperations(sql);
 			new LoginServer(op);
@@ -30,4 +32,13 @@ public class LoginServer extends Server{
 			e.printStackTrace();
 		}
 	}
+	
+	private void checkExistingDatabase(){
+		  if(!sql.checkDatabase("accountmanager")){
+		   sql.createDatabase("accountmanager");
+		  }
+		  if(!sql.checkTable("accountdetails")){
+		   sql.createAccountdetailsTable();
+		  }
+		 }
 }

@@ -26,8 +26,8 @@ public class LoginClient extends PacketHandler {
 	
 	public LoginClient() {
 		try {
-			c_login = new Client(new InetSocketAddress("127.0.0.1", 1338), this);
-			c_session = new Client(new InetSocketAddress("127.0.0.1", 1337), this);
+			c_login = new Client(new InetSocketAddress("78.31.66.224", 1338), this);
+			c_session = new Client(new InetSocketAddress("78.31.66.224", 1337), this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
