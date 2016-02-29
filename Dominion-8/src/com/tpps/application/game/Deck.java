@@ -28,11 +28,11 @@ public class Deck {
 	// TODO: replace Action.COUNT_FOR_VICTORY with null or create another constructor? Same with Action.NONE
 	// for copper
 	private final Card estate = new Card(CollectionsUtil.hashMapAction(
-			CollectionsUtil.arrayListAction(CardAction.COUNT_FOR_VICTORY), CollectionsUtil.arrayListInteger(2)),
-			CollectionsUtil.arrayListType(CardType.VICTORY), "Estate", 2);
+			CollectionsUtil.arrayList(CardAction.COUNT_FOR_VICTORY), CollectionsUtil.arrayList(2)),
+			CollectionsUtil.arrayList(CardType.VICTORY), "Estate", 2);
 	private final Card copper = new Card(CollectionsUtil.hashMapAction(
-			CollectionsUtil.arrayListAction(CardAction.NONE), CollectionsUtil.arrayListInteger(0)),
-			CollectionsUtil.arrayListType(CardType.COPPER), "Copper", 0);
+			CollectionsUtil.arrayList(CardAction.NONE), CollectionsUtil.arrayList(0)),
+			CollectionsUtil.arrayList(CardType.COPPER), "Copper", 0);
 	
 	public int getDeckSize() {
 		return deckSize;

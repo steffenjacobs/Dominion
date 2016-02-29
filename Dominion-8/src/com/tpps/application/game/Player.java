@@ -32,8 +32,8 @@ public class Player {
 		System.out.println(p.deck.toString());
 		p.deck.shuffle();
 		Card silver = new Card(CollectionsUtil.hashMapAction(
-				CollectionsUtil.arrayListAction(CardAction.NONE), CollectionsUtil.arrayListInteger(2)),
-				CollectionsUtil.arrayListType(CardType.SILVER), "Silver", 0);
+				CollectionsUtil.arrayList(CardAction.NONE), CollectionsUtil.arrayList(2)),
+				CollectionsUtil.arrayList(CardType.SILVER), "Silver", 0);
 		p.deck.addCardToDiscard(silver);
 		System.out.println("\n" + p.deck.toString());
 		p.deck.shuffle();

@@ -193,8 +193,8 @@ public class Card extends GameObject {
 		act.add(CardAction.ADD_PURCHASE);
 		act.add(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
 		act.add(CardAction.DRAW);
-		ArrayList<Integer> ints = CollectionsUtil.arrayListInteger(1, 2, 3, 4);
-		ArrayList<CardType> type = CollectionsUtil.arrayListType(CardType.ACTION);
+		ArrayList<Integer> ints = CollectionsUtil.arrayList(new Integer[]{1, 2, 3, 4});
+		ArrayList<CardType> type = CollectionsUtil.arrayList(new CardType[]{CardType.ACTION});
 
 		Card card = new Card(CollectionsUtil.hashMapAction(act, ints), type, "Market", 5);
 		System.out.println(card.toString());
