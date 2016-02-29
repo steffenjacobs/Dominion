@@ -28,11 +28,11 @@ public class Deck {
 	// TODO: replace Action.COUNT_FOR_VICTORY with null or create another
 	// constructor? Same with Action.NONE
 	// for copper
-	private final Card estate = new Card(CollectionsUtil.hashMapAction(
+	private final Card estate = new Card(CollectionsUtil.linkedHashMapAction(
 			CollectionsUtil.arrayList(CardAction.COUNT_FOR_VICTORY),
 			CollectionsUtil.arrayList(2)),
 			CollectionsUtil.arrayList(CardType.VICTORY), "Estate", 2);
-	private final Card copper = new Card(CollectionsUtil.hashMapAction(
+	private final Card copper = new Card(CollectionsUtil.linkedHashMapAction(
 			CollectionsUtil.arrayList(CardAction.NONE),
 			CollectionsUtil.arrayList(0)),
 			CollectionsUtil.arrayList(CardType.COPPER), "Copper", 0);

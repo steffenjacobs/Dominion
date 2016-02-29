@@ -190,7 +190,7 @@ public class Card extends GameObject {
 		ArrayList<Integer> ints = CollectionsUtil.arrayList(new Integer[] { 1, 2, 4, 3 });
 		ArrayList<CardType> type = CollectionsUtil.arrayList(new CardType[] { CardType.ACTION });
 
-		Card card = new Card(CollectionsUtil.hashMapAction(act, ints), type, "Market", 5);
+		Card card = new Card(CollectionsUtil.linkedHashMapAction(act, ints), type, "Market", 5);
 		System.out.println(card.toString());
 	}
 }
