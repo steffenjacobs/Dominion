@@ -90,7 +90,7 @@ public final class SessionClient extends PacketHandler {
 							new SuperCallable<PacketSessionGetAnswer>() {
 
 								@Override
-								public PacketSessionGetAnswer call(PacketSessionGetAnswer answer) {
+								public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer answer) {
 									System.out.println("Answer received: " + answer.toString());
 									return null;
 								}
@@ -101,7 +101,7 @@ public final class SessionClient extends PacketHandler {
 							UUID.fromString(line.split(" ")[2]), new SuperCallable<PacketSessionCheckAnswer>() {
 
 								@Override
-								public PacketSessionCheckAnswer call(PacketSessionCheckAnswer object) {
+								public PacketSessionCheckAnswer callMeMaybe(PacketSessionCheckAnswer object) {
 									System.out.println("Answer received: " + object.toString());
 									return null;
 								}
