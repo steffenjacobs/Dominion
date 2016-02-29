@@ -77,34 +77,34 @@ public class Card extends GameObject {
 				// call
 				break;
 			case ADD_PURCHASE:
-				// call
+				System.out.println("Add_purchase: " + actions.get(CardAction.ADD_ACTION_TO_PLAYER));
 				break;
 			case ADD_TEMPORARY_MONEY_FOR_TURN:
-				// call
+				System.out.println("ADD_TEMPORARY_MONEY_FOR_TURN: " +  actions.get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN));
 				break;
 			case DRAW:
-				// call
+				System.out.println("DRAW: " + actions.get(CardAction.DRAW));
 				break;
 			case GAIN:
-				// call
+				System.out.println("GAIN: " + actions.get(CardAction.GAIN));
 				break;
 			case DISCARD:
-				// call
+				System.out.println("DISCARD: " + actions.get(CardAction.DISCARD));
 				break;
 			case TRASH:
-				// call
+				System.out.println("TRASH: " + actions.get(CardAction.TRASH));
 				break;
 			case PUT_BACK:
-				// call
+				System.out.println("PUT_BACK: " + actions.get(CardAction.PUT_BACK));
 				break;
 			case REVEAL:
-				// call
+				System.out.println("REVEAL: " + actions.get(CardAction.REVEAL));
 				break;
 			case NONE:
-				// call
+				System.out.println("NONE: " + actions.get(CardAction.NONE));
 				break;
 			case COUNT_FOR_VICTORY:
-				// call
+				System.out.println("COUNT_VOR_VICTORY: " + actions.get(CardAction.COUNT_FOR_VICTORY));
 				break;
 			default:
 				// call
@@ -187,5 +187,7 @@ public class Card extends GameObject {
 		
 		Card card = new Card(CollectionsUtil.hashMapAction(act, i), type, "Market", 5);
 		System.out.println(card.toString());
+		System.out.println("do_Action");
+		card.doAction();
 	}
 }
