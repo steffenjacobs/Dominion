@@ -1,17 +1,17 @@
-package com.tpps.application.network.sessions.client;
+package com.tpps.application.network.clientSession.client;
 
 import java.io.IOException;
 import java.util.UUID;
 
+import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
+import com.tpps.application.network.clientSession.packets.PacketSessionCheckRequest;
+import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
+import com.tpps.application.network.clientSession.packets.PacketSessionGetRequest;
+import com.tpps.application.network.clientSession.packets.PacketSessionKeepAlive;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.network.packet.Packet;
 import com.tpps.application.network.packet.PacketType;
-import com.tpps.application.network.sessions.packets.PacketSessionCheckAnswer;
-import com.tpps.application.network.sessions.packets.PacketSessionCheckRequest;
-import com.tpps.application.network.sessions.packets.PacketSessionGetAnswer;
-import com.tpps.application.network.sessions.packets.PacketSessionGetRequest;
-import com.tpps.application.network.sessions.packets.PacketSessionKeepAlive;
 
 /**
  * represents some kind of API-like interface to send check- and get-requests to

@@ -1,10 +1,10 @@
-package com.tpps.application.network.sessions.client;
+package com.tpps.application.network.clientSession.client;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
+import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
 import com.tpps.application.network.core.SuperCallable;
-import com.tpps.application.network.sessions.packets.PacketSessionCheckAnswer;
-import com.tpps.application.network.sessions.packets.PacketSessionGetAnswer;
 
 /**
  * represents some kind of API-like interface where the answered requests will

@@ -1,4 +1,4 @@
-package com.tpps.application.network.sessions.packets;
+package com.tpps.application.network.clientSession.packets;
 
 import java.util.UUID;
 

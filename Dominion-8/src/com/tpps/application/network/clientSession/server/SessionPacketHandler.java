@@ -1,17 +1,17 @@
-package com.tpps.application.network.sessions.server;
+package com.tpps.application.network.clientSession.server;
 
 import java.io.IOException;
 import java.util.UUID;
 
+import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
+import com.tpps.application.network.clientSession.packets.PacketSessionCheckRequest;
+import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
+import com.tpps.application.network.clientSession.packets.PacketSessionGetRequest;
+import com.tpps.application.network.clientSession.packets.PacketSessionKeepAlive;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.packet.Packet;
 import com.tpps.application.network.packet.PacketType;
-import com.tpps.application.network.sessions.packets.PacketSessionCheckAnswer;
-import com.tpps.application.network.sessions.packets.PacketSessionCheckRequest;
-import com.tpps.application.network.sessions.packets.PacketSessionGetAnswer;
-import com.tpps.application.network.sessions.packets.PacketSessionGetRequest;
-import com.tpps.application.network.sessions.packets.PacketSessionKeepAlive;
 
 /**
  * this class handles all the packet-stuff
