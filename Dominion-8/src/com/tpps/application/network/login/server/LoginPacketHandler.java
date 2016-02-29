@@ -37,14 +37,13 @@ public class LoginPacketHandler extends PacketHandler{
 	@Override
 	public void handleReceivedPacket(int port, byte[] bytes) {
 		// TODO Auto-generated method stub
-		System.out.println("PORT: " + port);
 		final Packet packet = PacketType.getPacket(bytes);
 		System.out.println("Server received packet: " + packet);
 		switch(packet.getType()){
 		case LOGIN_CHECK_REQUEST: //check username, if valid genereate SESSION ID
 			PacketLoginCheckRequest pac = (PacketLoginCheckRequest) packet;
-			System.out.println("In packet is : " +pac);
 			String salt = sql.getSaltForLogin(pac.getUsername());
+
 			System.out.println("salt aus db: " + salt);
 			try {
 				Password pw = new Password(pac.getHashedPW(), salt.getBytes());
