@@ -43,13 +43,13 @@ public class ClientCard extends GameObject {
 	}
 
 	/** dummy constructor for testing of deck class */
-	public ClientCard(LinkedHashMap<CardAction, Integer> actions, List<CardType> types,
-			String name, int cost) {
-//		this.actions = actions;
-		this.types = types;
-		this.name = name;
-		this.cost = cost;
-	}
+//	public ClientCard(LinkedHashMap<CardAction, Integer> actions, List<CardType> types,
+//			String name, int cost) {
+////		this.actions = actions;
+//		this.types = types;
+//		this.name = name;
+//		this.cost = cost;
+//	}
 
 	public String getName() {
 		return this.name;
