@@ -192,6 +192,8 @@ public class SQLOperations {
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
 			String databasepw = rs.getString("salt_hashed_pw");
+			System.out.println("hash aus db: " + databasepw);
+			System.out.println("calculated hash: " + doublehashedpw);
 			if(databasepw.equals(doublehashedpw)){
 				return true;
 			}

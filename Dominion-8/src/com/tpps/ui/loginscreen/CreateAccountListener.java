@@ -2,8 +2,14 @@ package com.tpps.ui.loginscreen;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JOptionPane;
+
+import com.tpps.application.network.login.SQLHandling.SQLHandler;
+import com.tpps.application.network.login.SQLHandling.SQLOperations;
+import com.tpps.application.network.login.client.LoginClient;
+import com.tpps.application.network.login.server.LoginServer;
 
 public class CreateAccountListener implements ActionListener {
 	CreateAccount ca;
@@ -39,6 +45,12 @@ public class CreateAccountListener implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Your Username is too short or too long");
 			return;
 		}
+	
+		//--------------------------------------
+
+		
+		new LoginClient().handleCreation(ca.getUsername().getText(), String.valueOf(ca.getPasswordbox().getPassword()), ca.getEmail().getText());
+		//--------------------------------------
 		
 		new LogInGUI(ca.getUsername().getText(),ca.getPasswordbox().getPassword());
 		ca.dispose();

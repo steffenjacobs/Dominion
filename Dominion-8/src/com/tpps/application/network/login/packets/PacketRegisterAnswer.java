@@ -16,7 +16,7 @@ public class PacketRegisterAnswer extends Packet {
 	private static final long serialVersionUID = -8011318119424211580L;
 	private final PacketRegisterRequest request;
 	private final UUID sessionID;
-	private final boolean state;
+	private final int state;
 
 	/**
 	 * @return the received request
@@ -30,7 +30,7 @@ public class PacketRegisterAnswer extends Packet {
 	 * @return the validation result
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public boolean getState() {
+	public int getState() {
 		return this.state;
 	}
 
@@ -47,8 +47,8 @@ public class PacketRegisterAnswer extends Packet {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public PacketRegisterAnswer(PacketRegisterRequest req, boolean _state, UUID _sessionID) {
-		super(PacketType.LOGIN_CHECK_ANSWER);
+	public PacketRegisterAnswer(PacketRegisterRequest req, int _state, UUID _sessionID) {
+		super(PacketType.LOGIN_REGISTER_ANSWER);
 		this.request = req;
 		this.state = _state;
 		this.sessionID = _sessionID;

@@ -199,9 +199,9 @@ public class LogInGUI extends JFrame {
 		c.add(all);
 		panels[3].revalidate();
 
-		createAccount.addActionListener(new LoginListener(createAccount, this));
-		cancel.addActionListener(new LoginListener(cancel, this));
-		execute.addActionListener(new LoginListener(execute, this));
+		createAccount.addActionListener(new LoginListener(createAccount, this, userinfo, passwordbox));
+		cancel.addActionListener(new LoginListener(cancel, this, userinfo, passwordbox));
+		execute.addActionListener(new LoginListener(execute, this, userinfo, passwordbox));
 	}
 
 	public static void main(String[] args) {
