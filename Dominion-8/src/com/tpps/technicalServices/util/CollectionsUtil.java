@@ -1,10 +1,9 @@
 package com.tpps.technicalServices.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.tpps.application.game.card.CardAction;
-import com.tpps.application.game.card.CardType;
 
 /**
  * 
@@ -13,10 +12,10 @@ import com.tpps.application.game.card.CardType;
  */
 public final class CollectionsUtil {
 
-	public static HashMap<CardAction, Integer> hashMapAction(ArrayList<CardAction> actions,
-			ArrayList<Integer> numbers) {
+	public static LinkedHashMap<CardAction, Integer> hashMapAction(
+			ArrayList<CardAction> actions, ArrayList<Integer> numbers) {
 		if (actions.size() == numbers.size()) {
-			HashMap<CardAction, Integer> hashMap = new HashMap<CardAction, Integer>();
+			LinkedHashMap<CardAction, Integer> hashMap = new LinkedHashMap<CardAction, Integer>();
 			for (int i = 0; i < actions.size(); i++) {
 				hashMap.put(actions.get(i), numbers.get(i));
 			}
@@ -27,15 +26,6 @@ public final class CollectionsUtil {
 		}
 	}
 
-	// remove?
-	// public static ArrayList<Integer> arrayListInteger(Integer... actions) {
-	// ArrayList<Integer> resultList = new ArrayList<Integer>();
-	// for (Integer action : actions) {
-	// resultList.add(action);
-	// }
-	// return resultList;
-	// }
-
 	public static <T> ArrayList<T> arrayList(T[] objects) {
 		ArrayList<T> resultList = new ArrayList<T>();
 		for (T object : objects) {
@@ -43,10 +33,10 @@ public final class CollectionsUtil {
 		}
 		return resultList;
 	}
-	
+
 	public static <T> ArrayList<T> arrayList(T object) {
-		ArrayList<T> resultList = new ArrayList<T>();		
-			resultList.add(object);		
+		ArrayList<T> resultList = new ArrayList<T>();
+		resultList.add(object);
 		return resultList;
 	}
 
@@ -69,4 +59,11 @@ public final class CollectionsUtil {
 	// return resultList;
 	// }
 
+	// public static ArrayList<Integer> arrayListInteger(Integer... actions) {
+	// ArrayList<Integer> resultList = new ArrayList<Integer>();
+	// for (Integer action : actions) {
+	// resultList.add(action);
+	// }
+	// return resultList;
+	// }
 }

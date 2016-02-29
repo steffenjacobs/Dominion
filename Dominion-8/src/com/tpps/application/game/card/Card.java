@@ -3,7 +3,10 @@ package com.tpps.application.game.card;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -17,7 +20,7 @@ import com.tpps.ui.GraphicFramework;
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = 1L;
-	private final HashMap<CardAction, Integer> actions;
+	private final LinkedHashMap<CardAction, Integer> actions;
 	private final List<CardType> types;
 	private final int cost;
 	private final String name;
@@ -26,7 +29,7 @@ public class Card extends GameObject {
 	 * sets the actions array containing the actions which the cardObject will
 	 * execute
 	 */
-	public Card(HashMap<CardAction, Integer> actions, List<CardType> types,
+	public Card(LinkedHashMap<CardAction, Integer> actions, List<CardType> types,
 			String name, int cost, double relativeLocX, double relativeLocY,
 			double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage,
@@ -40,7 +43,7 @@ public class Card extends GameObject {
 	}
 
 	/** dummy constructor for testing of deck class */
-	public Card(HashMap<CardAction, Integer> actions, List<CardType> types,
+	public Card(LinkedHashMap<CardAction, Integer> actions, List<CardType> types,
 			String name, int cost) {
 		this.actions = actions;
 		this.types = types;
@@ -79,7 +82,7 @@ public class Card extends GameObject {
 						+ actions.get(CardAction.ADD_ACTION_TO_PLAYER));
 				break;
 			case ADD_PURCHASE:
-				System.out.println("Add_purchase: "
+				System.out.println("ADD_PURCHASE: "
 						+ actions.get(CardAction.ADD_PURCHASE));
 				break;
 			case ADD_TEMPORARY_MONEY_FOR_TURN:
@@ -160,45 +163,33 @@ public class Card extends GameObject {
 	 */
 	public String toString() {
 		StringBuffer sBuf = new StringBuffer();
-		sBuf.append("CardObject: " + "'" + this.name + "'" /*
-															 * +
-															 * "\nsuper.toString():\n-"
-															 * +
-															 * super.toString()
-															 */);
-		sBuf.append("\nCost: " + this.cost);
-		sBuf.append("\nAction(s):");
-		ArrayList<CardAction> actionsList = new ArrayList<CardAction>(
-				actions.keySet());
-		ArrayList<Integer> ints = new ArrayList<Integer>(actions.values());
-		for (int i = 0; i < actions.size(); i++) {
-
-			sBuf.append("\n- " + actionsList.get(i).toString() + " amount: "
-					+ ints.get(i));
-
+		sBuf.append("Card: " + "'" + this.name + "'\nActions: <");
+		Iterator<CardAction> actionsIt = actions.keySet().iterator();
+		Iterator<Integer> intsIt = actions.values().iterator();
+		while(actionsIt.hasNext() && intsIt.hasNext()) {
+			sBuf.append("<" + actionsIt.next().toString() + ": " + intsIt.next() + ">");
+			if (actionsIt.hasNext() && intsIt.hasNext()) 
+				sBuf.append(" ");
 		}
-		sBuf.append("\nType(s):");
-		for (CardType type : types) {
-			sBuf.append("\n- " + type.toString());
+		Iterator<CardType> typesIt = types.iterator();
+		sBuf.append(">\nTypes: <");
+		while (typesIt.hasNext()) {
+			sBuf.append("<" + typesIt.next().toString() + ">");
+			if (typesIt.hasNext()) 
+				sBuf.append(" ");
 		}
-		return sBuf.toString();
+		return sBuf.append(">\nCost: " + this.cost).toString();
 	}
 
 	/**
 	 * main method with test case for cardObject
 	 */
 	public static void main(String[] args) {
-		ArrayList<CardAction> act = new ArrayList<CardAction>();
-		act.add(CardAction.ADD_ACTION_TO_PLAYER);
-		act.add(CardAction.ADD_PURCHASE);
-		act.add(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
-		act.add(CardAction.DRAW);
-		ArrayList<Integer> ints = CollectionsUtil.arrayList(new Integer[]{1, 2, 3, 4});
-		ArrayList<CardType> type = CollectionsUtil.arrayList(new CardType[]{CardType.ACTION});
+		ArrayList<CardAction> act = CollectionsUtil.arrayList(new CardAction[] {CardAction.ADD_ACTION_TO_PLAYER, CardAction.ADD_PURCHASE, CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, CardAction.DRAW });
+		ArrayList<Integer> ints = CollectionsUtil.arrayList(new Integer[] { 1, 2, 4, 3 });
+		ArrayList<CardType> type = CollectionsUtil.arrayList(new CardType[] { CardType.ACTION });
 
 		Card card = new Card(CollectionsUtil.hashMapAction(act, ints), type, "Market", 5);
 		System.out.println(card.toString());
-		System.out.println("do_Action");
-		card.doAction();
 	}
 }

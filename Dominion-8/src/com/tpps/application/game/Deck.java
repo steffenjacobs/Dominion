@@ -19,21 +19,24 @@ public class Deck {
 	// - Every player has a deck
 	// - Deck has two Lists with CardObjects: drawPile and discardPile
 	// - Deck provides functionality to manage the deck and shuffle cards etc.
-	
+
 	private int deckSize;
 	private List<Card> drawPile;
 	private List<Card> discardPile;
 
 	// TODO: remove estate and copper (only for testing purposes)
-	// TODO: replace Action.COUNT_FOR_VICTORY with null or create another constructor? Same with Action.NONE
+	// TODO: replace Action.COUNT_FOR_VICTORY with null or create another
+	// constructor? Same with Action.NONE
 	// for copper
 	private final Card estate = new Card(CollectionsUtil.hashMapAction(
-			CollectionsUtil.arrayList(CardAction.COUNT_FOR_VICTORY), CollectionsUtil.arrayList(2)),
+			CollectionsUtil.arrayList(CardAction.COUNT_FOR_VICTORY),
+			CollectionsUtil.arrayList(2)),
 			CollectionsUtil.arrayList(CardType.VICTORY), "Estate", 2);
 	private final Card copper = new Card(CollectionsUtil.hashMapAction(
-			CollectionsUtil.arrayList(CardAction.NONE), CollectionsUtil.arrayList(0)),
+			CollectionsUtil.arrayList(CardAction.NONE),
+			CollectionsUtil.arrayList(0)),
 			CollectionsUtil.arrayList(CardType.COPPER), "Copper", 0);
-	
+
 	public int getDeckSize() {
 		return deckSize;
 	}
