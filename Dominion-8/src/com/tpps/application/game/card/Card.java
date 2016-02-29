@@ -26,8 +26,8 @@ public class Card extends GameObject {
 	 * sets the actions array containing the actions which the cardObject will
 	 * execute
 	 */
-	public Card(HashMap<CardAction, Integer> actions, List<CardType> types, String name,
-			int cost, double relativeLocX, double relativeLocY,
+	public Card(HashMap<CardAction, Integer> actions, List<CardType> types,
+			String name, int cost, double relativeLocX, double relativeLocY,
 			double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage,
 			GraphicFramework _parent, int _id) {
@@ -40,8 +40,8 @@ public class Card extends GameObject {
 	}
 
 	/** dummy constructor for testing of deck class */
-	public Card(HashMap<CardAction, Integer> actions, List<CardType> types, String name,
-			int cost) {
+	public Card(HashMap<CardAction, Integer> actions, List<CardType> types,
+			String name, int cost) {
 		this.actions = actions;
 		this.types = types;
 		this.name = name;
@@ -70,17 +70,21 @@ public class Card extends GameObject {
 	 * @author ladler - Lukas Adler
 	 */
 	public void doAction() {
-		ArrayList<CardAction> actionsList = new ArrayList<CardAction>(actions.keySet());
+		ArrayList<CardAction> actionsList = new ArrayList<CardAction>(
+				actions.keySet());
 		for (int i = 0; i < actionsList.size(); i++) {
 			switch (actionsList.get(i)) {
 			case ADD_ACTION_TO_PLAYER:
-				System.out.println("ADD_ACTION_TO_PLAYER: " + actions.get(CardAction.ADD_ACTION_TO_PLAYER));
+				System.out.println("ADD_ACTION_TO_PLAYER: "
+						+ actions.get(CardAction.ADD_ACTION_TO_PLAYER));
 				break;
 			case ADD_PURCHASE:
-				System.out.println("Add_purchase: " + actions.get(CardAction.ADD_PURCHASE));
+				System.out.println("Add_purchase: "
+						+ actions.get(CardAction.ADD_PURCHASE));
 				break;
 			case ADD_TEMPORARY_MONEY_FOR_TURN:
-				System.out.println("ADD_TEMPORARY_MONEY_FOR_TURN: " +  actions.get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN));
+				System.out.println("ADD_TEMPORARY_MONEY_FOR_TURN: "
+						+ actions.get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN));
 				break;
 			case DRAW:
 				System.out.println("DRAW: " + actions.get(CardAction.DRAW));
@@ -89,13 +93,15 @@ public class Card extends GameObject {
 				System.out.println("GAIN: " + actions.get(CardAction.GAIN));
 				break;
 			case DISCARD:
-				System.out.println("DISCARD: " + actions.get(CardAction.DISCARD));
+				System.out.println("DISCARD: "
+						+ actions.get(CardAction.DISCARD));
 				break;
 			case TRASH:
 				System.out.println("TRASH: " + actions.get(CardAction.TRASH));
 				break;
 			case PUT_BACK:
-				System.out.println("PUT_BACK: " + actions.get(CardAction.PUT_BACK));
+				System.out.println("PUT_BACK: "
+						+ actions.get(CardAction.PUT_BACK));
 				break;
 			case REVEAL:
 				System.out.println("REVEAL: " + actions.get(CardAction.REVEAL));
@@ -104,7 +110,8 @@ public class Card extends GameObject {
 				System.out.println("NONE: " + actions.get(CardAction.NONE));
 				break;
 			case COUNT_FOR_VICTORY:
-				System.out.println("COUNT_VOR_VICTORY: " + actions.get(CardAction.COUNT_FOR_VICTORY));
+				System.out.println("COUNT_VOR_VICTORY: "
+						+ actions.get(CardAction.COUNT_FOR_VICTORY));
 				break;
 			default:
 				// call
@@ -153,14 +160,21 @@ public class Card extends GameObject {
 	 */
 	public String toString() {
 		StringBuffer sBuf = new StringBuffer();
-		sBuf.append("CardObject: " + "'" + this.name + "'" /* + "\nsuper.toString():\n-" + super.toString()*/);
+		sBuf.append("CardObject: " + "'" + this.name + "'" /*
+															 * +
+															 * "\nsuper.toString():\n-"
+															 * +
+															 * super.toString()
+															 */);
 		sBuf.append("\nCost: " + this.cost);
 		sBuf.append("\nAction(s):");
-		ArrayList<CardAction> actionsList = new ArrayList<CardAction>(actions.keySet()); 
+		ArrayList<CardAction> actionsList = new ArrayList<CardAction>(
+				actions.keySet());
 		ArrayList<Integer> ints = new ArrayList<Integer>(actions.values());
 		for (int i = 0; i < actions.size(); i++) {
 
-			sBuf.append("\n- " + actionsList.get(i).toString() + " amount: " + ints.get(i));
+			sBuf.append("\n- " + actionsList.get(i).toString() + " amount: "
+					+ ints.get(i));
 
 		}
 		sBuf.append("\nType(s):");
@@ -179,13 +193,10 @@ public class Card extends GameObject {
 		act.add(CardAction.ADD_PURCHASE);
 		act.add(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
 		act.add(CardAction.DRAW);
-		ArrayList<Integer> i = new ArrayList<Integer>();
-		i.add(1); i.add(2); i.add(3); i.add(4);
-		List<CardType> type = new ArrayList<CardType>();
-		type.add(CardType.ACTION);
-		
-		
-		Card card = new Card(CollectionsUtil.hashMapAction(act, i), type, "Market", 5);
+		ArrayList<Integer> ints = CollectionsUtil.arrayListInteger(1, 2, 3, 4);
+		ArrayList<CardType> type = CollectionsUtil.arrayListType(CardType.ACTION);
+
+		Card card = new Card(CollectionsUtil.hashMapAction(act, ints), type, "Market", 5);
 		System.out.println(card.toString());
 		System.out.println("do_Action");
 		card.doAction();
