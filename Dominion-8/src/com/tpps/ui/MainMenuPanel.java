@@ -4,6 +4,8 @@ import java.awt.AlphaComposite;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -29,6 +31,7 @@ public class MainMenuPanel extends JPanel {
 	private float[] alpha;
 	private MainMenuButton[] buttons;	
 	private final MainMenu parent;
+	private final int gapFactor, topGap;
 
 	/**
 	 * 
@@ -37,12 +40,18 @@ public class MainMenuPanel extends JPanel {
 	 * @param buttons
 	 */
 	public MainMenuPanel(MainMenu parent) {
-		this.INITIALIZE_ALPHA = 0.6F;
+		this.gapFactor = 6;
 		this.parent = parent;
+		this.topGap = 100;
+		
+		this.INITIALIZE_ALPHA = 0.6F;
+		
 		loadBackgroundImage();
 		initializeAlpha();				
 		createButtons(this.parent);
-		registrateMouseListener();		
+		registrateMouseListener();
+		this.addComponentListener(new MyComponentAdapter());
+		repaint();
 	}
 
 	/**
@@ -55,7 +64,7 @@ public class MainMenuPanel extends JPanel {
 			String[] names = new String[]{"Single Player", "Multi Player", "Settings", "Community"};
 			try {
 				for (int i = 0; i < buttons.length; i++) {
-					buttons[i] = new MainMenuButton((parent.getWidth() / 2), parent.getHeight() / 6 * (i + 1),
+					buttons[i] = new MainMenuButton((parent.getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1),
 							names[i]);
 				}				
 				
@@ -127,8 +136,9 @@ public class MainMenuPanel extends JPanel {
 				this.parent.getWidth(), this.parent.getHeight());
 		for (int i = 0; i < buttons.length; i++) {
 			buttons[i].onResize((parent.getWidth() / 2)
-					- (buttons[i].getActualImage().getWidth(null) / 2), (parent.getHeight() / 6) * (i + 1), sizeFactorWidth, sizeFactorHeight);
-		}
+					- (buttons[i].getActualImage().getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1),
+					sizeFactorWidth, sizeFactorHeight);
+		}				
 	}
 
 	/**
@@ -159,6 +169,24 @@ public class MainMenuPanel extends JPanel {
 		@Override
 		public void mouseMoved(MouseEvent e) {
 			MainMenuPanel.this.changeAlphaForButton(e);
+		}
+	}
+	
+	private class MyComponentAdapter extends ComponentAdapter {
+
+		@Override
+		public void componentResized(ComponentEvent e) {
+			super.componentResized(e);
+
+			int width = MainMenuPanel.this.parent.getContentPane().getWidth();
+			int height = MainMenuPanel.this.parent.getContentPane().getHeight();
+
+			int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+			int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
+
+			onResize(width / Double.parseDouble(Integer.toString(maxWidth)),
+					height / Double.parseDouble(Integer.toString(maxHeight)));
+			repaint();
 		}
 	}
 
