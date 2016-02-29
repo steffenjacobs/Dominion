@@ -1,4 +1,4 @@
-package com.tpps.application.network.sessions.packets;
+package com.tpps.application.network.clientSession.packets;
 
 import com.tpps.application.network.packet.Packet;
 import com.tpps.application.network.packet.PacketType;
