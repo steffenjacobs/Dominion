@@ -2,8 +2,6 @@ package com.tpps.ui;
 
 import java.awt.Container;
 import java.awt.Toolkit;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import javax.swing.JFrame;
 
 public class MainMenu extends JFrame {
