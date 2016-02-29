@@ -75,9 +75,7 @@ public class MainMenuButton {
 
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight) {
 		this.x = x;
-		this.y = y;
-		System.out.println(sizeFactorHeight);
-		System.out.println(sizeFactorWidth);
+		this.y = y;		
 		this.actualImage = GraphicsUtil.resize((BufferedImage) this.originalImage,
 				(int) (this.actualImage.getWidth() * sizeFactorWidth),
 				(int) (this.actualImage.getHeight() * sizeFactorHeight));
