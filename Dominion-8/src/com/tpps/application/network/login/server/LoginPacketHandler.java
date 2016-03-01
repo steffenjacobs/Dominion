@@ -5,7 +5,7 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
-import com.tpps.application.network.clientSession.client.SuperSessionClient;
+import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
 import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.PacketHandler;
@@ -21,13 +21,13 @@ import com.tpps.application.network.packet.Packet;
 public class LoginPacketHandler extends PacketHandler{
 
 	LoginServer server;
-	SuperSessionClient sessionclient;
+	SessionClient sessionclient;
 	private ConcurrentHashMap<String, Integer> waitingForSessionAnswer;
 	
 	public LoginPacketHandler() {
 		try {
 			waitingForSessionAnswer = new ConcurrentHashMap<>();
-			sessionclient = new SuperSessionClient(new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort()));
+			sessionclient = new SessionClient(new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort()));
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}

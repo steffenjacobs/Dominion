@@ -31,7 +31,7 @@ public final class SessionPacketSenderAPI {
 	private static void sendPacket(Client c, Packet packet) {
 		if (c.isConnected()) {
 			try {
-				if (SessionClient.DEBUG_PACKETS) {
+				if (SessionTestClient.DEBUG_PACKETS) {
 					System.out.println(packet.toString());
 				}
 				c.sendMessage(packet);

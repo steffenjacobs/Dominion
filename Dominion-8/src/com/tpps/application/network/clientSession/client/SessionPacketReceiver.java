@@ -18,7 +18,7 @@ public class SessionPacketReceiver extends PacketHandler {
 		if (packet == null) {
 			System.out.println("Bad packet.");
 		} else {
-			if (SessionClient.DEBUG_PACKETS)
+			if (SessionTestClient.DEBUG_PACKETS)
 				System.out.println(packet.toString());
 			switch (packet.getType()) {
 			case SESSION_CHECK_ANSWER:

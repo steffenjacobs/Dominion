@@ -6,7 +6,7 @@ import java.util.UUID;
 
 import javax.swing.JOptionPane;
 
-import com.tpps.application.network.clientSession.client.SessionClient;
+import com.tpps.application.network.clientSession.client.SessionTestClient;
 import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
@@ -56,7 +56,7 @@ public class LoginClient extends PacketHandler {
 			PacketLoginCheckAnswer check = (PacketLoginCheckAnswer) answer;
 			if(check.getState()){	//Anmeldung erfolgreich, pw richtig
 				this.sessionid = check.getSessionID();
-				SessionClient.keepAlive(c_session, username, true);
+				SessionTestClient.keepAlive(c_session, username, true);
 				JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.INFORMATION_MESSAGE);
 			}else{//Anmeldung fehlgeschlagen, PW falsch
 				JOptionPane.showMessageDialog(null, "Wrong Password or nickname", "Login", JOptionPane.ERROR_MESSAGE);
