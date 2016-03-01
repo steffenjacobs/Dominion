@@ -25,6 +25,7 @@ public class GraphicFramework extends JPanel {
 	private JFrame parent;
 
 	private Mouse mouseListener;
+
 	// Integer represents ID
 	private ConcurrentHashMap<Integer, GameObject> gameObjects = new ConcurrentHashMap<>();
 
@@ -80,9 +81,10 @@ public class GraphicFramework extends JPanel {
 	 */
 	public void moveObject(GameObject obj, RelativeGeom2D location) {
 		Rectangle old = (Rectangle) obj.getHitbox().clone();
-		obj.setVisible(false);
+		boolean visible = obj.isVisible();
+		obj.setVisible(!visible);
 		obj.moveTo(location);
-		obj.setVisible(true);
+		obj.setVisible(visible);
 		Rectangle area = PhysicsUtil.getBigBox(new Rectangle[] { old, obj.getHitbox() });
 		this.repaint(area);
 	}
@@ -114,7 +116,7 @@ public class GraphicFramework extends JPanel {
 
 		for (GameObject obj : objects) {
 			if (obj.isVisible())
-				g.drawImage(obj.getImage(), (int)obj.getLocation().getX(), (int)obj.getLocation().getY(), null);
+				g.drawImage(obj.getImage(), (int) obj.getLocation().getX(), (int) obj.getLocation().getY(), null);
 		}
 	}
 
@@ -124,7 +126,7 @@ public class GraphicFramework extends JPanel {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	private void redrawWithoutRaytrace(GameObject obj) {
-		this.repaint((int)obj.getLocation().getX(), (int)obj.getLocation().getY(), obj.getWidth(), obj.getHeight());
+		this.repaint((int) obj.getLocation().getX(), (int) obj.getLocation().getY(), obj.getWidth(), obj.getHeight());
 	}
 
 	/**
@@ -146,10 +148,10 @@ public class GraphicFramework extends JPanel {
 			}
 		});
 	}
-	
-	private void onWindowResize(){
+
+	private void onWindowResize() {
 		System.out.println("window resized to " + parent.getWidth() + "/" + parent.getHeight());
-		for(GameObject go : gameObjects.values()){
+		for (GameObject go : gameObjects.values()) {
 			go.resizeObject(parent.getWidth(), parent.getHeight());
 		}
 	}
@@ -242,5 +244,13 @@ public class GraphicFramework extends JPanel {
 				obj.onMouseDrag();
 			}
 		}
+	}
+
+	/**
+	 * @author sjacobs - Steffen Jacobs @return the parent frame everything is
+	 *         drawn upon
+	 */
+	public JFrame getDisplayFrame() {
+		return this.parent;
 	}
 }

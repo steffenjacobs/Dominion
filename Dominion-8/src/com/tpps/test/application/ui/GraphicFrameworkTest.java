@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.AWTException;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Rectangle;
 
@@ -15,6 +16,7 @@ import org.junit.Test;
 
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
+import com.tpps.ui.RelativeGeom2D;
 import com.tpps.ui.components.GFButton;
 
 /**
@@ -27,6 +29,8 @@ import com.tpps.ui.components.GFButton;
  * tests the raytracing
  * 
  * tests the hitboxes
+ * 
+ * moving gameObjects
  * 
  * tests the layers (click and see if the returned top-element is on top)
  * 
@@ -43,20 +47,20 @@ import com.tpps.ui.components.GFButton;
  * @author sjacobs - Steffen Jacobs
  */
 public class GraphicFrameworkTest {
+	private static final int F_WIDTH = 1280, F_HEIGHT = 720;
 
 	@Test
 	public void test() throws AWTException {
-		int width = 1280, height = 720;
 
 		// create a test-framework
-		GraphicFramework framework = new GraphicFramework(new JFrame());
+		GraphicFramework framework = new GraphicFramework(new TestFrame());
 
 		// check if framework was created without exceptions
 		assertThat(framework, is(notNullValue()));
 
 		// add two overlapping buttons
-		TestButton button_1 = new TestButton(0, 0, .5, .5, width, height, 1, null, framework, "TEST");
-		TestButton button_2 = new TestButton(0, 0, .25, .25, width, height, 2, null, framework, "TEST2");
+		TestButton button_1 = new TestButton(0, 0, .5, .5, F_WIDTH, F_HEIGHT, 1, null, framework, "TEST");
+		TestButton button_2 = new TestButton(0, 0, .25, .25, F_WIDTH, F_HEIGHT, 2, null, framework, "TEST2");
 		framework.addComponent(button_1);
 		framework.addComponent(button_2);
 
@@ -65,10 +69,10 @@ public class GraphicFrameworkTest {
 		assertTrue(button_1.isVisible());
 
 		// check raytracing
-		assertTrue(button_1.isInside(width / 2 - 1, height / 2 - 1));
+		assertTrue(button_1.isInside(F_WIDTH / 2 - 1, F_HEIGHT / 2 - 1));
 
 		// check hitbox
-		Rectangle rect = new Rectangle(0, 0, width / 2, height / 2);
+		Rectangle rect = new Rectangle(0, 0, F_WIDTH / 2, F_HEIGHT / 2);
 		assertTrue(button_1.getHitbox().equals(rect));
 
 		// check click
@@ -103,12 +107,32 @@ public class GraphicFrameworkTest {
 		top = framework.getTopObject(0, 0);
 		assertTrue(top == null);
 
+		// check if elements are correctly moved
+		button_1.setVisible(true);
+		framework.moveObject(button_1, new RelativeGeom2D(.1, .1));
+		assertTrue(framework.getTopObject(0, 0) != button_1);
+		assertTrue(framework.getTopObject((int) (.1 * F_WIDTH), (int) (.1 * F_HEIGHT)) == button_1);
+
 		// check if second object was removed successful, true
 		go = framework.removeComponent(button_1);
 		assertTrue(go == button_1);
 
 		// check if framework is now empty
 		assertTrue(framework.getTopObject(0, 0) == null);
+
+	}
+
+	private class TestFrame extends JFrame {
+		private static final long serialVersionUID = 1L;
+
+		public TestFrame() {
+			this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+			this.setSize(F_WIDTH, F_HEIGHT);
+			this.setMinimumSize(new Dimension(1280, 720));
+			this.setVisible(true);
+			this.repaint();
+			this.revalidate();
+		}
 	}
 
 	private class TestButton extends GFButton {

@@ -31,7 +31,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 	private int layer;
 	private boolean visible = true;
 
-
 	/**
 	 * creates a game object, only used for cloning
 	 * 
@@ -286,12 +285,16 @@ public abstract class GameObject implements Cloneable, Serializable {
 	}
 
 	/**
+	 * ONLY USED BY FRAMEWORK - DO NOT CALL THIS METHOD
+	 * 
 	 * moves the object to the newLocation and redraws it on the framework
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public void moveTo(RelativeGeom2D newLocation) {
-		parent.moveObject(this, newLocation);
+		this.location = newLocation;
+		this.x = newLocation.getAbsoluteX(parent.getDisplayFrame().getWidth());
+		this.y = newLocation.getAbsoluteY(parent.getDisplayFrame().getHeight());
 	}
 
 	/**

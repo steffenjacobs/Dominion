@@ -59,10 +59,12 @@ public class GameWindow extends JFrame {
 		new Thread(() -> {
 			try {
 				Thread.sleep(5000);
+				framework.moveObject(gfb, new RelativeGeom2D(.4, .4));
+				Thread.sleep(5000);
+				framework.removeComponent(gfb);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			framework.removeComponent(gfb);
 		}).start();
 
 		this.revalidate();
