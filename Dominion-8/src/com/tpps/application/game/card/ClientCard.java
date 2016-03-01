@@ -95,7 +95,7 @@ public class ClientCard extends GameObject {
 	public void onMouseClick() {
 
 		try {
-			Client c = new Client(new InetSocketAddress("78.31.66.224", 1339), new PacketHandler() {
+			Client c = new Client(new InetSocketAddress("localhost", 1339), new PacketHandler() {
 				
 				@Override
 				public void handleReceivedPacket(int port, byte[] bytes) {
