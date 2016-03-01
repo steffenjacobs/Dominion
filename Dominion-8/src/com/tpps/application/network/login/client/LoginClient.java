@@ -34,7 +34,6 @@ public class LoginClient extends PacketHandler {
 	}
 	
 	public void handlelogin(String nickname, String plaintext){
-		//TODO get nickname und plaintext from gui
 		this.username = nickname;
 		Password pw = new Password(plaintext, new String("defsalt").getBytes()); //defsalt ist standartsalt
 		try {
@@ -50,38 +49,36 @@ public class LoginClient extends PacketHandler {
 	}
 	
 	@Override
-	//TODO: create Account
 	public void handleReceivedPacket(int port, byte[] bytes) {
 		System.out.println("into hanleReceivedPacket");
 		Packet answer = PacketType.getPacket(bytes);
 		switch(answer.getType()){
 		case LOGIN_CHECK_ANSWER: 
 			PacketLoginCheckAnswer check = (PacketLoginCheckAnswer) answer;
-			if(check.getState()){
+			if(check.getState()){	//Anmeldung erfolgreich, pw richtig
 				this.sessionid = check.getSessionID();
 				SessionClient.keepAlive(c_session, username, true);
-				JOptionPane.showMessageDialog(null, "Anmeldung erfolgreich :", "Anmeldung erfolgreich :", JOptionPane.OK_OPTION);
-			}else{
-				//TODO: Access Denied, PW falsch 
-				JOptionPane.showMessageDialog(null, "PW falsch :(", "PW falsch :(", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.OK_OPTION);
+			}else{//Anmeldung fehlgeschlagen, PW falsch
+				JOptionPane.showMessageDialog(null, "Wrong Password", "Login", JOptionPane.INFORMATION_MESSAGE);
 			}
 			break;
 		case LOGIN_REGISTER_ANSWER:
 			PacketRegisterAnswer check2 = (PacketRegisterAnswer) answer;
 			if(check2.getState() == 1){
-				JOptionPane.showMessageDialog(null, "PERFEKT, funktioniert", "PERFEKT, funktioniert", 0);
+				JOptionPane.showMessageDialog(null, "Account created succesfully", "Create Account", 0);
 			}else if(check2.getState() == 2){
-				JOptionPane.showMessageDialog(null, "Nickname already in use", "Nickname already in use", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Nickname already in use", "Create Account", JOptionPane.ERROR_MESSAGE);
 			}else{
-				JOptionPane.showMessageDialog(null, "EMAIL already in use", "EMAIL already in use", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "EMAIL already in use", "Create Account", JOptionPane.WARNING_MESSAGE);
 			}
 		default: break;
 		}
 		System.out.println("ende hanleReceivedPacket");
 	}
 	
-	
-	public void handleCreation(String username, String plaintext, String email ){
+	//sends accountdetails to server to create new account
+	public void handleAccountCreation(String username, String plaintext, String email ){
 		Password pw = new Password(plaintext, new String("defsalt").getBytes());
 		 PacketRegisterRequest packet = new PacketRegisterRequest(username, pw.getHashedPasswordAsString(), email);
 		 try {
@@ -93,8 +90,8 @@ public class LoginClient extends PacketHandler {
 	}
 	
 
-	public static void main(String[] args) {
-		new LoginClient().handlelogin("Alex44", "Schokolade");;
-	}
+//	public static void main(String[] args) {
+//		new LoginClient().handlelogin("Alex44", "Schokolade");;
+//	}
 
 }

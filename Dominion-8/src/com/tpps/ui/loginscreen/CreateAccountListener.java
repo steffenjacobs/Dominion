@@ -61,7 +61,7 @@ public class CreateAccountListener implements ActionListener {
 
 		// --------------------------------------
 
-		new LoginClient().handleCreation(ca.getUsername().getText(), String.valueOf(ca.getPasswordbox().getPassword()),
+		new LoginClient().handleAccountCreation(ca.getUsername().getText(), String.valueOf(ca.getPasswordbox().getPassword()),
 				ca.getEmail().getText());
 		// --------------------------------------
 
