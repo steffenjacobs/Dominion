@@ -9,19 +9,19 @@ import com.tpps.technicalServices.util.CollectionsUtil;
  * 
  * */
 
-public class Player {
+public class ClientPlayer {
 
 	private Deck deck;
 	// private int id;
 	// private static int port;
 
-	public Player() {
+	public ClientPlayer() {
 		this.deck = new Deck();
 		// this.id = GameController.getPlayerID();
 		// this.port = ;
 	}
 
-	public Player(Deck deck, int id) {
+	public ClientPlayer(Deck deck, int id) {
 		this.deck = deck;
 		// this.id = GameController.getPlayerID();
 	}
@@ -46,7 +46,7 @@ public class Player {
 	 * Test
 	 */
 	public static void main(String[] args) {
-		Player p = new Player();
+		ClientPlayer p = new ClientPlayer();
 		System.out.println(p.deck.toString());
 		p.deck.shuffle();
 		ServerCard silver = new ServerCard(CollectionsUtil

@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class GameController {
 
-	private HashMap<Player, Integer> players;
+	private HashMap<ServerPlayer, Integer> players;
 	private boolean gameNotFinished = true;
 
 	public GameController() {
@@ -12,16 +12,16 @@ public class GameController {
 								 * Hard Code, Anzahl an realen Spielern ohne die
 								 * KI's bzw. max. Anzahl Spieler
 								 */; i++) {
-			players.put(new Player(), i);
+			players.put(new ServerPlayer(), i);
 		}
 	}
 
 	/** GETTER AND SETTER */
-	public HashMap<Player, Integer> getPlayers() {
+	public HashMap<ServerPlayer, Integer> getPlayers() {
 		return players;
 	}
 
-	public void setPlayers(HashMap<Player, Integer> players) {
+	public void setPlayers(HashMap<ServerPlayer, Integer> players) {
 		this.players = players;
 	}
 
@@ -38,14 +38,14 @@ public class GameController {
 	/** CONTROLLER LOGIC */
 	public void startGame() {
 		while (gameNotFinished) {
-			for (Player p : players.keySet()) {
+			for (ServerPlayer p : players.keySet()) {
 				nextTurn(p);
 				checkGameFinished();
 			}
 		}
 	}
 
-	public void nextTurn(Player player) {
+	public void nextTurn(ServerPlayer player) {
 		/* Player Turn */
 		checkGameFinished();
 	}
