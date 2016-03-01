@@ -47,13 +47,23 @@ public class ClientPlayer {
 	 */
 	public static void main(String[] args) {
 		ClientPlayer player = new ClientPlayer();
-		ServerCard silver = new ServerCard(CollectionsUtil
-				.linkedHashMapAction(CollectionsUtil.arrayList(CardAction.NONE), CollectionsUtil.arrayList(2)),
-				CollectionsUtil.arrayList(CardType.SILVER), "Silver", 0);
-		System.out.println(player.deck.toString());
-		player.deck.shuffle();
-		
-		player.deck.addCard(silver, player.deck.getDiscardPile());
+		ServerCard eins = new ServerCard(CollectionsUtil
+				.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE), CollectionsUtil.linkedList(2)),
+				CollectionsUtil.linkedList(CardType.SILVER), "Eins", 0);
+		ServerCard zwei = new ServerCard(CollectionsUtil
+				.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE), CollectionsUtil.linkedList(2)),
+				CollectionsUtil.linkedList(CardType.SILVER), "Zwei", 0);
+		ServerCard estate = new ServerCard(
+				CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.COUNT_FOR_VICTORY),
+						CollectionsUtil.linkedList(2)),
+				CollectionsUtil.linkedList(CardType.VICTORY), "Estate", 2);
+		ServerCard copper = new ServerCard(CollectionsUtil
+				.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE), CollectionsUtil.linkedList(0)),
+				CollectionsUtil.linkedList(CardType.COPPER), "Copper", 0);
+		player.deck = new Deck(CollectionsUtil.linkedList(estate),
+				CollectionsUtil.linkedList(new ServerCard[] { zwei, estate, estate, estate, copper }),
+				CollectionsUtil.linkedList(new ServerCard[] { copper, copper, copper, copper, copper }));
+		player.deck.addCard(CollectionsUtil.linkedList(eins), player.getDeck().getDrawPile());
 		System.out.println("\n" + player.deck.toString());
 		player.deck.shuffle();
 		System.out.println("\n" + player.deck.toString());
