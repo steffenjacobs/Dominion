@@ -33,6 +33,8 @@ public class GameController {
 		this.gameNotFinished = gameNotFinished;
 	}
 
+	
+	//not sure whether the loops are necessary 
 	/** CONTROLLER LOGIC */
 	public void startGame() {
 		while (gameNotFinished) {

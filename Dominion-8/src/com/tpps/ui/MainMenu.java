@@ -9,7 +9,7 @@ public class MainMenu extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private final Container c;
-//	private int width, height;
+	// private int width, height;
 	private MainMenuPanel panel;
 
 	public MainMenu() {
@@ -21,13 +21,7 @@ public class MainMenu extends JFrame {
 		this.panel = new MainMenuPanel(this);
 		this.setMinimumSize(new Dimension(1280, 720));
 		c.add(panel);
-//		this.panel.repaint();
-//		this.addComponentListener(new MyComponentAdapter());
 	}
-
-
-
-
 
 	public static void main(String[] args) {
 		MainMenu menu = new MainMenu();
