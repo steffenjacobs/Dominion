@@ -2,6 +2,7 @@ package com.tpps.technicalServices.util;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import com.tpps.application.game.card.CardAction;
 
@@ -14,10 +15,11 @@ public final class CollectionsUtil {
 
 	/**
 	 * @param
-	 * @return creates a sorted hashmap (LinkedHashMap) from the given parameters
-	 * */
-	public static LinkedHashMap<CardAction, Integer> linkedHashMapAction(
-			ArrayList<CardAction> actions, ArrayList<Integer> numbers) {
+	 * @return creates a sorted hashmap (LinkedHashMap) from the given
+	 *         parameters
+	 */
+	public static LinkedHashMap<CardAction, Integer> linkedHashMapAction(ArrayList<CardAction> actions,
+			ArrayList<Integer> numbers) {
 		if (actions.size() == numbers.size()) {
 			LinkedHashMap<CardAction, Integer> hashMap = new LinkedHashMap<CardAction, Integer>();
 			for (int i = 0; i < actions.size(); i++) {
@@ -44,30 +46,15 @@ public final class CollectionsUtil {
 		return resultList;
 	}
 
-	// maybe remove?
-
-	// public static ArrayList<CardAction> arrayListAction(CardAction...
-	// actions) {
-	// ArrayList<CardAction> resultList = new ArrayList<CardAction>();
-	// for (CardAction action : actions) {
-	// resultList.add(action);
-	// }
-	// return resultList;
-	// }
-
-	// public static ArrayList<CardType> arrayListType(CardType... types) {
-	// ArrayList<CardType> resultList = new ArrayList<CardType>();
-	// for (CardType type : types) {
-	// resultList.add(type);
-	// }
-	// return resultList;
-	// }
-
-	// public static ArrayList<Integer> arrayListInteger(Integer... actions) {
-	// ArrayList<Integer> resultList = new ArrayList<Integer>();
-	// for (Integer action : actions) {
-	// resultList.add(action);
-	// }
-	// return resultList;
-	// }
+	/**
+	 * returns 'amount' elements from the given list
+	 * @author nwipfler - Nicolas Wipfler
+	 */
+	public static <T> ArrayList<T> getNextElements(int amount, List<T> list) {
+		ArrayList<T> resultList = new ArrayList<T>();
+		for (int i = 0; i < amount; i++) {
+			resultList.add(list.get(i));
+		}
+		return resultList;
+	}
 }

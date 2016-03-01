@@ -6,36 +6,53 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.tpps.application.game.card.CardAction;
-import com.tpps.application.game.card.ServerCard;
 import com.tpps.application.game.card.CardType;
+import com.tpps.application.game.card.ServerCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
 
 /**
  * @author nwipfler - Nicolas Wipfler
- * */
+ */
 
 public class Deck {
 
-	// - Every player has a deck
-	// - Deck has two Lists with CardObjects: drawPile and discardPile
-	// - Deck provides functionality to manage the deck and shuffle cards etc.
+	/***********************************************************/
+	/**														   */
+	/**				DECK muss eine SORTED LIST sein			   */
+	/**				(siehe zB Spion)						   */
+	/**				nicht vergessen zu ändern				   */
+	/**								 	 			 	   	   */
+	/***********************************************************/
 
 	private int deckSize;
 	private List<ServerCard> drawPile;
 	private List<ServerCard> discardPile;
+	private List<ServerCard> cardHand;
 
 	// TODO: remove estate and copper (only for testing purposes)
 	// TODO: replace Action.COUNT_FOR_VICTORY with null or create another
-	// constructor? Same with Action.NONE
-	// for copper
-	private final ServerCard estate = new ServerCard(CollectionsUtil.linkedHashMapAction(
-			CollectionsUtil.arrayList(CardAction.COUNT_FOR_VICTORY),
-			CollectionsUtil.arrayList(2)),
+	// constructor? Same with Action.NONE for copper
+	private final ServerCard estate = new ServerCard(CollectionsUtil
+			.linkedHashMapAction(CollectionsUtil.arrayList(CardAction.COUNT_FOR_VICTORY), CollectionsUtil.arrayList(2)),
 			CollectionsUtil.arrayList(CardType.VICTORY), "Estate", 2);
-	private final ServerCard copper = new ServerCard(CollectionsUtil.linkedHashMapAction(
-			CollectionsUtil.arrayList(CardAction.NONE),
-			CollectionsUtil.arrayList(0)),
+	private final ServerCard copper = new ServerCard(CollectionsUtil
+			.linkedHashMapAction(CollectionsUtil.arrayList(CardAction.NONE), CollectionsUtil.arrayList(0)),
 			CollectionsUtil.arrayList(CardType.COPPER), "Copper", 0);
+
+	protected Deck() {
+		this.drawPile = new ArrayList<ServerCard>();
+		this.discardPile = new ArrayList<ServerCard>();
+		this.cardHand = new ArrayList<ServerCard>();
+		this.deckSize = 0;
+		init();
+	}
+
+	protected Deck(List<ServerCard> draw, List<ServerCard> discard, List<ServerCard> cardHand) {
+		this.drawPile = draw;
+		this.discardPile = discard;
+		this.cardHand = cardHand;
+		this.deckSize = draw.size() + discard.size() + cardHand.size();
+	}
 
 	public int getDeckSize() {
 		return deckSize;
@@ -61,25 +78,21 @@ public class Deck {
 		this.discardPile = discardPile;
 	}
 
-	protected Deck() {
-		this.drawPile = new ArrayList<ServerCard>();
-		this.discardPile = new ArrayList<ServerCard>();
-		this.deckSize = 0;
-		init();
+	public List<ServerCard> getCardHand() {
+		return this.cardHand;
 	}
 
-	protected Deck(List<ServerCard> draw, List<ServerCard> discard) {
-		this.drawPile = draw;
-		this.discardPile = discard;
-		this.deckSize = draw.size() + discard.size();
+	public void setCardHand(List<ServerCard> cardHand) {
+		this.cardHand = cardHand;
 	}
 
 	protected void init() {
-		if (drawPile != null) {
-			addCardToDraw(estate, 3);
-			addCardToDraw(copper, 7);
+		if (this.drawPile != null) {
+			addCard(this.estate, 3, this.drawPile);
+			addCard(this.copper, 7, this.drawPile);
 			shuffle();
 		}
+		buildCardHand();
 	}
 
 	public void shuffle() {
@@ -91,28 +104,72 @@ public class Deck {
 		this.drawPile = cards;
 	}
 
-	public boolean addCardToDraw(ServerCard card) {
-		this.deckSize++;
-		return this.drawPile.add(card);
+	/**
+	 * redraws 5 Cards for the Player
+	 */
+	public void buildCardHand() {
+		/* --- VARIANTE 1 --- */
+		if (this.getDeckSize() >= 5) {
+			int size = this.drawPile.size();
+			if (size >= 5) {
+				this.addCard(CollectionsUtil.getNextElements(5, this.drawPile), this.cardHand);
+			} else if (size == 0) {
+				shuffle();
+				size = this.drawPile.size();
+				this.addCard(CollectionsUtil.getNextElements(size >= 5 ? 5 : size, this.drawPile), this.cardHand);
+			} else {
+				if (this.getDeckSize() <= 5) {
+					shuffle();
+					this.addCard(CollectionsUtil.getNextElements(this.drawPile.size(), this.drawPile), this.cardHand);
+				}
+				this.addCard(CollectionsUtil.getNextElements(size, this.drawPile), this.cardHand);
+				shuffle();
+				this.addCard(CollectionsUtil.getNextElements(5 - size, this.drawPile), this.cardHand);
+			}
+		}
+
+		/* --- VARIANTE 2 --- */
+
+		Iterator<ServerCard> it = this.drawPile.iterator();
+		int count = 0;
+		while (it.hasNext() && count < 5) {
+			this.addCard(it.next(), this.cardHand);
+		}
+		if (count != 4) {
+			shuffle();
+			while (count < 5) {
+				count++;
+				this.addCard(it.next(), this.cardHand);
+			}
+		}
 	}
 
-	public boolean addCardToDraw(ServerCard card, int amount) {
+	/**
+	 * adds a single Card to the list in parameters
+	 */
+	public boolean addCard(ServerCard card, List<ServerCard> list) {
+		this.deckSize++;
+		return list.add(card);
+	}
+
+	/**
+	 * adds the same card 'amount'-times to the list in parameters
+	 */
+	public boolean addCard(ServerCard card, int amount, List<ServerCard> list) {
 		boolean flag = true;
 		for (int i = 0; i < amount; i++) {
-			flag &= addCardToDraw(card);
+			flag &= addCard(card, list);
 		}
 		return flag;
 	}
 
-	public boolean addCardToDiscard(ServerCard card) {
-		this.deckSize++;
-		return this.discardPile.add(card);
-	}
-
-	public boolean addCardToDiscard(ServerCard card, int amount) {
+	/**
+	 * adds a list of cards to the (destination-)list in parameters
+	 */
+	public boolean addCard(List<ServerCard> cards, List<ServerCard> destination) {
 		boolean flag = true;
-		for (int i = 0; i < amount; i++) {
-			flag &= addCardToDiscard(card);
+		for (ServerCard card : cards) {
+			flag &= addCard(card, destination);
 		}
 		return flag;
 	}
