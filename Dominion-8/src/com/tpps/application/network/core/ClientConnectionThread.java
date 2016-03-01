@@ -92,4 +92,24 @@ public class ClientConnectionThread extends Thread {
 			System.out.println("Could not send packet: Server not connected.");
 		}
 	}
+
+	/**
+	 * needed for testing
+	 * 
+	 * @return remote port on server
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public int getRemotePort() {
+		return clientSocket.getPort();
+	}
+
+	/**
+	 * needed for testing
+	 * 
+	 * @return local port
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public int getLocalPort() {
+		return clientSocket.getLocalPort();
+	}
 }

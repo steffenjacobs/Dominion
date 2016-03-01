@@ -18,8 +18,18 @@ public class Client {
 	private boolean connecting = false, connected = false;
 	private Thread tryToConnectThread = null;
 	private PacketHandler handler;
-	private ClientConnectionThread thread;
+	private ClientConnectionThread connectionThread;
 	private SocketAddress address;
+
+	/**
+	 * needed for testing
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 * @return ClientConnectionThread holding the connection to the server
+	 */
+	public ClientConnectionThread getConnectionThread() {
+		return this.connectionThread;
+	}
 
 	/**
 	 * Tries to connect to the loaded server asynchronously until a connection
@@ -47,8 +57,8 @@ public class Client {
 							clientSocket.connect(address, 5000);
 							System.out.println("Connected to Server.");
 							this.connected = true;
-							thread = new ClientConnectionThread(clientSocket, handler, this);
-							thread.start();
+							connectionThread = new ClientConnectionThread(clientSocket, handler, this);
+							connectionThread.start();
 							Thread.yield();
 						} catch (ConnectException ex) {
 							this.connected = false;
@@ -125,7 +135,7 @@ public class Client {
 	 */
 	public void disconnect() {
 		this.connected = false;
-		this.thread.interrupt();
+		this.connectionThread.interrupt();
 	}
 
 	/**
@@ -138,7 +148,7 @@ public class Client {
 	 */
 	public void sendMessage(byte[] data) throws IOException {
 		if (this.connected) {
-			thread.sendPacket(data);
+			connectionThread.sendPacket(data);
 		} else {
 			System.out.println("Could not send packet: No Connection.");
 			this.connectAndLoop();
