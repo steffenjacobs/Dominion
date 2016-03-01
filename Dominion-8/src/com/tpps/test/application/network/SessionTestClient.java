@@ -1,4 +1,4 @@
-package com.tpps.application.network.clientSession.client;
+package com.tpps.test.application.network;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,6 +9,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import com.tpps.application.network.clientSession.client.SessionClient;
+import com.tpps.application.network.clientSession.client.SessionPacketReceiverAPI;
+import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
 import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
 import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
 import com.tpps.application.network.clientSession.server.SessionServer;
@@ -32,8 +35,6 @@ public final class SessionTestClient extends PacketHandler {
 
 	private static Timer scheduler = null;
 	private Client client;
-
-	static final boolean DEBUG_PACKETS = true;
 
 	/**
 	 * Main Entry-Point for Connection-Tester
@@ -220,7 +221,7 @@ public final class SessionTestClient extends PacketHandler {
 		if (packet == null) {
 			System.out.println("Bad packet.");
 		} else {
-			if (DEBUG_PACKETS)
+			if (SessionClient.debug())
 				System.out.println(packet.toString());
 			switch (packet.getType()) {
 			case SESSION_CHECK_ANSWER:

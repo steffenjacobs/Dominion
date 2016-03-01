@@ -11,9 +11,8 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-import com.tpps.application.network.clientSession.client.SessionTestClient;
-import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
 import com.tpps.application.network.clientSession.client.SessionClient;
+import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
 import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
 import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
 import com.tpps.application.network.clientSession.server.SessionManager;
@@ -104,7 +103,7 @@ public class JUnitSessionServerTest {
 
 		if (doLongTest) {
 			// Start keep-alive
-			SessionTestClient.keepAlive(sessionClient, TEST_USER, true);
+			sessionClient.keepAlive(TEST_USER, true);
 
 			// wait until session would be invalidated without keep-alive
 			System.out.println("Waiting " + SessionManager.getExpiration() * 1000 + 5000 + " seconds");
@@ -114,7 +113,7 @@ public class JUnitSessionServerTest {
 			assertTrue(checkSession(sessionClient));
 
 			// stop keep-alive
-			SessionTestClient.keepAlive(sessionClient, TEST_USER, false);
+			sessionClient.keepAlive(TEST_USER, false);
 
 			// wait again
 			System.out.println("Waiting " + SessionManager.getExpiration() * 1000 + 5000 + " seconds (again)");

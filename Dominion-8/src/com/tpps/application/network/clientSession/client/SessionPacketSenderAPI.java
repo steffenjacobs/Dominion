@@ -28,10 +28,11 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
+	
 	private static void sendPacket(Client c, Packet packet) {
 		if (c.isConnected()) {
 			try {
-				if (SessionTestClient.DEBUG_PACKETS) {
+				if (SessionClient.debug()) {
 					System.out.println(packet.toString());
 				}
 				c.sendMessage(packet);
@@ -72,7 +73,7 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	static void sendKeepAlive(Client c, String username) {
+	public static void sendKeepAlive(Client c, String username) {
 		sendPacket(c, new PacketSessionKeepAlive(username));
 	}
 }
