@@ -63,8 +63,7 @@ public class Deck {
 	protected void init() {
 		if (this.drawPile != null) {
 			// TODO: replace Action.COUNT_FOR_VICTORY with null or create
-			// another
-			// constructor? Same with Action.NONE for copper
+			// another constructor? Same with Action.NONE for copper
 			addCard(new ServerCard(CollectionsUtil.linkedHashMapAction(
 					CollectionsUtil.linkedList(CardAction.COUNT_FOR_VICTORY), CollectionsUtil.linkedList(2)),
 					CollectionsUtil.linkedList(CardType.VICTORY), "Estate", 2), 3, this.drawPile);

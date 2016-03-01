@@ -36,7 +36,6 @@ public class ClientCard extends GameObject {
 	public ClientCard(LinkedHashMap<CardAction, Integer> actions, LinkedList<CardType> types, String name, int cost,
 			double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
-
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage,
 				_parent, _id);
 		this.name = name;
@@ -94,11 +93,10 @@ public class ClientCard extends GameObject {
 
 		try {
 			Client c = new Client(new InetSocketAddress("78.31.66.224", 1339), new PacketHandler() {
-				
+
 				@Override
 				public void handleReceivedPacket(int port, Packet packet) {
-					 
-					
+
 				}
 			});
 			c.sendMessage(new PacketPlayCard(2, "karl"));
@@ -108,6 +106,7 @@ public class ClientCard extends GameObject {
 		}
 
 	}
+
 	@Override
 	public void onMouseDrag() {
 		// TODO Auto-generated method stub
