@@ -170,9 +170,10 @@ public class GraphicFramework extends JPanel {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public void removeComponent(GameObject obj) {
-		gameObjects.remove(obj.getID());
+	public GameObject removeComponent(GameObject obj) {
+		GameObject res = gameObjects.remove(obj.getID());
 		this.repaint(obj.getHitbox());
+		return res;
 	}
 
 	/**
