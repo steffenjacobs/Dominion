@@ -87,11 +87,11 @@ public class ClientConnectionThread extends Thread {
 				outStream.flush();
 			} catch (SocketException | NullPointerException e) {
 				parent.setDisconnected();
-				System.out.println("Connection to Cloud-Server lost! Reconnecting...");
-				parent.connectAndLoop();
+				System.out.println("NETWORK-ERROR: Connection to Server lost! Reconnecting...");
+				parent.connectAndLoop(true);
 			}
 		} else {
-			System.out.println("Could not send packet: Server not connected.");
+			System.out.println("NETWORK-ERROR: Could not send packet: Server not connected.");
 		}
 	}
 

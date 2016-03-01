@@ -35,14 +35,55 @@ public class Client {
 	}
 
 	/**
-	 * Tries to connect to the loaded server asynchronously until a connection
-	 * is established.
+	 * Tries to connect to the loaded server synchronously until a connection is
+	 * established.
+	 * 
+	 * (ATTENTION: blocks the calling thread!)
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public void connectAndLoop() {
-
+	private void connectAndLoopLogic() {
 		long CONNECTION_TIMEOUT = 5000;
+
+		while (!Thread.interrupted()) {
+			this.connected = false;
+			try {
+				try {
+					final Socket clientSocket = SocketFactory.getDefault().createSocket();
+					clientSocket.connect(address, 5000);
+					System.out.println("Connected to Server.");
+					this.connected = true;
+					connectionThread = new ClientConnectionThread(clientSocket, handler, this);
+					connectionThread.start();
+					Thread.yield();
+				} catch (ConnectException ex) {
+					this.connected = false;
+					System.out.println("Connection refused. Reconnecting...");
+				}
+
+				Thread.sleep(50);
+				if (this.connected) {
+					break;
+				} else {
+					Thread.sleep(CONNECTION_TIMEOUT);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// do nothing: this exception is normal when the program
+				// exits.
+			}
+		}
+		connecting = false;
+	}
+
+	/**
+	 * Tries to connect to the loaded server synchronously or asynchronously
+	 * until a connection is established.
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public void connectAndLoop(boolean async) {
 
 		if (!connecting) {
 			connecting = true;
@@ -50,40 +91,12 @@ public class Client {
 			if (tryToConnectThread != null)
 				tryToConnectThread.interrupt();
 
-			tryToConnectThread = new Thread(() -> {
-
-				while (!Thread.interrupted()) {
-					this.connected = false;
-					try {
-						try {
-							final Socket clientSocket = SocketFactory.getDefault().createSocket();
-							clientSocket.connect(address, 5000);
-							System.out.println("Connected to Server.");
-							this.connected = true;
-							connectionThread = new ClientConnectionThread(clientSocket, handler, this);
-							connectionThread.start();
-							Thread.yield();
-						} catch (ConnectException ex) {
-							this.connected = false;
-							System.out.println("Connection refused. Reconnecting...");
-						}
-
-						Thread.sleep(50);
-						if (this.connected) {
-							break;
-						} else {
-							Thread.sleep(CONNECTION_TIMEOUT);
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					} catch (InterruptedException e) {
-						// do nothing: this exception is normal when the program
-						// exits.
-					}
-				}
-				connecting = false;
-			});
-			tryToConnectThread.start();
+			if (async) {
+				tryToConnectThread = new Thread(() -> connectAndLoopLogic());
+				tryToConnectThread.start();
+			} else {
+				connectAndLoopLogic();
+			}
 		}
 	}
 
@@ -94,7 +107,7 @@ public class Client {
 	 */
 	public void tryReconnect() {
 		connected = false;
-		connectAndLoop();
+		connectAndLoop(true);
 	}
 
 	//
@@ -122,13 +135,31 @@ public class Client {
 	 *            SocketAddress of the server
 	 * @param _handler
 	 *            an implementation of the interface
+	 * @param async:
+	 *            make the thread wait until the connection is established
+	 * @throws IOException
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public Client(SocketAddress _address, PacketHandler _handler, boolean async) throws IOException {
+		this.address = _address;
+		this.handler = _handler;
+		connectAndLoop(async);
+	}
+
+	/**
+	 * Tries to connect to the specified server (5sec timeout)
+	 *
+	 * @param address
+	 *            SocketAddress of the server
+	 * @param _handler
+	 *            an implementation of the interface
 	 * @throws IOException
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	public Client(SocketAddress _address, PacketHandler _handler) throws IOException {
 		this.address = _address;
 		this.handler = _handler;
-		connectAndLoop();
+		connectAndLoop(true);
 	}
 
 	/**
@@ -140,7 +171,7 @@ public class Client {
 		this.connected = false;
 		this.connectionThread.interrupt();
 	}
-	
+
 	/**
 	 * Sends a message to the server - replacement for sendPacket(byte[])
 	 * 
@@ -153,8 +184,8 @@ public class Client {
 		if (this.connected) {
 			connectionThread.sendPacket(PacketType.getBytes(packet));
 		} else {
-			System.out.println("Could not send packet: No Connection.");
-			this.connectAndLoop();
+			System.out.println("NETWORK ERROR: Could not send packet: No Connection.");
+			this.connectAndLoop(true);
 		}
 	}
 }
