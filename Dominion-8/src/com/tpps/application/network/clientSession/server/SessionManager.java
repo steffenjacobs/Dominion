@@ -20,15 +20,11 @@ public class SessionManager {
 	// represents a cache which entries will be auto-removed after
 	// EXPIRATION_TIME_SECONDS
 	// using Guava for the cache. Project: https://github.com/google/guava
-	// Download for you guys until the dependencies are working:
-	// https://github.com/google/guava/wiki/Release19
 	private static Cache<String, UUID> validSessions;
 
 	static {
-		validSessions = CacheBuilder.newBuilder()
-				.concurrencyLevel(MAX_CONCURRENT_USERS)/* .weakKeys() */
-				.maximumSize(MAX_CACHE_SIZE).expireAfterAccess(EXPIRATION_TIME_SECONDS, TimeUnit.SECONDS)
-				.build(new CacheLoader<String, UUID>() {
+		validSessions = CacheBuilder.newBuilder().concurrencyLevel(MAX_CONCURRENT_USERS).maximumSize(MAX_CACHE_SIZE)
+				.expireAfterAccess(EXPIRATION_TIME_SECONDS, TimeUnit.SECONDS).build(new CacheLoader<String, UUID>() {
 
 					@Override
 					public UUID load(String arg0) throws Exception {
@@ -121,5 +117,15 @@ public class SessionManager {
 		}
 		stream.println("--------------------------\n");
 		stream.println();
+	}
+
+	/**
+	 * getter for EXPIRATION_TIME_SECONDS
+	 * 
+	 * @return expiration time in seconds
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public static int getExpiration() {
+		return EXPIRATION_TIME_SECONDS;
 	}
 }

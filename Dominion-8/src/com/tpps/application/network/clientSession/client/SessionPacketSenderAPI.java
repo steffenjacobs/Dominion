@@ -11,7 +11,6 @@ import com.tpps.application.network.clientSession.packets.PacketSessionKeepAlive
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
 
 /**
  * represents some kind of API-like interface to send check- and get-requests to
@@ -29,13 +28,14 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
+	
 	private static void sendPacket(Client c, Packet packet) {
 		if (c.isConnected()) {
 			try {
-				if (SessionClient.DEBUG_PACKETS) {
+				if (SessionClient.debug()) {
 					System.out.println(packet.toString());
 				}
-				c.sendMessage(PacketType.getBytes(packet));
+				c.sendMessage(packet);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -73,7 +73,7 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	static void sendKeepAlive(Client c, String username) {
+	public static void sendKeepAlive(Client c, String username) {
 		sendPacket(c, new PacketSessionKeepAlive(username));
 	}
 }

@@ -1,10 +1,8 @@
 package com.tpps.application.game.card;
 
 import java.awt.Image;
-
 import java.io.IOException;
 import java.net.InetSocketAddress;
-
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -12,7 +10,7 @@ import java.util.LinkedList;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
-import com.tpps.application.network.packet.PacketType;
+import com.tpps.application.network.packet.Packet;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -38,7 +36,6 @@ public class ClientCard extends GameObject {
 	public ClientCard(LinkedHashMap<CardAction, Integer> actions, LinkedList<CardType> types, String name, int cost,
 			double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
-
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage,
 				_parent, _id);
 		this.name = name;
@@ -94,22 +91,10 @@ public class ClientCard extends GameObject {
 	@Override
 	public void onMouseClick() {
 
-		try {
-			Client c = new Client(new InetSocketAddress("localhost", 1339), new PacketHandler() {
-				
-				@Override
-				public void handleReceivedPacket(int port, byte[] bytes) {
-					 
-					
-				}
-			});
-			c.sendMessage(PacketType.getBytes(new PacketPlayCard(2, "karl")));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
 
 	}
+
 	@Override
 	public void onMouseDrag() {
 		// TODO Auto-generated method stub

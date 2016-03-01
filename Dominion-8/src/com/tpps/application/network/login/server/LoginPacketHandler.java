@@ -5,8 +5,9 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
-import com.tpps.application.network.clientSession.client.SuperSessionClient;
+import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
+import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.network.login.SQLHandling.Password;
@@ -16,26 +17,24 @@ import com.tpps.application.network.login.packets.PacketLoginCheckRequest;
 import com.tpps.application.network.login.packets.PacketRegisterAnswer;
 import com.tpps.application.network.login.packets.PacketRegisterRequest;
 import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
 
 public class LoginPacketHandler extends PacketHandler{
 
 	LoginServer server;
-	SuperSessionClient sessionclient;
+	SessionClient sessionclient;
 	private ConcurrentHashMap<String, Integer> waitingForSessionAnswer;
 	
 	public LoginPacketHandler() {
 		try {
 			waitingForSessionAnswer = new ConcurrentHashMap<>();
-			sessionclient = new SuperSessionClient(new InetSocketAddress("127.0.0.1", 1337));
+			sessionclient = new SessionClient(new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort()));
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void handleReceivedPacket(int port, byte[] bytes) {
-		final Packet packet = PacketType.getPacket(bytes);
+	public void handleReceivedPacket(int port, final Packet packet) {
 		System.out.println("Server received packet: " + packet);
 		switch(packet.getType()){
 		case LOGIN_CHECK_REQUEST: //check username, if valid genereate SESSION ID and send to SessionServer
@@ -54,7 +53,7 @@ public class LoginPacketHandler extends PacketHandler{
 						public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer answer) {							
 							PacketLoginCheckAnswer checkAnswer = new PacketLoginCheckAnswer(pac, true, answer.getLoginSessionID());
 							try {
-								server.sendMessage(waitingForSessionAnswer.remove(pac.getUsername()), PacketType.getBytes(checkAnswer));
+								server.sendMessage(waitingForSessionAnswer.remove(pac.getUsername()), checkAnswer);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
@@ -64,13 +63,13 @@ public class LoginPacketHandler extends PacketHandler{
 				}else{
 					System.out.println("im in else, where calculated hash doesn't work");
 					PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, false, null);
-					server.sendMessage(port, PacketType.getBytes(answer));
+					server.sendMessage(port, answer);
 				}
 			} catch (Exception e) {			
 				e.printStackTrace();
 				PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, false, null);
 				try {
-					server.sendMessage(port, PacketType.getBytes(answer));
+					server.sendMessage(port, answer);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -93,7 +92,7 @@ public class LoginPacketHandler extends PacketHandler{
 			
 			PacketRegisterAnswer pack = new PacketRegisterAnswer(castedPac, state, null);
 			try {
-				server.sendMessage(port, PacketType.getBytes(pack));
+				server.sendMessage(port, pack);
 			} catch (IOException e) {			
 				e.printStackTrace();
 			}

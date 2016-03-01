@@ -23,7 +23,7 @@ public class GameClient extends Client{
 				
 				System.out.println("wait on connection");
 			}
-			g.sendMessage(PacketType.getBytes(new PacketPlayCard(2, "karl")));
+			g.sendMessage(new PacketPlayCard(2, "karl"));
 			
 			
 		} catch (IOException e) {

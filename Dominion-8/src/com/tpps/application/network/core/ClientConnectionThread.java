@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
+import com.tpps.application.network.packet.PacketType;
+
 /**
  * represents the connection-thread on the client (very similar to the server
  * one)
@@ -49,7 +51,7 @@ public class ClientConnectionThread extends Thread {
 					System.out.println(length);
 					byte[] data = new byte[length];
 					inStream.readFully(data);
-					receiver.handleReceivedPacket(clientSocket.getLocalPort(), data);
+					receiver.handleReceivedPacket(clientSocket.getLocalPort(), PacketType.getPacket(data));
 				} catch (IOException e) {
 					System.out.println("Network Error: Connection Lost.");
 					interrupt();
@@ -91,5 +93,25 @@ public class ClientConnectionThread extends Thread {
 		} else {
 			System.out.println("Could not send packet: Server not connected.");
 		}
+	}
+
+	/**
+	 * needed for testing
+	 * 
+	 * @return remote port on server
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public int getRemotePort() {
+		return clientSocket.getPort();
+	}
+
+	/**
+	 * needed for testing
+	 * 
+	 * @return local port
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public int getLocalPort() {
+		return clientSocket.getLocalPort();
 	}
 }

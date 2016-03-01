@@ -7,6 +7,9 @@ import java.net.SocketAddress;
 
 import javax.net.SocketFactory;
 
+import com.tpps.application.network.packet.Packet;
+import com.tpps.application.network.packet.PacketType;
+
 /**
  * represents a client connected to a server on a higher layer then
  * ClientConnectionThread
@@ -18,8 +21,18 @@ public class Client {
 	private boolean connecting = false, connected = false;
 	private Thread tryToConnectThread = null;
 	private PacketHandler handler;
-	private ClientConnectionThread thread;
+	private ClientConnectionThread connectionThread;
 	private SocketAddress address;
+
+	/**
+	 * needed for testing
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 * @return ClientConnectionThread holding the connection to the server
+	 */
+	public ClientConnectionThread getConnectionThread() {
+		return this.connectionThread;
+	}
 
 	/**
 	 * Tries to connect to the loaded server asynchronously until a connection
@@ -47,8 +60,8 @@ public class Client {
 							clientSocket.connect(address, 5000);
 							System.out.println("Connected to Server.");
 							this.connected = true;
-							thread = new ClientConnectionThread(clientSocket, handler, this);
-							thread.start();
+							connectionThread = new ClientConnectionThread(clientSocket, handler, this);
+							connectionThread.start();
 							Thread.yield();
 						} catch (ConnectException ex) {
 							this.connected = false;
@@ -125,20 +138,20 @@ public class Client {
 	 */
 	public void disconnect() {
 		this.connected = false;
-		this.thread.interrupt();
+		this.connectionThread.interrupt();
 	}
-
+	
 	/**
-	 * Sends a message to the server
+	 * Sends a message to the server - replacement for sendPacket(byte[])
 	 * 
 	 * @param data
 	 *            the data to send
 	 * @throws IOException
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public void sendMessage(byte[] data) throws IOException {
+	public void sendMessage(Packet packet) throws IOException {
 		if (this.connected) {
-			thread.sendPacket(data);
+			connectionThread.sendPacket(PacketType.getBytes(packet));
 		} else {
 			System.out.println("Could not send packet: No Connection.");
 			this.connectAndLoop();

@@ -4,7 +4,6 @@ import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnsw
 import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
 
 public class SessionPacketReceiver extends PacketHandler {
 
@@ -15,12 +14,11 @@ public class SessionPacketReceiver extends PacketHandler {
 	 */
 
 	@Override
-	public void handleReceivedPacket(int port, byte[] bytes) {
-		Packet packet = PacketType.getPacket(bytes);
+	public void handleReceivedPacket(int port, Packet packet) {
 		if (packet == null) {
 			System.out.println("Bad packet.");
 		} else {
-			if (SessionClient.DEBUG_PACKETS)
+			if (SessionClient.debug())
 				System.out.println(packet.toString());
 			switch (packet.getType()) {
 			case SESSION_CHECK_ANSWER:

@@ -26,15 +26,13 @@ public class SessionPacketHandler extends PacketHandler {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public void handleReceivedPacket(int port, byte[] bytes) {
-		Packet packet = PacketType.getPacket(bytes);
+	public void handleReceivedPacket(int port, Packet packet) {
 		ServerConnectionThread requester = parent.getClientThread(port);
 		if (packet == null) {
 			super.output("<- Empty Packet from (" + port + ")");
 			return;
 		}
 
-		// TODO: implement event-system
 		switch (packet.getType()) {
 		case SESSION_KEEP_ALIVE:
 			super.output("-> Kept Alive " + ((PacketSessionKeepAlive) packet).getUsername());
