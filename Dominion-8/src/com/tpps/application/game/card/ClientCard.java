@@ -91,19 +91,7 @@ public class ClientCard extends GameObject {
 	@Override
 	public void onMouseClick() {
 
-		try {
-			Client c = new Client(new InetSocketAddress("78.31.66.224", 1339), new PacketHandler() {
-
-				@Override
-				public void handleReceivedPacket(int port, Packet packet) {
-
-				}
-			});
-			c.sendMessage(new PacketPlayCard(2, "karl"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
 
 	}
 
