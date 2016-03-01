@@ -31,6 +31,72 @@ public abstract class GameObject implements Cloneable, Serializable {
 	private int layer;
 	private boolean visible = true;
 
+
+	/**
+	 * creates a game object, only used for cloning
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 **/
+	protected GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
+			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
+		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
+		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
+		this.originalImage = sourceImage;
+		this.parent = _parent;
+		this.layer = _layer;
+		this.id = _id;
+		this.resizeObject(absWidth, absHeight);
+	}
+
+	/**
+	 * creates a game object and automatically sets absolute values for width
+	 * and height
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int _layer,
+			Image sourceImage, GraphicFramework _parent) {
+		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
+		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
+		this.originalImage = sourceImage;
+		this.parent = _parent;
+		this.layer = _layer;
+		this.id = GameObject.objectCounter++;
+		this.resizeObject(_parent.getWidth(), _parent.getHeight());
+	}
+
+	/**
+	 * creates a game object
+	 * 
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
+			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent) {
+		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
+		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
+		this.originalImage = sourceImage;
+		this.parent = _parent;
+		this.layer = _layer;
+		this.id = GameObject.objectCounter++;
+		this.resizeObject(absWidth, absHeight);
+	}
+
+	/**
+	 * constructor for all objects that are not visible instantaneous
+	 * 
+	 * @author nwipfler - Nicolas Wipfler
+	 * @author sjacobs - Steffen Jacobs
+	 */
+	public GameObject(GraphicFramework _parent) {
+		this.location = new RelativeGeom2D(0, 0);
+		this.dimension = new RelativeGeom2D(0, 0);
+		this.originalImage = new BufferedImage(0, 0, BufferedImage.TYPE_INT_ARGB);
+		this.parent = _parent;
+		this.id = GameObject.objectCounter++;
+		this.resizeObject(0, 0);
+		this.visible = false;
+	}
+
 	/**
 	 * changes the visibility of the game object
 	 * 
@@ -154,71 +220,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 	public String toString() {
 		return this.location.toString() + " - " + this.dimension.toString() + " - Layer: " + this.getLayer() + " - "
 				+ this.getParent() + " - " + this.isVisible();
-	}
-
-	/**
-	 * creates a game object, only used for cloning
-	 * 
-	 * @author sjacobs - Steffen Jacobs
-	 **/
-	protected GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
-			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
-		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
-		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
-		this.originalImage = sourceImage;
-		this.parent = _parent;
-		this.layer = _layer;
-		this.id = _id;
-		this.resizeObject(absWidth, absHeight);
-	}
-
-	/**
-	 * creates a game object and automatically sets absolute values for width
-	 * and height
-	 * 
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	public GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int _layer,
-			Image sourceImage, GraphicFramework _parent) {
-		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
-		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
-		this.originalImage = sourceImage;
-		this.parent = _parent;
-		this.layer = _layer;
-		this.id = GameObject.objectCounter++;
-		this.resizeObject(_parent.getWidth(), _parent.getHeight());
-	}
-
-	/**
-	 * creates a game object
-	 * 
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	public GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
-			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent) {
-		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
-		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
-		this.originalImage = sourceImage;
-		this.parent = _parent;
-		this.layer = _layer;
-		this.id = GameObject.objectCounter++;
-		this.resizeObject(absWidth, absHeight);
-	}
-
-	/**
-	 * constructor for all objects that are not visible instantaneous
-	 * 
-	 * @author nwipfler - Nicolas Wipfler
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	public GameObject(GraphicFramework _parent) {
-		this.location = new RelativeGeom2D(0, 0);
-		this.dimension = new RelativeGeom2D(0, 0);
-		this.originalImage = new BufferedImage(0, 0, BufferedImage.TYPE_INT_ARGB);
-		this.parent = _parent;
-		this.id = GameObject.objectCounter++;
-		this.resizeObject(0, 0);
-		this.visible = false;
 	}
 
 	/**

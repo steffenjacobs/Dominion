@@ -15,13 +15,13 @@ import com.tpps.ui.components.GFButton;
 
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
-	
+
 	private static GameWindow instance;
-	
-	public static GameWindow getInstance(){
+
+	public static GameWindow getInstance() {
 		return instance;
 	}
-	
+
 	public static void main(String[] args) throws IOException {
 		instance = new GameWindow();
 	}
@@ -37,7 +37,7 @@ public class GameWindow extends JFrame {
 	 */
 	public GameWindow() throws IOException {
 		final int WIDTH = 1280, HEIGHT = 720;
-		
+
 		c = this.getContentPane();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(WIDTH, HEIGHT);
@@ -69,18 +69,18 @@ public class GameWindow extends JFrame {
 		this.repaint();
 	}
 
-	
-
 	private class TestButton extends GFButton {
 		private static final long serialVersionUID = 1520424079770080041L;
 
-		public TestButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
-			super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent, caption);
+		public TestButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
+				int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
+			super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage,
+					_parent, caption);
 		}
 
 		@Override
 		public GameObject clone() {
-			return null;//return new TestButton(super.get);
+			return null;// return new TestButton(super.get);
 		}
 
 		@Override
@@ -109,14 +109,14 @@ public class GameWindow extends JFrame {
 
 		@Override
 		public String toString() {
-			return "@" + System.identityHashCode(this) + " - " + super.getLocation() + " , "
-					+ super.getDimension() + " , " + super.getLayer() + " , " + super.getImage() + " , "
-					+ super.getParent() + " , " + super.getCaption();
+			return "@" + System.identityHashCode(this) + " - " + super.getLocation() + " , " + super.getDimension()
+					+ " , " + super.getLayer() + " , " + super.getImage() + " , " + super.getParent() + " , "
+					+ super.getCaption();
 		}
 
 		@Override
 		public void onResize(int absWidth, int absHeight) {
-			super.onResize(absWidth, absHeight);			
+			super.onResize(absWidth, absHeight);
 		}
 
 	}
