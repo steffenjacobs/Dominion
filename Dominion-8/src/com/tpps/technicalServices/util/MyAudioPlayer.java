@@ -11,10 +11,11 @@ public class MyAudioPlayer {
 	 * initialisiert die Player und setzt lastVolume und lastSoundVolume
 	 */
 	public static void init() {		
-		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
+//		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
+		System.out.println(ClassLoader.getSystemResource("resources"));
 		MyAudioPlayer.mp32 = new MP3Player(
-				ClassLoader.getSystemResource(""));
-		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource(""));		
+				ClassLoader.getSystemResource("resources/sounds/Click.mp3"));
+//		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource(""));		
 		MyAudioPlayer.lastVolume = 55;
 		MyAudioPlayer.lastSoundVolume = 55;
 	}
@@ -51,7 +52,7 @@ public class MyAudioPlayer {
 	/**
 	 * spielt einen zweiten Player ab der einen PunchSound abspielt
 	 */
-	public static void doPunch() {
+	public static void doClick() {
 		MyAudioPlayer.mp32.play();		
 	}
 	

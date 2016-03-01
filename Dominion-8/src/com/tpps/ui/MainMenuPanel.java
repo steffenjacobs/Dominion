@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.components.MainMenuButton;
 
 /**
@@ -45,7 +46,7 @@ public class MainMenuPanel extends JPanel {
 		this.topGap = 100;
 		
 		this.INITIALIZE_ALPHA = 0.6F;
-		
+		MyAudioPlayer.init();
 		loadBackgroundImage();
 		initializeAlpha();				
 		createButtons(this.parent);
@@ -154,12 +155,19 @@ public class MainMenuPanel extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (buttons[0].isOn(e.getX(), e.getY())) {
+				
+				MyAudioPlayer.doClick();
 				MainMenuPanel.this.parent.dispose();
 				try {
 					new GameWindow().setVisible(true);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+			}
+			if (buttons[1].isOn(e.getX(), e.getY())) {
+				
+				MyAudioPlayer.doClick();				
+				
 			}
 		}
 
