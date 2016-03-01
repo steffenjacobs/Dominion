@@ -158,7 +158,8 @@ public class SQLOperations {
 	public static String getSaltForLogin(String identification){
 		PreparedStatement stmt = null;
 		String column = "";
-		if(identification.matches("[a-zA-Z0-9]+@[a-zA-Z]+\\.[a-zA-Z]+")){
+		if(identification.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+						+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")){
 			column = "email";
 		}else{
 			column = "nickname";
@@ -188,8 +189,9 @@ public class SQLOperations {
 			if(databasepw.equals(doublehashedpw)){
 				return true;
 			}
-		} catch (SQLException e) {		
-			e.printStackTrace();
+		} catch (SQLException e) {
+			return false;
+			//e.printStackTrace();
 		}
 		return false;
 	}

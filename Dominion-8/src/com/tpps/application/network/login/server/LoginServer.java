@@ -10,7 +10,7 @@ import com.tpps.application.network.login.SQLHandling.SQLOperations;
 public class LoginServer extends Server{
 	
 	public LoginServer() throws IOException {
-		super(new InetSocketAddress("0.0.0.0", 1338), new LoginPacketHandler());
+		super(new InetSocketAddress("127.0.0.1", 1338), new LoginPacketHandler());
 		((LoginPacketHandler)super.getHandler()).setServer(this);
 		checkExistingDatabase();
 	}
@@ -20,8 +20,8 @@ public class LoginServer extends Server{
 			String hostname = "localhost";
 			String port = "3306";
 			String database = "accountmanager";
-			String user = "root";
-			String password = "root";
+			String user = "jojo";
+			String password = "password";
 			SQLHandler.init(hostname, port, user, password, database);
 			new LoginServer();
 		} catch (IOException e) {		
@@ -29,12 +29,12 @@ public class LoginServer extends Server{
 		}
 	}
 	
-	private void checkExistingDatabase(){
-		  if(!SQLOperations.checkDatabase("accountmanager")){
-			  SQLOperations.createDatabase("accountmanager");
-		  }
-		  if(!SQLOperations.checkTable("accountdetails")){
-			  SQLOperations.createAccountdetailsTable();
-		  }
-		 }
+	private void checkExistingDatabase() {
+		if (!SQLOperations.checkDatabase("accountmanager")) {
+			SQLOperations.createDatabase("accountmanager");
+		}
+		if (!SQLOperations.checkTable("accountdetails")) {
+			SQLOperations.createAccountdetailsTable();
+		}
+	}
 }

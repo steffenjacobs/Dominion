@@ -26,8 +26,8 @@ public class LoginClient extends PacketHandler {
 	
 	public LoginClient() {
 		try {
-			c_login = new Client(new InetSocketAddress("78.31.66.224", 1338), this);
-			c_session = new Client(new InetSocketAddress("78.31.66.224", 1337), this);
+			c_login = new Client(new InetSocketAddress("127.0.0.1", 1338), this);
+			c_session = new Client(new InetSocketAddress("127.0.0.1", 1337), this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -58,9 +58,9 @@ public class LoginClient extends PacketHandler {
 			if(check.getState()){	//Anmeldung erfolgreich, pw richtig
 				this.sessionid = check.getSessionID();
 				SessionClient.keepAlive(c_session, username, true);
-				JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.INFORMATION_MESSAGE);
 			}else{//Anmeldung fehlgeschlagen, PW falsch
-				JOptionPane.showMessageDialog(null, "Wrong Password", "Login", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Wrong Password or nickname", "Login", JOptionPane.INFORMATION_MESSAGE);
 			}
 			break;
 		case LOGIN_REGISTER_ANSWER:
@@ -70,7 +70,7 @@ public class LoginClient extends PacketHandler {
 			}else if(check2.getState() == 2){
 				JOptionPane.showMessageDialog(null, "Nickname already in use", "Create Account", JOptionPane.ERROR_MESSAGE);
 			}else{
-				JOptionPane.showMessageDialog(null, "EMAIL already in use", "Create Account", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "EMAIL already in use", "Create Account", JOptionPane.ERROR_MESSAGE);
 			}
 		default: break;
 		}
