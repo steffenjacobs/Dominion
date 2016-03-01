@@ -46,15 +46,30 @@ public class ClientPlayer {
 	 * Test
 	 */
 	public static void main(String[] args) {
-		ClientPlayer p = new ClientPlayer();
-		System.out.println(p.deck.toString());
-		p.deck.shuffle();
-		ServerCard silver = new ServerCard(CollectionsUtil
-				.linkedHashMapAction(CollectionsUtil.arrayList(CardAction.NONE), CollectionsUtil.arrayList(2)),
-				CollectionsUtil.arrayList(CardType.SILVER), "Silver", 0);
-		p.deck.addCard(silver, p.deck.getDiscardPile());
-		System.out.println("\n" + p.deck.toString());
-		p.deck.shuffle();
-		System.out.println("\n" + p.deck.toString());
+		ClientPlayer player = new ClientPlayer();
+		ServerCard eins = new ServerCard(CollectionsUtil
+				.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE), CollectionsUtil.linkedList(2)),
+				CollectionsUtil.linkedList(CardType.SILVER), "Eins", 0);
+		ServerCard zwei = new ServerCard(CollectionsUtil
+				.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE), CollectionsUtil.linkedList(2)),
+				CollectionsUtil.linkedList(CardType.SILVER), "Zwei", 0);
+		ServerCard estate = new ServerCard(
+				CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.COUNT_FOR_VICTORY),
+						CollectionsUtil.linkedList(2)),
+				CollectionsUtil.linkedList(CardType.VICTORY), "Estate", 2);
+		ServerCard copper = new ServerCard(CollectionsUtil
+				.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE), CollectionsUtil.linkedList(0)),
+				CollectionsUtil.linkedList(CardType.COPPER), "Copper", 0);
+		player.deck = new Deck(CollectionsUtil.linkedList(estate),
+				CollectionsUtil.linkedList(new ServerCard[] { zwei, estate, estate, estate, copper }),
+				CollectionsUtil.linkedList(new ServerCard[] { copper, copper, copper, copper, copper }));
+		player.deck.addCard(CollectionsUtil.linkedList(eins), player.getDeck().getDrawPile());
+		System.out.println("\n" + player.deck.toString());
+		player.deck.shuffle();
+		System.out.println("\n" + player.deck.toString());
+		player.deck.draw();
+		System.out.println("\n" + player.deck.toString());
+		player.deck.putBack(player.deck.getCardHand().removeLast());
+		System.out.println("\n" + player.deck.toString());
 	}
 }

@@ -12,7 +12,7 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 public class ServerPlayer {
 
 	private Deck deck;
-	 private int id;
+	private int id;
 	// private static int port;
 
 	public ServerPlayer() {
@@ -50,9 +50,9 @@ public class ServerPlayer {
 		System.out.println(p.deck.toString());
 		p.deck.shuffle();
 		ServerCard silver = new ServerCard(CollectionsUtil
-				.linkedHashMapAction(CollectionsUtil.arrayList(CardAction.NONE), CollectionsUtil.arrayList(2)),
-				CollectionsUtil.arrayList(CardType.SILVER), "Silver", 0);
-		p.deck.addCard(silver, p.deck.getDiscardPile());
+				.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE), CollectionsUtil.linkedList(2)),
+				CollectionsUtil.linkedList(CardType.SILVER), "Silver", 0);
+		p.deck.addCard(CollectionsUtil.linkedList(silver), p.deck.getDiscardPile());
 		System.out.println("\n" + p.deck.toString());
 		p.deck.shuffle();
 		System.out.println("\n" + p.deck.toString());

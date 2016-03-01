@@ -11,12 +11,12 @@ import java.sql.SQLException;
  */
 public class SQLHandler {
 		
-	private String host;
-	private String port;
-	private String username;
-	private String password;
-	private String database;
-	private Connection connection;
+	private static String host;
+	private static String port;
+	private static String username;
+	private static String password;
+	private static String database;
+	private static Connection connection;
 	
 	/**
 	 * @author jhuhn - Johannes Huhn
@@ -27,29 +27,31 @@ public class SQLHandler {
 	 * @param password
 	 * @param database
 	 */
-	public SQLHandler(String host, String port, String username, String password, String database){
-		this.host = host;
-		this.port = port;
-		this.username = username;
-		this.password = password;
-		this.database = database;
-		this.connection = null;
-	}
-	
-//	public void init(String host, String port, String username, String password, String database){
-//		this.host = host;
-//		this.port = port;
-//		this.username = username;
-//		this.password = password;
-//		this.database = database;
+//	public SQLHandler(String host, String port, String username, String password, String database){
+//		SQLHandler.host = host;
+//		SQLHandler.port = port;
+//		SQLHandler.username = username;
+//		SQLHandler.password = password;
+//		SQLHandler.database = database;
+//		SQLHandler.connection = null;
 //	}
+	
+	public static void init(String host, String port, String username, String password, String database){
+		SQLHandler.host = host;
+		SQLHandler.port = port;
+		SQLHandler.username = username;
+		SQLHandler.password = password;
+		SQLHandler.database = database;
+		SQLHandler.connection = null;
+		connect();
+	}
 	
 	/**
 	 * @author jhuhn - Johannes Huhn
 	 * test if the client is still connected with the mysql database
 	 * @return true if the connection is valid, false else
 	 */
-	public boolean isConnected() {
+	public static boolean isConnected() {
 		try {
 			return (connection != null) && (connection.isValid(1));
 		}
@@ -65,7 +67,7 @@ public class SQLHandler {
 	 * This method connects to the mysql server and to a specific database
 	 * Furthermore this method tests if there is still a valid connection, if not the method connects again.
 	 */
-	public void connect() {
+	public static void connect() {
 		if (isConnected()) {
 			try {
 				connection.close();
@@ -75,7 +77,7 @@ public class SQLHandler {
 		}
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.database, this.username, this.password);
+			connection = DriverManager.getConnection("jdbc:mysql://" + SQLHandler.host + ":" + SQLHandler.port + "/" + SQLHandler.database, SQLHandler.username, SQLHandler.password);
 		}
 		catch (SQLException e) {
 			System.out.println("Could not connect to MySQL server! Exception: " + e.getMessage());
@@ -90,11 +92,11 @@ public class SQLHandler {
 	 * @author jhuhn - Johannes Huhn
 	 * This method closes the connection to the mysql server properly
 	 */
-	public void closeConnection() {
-		if (this.connection != null) {
+	public static void closeConnection() {
+		if (SQLHandler.connection != null) {
 			try {
-				this.connection.close();
-				this.connection = null;
+				SQLHandler.connection.close();
+				SQLHandler.connection = null;
 				System.out.println("Closed Connection to MySQL-Server successfully");
 			}
 			catch (SQLException e) {
@@ -109,13 +111,13 @@ public class SQLHandler {
 	 * gets the connection
 	 * @return a valif connection object, that is used to query mysql statements
 	 */
-	public Connection getConnection() {
+	public static Connection getConnection() {
 		if (isConnected()) {
 			return connection;
 		}
 		else {
 			System.out.println("Lost MySQL Connection. Reconnecting...");
-			this.connect();
+			SQLHandler.connect();
 			return connection;
 		}
 	}
