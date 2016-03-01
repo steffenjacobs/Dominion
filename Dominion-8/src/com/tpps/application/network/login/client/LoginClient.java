@@ -60,13 +60,13 @@ public class LoginClient extends PacketHandler {
 				SessionClient.keepAlive(c_session, username, true);
 				JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.INFORMATION_MESSAGE);
 			}else{//Anmeldung fehlgeschlagen, PW falsch
-				JOptionPane.showMessageDialog(null, "Wrong Password or nickname", "Login", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Wrong Password or nickname", "Login", JOptionPane.ERROR_MESSAGE);
 			}
 			break;
 		case LOGIN_REGISTER_ANSWER:
 			PacketRegisterAnswer check2 = (PacketRegisterAnswer) answer;
 			if(check2.getState() == 1){
-				JOptionPane.showMessageDialog(null, "Account created succesfully", "Create Account", 0);
+				JOptionPane.showMessageDialog(null, "Account created succesfully", "Create Account", JOptionPane.INFORMATION_MESSAGE);
 			}else if(check2.getState() == 2){
 				JOptionPane.showMessageDialog(null, "Nickname already in use", "Create Account", JOptionPane.ERROR_MESSAGE);
 			}else{
