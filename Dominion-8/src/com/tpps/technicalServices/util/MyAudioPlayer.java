@@ -10,14 +10,15 @@ public class MyAudioPlayer {
 	/**
 	 * initialisiert die Player und setzt lastVolume und lastSoundVolume
 	 */
-	public static void init() {
-		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
-		MyAudioPlayer.mp32 = new MP3Player(ClassLoader.getSystemResource(""));
-		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource(""));
-		MyAudioPlayer.lastVolume = 55;
-		MyAudioPlayer.lastSoundVolume = 55;
-	}
 
+	public static void init() {		
+//		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
+		
+		MyAudioPlayer.mp32 = new MP3Player(
+				ClassLoader.getSystemResource("resources/sounds/Click.mp3"));
+//		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource(""));		
+	}
+	
 	/**
 	 * startet die HintergrundMusik und setzt den Player auf wiederholen
 	 */
@@ -51,6 +52,10 @@ public class MyAudioPlayer {
 	/**
 	 * spielt einen zweiten Player ab der einen PunchSound abspielt
 	 */
+
+	public static void doClick() {
+		MyAudioPlayer.mp32.play();		
+	}
 	public static void doPunch() {
 		MyAudioPlayer.mp32.play();
 	}
