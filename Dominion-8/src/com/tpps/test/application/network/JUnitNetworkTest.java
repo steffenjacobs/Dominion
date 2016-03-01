@@ -18,7 +18,18 @@ import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.packet.Packet;
 
 /**
- * tests the network-framework
+ * tests the network-framework as required
+ * 
+ * check if server starts
+ * 
+ * check if client starts
+ * 
+ * check whether a local-host connection can be established and lies between the
+ * correct ports
+ * 
+ * test wheter packets can be send from client to server
+ * 
+ * check whether packets can be send from server to client
  * 
  * @author sjacobs - Steffen Jacobs
  */
