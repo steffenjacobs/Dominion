@@ -111,6 +111,11 @@ public class JUnitNetworkTest {
 	private class TestPacketHandler extends PacketHandler {
 		HashMap<Integer, Packet> lastReceived = new HashMap<>();
 
+		/**
+		 * trivial
+		 * 
+		 * @author sjacobs - Steffen Jacobs
+		 */
 		@Override
 		public void handleReceivedPacket(int port, Packet packet) {
 			System.out.println("[SUCCESS] Received Packet!");
@@ -118,6 +123,11 @@ public class JUnitNetworkTest {
 
 		}
 
+		/**
+		 * trivial
+		 * 
+		 * @author sjacobs - Steffen Jacobs
+		 */
 		public Packet getLastReceived(int port) {
 			return lastReceived.get(port);
 		}
