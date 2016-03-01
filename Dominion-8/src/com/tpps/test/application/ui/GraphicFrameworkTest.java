@@ -20,6 +20,26 @@ import com.tpps.ui.components.GFButton;
 /**
  * class to test the graphic framework
  * 
+ * tests whether the framework can be created
+ * 
+ * tests visability of game-objects
+ * 
+ * tests the raytracing
+ * 
+ * tests the hitboxes
+ * 
+ * tests the layers (click and see if the returned top-element is on top)
+ * 
+ * tests wheter the objects are repositioned correctly after resizing the window
+ * 
+ * tests hitbox & raytrace after resizing the window
+ * 
+ * tests check invisibility of gameObjects & redo layer-test
+ * 
+ * tests remove top element & redo layer-test
+ * 
+ * tests remove all components & redo layer-test
+ * 
  * @author sjacobs - Steffen Jacobs
  */
 public class GraphicFrameworkTest {
