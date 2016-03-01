@@ -1,6 +1,7 @@
 package com.tpps.ui;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
 
@@ -18,6 +19,7 @@ public class MainMenu extends JFrame {
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.panel = new MainMenuPanel(this);
+		this.setMinimumSize(new Dimension(1280, 720));
 		c.add(panel);
 //		this.panel.repaint();
 //		this.addComponentListener(new MyComponentAdapter());
