@@ -50,12 +50,16 @@ public final class CollectionsUtil {
 	 * returns 'amount' elements from the given list
 	 * @author nwipfler - Nicolas Wipfler
 	 */
-	public static <T> LinkedList<T> getNextElements(int amount, List<T> list) {
+	public static <T> LinkedList<T> getNextElements(int amount, LinkedList<T> list) {
 		LinkedList<T> resultList = new LinkedList<T>();
 		for (int i = 0; i < amount; i++) {
-			resultList.add(list.get(i));
-			list.remove(i);
+			resultList.add(list.getLast());
+			list.removeLast();
 		}
 		return resultList;
 	}
+	
+	// public static <T> T getNextElement(LinkedList<T> list) {
+	// return list.removeLast();
+	// }
 }

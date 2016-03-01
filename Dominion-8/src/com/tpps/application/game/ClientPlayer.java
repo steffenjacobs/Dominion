@@ -67,5 +67,9 @@ public class ClientPlayer {
 		System.out.println("\n" + player.deck.toString());
 		player.deck.shuffle();
 		System.out.println("\n" + player.deck.toString());
+		player.deck.draw();
+		System.out.println("\n" + player.deck.toString());
+		player.deck.putBack(player.deck.getCardHand().removeLast());
+		System.out.println("\n" + player.deck.toString());
 	}
 }

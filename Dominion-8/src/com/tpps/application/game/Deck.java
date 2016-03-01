@@ -152,24 +152,28 @@ public class Deck {
 	 * shuffle() method
 	 */
 	public void draw() {
-		if (this.drawPile.size() != 0) {
-			this.addCard(CollectionsUtil.getNextElements(1, this.drawPile), this.cardHand);
-		} else {
-			shuffle();
-			if (this.drawPile.size() != 0) {
-				this.addCard(CollectionsUtil.getNextElements(1, this.drawPile), this.cardHand);
-			} else {
-				/** keine Karte mehr vorhanden */
-			}
-		}
+		// if (this.drawPile.size() != 0) {
+		// this.addCard(CollectionsUtil.getNextElements(1, this.drawPile),
+		// this.cardHand);
+		// } else {
+		// shuffle();
+		// if (this.drawPile.size() != 0) {
+		// this.addCard(CollectionsUtil.getNextElements(1, this.drawPile),
+		// this.cardHand);
+		// } else {
+		// /** keine Karte mehr vorhanden */
+		// }
+		// }
+		this.cardHand.addLast(this.drawPile.removeLast());
 	}
 
 	public void putBack(ServerCard card) {
-
+		this.drawPile.addLast(card);
 	}
 
 	/** ENDOF TESTING */
 
+	// addCard in CollectionsUtil oder sinnlos?
 	/**
 	 * adds the same card 'amount'-times to the list in parameters
 	 */
