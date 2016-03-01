@@ -18,9 +18,9 @@ public class Deck {
 
 	/***********************************************************/
 	/**														   */
-	/**				DECK muss eine SORTED LIST sein			   */
-	/**				(siehe zB Spion)						   */
-	/**				nicht vergessen zu ändern				   */
+	/** DECK muss eine SORTED LIST sein */
+	/** (siehe zB Spion) */
+	/** nicht vergessen zu ändern */
 	/**								 	 			 	   	   */
 	/***********************************************************/
 
@@ -94,18 +94,25 @@ public class Deck {
 		}
 		buildCardHand();
 	}
-
-	public void shuffle() {
-		List<ServerCard> cards = new ArrayList<ServerCard>();
-		cards.addAll(this.discardPile);
-		cards.addAll(this.drawPile);
-		Collections.shuffle(cards);
-		this.discardPile = new ArrayList<ServerCard>();
-		this.drawPile = cards;
-	}
+	
+	
+	/** TESTING, z.B. draw Methode kann dann ausgelagert werden in Logik Klasse, ist nur zum Testen */
 
 	/**
 	 * redraws 5 Cards for the Player
+	 * 
+	 * <<<<<<<<<<<<<<<<method should use the draw() method below>>>>>>>>>>, which uses the shuffle()
+	 * 
+	 * method shuffle() should always check, if there are less cards in the
+	 * drawPile than the amount of cards we want to draw. if this is the case:
+	 * 
+	 * LIST Nachziehstapel HAS 3 CARDS 
+	 * LIST Ablagestapel HAS 20 CARDS
+	 * we want to draw 4 cards
+	 * 
+	 * shuffle should mix the Ablagestapel and add all remaining cards from
+	 * Nachziehstapel on the top of the new list, so at first the 3 'old' cards
+	 * will be drawn, and after that 1 card of the new shuffled list
 	 */
 	public void buildCardHand() {
 		/* --- VARIANTE 1 --- */
@@ -130,20 +137,56 @@ public class Deck {
 
 		/* --- VARIANTE 2 --- */
 
-		Iterator<ServerCard> it = this.drawPile.iterator();
-		int count = 0;
-		while (it.hasNext() && count < 5) {
-			this.addCard(it.next(), this.cardHand);
-		}
-		if (count != 4) {
+		// Iterator<ServerCard> it = this.drawPile.iterator();
+		// int count = 0;
+		// while (it.hasNext() && count < 5) {
+		// this.addCard(it.next(), this.cardHand);
+		// }
+		// if (count != 4) {
+		// shuffle();
+		// while (count < 5) {
+		// count++;
+		// /* hat java.util.NoSuchElementException geworfen*/
+		// this.addCard(it.next(), this.cardHand);
+		// }
+		// }
+	}
+	
+	public void shuffle() {
+		List<ServerCard> cards = new ArrayList<ServerCard>();
+		cards.addAll(this.discardPile);
+		cards.addAll(this.drawPile);
+		Collections.shuffle(cards);
+		this.discardPile = new ArrayList<ServerCard>();
+		this.drawPile = cards;
+	}
+    
+	
+	/**
+	 * adds 1 card from the drawPile to the cardHand of the player and removes
+	 * this card from the drawPile. Logic of comparism should be added to
+	 * shuffle() method
+	 */
+	public void draw() {
+		if (this.drawPile.size() != 0) {
+			this.addCard(CollectionsUtil.getNextElements(1, this.drawPile), this.cardHand);
+		} else {
 			shuffle();
-			while (count < 5) {
-				count++;
-				this.addCard(it.next(), this.cardHand);
+			if (this.drawPile.size() != 0) {
+				this.addCard(CollectionsUtil.getNextElements(1, this.drawPile), this.cardHand);
+			} else {
+				/** keine Karte mehr vorhanden */
 			}
 		}
 	}
 
+	public void putBack(ServerCard card) {
+		
+	}
+
+	/** ENDOF TESTING*/
+	
+	
 	/**
 	 * adds a single Card to the list in parameters
 	 */
@@ -178,6 +221,7 @@ public class Deck {
 		StringBuffer sBuf = new StringBuffer();
 		Iterator<ServerCard> itrDraw = drawPile.iterator();
 		Iterator<ServerCard> itrDisc = discardPile.iterator();
+		Iterator<ServerCard> itrCardHand = cardHand.iterator();
 		sBuf.append("drawPile:    <");
 		if (drawPile.isEmpty()) {
 			sBuf.append("empty");
@@ -200,7 +244,17 @@ public class Deck {
 				}
 			}
 		}
-		sBuf.append(">");
+		sBuf.append(">\ncardHand: <");
+		if (cardHand.isEmpty()) {
+			sBuf.append("empty");
+		} else {
+			while (itrCardHand.hasNext()) {
+				sBuf.append("<" + ((ServerCard) itrCardHand.next()).getName() + ">");
+				if (itrCardHand.hasNext()) {
+					sBuf.append(" ");
+				}
+			}
+		}
 		return sBuf.toString();
 	}
 }

@@ -1,10 +1,10 @@
 package com.tpps.application.game;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class GameController {
 
-	private HashMap<ServerPlayer, Integer> players;
+	private LinkedHashMap<ServerPlayer, Integer> players;
 	private boolean gameNotFinished = true;
 
 	public GameController() {
@@ -17,11 +17,11 @@ public class GameController {
 	}
 
 	/** GETTER AND SETTER */
-	public HashMap<ServerPlayer, Integer> getPlayers() {
+	public LinkedHashMap<ServerPlayer, Integer> getPlayers() {
 		return players;
 	}
 
-	public void setPlayers(HashMap<ServerPlayer, Integer> players) {
+	public void setPlayers(LinkedHashMap<ServerPlayer, Integer> players) {
 		this.players = players;
 	}
 
@@ -33,8 +33,7 @@ public class GameController {
 		this.gameNotFinished = gameNotFinished;
 	}
 
-	
-	//not sure whether the loops are necessary 
+	// not sure whether the loops are necessary
 	/** CONTROLLER LOGIC */
 	public void startGame() {
 		while (gameNotFinished) {

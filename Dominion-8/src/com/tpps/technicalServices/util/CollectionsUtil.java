@@ -54,6 +54,7 @@ public final class CollectionsUtil {
 		ArrayList<T> resultList = new ArrayList<T>();
 		for (int i = 0; i < amount; i++) {
 			resultList.add(list.get(i));
+			list.remove(i);
 		}
 		return resultList;
 	}

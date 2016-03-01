@@ -46,15 +46,16 @@ public class ClientPlayer {
 	 * Test
 	 */
 	public static void main(String[] args) {
-		ClientPlayer p = new ClientPlayer();
-		System.out.println(p.deck.toString());
-		p.deck.shuffle();
+		ClientPlayer player = new ClientPlayer();
 		ServerCard silver = new ServerCard(CollectionsUtil
 				.linkedHashMapAction(CollectionsUtil.arrayList(CardAction.NONE), CollectionsUtil.arrayList(2)),
 				CollectionsUtil.arrayList(CardType.SILVER), "Silver", 0);
-		p.deck.addCard(silver, p.deck.getDiscardPile());
-		System.out.println("\n" + p.deck.toString());
-		p.deck.shuffle();
-		System.out.println("\n" + p.deck.toString());
+		System.out.println(player.deck.toString());
+		player.deck.shuffle();
+		
+		player.deck.addCard(silver, player.deck.getDiscardPile());
+		System.out.println("\n" + player.deck.toString());
+		player.deck.shuffle();
+		System.out.println("\n" + player.deck.toString());
 	}
 }
