@@ -10,9 +10,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -25,6 +23,12 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+/**
+ * 
+ * @author Nishit Agrawal - nagrawal
+ *
+ */
+
 public class CreateAccount extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -34,13 +38,17 @@ public class CreateAccount extends JFrame {
 	private ImageIcon loading;
 	private BufferedImage background;
 	private JButton createAccount;
-	private JTextField email,describing,username;
-	private JPasswordField passwordbox,passwordboxRetype;
+	private JTextField email, describing, username;
+	private JPasswordField passwordbox, passwordboxRetype;
 	private JLabel[] description;
 	private JLabel header;
 	private JLabel all;
 	private JPanel[] panels;
 	private Font smallfont, customFont;
+	
+	/**
+	 * simple constructor (first call) merging all elements
+	 */
 
 	public CreateAccount() {
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -72,12 +80,17 @@ public class CreateAccount extends JFrame {
 		this.revalidate();
 	}
 
+	/**
+	 * A simple initialize method to set specific Frame.
+	 */
+
+	
 	private void init() {
 		c = this.getContentPane();
 		all = new JLabel(loading);
 		all.setLayout(new GridLayout(7, 1, 0, 30));
 		this.setSize(width / 4, height / 2);
-		this.setLocation((int)(width*0.65), height/4);
+		this.setLocation((int) (width * 0.65), height / 4);
 		this.setTitle("Create Account");
 		this.setResizable(false);
 		this.setVisible(true);
@@ -92,21 +105,26 @@ public class CreateAccount extends JFrame {
 		// this.setContentPane(new JLabel(loading));
 	}
 
-	// not working why? Path checking!!
+	
+	/**
+	 * importing font from resources
+	 */
+	
 	private void importFont() {
 		try {
-			customFont = Font
-					.createFont(Font.TRUETYPE_FONT,
-							new File(URLDecoder.decode(ClassLoader.getSystemResource("resources/font/xenippa1.TTF").getFile(),"UTF-8")));
+			customFont = Font.createFont(Font.TRUETYPE_FONT,
+					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF"));
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			// ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new
-			// File("src/resources/font/xenippa1.TTF")));
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
-					new File(URLDecoder.decode(ClassLoader.getSystemResource("resources/font/xenippa1.TTF").getFile(),"UTF-8"))));
+					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF")));
 		} catch (Exception e) {
 			System.err.println(e);
 		}
 	}
+	
+	/**
+	 * importing background image from resources
+	 */
 
 	private void loadImage() {
 		try {
@@ -116,13 +134,21 @@ public class CreateAccount extends JFrame {
 			e.printStackTrace();
 		}
 	}
-
+	
+	/**
+	 * background resize method
+	 */
+	
 	private void resizeImage() {
 		loading = new ImageIcon(background);
 		Image newing = background.getScaledInstance(width / 4, height / 2, java.awt.Image.SCALE_SMOOTH);
 		loading = new ImageIcon(newing);
 	}
 
+	/**
+	 * first panel created as a header
+	 */
+	
 	private void createpanel1() {
 		header = new JLabel();
 		header.setText("Create Account");
@@ -135,6 +161,10 @@ public class CreateAccount extends JFrame {
 		all.add(panels[0]);
 		// c.add(panels[0]);
 	}
+	
+	/**
+	 * second panel created as JTextfield for email
+	 */
 
 	private void createpanel2() {
 		panels[1].setLayout(new GridLayout(1, 2));
@@ -153,6 +183,11 @@ public class CreateAccount extends JFrame {
 		all.add(panels[1]);
 		panels[0].revalidate();
 	}
+	
+	/**
+	 * third panel created for the USER-ID
+	 */
+
 	private void createpanel3() {
 		panels[2].setLayout(new GridLayout(1, 2));
 
@@ -170,6 +205,10 @@ public class CreateAccount extends JFrame {
 		all.add(panels[2]);
 		panels[2].revalidate();
 	}
+	
+	/**
+	 * fourth panel is for the first password
+	 */
 
 	private void createpanel4() {
 		panels[3].setLayout(new GridLayout(1, 2));
@@ -187,6 +226,10 @@ public class CreateAccount extends JFrame {
 		panels[3].revalidate();
 	}
 	
+	/**
+	 * password recheck panel
+	 */
+
 	private void createpanel5() {
 		panels[4].setLayout(new GridLayout(1, 2));
 
@@ -203,6 +246,10 @@ public class CreateAccount extends JFrame {
 		panels[4].revalidate();
 	}
 	
+	/**
+	 * User-Description panel. 
+	 */
+
 	private void createpanel6() {
 		panels[5].setLayout(new GridLayout(1, 2));
 
@@ -220,12 +267,14 @@ public class CreateAccount extends JFrame {
 		all.add(panels[5]);
 		panels[5].revalidate();
 	}
-
+	
+	/**
+	 * Create Account button with specific listener.
+	 */
 
 	private void createpanel7() {
 		panels[6].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
 		// panels[3].setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
-
 
 		createAccount = new JButton("Create New Account");
 		createAccount.setFont(customFont.deriveFont(15f));
@@ -234,32 +283,62 @@ public class CreateAccount extends JFrame {
 		panels[6].setOpaque(false);
 		all.add(panels[6]);
 		c.add(all);
-		
+
 		createAccount.addActionListener(new CreateAccountListener(this));
-		
+
 		panels[6].revalidate();
 	}
 	
+	/**
+	 * getter Email
+	 * @return email
+	 */
+
 	public JTextField getEmail() {
 		return email;
 	}
 
+	/**
+	 * Description getter
+	 * @return describing
+	 */
+	
 	public JTextField getDescribing() {
 		return describing;
 	}
+	
+	/**
+	 * Getter USER-ID
+	 * @return username
+	 */
 
 	public JTextField getUsername() {
 		return username;
 	}
+	
+	/**
+	 * Getter for password
+	 * @return passwordbox 
+	 */
 
 	public JPasswordField getPasswordbox() {
 		return passwordbox;
 	}
 	
+	/**
+	 * Confirmation password getter
+	 * @return passwordboxRetype
+	 */
+
 	public JPasswordField getPasswordboxRetype() {
 		return passwordboxRetype;
 	}
 
+	/**
+	 * Button getter.
+	 * @return createAccount
+	 */
+	
 	public JButton getCreateAccount() {
 		return createAccount;
 	}

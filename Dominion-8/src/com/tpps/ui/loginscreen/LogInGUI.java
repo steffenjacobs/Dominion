@@ -10,9 +10,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.net.URLDecoder;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -26,6 +24,10 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 //TODO: underline Header, set Background, set transparent, map 'RETURN' key to Login
+
+/***
+ * @author nagrawal - Nishit Agrawal
+ */
 public class LogInGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -46,15 +48,31 @@ public class LogInGUI extends JFrame {
 	private JPanel[] panels;
 	private Font smallfont, customFont;
 
+	/**
+	 * constructor first call
+	 */
+
 	public LogInGUI() {
 		createdComponent();
 	}
+
+	/**
+	 * If new Account created, this constructor will be used by the Class
+	 * CreateAccount
+	 * 
+	 * @param text
+	 * @param password
+	 */
 
 	public LogInGUI(String text, char[] password) {
 		createdComponent();
 		this.userinfo.setText(text);
 		this.passwordbox.setText(String.valueOf(password));
 	}
+
+	/**
+	 * All components merged together
+	 */
 
 	private void createdComponent() {
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -83,6 +101,10 @@ public class LogInGUI extends JFrame {
 		this.revalidate();
 	}
 
+	/**
+	 * A simple initialize method to set specific Frame.
+	 */
+
 	private void init() {
 		c = this.getContentPane();
 		all = new JLabel(loading);
@@ -103,11 +125,15 @@ public class LogInGUI extends JFrame {
 		// this.setContentPane(new JLabel(loading));
 	}
 
-	// not working why? Path checking!!
+	/**
+	 * importing font from resources
+	 */
+
 	private void importFont() {
 
-		try {		
-			customFont = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF"));
+		try {
+			customFont = Font.createFont(Font.TRUETYPE_FONT,
+					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF"));
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
 					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF")));
@@ -115,6 +141,10 @@ public class LogInGUI extends JFrame {
 			System.err.println(e);
 		}
 	}
+
+	/**
+	 * loading an image from resources
+	 */
 
 	private void loadImage() {
 		try {
@@ -125,11 +155,19 @@ public class LogInGUI extends JFrame {
 		}
 	}
 
+	/**
+	 * resizing image according to the window.
+	 */
+
 	private void resizeImage() {
 		loading = new ImageIcon(background);
 		Image newing = background.getScaledInstance(width / 4, height / 4, java.awt.Image.SCALE_SMOOTH);
 		loading = new ImageIcon(newing);
 	}
+
+	/**
+	 * first panel creation - Header
+	 */
 
 	private void createpanel1() {
 		header = new JLabel();
@@ -143,6 +181,10 @@ public class LogInGUI extends JFrame {
 		all.add(panels[0]);
 		// c.add(panels[0]);
 	}
+
+	/**
+	 * second panel creation - registered UserID
+	 */
 
 	private void createpanel2() {
 		panels[1].setLayout(new GridLayout(1, 2));
@@ -162,6 +204,10 @@ public class LogInGUI extends JFrame {
 		panels[0].revalidate();
 	}
 
+	/**
+	 * third panel with password box
+	 */
+
 	private void createpanel3() {
 		panels[2].setLayout(new GridLayout(1, 2));
 
@@ -177,6 +223,10 @@ public class LogInGUI extends JFrame {
 		all.add(panels[2]);
 		panels[2].revalidate();
 	}
+
+	/**
+	 * fourth panel with Buttons and referring listener.
+	 */
 
 	private void createpanel4() {
 		panels[3].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
@@ -203,6 +253,12 @@ public class LogInGUI extends JFrame {
 		cancel.addActionListener(new LoginListener(cancel, this, userinfo, passwordbox));
 		execute.addActionListener(new LoginListener(execute, this, userinfo, passwordbox));
 	}
+
+	/**
+	 * a testing main
+	 * 
+	 * @param args
+	 */
 
 	public static void main(String[] args) {
 		new LogInGUI();

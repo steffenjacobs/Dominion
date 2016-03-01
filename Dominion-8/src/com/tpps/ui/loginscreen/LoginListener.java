@@ -9,6 +9,12 @@ import javax.swing.JTextField;
 
 import com.tpps.application.network.login.client.LoginClient;
 
+/**
+ * 
+ * @author Nishit Agrawal - nagrawal
+ *
+ */
+
 public class LoginListener implements ActionListener {
 
 	JButton clicked;
@@ -16,12 +22,25 @@ public class LoginListener implements ActionListener {
 	JTextField userinfo;
 	JPasswordField passwordbox;
 	
+	/**
+	 * simple constructor initialize all parameters
+	 * @param clicked
+	 * @param logInGUI
+	 * @param userinfo
+	 * @param passwordbox
+	 */
+	
 	public LoginListener(JButton clicked, LogInGUI logInGUI, JTextField userinfo, JPasswordField passwordbox) {
 		this.clicked = clicked;
 		lg = logInGUI;
 		this.userinfo = userinfo;
 		this.passwordbox = passwordbox;
 	}
+	
+	/**
+	 * action performed when clicked on a specific button
+	 * @param e
+	 */
 
 	public void actionPerformed(ActionEvent e) {
 		if (clicked.getText().equals("New Account")) {

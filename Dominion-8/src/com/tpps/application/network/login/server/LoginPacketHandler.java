@@ -20,14 +20,13 @@ import com.tpps.application.network.packet.PacketType;
 
 public class LoginPacketHandler extends PacketHandler{
 
-	SQLOperations sql;
 	LoginServer server;
 	SuperSessionClient sessionclient;
-	private ConcurrentHashMap<String, Integer> waitingForSessionAnswer = new ConcurrentHashMap<>();
+	private ConcurrentHashMap<String, Integer> waitingForSessionAnswer;
 	
-	public LoginPacketHandler(SQLOperations sql) {
-		this.sql = sql;
+	public LoginPacketHandler() {
 		try {
+			waitingForSessionAnswer = new ConcurrentHashMap<>();
 			sessionclient = new SuperSessionClient(new InetSocketAddress("127.0.0.1", 1337));
 		} catch (IOException e) {		
 			e.printStackTrace();
@@ -36,13 +35,12 @@ public class LoginPacketHandler extends PacketHandler{
 
 	@Override
 	public void handleReceivedPacket(int port, byte[] bytes) {
-		// TODO Auto-generated method stub
 		final Packet packet = PacketType.getPacket(bytes);
 		System.out.println("Server received packet: " + packet);
 		switch(packet.getType()){
-		case LOGIN_CHECK_REQUEST: //check username, if valid genereate SESSION ID
+		case LOGIN_CHECK_REQUEST: //check username, if valid genereate SESSION ID and send to SessionServer
 			PacketLoginCheckRequest pac = (PacketLoginCheckRequest) packet;
-			String salt = sql.getSaltForLogin(pac.getUsername());
+			String salt = SQLOperations.getSaltForLogin(pac.getUsername());
 
 			System.out.println("salt aus db: " + salt);
 			try {
@@ -50,7 +48,7 @@ public class LoginPacketHandler extends PacketHandler{
 				pw.createHashedPassword();
 				String doublehashed = pw.getHashedPasswordAsString();
 				waitingForSessionAnswer.put(pac.getUsername(), port);
-				if(sql.rightDoubleHashedPassword(pac.getUsername(), doublehashed)){
+				if(SQLOperations.rightDoubleHashedPassword(pac.getUsername(), doublehashed)){
 					SessionPacketSenderAPI.sendGetRequest(sessionclient, pac.getUsername(), new SuperCallable<PacketSessionGetAnswer>() {						
 						@Override
 						public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer answer) {							
@@ -90,8 +88,8 @@ public class LoginPacketHandler extends PacketHandler{
 			Password pw2 = new Password(firsthashedpw);
 			String genereatedrandomsalt = pw2.getSaltAsString();
 			String doublehashedpw = pw2.getHashedPasswordAsString();
-			System.out.println("Information: " + username + " " + email + " " + firsthashedpw + " " + genereatedrandomsalt + " " + doublehashedpw);
-			int state = sql.createAccount(username, email, doublehashedpw, genereatedrandomsalt);
+		//	System.out.println("Information: " + username + " " + email + " " + firsthashedpw + " " + genereatedrandomsalt + " " + doublehashedpw);
+			int state = SQLOperations.createAccount(username, email, doublehashedpw, genereatedrandomsalt);
 			
 			PacketRegisterAnswer pack = new PacketRegisterAnswer(castedPac, state, null);
 			try {

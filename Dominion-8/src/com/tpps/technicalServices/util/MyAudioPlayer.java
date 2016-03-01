@@ -1,30 +1,30 @@
 package com.tpps.technicalServices.util;
 
 import jaco.mp3.player.MP3Player;
+
 public class MyAudioPlayer {
 
 	private static MP3Player mp3, mp32, mp33;
 	private static int lastVolume, lastSoundVolume;
 
-	
 	/**
 	 * initialisiert die Player und setzt lastVolume und lastSoundVolume
 	 */
-	public static void init() {		
-		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
-		MyAudioPlayer.mp32 = new MP3Player(
-				ClassLoader.getSystemResource(""));
-		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource(""));		
-		MyAudioPlayer.lastVolume = 55;
-		MyAudioPlayer.lastSoundVolume = 55;
-	}
 
+	public static void init() {		
+//		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
+		
+		MyAudioPlayer.mp32 = new MP3Player(
+				ClassLoader.getSystemResource("resources/sounds/Click.mp3"));
+//		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource(""));		
+	}
+	
 	/**
 	 * startet die HintergrundMusik und setzt den Player auf wiederholen
 	 */
 	public static void play() {
-		if (!MyAudioPlayer.mp3.isPlaying()) {				
-			MyAudioPlayer.mp3.play();			
+		if (!MyAudioPlayer.mp3.isPlaying()) {
+			MyAudioPlayer.mp3.play();
 			MyAudioPlayer.mp3.setRepeat(true);
 		}
 	}
@@ -36,35 +36,42 @@ public class MyAudioPlayer {
 		MyAudioPlayer.mp3.pause();
 
 	}
-	
+
 	/**
 	 * hällt den Player an
 	 */
-	public static void stop(){		
-		MyAudioPlayer.mp3.stop();			
-//		mp3 = new MP3Player(ClassLoader.getSystemResource("resources/music/SovietConnection.mp3"));
-//		mp3.addMP3PlayerListener(new MyMP3PlayerListener());
+	public static void stop() {
+		MyAudioPlayer.mp3.stop();
+		// mp3 = new
+		// MP3Player(ClassLoader.getSystemResource("resources/music/SovietConnection.mp3"));
+		// mp3.addMP3PlayerListener(new MyMP3PlayerListener());
 		MyAudioPlayer.mp3.setRepeat(true);
-				
+
 	}
 
 	/**
 	 * spielt einen zweiten Player ab der einen PunchSound abspielt
 	 */
-	public static void doPunch() {
+
+	public static void doClick() {
 		MyAudioPlayer.mp32.play();		
 	}
-	
+	public static void doPunch() {
+		MyAudioPlayer.mp32.play();
+	}
+
 	/**
 	 * spielt einen dritten Player ab der einen CashSound abspielt
 	 */
-	public static void doCashSound(){
+	public static void doCashSound() {
 		MyAudioPlayer.mp33.play();
 	}
 
 	/**
 	 * setzt die lautstärke runter für den gewählten Player
-	 * @param select der zu wählenden Player ("mp3"/"mp32"/"mp33")
+	 * 
+	 * @param select
+	 *            der zu wählenden Player ("mp3"/"mp32"/"mp33")
 	 */
 	public static void turnDown(String select) {
 		switch (select) {
@@ -84,10 +91,11 @@ public class MyAudioPlayer {
 		}
 	}
 
-	
 	/**
 	 * setzt die lautstärke hoch für den gewählten Player
-	 * @param select der zu wählenden Player ("mp3"/"mp32"/"mp33")
+	 * 
+	 * @param select
+	 *            der zu wählenden Player ("mp3"/"mp32"/"mp33")
 	 */
 	public static void turnUp(String select) {
 		switch (select) {
@@ -106,11 +114,14 @@ public class MyAudioPlayer {
 			break;
 		}
 	}
-	
+
 	/**
-	 * setzt die lautstärke auf Null wenn sie ungleich Null ist wenn sie gleich Null ist
-	 * setzt sie die Lautstärke auf die letzte Lautstärke ungleich Null für den gewählten Player
-	 * @param select der zu wählenden Player ("mp3"/"mp32"/"mp33")
+	 * setzt die lautstärke auf Null wenn sie ungleich Null ist wenn sie gleich
+	 * Null ist setzt sie die Lautstärke auf die letzte Lautstärke ungleich Null
+	 * für den gewählten Player
+	 * 
+	 * @param select
+	 *            der zu wählenden Player ("mp3"/"mp32"/"mp33")
 	 */
 	public static void mute(String select) {
 		switch (select) {
@@ -118,7 +129,7 @@ public class MyAudioPlayer {
 			if (MyAudioPlayer.mp3.getVolume() != 0) {
 				MyAudioPlayer.mp3.setVolume(0);
 			} else {
-				if (MyAudioPlayer.lastVolume == 0){
+				if (MyAudioPlayer.lastVolume == 0) {
 					MyAudioPlayer.lastVolume = 55;
 				}
 				MyAudioPlayer.mp3.setVolume(MyAudioPlayer.lastVolume);
@@ -129,7 +140,7 @@ public class MyAudioPlayer {
 				MyAudioPlayer.mp32.setVolume(0);
 				MyAudioPlayer.mp33.setVolume(0);
 			} else {
-				if (MyAudioPlayer.lastSoundVolume == 0){
+				if (MyAudioPlayer.lastSoundVolume == 0) {
 					MyAudioPlayer.lastSoundVolume = 55;
 				}
 				MyAudioPlayer.mp32.setVolume(MyAudioPlayer.lastSoundVolume);
@@ -149,45 +160,45 @@ public class MyAudioPlayer {
 			return -1;
 		}
 	}
-	
-//	private static class MyMP3PlayerListener implements MP3PlayerListener{
-//
-//		@Override
-//		public void onPlay(MP3Player player) {
-//
-//
-//			
-//		}
-//
-//		@Override
-//		public void onPause(MP3Player player) {
-//
-//
-//			
-//		}
-//
-//		@Override
-//		public void onStop(MP3Player player) {
-//			//player.skipForward();			
-//		}
-//
-//		@Override
-//		public void onSetVolume(MP3Player player, int volume) {
-//			
-//			
-//		}
-//
-//		@Override
-//		public void onSetShuffle(MP3Player player, boolean shuffle) {
-//			
-//			
-//		}
-//
-//		@Override
-//		public void onSetRepeat(MP3Player player, boolean repeat) {
-//			
-//			
-//		}
-//		
-//	}
+
+	// private static class MyMP3PlayerListener implements MP3PlayerListener{
+	//
+	// @Override
+	// public void onPlay(MP3Player player) {
+	//
+	//
+	//
+	// }
+	//
+	// @Override
+	// public void onPause(MP3Player player) {
+	//
+	//
+	//
+	// }
+	//
+	// @Override
+	// public void onStop(MP3Player player) {
+	// //player.skipForward();
+	// }
+	//
+	// @Override
+	// public void onSetVolume(MP3Player player, int volume) {
+	//
+	//
+	// }
+	//
+	// @Override
+	// public void onSetShuffle(MP3Player player, boolean shuffle) {
+	//
+	//
+	// }
+	//
+	// @Override
+	// public void onSetRepeat(MP3Player player, boolean repeat) {
+	//
+	//
+	// }
+	//
+	// }
 }
