@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
 import com.tpps.application.network.clientSession.client.SuperSessionClient;
 import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
+import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.network.login.SQLHandling.Password;
@@ -26,7 +27,7 @@ public class LoginPacketHandler extends PacketHandler{
 	public LoginPacketHandler() {
 		try {
 			waitingForSessionAnswer = new ConcurrentHashMap<>();
-			sessionclient = new SuperSessionClient(new InetSocketAddress("127.0.0.1", 1337));
+			sessionclient = new SuperSessionClient(new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort()));
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}

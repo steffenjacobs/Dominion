@@ -9,12 +9,10 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.junit.Test;
 
 import com.tpps.application.network.core.Client;
-import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.Server;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.packet.Packet;
@@ -100,37 +98,6 @@ public class JUnitNetworkTest {
 		// check if test-packet lost no data
 		TestPacket receivedTestPacket2 = (TestPacket) receivedPacket2;
 		assertTrue(receivedTestPacket2.getData().equals(toSend));
-
-	}
-
-	/**
-	 * custom PacketHandler for the testing of the network-framework
-	 * 
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	private class TestPacketHandler extends PacketHandler {
-		HashMap<Integer, Packet> lastReceived = new HashMap<>();
-
-		/**
-		 * trivial
-		 * 
-		 * @author sjacobs - Steffen Jacobs
-		 */
-		@Override
-		public void handleReceivedPacket(int port, Packet packet) {
-			System.out.println("[SUCCESS] Received Packet!");
-			this.lastReceived.put(port, packet);
-
-		}
-
-		/**
-		 * trivial
-		 * 
-		 * @author sjacobs - Steffen Jacobs
-		 */
-		public Packet getLastReceived(int port) {
-			return lastReceived.get(port);
-		}
 
 	}
 }

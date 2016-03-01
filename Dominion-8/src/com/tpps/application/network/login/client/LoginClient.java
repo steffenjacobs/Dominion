@@ -7,6 +7,7 @@ import java.util.UUID;
 import javax.swing.JOptionPane;
 
 import com.tpps.application.network.clientSession.client.SessionClient;
+import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.login.SQLHandling.Password;
@@ -26,7 +27,7 @@ public class LoginClient extends PacketHandler {
 	public LoginClient() {
 		try {
 			c_login = new Client(new InetSocketAddress("127.0.0.1", 1338), this);
-			c_session = new Client(new InetSocketAddress("127.0.0.1", 1337), this);
+			c_session = new Client(new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort()), this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

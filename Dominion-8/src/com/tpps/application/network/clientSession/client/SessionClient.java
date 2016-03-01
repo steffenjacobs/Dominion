@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
 import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
+import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.SuperCallable;
@@ -161,7 +162,7 @@ public final class SessionClient extends PacketHandler {
 
 			}
 		}
-		return new InetSocketAddress("127.0.0.1", 1337);
+		return new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort());
 	}
 
 	/**
