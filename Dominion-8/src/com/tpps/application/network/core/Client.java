@@ -140,10 +140,10 @@ public class Client {
 	 * @throws IOException
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public Client(SocketAddress _address, PacketHandler _handler, boolean async) throws IOException {
+	public Client(SocketAddress _address, PacketHandler _handler, boolean connectAsync) throws IOException {
 		this.address = _address;
 		this.handler = _handler;
-		connectAndLoop(async);
+		connectAndLoop(connectAsync);
 	}
 
 	/**
