@@ -9,8 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.net.ServerSocketFactory;
 
 public class Server {
-	private static String ipAddress = "127.0.0.1";
-	private static int port = 1337;
 	private ServerSocket serverSocket;
 	private PacketHandler handler;
 	private Thread acceptor;
@@ -97,7 +95,7 @@ public class Server {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	private void asyncAcceptor() {
-		this.getHandler().output("Starting Server on " + ipAddress + ":" + port);
+		this.getHandler().output("Starting Server on " + serverSocket.getInetAddress());
 		while (!Thread.interrupted()) {
 			try {
 				Socket client = serverSocket.accept();
