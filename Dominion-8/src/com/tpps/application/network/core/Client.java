@@ -7,6 +7,9 @@ import java.net.SocketAddress;
 
 import javax.net.SocketFactory;
 
+import com.tpps.application.network.packet.Packet;
+import com.tpps.application.network.packet.PacketType;
+
 /**
  * represents a client connected to a server on a higher layer then
  * ClientConnectionThread
@@ -137,18 +140,18 @@ public class Client {
 		this.connected = false;
 		this.connectionThread.interrupt();
 	}
-
+	
 	/**
-	 * Sends a message to the server
+	 * Sends a message to the server - replacement for sendPacket(byte[])
 	 * 
 	 * @param data
 	 *            the data to send
 	 * @throws IOException
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public void sendMessage(byte[] data) throws IOException {
+	public void sendMessage(Packet packet) throws IOException {
 		if (this.connected) {
-			connectionThread.sendPacket(data);
+			connectionThread.sendPacket(PacketType.getBytes(packet));
 		} else {
 			System.out.println("Could not send packet: No Connection.");
 			this.connectAndLoop();

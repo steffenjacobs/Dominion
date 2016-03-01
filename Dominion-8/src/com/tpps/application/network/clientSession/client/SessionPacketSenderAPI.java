@@ -11,7 +11,6 @@ import com.tpps.application.network.clientSession.packets.PacketSessionKeepAlive
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
 
 /**
  * represents some kind of API-like interface to send check- and get-requests to
@@ -35,7 +34,7 @@ public final class SessionPacketSenderAPI {
 				if (SessionClient.DEBUG_PACKETS) {
 					System.out.println(packet.toString());
 				}
-				c.sendMessage(PacketType.getBytes(packet));
+				c.sendMessage(packet);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

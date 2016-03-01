@@ -15,7 +15,6 @@ import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
 import com.tpps.technicalServices.util.FileParser;
 
 /**
@@ -216,8 +215,7 @@ public final class SessionClient extends PacketHandler {
 	 */
 
 	@Override
-	public void handleReceivedPacket(int port, byte[] bytes) {
-		Packet packet = PacketType.getPacket(bytes);
+	public void handleReceivedPacket(int port, Packet packet) {
 		if (packet == null) {
 			System.out.println("Bad packet.");
 		} else {

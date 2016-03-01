@@ -18,7 +18,6 @@ import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.Server;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
 
 /**
  * tests the network-framework
@@ -66,17 +65,16 @@ public class JUnitNetworkTest {
 
 		/* check client-to-server */
 		// send test-packet
-		client.sendMessage(PacketType.getBytes(sentTestPacket));
+		client.sendMessage(sentTestPacket);
 
 		// wait to send & receive
 		Thread.sleep(10);
 
 		// check if test-packet was received
-		byte[] receivedBytes = serverPacketHandler.getLastReceived(localPort);
-		assertThat(receivedBytes, is(notNullValue()));
+		Packet receivedPacket = serverPacketHandler.getLastReceived(localPort);
+		assertThat(receivedPacket, is(notNullValue()));
 
 		// check if test-packet is not broken
-		Packet receivedPacket = PacketType.getPacket(receivedBytes);
 		assertThat(receivedPacket, is(notNullValue()));
 
 		// check if test-packet lost no data
@@ -86,18 +84,17 @@ public class JUnitNetworkTest {
 		/* check server-to-client */
 
 		// send test-packet
-		server.sendMessage(localPort, PacketType.getBytes(sentTestPacket));
+		server.sendMessage(localPort, sentTestPacket);
 
 		// wait to send & receive
 		Thread.sleep(10);
 
 		// check if test-packet was received
 		// int localPort = client.getConnectionThread().getLocalPort();
-		byte[] receivedBytes2 = clientPacketHandler.getLastReceived(localPort);
-		assertThat(receivedBytes2, is(notNullValue()));
+		Packet receivedPacket2 = clientPacketHandler.getLastReceived(localPort);
+		assertThat(receivedPacket2, is(notNullValue()));
 
 		// check if test-packet is not broken
-		Packet receivedPacket2 = PacketType.getPacket(receivedBytes2);
 		assertThat(receivedPacket2, is(notNullValue()));
 
 		// check if test-packet lost no data
@@ -112,16 +109,16 @@ public class JUnitNetworkTest {
 	 * @author sjacobs - Steffen Jacobs
 	 */
 	private class TestPacketHandler extends PacketHandler {
-		HashMap<Integer, byte[]> lastReceived = new HashMap<>();
+		HashMap<Integer, Packet> lastReceived = new HashMap<>();
 
 		@Override
-		public void handleReceivedPacket(int port, byte[] bytes) {
+		public void handleReceivedPacket(int port, Packet packet) {
 			System.out.println("[SUCCESS] Received Packet!");
-			this.lastReceived.put(port, bytes);
+			this.lastReceived.put(port, packet);
 
 		}
 
-		public byte[] getLastReceived(int port) {
+		public Packet getLastReceived(int port) {
 			return lastReceived.get(port);
 		}
 

@@ -3,6 +3,8 @@ package com.tpps.application.network.core;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.tpps.application.network.packet.Packet;
+
 public abstract class PacketHandler {
 	
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -10,7 +12,7 @@ public abstract class PacketHandler {
 	// represents the server-instance who's packets are handled by this PacketHandler-instance
 	protected Server parent;
 	
-	public abstract void handleReceivedPacket(int port, byte[] bytes);
+	public abstract void handleReceivedPacket(int port, Packet packet);
 	
 
 	/**

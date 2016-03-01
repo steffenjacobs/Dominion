@@ -15,7 +15,6 @@ import com.tpps.application.network.login.packets.PacketLoginCheckRequest;
 import com.tpps.application.network.login.packets.PacketRegisterAnswer;
 import com.tpps.application.network.login.packets.PacketRegisterRequest;
 import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
 
 public class LoginClient extends PacketHandler {
 
@@ -41,7 +40,7 @@ public class LoginClient extends PacketHandler {
 		//	pw.createHashedPassword();
 			String pwAsString = pw.getHashedPasswordAsString();
 			PacketLoginCheckRequest check = new PacketLoginCheckRequest(nickname, pwAsString);
-			c_login.sendMessage(PacketType.getBytes(check));
+			c_login.sendMessage(check);
 			System.out.println("ende handlelogin");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -49,9 +48,8 @@ public class LoginClient extends PacketHandler {
 	}
 	
 	@Override
-	public void handleReceivedPacket(int port, byte[] bytes) {
+	public void handleReceivedPacket(int port, Packet answer) {
 		System.out.println("into hanleReceivedPacket");
-		Packet answer = PacketType.getPacket(bytes);
 		switch(answer.getType()){
 		case LOGIN_CHECK_ANSWER: 
 			PacketLoginCheckAnswer check = (PacketLoginCheckAnswer) answer;
@@ -82,7 +80,7 @@ public class LoginClient extends PacketHandler {
 		Password pw = new Password(plaintext, new String("defsalt").getBytes());
 		 PacketRegisterRequest packet = new PacketRegisterRequest(username, pw.getHashedPasswordAsString(), email);
 		 try {
-			c_login.sendMessage(PacketType.getBytes(packet));
+			c_login.sendMessage(packet);
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}

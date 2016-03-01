@@ -8,6 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.net.ServerSocketFactory;
 
+import com.tpps.application.network.packet.Packet;
+import com.tpps.application.network.packet.PacketType;
+
 public class Server {
 	private ServerSocket serverSocket;
 	private PacketHandler handler;
@@ -101,7 +104,7 @@ public class Server {
 				Socket client = serverSocket.accept();
 				this.getHandler().output("<-" + client.getInetAddress() + ":" + client.getPort() + " connected.");
 				ServerConnectionThread clientThread = new ServerConnectionThread(client,
-						(socket, data) -> handler.handleReceivedPacket(socket.getPort(), data), this);
+						(socket, data) -> handler.handleReceivedPacket(socket.getPort(), PacketType.getPacket(data)), this);
 				clients.putIfAbsent(client.getPort(), clientThread);
 				clientThread.start();
 			} catch (IOException e) {
@@ -119,7 +122,7 @@ public class Server {
 	}
 
 	/**
-	 * Sends a message to a connected client
+	 * Sends a message to a connected client - replacement for sendMessage(int port, byte[] data)
 	 *
 	 * @param port
 	 *            the port of the client
@@ -129,12 +132,12 @@ public class Server {
 	 * @throws IllegalArgumentException
 	 *             if the client is unknown
 	 * @author sjacobs - Steffen Jacobs
-	 */
-	public void sendMessage(int port, byte[] data) throws IOException {
+	 * */
+	public void sendMessage(int port, Packet packet) throws IOException {
 		if (!clients.containsKey(port)) {
 			throw new IllegalArgumentException("No such client connected: " + port);
 		}
-		clients.get(port).sendMessage(data);
+		clients.get(port).sendMessage(PacketType.getBytes(packet));
 	}
 
 	/**
