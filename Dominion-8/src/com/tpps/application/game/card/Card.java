@@ -124,6 +124,7 @@ public class Card extends GameObject {
 		System.out.println(card.toString());
 
 		/*-------------------------------------------------------------------------------------------------------*/
+		
 		GameClient g;
 		try {
 			g = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());
