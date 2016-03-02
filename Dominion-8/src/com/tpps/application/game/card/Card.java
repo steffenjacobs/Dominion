@@ -12,11 +12,11 @@ public abstract class Card extends GameObject {
 
 	private static final long serialVersionUID = 1L;
 	private final LinkedHashMap<CardAction, Integer> actions;
-	protected final LinkedList<CardType> types;
-	protected final int cost;
-	protected final String name;
+	private final LinkedList<CardType> types;
+	private final int cost;
+	private final String name;
 	private final String id;
-	private static int classId;
+	private static int classID;
 	
 
 	public Card(LinkedHashMap<CardAction, Integer> actions,
@@ -27,7 +27,7 @@ public abstract class Card extends GameObject {
 		this.actions = actions;
 		this.cost = cost;
 		this.types = types;
-		this.id = this.name + classId++;
+		this.id = this.name + classID++;
 	}
 
 	/** dummy constructor for testing of deck class */
