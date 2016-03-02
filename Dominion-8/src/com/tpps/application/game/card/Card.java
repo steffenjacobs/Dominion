@@ -9,8 +9,8 @@ import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 
 public abstract class Card extends GameObject {
-
-	private static final long serialVersionUID = 1L;
+	
+	private static final long serialVersionUID = -4157717625890678601L;
 	private final LinkedHashMap<CardAction, Integer> actions;
 	private final LinkedList<CardType> types;
 	private final int cost;
@@ -18,7 +18,6 @@ public abstract class Card extends GameObject {
 	private final String id;
 	private static int classID;
 	
-
 	public Card(LinkedHashMap<CardAction, Integer> actions,
 			LinkedList<CardType> types, String name, int cost,
 			GraphicFramework _parent) {
@@ -30,21 +29,24 @@ public abstract class Card extends GameObject {
 		this.id = this.name + classID++;
 	}
 
-	/** dummy constructor for testing of deck class */
+	public LinkedHashMap<CardAction, Integer> getActions() {
+		return actions;
+	}
+	
+	public LinkedList<CardType> getTypes() {
+		return types;
+	}
+	
+	public int getCost() {
+		return this.cost;
+	}
+	
 	public String getName() {
 		return this.name;
 	}
 
-	public int getCost() {
-		return this.cost;
-	}
-
-	public LinkedList<CardType> getTypes() {
-		return types;
-	}
-
-	public LinkedHashMap<CardAction, Integer> getActions() {
-		return actions;
+	public String getId() {
+		return id;
 	}
 
 	@Override
