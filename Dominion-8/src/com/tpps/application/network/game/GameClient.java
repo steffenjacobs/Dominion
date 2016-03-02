@@ -8,7 +8,6 @@ import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
-import com.tpps.application.network.packet.PacketType;
 
 public class GameClient extends Client{
 

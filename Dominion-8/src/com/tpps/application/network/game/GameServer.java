@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Scanner;
 
-import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.core.Server;
-import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 
 /** @author sjacobs - Steffen Jacobs */
 public class GameServer extends Server{
@@ -17,7 +15,7 @@ public class GameServer extends Server{
 	}
 	public static void main(String[] args) {
 		try {
-			GameServer g = new GameServer();		
+			new GameServer();		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

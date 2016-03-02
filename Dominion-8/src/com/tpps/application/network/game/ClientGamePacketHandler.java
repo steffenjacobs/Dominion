@@ -1,7 +1,6 @@
 package com.tpps.application.network.game;
 
 import com.tpps.application.network.core.PacketHandler;
-import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.packet.Packet;
 
