@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+import com.tpps.application.game.ServerPlayer;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.GraphicFramework;
 
@@ -28,7 +29,7 @@ public class ServerCard extends Card {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public void doAction() {
+	public void doAction(ServerPlayer serverPlayer) {
 		ArrayList<CardAction> actionsList = new ArrayList<CardAction>(super
 				.getActions().keySet());
 		// Player player = GameController.getActivePlayer();
