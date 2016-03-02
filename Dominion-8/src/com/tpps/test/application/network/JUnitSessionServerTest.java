@@ -2,8 +2,7 @@ package com.tpps.test.application.network;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -60,12 +59,12 @@ public class JUnitSessionServerTest {
 		// test server startup
 		SessionServer server = new SessionServer(serverPacketHandler);
 		serverPacketHandler.setParent(server);
-		assertThat(server, is(notNullValue()));
+		assertNotNull(server);
 
 		// test client startup
 		SessionClient sessionClient = new SessionClient(
 				new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort()));
-		assertThat(sessionClient, is(notNullValue()));
+		assertNotNull(sessionClient);
 
 		// wait to connect.
 		Thread.sleep(10);
@@ -76,9 +75,9 @@ public class JUnitSessionServerTest {
 		assertTrue(sessionClient.isConnected());
 
 		// check if client is connected to the correct port
-		assertTrue(sessionPort == sessionClient.getConnectionThread().getRemotePort());
+		assertEquals(sessionPort, sessionClient.getConnectionThread().getRemotePort());
 		ServerConnectionThread connectedClient = server.getClientThread(localPort);
-		assertThat(connectedClient, is(notNullValue()));
+		assertNotNull(connectedClient);
 
 		// send get-request and create session
 		SessionPacketSenderAPI.sendGetRequest(sessionClient, TEST_USER, new SuperCallable<PacketSessionGetAnswer>() {
@@ -87,7 +86,7 @@ public class JUnitSessionServerTest {
 				//
 				receivedUUID = answer.getLoginSessionID();
 				// check if session is not null
-				assertThat(answer.getLoginSessionID(), is(notNullValue()));
+				assertNotNull(answer.getLoginSessionID());
 
 				return null;
 			}
@@ -96,7 +95,7 @@ public class JUnitSessionServerTest {
 		Thread.sleep(MAX_TIMEOUT);
 
 		// check if session was created
-		assertThat(receivedUUID, is(notNullValue()));
+		assertNotNull(receivedUUID);
 
 		// check if session is still valid
 		assertTrue(checkSession(sessionClient));
@@ -106,7 +105,7 @@ public class JUnitSessionServerTest {
 			sessionClient.keepAlive(TEST_USER, true);
 
 			// wait until session would be invalidated without keep-alive
-			System.out.println("Waiting " + SessionManager.getExpiration() * 1000 + 5000 + " seconds");
+			System.out.println("Waiting " + (SessionManager.getExpiration() * 1000 + 5000)/1000 + " seconds");
 			Thread.sleep(SessionManager.getExpiration() * 1000 + 5000);
 
 			// check if session is still valid
@@ -116,11 +115,11 @@ public class JUnitSessionServerTest {
 			sessionClient.keepAlive(TEST_USER, false);
 
 			// wait again
-			System.out.println("Waiting " + SessionManager.getExpiration() * 1000 + 5000 + " seconds (again)");
+			System.out.println("Waiting " + (SessionManager.getExpiration() * 1000 + 5000)/1000 + " seconds (again)");
 			Thread.sleep(SessionManager.getExpiration() * 1000 + 5000);
 
 			// check if session is still valid
-			assertTrue(!checkSession(sessionClient));
+			assertFalse(checkSession(sessionClient));
 		}
 	}
 
