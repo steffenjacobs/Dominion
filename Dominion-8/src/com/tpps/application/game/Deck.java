@@ -6,7 +6,7 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
-import com.tpps.application.game.card.ServerCard;
+import com.tpps.application.game.card.Card;
 import com.tpps.technicalServices.util.CollectionsUtil;
 
 /**
@@ -15,18 +15,18 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 
 public class Deck {
 
-	private LinkedList<ServerCard> drawPile;
-	private LinkedList<ServerCard> discardPile;
-	private LinkedList<ServerCard> cardHand;
+	private LinkedList<Card> drawPile;
+	private LinkedList<Card> discardPile;
+	private LinkedList<Card> cardHand;
 
 	protected Deck() {
-		this.drawPile = new LinkedList<ServerCard>();
-		this.discardPile = new LinkedList<ServerCard>();
-		this.cardHand = new LinkedList<ServerCard>();
+		this.drawPile = new LinkedList<Card>();
+		this.discardPile = new LinkedList<Card>();
+		this.cardHand = new LinkedList<Card>();
 		init();
 	}
 
-	protected Deck(LinkedList<ServerCard> draw, LinkedList<ServerCard> discard, LinkedList<ServerCard> cardHand) {
+	protected Deck(LinkedList<Card> draw, LinkedList<Card> discard, LinkedList<Card> cardHand) {
 		this.drawPile = draw;
 		this.discardPile = discard;
 		this.cardHand = cardHand;
@@ -36,44 +36,51 @@ public class Deck {
 		return this.drawPile.size() + this.discardPile.size() + this.cardHand.size();
 	}
 
-	public LinkedList<ServerCard> getDrawPile() {
+	public LinkedList<Card> getDrawPile() {
 		return this.drawPile;
 	}
 
-	public void setDrawPile(LinkedList<ServerCard> drawPile) {
+	public void setDrawPile(LinkedList<Card> drawPile) {
 		this.drawPile = drawPile;
 	}
 
-	public LinkedList<ServerCard> getDiscardPile() {
+	public LinkedList<Card> getDiscardPile() {
 		return discardPile;
 	}
 
-	public void setDiscardPile(LinkedList<ServerCard> discardPile) {
+	public void setDiscardPile(LinkedList<Card> discardPile) {
 		this.discardPile = discardPile;
 	}
 
-	public LinkedList<ServerCard> getCardHand() {
+	public LinkedList<Card> getCardHand() {
 		return this.cardHand;
 	}
 
-	public void setCardHand(LinkedList<ServerCard> cardHand) {
+	public void setCardHand(LinkedList<Card> cardHand) {
 		this.cardHand = cardHand;
 	}
 
-	public ServerCard getCard(ServerCard card) {
-		// suche cardHand mit der card ID durch und returne card
+	// suche cardHand mit der card ID durch und returne card
+	public Card getCard(String cardID) {
+		Iterator<Card> it = cardHand.iterator();
+		while (it.hasNext()) {
+			Card card = it.next();
+			if (card.getId().equals(cardID))
+				return card;
+		}
 		return null;
 	}
 
+	// TODO: replace Action.COUNT_FOR_VICTORY with null or create
+	// another constructor? Same with Action.NONE for copper
 	protected void init() {
 		if (this.drawPile != null) {
-			// TODO: replace Action.COUNT_FOR_VICTORY with null or create
-			// another constructor? Same with Action.NONE for copper
-			addCard(new ServerCard(
+
+			addCard(new Card(
 					CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.COUNT_FOR_VICTORY),
 							CollectionsUtil.linkedList(2)),
 					CollectionsUtil.linkedList(CardType.VICTORY), "Estate", 2, null), 3, this.drawPile);
-			addCard(new ServerCard(
+			addCard(new Card(
 					CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE),
 							CollectionsUtil.linkedList(0)),
 					CollectionsUtil.linkedList(CardType.COPPER), "Copper", 0, null), 7, this.drawPile);
@@ -131,7 +138,7 @@ public class Deck {
 
 		/* --- VARIANTE 2 --- */
 
-		Iterator<ServerCard> it = this.drawPile.iterator();
+		Iterator<Card> it = this.drawPile.iterator();
 		int count = 0;
 		while (it.hasNext() && count < 5) {
 			this.cardHand.addLast(it.next());
@@ -149,13 +156,13 @@ public class Deck {
 	// public void discardCardHand() {}
 
 	public void shuffle() {
-		LinkedList<ServerCard> cards = new LinkedList<ServerCard>();
+		LinkedList<Card> cards = new LinkedList<Card>();
 		cards.addAll(this.discardPile);
 		Collections.shuffle(cards);
-		for (ServerCard card : this.drawPile) {
+		for (Card card : this.drawPile) {
 			cards.addLast(card);
 		}
-		this.discardPile = new LinkedList<ServerCard>();
+		this.discardPile = new LinkedList<Card>();
 		this.drawPile = cards;
 	}
 
@@ -180,7 +187,7 @@ public class Deck {
 		this.cardHand.addLast(this.drawPile.removeLast());
 	}
 
-	public void putBack(ServerCard card) {
+	public void putBack(Card card) {
 		this.drawPile.addLast(card);
 	}
 
@@ -190,32 +197,32 @@ public class Deck {
 	/**
 	 * adds the same card 'amount'-times to the list in parameters
 	 */
-	public void addCard(ServerCard card, int amount, LinkedList<ServerCard> destination) {
+	public void addCard(Card card, int amount, LinkedList<Card> destination) {
 		for (int i = 0; i < amount; i++) {
-			destination.addLast((ServerCard) card.clone());
+			destination.addLast((Card) card.clone());
 		}
 	}
 
 	/**
 	 * adds a list of cards to the (destination-)list in parameters
 	 */
-	public void addCard(LinkedList<ServerCard> cards, LinkedList<ServerCard> destination) {
-		for (ServerCard card : cards) {
+	public void addCard(LinkedList<Card> cards, LinkedList<Card> destination) {
+		for (Card card : cards) {
 			destination.addLast(card);
 		}
 	}
 
 	public String toString() {
 		StringBuffer sBuf = new StringBuffer();
-		Iterator<ServerCard> itrDraw = drawPile.iterator();
-		Iterator<ServerCard> itrDisc = discardPile.iterator();
-		Iterator<ServerCard> itrCardHand = cardHand.iterator();
+		Iterator<Card> itrDraw = drawPile.iterator();
+		Iterator<Card> itrDisc = discardPile.iterator();
+		Iterator<Card> itrCardHand = cardHand.iterator();
 		sBuf.append("drawPile, size: " + drawPile.size() + " <");
 		if (drawPile.isEmpty()) {
 			sBuf.append("empty");
 		} else {
 			while (itrDraw.hasNext()) {
-				sBuf.append("<" + ((ServerCard) itrDraw.next()).getName() + ">");
+				sBuf.append("<" + ((Card) itrDraw.next()).getName() + ">");
 				if (itrDraw.hasNext()) {
 					sBuf.append(" ");
 				}
@@ -226,7 +233,7 @@ public class Deck {
 			sBuf.append("empty");
 		} else {
 			while (itrDisc.hasNext()) {
-				sBuf.append("<" + ((ServerCard) itrDisc.next()).getName() + ">");
+				sBuf.append("<" + ((Card) itrDisc.next()).getName() + ">");
 				if (itrDisc.hasNext()) {
 					sBuf.append(" ");
 				}
@@ -237,7 +244,7 @@ public class Deck {
 			sBuf.append("empty");
 		} else {
 			while (itrCardHand.hasNext()) {
-				sBuf.append("<" + ((ServerCard) itrCardHand.next()).getName() + ">");
+				sBuf.append("<" + ((Card) itrCardHand.next()).getName() + ">");
 				if (itrCardHand.hasNext()) {
 					sBuf.append(" ");
 				}

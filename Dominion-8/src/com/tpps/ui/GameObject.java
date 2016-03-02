@@ -32,6 +32,15 @@ public abstract class GameObject implements Cloneable, Serializable {
 	private boolean visible = true;
 
 	/**
+	 * Dummy **SORRY** =D
+	 * 
+	 * @author - Nico
+	 * */
+	public GameObject() {
+		
+	}
+	
+	/**
 	 * creates a game object, only used for cloning
 	 * 
 	 * @author sjacobs - Steffen Jacobs
