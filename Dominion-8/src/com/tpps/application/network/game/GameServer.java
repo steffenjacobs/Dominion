@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Scanner;
 
+import com.tpps.application.game.GameController;
 import com.tpps.application.network.core.Server;
 
 /** @author ladler - Lukas Adler */
 public class GameServer extends Server{
+	
+	private GameController gameController;
+	
 	public GameServer() throws IOException{
 		super(new InetSocketAddress("0.0.0.0", 1339), new ServerGamePacketHandler());
 		((ServerGamePacketHandler)super.getHandler()).setServer(this);
@@ -19,6 +23,12 @@ public class GameServer extends Server{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+
+	public GameController getGameController() {
+		return gameController;
 	}
 
 	/**
