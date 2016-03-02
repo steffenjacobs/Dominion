@@ -20,8 +20,7 @@ public class ClientGamePacketHandler extends PacketHandler{
 		}
 		switch (packet.getType()) {
 			case CARD_PLAYED:
-				System.out.println("packet received from Server of type " + packet.getType() + 
-						" card is of Type " + ((PacketPlayCard)packet).getCardType());				
+				System.out.println("packet received from Server of type " + packet.getType() + "id: " + ((PacketPlayCard)packet).getCardID());				
 			break;
 			default:
 				System.out.println("unknown packed type");

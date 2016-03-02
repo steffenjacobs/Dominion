@@ -34,12 +34,11 @@ public class ServerGamePacketHandler extends PacketHandler{
 		switch (packet.getType()) {
 			case CARD_PLAYED:
 				System.out.println("packet received from Client of type " + packet.getType() + 
-						" card is of Type " + ((PacketPlayCard)packet).getCardType());
+						" card id " + ((PacketPlayCard)packet).getCardID());
 			
 				try {					
-					server.sendMessage(port, new PacketPlayCard(2, "anna", CardType.DUCHY));
-				} catch (IOException e1) {
-					
+					server.sendMessage(port, new PacketPlayCard("Chappel2", "anna"));
+				} catch (IOException e1) {					
 					e1.printStackTrace();
 				}
 				
