@@ -4,17 +4,20 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Scanner;
 
+import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.core.Server;
+import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 
 /** @author sjacobs - Steffen Jacobs */
 public class GameServer extends Server{
 	public GameServer() throws IOException{
-		super(new InetSocketAddress("0.0.0.0", 1339), new ServerGamePacketHandler());
+		super(new InetSocketAddress("localhost", 1339), new ServerGamePacketHandler());
+		((ServerGamePacketHandler)super.getHandler()).setServer(this);
 		setConsoleInput();
 	}
 	public static void main(String[] args) {
 		try {
-			new GameServer();
+			GameServer g = new GameServer();		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -37,7 +40,7 @@ public class GameServer extends Server{
 		
 		String line = null;
 		Scanner scanInput = new Scanner(System.in);
-		while (true) {
+		while (true) {			
 			line = scanInput.nextLine();
 			try {
 				if (line.equals("exit")) {
