@@ -29,9 +29,10 @@ public class ServerCard extends Card {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public void doAction(ServerPlayer serverPlayer) {
+	public void doAction(String cardId) {
 		ArrayList<CardAction> actionsList = new ArrayList<CardAction>(super
 				.getActions().keySet());
+//		ServerCard = player.getDeck().getCard(cardId)
 		// Player player = GameController.getActivePlayer();
 		for (int i = 0; i < actionsList.size(); i++) {
 			switch (actionsList.get(i)) {
