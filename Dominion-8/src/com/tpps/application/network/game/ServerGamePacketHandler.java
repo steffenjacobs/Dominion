@@ -1,5 +1,6 @@
 package com.tpps.application.network.game;
 
+import java.awt.datatransfer.ClipboardOwner;
 import java.io.IOException;
 
 import com.tpps.application.game.GameController;
@@ -42,12 +43,11 @@ public class ServerGamePacketHandler extends PacketHandler{
 					server.sendMessage(port, new PacketPlayCard("Chappel2", "anna"));
 				} catch (IOException e1) {					
 					e1.printStackTrace();
-				}
+				}				
+			break;
+			case END_TURN:
 				
-				
-				
-				
-				
+//				GameController.
 			break;
 			default:
 				System.out.println("unknown packed type");
