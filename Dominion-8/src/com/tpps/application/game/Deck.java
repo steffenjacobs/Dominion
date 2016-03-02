@@ -60,9 +60,9 @@ public class Deck {
 		this.cardHand = cardHand;
 	}
 
-	// suche cardHand mit der card ID durch und returne card
-	public Card getCard(String cardID) {
-		Iterator<Card> it = cardHand.iterator();
+	// suche cardHand mit der card ID durch und returne card	
+	public Card getCard(String cardID, LinkedList<Card> searchList) {
+		Iterator<Card> it = searchList.iterator();
 		while (it.hasNext()) {
 			Card card = it.next();
 			if (card.getId().equals(cardID))
@@ -75,7 +75,6 @@ public class Deck {
 	// another constructor? Same with Action.NONE for copper
 	protected void init() {
 		if (this.drawPile != null) {
-
 			addCard(new Card(
 					CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.COUNT_FOR_VICTORY),
 							CollectionsUtil.linkedList(2)),
