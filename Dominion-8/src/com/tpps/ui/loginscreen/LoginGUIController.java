@@ -25,6 +25,9 @@ public class LoginGUIController{
 	}
 	
 	public void createAccountWithServer(String username, String plaintext, String email){
+		if(loginclient == null){
+			loginclient = new LoginClient(this);
+		}
 		loginclient.handleAccountCreation(username, plaintext, email);
 	}
 	

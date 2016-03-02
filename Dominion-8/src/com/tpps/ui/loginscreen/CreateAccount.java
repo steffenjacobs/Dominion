@@ -77,7 +77,7 @@ public class CreateAccount extends JFrame {
 		this.createpanel3();
 		this.createpanel4();
 		this.createpanel5();
-	//	this.createpanel6();
+		this.createpanel6();
 		this.createpanel7();
 		this.revalidate();
 	}
