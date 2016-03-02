@@ -23,7 +23,7 @@ public class Player {
 	public Player(Deck deck, int id) {
 		this.deck = deck;
 		this.id = id;
-		this.cardHandSize = GameConstant.INITIAL_CARD_HAND_SIZE;
+		this.cardHandSize = GameConstant.INIT_CARD_HAND_SIZE;
 	}
 
 	public Player(int id) {
@@ -61,7 +61,7 @@ public class Player {
 	 * @author ladler - Lukas Adler
 	 */
 	public void doAction(String cardID) {
-		Card serverCard = this.getDeck().getCard(cardID);
+		Card serverCard = this.getDeck().getCardFromHand(cardID);
 		// Player player = GameController.getActivePlayer();
 
 		LinkedList<CardAction> actionsList = new LinkedList<CardAction>(serverCard.getActions().keySet());
