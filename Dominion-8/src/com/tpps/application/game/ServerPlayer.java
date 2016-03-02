@@ -13,6 +13,7 @@ public class ServerPlayer {
 
 	private Deck deck;
 	private int id;
+
 	// private static int port;
 
 	public ServerPlayer() {
@@ -49,10 +50,12 @@ public class ServerPlayer {
 		ServerPlayer p = new ServerPlayer();
 		System.out.println(p.deck.toString());
 		p.deck.shuffle();
-		ServerCard silver = new ServerCard(CollectionsUtil
-				.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE), CollectionsUtil.linkedList(2)),
-				CollectionsUtil.linkedList(CardType.SILVER), "Silver", 0);
-		p.deck.addCard(CollectionsUtil.linkedList(silver), p.deck.getDiscardPile());
+		ServerCard silver = new ServerCard(CollectionsUtil.linkedHashMapAction(
+				CollectionsUtil.linkedList(CardAction.NONE),
+				CollectionsUtil.linkedList(2)),
+				CollectionsUtil.linkedList(CardType.SILVER), "Silver", 0, null);
+		p.deck.addCard(CollectionsUtil.linkedList(silver),
+				p.deck.getDiscardPile());
 		System.out.println("\n" + p.deck.toString());
 		p.deck.shuffle();
 		System.out.println("\n" + p.deck.toString());

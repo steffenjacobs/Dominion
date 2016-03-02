@@ -26,18 +26,20 @@ public class Deck {
 		init();
 	}
 
-	protected Deck(LinkedList<ServerCard> draw, LinkedList<ServerCard> discard, LinkedList<ServerCard> cardHand) {
+	protected Deck(LinkedList<ServerCard> draw, LinkedList<ServerCard> discard,
+			LinkedList<ServerCard> cardHand) {
 		this.drawPile = draw;
 		this.discardPile = discard;
 		this.cardHand = cardHand;
 	}
 
 	public int getDeckSize() {
-		return this.drawPile.size() + discardPile.size() + cardHand.size();
+		return this.drawPile.size() + this.discardPile.size()
+				+ this.cardHand.size();
 	}
 
 	public LinkedList<ServerCard> getDrawPile() {
-		return drawPile;
+		return this.drawPile;
 	}
 
 	public void setDrawPile(LinkedList<ServerCard> drawPile) {
@@ -65,11 +67,15 @@ public class Deck {
 			// TODO: replace Action.COUNT_FOR_VICTORY with null or create
 			// another constructor? Same with Action.NONE for copper
 			addCard(new ServerCard(CollectionsUtil.linkedHashMapAction(
-					CollectionsUtil.linkedList(CardAction.COUNT_FOR_VICTORY), CollectionsUtil.linkedList(2)),
-					CollectionsUtil.linkedList(CardType.VICTORY), "Estate", 2), 3, this.drawPile);
-			addCard(new ServerCard(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE),
-					CollectionsUtil.linkedList(0)), CollectionsUtil.linkedList(CardType.COPPER), "Copper", 0), 7,
-					this.drawPile);
+					CollectionsUtil.linkedList(CardAction.COUNT_FOR_VICTORY),
+					CollectionsUtil.linkedList(2)),
+					CollectionsUtil.linkedList(CardType.VICTORY), "Estate", 2,
+					null), 3, this.drawPile);
+			addCard(new ServerCard(CollectionsUtil.linkedHashMapAction(
+					CollectionsUtil.linkedList(CardAction.NONE),
+					CollectionsUtil.linkedList(0)),
+					CollectionsUtil.linkedList(CardType.COPPER), "Copper", 0,
+					null), 7, this.drawPile);
 			shuffle();
 		}
 		buildCardHand();
@@ -98,41 +104,48 @@ public class Deck {
 	 */
 	public void buildCardHand() {
 		/* --- VARIANTE 1 --- */
-		if (this.getDeckSize() >= 5) {
-			int size = this.drawPile.size();
-			if (size >= 5) {
-				this.addCard(CollectionsUtil.getNextElements(5, this.drawPile), this.cardHand);
-			} else if (size == 0) {
-				shuffle();
-				size = this.drawPile.size();
-				this.addCard(CollectionsUtil.getNextElements(size >= 5 ? 5 : size, this.drawPile), this.cardHand);
-			} else {
-				if (this.getDeckSize() <= 5) {
-					shuffle();
-					this.addCard(CollectionsUtil.getNextElements(this.drawPile.size(), this.drawPile), this.cardHand);
-				}
-				this.addCard(CollectionsUtil.getNextElements(size, this.drawPile), this.cardHand);
-				shuffle();
-				this.addCard(CollectionsUtil.getNextElements(5 - size, this.drawPile), this.cardHand);
-			}
-		}
+		// if (this.getDeckSize() >= 5) {
+		// int size = this.drawPile.size();
+		// if (size >= 5) {
+		// this.addCard(CollectionsUtil.getNextElements(5, this.drawPile),
+		// this.cardHand);
+		// } else if (size == 0) {
+		// shuffle();
+		// size = this.drawPile.size();
+		// this.addCard(CollectionsUtil.getNextElements(size >= 5 ? 5 : size,
+		// this.drawPile), this.cardHand);
+		// } else {
+		// if (this.getDeckSize() <= 5) {
+		// shuffle();
+		// this.addCard(CollectionsUtil.getNextElements(this.drawPile.size(),
+		// this.drawPile), this.cardHand);
+		// }
+		// this.addCard(CollectionsUtil.getNextElements(size, this.drawPile),
+		// this.cardHand);
+		// shuffle();
+		// this.addCard(CollectionsUtil.getNextElements(5 - size,
+		// this.drawPile), this.cardHand);
+		// }
+		// }
 
 		/* --- VARIANTE 2 --- */
 
-		// Iterator<ServerCard> it = this.drawPile.iterator();
-		// int count = 0;
-		// while (it.hasNext() && count < 5) {
-		// this.addCard(it.next(), this.cardHand);
-		// }
-		// if (count != 4) {
-		// shuffle();
-		// while (count < 5) {
-		// count++;
-		// /* hat java.util.NoSuchElementException geworfen*/
-		// this.addCard(it.next(), this.cardHand);
-		// }
-		// }
+		Iterator<ServerCard> it = this.drawPile.iterator();
+		int count = 0;
+		while (it.hasNext() && count < 5) {
+			this.cardHand.addLast(it.next());
+		}
+		if (count != 4) {
+			shuffle();
+			while (count < 5) {
+				count++;
+				/* hat java.util.NoSuchElementException geworfen */
+				this.cardHand.addLast(it.next());
+			}
+		}
 	}
+
+	// public void discardCardHand() {}
 
 	public void shuffle() {
 		LinkedList<ServerCard> cards = new LinkedList<ServerCard>();
@@ -172,20 +185,22 @@ public class Deck {
 
 	/** ENDOF TESTING */
 
-	// addCard in CollectionsUtil oder sinnlos?
+	// addCard in CollectionsUtil oder sinnlos? JA
 	/**
 	 * adds the same card 'amount'-times to the list in parameters
 	 */
-	public void addCard(ServerCard card, int amount, LinkedList<ServerCard> list) {
+	public void addCard(ServerCard card, int amount,
+			LinkedList<ServerCard> destination) {
 		for (int i = 0; i < amount; i++) {
-			list.addLast(card);
+			destination.addLast((ServerCard) card.clone());
 		}
 	}
 
 	/**
 	 * adds a list of cards to the (destination-)list in parameters
 	 */
-	public void addCard(LinkedList<ServerCard> cards, LinkedList<ServerCard> destination) {
+	public void addCard(LinkedList<ServerCard> cards,
+			LinkedList<ServerCard> destination) {
 		for (ServerCard card : cards) {
 			destination.addLast(card);
 		}
@@ -223,7 +238,8 @@ public class Deck {
 			sBuf.append("empty");
 		} else {
 			while (itrCardHand.hasNext()) {
-				sBuf.append("<" + ((ServerCard) itrCardHand.next()).getName() + ">");
+				sBuf.append("<" + ((ServerCard) itrCardHand.next()).getName()
+						+ ">");
 				if (itrCardHand.hasNext()) {
 					sBuf.append(" ");
 				}
