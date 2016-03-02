@@ -170,6 +170,18 @@ public class Server {
 	}
 
 	/**
+	 * broadcasts a packet to all connected clients *
+	 * 
+	 * @param packet
+	 *            Packet to broadcast
+	 */
+	public void broadcastMessage(Packet packet) throws IOException {
+		for (Entry<Integer, ServerConnectionThread> entr : clients.entrySet()) {
+			entr.getValue().sendMessage(PacketType.getBytes(packet));
+		}
+	}
+
+	/**
 	 * Closes the connection
 	 * 
 	 */
