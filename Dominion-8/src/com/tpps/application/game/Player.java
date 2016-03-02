@@ -15,6 +15,8 @@ public class Player {
 	private Deck deck;
 	private int id;
 	private int cardHandSize;
+	private int actions;
+	private int buys;
 	// aktionen, käufe, etc.
 
 	// draw()
@@ -61,7 +63,7 @@ public class Player {
 	 * @author ladler - Lukas Adler
 	 */
 	public void doAction(String cardID) {
-		Card serverCard = this.getDeck().getCardFromHand(cardID);
+		Card serverCard = this.getDeck().getCard(cardID, this.getDeck().getCardHand());
 		// Player player = GameController.getActivePlayer();
 
 		LinkedList<CardAction> actionsList = new LinkedList<CardAction>(serverCard.getActions().keySet());
@@ -69,11 +71,8 @@ public class Player {
 
 		while (cardIt.hasNext()) {
 			switch (cardIt.next()) {
-			case ADD_ACTION_TO_PLAYER:
-				// player.addAction(this.actions.get(ADD_ACTION_TO_PLAYER));
-				// sentPackage(player, numbAction);
-				System.out.println(
-						"ADD_ACTION_TO_PLAYER: " + serverCard.getActions().get(CardAction.ADD_ACTION_TO_PLAYER));
+			case ADD_ACTION_TO_PLAYER:				
+				actions = serverCard.getActions().get(CardAction.ADD_ACTION_TO_PLAYER);
 				break;
 			case ADD_PURCHASE:
 				System.out.println("ADD_PURCHASE: " + serverCard.getActions().get(CardAction.ADD_PURCHASE));

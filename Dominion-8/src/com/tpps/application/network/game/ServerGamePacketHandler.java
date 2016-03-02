@@ -34,7 +34,7 @@ public class ServerGamePacketHandler extends PacketHandler{
 		}
 		switch (packet.getType()) {
 			case CARD_PLAYED:
-//				GameController.getActivePlayer().getDeck().
+				GameController.getActivePlayer().doAction(((PacketPlayCard)packet).getCardID());
 				System.out.println("packet received from Client of type " + packet.getType() + 
 						" card id " + ((PacketPlayCard)packet).getCardID());
 			
