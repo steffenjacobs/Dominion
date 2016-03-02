@@ -1,8 +1,7 @@
 package com.tpps.test.application.network;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
@@ -47,11 +46,11 @@ public class JUnitNetworkTest {
 		// test server startup
 		Server server = new Server(new InetSocketAddress("127.0.0.1", port), serverPacketHandler);
 		serverPacketHandler.setParent(server);
-		assertThat(server, is(notNullValue()));
+		assertNotNull(server);
 
 		// test client startup
 		Client client = new Client(new InetSocketAddress("127.0.0.1", port), clientPacketHandler);
-		assertThat(client, is(notNullValue()));
+		assertNotNull(client);
 
 		// wait to connect.
 		Thread.sleep(10);
@@ -62,9 +61,9 @@ public class JUnitNetworkTest {
 		assertTrue(client.isConnected());
 
 		// check if client is connected to the correct port
-		assertTrue(port == client.getConnectionThread().getRemotePort());
+		assertEquals(port, client.getConnectionThread().getRemotePort());
 		ServerConnectionThread connectedClient = server.getClientThread(localPort);
-		assertThat(connectedClient, is(notNullValue()));
+		assertNotNull(connectedClient);
 
 		// create test-packet
 		ArrayList<Serializable> toSend = new ArrayList<>();
@@ -81,14 +80,14 @@ public class JUnitNetworkTest {
 
 		// check if test-packet was received
 		Packet receivedPacket = serverPacketHandler.getLastReceived(localPort);
-		assertThat(receivedPacket, is(notNullValue()));
+		assertNotNull(receivedPacket);
 
 		// check if test-packet is not broken
-		assertThat(receivedPacket, is(notNullValue()));
+		assertNotNull(receivedPacket);
 
 		// check if test-packet lost no data
 		TestPacket receivedTestPacket = (TestPacket) receivedPacket;
-		assertTrue(receivedTestPacket.getData().equals(toSend));
+		assertEquals(receivedTestPacket.getData(), toSend);
 
 		/* check server-to-client */
 
@@ -101,14 +100,14 @@ public class JUnitNetworkTest {
 		// check if test-packet was received
 		// int localPort = client.getConnectionThread().getLocalPort();
 		Packet receivedPacket2 = clientPacketHandler.getLastReceived(localPort);
-		assertThat(receivedPacket2, is(notNullValue()));
+		assertNotNull(receivedPacket2);
 
 		// check if test-packet is not broken
-		assertThat(receivedPacket2, is(notNullValue()));
+		assertNotNull(receivedPacket2);
 
 		// check if test-packet lost no data
 		TestPacket receivedTestPacket2 = (TestPacket) receivedPacket2;
-		assertTrue(receivedTestPacket2.getData().equals(toSend));
+		assertEquals(receivedTestPacket2.getData(), toSend);
 
 	}
 }
