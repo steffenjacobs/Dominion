@@ -1,8 +1,10 @@
 package com.tpps.test.application.ui;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.AWTException;
@@ -56,7 +58,7 @@ public class GraphicFrameworkTest {
 		GraphicFramework framework = new GraphicFramework(new TestFrame());
 
 		// check if framework was created without exceptions
-		assertThat(framework, is(notNullValue()));
+		assertNotNull(framework);
 
 		// add two overlapping buttons
 		TestButton button_1 = new TestButton(0, 0, .5, .5, F_WIDTH, F_HEIGHT, 1, null, framework, "TEST");
@@ -73,11 +75,11 @@ public class GraphicFrameworkTest {
 
 		// check hitbox
 		Rectangle rect = new Rectangle(0, 0, F_WIDTH / 2, F_HEIGHT / 2);
-		assertTrue(button_1.getHitbox().equals(rect));
+		assertEquals(button_1.getHitbox(), rect);
 
 		// check click
 		GameObject top1 = framework.getTopObject(0, 0);
-		assertTrue(top1 == button_2);
+		assertSame(top1, button_2);
 
 		// check resize
 		final int newWidth = 1920, newHeight = 1080;
@@ -85,7 +87,7 @@ public class GraphicFrameworkTest {
 		rect = new Rectangle(0, 0, newWidth / 2, newHeight / 2);
 
 		// hitbox after resize
-		assertTrue(button_1.getHitbox().equals(rect));
+		assertEquals(button_1.getHitbox(), rect);
 
 		// raytrace after resize
 		assertTrue(button_1.isInside(newWidth / 4 - 1, newHeight / 4 - 1));
@@ -93,32 +95,32 @@ public class GraphicFrameworkTest {
 		// remove top element at 0, 0
 		GameObject toRemove = framework.getTopObject(0, 0);
 		GameObject go = framework.removeComponent(toRemove);
-		assertThat(go, is(notNullValue()));
+		assertNotNull(go);
 
 		// check if that was button_2
-		assertTrue(button_2 == go);
+		assertSame(button_2, go);
 
 		// check if button_1 is now top object
 		GameObject top = framework.getTopObject(0, 0);
-		assertTrue(top == button_1);
+		assertSame(top, button_1);
 
 		// check visibility again: invisible objects should not be clickable
 		button_1.setVisible(false);
 		top = framework.getTopObject(0, 0);
-		assertTrue(top == null);
+		assertNull(top);
 
 		// check if elements are correctly moved
 		button_1.setVisible(true);
 		framework.moveObject(button_1, new RelativeGeom2D(.1, .1));
-		assertTrue(framework.getTopObject(0, 0) != button_1);
-		assertTrue(framework.getTopObject((int) (.1 * F_WIDTH), (int) (.1 * F_HEIGHT)) == button_1);
+		assertNotSame(framework.getTopObject(0, 0), button_1);
+		assertSame(framework.getTopObject((int) (.1 * F_WIDTH), (int) (.1 * F_HEIGHT)),button_1);
 
 		// check if second object was removed successful, true
 		go = framework.removeComponent(button_1);
-		assertTrue(go == button_1);
+		assertSame(go,  button_1);
 
 		// check if framework is now empty
-		assertTrue(framework.getTopObject(0, 0) == null);
+		assertNull(framework.getTopObject(0, 0));
 
 	}
 
