@@ -4,7 +4,11 @@ import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.packet.Packet;
 
-
+/**
+ * 
+ * @author ladler - Lukas Adler
+ *
+ */
 public class ClientGamePacketHandler extends PacketHandler{
 
 	@Override

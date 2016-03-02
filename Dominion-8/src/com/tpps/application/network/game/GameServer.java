@@ -6,10 +6,10 @@ import java.util.Scanner;
 
 import com.tpps.application.network.core.Server;
 
-/** @author sjacobs - Steffen Jacobs */
+/** @author ladler - Lukas Adler */
 public class GameServer extends Server{
 	public GameServer() throws IOException{
-		super(new InetSocketAddress("localhost", 1339), new ServerGamePacketHandler());
+		super(new InetSocketAddress("0.0.0.0", 1339), new ServerGamePacketHandler());
 		((ServerGamePacketHandler)super.getHandler()).setServer(this);
 		setConsoleInput();
 	}

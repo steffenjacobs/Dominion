@@ -8,7 +8,11 @@ import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.packet.Packet;
 
-
+/**
+ * 
+ * @author ladler - Lukas Adler
+ *
+ */
 public class ServerGamePacketHandler extends PacketHandler{
 	GameServer server;
 

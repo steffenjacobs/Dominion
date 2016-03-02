@@ -7,8 +7,9 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 
 /**
  * 
- * */
-
+ * @author ladler - Lukas Adler
+ *
+ */
 public class ClientPlayer {
 
 	private Deck deck;
