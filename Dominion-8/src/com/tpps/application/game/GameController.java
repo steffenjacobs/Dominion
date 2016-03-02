@@ -9,7 +9,7 @@ public class GameController {
 
 	private LinkedList<Player> players;
 	private boolean gameNotFinished = true;
-	//private Player activePlayer
+	private static Player activePlayer;
 
 	public GameController() {
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
@@ -23,6 +23,14 @@ public class GameController {
 
 	public void setPlayers(LinkedList<Player> players) {
 		this.players = players;
+	}
+	
+	public static Player getActivePlayer() {
+		return activePlayer;
+	}
+
+	public static void setActivePlayer(Player aP) {
+		activePlayer = aP;
 	}
 
 	public boolean isGameNotFinished() {
