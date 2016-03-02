@@ -56,6 +56,22 @@ public class Player {
 	public void setCardHandSize(int cardHandSize) {
 		this.cardHandSize = cardHandSize;
 	}
+	
+	public int getActions() {
+		return actions;
+	}
+
+	public void setActions(int actions) {
+		this.actions = actions;
+	}
+
+	public int getBuys() {
+		return buys;
+	}
+
+	public void setBuys(int buys) {
+		this.buys = buys;
+	}
 
 	/**
 	 * calls the static method which executes the actions
@@ -71,15 +87,14 @@ public class Player {
 
 		while (cardIt.hasNext()) {
 			switch (cardIt.next()) {
-			case ADD_ACTION_TO_PLAYER:				
+			case ADD_ACTION_TO_PLAYER:
 				actions = serverCard.getActions().get(CardAction.ADD_ACTION_TO_PLAYER);
 				break;
 			case ADD_PURCHASE:
 				System.out.println("ADD_PURCHASE: " + serverCard.getActions().get(CardAction.ADD_PURCHASE));
 				break;
 			case ADD_TEMPORARY_MONEY_FOR_TURN:
-				System.out.println("ADD_TEMPORARY_MONEY_FOR_TURN: "
-						+ serverCard.getActions().get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN));
+				System.out.println("ADD_TEMPORARY_MONEY_FOR_TURN: "+ serverCard.getActions().get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN));
 				break;
 			case DRAW:
 				System.out.println("DRAW: " + serverCard.getActions().get(CardAction.DRAW));
@@ -99,12 +114,6 @@ public class Player {
 			case REVEAL:
 				System.out.println("REVEAL: " + serverCard.getActions().get(CardAction.REVEAL));
 				break;
-			case NONE:
-				System.out.println("NONE: " + serverCard.getActions().get(CardAction.NONE));
-				break;
-			case COUNT_FOR_VICTORY:
-				System.out.println("COUNT_VOR_VICTORY: " + serverCard.getActions().get(CardAction.COUNT_FOR_VICTORY));
-				break;
 			default:
 				// call
 				break;
@@ -116,8 +125,7 @@ public class Player {
 		Player p = new Player(0);
 		System.out.println(p.getDeck().toString());
 		p.getDeck().shuffle();
-		Card silver = new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE),
-				CollectionsUtil.linkedList(2)), CollectionsUtil.linkedList(CardType.SILVER), "Silver", 0, null);
+		Card silver = new Card(CollectionsUtil.linkedList(CardType.SILVER), "Silver", 0, null);
 		p.getDeck().addCard(CollectionsUtil.linkedList(silver), p.getDeck().getDiscardPile());
 		System.out.println("\n" + p.getDeck().toString());
 		p.getDeck().shuffle();

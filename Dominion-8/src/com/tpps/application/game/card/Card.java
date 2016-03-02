@@ -33,7 +33,12 @@ public class Card extends GameObject {
 		this.id = this.name + classID++;
 	}
 
-	/** Test Konstruktor */
+	/** Constructor for cards without Actions (for example estate, copper) */
+	public Card(LinkedList<CardType> types, String name, int cost, GraphicFramework _parent) {
+		this(null, types, name, cost, _parent);
+	}
+
+	/** Test Konstruktor ohne Graphic Framework */
 	public Card(LinkedHashMap<CardAction, Integer> actions, LinkedList<CardType> types, String name, int cost) {
 		super();
 		this.name = name;
@@ -65,7 +70,7 @@ public class Card extends GameObject {
 
 	@Override
 	public Card clone() {
-		return null;
+		return new Card(this.getActions(), this.getTypes(), this.getName(), this.getCost(), this.getParent());
 	}
 
 	@Override
@@ -124,7 +129,7 @@ public class Card extends GameObject {
 		System.out.println(card.toString());
 
 		/*-------------------------------------------------------------------------------------------------------*/
-		
+
 		GameClient g;
 		try {
 			g = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());

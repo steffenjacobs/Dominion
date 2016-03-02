@@ -4,9 +4,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.tpps.application.game.card.CardAction;
-import com.tpps.application.game.card.CardType;
 import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 
 /**
@@ -60,7 +59,7 @@ public class Deck {
 		this.cardHand = cardHand;
 	}
 
-	// suche cardHand mit der card ID durch und returne card	
+	// suche cardHand mit der card ID durch und returne card
 	public Card getCard(String cardID, LinkedList<Card> searchList) {
 		Iterator<Card> it = searchList.iterator();
 		while (it.hasNext()) {
@@ -75,14 +74,8 @@ public class Deck {
 	// another constructor? Same with Action.NONE for copper
 	protected void init() {
 		if (this.drawPile != null) {
-			addCard(new Card(
-					CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.COUNT_FOR_VICTORY),
-							CollectionsUtil.linkedList(2)),
-					CollectionsUtil.linkedList(CardType.VICTORY), "Estate", 2, null), 3, this.drawPile);
-			addCard(new Card(
-					CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE),
-							CollectionsUtil.linkedList(0)),
-					CollectionsUtil.linkedList(CardType.COPPER), "Copper", 0, null), 7, this.drawPile);
+			addCard(new Card(CollectionsUtil.linkedList(CardType.VICTORY), "Estate", 2, null), 3, this.drawPile);
+			addCard(new Card(CollectionsUtil.linkedList(CardType.COPPER), "Copper", 0, null), 7, this.drawPile);
 			shuffle();
 		}
 		buildCardHand();

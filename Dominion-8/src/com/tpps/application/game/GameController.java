@@ -9,8 +9,6 @@ public class GameController {
 	private static boolean gameNotFinished = true;
 	private static Player activePlayer;
 
-
-
 	public static LinkedList<Player> getPlayers() {
 		return players;
 	}
