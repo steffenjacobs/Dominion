@@ -13,10 +13,12 @@ public class ServerPlayer {
 
 	private Deck deck;
 	private int id;
+	private int cardHandSize;
 	// private static int port;
 
 	public ServerPlayer() {
 		this.deck = new Deck();
+		this.cardHandSize = 5;
 		// this.id = GameController.getPlayerID();
 		// this.port = ;
 	}
@@ -32,6 +34,14 @@ public class ServerPlayer {
 
 	public void setDeck(Deck deck) {
 		this.deck = deck;
+	}
+	
+	public void setCardHandSize(int cardHandSize){
+		this.cardHandSize = cardHandSize;
+	}
+	
+	public int getCardHandSize(){
+		return this.cardHandSize;
 	}
 
 	// public int getPlayerID() {
