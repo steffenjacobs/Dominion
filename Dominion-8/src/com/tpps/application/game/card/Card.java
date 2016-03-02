@@ -15,6 +15,9 @@ public abstract class Card extends GameObject {
 	protected final LinkedList<CardType> types;
 	protected final int cost;
 	protected final String name;
+	private final String id;
+	private static int classId;
+	
 
 	public Card(LinkedHashMap<CardAction, Integer> actions,
 			LinkedList<CardType> types, String name, int cost,
@@ -24,6 +27,7 @@ public abstract class Card extends GameObject {
 		this.actions = actions;
 		this.cost = cost;
 		this.types = types;
+		this.id = this.name + classId++;
 	}
 
 	/** dummy constructor for testing of deck class */
