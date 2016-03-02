@@ -47,13 +47,23 @@ public class LogInGUI extends JFrame {
 	private JLabel all;
 	private JPanel[] panels;
 	private Font smallfont, customFont;
-
+	LoginGUIController guicontroller;
+	
 	/**
 	 * constructor first call
+	 * @param loginGUIController 
 	 */
 
-	public LogInGUI() {
+	public LogInGUI(LoginGUIController loginGUIController) {
+		this.guicontroller = loginGUIController;
 		createdComponent();
+	}
+	
+	public LogInGUI(LoginGUIController loginGUIController, String username, String plaintext) {
+		this.guicontroller = loginGUIController;		
+		createdComponent();
+		this.userinfo.setText(username);
+		this.passwordbox.setText(plaintext);
 	}
 
 	/**
@@ -64,11 +74,11 @@ public class LogInGUI extends JFrame {
 	 * @param password
 	 */
 
-	public LogInGUI(String text, char[] password) {
-		createdComponent();
-		this.userinfo.setText(text);
-		this.passwordbox.setText(String.valueOf(password));
-	}
+//	public LogInGUI(String text, char[] password) {
+//		createdComponent();
+//		this.userinfo.setText(text);
+//		this.passwordbox.setText(String.valueOf(password));
+//	}
 
 	/**
 	 * All components merged together
@@ -249,9 +259,9 @@ public class LogInGUI extends JFrame {
 		c.add(all);
 		panels[3].revalidate();
 
-		createAccount.addActionListener(new LoginListener(createAccount, this, userinfo, passwordbox));
-		cancel.addActionListener(new LoginListener(cancel, this, userinfo, passwordbox));
-		execute.addActionListener(new LoginListener(execute, this, userinfo, passwordbox));
+		createAccount.addActionListener(new LoginListener(createAccount, this, userinfo, passwordbox, guicontroller));
+		cancel.addActionListener(new LoginListener(cancel, this, userinfo, passwordbox, guicontroller));
+		execute.addActionListener(new LoginListener(execute, this, userinfo, passwordbox, guicontroller));
 	}
 
 	/**
@@ -260,7 +270,7 @@ public class LogInGUI extends JFrame {
 	 * @param args
 	 */
 
-	public static void main(String[] args) {
-		new LogInGUI();
-	}
+//	public static void main(String[] args) {
+//		new LogInGUI();
+//	}
 }

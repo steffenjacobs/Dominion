@@ -45,15 +45,17 @@ public class CreateAccount extends JFrame {
 	private JLabel all;
 	private JPanel[] panels;
 	private Font smallfont, customFont;
+	LoginGUIController guicontroller;
 	
 	/**
 	 * simple constructor (first call) merging all elements
 	 */
 
-	public CreateAccount() {
+	public CreateAccount(LoginGUIController guicontroller) {
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
-
+		this.guicontroller = guicontroller;
+		
 		loadImage();
 		resizeImage();
 		importFont();
@@ -75,7 +77,7 @@ public class CreateAccount extends JFrame {
 		this.createpanel3();
 		this.createpanel4();
 		this.createpanel5();
-		this.createpanel6();
+	//	this.createpanel6();
 		this.createpanel7();
 		this.revalidate();
 	}
@@ -284,7 +286,7 @@ public class CreateAccount extends JFrame {
 		all.add(panels[6]);
 		c.add(all);
 
-		createAccount.addActionListener(new CreateAccountListener(this));
+		createAccount.addActionListener(new CreateAccountListener(this, guicontroller));
 
 		panels[6].revalidate();
 	}

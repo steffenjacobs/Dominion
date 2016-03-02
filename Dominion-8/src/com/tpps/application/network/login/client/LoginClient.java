@@ -15,16 +15,22 @@ import com.tpps.application.network.login.packets.PacketLoginCheckRequest;
 import com.tpps.application.network.login.packets.PacketRegisterAnswer;
 import com.tpps.application.network.login.packets.PacketRegisterRequest;
 import com.tpps.application.network.packet.Packet;
+import com.tpps.ui.loginscreen.LoginGUIController;
 
 public class LoginClient extends PacketHandler {
 
 	Client c_login;
 	UUID sessionid;
-	String username;
+	String usernamelogin;
 	SessionClient c_session;
+	LoginGUIController guicontroller;
 
-	public LoginClient() {
+	String usernamenewacc;
+	String plaintext;
+
+	public LoginClient(LoginGUIController guicontroller) {
 		try {
+			this.guicontroller = guicontroller;
 			c_login = new Client(new InetSocketAddress("127.0.0.1", 1338), this);
 			c_session = new SessionClient(new InetSocketAddress("127.0.0.1", 1337));
 		} catch (IOException e) {
@@ -33,10 +39,9 @@ public class LoginClient extends PacketHandler {
 	}
 
 	public void handlelogin(String nickname, String plaintext) {
-		this.username = nickname;
-		Password pw = new Password(plaintext, new String("defsalt").getBytes()); // defsalt
-																					// ist
-																					// standartsalt
+		this.usernamelogin = nickname;
+		Password pw = new Password(plaintext, new String("defsalt").getBytes()); // defsalt ist standardsalt
+																					
 		try {
 			System.out.println("into handlelogin");
 			// pw.createHashedPassword();
@@ -55,27 +60,15 @@ public class LoginClient extends PacketHandler {
 		switch (answer.getType()) {
 		case LOGIN_CHECK_ANSWER:
 			PacketLoginCheckAnswer check = (PacketLoginCheckAnswer) answer;
+			guicontroller.getStateOfLoginRequest(check.getState());
 			if (check.getState()) { // Anmeldung erfolgreich, pw richtig
 				this.sessionid = check.getSessionID();
-				c_session.keepAlive(username, true);
-				JOptionPane.showMessageDialog(null, "You logged in successfully", "Login",
-						JOptionPane.INFORMATION_MESSAGE);
-			} else {// Anmeldung fehlgeschlagen, PW falsch
-				JOptionPane.showMessageDialog(null, "Wrong Password or nickname", "Login", JOptionPane.ERROR_MESSAGE);
+				c_session.keepAlive(usernamelogin, true);
 			}
 			break;
 		case LOGIN_REGISTER_ANSWER:
 			PacketRegisterAnswer check2 = (PacketRegisterAnswer) answer;
-			if (check2.getState() == 1) {
-				JOptionPane.showMessageDialog(null, "Account created succesfully", "Create Account",
-						JOptionPane.INFORMATION_MESSAGE);
-			} else if (check2.getState() == 2) {
-				JOptionPane.showMessageDialog(null, "Nickname already in use", "Create Account",
-						JOptionPane.ERROR_MESSAGE);
-			} else {
-				JOptionPane.showMessageDialog(null, "EMAIL already in use", "Create Account",
-						JOptionPane.ERROR_MESSAGE);
-			}
+			guicontroller.getStateOfAccountCreation(check2.getState(),this.usernamenewacc, this.plaintext);
 		default:
 			break;
 		}
@@ -84,6 +77,8 @@ public class LoginClient extends PacketHandler {
 
 	// sends accountdetails to server to create new account
 	public void handleAccountCreation(String username, String plaintext, String email) {
+		this.usernamenewacc = username;
+		this.plaintext = plaintext;
 		Password pw = new Password(plaintext, new String("defsalt").getBytes());
 		PacketRegisterRequest packet = new PacketRegisterRequest(username, pw.getHashedPasswordAsString(), email);
 		try {

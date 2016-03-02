@@ -21,6 +21,7 @@ public class LoginListener implements ActionListener {
 	LogInGUI lg;
 	JTextField userinfo;
 	JPasswordField passwordbox;
+	LoginGUIController guicontroller;
 	
 	/**
 	 * simple constructor initialize all parameters
@@ -30,11 +31,12 @@ public class LoginListener implements ActionListener {
 	 * @param passwordbox
 	 */
 	
-	public LoginListener(JButton clicked, LogInGUI logInGUI, JTextField userinfo, JPasswordField passwordbox) {
+	public LoginListener(JButton clicked, LogInGUI logInGUI, JTextField userinfo, JPasswordField passwordbox, LoginGUIController guicontroller) {
 		this.clicked = clicked;
 		lg = logInGUI;
 		this.userinfo = userinfo;
 		this.passwordbox = passwordbox;
+		this.guicontroller = guicontroller;
 	}
 	
 	/**
@@ -44,8 +46,7 @@ public class LoginListener implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if (clicked.getText().equals("New Account")) {
-			lg.dispose();
-			new CreateAccount();
+			guicontroller.createAccountGUI();
 		}
 		else if(clicked.getText().equals("Cancel")){
 			System.exit(0);
@@ -54,8 +55,8 @@ public class LoginListener implements ActionListener {
 		// for Johannes and his further works..
 		else if(clicked.getText().equals("Login")){
 			//-------------------------------
-			new LoginClient().handlelogin(userinfo.getText(), String.valueOf(passwordbox.getPassword()));
-			
+		//	new LoginClient().handlelogin(userinfo.getText(), String.valueOf(passwordbox.getPassword()));
+			guicontroller.createLoginClient(userinfo.getText(), String.valueOf(passwordbox.getPassword()));
 			
 			//-------------------------------
 		}

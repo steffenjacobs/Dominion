@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
+
 import com.tpps.application.network.login.client.LoginClient;
 
 
@@ -14,14 +15,15 @@ import com.tpps.application.network.login.client.LoginClient;
  */
 public class CreateAccountListener implements ActionListener {
 	CreateAccount ca;
-	
+	LoginGUIController guicontroller;
 	/**
 	 * simple constructor initializing a parameter
 	 * @param createAccount
 	 */
 			
-	public CreateAccountListener(CreateAccount createAccount) {
+	public CreateAccountListener(CreateAccount createAccount, LoginGUIController guicontroller) {
 		this.ca = createAccount;
+		this.guicontroller = guicontroller;
 	}
 	
 	/**
@@ -60,13 +62,12 @@ public class CreateAccountListener implements ActionListener {
 		}
 
 		// --------------------------------------
-
-		new LoginClient().handleAccountCreation(ca.getUsername().getText(), String.valueOf(ca.getPasswordbox().getPassword()),
-				ca.getEmail().getText());
+		guicontroller.createAccountWithServer(ca.getUsername().getText(), String.valueOf(ca.getPasswordbox().getPassword()), ca.getEmail().getText());
+		//new LoginClient().handleAccountCreation(ca.getUsername().getText(), String.valueOf(ca.getPasswordbox().getPassword()),ca.getEmail().getText());
 		// --------------------------------------
 
-		new LogInGUI(ca.getUsername().getText(), ca.getPasswordbox().getPassword());
-		ca.dispose();
+//		new LogInGUI(ca.getUsername().getText(), ca.getPasswordbox().getPassword());
+//		ca.dispose();
 	}
 
 }
