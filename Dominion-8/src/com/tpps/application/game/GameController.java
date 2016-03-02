@@ -8,10 +8,7 @@ public class GameController {
 	private boolean gameNotFinished = true;
 
 	public GameController() {
-		for (int i = 0; i < 4 /*
-								 * Hard Code, Anzahl an realen Spielern ohne die
-								 * KI's bzw. max. Anzahl Spieler
-								 */; i++) {
+		for (int i = 0; i < 4 /*Hard Code, Anzahl an realen Spielern ohne die KI's bzw. max. Anzahl Spieler */; i++) {
 			players.put(new ServerPlayer(), i);
 		}
 	}
@@ -37,14 +34,14 @@ public class GameController {
 	/** CONTROLLER LOGIC */
 	public void startGame() {
 		while (gameNotFinished) {
-			for (ServerPlayer p : players.keySet()) {
+			for (Player p : players.keySet()) {
 				nextTurn(p);
 				checkGameFinished();
 			}
 		}
 	}
 
-	public void nextTurn(ServerPlayer player) {
+	public void nextTurn(Player player) {
 		/* Player Turn */
 		checkGameFinished();
 	}
