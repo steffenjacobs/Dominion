@@ -16,7 +16,9 @@ public class Player {
 	private int id;
 	private int cardHandSize;
 	private int actions;
-	private int buys;
+	private int purchase;
+	private int draw;
+	private int money;
 	// aktionen, käufe, etc.
 
 	// draw()
@@ -26,6 +28,8 @@ public class Player {
 		this.deck = deck;
 		this.id = id;
 		this.cardHandSize = GameConstant.INIT_CARD_HAND_SIZE;
+//		this.actions =
+//		this.purchase = 
 	}
 
 	public Player(int id) {
@@ -65,12 +69,12 @@ public class Player {
 		this.actions = actions;
 	}
 
-	public int getBuys() {
-		return buys;
+	public int getPurchases() {
+		return purchase;
 	}
 
-	public void setBuys(int buys) {
-		this.buys = buys;
+	public void setPurchases(int purchase) {
+		this.purchase = purchase;
 	}
 
 	/**
@@ -88,16 +92,16 @@ public class Player {
 		while (cardIt.hasNext()) {
 			switch (cardIt.next()) {
 			case ADD_ACTION_TO_PLAYER:
-				actions = serverCard.getActions().get(CardAction.ADD_ACTION_TO_PLAYER);
+				actions += serverCard.getActions().get(CardAction.ADD_ACTION_TO_PLAYER);
 				break;
 			case ADD_PURCHASE:
-				System.out.println("ADD_PURCHASE: " + serverCard.getActions().get(CardAction.ADD_PURCHASE));
+				purchase += serverCard.getActions().get(CardAction.ADD_PURCHASE);
 				break;
 			case ADD_TEMPORARY_MONEY_FOR_TURN:
-				System.out.println("ADD_TEMPORARY_MONEY_FOR_TURN: "+ serverCard.getActions().get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN));
+				money += serverCard.getActions().get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
 				break;
 			case DRAW:
-				System.out.println("DRAW: " + serverCard.getActions().get(CardAction.DRAW));
+				draw += serverCard.getActions().get(CardAction.DRAW);
 				break;
 			case GAIN:
 				System.out.println("GAIN: " + serverCard.getActions().get(CardAction.GAIN));
