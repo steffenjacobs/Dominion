@@ -17,7 +17,6 @@ public class Player {
 	private int cardHandSize;
 	private int actions;
 	private int purchase;
-	private int draw;
 	private int money;
 	// aktionen, käufe, etc.
 
@@ -35,6 +34,34 @@ public class Player {
 	public Player(int id) {
 		this(new Deck(), id);
 		this.id = id;
+	}
+
+	/**
+	 * @return the purchase
+	 */
+	public int getPurchase() {
+		return purchase;
+	}
+
+	/**
+	 * @param purchase the purchase to set
+	 */
+	public void setPurchase(int purchase) {
+		this.purchase = purchase;
+	}
+
+	/**
+	 * @return the money
+	 */
+	public int getMoney() {
+		return money;
+	}
+
+	/**
+	 * @param money the money to set
+	 */
+	public void setMoney(int money) {
+		this.money = money;
 	}
 
 	public int getId() {
@@ -100,23 +127,23 @@ public class Player {
 			case ADD_TEMPORARY_MONEY_FOR_TURN:
 				money += serverCard.getActions().get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
 				break;
-			case DRAW:
-				draw += serverCard.getActions().get(CardAction.DRAW);
+			case DRAW_CARD:
+//				serverCard.getActions().get(CardAction.DRAW_CARD);
 				break;
-			case GAIN:
-				System.out.println("GAIN: " + serverCard.getActions().get(CardAction.GAIN));
+			case GAIN_CARD:
+				System.out.println("GAIN: " + serverCard.getActions().get(CardAction.GAIN_CARD));
 				break;
-			case DISCARD:
-				System.out.println("DISCARD: " + serverCard.getActions().get(CardAction.DISCARD));
+			case DISCARD_CARD:
+				System.out.println("DISCARD: " + serverCard.getActions().get(CardAction.DISCARD_CARD));
 				break;
-			case TRASH:
-				System.out.println("TRASH: " + serverCard.getActions().get(CardAction.TRASH));
+			case TRASH_CARD:
+				System.out.println("TRASH: " + serverCard.getActions().get(CardAction.TRASH_CARD));
 				break;
 			case PUT_BACK:
 				System.out.println("PUT_BACK: " + serverCard.getActions().get(CardAction.PUT_BACK));
 				break;
-			case REVEAL:
-				System.out.println("REVEAL: " + serverCard.getActions().get(CardAction.REVEAL));
+			case REVEAL_CARD:
+				System.out.println("REVEAL: " + serverCard.getActions().get(CardAction.REVEAL_CARD));
 				break;
 			default:
 				// call
@@ -129,8 +156,8 @@ public class Player {
 		Player p = new Player(0);
 		System.out.println(p.getDeck().toString());
 		p.getDeck().shuffle();
-		Card silver = new Card(CollectionsUtil.linkedList(CardType.SILVER), "Silver", 0, null);
-		p.getDeck().addCard(CollectionsUtil.linkedList(silver), p.getDeck().getDiscardPile());
+		Card silver = new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.IS_TREASURE), CollectionsUtil.linkedList(GameConstant.SILVER_VALUE)) , CollectionsUtil.linkedList(CardType.TREASURE), "Silver", 0);
+		CollectionsUtil.addCardToList(silver, p.getDeck().getDiscardPile());
 		System.out.println("\n" + p.getDeck().toString());
 		p.getDeck().shuffle();
 		System.out.println("\n" + p.getDeck().toString());

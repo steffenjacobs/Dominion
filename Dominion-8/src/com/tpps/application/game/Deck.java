@@ -5,8 +5,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.util.CollectionsUtil;
+import com.tpps.technicalServices.util.GameConstant;
 
 /**
  * @author nwipfler - Nicolas Wipfler
@@ -72,10 +74,19 @@ public class Deck {
 
 	// TODO: replace Action.COUNT_FOR_VICTORY with null or create
 	// another constructor? Same with Action.NONE for copper
-	protected void init() {
+
+	// CardAction.IS_VICTORY ; GameConstant.ESTATE_VALUE ; CardType.ESTATE ;
+	// "Estate"
+	private void init() {
 		if (this.drawPile != null) {
-			addCard(new Card(CollectionsUtil.linkedList(CardType.VICTORY), "Estate", 2, null), 3, this.drawPile);
-			addCard(new Card(CollectionsUtil.linkedList(CardType.COPPER), "Copper", 0, null), 7, this.drawPile);
+			CollectionsUtil.cloneCardToList(
+					new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, GameConstant.ESTATE_VALUE),
+							CollectionsUtil.linkedList(CardType.VICTORY), "Estate", GameConstant.ESTATE_COST),
+					3, this.drawPile);
+			CollectionsUtil.cloneCardToList(
+					new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, GameConstant.COPPER_VALUE),
+							CollectionsUtil.linkedList(CardType.TREASURE), "Copper", GameConstant.COPPER_COST),
+					7, this.drawPile);
 			shuffle();
 		}
 		buildCardHand();
@@ -181,27 +192,6 @@ public class Deck {
 
 	public void putBack(Card card) {
 		this.drawPile.addLast(card);
-	}
-
-	/** ENDOF TESTING */
-
-	// addCard in CollectionsUtil oder sinnlos? JA
-	/**
-	 * adds the same card 'amount'-times to the list in parameters
-	 */
-	public void addCard(Card card, int amount, LinkedList<Card> destination) {
-		for (int i = 0; i < amount; i++) {
-			destination.addLast((Card) card.clone());
-		}
-	}
-
-	/**
-	 * adds a list of cards to the (destination-)list in parameters
-	 */
-	public void addCard(LinkedList<Card> cards, LinkedList<Card> destination) {
-		for (Card card : cards) {
-			destination.addLast(card);
-		}
 	}
 
 	public String toString() {

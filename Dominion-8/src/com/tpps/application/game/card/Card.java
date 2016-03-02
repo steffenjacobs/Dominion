@@ -16,9 +16,9 @@ import com.tpps.ui.GraphicFramework;
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = -4157717625890678601L;
-	private final LinkedHashMap<CardAction, Integer> actions;
+	private final LinkedHashMap<CardAction, Integer> actions; // if the card is  
 	private final LinkedList<CardType> types;
-	private final int cost;
+	private final int cost; // cost of the card
 	private final String name;
 	private final String id;
 	private static int classID;
@@ -31,11 +31,6 @@ public class Card extends GameObject {
 		this.cost = cost;
 		this.types = types;
 		this.id = this.name + classID++;
-	}
-
-	/** Constructor for cards without Actions (for example estate, copper) */
-	public Card(LinkedList<CardType> types, String name, int cost, GraphicFramework _parent) {
-		this(null, types, name, cost, _parent);
 	}
 
 	/** Test Konstruktor ohne Graphic Framework */
@@ -121,7 +116,7 @@ public class Card extends GameObject {
 	 */
 	public static void main(String[] args) {
 		LinkedList<CardAction> act = CollectionsUtil.linkedList(new CardAction[] { CardAction.ADD_ACTION_TO_PLAYER,
-				CardAction.ADD_PURCHASE, CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, CardAction.DRAW });
+				CardAction.ADD_PURCHASE, CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, CardAction.DRAW_CARD });
 		LinkedList<Integer> ints = CollectionsUtil.linkedList(new Integer[] { 1, 2, 4, 3 });
 		LinkedList<CardType> type = CollectionsUtil.linkedList(new CardType[] { CardType.ACTION });
 
