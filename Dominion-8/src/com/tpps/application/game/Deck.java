@@ -26,16 +26,14 @@ public class Deck {
 		init();
 	}
 
-	protected Deck(LinkedList<ServerCard> draw, LinkedList<ServerCard> discard,
-			LinkedList<ServerCard> cardHand) {
+	protected Deck(LinkedList<ServerCard> draw, LinkedList<ServerCard> discard, LinkedList<ServerCard> cardHand) {
 		this.drawPile = draw;
 		this.discardPile = discard;
 		this.cardHand = cardHand;
 	}
 
 	public int getDeckSize() {
-		return this.drawPile.size() + this.discardPile.size()
-				+ this.cardHand.size();
+		return this.drawPile.size() + this.discardPile.size() + this.cardHand.size();
 	}
 
 	public LinkedList<ServerCard> getDrawPile() {
@@ -62,20 +60,23 @@ public class Deck {
 		this.cardHand = cardHand;
 	}
 
+	public ServerCard getCard(ServerCard card) {
+		// suche cardHand mit der card ID durch und returne card
+		return null;
+	}
+
 	protected void init() {
 		if (this.drawPile != null) {
 			// TODO: replace Action.COUNT_FOR_VICTORY with null or create
 			// another constructor? Same with Action.NONE for copper
-			addCard(new ServerCard(CollectionsUtil.linkedHashMapAction(
-					CollectionsUtil.linkedList(CardAction.COUNT_FOR_VICTORY),
-					CollectionsUtil.linkedList(2)),
-					CollectionsUtil.linkedList(CardType.VICTORY), "Estate", 2,
-					null), 3, this.drawPile);
-			addCard(new ServerCard(CollectionsUtil.linkedHashMapAction(
-					CollectionsUtil.linkedList(CardAction.NONE),
-					CollectionsUtil.linkedList(0)),
-					CollectionsUtil.linkedList(CardType.COPPER), "Copper", 0,
-					null), 7, this.drawPile);
+			addCard(new ServerCard(
+					CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.COUNT_FOR_VICTORY),
+							CollectionsUtil.linkedList(2)),
+					CollectionsUtil.linkedList(CardType.VICTORY), "Estate", 2, null), 3, this.drawPile);
+			addCard(new ServerCard(
+					CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.NONE),
+							CollectionsUtil.linkedList(0)),
+					CollectionsUtil.linkedList(CardType.COPPER), "Copper", 0, null), 7, this.drawPile);
 			shuffle();
 		}
 		buildCardHand();
@@ -189,8 +190,7 @@ public class Deck {
 	/**
 	 * adds the same card 'amount'-times to the list in parameters
 	 */
-	public void addCard(ServerCard card, int amount,
-			LinkedList<ServerCard> destination) {
+	public void addCard(ServerCard card, int amount, LinkedList<ServerCard> destination) {
 		for (int i = 0; i < amount; i++) {
 			destination.addLast((ServerCard) card.clone());
 		}
@@ -199,8 +199,7 @@ public class Deck {
 	/**
 	 * adds a list of cards to the (destination-)list in parameters
 	 */
-	public void addCard(LinkedList<ServerCard> cards,
-			LinkedList<ServerCard> destination) {
+	public void addCard(LinkedList<ServerCard> cards, LinkedList<ServerCard> destination) {
 		for (ServerCard card : cards) {
 			destination.addLast(card);
 		}
@@ -238,8 +237,7 @@ public class Deck {
 			sBuf.append("empty");
 		} else {
 			while (itrCardHand.hasNext()) {
-				sBuf.append("<" + ((ServerCard) itrCardHand.next()).getName()
-						+ ">");
+				sBuf.append("<" + ((ServerCard) itrCardHand.next()).getName() + ">");
 				if (itrCardHand.hasNext()) {
 					sBuf.append(" ");
 				}
