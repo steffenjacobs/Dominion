@@ -135,53 +135,53 @@ public class Deck {
 	 */
 	public void buildCardHand() {
 		/* --- VARIANTE 1 --- */
-//		if (this.getDeckSize() >= 5) {
-//			int size = this.drawPile.size();
-//			if (size >= 5) {
-//				this.addCard(CollectionsUtil.getNextElements(5, this.drawPile),
-//						this.cardHand);
-//			} else if (size == 0) {
-//				shuffle();
-//				size = this.drawPile.size();
-//				this.addCard(CollectionsUtil.getNextElements(size >= 5 ? 5
-//						: size, this.drawPile), this.cardHand);
-//			} else {
-//				if (this.getDeckSize() <= 5) {
-//					shuffle();
-//					this.addCard(
-//							CollectionsUtil.getNextElements(
-//									this.drawPile.size(), this.drawPile),
-//							this.cardHand);
-//				}
-//				this.addCard(
-//						CollectionsUtil.getNextElements(size, this.drawPile),
-//						this.cardHand);
-//				shuffle();
-//				this.addCard(CollectionsUtil.getNextElements(5 - size,
-//						this.drawPile), this.cardHand);
-//			}
-//		}
-//
-//		/* --- VARIANTE 2 --- */
-//
-//		Iterator<Card> it = this.drawPile.iterator();
-//		int count = 0;
-//		while (it.hasNext() && count < 5) {
-//			this.cardHand.addLast(it.next());
-//		}
-//		if (count != 4) {
-//			shuffle();
-//			while (count < 5) {
-//				count++;
-//				/* hat java.util.NoSuchElementException geworfen */
-//				this.cardHand.addLast(it.next());
-//			}
-//		}
+		if (this.getDeckSize() >= 5) {
+			int size = this.drawPile.size();
+			if (size >= 5) {
+				this.addCard(CollectionsUtil.getNextElements(5, this.drawPile),
+						this.cardHand);
+			} else if (size == 0) {
+				shuffle();
+				size = this.drawPile.size();
+				this.addCard(CollectionsUtil.getNextElements(size >= 5 ? 5
+						: size, this.drawPile), this.cardHand);
+			} else {
+				if (this.getDeckSize() <= 5) {
+					shuffle();
+					this.addCard(
+							CollectionsUtil.getNextElements(
+									this.drawPile.size(), this.drawPile),
+							this.cardHand);
+				}
+				this.addCard(
+						CollectionsUtil.getNextElements(size, this.drawPile),
+						this.cardHand);
+				shuffle();
+				this.addCard(CollectionsUtil.getNextElements(5 - size,
+						this.drawPile), this.cardHand);
+			}
+		}
+
+		/* --- VARIANTE 2 --- */
+
+		Iterator<Card> it = this.drawPile.iterator();
+		int count = 0;
+		while (it.hasNext() && count < 5) {
+			this.cardHand.addLast(it.next());
+		}
+		if (count != 4) {
+			shuffle();
+			while (count < 5) {
+				count++;
+				/* hat java.util.NoSuchElementException geworfen */
+				this.cardHand.addLast(it.next());
+			}
+		}
 	}
 
 	// public void discardCardHand() {}
 
-	public void shuffle(int amount) {
+	public void shuffle() {
 		LinkedList<Card> cards = new LinkedList<Card>();
 		cards.addAll(this.discardPile);
 		Collections.shuffle(cards);
@@ -216,6 +216,9 @@ public class Deck {
 //		}
 	}
 
+	/**
+	 * @param card which will be added on top of the drawPile
+	 * */
 	public void putBack(Card card) {
 		this.drawPile.addLast(card);
 	}
