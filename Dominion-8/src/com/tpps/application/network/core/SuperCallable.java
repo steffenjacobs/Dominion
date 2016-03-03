@@ -1,6 +1,6 @@
 package com.tpps.application.network.core;
 
-/**@author sjacobs - Gamingfish
+/**@author sjacobs - Steffen Jacobs
  * Supercallable is like a Callable, but much more super.*/
 public interface SuperCallable<T> {
 	
