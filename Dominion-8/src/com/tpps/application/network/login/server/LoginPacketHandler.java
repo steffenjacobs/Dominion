@@ -12,18 +12,27 @@ import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.network.login.SQLHandling.Password;
 import com.tpps.application.network.login.SQLHandling.SQLOperations;
+import com.tpps.application.network.login.SQLHandling.SQLStatisticsHandler;
 import com.tpps.application.network.login.packets.PacketLoginCheckAnswer;
 import com.tpps.application.network.login.packets.PacketLoginCheckRequest;
 import com.tpps.application.network.login.packets.PacketRegisterAnswer;
 import com.tpps.application.network.login.packets.PacketRegisterRequest;
 import com.tpps.application.network.packet.Packet;
 
+/**
+ * This class delivers all functionalities that are used by the LoginServer
+ * @author jhuhn - Johannes Huhn
+ */
 public class LoginPacketHandler extends PacketHandler{
 
-	LoginServer server;
-	SessionClient sessionclient;
+	private LoginServer server;
+	private SessionClient sessionclient;
 	private ConcurrentHashMap<String, Integer> waitingForSessionAnswer;
 	
+	/**
+	 * Initializes the LoginPacketHandler object, opens a connection to the Sessionserver with a sessionclient
+	 * @author jhuhn - Johannes Huhn
+	 */
 	public LoginPacketHandler() {
 		try {
 			waitingForSessionAnswer = new ConcurrentHashMap<>();
@@ -33,6 +42,13 @@ public class LoginPacketHandler extends PacketHandler{
 		}
 	}
 
+	/**
+	 * called when a packet from the LoginClient received,
+	 * method to handle the received packet from the loginClient
+	 * important to validate the loginrequest and sends a packet back to the loginClient
+	 * important to validate the Accountcreation and sends a packet back to the loginClient
+	 * @author jhuhn - Johannes Huhn
+	 */
 	@Override
 	public void handleReceivedPacket(int port, final Packet packet) {
 		System.out.println("Server received packet: " + packet);
@@ -61,7 +77,7 @@ public class LoginPacketHandler extends PacketHandler{
 						}
 					});
 				}else{
-					System.out.println("im in else, where calculated hash doesn't work");
+					System.out.println("calculated hash doesn't work");
 					PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, false, null);
 					server.sendMessage(port, answer);
 				}
@@ -76,9 +92,8 @@ public class LoginPacketHandler extends PacketHandler{
 			}
 			break;
 			
-			//create user + automatisch login
-		case LOGIN_REGISTER_REQUEST:
-			System.out.println("I got a request to create an Account");
+		case LOGIN_REGISTER_REQUEST: //create user
+			System.out.println("Server got a request to create an Account");
 			PacketRegisterRequest castedPac = (PacketRegisterRequest) packet;
 			System.out.println("In packet is: " + castedPac);
 			String username = castedPac.getUsername();
@@ -87,8 +102,11 @@ public class LoginPacketHandler extends PacketHandler{
 			Password pw2 = new Password(firsthashedpw);
 			String genereatedrandomsalt = pw2.getSaltAsString();
 			String doublehashedpw = pw2.getHashedPasswordAsString();
-		//	System.out.println("Information: " + username + " " + email + " " + firsthashedpw + " " + genereatedrandomsalt + " " + doublehashedpw);
+			
 			int state = SQLOperations.createAccount(username, email, doublehashedpw, genereatedrandomsalt);
+			if(state == 1){
+				SQLStatisticsHandler.insertRowForFirstLogin(username);
+			}
 			
 			PacketRegisterAnswer pack = new PacketRegisterAnswer(castedPac, state, null);
 			try {
@@ -102,10 +120,18 @@ public class LoginPacketHandler extends PacketHandler{
 		}
 	}
 	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * @return the server object
+	 */
 	public LoginServer getServer() {
 		return server;
 	}
 
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * @param server sets the server object
+	 */
 	public void setServer(LoginServer server) {
 		this.server = server;
 	}
