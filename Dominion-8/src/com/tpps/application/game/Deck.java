@@ -110,11 +110,9 @@ public class Deck {
 	 * */
 	private void init() {
 		if (this.drawPile != null) {
-
 			CollectionsUtil.cloneCardToListAndResetCardId(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, GameConstant.ESTATE_VALUE),CollectionsUtil.linkedList(CardType.VICTORY),"Estate", GameConstant.ESTATE_COST), 3,	this.drawPile);
 			CollectionsUtil.cloneCardToListAndResetCardId(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, GameConstant.COPPER_VALUE),CollectionsUtil.linkedList(CardType.TREASURE),"Copper", GameConstant.COPPER_COST), 7, this.drawPile);
 			shuffleDrawPile();
-
 		}
 		buildCardHand();
 	}
@@ -228,7 +226,6 @@ public class Deck {
 				/** keine Karte mehr vorhanden */
 			}
 		}
-		
 		
 		this.shuffleIfLessThan(amount);
 		for (int i = 0; i < amount; i++) {
