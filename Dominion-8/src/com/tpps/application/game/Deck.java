@@ -181,7 +181,7 @@ public class Deck {
 
 	// public void discardCardHand() {}
 
-	public void shuffle(int amount) {
+	public void shuffle() {
 		LinkedList<Card> cards = new LinkedList<Card>();
 		cards.addAll(this.discardPile);
 		Collections.shuffle(cards);
@@ -217,7 +217,7 @@ public class Deck {
 	}
 
 	/**
-	 * @param card which will be 
+	 * @param card which will be added on top of the drawPile
 	 * */
 	public void putBack(Card card) {
 		this.drawPile.addLast(card);
