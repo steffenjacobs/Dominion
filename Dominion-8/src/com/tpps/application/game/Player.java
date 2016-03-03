@@ -105,7 +105,7 @@ public class Player {
 	 */
 	public void doAction(String cardID) {
 		
-		this.getDeck().draw();
+		this.getDeck().drawCard();
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 		// Player player = GameController.getActivePlayer();
 		

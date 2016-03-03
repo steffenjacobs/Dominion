@@ -8,11 +8,11 @@ public class GameController {
 	private LinkedList<Player> players;
 	private boolean gameNotFinished;
 	private Player activePlayer;
-	
+
 	public GameController() {
-		
+//		new Setup().start();
+		this.players = new LinkedList<Player>();
 		this.gameNotFinished = true;
-			
 	}
 
 	public LinkedList<Player> getPlayers() {
@@ -22,7 +22,7 @@ public class GameController {
 	public void setPlayers(LinkedList<Player> players) {
 		this.players = players;
 	}
-	
+
 	public Player getActivePlayer() {
 		return this.activePlayer;
 	}
@@ -39,7 +39,11 @@ public class GameController {
 		return this.gameNotFinished = gameNotFinished;
 	}
 
-	public boolean gameFinished() {
+	public void addPlayer(Player player) {
+		this.players.addLast(player);
+	}
+
+	private boolean gameFinished() {
 		/* Checkt die Stapel durch, ob 3 Stapel leer sind bzw. Provinzen leer */
 		/* Wenn ja: */
 		return !setGameNotFinished(false);
@@ -58,7 +62,7 @@ public class GameController {
 		}
 	}
 
-	public void turn(Player player) {
+	private void turn(Player player) {
 		setActivePlayer(player);
 	}
 }

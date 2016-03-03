@@ -110,9 +110,11 @@ public class Deck {
 	 * */
 	private void init() {
 		if (this.drawPile != null) {
-			CollectionsUtil.cloneCardToListAndResteCardId(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, GameConstant.ESTATE_VALUE),CollectionsUtil.linkedList(CardType.VICTORY),"Estate", GameConstant.ESTATE_COST), 3,	this.drawPile);			
-			CollectionsUtil.cloneCardToListAndResteCardId(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, GameConstant.COPPER_VALUE),CollectionsUtil.linkedList(CardType.TREASURE),"Copper", GameConstant.COPPER_COST), 7, this.drawPile);
-//			shuffle();
+
+			CollectionsUtil.cloneCardToListAndResetCardId(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, GameConstant.ESTATE_VALUE),CollectionsUtil.linkedList(CardType.VICTORY),"Estate", GameConstant.ESTATE_COST), 3,	this.drawPile);
+			CollectionsUtil.cloneCardToListAndResetCardId(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, GameConstant.COPPER_VALUE),CollectionsUtil.linkedList(CardType.TREASURE),"Copper", GameConstant.COPPER_COST), 7, this.drawPile);
+			shuffleDrawPile();
+
 		}
 		buildCardHand();
 	}
@@ -138,26 +140,25 @@ public class Deck {
 		if (this.getDeckSize() >= 5) {
 			int size = this.drawPile.size();
 			if (size >= 5) {
-				this.addCard(CollectionsUtil.getNextElements(5, this.drawPile),
-						this.cardHand);
+				//add 5 cards
 			} else if (size == 0) {
-				shuffle();
+				shuffleDrawPile();
 				size = this.drawPile.size();
-				this.addCard(CollectionsUtil.getNextElements(size >= 5 ? 5
+				CollectionsUtil.appendListToList(CollectionsUtil.getNextElements(size >= 5 ? 5
 						: size, this.drawPile), this.cardHand);
 			} else {
 				if (this.getDeckSize() <= 5) {
-					shuffle();
-					this.addCard(
+					shuffleDrawPile();
+					CollectionsUtil.appendListToList(
 							CollectionsUtil.getNextElements(
 									this.drawPile.size(), this.drawPile),
 							this.cardHand);
 				}
-				this.addCard(
+				CollectionsUtil.appendListToList(
 						CollectionsUtil.getNextElements(size, this.drawPile),
 						this.cardHand);
-				shuffle();
-				this.addCard(CollectionsUtil.getNextElements(5 - size,
+				shuffleDrawPile();
+				CollectionsUtil.appendListToList(CollectionsUtil.getNextElements(5 - size,
 						this.drawPile), this.cardHand);
 			}
 		}
@@ -170,7 +171,7 @@ public class Deck {
 			this.cardHand.addLast(it.next());
 		}
 		if (count != 4) {
-			shuffle();
+			shuffleDrawPile();
 			while (count < 5) {
 				count++;
 				/* hat java.util.NoSuchElementException geworfen */
@@ -179,9 +180,22 @@ public class Deck {
 		}
 	}
 
-	// public void discardCardHand() {}
+	public void discardCardHand() {
+		CollectionsUtil.appendListToList(cardHand, discardPile);
+		this.cardHand = new LinkedList<Card>();
+	}
+	
+	public void discardCard(Card card) {
+		if (this.cardHand.contains(card)) {
+			
+		}
+	}
 
-	public void shuffle() {
+	public void shuffleDrawPile() {
+		Collections.shuffle(this.drawPile);
+	}
+	
+	public void shuffleIfLessThan(int amount) {
 		LinkedList<Card> cards = new LinkedList<Card>();
 		cards.addAll(this.discardPile);
 		Collections.shuffle(cards);
@@ -192,28 +206,35 @@ public class Deck {
 		this.drawPile = cards;
 	}
 
+	
+	public void drawCard() {
+		this.cardHand.addLast(this.drawPile.removeLast());
+	}
+	
 	/**
 	 * adds 1 card from the drawPile to the cardHand of the player and removes
 	 * this card from the drawPile. Logic of comparism should be added to
 	 * shuffle() method
 	 */
-	public void draw(/*int amount*/) {
-//		if (this.drawPile.size() != 0) {
-//			// add card
-//		} else {
-//			shuffle(amount);
-//			if (this.drawPile.size() != 0) {
-//				// add card
-//			} else {
-//				/** keine Karte mehr vorhanden */
-//			}
-//		}
-//		
-//		
-//		this.shuffle(amount);
-//		for (int i = 0; i < amount; i++) {
+
+	public void draw(int amount) {
+		if (this.drawPile.size() != 0) {
+			// add card
+		} else {
+			shuffleIfLessThan(amount);
+			if (this.drawPile.size() != 0) {
+				// add card
+			} else {
+				/** keine Karte mehr vorhanden */
+			}
+		}
+		
+		
+		this.shuffleIfLessThan(amount);
+		for (int i = 0; i < amount; i++) {
+
 			this.cardHand.addLast(this.drawPile.removeLast());
-//		}
+		}
 	}
 
 	/**
@@ -228,11 +249,11 @@ public class Deck {
 	 * */
 	public String toString() {
 		StringBuffer sBuf = new StringBuffer();
-		Iterator<Card> itrDraw = drawPile.iterator();
-		Iterator<Card> itrDisc = discardPile.iterator();
-		Iterator<Card> itrCardHand = cardHand.iterator();
-		sBuf.append("drawPile, size: " + drawPile.size() + " <");
-		if (drawPile.isEmpty()) {
+		Iterator<Card> itrDraw = this.drawPile.iterator();
+		Iterator<Card> itrDisc = this.discardPile.iterator();
+		Iterator<Card> itrCardHand = this.cardHand.iterator();
+		sBuf.append("drawPile, size: " + this.drawPile.size() + " <");
+		if (this.drawPile.isEmpty()) {
 			sBuf.append("empty");
 		} else {
 			while (itrDraw.hasNext()) {
@@ -242,8 +263,8 @@ public class Deck {
 				}
 			}
 		}
-		sBuf.append(">\ndiscPile, size: " + discardPile.size() + " <");
-		if (discardPile.isEmpty()) {
+		sBuf.append(">\ndiscPile, size: " + this.discardPile.size() + " <");
+		if (this.discardPile.isEmpty()) {
 			sBuf.append("empty");
 		} else {
 			while (itrDisc.hasNext()) {
@@ -253,8 +274,8 @@ public class Deck {
 				}
 			}
 		}
-		sBuf.append(">\ncardHand, size: " + cardHand.size() + " <");
-		if (cardHand.isEmpty()) {
+		sBuf.append(">\ncardHand, size: " + this.cardHand.size() + " <");
+		if (this.cardHand.isEmpty()) {
 			sBuf.append("empty");
 		} else {
 			while (itrCardHand.hasNext()) {

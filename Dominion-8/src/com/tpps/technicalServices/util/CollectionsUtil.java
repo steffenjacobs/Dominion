@@ -83,7 +83,7 @@ public final class CollectionsUtil {
 	 * clones the card and adds this card 'amount - 1'-times, to the list in
 	 * parameters, because one object of the card already exists
 	 */
-	public static void cloneCardToListAndResteCardId(Card card, int amount, LinkedList<Card> destination) {
+	public static void cloneCardToListAndResetCardId(Card card, int amount, LinkedList<Card> destination) {
 		for (int i = 0; i < amount - 1; i++) {
 			destination.addLast(card.clone());
 		}
