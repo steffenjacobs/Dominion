@@ -110,8 +110,8 @@ public class Deck {
 	 * */
 	private void init() {
 		if (this.drawPile != null) {
-			CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, GameConstant.ESTATE_VALUE),CollectionsUtil.linkedList(CardType.VICTORY),"Estate", GameConstant.ESTATE_COST), 3,	this.drawPile);
-			CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, GameConstant.COPPER_VALUE),CollectionsUtil.linkedList(CardType.TREASURE),"Copper", GameConstant.COPPER_COST), 7, this.drawPile);
+			CollectionsUtil.cloneCardToListAndResteCardId(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, GameConstant.ESTATE_VALUE),CollectionsUtil.linkedList(CardType.VICTORY),"Estate", GameConstant.ESTATE_COST), 3,	this.drawPile);			
+			CollectionsUtil.cloneCardToListAndResteCardId(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, GameConstant.COPPER_VALUE),CollectionsUtil.linkedList(CardType.TREASURE),"Copper", GameConstant.COPPER_COST), 7, this.drawPile);
 //			shuffle();
 		}
 		buildCardHand();
@@ -197,23 +197,23 @@ public class Deck {
 	 * this card from the drawPile. Logic of comparism should be added to
 	 * shuffle() method
 	 */
-	public void draw(int amount) {
-		if (this.drawPile.size() != 0) {
-			// add card
-		} else {
-			shuffle(amount);
-			if (this.drawPile.size() != 0) {
-				// add card
-			} else {
-				/** keine Karte mehr vorhanden */
-			}
-		}
-		
-		
-		this.shuffle(amount);
-		for (int i = 0; i < amount; i++) {
+	public void draw(/*int amount*/) {
+//		if (this.drawPile.size() != 0) {
+//			// add card
+//		} else {
+//			shuffle(amount);
+//			if (this.drawPile.size() != 0) {
+//				// add card
+//			} else {
+//				/** keine Karte mehr vorhanden */
+//			}
+//		}
+//		
+//		
+//		this.shuffle(amount);
+//		for (int i = 0; i < amount; i++) {
 			this.cardHand.addLast(this.drawPile.removeLast());
-		}
+//		}
 	}
 
 	public void putBack(Card card) {

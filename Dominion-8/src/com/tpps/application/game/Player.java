@@ -104,6 +104,8 @@ public class Player {
 	 * @author ladler - Lukas Adler
 	 */
 	public void doAction(String cardID) {
+		
+		this.getDeck().draw();
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 		// Player player = GameController.getActivePlayer();
 		
@@ -148,6 +150,11 @@ public class Player {
 			case REVEAL_CARD:
 				System.out.println("REVEAL: "
 						+ serverCard.getActions().get(CardAction.REVEAL_CARD));
+			case IS_TREASURE:
+				System.out.println("treasure received");
+				break;
+			case IS_VICTORY:
+				System.out.println("is viktory");
 				break;
 			default:
 				// call

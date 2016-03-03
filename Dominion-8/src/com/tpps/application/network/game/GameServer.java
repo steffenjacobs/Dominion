@@ -17,6 +17,7 @@ public class GameServer extends Server{
 		super(new InetSocketAddress("0.0.0.0", 1339), new ServerGamePacketHandler());
 		((ServerGamePacketHandler)super.getHandler()).setServer(this);
 		this.gameController = new GameController();
+//		has to be removed
 		this.gameController.setActivePlayer(new Player());
 		setConsoleInput();		
 	}

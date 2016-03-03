@@ -36,6 +36,7 @@ public class Card extends GameObject {
 		this.cost = cost;
 		this.types = types;
 		this.id = this.name + classID++;
+		System.out.println(id);
 	}
 
 	public LinkedHashMap<CardAction, Integer> getActions() {
@@ -105,6 +106,13 @@ public class Card extends GameObject {
 				sBuf.append(" ");
 		}
 		return sBuf.append(">\nCost: " + this.cost).toString();
+	}
+	
+	/**
+	 * sets the classId to zero
+	 */
+	public static void resetClassIdToZero(){
+		Card.classID = 0;
 	}
 
 	/**
