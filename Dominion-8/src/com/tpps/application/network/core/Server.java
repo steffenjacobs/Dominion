@@ -176,8 +176,8 @@ public class Server {
 	 *            Packet to broadcast
 	 */
 	public void broadcastMessage(Packet packet) throws IOException {
-		for (Entry<Integer, ServerConnectionThread> entr : clients.entrySet()) {
-			entr.getValue().sendMessage(PacketType.getBytes(packet));
+		for (ServerConnectionThread entr : clients.values()) {
+			entr.sendMessage(PacketType.getBytes(packet));
 		}
 	}
 
