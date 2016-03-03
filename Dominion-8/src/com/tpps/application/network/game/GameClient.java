@@ -13,10 +13,17 @@ import com.tpps.application.network.gameSession.packets.PacketRegistratePlayerBy
  *
  */
 public class GameClient extends Client{
+	private int id;
+	private static int classId = 0;
 
 	public GameClient(SocketAddress _address, PacketHandler _handler) throws IOException {
 		super(_address, _handler, false);	
-//		this.sendMessage(new PacketRegistratePlayerByServer(playerId, playerName));
+		registrateByServer();
+	}
+
+	private void registrateByServer() throws IOException {
+		this.id = GameClient.classId++;		
+		this.sendMessage(new PacketRegistratePlayerByServer(this.id));
 	}
 
 

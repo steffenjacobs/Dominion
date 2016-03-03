@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
+import com.tpps.application.network.packet.PacketType;
+
 /**
  * represents the connectoin-thread on the server (very similar to the client
  * one
@@ -15,7 +17,7 @@ import java.nio.ByteBuffer;
  */
 public class ServerConnectionThread extends Thread {
 
-	private Receiver receiver;
+	private PacketHandler receiver;
 	private Socket clientSocket;
 	private DataInputStream inStream;
 	private DataOutputStream outStream;
@@ -26,7 +28,7 @@ public class ServerConnectionThread extends Thread {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	ServerConnectionThread(Socket clientSocket, Receiver receiver, Server _parent) {
+	ServerConnectionThread(Socket clientSocket, PacketHandler receiver, Server _parent) {
 		this.receiver = receiver;
 		this.clientSocket = clientSocket;
 		this.parent = _parent;
@@ -67,7 +69,7 @@ public class ServerConnectionThread extends Thread {
 					int length = inStream.readInt();
 					byte[] data = new byte[length];
 					inStream.readFully(data);
-					receiver.received(clientSocket, data);
+					receiver.handleReceivedPacket(clientSocket.getPort(), PacketType.getPacket(data));
 				} catch (IOException e) {
 					parent.getHandler().output("Connection Lost with " + this.clientSocket.getInetAddress() + ":"
 							+ this.clientSocket.getPort());
@@ -107,17 +109,5 @@ public class ServerConnectionThread extends Thread {
 		} catch (SocketException e) {
 			return false;
 		}
-	}
-
-	/** receiver-interface */
-	public interface Receiver {
-		/**
-		 * Is called when a message is received
-		 *
-		 * @param data
-		 *            the data received
-		 * @author sjacobs - Steffen Jacobs
-		 */
-		public void received(Socket socket, byte[] data);
 	}
 }

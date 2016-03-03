@@ -1,0 +1,84 @@
+package com.tpps.application.game;
+
+import java.util.UUID;
+
+import com.tpps.application.network.clientSession.client.SessionClient;
+import com.tpps.ui.loginscreen.LoginGUIController;
+
+/**
+ * main controller class containing main entry point for client-application
+ * 
+ * @author sjacobs - Steffen Jacobs
+ */
+public final class DominionController {
+
+	private static DominionController instance;
+
+	private String username, email;
+	private UUID sessionID;
+	private SessionClient sessionClient;
+
+	/** main entry point for client application */
+	public static void main(String[] stuff) {
+		instance = new DominionController();
+	}
+
+	/* constructor */
+	public DominionController() {
+		new LoginGUIController();
+	}
+
+	/** sets the session-client instance and starts keep-alive */
+	public void setSessionClient(SessionClient sc) {
+
+		if (this.sessionClient != null) {
+			this.sessionClient.keepAlive(username, false);
+			this.sessionClient.disconnect();
+		}
+
+		this.sessionClient = sc;
+		this.sessionClient.keepAlive(username, true);
+	}
+
+	/* getters and setters */
+
+	/**
+	 * @param sessionID
+	 *            new session-id
+	 */
+	public void setSessionID(UUID sessionID) {
+		this.sessionID = sessionID;
+	}
+
+	/** @return the users username */
+	public String getUsername() {
+		return username;
+	}
+
+	/** @return the users email-address */
+	public String getEmail() {
+		return email;
+	}
+
+	/** @return the current Session-ID */
+	public UUID getSessionID() {
+		return sessionID;
+	}
+
+	/** @return the current instance of the game */
+	public static DominionController getInstance() {
+		return instance;
+	}
+
+	/**
+	 * @param username
+	 *            new Username
+	 * @param mailAddress
+	 *            new Email-Address
+	 */
+	public void setCredentials(String username, String mailAddress) {
+		this.username = username;
+		this.email = mailAddress;
+	}
+
+}
