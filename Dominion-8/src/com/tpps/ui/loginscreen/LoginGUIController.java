@@ -4,21 +4,40 @@ import javax.swing.JOptionPane;
 
 import com.tpps.application.network.login.client.LoginClient;
 
+/**
+ * Tis class is used as an interface between LoginGUI and 
+ * @author jhuhn - Johannes Huhn
+ */
 public class LoginGUIController{
 	
-	LogInGUI logingui;
-	CreateAccount createaccount;
-	LoginClient loginclient;
+	private LogInGUI logingui;
+	private CreateAccount createaccount;
+	private LoginClient loginclient;
 	
+	/**
+	 * Initializes this object
+	 * @author jhuhn - Johannes Huhn
+	 */
 	public LoginGUIController(){
 		logingui = new LogInGUI(this);
 	}
 	
+	/**
+	 * This method sends a packet to the LoginServer to validate the accountinformation.
+	 * Initialize the the LoginClient
+	 * @author jhuhn - Johannes Huhn
+	 * @param nickname a String representation of the accountname
+	 * @param plaintext a String representation as a plaintext of the password
+	 */
 	public void createLoginClient(String nickname, String plaintext){
 		loginclient = new LoginClient(this);
 		loginclient.handlelogin(nickname, plaintext);
 	}
 	
+	/**
+	 * This method closes the Loginwindow and opens the window for accountcreation
+	 * @author jhuhn - Johannes Huhn
+	 */
 	public void createAccountGUI(){
 		this.logingui.dispose();
 		createaccount = new CreateAccount(this);
@@ -31,6 +50,16 @@ public class LoginGUIController{
 		loginclient.handleAccountCreation(username, plaintext, email);
 	}
 	
+	/**
+	 * This method opens a small messagebox (JOptionPane) which contains the state of your Accountcreation
+	 * @author jhuhn - Johannes Huhn
+	 * @param state an Integer which represents the status quo of the accountcreation
+	 * 			1 account creates successfully
+	 * 			2 the desired nickname is already in use
+	 * 			3 the desired email adress is already in use
+	 * @param nickname a String representation of the desires user account
+	 * @param plaintext a String representation as plaintext of the password
+	 */
 	public void getStateOfAccountCreation(int state, String nickname, String plaintext){
 		if(state == 1) {
 			JOptionPane.showMessageDialog(null, "Account created succesfully", "Create Account", JOptionPane.INFORMATION_MESSAGE);
@@ -43,10 +72,15 @@ public class LoginGUIController{
 		}
 	}
 	
+	/**
+	 * This method opens a small messagebox(JOptionPane)  which contains the state of your Login request.
+	 * @author jhuhn - Johannes Huhn
+	 * @param state true if your login request ellaborated correctly, false else
+	 */
 	public void getStateOfLoginRequest(boolean state){
-		if (state) { // Anmeldung erfolgreich, pw richtig
+		if (state) { // logged in successfully
 			JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.INFORMATION_MESSAGE);
-		} else {// Anmeldung fehlgeschlagen, PW falsch
+		} else {	//login request failed 
 			JOptionPane.showMessageDialog(null, "Wrong Password or nickname", "Login", JOptionPane.ERROR_MESSAGE);
 		}
 	}
