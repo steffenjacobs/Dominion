@@ -163,19 +163,19 @@ public class Deck {
 
 		/* --- VARIANTE 2 --- */
 
-//		Iterator<Card> it = this.drawPile.iterator();
-//		int count = 0;
-//		while (it.hasNext() && count < 5) {
-//			this.cardHand.addLast(it.next());
-//		}
-//		if (count != 4) {
-//			shuffleDrawPile();
-//			while (count < 5) {
-//				count++;
-//				/* hat java.util.NoSuchElementException geworfen */
-//				this.cardHand.addLast(it.next());
-//			}
-//		}
+		Iterator<Card> it = this.drawPile.iterator();
+		int count = 0;
+		while (it.hasNext() && count < 5) {
+			this.cardHand.addLast(it.next());
+		}
+		if (count != 4) {
+			shuffleDrawPile();
+			while (count < 5 && it.hasNext()) {
+				count++;
+				/* hat java.util.NoSuchElementException geworfen */
+				this.cardHand.addLast(it.next());
+			}
+		}
 	}
 
 	public void discardCardHand() {
@@ -214,7 +214,6 @@ public class Deck {
 	 * this card from the drawPile. Logic of comparism should be added to
 	 * shuffle() method
 	 */
-
 	public void draw(int amount) {
 		if (this.drawPile.size() != 0) {
 			// add card
@@ -229,7 +228,6 @@ public class Deck {
 		
 		this.shuffleIfLessThan(amount);
 		for (int i = 0; i < amount; i++) {
-
 			this.cardHand.addLast(this.drawPile.removeLast());
 		}
 	}

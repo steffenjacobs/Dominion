@@ -14,16 +14,6 @@ import java.util.Iterator;
  *
  */
 public class SQLStatisticsHandler {
-
-	private SQLHandler sql;
-	
-	/**
-	 * initializes the Object
-	 * @param sql SQLHandler which is needed to get basic mysql functionalities like getConnection()
-	 */
-	public SQLStatisticsHandler(SQLHandler sql){
-		this.sql = sql;
-	}
 	
 	/**
 	 * @author jhuhn - Johannes Huhn
@@ -31,7 +21,7 @@ public class SQLStatisticsHandler {
 	 * columns(included types e.g. VARCHAR) that should implement the
 	 * statistics table in the database (PRIMARY KEY is nickname, hardcoded) 
 	 */
-	public void createStatisticsTable(ArrayList<Statistic> statistics){
+	public static void createStatisticsTable(ArrayList<Statistic> statistics){
 		StringBuffer buf = new StringBuffer();
 		buf.append("CREATE TABLE statistics ( \n");
 		Statistic temp;
@@ -45,7 +35,7 @@ public class SQLStatisticsHandler {
 		buf.append(");");	
 		System.out.println(buf.toString());
 		try {
-			Statement stmt = this.sql.getConnection().createStatement();
+			Statement stmt = SQLHandler.getConnection().createStatement();
 			stmt.executeUpdate(buf.toString());
 			System.out.println("Table created");
 		} catch (SQLException e) {
@@ -59,9 +49,9 @@ public class SQLStatisticsHandler {
 	 * @author jhuhn - Johannes Huhn
 	 * @param nickname String representation of the account name, that is used to initial the row
 	 */
-	public void insertRowForFirstLogin(String nickname){
+	public static void insertRowForFirstLogin(String nickname){
 		try {
-			PreparedStatement stmt = this.sql.getConnection().prepareStatement("INSERT INTO statistics (nickname, description, wins, losses) VALUES (?, '', 0, 0)");
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("INSERT INTO statistics (nickname, description, wins, losses) VALUES (?, '', 0, 0)");
 			stmt.setString(1, nickname);
 			stmt.executeUpdate();
 			System.out.println("Added nickname Row for statistics");
@@ -76,17 +66,17 @@ public class SQLStatisticsHandler {
 	 * @param nickname String representation of the account name
 	 * @param win boolean value, true for win, false for loss
 	 */
-	public void addWinOrLoss(String nickname, boolean win){
+	public static void addWinOrLoss(String nickname, boolean win){
 		PreparedStatement stmt = null;
 		try{
 			if(win){
-				stmt = this.sql.getConnection().prepareStatement("UPDATE statistics SET wins = wins +1 WHERE nickname = ?");
+				stmt = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET wins = wins +1 WHERE nickname = ?");
 			}else{
-				stmt = this.sql.getConnection().prepareStatement("UPDATE statistics SET losses = losses +1 WHERE nickname = ?");
+				stmt = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET losses = losses +1 WHERE nickname = ?");
 			}
 			stmt.setString(1, nickname);
 			stmt.executeUpdate();
-			this.updateWinLoss(nickname);
+			updateWinLoss(nickname);
 			System.out.println("Updated Wins and Losses");
 		}catch(SQLException e){
 			System.err.println("Error while updating win/loss db");
@@ -100,9 +90,9 @@ public class SQLStatisticsHandler {
 	 * @param nickname String representation of the account name
 	 * @param description String representation that delivers more detailed information about the nickname
 	 */
-	public void setDescription(String nickname, String description){
+	public static void setDescription(String nickname, String description){
 		try {
-			PreparedStatement stmt = this.sql.getConnection().prepareStatement("UPDATE statistics SET description = ? WHERE nickname = ?;");
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET description = ? WHERE nickname = ?;");
 			stmt.setString(1, description);
 			stmt.setString(2, nickname);
 			stmt.executeUpdate();
@@ -117,11 +107,11 @@ public class SQLStatisticsHandler {
 	 * @author jhuhn - Johannes Huhn
 	 * @param nickname String representation of the account name
 	 */
-	private void updateWinLoss(String nickname){
+	private static void updateWinLoss(String nickname){
 		try {
-			PreparedStatement stmtgetwinquery = this.sql.getConnection().prepareStatement("SELECT wins FROM statistics WHERE nickname = ?");
+			PreparedStatement stmtgetwinquery = SQLHandler.getConnection().prepareStatement("SELECT wins FROM statistics WHERE nickname = ?");
 			stmtgetwinquery.setString(1, nickname);
-			PreparedStatement stmtgetlosses = this.sql.getConnection().prepareStatement("SELECT losses FROM statistics WHERE nickname = ?");
+			PreparedStatement stmtgetlosses = SQLHandler.getConnection().prepareStatement("SELECT losses FROM statistics WHERE nickname = ?");
 			stmtgetlosses.setString(1, nickname);
 			ResultSet rswin = stmtgetwinquery.executeQuery();
 			rswin.next();
@@ -132,7 +122,7 @@ public class SQLStatisticsHandler {
 			if(losses != 0){
 				float ratio = (float)wins/  (float)losses;
 				System.out.println(ratio);
-				PreparedStatement setwinloss = this.sql.getConnection().prepareStatement("UPDATE statistics SET win_loss = ? WHERE nickname = ?;");
+				PreparedStatement setwinloss = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET win_loss = ? WHERE nickname = ?;");
 				setwinloss.setFloat(1, ratio);
 				setwinloss.setString(2, nickname);
 				setwinloss.executeUpdate();						

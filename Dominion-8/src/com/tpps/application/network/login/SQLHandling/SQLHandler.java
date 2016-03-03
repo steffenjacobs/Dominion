@@ -42,8 +42,7 @@ public class SQLHandler {
 		SQLHandler.username = username;
 		SQLHandler.password = password;
 		SQLHandler.database = database;
-		SQLHandler.connection = null;
-		connect();
+		SQLHandler.connection = null;	
 	}
 	
 	/**
@@ -77,7 +76,7 @@ public class SQLHandler {
 		}
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			connection = DriverManager.getConnection("jdbc:mysql://" + SQLHandler.host + ":" + SQLHandler.port + "/" + SQLHandler.database, SQLHandler.username, SQLHandler.password);
+			connection = DriverManager.getConnection("jdbc:mysql://" + SQLHandler.host + ":" + SQLHandler.port + "/" + SQLHandler.database, SQLHandler.username, SQLHandler.password);			
 		}
 		catch (SQLException e) {
 			System.out.println("Could not connect to MySQL server! Exception: " + e.getMessage());

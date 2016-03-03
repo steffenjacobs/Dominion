@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 
-import javax.swing.JOptionPane;
-
 import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
@@ -17,17 +15,27 @@ import com.tpps.application.network.login.packets.PacketRegisterRequest;
 import com.tpps.application.network.packet.Packet;
 import com.tpps.ui.loginscreen.LoginGUIController;
 
+/**
+ * this class delivers specific methods to handle the login/account creation.
+ * These methods are able to send or receive packets from the LoginServer
+ * @author jhuhn - Johannes Huhn
+ */
 public class LoginClient extends PacketHandler {
 
-	Client c_login;
-	UUID sessionid;
-	String usernamelogin;
-	SessionClient c_session;
-	LoginGUIController guicontroller;
+	private Client c_login;
+	private UUID sessionid;
+	private String usernamelogin;
+	private SessionClient c_session;
+	private LoginGUIController guicontroller;
 
-	String usernamenewacc;
-	String plaintext;
+	private String usernamenewacc;
+	private String plaintext;
 
+	/**
+	 * Initializes the object, create connection to the loginserver and sessionserver
+	 * @author jhuhn - Johannes Huhn
+	 * @param guicontroller controlls the overall gui for login
+	 */
 	public LoginClient(LoginGUIController guicontroller) {
 		try {
 			this.guicontroller = guicontroller;
@@ -38,31 +46,41 @@ public class LoginClient extends PacketHandler {
 		}
 	}
 
+	/**
+	 * method to login into LoginServer, sends packet to LoginServer
+	 * @author jhuhn - Johannes Huhn
+	 * @param nickname a String representation of the username/acountname
+	 * @param plaintext a String representation of the password in plaintext
+	 */
 	public void handlelogin(String nickname, String plaintext) {
 		this.usernamelogin = nickname;
-		Password pw = new Password(plaintext, new String("defsalt").getBytes()); // defsalt ist standardsalt
+		Password pw = new Password(plaintext, new String("defsalt").getBytes()); // defsalt is a standardsalt
 																					
 		try {
-			System.out.println("into handlelogin");
-			// pw.createHashedPassword();
 			String pwAsString = pw.getHashedPasswordAsString();
 			PacketLoginCheckRequest check = new PacketLoginCheckRequest(nickname, pwAsString);
-			c_login.sendMessage(check);
-			System.out.println("ende handlelogin");
+			c_login.sendMessage(check);			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * called when a packet from the LoginServer received,
+	 * method to handle the received packet from the LoginServer
+	 * important to get the state of a loginrequest
+	 * important to get the state of an Accountcreation e.g nickname ok, Email already given
+	 * @author jhuhn - Johannes Huhn
+	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet answer) {
-		System.out.println("into hanleReceivedPacket");
+		System.out.println("Client received an answer packet");
 		switch (answer.getType()) {
 		case LOGIN_CHECK_ANSWER:
 			PacketLoginCheckAnswer check = (PacketLoginCheckAnswer) answer;
 			guicontroller.getStateOfLoginRequest(check.getState());
 			if (check.getState()) { // Anmeldung erfolgreich, pw richtig
-				this.sessionid = check.getSessionID();
+				this.setSessionid(check.getSessionID());
 				c_session.keepAlive(usernamelogin, true);
 			}
 			break;
@@ -72,10 +90,16 @@ public class LoginClient extends PacketHandler {
 		default:
 			break;
 		}
-		System.out.println("ende hanleReceivedPacket");
 	}
 
-	// sends accountdetails to server to create new account
+	/**
+	 * method to create a new unique account
+	 * this method sends accountinformation (nickname, password, email) to the LoginServer
+	 * @author jhuhn - Johannes Huhn
+	 * @param username a String representation of the desired nickname
+	 * @param plaintext a String representation of the desired password in plaintext
+	 * @param email a String representation of the desired email adress
+	 */
 	public void handleAccountCreation(String username, String plaintext, String email) {
 		this.usernamenewacc = username;
 		this.plaintext = plaintext;
@@ -86,11 +110,23 @@ public class LoginClient extends PacketHandler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("client sent new Accountinformaion to server");
+		System.out.println("client sent accountinformaion to server to create a new account");
 	}
 
-	// public static void main(String[] args) {
-	// new LoginClient().handlelogin("Alex44", "Schokolade");;
-	// }
+	/**
+	 * gets the sessionid
+	 * @author jhuhn - Johannes Huhn
+	 * @return the sessionid (UUID), if the loginrequest is valid, else null
+	 */
+	public UUID getSessionid() {
+		return sessionid;
+	}
 
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * @param sessionid sets the sessionid
+	 */
+	public void setSessionid(UUID sessionid) {
+		this.sessionid = sessionid;
+	}
 }
