@@ -6,5 +6,20 @@ package com.tpps.application.game.card;
  * @author nwipfler - Nicolas Wipfler
  */
 public enum CardType {
-	ACTION, REACTION, ATTACK, DURATION, PRIZE, RUINS, SHELTER, LOOTER, KNIGHT, TRAVELLER, RESERVE, TREASURE, VICTORY, CURSE;
+	
+	ACTION, 
+	REACTION, 
+	ATTACK, 
+	DURATION, 
+	PRIZE, 
+	RUINS, 
+	SHELTER, 
+	LOOTER, 
+	KNIGHT, 
+	TRAVELLER, 
+	RESERVE, 
+	TREASURE, 
+	VICTORY, 
+	CURSE;
+	
 }

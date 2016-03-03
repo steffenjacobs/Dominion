@@ -19,6 +19,10 @@ public class GameConstant {
 	public static final int INIT_DUCHY_PILE_SIZE = 12;
 	public static final int INIT_PROVINCE_PILE_SIZE = 12;
 	
+	public static final int INIT_ACTIONS = 1;
+	public static final int INIT_PURCHASES = 1;
+	public static final int INIT_MONEY = 0;
+	
 	/**
 	 * VICTORY
 	 * */

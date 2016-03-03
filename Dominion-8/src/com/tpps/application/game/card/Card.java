@@ -16,12 +16,12 @@ import com.tpps.ui.GraphicFramework;
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = -4157717625890678601L;
-	private final LinkedHashMap<CardAction, Integer> actions; // if the card is  
+	private final LinkedHashMap<CardAction, Integer> actions; // if the card is VICTORY/TREASURE, Int is the value (not the cost)
 	private final LinkedList<CardType> types;
 	private final int cost; // cost of the card
 	private final String name;
 	private final String id;
-	private static int classID;
+	private static int classID = 0;
 
 	public Card(LinkedHashMap<CardAction, Integer> actions, LinkedList<CardType> types, String name, int cost,
 			GraphicFramework _parent) {
@@ -127,7 +127,8 @@ public class Card extends GameObject {
 
 		GameClient g;
 		try {
-			g = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());
+			g = new GameClient(new InetSocketAddress("localhost", 1339),
+					new ClientGamePacketHandler());
 
 			g.sendMessage(new PacketPlayCard("Chappel1", "karl"));
 		} catch (IOException e) {
