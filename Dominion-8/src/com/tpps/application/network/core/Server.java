@@ -113,9 +113,8 @@ public class Server {
 			try {
 				Socket client = serverSocket.accept();
 				this.getHandler().output("<-" + client.getInetAddress() + ":" + client.getPort() + " connected.");
-				ServerConnectionThread clientThread = new ServerConnectionThread(client,
-						(socket, data) -> handler.handleReceivedPacket(socket.getPort(), PacketType.getPacket(data)),
-						this);
+				ServerConnectionThread clientThread = new ServerConnectionThread(client, handler, this);
+
 				clients.putIfAbsent(client.getPort(), clientThread);
 				clientThread.start();
 			} catch (IOException e) {
