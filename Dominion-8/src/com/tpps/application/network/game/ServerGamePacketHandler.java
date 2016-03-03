@@ -1,8 +1,6 @@
 package com.tpps.application.network.game;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedList;
 
 import com.tpps.application.game.Player;
 import com.tpps.application.network.core.PacketHandler;
@@ -36,12 +34,13 @@ public class ServerGamePacketHandler extends PacketHandler{
 		}
 		switch (packet.getType()) {
 			case REGISTRATE_PLAYER_BY_SERVER:				
+			
 				server.getGameController().addPlayer(new Player(((PacketRegistratePlayerByServer)packet).getClientId(), port));
+		
 				System.out.println("registrate one more client to server with id: " + 
 				((PacketRegistratePlayerByServer)packet).getClientId() + "listening on port: " + port);
 				break;
-			case CARD_PLAYED:
-								
+			case CARD_PLAYED:								
 				server.getGameController().getActivePlayer().doAction(((PacketPlayCard)packet).getCardID());
 				System.out.println("packet received from Client of type " + packet.getType() + 
 						" card id " + ((PacketPlayCard)packet).getCardID());

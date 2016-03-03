@@ -3,6 +3,8 @@ package com.tpps.application.game;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import com.tpps.application.network.game.ToMuchPlayerException;
+
 public class GameController {
 
 	private LinkedList<Player> players;
@@ -40,7 +42,16 @@ public class GameController {
 	}
 
 	public void addPlayer(Player player) {
+		if (this.players.size() < 4){
 		this.players.addLast(player);
+		}else{
+			try {
+				throw new ToMuchPlayerException();
+			} catch (ToMuchPlayerException e) {			
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 	private boolean gameFinished() {

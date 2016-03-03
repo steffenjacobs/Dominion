@@ -5,8 +5,6 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
-import com.tpps.application.game.card.CardType;
-import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
 /** ServerPlayer */
