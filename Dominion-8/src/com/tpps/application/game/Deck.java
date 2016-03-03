@@ -193,7 +193,10 @@ public class Deck {
 		Collections.shuffle(this.drawPile);
 	}
 	
-	public void shuffleIfLessThan(int amount) {
+	/**
+	 * shuffles the discard pile and appends it to the draw pile (unten drunter)
+	 * */
+	private void shuffle() {
 		LinkedList<Card> cards = new LinkedList<Card>();
 		cards.addAll(this.discardPile);
 		Collections.shuffle(cards);
@@ -202,6 +205,23 @@ public class Deck {
 		}
 		this.discardPile = new LinkedList<Card>();
 		this.drawPile = cards;
+	}
+	
+	public void shuffleIfLessThan(int drawAmount) {
+		int drawPileSize = this.drawPile.size();
+		if (drawAmount < (drawPileSize + this.discardPile.size())) {
+			if (drawPileSize < drawAmount) {
+				draw(drawPileSize);
+				int remaining = drawAmount - drawPileSize;
+				shuffle();
+				draw(remaining);
+			} else {
+				/* do nothing */
+			}	
+		} else {
+			shuffle();
+			//draw until pile is empty
+		}
 	}
 
 	
