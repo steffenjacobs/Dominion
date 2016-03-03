@@ -117,8 +117,5 @@ public class Card extends GameObject {
 
 		Card card = new Card(CollectionsUtil.linkedHashMapAction(act, ints), type, "Market", 5);
 		System.out.println(card.toString());
-
-		/*-------------------------------------------------------------------------------------------------------*/
-
 	}
 }
