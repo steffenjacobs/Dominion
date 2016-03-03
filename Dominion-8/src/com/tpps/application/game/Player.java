@@ -5,8 +5,6 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
-import com.tpps.application.game.card.CardType;
-import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
 /** ServerPlayer */
@@ -120,8 +118,7 @@ public class Player {
 	 * @author ladler - Lukas Adler
 	 */
 	public void doAction(String cardID) {
-		
-		this.getDeck().drawCard();
+		this.getDeck().draw();
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 		// Player player = GameController.getActivePlayer();
 		

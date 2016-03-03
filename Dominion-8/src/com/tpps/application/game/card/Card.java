@@ -111,7 +111,7 @@ public class Card extends GameObject {
 	/**
 	 * sets the classId to zero
 	 */
-	public static void resetClassIdToZero(){
+	public static void resetClassID(){
 		Card.classID = 0;
 	}
 
