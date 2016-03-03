@@ -112,7 +112,7 @@ public class Deck {
 		if (this.drawPile != null) {
 			CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, GameConstant.ESTATE_VALUE),CollectionsUtil.linkedList(CardType.VICTORY),"Estate", GameConstant.ESTATE_COST), 3,	this.drawPile);
 			CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, GameConstant.COPPER_VALUE),CollectionsUtil.linkedList(CardType.TREASURE),"Copper", GameConstant.COPPER_COST), 7, this.drawPile);
-//			shuffle();
+			shuffleDrawPile();
 		}
 		buildCardHand();
 	}
@@ -138,16 +138,15 @@ public class Deck {
 		if (this.getDeckSize() >= 5) {
 			int size = this.drawPile.size();
 			if (size >= 5) {
-				this.addCard(CollectionsUtil.getNextElements(5, this.drawPile),
-						this.cardHand);
+				//add 5 cards
 			} else if (size == 0) {
-				shuffle();
+				shuffleDrawPile();
 				size = this.drawPile.size();
 				this.addCard(CollectionsUtil.getNextElements(size >= 5 ? 5
 						: size, this.drawPile), this.cardHand);
 			} else {
 				if (this.getDeckSize() <= 5) {
-					shuffle();
+					shuffleDrawPile();
 					this.addCard(
 							CollectionsUtil.getNextElements(
 									this.drawPile.size(), this.drawPile),
@@ -156,7 +155,7 @@ public class Deck {
 				this.addCard(
 						CollectionsUtil.getNextElements(size, this.drawPile),
 						this.cardHand);
-				shuffle();
+				shuffleDrawPile();
 				this.addCard(CollectionsUtil.getNextElements(5 - size,
 						this.drawPile), this.cardHand);
 			}
@@ -170,7 +169,7 @@ public class Deck {
 			this.cardHand.addLast(it.next());
 		}
 		if (count != 4) {
-			shuffle();
+			shuffleDrawPile();
 			while (count < 5) {
 				count++;
 				/* hat java.util.NoSuchElementException geworfen */
@@ -181,7 +180,18 @@ public class Deck {
 
 	// public void discardCardHand() {}
 
-	public void shuffle() {
+	public void shuffleDrawPile() {
+		LinkedList<Card> cards = new LinkedList<Card>();
+		cards.addAll(this.discardPile);
+		Collections.shuffle(cards);
+		for (Card card : this.drawPile) {
+			cards.addLast(card);
+		}
+		this.discardPile = new LinkedList<Card>();
+		this.drawPile = cards;
+	}
+	
+	public void shuffleIfLessThan(int amount) {
 		LinkedList<Card> cards = new LinkedList<Card>();
 		cards.addAll(this.discardPile);
 		Collections.shuffle(cards);
@@ -201,7 +211,7 @@ public class Deck {
 		if (this.drawPile.size() != 0) {
 			// add card
 		} else {
-			shuffle(amount);
+			shuffleIfLessThan(amount);
 			if (this.drawPile.size() != 0) {
 				// add card
 			} else {
@@ -210,7 +220,7 @@ public class Deck {
 		}
 		
 		
-		this.shuffle(amount);
+		this.shuffleIfLessThan(amount);
 		for (int i = 0; i < amount; i++) {
 			this.cardHand.addLast(this.drawPile.removeLast());
 		}
