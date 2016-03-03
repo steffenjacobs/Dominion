@@ -10,6 +10,7 @@ public class GameController {
 	private Player activePlayer;
 
 	public GameController() {
+//		new Setup().start();
 		this.players = new LinkedList<Player>();
 		this.gameNotFinished = true;
 	}
