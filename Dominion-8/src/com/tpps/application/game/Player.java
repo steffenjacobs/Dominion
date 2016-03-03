@@ -17,22 +17,38 @@ public class Player {
 	private int actions;
 	private int purchases;
 	private int money;
+	private final int CLIENT_ID;
+	private int port;
+
+	public int getPort() {
+		return port;
+	}
+	
+	public void setPort(int port){
+		this.port = port;
+	}
+
+	public int getClientId() {
+		return CLIENT_ID;
+	}
 
 	private final int id;
 	private static int playerID = 0;
 
 	// draw()
 
-	public Player(Deck deck) {
+	public Player(Deck deck, int clientId, int port) {
 		this.deck = deck;
 		this.id = playerID++;
 		this.actions = GameConstant.INIT_ACTIONS;
 		this.purchases = GameConstant.INIT_PURCHASES;
 		this.money = GameConstant.INIT_MONEY;
+		this.CLIENT_ID = clientId;
+		this.port = port;
 	}
 
-	public Player() {
-		this(new Deck());
+	public Player(int clientId, int port) {
+		this(new Deck(), clientId, port);		
 	}
 	
 	/**
@@ -163,17 +179,17 @@ public class Player {
 		}
 	}
 
-	public static void main(String[] args) {
-		Player p = new Player();
-		System.out.println(p.getDeck().toString());
+//	public static void main(String[] args) {
+//		Player p = new Player(0);
+//		System.out.println(p.getDeck().toString());
 //		p.getDeck().shuffle();
-		Card silver = new Card(CollectionsUtil.linkedHashMapAction(
-				CollectionsUtil.linkedList(CardAction.IS_TREASURE),
-				CollectionsUtil.linkedList(GameConstant.SILVER_VALUE)),
-				CollectionsUtil.linkedList(CardType.TREASURE), "Silver", 0);
-		CollectionsUtil.addCardToList(silver, p.getDeck().getDiscardPile());
-		System.out.println("\n" + p.getDeck().toString());
+//		Card silver = new Card(CollectionsUtil.linkedHashMapAction(
+//				CollectionsUtil.linkedList(CardAction.IS_TREASURE),
+//				CollectionsUtil.linkedList(GameConstant.SILVER_VALUE)),
+//				CollectionsUtil.linkedList(CardType.TREASURE), "Silver", 0);
+//		CollectionsUtil.addCardToList(silver, p.getDeck().getDiscardPile());
+//		System.out.println("\n" + p.getDeck().toString());
 //		p.getDeck().shuffle();
-		System.out.println("\n" + p.getDeck().toString());
-	}
+//		System.out.println("\n" + p.getDeck().toString());
+//	}
 }

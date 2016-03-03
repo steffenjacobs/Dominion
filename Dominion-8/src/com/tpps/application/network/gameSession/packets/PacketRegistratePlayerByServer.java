@@ -12,23 +12,17 @@ import com.tpps.application.network.packet.PacketType;
 public class PacketRegistratePlayerByServer extends Packet {
 	
 	private static final long serialVersionUID = -1098491079138028225L;
-	private final int playerID;
-	private final String username;  
+	private final int clientID;
+	
 
-	/**
-	 * @return the name of the player who played the card
-	 * @author sjacobs - Steffen Jacobs
-	 */
-	public String getUsername() {
-		return this.username;
-	}
+
 
 	/**
 	 * @return the playedCard
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public int getPlayerID() {
-		return this.playerID;
+	public int getClientId() {
+		return this.clientID;
 	}
 	
 
@@ -38,10 +32,9 @@ public class PacketRegistratePlayerByServer extends Packet {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public PacketRegistratePlayerByServer(int playerId, String playerName) {
+	public PacketRegistratePlayerByServer(int clientId) {
 		super(PacketType.REGISTRATE_PLAYER_BY_SERVER);
-		this.playerID = playerId;		
-		this.username = playerName;
+		this.clientID = clientId;		
 	}
 
 	/**
@@ -50,6 +43,6 @@ public class PacketRegistratePlayerByServer extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + ": " + this.getUsername() + " - " + this.getPlayerID();
+		return this.getClass().getSimpleName() + ": " + this.clientID;
 	}
 }

@@ -165,19 +165,19 @@ public class Deck {
 
 		/* --- VARIANTE 2 --- */
 
-		Iterator<Card> it = this.drawPile.iterator();
-		int count = 0;
-		while (it.hasNext() && count < 5) {
-			this.cardHand.addLast(it.next());
-		}
-		if (count != 4) {
-			shuffleDrawPile();
-			while (count < 5) {
-				count++;
-				/* hat java.util.NoSuchElementException geworfen */
-				this.cardHand.addLast(it.next());
-			}
-		}
+//		Iterator<Card> it = this.drawPile.iterator();
+//		int count = 0;
+//		while (it.hasNext() && count < 5) {
+//			this.cardHand.addLast(it.next());
+//		}
+//		if (count != 4) {
+//			shuffleDrawPile();
+//			while (count < 5) {
+//				count++;
+//				/* hat java.util.NoSuchElementException geworfen */
+//				this.cardHand.addLast(it.next());
+//			}
+//		}
 	}
 
 	public void discardCardHand() {

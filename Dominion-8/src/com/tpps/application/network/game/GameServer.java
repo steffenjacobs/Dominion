@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 import java.util.Scanner;
 
 import com.tpps.application.game.GameController;
-import com.tpps.application.game.Player;
 import com.tpps.application.network.core.Server;
 
 /** @author ladler - Lukas Adler */
@@ -17,8 +16,7 @@ public class GameServer extends Server{
 		super(new InetSocketAddress("0.0.0.0", 1339), new ServerGamePacketHandler());
 		((ServerGamePacketHandler)super.getHandler()).setServer(this);
 		this.gameController = new GameController();
-//		has to be removed
-		this.gameController.setActivePlayer(new Player());
+
 		setConsoleInput();		
 	}
 	
