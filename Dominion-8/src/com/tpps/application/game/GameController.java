@@ -5,42 +5,48 @@ import java.util.LinkedList;
 
 public class GameController {
 
-	private static LinkedList<Player> players;
-	private static boolean gameNotFinished = true;
-	private static Player activePlayer;
-
-	public static LinkedList<Player> getPlayers() {
-		return players;
+	private LinkedList<Player> players;
+	private boolean gameNotFinished;
+	private Player activePlayer;
+	
+	public GameController() {
+		
+		this.gameNotFinished = true;
+			
 	}
 
-	public static void setPlayers(LinkedList<Player> players) {
-		GameController.players = players;
+	public LinkedList<Player> getPlayers() {
+		return this.players;
+	}
+
+	public void setPlayers(LinkedList<Player> players) {
+		this.players = players;
 	}
 	
-	public static Player getActivePlayer() {
-		return activePlayer;
+	public Player getActivePlayer() {
+		return this.activePlayer;
 	}
 
-	public static void setActivePlayer(Player aP) {
-		activePlayer = aP;
+	public void setActivePlayer(Player aP) {
+		this.activePlayer = aP;
 	}
 
-	public static boolean isGameNotFinished() {
-		return gameNotFinished;
+	public boolean isGameNotFinished() {
+		return this.gameNotFinished;
 	}
 
-	public static boolean setGameNotFinished(boolean gameNotFinished) {
-		return GameController.gameNotFinished = gameNotFinished;
+	public boolean setGameNotFinished(boolean gameNotFinished) {
+		return this.gameNotFinished = gameNotFinished;
 	}
 
-	public static boolean gameFinished() {
+	public boolean gameFinished() {
 		/* Checkt die Stapel durch, ob 3 Stapel leer sind bzw. Provinzen leer */
 		/* Wenn ja: */
 		return !setGameNotFinished(false);
 	}
 
 	/** CONTROLLER LOGIC; not sure whether the loops are necessary */
-	public static void startGame() {
+	public void startGame() {
 		Iterator<Player> it = players.iterator();
 		while (gameNotFinished) {
 			while (it.hasNext()) {
@@ -52,7 +58,7 @@ public class GameController {
 		}
 	}
 
-	public static void turn(Player player) {
-		/* Player Turn */
+	public void turn(Player player) {
+		setActivePlayer(player);
 	}
 }

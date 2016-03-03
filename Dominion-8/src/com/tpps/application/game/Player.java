@@ -93,6 +93,7 @@ public class Player {
 			switch (cardIt.next()) {
 			case ADD_ACTION_TO_PLAYER:
 				actions += serverCard.getActions().get(CardAction.ADD_ACTION_TO_PLAYER);
+				System.out.println("action added new value: " + actions);
 				break;
 			case ADD_PURCHASE:
 				purchase += serverCard.getActions().get(CardAction.ADD_PURCHASE);

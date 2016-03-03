@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.util.Scanner;
 
 import com.tpps.application.game.GameController;
+import com.tpps.application.game.Player;
 import com.tpps.application.network.core.Server;
 
 /** @author ladler - Lukas Adler */
@@ -15,20 +16,21 @@ public class GameServer extends Server{
 	public GameServer() throws IOException{
 		super(new InetSocketAddress("0.0.0.0", 1339), new ServerGamePacketHandler());
 		((ServerGamePacketHandler)super.getHandler()).setServer(this);
-		setConsoleInput();
+		this.gameController = new GameController();
+		this.gameController.setActivePlayer(new Player());
+		setConsoleInput();		
 	}
+	
 	public static void main(String[] args) {
 		try {
 			new GameServer();		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	
+	}	
 
 	public GameController getGameController() {
-		return gameController;
+		return this.gameController;
 	}
 
 	/**

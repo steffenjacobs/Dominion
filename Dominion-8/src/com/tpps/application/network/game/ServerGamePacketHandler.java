@@ -1,10 +1,6 @@
 package com.tpps.application.network.game;
 
-import java.awt.datatransfer.ClipboardOwner;
 import java.io.IOException;
-
-import com.tpps.application.game.GameController;
-import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
@@ -16,7 +12,7 @@ import com.tpps.application.network.packet.Packet;
  *
  */
 public class ServerGamePacketHandler extends PacketHandler{
-	GameServer server;
+	private GameServer server;
 
 	public GameServer getServer() {
 		return server;
@@ -35,7 +31,10 @@ public class ServerGamePacketHandler extends PacketHandler{
 		}
 		switch (packet.getType()) {
 			case CARD_PLAYED:
-				GameController.getActivePlayer().doAction(((PacketPlayCard)packet).getCardID());
+				System.out.println(server);
+				System.out.println(server.getGameController());
+				System.out.println(server.getGameController().getActivePlayer());
+				server.getGameController().getActivePlayer().doAction(((PacketPlayCard)packet).getCardID());
 				System.out.println("packet received from Client of type " + packet.getType() + 
 						" card id " + ((PacketPlayCard)packet).getCardID());
 			

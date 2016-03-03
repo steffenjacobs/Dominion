@@ -130,13 +130,6 @@ public class Card extends GameObject {
 
 		/*-------------------------------------------------------------------------------------------------------*/
 
-		GameClient g;
-		try {
-			g = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());
-
-			g.sendMessage(new PacketPlayCard("Chappel1", "karl"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	
 	}
 }
