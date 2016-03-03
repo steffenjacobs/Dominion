@@ -2,7 +2,6 @@ package com.tpps.application.network.game;
 
 import java.io.IOException;
 
-import com.tpps.application.game.Player;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
@@ -32,6 +31,10 @@ public class ServerGamePacketHandler extends PacketHandler{
 			return;
 		}
 		switch (packet.getType()) {
+			case REGISTRATE_PLAYER_BY_SERVER:
+//				((PacketRegistratePlayerByServer)packet).getPlayerID()
+//				server.getGameController().
+				break;
 			case CARD_PLAYED:
 								
 				server.getGameController().getActivePlayer().doAction(((PacketPlayCard)packet).getCardID());

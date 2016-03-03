@@ -9,9 +9,10 @@ import com.tpps.application.network.packet.PacketType;
  * 
  * @author sjacobs - Steffen Jacobs
  */
-public class PacketPlayCard extends Packet {
-	private static final long serialVersionUID = -8763060018038893429L;
-	private final String playedCardID;
+public class PacketRegistratePlayerByServer extends Packet {
+	
+	private static final long serialVersionUID = -1098491079138028225L;
+	private final int playerID;
 	private final String username;  
 
 	/**
@@ -26,8 +27,8 @@ public class PacketPlayCard extends Packet {
 	 * @return the playedCard
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public String getCardID() {
-		return this.playedCardID;
+	public int getPlayerID() {
+		return this.playerID;
 	}
 	
 
@@ -37,9 +38,9 @@ public class PacketPlayCard extends Packet {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public PacketPlayCard(String cardID, String playerName) {
-		super(PacketType.CARD_PLAYED);
-		this.playedCardID = cardID;		
+	public PacketRegistratePlayerByServer(int playerId, String playerName) {
+		super(PacketType.REGISTRATE_PLAYER_BY_SERVER);
+		this.playerID = playerId;		
 		this.username = playerName;
 	}
 
@@ -49,6 +50,6 @@ public class PacketPlayCard extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + ": " + this.getUsername() + " - " + this.getCardID();
+		return this.getClass().getSimpleName() + ": " + this.getUsername() + " - " + this.getPlayerID();
 	}
 }

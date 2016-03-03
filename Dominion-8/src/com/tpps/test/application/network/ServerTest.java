@@ -17,8 +17,7 @@ public class ServerTest {
 			
 			g = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());
 			
-			
-			g.sendMessage(new PacketPlayCard("Copper6", "karl"));
+					g.sendMessage(new PacketPlayCard("Copper6", "karl"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
