@@ -34,6 +34,8 @@ public class Client {
 		return this.connectionThread;
 	}
 
+	
+
 	/**
 	 * Tries to connect to the loaded server synchronously until a connection is
 	 * established.
@@ -188,4 +190,12 @@ public class Client {
 			this.connectAndLoop(true);
 		}
 	}
+	/**
+	 * 
+	 * @return the packetHandler of the client
+	 */
+	public PacketHandler getHandler() {
+		return handler;
+	}
+	
 }

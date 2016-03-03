@@ -3,7 +3,7 @@ package com.tpps.application.game;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-import com.tpps.application.network.game.ToMuchPlayerException;
+import com.tpps.application.network.game.TooMuchPlayerException;
 
 public class GameController {
 
@@ -12,7 +12,7 @@ public class GameController {
 	private Player activePlayer;
 
 	public GameController() {
-//		new Setup().start();
+		// new Setup().start();
 		this.players = new LinkedList<Player>();
 		this.gameNotFinished = true;
 	}
@@ -41,17 +41,25 @@ public class GameController {
 		return this.gameNotFinished = gameNotFinished;
 	}
 
-	public void addPlayer(Player player) {
-		if (this.players.size() < 4){
-		this.players.addLast(player);
-		}else{
-			try {
-				throw new ToMuchPlayerException();
-			} catch (ToMuchPlayerException e) {			
-				e.printStackTrace();
+	public void addPlayer(Player player) throws TooMuchPlayerException {
+		if (this.players.size() < 4) {
+			this.players.addLast(player);
+			if (this.players.size() == 4){
+				this.activePlayer = getRandomPlayer();
 			}
+		} else {
+			throw new TooMuchPlayerException();
+
 		}
-		
+
+	}
+
+	/**
+	 * 
+	 * @return one of the four players who is randomly choosen
+	 */
+	private Player getRandomPlayer() {
+		return this.players.get((int)(Math.random()*4));
 	}
 
 	private boolean gameFinished() {

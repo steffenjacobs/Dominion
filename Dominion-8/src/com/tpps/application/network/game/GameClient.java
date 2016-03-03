@@ -13,18 +13,26 @@ import com.tpps.application.network.gameSession.packets.PacketRegistratePlayerBy
  *
  */
 public class GameClient extends Client{
-	private int id;
-	private static int classId = 0;
+	
+	private int clientId;
 
 	public GameClient(SocketAddress _address, PacketHandler _handler) throws IOException {
 		super(_address, _handler, false);	
+		((ClientGamePacketHandler)super.getHandler()).setGameClient(this);
 		registrateByServer();
-	}
+	}	
 
-	private void registrateByServer() throws IOException {
-		this.id = GameClient.classId++;		
-		this.sendMessage(new PacketRegistratePlayerByServer(this.id));
+	private void registrateByServer() throws IOException {		
+		this.sendMessage(new PacketRegistratePlayerByServer());
 	}
-
+	
+	/**
+	 * sets the Client id with given clientId
+	 * @param clientId
+	 */
+	public void setClientId(int clientId) {
+		this.clientId = clientId;
+		System.out.println("clientId was set " + clientId);
+	}
 
 }

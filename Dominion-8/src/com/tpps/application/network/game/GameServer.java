@@ -10,6 +10,9 @@ import com.tpps.application.network.core.Server;
 /** @author ladler - Lukas Adler */
 public class GameServer extends Server{
 	
+	
+	private static int CLIENT_ID;
+
 	private GameController gameController;
 	
 	public GameServer() throws IOException{
@@ -18,6 +21,10 @@ public class GameServer extends Server{
 		this.gameController = new GameController();
 
 		setConsoleInput();		
+	}
+	
+	public static int getCLIENT_ID() {
+		return CLIENT_ID++;
 	}
 	
 	public static void main(String[] args) {
