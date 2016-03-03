@@ -60,6 +60,7 @@ public class Card extends GameObject {
 
 	@Override
 	public Card clone() {
+//		remember to add parameter this.getParent
 		return new Card(this.getActions(), this.getTypes(), this.getName(), this.getCost());
 	}
 
