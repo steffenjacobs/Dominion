@@ -21,7 +21,7 @@ public class ServerTest {
 			Card card = new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.ADD_ACTION_TO_PLAYER), 
 					CollectionsUtil.linkedList(2)), CollectionsUtil.linkedList(CardType.ACTION), "chappel", 20);
 			
-			g.sendMessage(new PacketPlayCard("hallo", "karl"));
+			g.sendMessage(new PacketPlayCard("Estate0", "karl"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -88,7 +88,11 @@ public class Deck {
 	 *         null if the list doesn't contain the card
 	 * */
 	// suche cardHand mit der card ID durch und returne card
-	public Card getCard(String cardID, LinkedList<Card> searchList) {
+	public Card getCardFromHand(String cardID) {
+		return getCardFromPile(cardID, this.cardHand);
+	}
+	
+	public Card getCardFromPile(String cardID, LinkedList<Card> searchList) {
 		Iterator<Card> it = searchList.iterator();
 		while (it.hasNext()) {
 			Card card = it.next();
