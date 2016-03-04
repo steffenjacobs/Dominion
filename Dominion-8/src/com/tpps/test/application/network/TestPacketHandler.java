@@ -8,7 +8,7 @@ import com.tpps.application.network.core.packet.Packet;
 /**
  * custom PacketHandler for the testing of the network-framework
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class TestPacketHandler extends PacketHandler {
 	HashMap<Integer, Packet> lastReceived = new HashMap<>();
@@ -16,7 +16,7 @@ public class TestPacketHandler extends PacketHandler {
 	/**
 	 * trivial
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {
@@ -28,7 +28,7 @@ public class TestPacketHandler extends PacketHandler {
 	/**
 	 * trivial
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public Packet getLastReceived(int port) {
 		return lastReceived.get(port);

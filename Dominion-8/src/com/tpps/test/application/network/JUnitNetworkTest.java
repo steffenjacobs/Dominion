@@ -30,7 +30,7 @@ import com.tpps.application.network.core.packet.Packet;
  * 
  * check whether packets can be send from server to client
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class JUnitNetworkTest {
 	@Test

@@ -8,7 +8,7 @@ import com.tpps.application.network.core.packet.PacketType;
 /**
  * custom packet for testing of the network-framework
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class TestPacket extends Packet {
 	private static final long serialVersionUID = 8810954992640131497L;
@@ -17,7 +17,7 @@ public class TestPacket extends Packet {
 	/**
 	 * creates the TestPacket with some test-data
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	protected TestPacket(Serializable _data) {
 		super(PacketType.TEST);
@@ -25,7 +25,7 @@ public class TestPacket extends Packet {
 	}
 
 	/**
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 * @return the serialized data to test
 	 */
 	public Serializable getData() {
@@ -34,7 +34,7 @@ public class TestPacket extends Packet {
 
 	/**
 	 * @return a readable representation of the packet
-	 * @author sjacobs - Steffen JAcobs
+	 * @author Steffen JAcobs
 	 */
 	@Override
 	public String toString() {
