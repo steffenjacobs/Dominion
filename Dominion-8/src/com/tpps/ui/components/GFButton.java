@@ -12,7 +12,7 @@ import com.tpps.ui.GraphicFramework;
 /**
  * an abstract class representing any button
  * 
- * @author sjacobs
+ * @author Steffen Jacobs
  */
 public abstract class GFButton extends GameObject {
 	private static final long serialVersionUID = -5419554206946431577L;
@@ -24,7 +24,7 @@ public abstract class GFButton extends GameObject {
 	/**
 	 * clone-constructor
 	 * 
-	 * @author sjacobs
+	 * @author Steffen Jacobs
 	 */
 	protected GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id, String caption) {
@@ -37,7 +37,7 @@ public abstract class GFButton extends GameObject {
 	/**
 	 * normal constructor
 	 * 
-	 * @author sjacobs
+	 * @author Steffen Jacobs
 	 */
 	public GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
@@ -67,7 +67,7 @@ public abstract class GFButton extends GameObject {
 	}
 
 	/**
-	 * @author sjacobs
+	 * @author Steffen Jacobs
 	 * @return the object-caption
 	 */
 	public String getCaption() {
@@ -77,7 +77,7 @@ public abstract class GFButton extends GameObject {
 	/**
 	 * } is called to clone the entire object
 	 * 
-	 * @author sjacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public abstract GameObject clone();
@@ -85,7 +85,7 @@ public abstract class GFButton extends GameObject {
 	/**
 	 * is called when the user enters the object with the mouse
 	 * 
-	 * @author sjacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public abstract void onMouseEnter();
@@ -93,7 +93,7 @@ public abstract class GFButton extends GameObject {
 	/**
 	 * is called when the user exits the object with the mouse
 	 * 
-	 * @author sjacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public abstract void onMouseExit();
@@ -101,7 +101,7 @@ public abstract class GFButton extends GameObject {
 	/**
 	 * is called when the user clicks on the object
 	 * 
-	 * @author sjacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public abstract void onMouseClick();
@@ -109,13 +109,13 @@ public abstract class GFButton extends GameObject {
 	/**
 	 * is called when the users drags the mouse across the object
 	 * 
-	 * @author sjacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public abstract void onMouseDrag();
 
 	/**
-	 * @author sjacobs
+	 * @author Steffen Jacobs
 	 * @return a readable representation of the object
 	 */
 	@Override
