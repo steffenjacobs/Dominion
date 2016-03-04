@@ -36,7 +36,7 @@ import com.tpps.application.network.core.SuperCallable;
  * 
  * checks if the sessions are revalidated by the keep-alive thread
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 
 public class JUnitSessionServerTest {
@@ -127,7 +127,7 @@ public class JUnitSessionServerTest {
 	 * checks if the session is still valid
 	 * 
 	 * @return if the session is still valid
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	private boolean checkSession(Client sessionClient) throws InterruptedException {
 		SessionPacketSenderAPI.sendCheckRequest(sessionClient, TEST_USER, receivedUUID,

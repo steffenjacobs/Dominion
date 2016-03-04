@@ -24,7 +24,7 @@ import com.tpps.technicalServices.util.FileParser;
 /**
  * this represents the session-client (only one per application
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public final class SessionTestClient extends PacketHandler {
 
@@ -39,7 +39,7 @@ public final class SessionTestClient extends PacketHandler {
 	/**
 	 * Main Entry-Point for Connection-Tester
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static void main(String[] args) {
 		new SessionTestClient("127.0.0.1", 1337);
@@ -48,7 +48,7 @@ public final class SessionTestClient extends PacketHandler {
 	/**
 	 * @return instance of the SessionClient (There will be only one)
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static SessionTestClient getInstance() {
 		return instance;
@@ -57,7 +57,7 @@ public final class SessionTestClient extends PacketHandler {
 	/**
 	 * constructor, automatically tries to connect to give server
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public SessionTestClient(String ipAddress, int port) {
 		instance = this;
@@ -67,7 +67,7 @@ public final class SessionTestClient extends PacketHandler {
 
 	/**
 	 * @return the Client-Object
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public Client getClient() {
 		return this.client;
@@ -76,7 +76,7 @@ public final class SessionTestClient extends PacketHandler {
 	/**
 	 * creates the console-input-scanner
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void setupScanner() {
 		Scanner scanInput = new Scanner(System.in);
@@ -135,7 +135,7 @@ public final class SessionTestClient extends PacketHandler {
 	 * sets up the client and connects to server ***THIS MUST BE CALLED BEFORE
 	 * YOU SENT PACKETS!!***
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void setup(InetSocketAddress address) {
 		System.out.println("Enter 'help' to see all available commands.");
@@ -150,7 +150,7 @@ public final class SessionTestClient extends PacketHandler {
 	/**
 	 * loads server-properties (such as ip and port) and connects after that
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public InetSocketAddress loadConnectionProperties(String path) {
 		ArrayList<String> lines = FileParser.loadLines(path);
@@ -170,7 +170,7 @@ public final class SessionTestClient extends PacketHandler {
 	 * sets wheter keep-alive packets should be sent for a given user. You can
 	 * only send keep-alive-packets for one user at a time
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static void keepAlive(Client c, final String username, boolean state) {
 		if (state) {
@@ -200,7 +200,7 @@ public final class SessionTestClient extends PacketHandler {
 	/**
 	 * is called when the client stops
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void onStop() {
 		this.client.disconnect();
@@ -213,7 +213,7 @@ public final class SessionTestClient extends PacketHandler {
 	/**
 	 * is called when a packet is received
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 
 	@Override
