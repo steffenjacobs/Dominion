@@ -8,7 +8,7 @@ import com.tpps.ui.loginscreen.LoginGUIController;
 /**
  * main controller class containing main entry point for client-application
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public final class DominionController {
 
