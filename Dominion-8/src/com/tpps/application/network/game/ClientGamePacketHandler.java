@@ -3,7 +3,7 @@ package com.tpps.application.network.game;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
-import com.tpps.application.network.gameSession.packets.PacketSentClientId;
+import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.packet.Packet;
 
 /**
@@ -26,7 +26,7 @@ public class ClientGamePacketHandler extends PacketHandler{
 				System.out.println("packet received from Server of type " + packet.getType() + "id: " + ((PacketPlayCard)packet).getCardID());				
 			break;
 			case SEND_CLIENT_ID:
-				this.gameClient.setClientId(((PacketSentClientId)packet).getClientId());					
+				this.gameClient.setClientId(((PacketSendClientId)packet).getClientId());					
 			break;
 			case CLIENT_SHOULD_DISCONECT:
 				this.gameClient.disconnect();

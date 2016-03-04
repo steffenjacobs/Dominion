@@ -9,7 +9,7 @@ import com.tpps.application.network.packet.PacketType;
  * 
  * @author sjacobs - Steffen Jacobs
  */
-public class PacketSentClientId extends Packet {
+public class PacketSendClientId extends Packet {
 	
 	private static final long serialVersionUID = -8238146017971931432L;
 	private final int clientID;
@@ -32,7 +32,7 @@ public class PacketSentClientId extends Packet {
 	 * 
 	 * @author sjacobs - Steffen Jacobs
 	 */
-	public PacketSentClientId(int clientId) {
+	public PacketSendClientId(int clientId) {
 		super(PacketType.SEND_CLIENT_ID);
 		this.clientID = clientId;		
 	}
