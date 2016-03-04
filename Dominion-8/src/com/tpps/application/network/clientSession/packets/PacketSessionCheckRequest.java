@@ -2,8 +2,8 @@ package com.tpps.application.network.clientSession.packets;
 
 import java.util.UUID;
 
-import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
+import com.tpps.application.network.core.packet.Packet;
+import com.tpps.application.network.core.packet.PacketType;
 
 /**
  * This packet is send as a request from a (game-)server to the Session-Server

@@ -1,7 +1,7 @@
 package com.tpps.application.network.clientSession.packets;
 
-import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
+import com.tpps.application.network.core.packet.Packet;
+import com.tpps.application.network.core.packet.PacketType;
 
 /**
  * This packet is sent from the Game-Client to the Session-Server to keep the

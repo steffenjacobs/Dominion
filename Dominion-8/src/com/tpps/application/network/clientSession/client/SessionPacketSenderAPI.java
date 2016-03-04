@@ -10,7 +10,7 @@ import com.tpps.application.network.clientSession.packets.PacketSessionGetReques
 import com.tpps.application.network.clientSession.packets.PacketSessionKeepAlive;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.SuperCallable;
-import com.tpps.application.network.packet.Packet;
+import com.tpps.application.network.core.packet.Packet;
 
 /**
  * represents some kind of API-like interface to send check- and get-requests to

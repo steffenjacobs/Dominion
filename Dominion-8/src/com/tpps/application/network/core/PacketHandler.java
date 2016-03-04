@@ -3,7 +3,7 @@ package com.tpps.application.network.core;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.tpps.application.network.packet.Packet;
+import com.tpps.application.network.core.packet.Packet;
 
 public abstract class PacketHandler {
 	

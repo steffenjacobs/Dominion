@@ -3,7 +3,7 @@ package com.tpps.test.application.network;
 import java.util.HashMap;
 
 import com.tpps.application.network.core.PacketHandler;
-import com.tpps.application.network.packet.Packet;
+import com.tpps.application.network.core.packet.Packet;
 
 /**
  * custom PacketHandler for the testing of the network-framework

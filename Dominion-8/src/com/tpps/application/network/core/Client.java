@@ -7,8 +7,8 @@ import java.net.SocketAddress;
 
 import javax.net.SocketFactory;
 
-import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
+import com.tpps.application.network.core.packet.Packet;
+import com.tpps.application.network.core.packet.PacketType;
 
 /**
  * represents a client connected to a server on a higher layer then

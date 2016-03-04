@@ -18,7 +18,7 @@ import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.SuperCallable;
-import com.tpps.application.network.packet.Packet;
+import com.tpps.application.network.core.packet.Packet;
 import com.tpps.technicalServices.util.FileParser;
 
 /**
