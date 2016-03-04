@@ -3,13 +3,13 @@ package com.tpps.ui;
 import java.awt.Dimension;
 import java.awt.Point;
 
-/** @author sjacobs - Steffen Jacobs */
+/** @author Steffen Jacobs */
 public class RelativeGeom2D implements Cloneable {
 	private double x, y;
 
 	/**
 	 * @return relative x-coordinate
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public double getRelativeX() {
 		return this.x;
@@ -17,7 +17,7 @@ public class RelativeGeom2D implements Cloneable {
 
 	/**
 	 * @return relative y-coordinate
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public double getRelativeY() {
 		return this.y;
@@ -25,7 +25,7 @@ public class RelativeGeom2D implements Cloneable {
 
 	/**
 	 * @return absolute x-coordinate
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public int getAbsoluteX(int width) {
 		return (int) (this.x * width + .5);
@@ -33,7 +33,7 @@ public class RelativeGeom2D implements Cloneable {
 	
 	/**
 	 * @return absolute y-coordinate
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public int getAbsoluteY(int height) {
 		return (int) (this.y * height + .5);
@@ -42,7 +42,7 @@ public class RelativeGeom2D implements Cloneable {
 	/**
 	 * creates something similar to java.awt.Point
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public RelativeGeom2D(double locX, double locY) {
 		this.x = locX;
@@ -52,7 +52,7 @@ public class RelativeGeom2D implements Cloneable {
 	/**
 	 * adds a second location to the first location
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void addRelative(RelativeGeom2D vector2) {
 		this.x += vector2.getRelativeX();
@@ -62,7 +62,7 @@ public class RelativeGeom2D implements Cloneable {
 	/**
 	 * sets the x-coordinate to the desired value
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void setRelativeX(double newX) {
 		this.x = newX;
@@ -71,7 +71,7 @@ public class RelativeGeom2D implements Cloneable {
 	/**
 	 * sets the y-coordinate to the desired value
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void setRelativeY(double newY) {
 		this.y = newY;
@@ -79,7 +79,7 @@ public class RelativeGeom2D implements Cloneable {
 
 	/**
 	 * @return an  absolute java.awt.Point (for compatibilty)
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public Point getAbsolutePoint(int width, int height) {
 		return new Point(this.getAbsoluteX(width), this.getAbsoluteY(height));
@@ -88,7 +88,7 @@ public class RelativeGeom2D implements Cloneable {
 
 	/**
 	 * @return an  absolute java.awt.Dimension (for compatibilty)
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public Dimension getAbsoluteDimension(int width, int height) {
 		return new Dimension(this.getAbsoluteX(width), this.getAbsoluteY(height));
@@ -96,7 +96,7 @@ public class RelativeGeom2D implements Cloneable {
 
 	/**
 	 * @return a readable representation of the object
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {
@@ -105,7 +105,7 @@ public class RelativeGeom2D implements Cloneable {
 
 	/**
 	 * @return an exact clone of the object
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public RelativeGeom2D clone() {

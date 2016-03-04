@@ -33,7 +33,7 @@ public class GameWindow extends JFrame {
 	/**
 	 * creates the GameWindow
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public GameWindow() throws IOException {
 		final int WIDTH = 1280, HEIGHT = 720;

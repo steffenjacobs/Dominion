@@ -17,7 +17,7 @@ import com.tpps.technicalServices.util.PhysicsUtil;
 import com.tpps.ui.GameObject.CompareByLayer;
 
 /**
- * general framework handling all the graphic objects@author sjacobs - Steffen
+ * general framework handling all the graphic objects@author Steffen
  * Jacobs
  */
 public class GraphicFramework extends JPanel {
@@ -31,7 +31,7 @@ public class GraphicFramework extends JPanel {
 
 	/**
 	 * @return the top object (sorted by layers)
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public GameObject getTopObject(int x, int y) {
 		GameObject highest = null;
@@ -49,7 +49,7 @@ public class GraphicFramework extends JPanel {
 
 	/**
 	 * @return all game-objects which collide with the given area
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public ArrayList<GameObject> getAllCollisions(Rectangle area) {
 		ArrayList<GameObject> objects = new ArrayList<>();
@@ -65,7 +65,7 @@ public class GraphicFramework extends JPanel {
 	 * repaints the specific area and finds out which game-objects need to be
 	 * redrawed
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void repaintSpecificArea(Rectangle area) {
 		for (GameObject go : getAllCollisions(area)) {
@@ -77,7 +77,7 @@ public class GraphicFramework extends JPanel {
 	/**
 	 * moves the game-object to the desired location and updates the area
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void moveObject(GameObject obj, RelativeGeom2D location) {
 		Rectangle old = (Rectangle) obj.getHitbox().clone();
@@ -91,7 +91,7 @@ public class GraphicFramework extends JPanel {
 
 	/**
 	 * @return all GameObject which the location is on top of
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	protected ArrayList<GameObject> raytrace(RelativeGeom2D location) {
 		GameObject[] objects = gameObjects.values().toArray(new GameObject[] {});
@@ -106,7 +106,7 @@ public class GraphicFramework extends JPanel {
 	/**
 	 * paints the component and layers the GameObjects
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -123,7 +123,7 @@ public class GraphicFramework extends JPanel {
 	/**
 	 * force-redraw the GameObject without raytrace
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	private void redrawWithoutRaytrace(GameObject obj) {
 		this.repaint((int) obj.getLocation().getX(), (int) obj.getLocation().getY(), obj.getWidth(), obj.getHeight());
@@ -133,7 +133,7 @@ public class GraphicFramework extends JPanel {
 	 * creates a new instance of the GraphicFramework-JPanel, adds
 	 * mouse-listeners
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public GraphicFramework(JFrame _parent) {
 		this.parent = _parent;
@@ -159,7 +159,7 @@ public class GraphicFramework extends JPanel {
 	/**
 	 * adds the game object to the framework and updates the visuals
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void addComponent(GameObject obj) {
 		gameObjects.put(obj.getID(), obj);
@@ -170,7 +170,7 @@ public class GraphicFramework extends JPanel {
 	/**
 	 * removes the game object from the framework and updates the visuals
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public GameObject removeComponent(GameObject obj) {
 		GameObject res = gameObjects.remove(obj.getID());
@@ -181,7 +181,7 @@ public class GraphicFramework extends JPanel {
 	/**
 	 * redraws all given GameObjects
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void redrawObjectsWithoutRaytrace(GameObject... gameObjects) {
 		Arrays.sort(gameObjects, new GameObject.CompareByLayer());
@@ -193,7 +193,7 @@ public class GraphicFramework extends JPanel {
 	/**
 	 * listenes to the mouse-input and tunnels it to the underlying game-objects
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	private class Mouse extends MouseAdapter {
 		private GraphicFramework framework;
@@ -247,7 +247,7 @@ public class GraphicFramework extends JPanel {
 	}
 
 	/**
-	 * @author sjacobs - Steffen Jacobs @return the parent frame everything is
+	 * @author Steffen Jacobs @return the parent frame everything is
 	 *         drawn upon
 	 */
 	public JFrame getDisplayFrame() {

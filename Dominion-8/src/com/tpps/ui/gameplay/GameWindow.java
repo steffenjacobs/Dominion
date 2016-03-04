@@ -40,7 +40,7 @@ public class GameWindow extends JFrame {
 	/**
 	 * creates the GameWindow
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public GameWindow() throws IOException {
 		final int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
