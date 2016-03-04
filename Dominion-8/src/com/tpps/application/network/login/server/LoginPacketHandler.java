@@ -10,6 +10,7 @@ import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer
 import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.SuperCallable;
+import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.login.SQLHandling.Password;
 import com.tpps.application.network.login.SQLHandling.SQLOperations;
 import com.tpps.application.network.login.SQLHandling.SQLStatisticsHandler;
@@ -17,7 +18,6 @@ import com.tpps.application.network.login.packets.PacketLoginCheckAnswer;
 import com.tpps.application.network.login.packets.PacketLoginCheckRequest;
 import com.tpps.application.network.login.packets.PacketRegisterAnswer;
 import com.tpps.application.network.login.packets.PacketRegisterRequest;
-import com.tpps.application.network.packet.Packet;
 
 /**
  * This class delivers all functionalities that are used by the LoginServer

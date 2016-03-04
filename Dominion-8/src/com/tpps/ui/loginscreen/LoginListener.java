@@ -7,8 +7,6 @@ import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import com.tpps.application.network.login.client.LoginClient;
-
 /**
  * 
  * @author Nishit Agrawal - nagrawal

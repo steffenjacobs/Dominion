@@ -1,17 +1,15 @@
 package com.tpps.application.network.game;
 
 import java.io.IOException;
-import java.util.Iterator;
 
-import com.tpps.application.game.GameController;
 import com.tpps.application.game.Player;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
+import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
-import com.tpps.application.network.packet.Packet;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**

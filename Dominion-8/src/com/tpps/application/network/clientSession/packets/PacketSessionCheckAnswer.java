@@ -1,7 +1,7 @@
 package com.tpps.application.network.clientSession.packets;
 
-import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
+import com.tpps.application.network.core.packet.Packet;
+import com.tpps.application.network.core.packet.PacketType;
 
 /**
  * This packet is send back as an answer to a the request from a (game-)server

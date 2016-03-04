@@ -10,8 +10,8 @@ import com.tpps.application.network.clientSession.packets.PacketSessionGetReques
 import com.tpps.application.network.clientSession.packets.PacketSessionKeepAlive;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
-import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
+import com.tpps.application.network.core.packet.Packet;
+import com.tpps.application.network.core.packet.PacketType;
 
 /**
  * this class handles all the packet-stuff

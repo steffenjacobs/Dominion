@@ -1,7 +1,7 @@
 package com.tpps.application.network.gameSession.packets;
 
-import com.tpps.application.network.packet.Packet;
-import com.tpps.application.network.packet.PacketType;
+import com.tpps.application.network.core.packet.Packet;
+import com.tpps.application.network.core.packet.PacketType;
 
 /**
  * This packet is send from a server to the client every time there are already

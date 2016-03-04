@@ -1,4 +1,4 @@
-package com.tpps.application.network.packet;
+package com.tpps.application.network.core.packet;
 
 import java.io.Serializable;
 

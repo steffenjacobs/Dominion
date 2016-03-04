@@ -26,7 +26,7 @@ public abstract class GFButton extends GameObject {
 	 * 
 	 * @author sjacobs
 	 */
-	private GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
+	protected GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id, String caption) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,
 				_id);

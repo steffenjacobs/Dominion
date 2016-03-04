@@ -5,8 +5,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import com.tpps.application.network.login.client.LoginClient;
-
 
 /**
  * 

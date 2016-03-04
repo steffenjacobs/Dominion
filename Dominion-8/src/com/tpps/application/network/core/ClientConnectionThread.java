@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
-import com.tpps.application.network.packet.PacketType;
+import com.tpps.application.network.core.packet.PacketType;
 
 /**
  * represents the connection-thread on the client (very similar to the server
