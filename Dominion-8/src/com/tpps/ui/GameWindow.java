@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import com.tpps.application.game.card.Card;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.components.GFButton;
 

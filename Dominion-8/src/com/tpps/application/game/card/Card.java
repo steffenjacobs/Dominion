@@ -11,7 +11,11 @@ import com.tpps.ui.GraphicFramework;
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = -4157717625890678601L;
-	private final LinkedHashMap<CardAction, Integer> actions; // if the card is VICTORY/TREASURE, Int is the value (not the cost)
+	private final LinkedHashMap<CardAction, Integer> actions; // if the card is
+																// VICTORY/TREASURE,
+																// Int is the
+																// value (not
+																// the cost)
 	private final LinkedList<CardType> types;
 	private final int cost; // cost of the card
 	private final String name;
@@ -61,7 +65,7 @@ public class Card extends GameObject {
 
 	@Override
 	public Card clone() {
-//		remember to add parameter this.getParent
+		// remember to add parameter this.getParent
 		return new Card(this.getActions(), this.getTypes(), this.getName(), this.getCost());
 	}
 
@@ -107,11 +111,11 @@ public class Card extends GameObject {
 		}
 		return sBuf.append(">\nCost: " + this.cost).toString();
 	}
-	
+
 	/**
 	 * sets the classId to zero
 	 */
-	public static void resetClassID(){
+	public static void resetClassID() {
 		Card.classID = 0;
 	}
 
