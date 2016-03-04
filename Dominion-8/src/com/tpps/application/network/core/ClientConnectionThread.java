@@ -13,7 +13,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * represents the connection-thread on the client (very similar to the server
  * one)
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class ClientConnectionThread extends Thread {
 
@@ -27,7 +27,7 @@ public class ClientConnectionThread extends Thread {
 	/**
 	 * constructor for ConnectionThread
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	ClientConnectionThread(Socket clientSocket, PacketHandler receiver, Client _parent) {
 		this.receiver = receiver;
@@ -38,7 +38,7 @@ public class ClientConnectionThread extends Thread {
 	/**
 	 * is called as soon as the thread starts
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public void run() {
@@ -77,7 +77,7 @@ public class ClientConnectionThread extends Thread {
 	/**
 	 * sends the bytes over the network to the connected server.
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void sendPacket(byte[] data) throws IOException {
 		if (parent.isConnected()) {
@@ -99,7 +99,7 @@ public class ClientConnectionThread extends Thread {
 	 * needed for testing
 	 * 
 	 * @return remote port on server
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public int getRemotePort() {
 		return clientSocket.getPort();
@@ -109,7 +109,7 @@ public class ClientConnectionThread extends Thread {
 	 * needed for testing
 	 * 
 	 * @return local port
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public int getLocalPort() {
 		return clientSocket.getLocalPort();

@@ -7,7 +7,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * This packet is send from a client to the server every time the player wants
  * to end his turn. The Server then distributes the packet to the other players.
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class PacketEndTurn extends Packet {
 	private static final long serialVersionUID = -8763060018038893429L;
@@ -15,7 +15,7 @@ public class PacketEndTurn extends Packet {
 
 	/**
 	 * @return the name of the player who played wants to end the turn
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public String getUsername() {
 		return this.username;
@@ -25,7 +25,7 @@ public class PacketEndTurn extends Packet {
 	 * initializes the Packet with the name of the player who wants to end the
 	 * turn
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketEndTurn(String playerName) {
 		super(PacketType.END_TURN);
@@ -34,7 +34,7 @@ public class PacketEndTurn extends Packet {
 
 	/**
 	 * @return a readable String
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {

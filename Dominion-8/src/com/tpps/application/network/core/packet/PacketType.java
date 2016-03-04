@@ -11,7 +11,7 @@ import java.io.ObjectOutputStream;
 /**
  * represents a packet type
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  * 
  *         NOTE: Add new Packets here. Please contact Steffen Jacobs for any
  *         questions & concerns.
@@ -27,7 +27,7 @@ public enum PacketType {
 	/**
 	 * initializs PacketType with id
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	private PacketType(int id) {
 		internalID = id;
@@ -35,7 +35,7 @@ public enum PacketType {
 
 	/**
 	 * @return packet-id
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public int getID() {
 		return internalID;
@@ -45,7 +45,7 @@ public enum PacketType {
 	 * converts a Network-Packet to a byte-array
 	 * 
 	 * @return serialized packet
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static byte[] getBytes(Packet packet) {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -78,7 +78,7 @@ public enum PacketType {
 	 * converts a byte-array to a packet
 	 * 
 	 * @return deserialized packet
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static Packet getPacket(byte[] bytes) {
 		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);

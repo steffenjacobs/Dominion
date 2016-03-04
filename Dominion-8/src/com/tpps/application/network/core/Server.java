@@ -16,7 +16,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * represents a general server that can send and receive packets from and to
  * multiple clients
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class Server {
 	private ServerSocket serverSocket;

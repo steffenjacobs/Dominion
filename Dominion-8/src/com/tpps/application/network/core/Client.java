@@ -14,7 +14,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * represents a client connected to a server on a higher layer then
  * ClientConnectionThread
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class Client {
 
@@ -27,7 +27,7 @@ public class Client {
 	/**
 	 * needed for testing
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 * @return ClientConnectionThread holding the connection to the server
 	 */
 	public ClientConnectionThread getConnectionThread() {
@@ -42,7 +42,7 @@ public class Client {
 	 * 
 	 * (ATTENTION: blocks the calling thread!)
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	private void connectAndLoopLogic() {
 		long CONNECTION_TIMEOUT = 5000;
@@ -83,7 +83,7 @@ public class Client {
 	 * Tries to connect to the loaded server synchronously or asynchronously
 	 * until a connection is established.
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void connectAndLoop(boolean async) {
 
@@ -105,7 +105,7 @@ public class Client {
 	/**
 	 * tries to reconnect to the server
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void tryReconnect() {
 		connected = false;
@@ -115,7 +115,7 @@ public class Client {
 	//
 	/**
 	 * @return wheter the client is connected to the server
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public boolean isConnected() {
 		return connected;
@@ -124,7 +124,7 @@ public class Client {
 	/**
 	 * sets the connected-boolean to false
 	 *
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void setDisconnected() {
 		this.connected = false;
@@ -140,7 +140,7 @@ public class Client {
 	 * @param async:
 	 *            make the thread wait until the connection is established
 	 * @throws IOException
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public Client(SocketAddress _address, PacketHandler _handler, boolean connectAsync) throws IOException {
 		this.address = _address;
@@ -156,7 +156,7 @@ public class Client {
 	 * @param _handler
 	 *            an implementation of the interface
 	 * @throws IOException
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public Client(SocketAddress _address, PacketHandler _handler) throws IOException {
 		this.address = _address;
@@ -167,7 +167,7 @@ public class Client {
 	/**
 	 * Closes the connection
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void disconnect() {
 		this.connected = false;
@@ -180,7 +180,7 @@ public class Client {
 	 * @param data
 	 *            the data to send
 	 * @throws IOException
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void sendMessage(Packet packet) throws IOException {
 		if (this.connected) {

@@ -13,7 +13,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * represents the connectoin-thread on the server (very similar to the client
  * one
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class ServerConnectionThread extends Thread {
 
@@ -26,7 +26,7 @@ public class ServerConnectionThread extends Thread {
 	/**
 	 * constructor
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	ServerConnectionThread(Socket clientSocket, PacketHandler receiver, Server _parent) {
 		this.receiver = receiver;
@@ -37,7 +37,7 @@ public class ServerConnectionThread extends Thread {
 	/**
 	 * closes all sockets & streams
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void closeSockets() throws IOException {
 		clientSocket.close();
@@ -47,7 +47,7 @@ public class ServerConnectionThread extends Thread {
 
 	/**
 	 * @return a readable representation of the Connection
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {
@@ -57,7 +57,7 @@ public class ServerConnectionThread extends Thread {
 	/**
 	 * is called when the thread is started. Opens streams and receives bytes
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public void run() {
@@ -98,7 +98,7 @@ public class ServerConnectionThread extends Thread {
 	 * 
 	 * @param data
 	 *            bytes to send
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public boolean sendMessage(byte[] data) throws IOException {
 		try {

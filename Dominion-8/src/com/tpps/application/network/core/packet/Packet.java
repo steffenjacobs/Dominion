@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * represents a network packet ready to send via our network-interface
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public abstract class Packet implements Serializable {
 	private static final long serialVersionUID = 9013592092025644535L;
@@ -16,7 +16,7 @@ public abstract class Packet implements Serializable {
 	 * 
 	 * @param type
 	 *            PacketType to initalize the packet with
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	protected Packet(PacketType type) {
 		this.packetType = type;
@@ -24,7 +24,7 @@ public abstract class Packet implements Serializable {
 
 	/**
 	 * @return the packet type
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketType getType() {
 		return this.packetType;
@@ -32,7 +32,7 @@ public abstract class Packet implements Serializable {
 
 	/**
 	 * @return a readable String which represents the packet
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public abstract String toString();
 }

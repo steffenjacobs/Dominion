@@ -7,7 +7,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * This packet is send from the client to the server everytime the client draws
  * a card. The Server then distributes the packet to the other clients.
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class PacketRegistratePlayerByServer extends Packet {
 
@@ -25,7 +25,7 @@ public class PacketRegistratePlayerByServer extends Packet {
 
 	/**
 	 * @return a readable String
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {

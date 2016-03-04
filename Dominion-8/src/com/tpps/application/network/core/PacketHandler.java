@@ -18,7 +18,7 @@ public abstract class PacketHandler {
 	/**
 	 * outputs a String to the console
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	// TODO: save log
 	public void output(String str) {
@@ -28,7 +28,7 @@ public abstract class PacketHandler {
 	/**
 	 * constructor with parent server-instance
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketHandler(Server _parent){
 		this.parent = _parent;

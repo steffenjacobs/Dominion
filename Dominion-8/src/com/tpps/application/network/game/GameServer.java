@@ -42,7 +42,7 @@ public class GameServer extends Server{
 	/**
 	 * sets up the console-input
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	private void setConsoleInput() {
 		System.out.println("            * * * * * * * * * * * * * *      ");

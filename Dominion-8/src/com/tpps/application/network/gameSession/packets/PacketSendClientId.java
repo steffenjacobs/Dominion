@@ -7,7 +7,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * This packet is send from the client to the server everytime the client draws
  * a card. The Server then distributes the packet to the other clients.
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class PacketSendClientId extends Packet {
 	
@@ -19,7 +19,7 @@ public class PacketSendClientId extends Packet {
 
 	/**
 	 * @return the playedCard
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public int getClientId() {
 		return this.clientID;
@@ -30,7 +30,7 @@ public class PacketSendClientId extends Packet {
 	 * initializes the Packet with the id of the card which had been played and
 	 * the name of the player who played the card
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketSendClientId(int clientId) {
 		super(PacketType.SEND_CLIENT_ID);
@@ -39,7 +39,7 @@ public class PacketSendClientId extends Packet {
 
 	/**
 	 * @return a readable String
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {
