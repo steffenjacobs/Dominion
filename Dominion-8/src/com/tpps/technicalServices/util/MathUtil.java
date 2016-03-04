@@ -1,11 +1,11 @@
 package com.tpps.technicalServices.util;
 
-/** provides some useful mathematical-calculations @author sjacobs */
+/** provides some useful mathematical-calculations @author Steffen Jacobs */
 public final class MathUtil {
 	
 	/**
 	 * @return the signum
-	 * @author sjacobs
+	 * @author Steffen Jacobs
 	 */
 	public static int signumOfInteger(int x) {
 		if (x < 0)

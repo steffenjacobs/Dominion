@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
 public final class GraphicsUtil {
 
 	/**
-	 * @author sjacobs, jhuhn sets the alpha-value for an image synchronously
+	 * @author Steffen Jacobs, Johannes Huhn sets the alpha-value for an image synchronously
 	 * @param transparency
 	 *            new Alpha-Value for desired image
 	 * @param img
