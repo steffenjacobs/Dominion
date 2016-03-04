@@ -118,8 +118,7 @@ public class Player {
 	 * @author ladler - Lukas Adler
 	 */
 	public void doAction(String cardID) {
-		
-		this.getDeck().drawCard();
+		this.getDeck().draw();
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 		// Player player = GameController.getActivePlayer();
 		

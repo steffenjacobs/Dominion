@@ -59,7 +59,8 @@ public class LoginClient extends PacketHandler {
 		try {
 			String pwAsString = pw.getHashedPasswordAsString();
 			PacketLoginCheckRequest check = new PacketLoginCheckRequest(nickname, pwAsString);
-			c_login.sendMessage(check);			
+			c_login.sendMessage(check);
+			System.out.println("sent accountinformation hashed to the login server");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

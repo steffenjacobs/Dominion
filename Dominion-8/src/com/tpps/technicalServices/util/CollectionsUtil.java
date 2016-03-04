@@ -16,9 +16,10 @@ public final class CollectionsUtil {
 	/**
 	 * @param
 	 * @return creates a sorted hashmap (LinkedHashMap) from the given
-	 *         parameters (single elements)
+	 *         parameters (single element)
 	 */
-	public static LinkedHashMap<CardAction, Integer> linkedHashMapAction(CardAction action, Integer number) {
+	public static LinkedHashMap<CardAction, Integer> linkedHashMapAction(
+			CardAction action, Integer number) {
 		LinkedHashMap<CardAction, Integer> hashMap = new LinkedHashMap<CardAction, Integer>();
 		hashMap.put(action, number);
 		return hashMap;
@@ -27,10 +28,10 @@ public final class CollectionsUtil {
 	/**
 	 * @param
 	 * @return creates a sorted hashmap (LinkedHashMap) from the given
-	 *         parameters (lists)
+	 *         parameters (list)
 	 */
-	public static LinkedHashMap<CardAction, Integer> linkedHashMapAction(LinkedList<CardAction> actions,
-			LinkedList<Integer> numbers) {
+	public static LinkedHashMap<CardAction, Integer> linkedHashMapAction(
+			LinkedList<CardAction> actions, LinkedList<Integer> numbers) {
 		if (actions.size() == numbers.size()) {
 			LinkedHashMap<CardAction, Integer> hashMap = new LinkedHashMap<CardAction, Integer>();
 			for (int i = 0; i < actions.size(); i++) {
@@ -38,11 +39,14 @@ public final class CollectionsUtil {
 			}
 			return hashMap;
 		} else {
-			System.err.println("arrayLists don't have the same size");
+			System.err.println("LinkedLists don't have the same size.");
 			return null;
 		}
 	}
 
+	/**
+	 * 
+	 * */
 	public static <T> LinkedList<T> linkedList(T[] objects) {
 		LinkedList<T> resultList = new LinkedList<T>();
 		for (T object : objects) {
@@ -51,43 +55,63 @@ public final class CollectionsUtil {
 		return resultList;
 	}
 
+	/**
+	 * 
+	 * */
 	public static <T> LinkedList<T> linkedList(T object) {
 		LinkedList<T> resultList = new LinkedList<T>();
 		resultList.add(object);
 		return resultList;
 	}
 
-	/**
-	 * returns 'amount' elements from the given list
-	 * 
-	 * @author nwipfler - Nicolas Wipfler
-	 */
-	public static <T> LinkedList<T> getNextElements(int amount, LinkedList<T> list) {
-		LinkedList<T> resultList = new LinkedList<T>();
-		for (int i = 0; i < amount; i++) {
-			resultList.add(list.getLast());
-			list.removeLast();
-		}
-		return resultList;
-	}
-
-	// public static <T> T getNextElement(LinkedList<T> list) {
+	// /**
+	// *
+	// * @param amount the amount of elements
+	// * @param list the list where the last elements will be returned from
+	// * @return the 'amount' last elements from the given list
+	// * @author nwipfler - Nicolas Wipfler
+	// */
+	// public static <T> LinkedList<T> getLastElements(int amount, LinkedList<T>
+	// list) {
+	// if (list.size() >= amount) {
+	// LinkedList<T> resultList = new LinkedList<T>();
+	// for (int i = 0; i < amount; i++) {
+	// resultList.add(getLastElement(list));
+	// }
+	// return resultList;
+	// } else
+	// return null;
+	// }
+	//
+	// /**
+	// * returns the last element (for example on top of the drawPile) from the
+	// * given list
+	// *
+	// * @param list the list where the last element will be returned from
+	// * @return the last object of the list
+	// * @author nwipfler - Nicolas Wipfler
+	// */
+	// public static <T> T getLastElement(LinkedList<T> list) {
 	// return list.removeLast();
 	// }
-
-	public static void addCardToList(Card card, LinkedList<Card> destination) {
-		destination.addLast(card);
-	}
 
 	/**
 	 * clones the card and adds this card 'amount - 1'-times, to the list in
 	 * parameters, because one object of the card already exists
 	 */
-	public static void cloneCardToListAndResetCardId(Card card, int amount, LinkedList<Card> destination) {
+	public static void cloneCardToList(Card card, int amount,
+			LinkedList<Card> destination) {
 		for (int i = 0; i < amount - 1; i++) {
 			destination.addLast(card.clone());
 		}
-		Card.resetClassIdToZero();
+		// Card.resetClassID();
+	}
+
+	/**
+	 * 
+	 * */
+	public static void addCardToList(Card card, LinkedList<Card> destination) {
+		destination.addLast(card);
 	}
 
 	/**
@@ -96,7 +120,8 @@ public final class CollectionsUtil {
 	 *         but doesn't remove the cards from the original list
 	 * @author Nicolas Wipfler
 	 */
-	public static void appendListToList(LinkedList<Card> cards, LinkedList<Card> destination) {
+	public static void appendListToList(LinkedList<Card> cards,
+			LinkedList<Card> destination) {
 		for (Card card : cards) {
 			destination.addLast(card);
 		}

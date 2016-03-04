@@ -4,9 +4,12 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+
 import java.awt.image.BufferedImage;
+
 import java.io.Serializable;
 import java.util.Comparator;
+
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.MathUtil;
@@ -104,7 +107,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.resizeObject(0, 0);
 		this.visible = false;
 	}
-
+	
 	/**
 	 * changes the visibility of the game object
 	 * 

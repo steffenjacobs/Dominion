@@ -2,6 +2,7 @@ package com.tpps.ui.components;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -17,6 +18,8 @@ public abstract class GFButton extends GameObject {
 	private static final long serialVersionUID = -5419554206946431577L;
 
 	private String caption;
+
+	private Font customFont;
 
 	/**
 	 * clone-constructor
@@ -46,8 +49,21 @@ public abstract class GFButton extends GameObject {
 	@Override
 	public void onResize(int absWidth, int absHeight) {
 		if (this.caption != null)
-			super.forceSetImage(GraphicsUtil.drawStringCentered(super.getImage(), this.caption,
-					new Font("Blackadder ITC", Font.BOLD, 80), Color.BLACK));
+		super.forceSetImage(GraphicsUtil.drawStringCentered(super.getImage(), this.caption,
+				new Font("Blackadder ITC", Font.BOLD, 80), Color.BLACK));
+	}
+	
+	private void importFont() {
+
+		try {
+			customFont = Font.createFont(Font.TRUETYPE_FONT,
+					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF"));
+			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
+					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF")));
+		} catch (Exception e) {
+			System.err.println(e);
+		}
 	}
 
 	/**

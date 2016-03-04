@@ -51,19 +51,20 @@ public class LoginPacketHandler extends PacketHandler{
 	 */
 	@Override
 	public void handleReceivedPacket(int port, final Packet packet) {
-		System.out.println("Server received packet: " + packet);
+		System.out.println("Server received packet: ");
 		switch(packet.getType()){
 		case LOGIN_CHECK_REQUEST: //check username, if valid genereate SESSION ID and send to SessionServer
 			PacketLoginCheckRequest pac = (PacketLoginCheckRequest) packet;
 			String salt = SQLOperations.getSaltForLogin(pac.getUsername());
 
-			System.out.println("salt aus db: " + salt);
+			//System.out.println("salt aus db: " + salt);
 			try {
 				Password pw = new Password(pac.getHashedPW(), salt.getBytes());
 				pw.createHashedPassword();
 				String doublehashed = pw.getHashedPasswordAsString();
 				waitingForSessionAnswer.put(pac.getUsername(), port);
 				if(SQLOperations.rightDoubleHashedPassword(pac.getUsername(), doublehashed)){
+					System.out.println("calculated hash match with hash out of the database");
 					SessionPacketSenderAPI.sendGetRequest(sessionclient, pac.getUsername(), new SuperCallable<PacketSessionGetAnswer>() {						
 						@Override
 						public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer answer) {							
@@ -77,25 +78,26 @@ public class LoginPacketHandler extends PacketHandler{
 						}
 					});
 				}else{
-					System.out.println("calculated hash doesn't work");
+					System.out.println("calculated hash doesn't match with hash out of the database");
 					PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, false, null);
 					server.sendMessage(port, answer);
 				}
 			} catch (Exception e) {			
-				e.printStackTrace();
+			//	e.printStackTrace();
 				PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, false, null);
 				try {
 					server.sendMessage(port, answer);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+			} finally{
+				System.out.println("----------------------------");
 			}
 			break;
 			
 		case LOGIN_REGISTER_REQUEST: //create user
 			System.out.println("Server got a request to create an Account");
 			PacketRegisterRequest castedPac = (PacketRegisterRequest) packet;
-			System.out.println("In packet is: " + castedPac);
 			String username = castedPac.getUsername();
 			String email = castedPac.getEmail();
 			String firsthashedpw = castedPac.getHashedPW();
@@ -115,6 +117,7 @@ public class LoginPacketHandler extends PacketHandler{
 				e.printStackTrace();
 			}
 			System.out.println("finished creating an Account");
+			System.out.println("----------------------------");
 			break;
 		default:break;
 		}

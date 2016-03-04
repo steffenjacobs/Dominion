@@ -66,10 +66,10 @@ public class SQLOperations {
 	 */
 	public static void createAccountdetailsTable(){
 		String sqlStatement = "CREATE TABLE accountdetails ("
-				+ "nickname VARCHAR(24) PRIMARY KEY NOT NULL,"
-				+ "email VARCHAR(256) NOT NULL,"
-				+ "salt_hashed_pw VARCHAR(256) NOT NULL,"
-				+ "salt VARCHAR(8) NOT NULL);";
+				+ "nickname NVARCHAR(24) PRIMARY KEY NOT NULL,"
+				+ "email NVARCHAR(256) NOT NULL,"
+				+ "salt_hashed_pw NVARCHAR(256) NOT NULL,"
+				+ "salt NVARCHAR(8) NOT NULL);";
 		try {
 			Statement stmt = SQLHandler.getConnection().createStatement();
 			stmt.executeUpdate(sqlStatement);
@@ -152,13 +152,13 @@ public class SQLOperations {
 	
 	/**
 	 * @author jhuhn - Johannes Huhn
-	 * @param identification is the nickname or the email of the user
+	 * @param nickname is the nickname or the email of the user
 	 * @return a String representation of the requested salt, null for failure
 	 */
-	public static String getSaltForLogin(String identification){
+	public static String getSaltForLogin(String nickname){
 		PreparedStatement stmt = null;
 		String column = "";
-		if(identification.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+		if(nickname.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
 						+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")){
 			column = "email";
 		}else{
@@ -166,17 +166,25 @@ public class SQLOperations {
 		}		
 		try{
 				stmt = SQLHandler.getConnection().prepareStatement("SELECT salt FROM accountdetails WHERE " + column + " = ?");	
-				stmt.setString(1, identification);
+				stmt.setString(1, nickname);
 				ResultSet rs = stmt.executeQuery();
 				rs.next();
 			return rs.getString("salt");
 		}catch (SQLException e){			
-			System.err.println("Error by getting salt for your account verification \n Maybe email or nickname " + identification + " doesn't exist \n" + e.getMessage());
-			e.printStackTrace();
+			System.err.println("Error by getting salt for your account verification \n Maybe nickname " + nickname + " doesn't exist \n");
+		//	e.printStackTrace();
+			return null;
 		}		
-		return null;
+	//	return null;
 	}
 
+	/**
+	 * This method checks if the calculated hash matches with the hash out ouf the database
+	 * @author jhuhn - Johannes Huhn
+	 * @param nickname a String representation of the username, needed to get the salt hashed password
+	 * @param doublehashedpw a String representation of the calculated hash
+	 * @return true, if the calculated hash(deliver) matches with the hash out of the database 
+	 */
 	public static boolean rightDoubleHashedPassword(String nickname, String doublehashedpw){
 		try {
 			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT salt_hashed_pw FROM accountdetails WHERE nickname = ?");
@@ -194,6 +202,64 @@ public class SQLOperations {
 			//e.printStackTrace();
 		}
 		return false;
+	}
+	
+	/**
+	 * This method gets all nicknames(PRIMARY KEY) in the table accountdetails
+	 * @author jhuhn - Johannes Huhn
+	 * @return a String with all nicknames in the table accountdetails
+	 */
+	public static String showAllNicknames(){
+		StringBuffer buf = new StringBuffer("Nicknames: " + "\n");
+		try {
+			Statement stmt = SQLHandler.getConnection().createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT nickname FROM accountdetails");
+			while(rs.next()){
+				buf.append(rs.getString("nickname") + "\n");
+			}
+			return buf.toString();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return buf.toString();
+		}
+	}
+	
+	/**
+	 * This methods deletetes a table
+	 * @author jhuhn - Johannes Huhn
+	 * @param tablename a String representation of the table to delete
+	 * @return true if the table deletes successfully, false else
+	 */
+	public static boolean deleteTable(String tablename){
+		try {
+			Statement stmt = SQLHandler.getConnection().createStatement();
+			stmt.executeUpdate("DROP TABLE " + tablename);
+			System.out.println("Table " + tablename + " deleted");
+			return true;
+		} catch (SQLException e) {		
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	/**
+	 * This method gets all tables (names) that are in the database
+	 * @author jhuhn - Johannes Huhn
+	 * @return a String with all tables
+	 */
+	public static String showTables(){
+		StringBuffer buf = new StringBuffer("All tables: \n");
+		try {
+			Statement stmt = SQLHandler.getConnection().createStatement();
+			ResultSet rs = stmt.executeQuery("show tables");
+			while(rs.next()){
+				buf.append(rs.getString(1) + "\n");
+			}
+			return buf.toString();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "-- no tables-- or no connection";
+		}
 	}
 
 }

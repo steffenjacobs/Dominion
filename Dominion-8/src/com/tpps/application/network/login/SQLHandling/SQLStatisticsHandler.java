@@ -25,7 +25,7 @@ public class SQLStatisticsHandler {
 		StringBuffer buf = new StringBuffer();
 		buf.append("CREATE TABLE statistics ( \n");
 		Statistic temp;
-		buf.append("nickname VARCHAR(24) PRIMARY KEY NOT NULL, \n");
+		buf.append("nickname NVARCHAR(24) PRIMARY KEY NOT NULL, \n");
 		for (Iterator<Statistic> iterator = statistics.iterator(); iterator.hasNext();) {			
 			temp = (Statistic) iterator.next();
 			//buf.append(temp.getColumnname() + " " + temp.getTypeAsString() + " NOT NULL,");
@@ -33,11 +33,11 @@ public class SQLStatisticsHandler {
 		}			
 		buf.deleteCharAt(buf.length() -1);
 		buf.append(");");	
-		System.out.println(buf.toString());
+	//	System.out.println(buf.toString());
 		try {
 			Statement stmt = SQLHandler.getConnection().createStatement();
 			stmt.executeUpdate(buf.toString());
-			System.out.println("Table created");
+			System.out.println("Table statistics created");
 		} catch (SQLException e) {
 			System.err.println("Table couldn't get created, Maybe it already exists");
 			e.printStackTrace();

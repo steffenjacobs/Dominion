@@ -23,7 +23,7 @@ public class Deck {
 		this.drawPile = new LinkedList<Card>();
 		this.discardPile = new LinkedList<Card>();
 		this.cardHand = new LinkedList<Card>();
-		init();
+		this.init();
 	}
 
 	protected Deck(LinkedList<Card> draw, LinkedList<Card> discard, LinkedList<Card> cardHand) {
@@ -36,7 +36,7 @@ public class Deck {
 	 * @return the drawPile
 	 */
 	public LinkedList<Card> getDrawPile() {
-		return drawPile;
+		return this.drawPile;
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class Deck {
 	 * @return the discardPile
 	 */
 	public LinkedList<Card> getDiscardPile() {
-		return discardPile;
+		return this.discardPile;
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class Deck {
 	 * @return the cardHand
 	 */
 	public LinkedList<Card> getCardHand() {
-		return cardHand;
+		return this.cardHand;
 	}
 
 	/**
@@ -110,90 +110,39 @@ public class Deck {
 	 * */
 	private void init() {
 		if (this.drawPile != null) {
-			CollectionsUtil.cloneCardToListAndResetCardId(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, GameConstant.ESTATE_VALUE),CollectionsUtil.linkedList(CardType.VICTORY),"Estate", GameConstant.ESTATE_COST), 3,	this.drawPile);
-			CollectionsUtil.cloneCardToListAndResetCardId(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, GameConstant.COPPER_VALUE),CollectionsUtil.linkedList(CardType.TREASURE),"Copper", GameConstant.COPPER_COST), 7, this.drawPile);
-			shuffleDrawPile();
+			CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, GameConstant.ESTATE_VALUE),CollectionsUtil.linkedList(CardType.VICTORY),"Estate", GameConstant.ESTATE_COST), 3,	this.drawPile);
+			Card.resetClassID();
+			CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, GameConstant.COPPER_VALUE),CollectionsUtil.linkedList(CardType.TREASURE),"Copper", GameConstant.COPPER_COST), 7, this.drawPile);
+			Card.resetClassID();
+			this.shuffleDrawPile();
 		}
-		buildCardHand();
+		this.draw(5);
 	}
 
-	/**
-	 * redraws 5 Cards for the Player
-	 * 
-	 * <<<<<<<<<<<<<<<<method should use the draw() method below>>>>>>>>>>,
-	 * which uses the shuffle()
-	 * 
-	 * method shuffle() should always check, if there are less cards in the
-	 * drawPile than the amount of cards we want to draw. if this is the case:
-	 * 
-	 * LIST Nachziehstapel HAS 3 CARDS LIST Ablagestapel HAS 20 CARDS we want to
-	 * draw 4 cards
-	 * 
-	 * shuffle should mix the Ablagestapel and add all remaining cards from
-	 * Nachziehstapel on the top of the new list, so at first the 3 'old' cards
-	 * will be drawn, and after that 1 card of the new shuffled list
-	 */
-	public void buildCardHand() {
-		/* --- VARIANTE 1 --- */
-		if (this.getDeckSize() >= 5) {
-			int size = this.drawPile.size();
-			if (size >= 5) {
-				//add 5 cards
-			} else if (size == 0) {
-				shuffleDrawPile();
-				size = this.drawPile.size();
-				CollectionsUtil.appendListToList(CollectionsUtil.getNextElements(size >= 5 ? 5
-						: size, this.drawPile), this.cardHand);
-			} else {
-				if (this.getDeckSize() <= 5) {
-					shuffleDrawPile();
-					CollectionsUtil.appendListToList(
-							CollectionsUtil.getNextElements(
-									this.drawPile.size(), this.drawPile),
-							this.cardHand);
-				}
-				CollectionsUtil.appendListToList(
-						CollectionsUtil.getNextElements(size, this.drawPile),
-						this.cardHand);
-				shuffleDrawPile();
-				CollectionsUtil.appendListToList(CollectionsUtil.getNextElements(5 - size,
-						this.drawPile), this.cardHand);
-			}
-		}
-
-		/* --- VARIANTE 2 --- */
-
-		Iterator<Card> it = this.drawPile.iterator();
-		int count = 0;
-		while (it.hasNext() && count < 5) {
-			this.cardHand.addLast(it.next());
-		}
-		if (count != 4) {
-			shuffleDrawPile();
-			while (count < 5 && it.hasNext()) {
-				count++;
-				/* hat java.util.NoSuchElementException geworfen */
-				this.cardHand.addLast(it.next());
-			}
-		}
+	public void refreshCardHand() {
+		this.discardCardHand();
+		this.draw(5);
 	}
 
-	public void discardCardHand() {
-		CollectionsUtil.appendListToList(cardHand, discardPile);
+	public void discardCard(Card card) {
+		if (this.cardHand.contains(card)) {
+			this.cardHand.remove(card);
+			this.discardPile.addLast(card);
+		}
+	}
+	
+	private void discardCardHand() {
+		CollectionsUtil.appendListToList(this.cardHand, this.discardPile);
 		this.cardHand = new LinkedList<Card>();
 	}
 	
-	public void discardCard(Card card) {
-		if (this.cardHand.contains(card)) {
-			
-		}
-	}
-
-	public void shuffleDrawPile() {
-		Collections.shuffle(this.drawPile);
-	}
-	
-	public void shuffleIfLessThan(int amount) {
+	/**
+	 * (Methode heißt shuffle, weil es das regulaere Mischen ist;
+	 *  kann auch shuffleDiscardBelowDrawPile() genannt werden
+	 * shuffles the discard pile and appends it "below" the draw pile 
+	 * (legt gemischten Ablage- unter Nachziehstapel)
+	 * */
+	private void shuffle() {
 		LinkedList<Card> cards = new LinkedList<Card>();
 		cards.addAll(this.discardPile);
 		Collections.shuffle(cards);
@@ -203,9 +152,28 @@ public class Deck {
 		this.discardPile = new LinkedList<Card>();
 		this.drawPile = cards;
 	}
-
 	
-	public void drawCard() {
+	private void shuffleIfLessThan(int drawAmount) {
+		if (drawAmount < (this.drawPile.size() + this.discardPile.size())) {
+			if (this.drawPile.size() < drawAmount) {
+				int remaining = drawAmount - this.drawPile.size();
+				draw(this.drawPile.size());
+				shuffle();
+				draw(remaining);
+			} else {
+				draw(drawAmount);
+			}	
+		} else {
+			shuffle();
+			draw(this.drawPile.size());
+		}
+	}
+	
+	private void shuffleDrawPile() {
+		Collections.shuffle(this.drawPile);
+	}
+	
+	public void draw() {
 		this.cardHand.addLast(this.drawPile.removeLast());
 	}
 	
@@ -214,29 +182,27 @@ public class Deck {
 	 * this card from the drawPile. Logic of comparism should be added to
 	 * shuffle() method
 	 */
-	public void draw(int amount) {
-		if (this.drawPile.size() != 0) {
-			// add card
-		} else {
-			shuffleIfLessThan(amount);
-			if (this.drawPile.size() != 0) {
-				// add card
-			} else {
-				/** keine Karte mehr vorhanden */
-			}
-		}
-		
+	private void draw(int amount) {
 		this.shuffleIfLessThan(amount);
 		for (int i = 0; i < amount; i++) {
-			this.cardHand.addLast(this.drawPile.removeLast());
+			this.draw();
 		}
 	}
 
 	/**
 	 * @param card which will be added on top of the drawPile
 	 * */
-	public void putBack(Card card) {
+	private void putBack(Card card) {
 		this.drawPile.addLast(card);
+	}
+	
+	/**
+	 * 
+	 * */
+	private void putBack(LinkedList<Card> cards) {
+		for (Card card : cards) {
+			this.putBack(card);
+		}
 	}
 
 	/**

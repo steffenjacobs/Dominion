@@ -3,8 +3,10 @@ package com.tpps.application.network.login.server;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import com.tpps.application.network.core.Server;
+import com.tpps.application.network.login.SQLHandling.Password;
 import com.tpps.application.network.login.SQLHandling.SQLHandler;
 import com.tpps.application.network.login.SQLHandling.SQLOperations;
 import com.tpps.application.network.login.SQLHandling.SQLStatisticsHandler;
@@ -40,7 +42,7 @@ public class LoginServer extends Server{
 	
 	/**
 	 * This methods is called when the server is finished with initializing
-	 * This method outputs a 'Dominion Login Server' banner
+	 * This method outputs a 'Dominion Login Server' banner and delivers specific server commands like help, reconnect or some basic sql statements
 	 * @author jhuhn - Johannes Huhn
 	 */
 	private void setConsoleOutput(){
@@ -50,8 +52,81 @@ public class LoginServer extends Server{
 		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
 		System.out.println("            * * * * * * * * * * * * * *      ");
 		System.out.println();
-	//	System.out.println("Enter 'help' to see all available commands.");
-	//	System.out.println();
+		System.out.println("Enter 'help' to see all available commands.");
+		System.out.println();
+		
+		String line = null;
+		Scanner scanInput = new Scanner(System.in);
+		while (true) {
+			line = scanInput.nextLine();
+			try {
+				if (line.startsWith("exit") || line.startsWith("close connection")) {
+					SQLHandler.closeConnection();
+					System.exit(0);
+					break;
+				} else if (line.startsWith("create account")) {
+					String[] words = line.split("\\s+");
+					Password temp1 = new Password(words[3], new String("defsalt").getBytes());
+					String firsthash = temp1.getHashedPasswordAsString();
+					byte[] randomsalt = temp1.generateSalt();
+					Password temp2 = new Password(firsthash, randomsalt);
+					SQLOperations.createAccount(words[2], "", temp2.getHashedPasswordAsString(), new String(randomsalt));
+					SQLStatisticsHandler.insertRowForFirstLogin(words[2]);
+				} else if (line.startsWith("show nicknames")) {
+					System.out.println(SQLOperations.showAllNicknames());
+				} else if (line.startsWith("reconnect")) {
+					SQLHandler.closeConnection();
+					SQLHandler.connect();
+				} else if(line.startsWith("DROP TABLE")){
+					String[] words = line.split("\\s+");
+					if(SQLOperations.checkTable(words[2])){
+						SQLOperations.deleteTable(words[2]);
+					}else {
+						System.out.println("Table: " + words[2]  + " doesn't exist");
+					}
+				} else if(line.startsWith("show tables")){
+					System.out.println(SQLOperations.showTables());
+				}else if(line.startsWith("CREATE TABLE accountdetails")){
+					if(!SQLOperations.checkTable("accountdetails")){
+						SQLOperations.createAccountdetailsTable();
+					}else{
+						System.out.println("Table accountdetails already exists");
+					}
+				} else if(line.trim().startsWith("CREATE TABLE statistics")){
+					if(!SQLOperations.checkTable("statistics")){
+						ArrayList<Statistic> statistics = new ArrayList<Statistic>();
+						Statistic one = new Statistic(SQLType.VARCHAR, "40", "description");
+						Statistic two = new Statistic(SQLType.INT, "wins");
+						Statistic tree = new Statistic(SQLType.INT, "losses");
+						Statistic four = new Statistic(SQLType.FLOAT, "4,2", "win_loss");
+						statistics.add(one);
+						statistics.add(two);
+						statistics.add(tree);
+						statistics.add(four);
+						SQLStatisticsHandler.createStatisticsTable(statistics);
+					}else{
+						System.out.println("TABLE statistics already exists");
+					}
+				} else if (line.startsWith("help")) {
+					System.out.println("-------- Available Commands --------");
+					System.out.println("DROP TABLE <tablename>");
+					System.out.println("CREATE TABLE accountdetails");
+					System.out.println("CREATE TABLE statistics");
+					System.out.println("show tables");
+					System.out.println("create account <username> <password>");
+					System.out.println("show nicknames");
+					System.out.println("exit" + " or " + "close connection");
+					System.out.println("reconnect");
+					System.out.println("help");
+					System.out.println("------------------------------------");
+				} else {
+					System.out.println("Bad command: " + line + " Type in 'help' to see all avaible commands");
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.err.println("Bad syntax.");
+			}
+		}
+		scanInput.close();
 	}
 	
 	/**
