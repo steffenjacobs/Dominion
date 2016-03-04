@@ -16,7 +16,7 @@ public class PacketSessionGetAnswer extends Packet {
 
 	/**
 	 * @return the Get-Request
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketSessionGetRequest getRequest() {
 		return req;
@@ -24,7 +24,7 @@ public class PacketSessionGetAnswer extends Packet {
 
 	/**
 	 * @return the generated Game-Session
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public UUID getLoginSessionID() {
 		return this.sessionID;
@@ -34,7 +34,7 @@ public class PacketSessionGetAnswer extends Packet {
 	 * initializes the Packet with the request and a newly generated
 	 * Game-Session
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketSessionGetAnswer(PacketSessionGetRequest request, UUID sID) {
 		super(PacketType.SESSION_GET_ANSWER);
@@ -44,7 +44,7 @@ public class PacketSessionGetAnswer extends Packet {
 
 	/**
 	 * @return a readable representation of the packet
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {

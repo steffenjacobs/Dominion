@@ -7,7 +7,7 @@ import java.util.Scanner;
 import com.tpps.application.network.core.Server;
 import com.tpps.application.network.core.ServerConnectionThread;
 
-/** @author sjacobs - Steffen Jacobs */
+/** @author Steffen Jacobs */
 public class SessionServer extends Server {
 	
 	private final static int standardPort = 1337;
@@ -15,7 +15,7 @@ public class SessionServer extends Server {
 	/**
 	 * normal constructor
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public SessionServer() throws IOException {
 		super(new InetSocketAddress("0.0.0.0", standardPort), new SessionPacketHandler());
@@ -25,7 +25,7 @@ public class SessionServer extends Server {
 	/**
 	 * constructor used by JUnit-Test
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public SessionServer(SessionPacketHandler handler) throws IOException {
 		super(new InetSocketAddress("0.0.0.0", standardPort), handler);
@@ -42,7 +42,7 @@ public class SessionServer extends Server {
 	/**
 	 * sets up the console-input
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	private void setConsoleInput() {
 		System.out.println("            * * * * * * * * * * * * * *      ");
@@ -99,7 +99,7 @@ public class SessionServer extends Server {
 
 	/**
 	 * getter for standard-port for session-server @return standard-port for
-	 * session-server @author sjacobs - Steffen Jacobs
+	 * session-server @author Steffen Jacobs
 	 */
 	public static int getStandardPort() {
 		return standardPort;

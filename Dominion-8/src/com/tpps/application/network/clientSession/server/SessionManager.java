@@ -10,7 +10,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 
-/** @author sjacobs - Steffen Jacobs */
+/** @author Steffen Jacobs */
 public class SessionManager {
 
 	private static final int MAX_CACHE_SIZE = 10000;
@@ -22,6 +22,11 @@ public class SessionManager {
 	// using Guava for the cache. Project: https://github.com/google/guava
 	private static Cache<String, UUID> validSessions;
 
+	/**
+	 * static constructor, is called when class is created
+	 * 
+	 * @author Steffen Jacobs
+	 */
 	static {
 		validSessions = CacheBuilder.newBuilder().concurrencyLevel(MAX_CONCURRENT_USERS).maximumSize(MAX_CACHE_SIZE)
 				.expireAfterAccess(EXPIRATION_TIME_SECONDS, TimeUnit.SECONDS).build(new CacheLoader<String, UUID>() {
@@ -38,7 +43,7 @@ public class SessionManager {
 	 * 
 	 * @param username
 	 *            name of the user whos timestamp should be updated
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static void revalidate(String username) {
 		validSessions.getIfPresent(username);
@@ -49,7 +54,7 @@ public class SessionManager {
 	 * 
 	 * @param username
 	 *            name of user who will be removed
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	private static void invalidate(String username) {
 		validSessions.invalidate(username);
@@ -62,7 +67,7 @@ public class SessionManager {
 	 * @param username:
 	 *            name of the user
 	 * @return wheter the uuid with the given username is valid
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static boolean isValid(String username, UUID uuid) {
 		if (uuid == null)
@@ -78,7 +83,7 @@ public class SessionManager {
 	 * @return the SessionID from the username
 	 * @param username
 	 *            Name of the user whos sessionID is needed
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static UUID getValidSession(String username) {
 		UUID sessionID = validSessions.getIfPresent(username);
@@ -94,7 +99,7 @@ public class SessionManager {
 	 * generates a sessionID
 	 * 
 	 * @return a new randomly generated sessionID
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	private static UUID generateUUID() {
 		return UUID.randomUUID();
@@ -105,7 +110,7 @@ public class SessionManager {
 	 * 
 	 * @param stream
 	 *            Stream to write all the users with their sessions in.
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	static void outputAll(PrintStream stream) {
 
@@ -122,7 +127,7 @@ public class SessionManager {
 	 * getter for EXPIRATION_TIME_SECONDS
 	 * 
 	 * @return expiration time in seconds
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static int getExpiration() {
 		return EXPIRATION_TIME_SECONDS;

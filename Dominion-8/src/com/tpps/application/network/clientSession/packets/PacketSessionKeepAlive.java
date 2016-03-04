@@ -7,7 +7,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * This packet is sent from the Game-Client to the Session-Server to keep the
  * active Game-Session valid. The Game-Session expires after [120] seconds.
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class PacketSessionKeepAlive extends Packet {
 	private static final long serialVersionUID = -4121285191894892888L;
@@ -15,7 +15,7 @@ public class PacketSessionKeepAlive extends Packet {
 
 	/**
 	 * @return the username who's session should be revalidated
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public String getUsername() {
 		return this.username;
@@ -29,7 +29,7 @@ public class PacketSessionKeepAlive extends Packet {
 
 	/**
 	 * @return a readable representation of the packet
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {

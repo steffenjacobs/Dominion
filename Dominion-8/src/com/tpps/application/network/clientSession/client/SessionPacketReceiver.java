@@ -10,7 +10,7 @@ public class SessionPacketReceiver extends PacketHandler {
 	/**
 	 * is called when a packet is received
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 
 	@Override

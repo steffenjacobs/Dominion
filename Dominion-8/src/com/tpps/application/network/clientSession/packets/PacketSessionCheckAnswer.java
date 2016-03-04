@@ -7,7 +7,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * This packet is send back as an answer to a the request from a (game-)server
  * to the Session-Server to check some users session.
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class PacketSessionCheckAnswer extends Packet {
 	private static final long serialVersionUID = -8763060018038893429L;
@@ -16,7 +16,7 @@ public class PacketSessionCheckAnswer extends Packet {
 
 	/**
 	 * @return the received request
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketSessionCheckRequest getRequest() {
 		return this.request;
@@ -24,7 +24,7 @@ public class PacketSessionCheckAnswer extends Packet {
 
 	/**
 	 * @return the validation result
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public boolean getState() {
 		return this.state;
@@ -33,7 +33,7 @@ public class PacketSessionCheckAnswer extends Packet {
 	/**
 	 * initializes the Packet with the request and the validation result
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketSessionCheckAnswer(PacketSessionCheckRequest req, boolean _state) {
 		super(PacketType.SESSION_CHECK_ANSWER);
@@ -43,7 +43,7 @@ public class PacketSessionCheckAnswer extends Packet {
 
 	/**
 	 * @return a readable String
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {

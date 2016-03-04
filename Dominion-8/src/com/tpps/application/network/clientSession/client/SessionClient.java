@@ -22,7 +22,7 @@ public class SessionClient extends Client {
 	 * sets wheter keep-alive packets should be sent for a given user. You can
 	 * only send keep-alive-packets for one user at a time
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void keepAlive(final String username, boolean state) {
 		if (state) {
@@ -54,7 +54,7 @@ public class SessionClient extends Client {
 	/**
 	 * is called when the client stops
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void onStop() {
 		super.disconnect();

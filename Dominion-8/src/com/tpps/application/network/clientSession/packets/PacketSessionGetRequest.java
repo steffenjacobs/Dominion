@@ -7,7 +7,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * This packet is send from the Login-Server to the Session-Server to retrieve a
  * Game-Session for a user
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class PacketSessionGetRequest extends Packet {
 	private static final long serialVersionUID = 1544367295338928457L;
@@ -16,7 +16,7 @@ public class PacketSessionGetRequest extends Packet {
 
 	/**
 	 * @return requested user-name
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public String getUsername() {
 		return this.username;
@@ -25,7 +25,7 @@ public class PacketSessionGetRequest extends Packet {
 	/**
 	 * initialize Packet with the requested user-name
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketSessionGetRequest(String name) {
 		super(PacketType.SESSION_GET_REQUEST);
@@ -34,7 +34,7 @@ public class PacketSessionGetRequest extends Packet {
 
 	/**
 	 * @return a readable representation of the packet
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {

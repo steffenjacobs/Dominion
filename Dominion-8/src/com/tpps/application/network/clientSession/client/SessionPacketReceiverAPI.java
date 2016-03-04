@@ -13,14 +13,14 @@ import com.tpps.application.network.core.SuperCallable;
  * Note: ask Steffen Jacobs when you have any questions regarding network &
  * netcode
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public final class SessionPacketReceiverAPI {
 
 	/**
 	 * the answer to a session validity request will be deployed here.
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static void onPacketSessionCheckAnswer(PacketSessionCheckAnswer packet) {
 		SuperCallable<PacketSessionCheckAnswer> toCall = checkRequests.get(packet.getRequest().getUsername());
@@ -35,7 +35,7 @@ public final class SessionPacketReceiverAPI {
 	/**
 	 * the answer to the session-get-request will be deployed here
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static void onPacketSessionGetAnswer(PacketSessionGetAnswer packet) {
 		SuperCallable<PacketSessionGetAnswer> toCall = getRequests.get(packet.getRequest().getUsername());
@@ -49,13 +49,13 @@ public final class SessionPacketReceiverAPI {
 	}
 
 	/**adds a get-Request
-	 * @author sjacobs - Steffen Jacobs*/
+	 * @author Steffen Jacobs*/
 	static void addGetRequest(String username, SuperCallable<PacketSessionGetAnswer> callable) {
 		getRequests.putIfAbsent(username, callable);
 	}
 
 	/** adds a check-Request
-	 * @author sjacobs - Steffen Jacobs*/
+	 * @author Steffen Jacobs*/
 	static void addCheckRequest(String username, SuperCallable<PacketSessionCheckAnswer> callable) {
 		checkRequests.putIfAbsent(username, callable);
 	}

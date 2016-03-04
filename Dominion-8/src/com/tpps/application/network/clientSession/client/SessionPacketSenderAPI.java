@@ -19,14 +19,14 @@ import com.tpps.application.network.core.packet.Packet;
  * Note: ask Steffen Jacobs when you have any questions regarding network &
  * netcode
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public final class SessionPacketSenderAPI {
 
 	/**
 	 * sends a general packet to the session-server
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	
 	private static void sendPacket(Client c, Packet packet) {
@@ -49,7 +49,7 @@ public final class SessionPacketSenderAPI {
 	 * deployed at
 	 * com.tpps.network.clients.session.PacketReceiver.onPacketSessionGetAnswer
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static void sendGetRequest(Client c, String username, SuperCallable<PacketSessionGetAnswer> callable) {
 		SessionPacketReceiverAPI.addGetRequest(username, callable);
@@ -61,7 +61,7 @@ public final class SessionPacketSenderAPI {
 	 * deployed at com.tpps.network.clients.session.PacketReceiver.
 	 * onPacketSessionCheckAnswer
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static void sendCheckRequest(Client c, String username, UUID sessionID, SuperCallable<PacketSessionCheckAnswer> callable) {
 		SessionPacketReceiverAPI.addCheckRequest(username, callable);
@@ -71,7 +71,7 @@ public final class SessionPacketSenderAPI {
 	/**
 	 * sends a keep-alive packet to the session-server
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static void sendKeepAlive(Client c, String username) {
 		sendPacket(c, new PacketSessionKeepAlive(username));

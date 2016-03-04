@@ -16,7 +16,7 @@ import com.tpps.application.network.core.packet.PacketType;
 /**
  * this class handles all the packet-stuff
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class SessionPacketHandler extends PacketHandler {
 
@@ -24,7 +24,7 @@ public class SessionPacketHandler extends PacketHandler {
 	/**
 	 * is called in async thread when a packet was received
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public void handleReceivedPacket(int port, Packet packet) {
 		ServerConnectionThread requester = parent.getClientThread(port);
