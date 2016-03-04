@@ -16,6 +16,8 @@ public class ChatClient extends PacketHandler{
 		this.sender = username;
 		try {
 			chatclient = new Client(new InetSocketAddress("127.0.0.1", 1340), this, false);
+			PacketChatHandshake handshake = new PacketChatHandshake(sender);
+			chatclient.sendMessage(handshake);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
