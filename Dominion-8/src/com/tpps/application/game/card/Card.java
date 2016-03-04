@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+import javax.swing.JFrame;
+
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -38,6 +40,11 @@ public class Card extends GameObject {
 		this.id = this.name + classID++;
 		System.out.println(id);
 	}
+	
+	// clone constructor
+	//	private GraphicFramework gf_test = new GraphicFramework(new JFrame());
+		
+	// equals
 
 	public LinkedHashMap<CardAction, Integer> getActions() {
 		return actions;
@@ -121,9 +128,14 @@ public class Card extends GameObject {
 		LinkedList<CardAction> act = CollectionsUtil.linkedList(new CardAction[] { CardAction.ADD_ACTION_TO_PLAYER,
 				CardAction.ADD_PURCHASE, CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, CardAction.DRAW_CARD });
 		LinkedList<Integer> ints = CollectionsUtil.linkedList(new Integer[] { 1, 2, 4, 3 });
-		LinkedList<CardType> type = CollectionsUtil.linkedList(new CardType[] { CardType.ACTION });
+		LinkedList<CardType> type = CollectionsUtil.linkedList(CardType.ACTION);
+		
+		JFrame j = new JFrame();
+		j.setSize(1, 1);
+		GraphicFramework g = new GraphicFramework(j);
+		g.setVisible(false);
 
-		Card card = new Card(CollectionsUtil.linkedHashMapAction(act, ints), type, "Market", 5);
+		Card card = new Card(CollectionsUtil.linkedHashMapAction(act, ints), type, "Market", 5,g );
 		System.out.println(card.toString());
 	}
 }
