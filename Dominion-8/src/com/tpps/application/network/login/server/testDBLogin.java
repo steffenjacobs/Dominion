@@ -1,9 +1,5 @@
 package com.tpps.application.network.login.server;
 
-import com.tpps.application.network.login.SQLHandling.Password;
-import com.tpps.application.network.login.SQLHandling.SQLHandler;
-import com.tpps.application.network.login.SQLHandling.SQLOperations;
-
 public class testDBLogin {
 	
 	public static void main(String[] args) {
