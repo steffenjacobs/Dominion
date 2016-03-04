@@ -29,7 +29,6 @@ public class SessionServer extends Server {
 	 */
 	public SessionServer(SessionPacketHandler handler) throws IOException {
 		super(new InetSocketAddress("0.0.0.0", standardPort), handler);
-		//setConsoleInput();
 	}
 
 	public static void main(String[] args) {

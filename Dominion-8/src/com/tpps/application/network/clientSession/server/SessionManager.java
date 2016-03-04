@@ -42,7 +42,6 @@ public class SessionManager {
 	 */
 	public static void revalidate(String username) {
 		validSessions.getIfPresent(username);
-		isValid(null, null);
 	}
 
 	/**
