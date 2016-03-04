@@ -10,7 +10,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * the Login-Server to check some users credentials. It contains a new
  * sessionID.
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class PacketLoginCheckAnswer extends Packet {
 	private static final long serialVersionUID = 4238263297967404678L;
@@ -20,7 +20,7 @@ public class PacketLoginCheckAnswer extends Packet {
 
 	/**
 	 * @return the received request
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketLoginCheckRequest getRequest() {
 		return this.request;
@@ -28,7 +28,7 @@ public class PacketLoginCheckAnswer extends Packet {
 
 	/**
 	 * @return the validation result
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public boolean getState() {
 		return this.state;
@@ -36,7 +36,7 @@ public class PacketLoginCheckAnswer extends Packet {
 
 	/**
 	 * @return the validation result
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public UUID getSessionID() {
 		return this.sessionID;
@@ -45,7 +45,7 @@ public class PacketLoginCheckAnswer extends Packet {
 	/**
 	 * initializes the Packet with the request and the validation result
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketLoginCheckAnswer(PacketLoginCheckRequest req, boolean _state, UUID _sessionID) {
 		super(PacketType.LOGIN_CHECK_ANSWER);
@@ -56,7 +56,7 @@ public class PacketLoginCheckAnswer extends Packet {
 
 	/**
 	 * @return a readable String
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {

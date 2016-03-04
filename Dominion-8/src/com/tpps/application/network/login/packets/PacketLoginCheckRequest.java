@@ -7,7 +7,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * This packet is send as a request from a game client to the LoginServer to
  * check a users credentials.
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class PacketLoginCheckRequest extends Packet {
 	private static final long serialVersionUID = 4466044302525259053L;
@@ -16,7 +16,7 @@ public class PacketLoginCheckRequest extends Packet {
 
 	/**
 	 * @return the username to check
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public String getUsername() {
 		return this.username;
@@ -24,7 +24,7 @@ public class PacketLoginCheckRequest extends Packet {
 
 	/**
 	 * @return the hashed password to check
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public String getHashedPW() {
 		return this.hashedPW;
@@ -33,7 +33,7 @@ public class PacketLoginCheckRequest extends Packet {
 	/**
 	 * initializes the Packet with a username and a hashed password to check
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public PacketLoginCheckRequest(String name, String _hashedPW) {
 		super(PacketType.LOGIN_CHECK_REQUEST);
@@ -43,7 +43,7 @@ public class PacketLoginCheckRequest extends Packet {
 
 	/**
 	 * @return a readable representation of the packet
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {
