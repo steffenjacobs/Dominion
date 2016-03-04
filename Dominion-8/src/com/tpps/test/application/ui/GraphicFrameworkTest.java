@@ -46,7 +46,7 @@ import com.tpps.ui.components.GFButton;
  * 
  * tests remove all components & redo layer-test
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public class GraphicFrameworkTest {
 	private static final int F_WIDTH = 1280, F_HEIGHT = 720;
