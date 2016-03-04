@@ -41,14 +41,21 @@ public class GameController {
 		return this.gameNotFinished = gameNotFinished;
 	}
 
+	/**
+	 * 
+	 * @param player
+	 * @return if there are four players
+	 * @throws TooMuchPlayerException
+	 */
 	public void addPlayer(Player player) throws TooMuchPlayerException {
 		if (this.players.size() < 4) {
 			this.players.addLast(player);
 			if (this.players.size() == 4){
-				this.activePlayer = getRandomPlayer();
+				this.activePlayer = getRandomPlayer();				
 			}
 		} else {
 			throw new TooMuchPlayerException();
+			
 
 		}
 

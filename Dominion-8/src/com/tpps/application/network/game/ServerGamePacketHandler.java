@@ -1,13 +1,18 @@
 package com.tpps.application.network.game;
 
 import java.io.IOException;
+import java.util.Iterator;
 
+import com.tpps.application.game.GameController;
 import com.tpps.application.game.Player;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
+import com.tpps.application.network.gameSession.packets.PacketClientShouldDisconect;
+import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketSentClientId;
 import com.tpps.application.network.packet.Packet;
+import com.tpps.technicalServices.util.GameConstant;
 
 /**
  * 
@@ -36,19 +41,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			switch (packet.getType()) {
 			case REGISTRATE_PLAYER_BY_SERVER:
 				int clientId = GameServer.getCLIENT_ID();
-				try{
-				server.getGameController().addPlayer(new Player(clientId, port));
-				System.out.println(
-						"registrate one more client to server with id: " + clientId + "listening on port: " + port);
-				server.sendMessage(port, new PacketSentClientId(clientId));
-				}
-				catch (TooMuchPlayerException tmpe) {
-					server.getClientThread(port).interrupt();
-					
-					server.getClientThread(port).closeSockets();
-					
-					tmpe.printStackTrace();
-				}
+				addPlayerAndCheckPlayerCount(port, clientId);
 				break;
 			case CARD_PLAYED:
 				server.getGameController().getActivePlayer().doAction(((PacketPlayCard) packet).getCardID());
@@ -60,7 +53,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case END_TURN:
 
-				// GameController.
+//				 this.server.getGameController().getActivePlayer()
+				 
+//				 this.server.getGameController().getPlayers().g
+				 for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
+					
+					
+				}
 				break;
 			default:
 				System.out.println("unknown packed type");
@@ -71,6 +70,29 @@ public class ServerGamePacketHandler extends PacketHandler {
 			ie.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * 
+	 * @param port
+	 * @param clientId
+	 * @throws IOException
+	 */
+	private void addPlayerAndCheckPlayerCount(int port, int clientId) throws IOException {
+		try{				
+		server.getGameController().addPlayer(new Player(clientId, port));
+		server.sendMessage(port, new PacketSentClientId(clientId));
+		if (server.getGameController().getPlayers().size() == 4){					
+			server.broadcastMessage(new PacketEnableDisable(server.getGameController().getActivePlayer().getClientId()));
+		}
+		System.out.println(
+				"registrate one more client to server with id: " + clientId + "listening on port: " + port);
+		
+		}
+		catch (TooMuchPlayerException tmpe) {					
+			server.sendMessage(port, new PacketClientShouldDisconect());					
+			tmpe.printStackTrace();
+		}
 	}
 
 }

@@ -34,5 +34,15 @@ public class GameClient extends Client{
 		this.clientId = clientId;
 		System.out.println("clientId was set " + clientId);
 	}
+	
+	/**
+	 * 
+	 * @return the clientId
+	 */
+	public int getClientId() {
+		return clientId;
+	}
+	
+	
 
 }

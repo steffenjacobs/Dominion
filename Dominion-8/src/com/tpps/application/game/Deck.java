@@ -183,7 +183,7 @@ public class Deck {
 	 * shuffle() method
 	 */
 	private void draw(int amount) {
-		this.shuffleIfLessThan(amount);
+//		this.shuffleIfLessThan(amount);
 		for (int i = 0; i < amount; i++) {
 			this.draw();
 		}

@@ -270,7 +270,7 @@ public class LogInGUI extends JFrame {
 	 * @param args
 	 */
 
-//	public static void main(String[] args) {
-//		new LogInGUI();
-//	}
+	public static void main(String[] args) {
+		new LogInGUI(null);
+	}
 }

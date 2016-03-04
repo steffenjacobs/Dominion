@@ -10,14 +10,14 @@ import com.tpps.application.network.packet.PacketType;
  * @author sjacobs - Steffen Jacobs
  */
 public class PacketRegistratePlayerByServer extends Packet {
-	
-	private static final long serialVersionUID = -1098491079138028225L;
-	
+
+	private static final long serialVersionUID = -3390002980740295573L;
+
 	/**
 	 * initializes the Packet with the id of the card which had been played and
 	 * the name of the player who played the card
 	 * 
-	 * @author sjacobs - Steffen Jacobs
+	 * @author ladler - Lukas Adler
 	 */
 	public PacketRegistratePlayerByServer() {
 		super(PacketType.REGISTRATE_PLAYER_BY_SERVER);			

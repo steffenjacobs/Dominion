@@ -11,7 +11,7 @@ import com.tpps.application.network.packet.PacketType;
  */
 public class PacketSentClientId extends Packet {
 	
-	private static final long serialVersionUID = -1098491079138028225L;
+	private static final long serialVersionUID = -8238146017971931432L;
 	private final int clientID;
 	
 
