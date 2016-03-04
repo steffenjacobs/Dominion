@@ -130,12 +130,11 @@ public class Card extends GameObject {
 		LinkedList<Integer> ints = CollectionsUtil.linkedList(new Integer[] { 1, 2, 4, 3 });
 		LinkedList<CardType> type = CollectionsUtil.linkedList(CardType.ACTION);
 		
-		JFrame j = new JFrame();
-		j.setSize(1, 1);
-		GraphicFramework g = new GraphicFramework(j);
-		g.setVisible(false);
+		JFrame frame = new JFrame();
+		GraphicFramework gf = new GraphicFramework(frame);
+		gf.setSize(1,1);
 
-		Card card = new Card(CollectionsUtil.linkedHashMapAction(act, ints), type, "Market", 5,g );
+		Card card = new Card(CollectionsUtil.linkedHashMapAction(act, ints), type, "Market", 5, gf);
 		System.out.println(card.toString());
 	}
 }
