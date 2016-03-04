@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 /**
  * provides some useful methods for manipulating graphic objects
  * 
- * @author sjacobs - Steffen Jacobs
+ * @author Steffen Jacobs
  */
 public final class GraphicsUtil {
 
@@ -49,7 +49,7 @@ public final class GraphicsUtil {
 	 * @param offsetY:
 	 *            offset up and down
 	 * @return a new rendered image with the caption on top of the old image
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static Image drawStringCentered(Image img, String caption, Font font, Color fontColor, int offsetX,
 			int offsetY) {
@@ -80,7 +80,7 @@ public final class GraphicsUtil {
 	 * @param fontColor:
 	 *            color of the font
 	 * @return a new rendered image with the caption on top of the old image
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static Image drawStringCentered(Image img, String caption, Font font, Color fontColor) {
 		return drawStringCentered(img, caption, font, fontColor, 0, 0);
@@ -96,7 +96,7 @@ public final class GraphicsUtil {
 	 * @param newHeight
 	 *            new height to resize to
 	 * @return the resized image
-	 * @author sjacobs - Steffen Jacobs
+	 * @author Steffen Jacobs
 	 */
 	public static BufferedImage resize(BufferedImage buffImg, int newWidth, int newHeight) {
 		BufferedImage result = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
