@@ -105,13 +105,13 @@ public class Card extends GameObject {
 	@Override
 	public void onMouseClick() {
 		System.out.println("hier");
-//		try {
-//			DominionController.getInstance().getGameClient()
-//					.sendMessage(new PacketPlayCard(this.id));
-//		} catch (IOException e) {
-//
-//			e.printStackTrace();
-//		}
+		try {
+			DominionController.getInstance().getGameClient()
+					.sendMessage(new PacketPlayCard(this.id));
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		}
 	}
 
 	@Override

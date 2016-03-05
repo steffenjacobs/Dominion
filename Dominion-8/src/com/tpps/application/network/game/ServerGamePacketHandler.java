@@ -3,6 +3,7 @@ package com.tpps.application.network.game;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
@@ -12,9 +13,11 @@ import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketReconnect;
+import com.tpps.application.network.gameSession.packets.PacketSendBoard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketUpdateValues;
+import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
@@ -57,7 +60,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case BUY_CARD:
 //				take a card from the boardClass
-//				((PacketBuyCard)packet).getCardId();
+//				GameController gameController = this.server.getGameController(); 
+//				server.broadcastMessage(new PacketSendTable(gameController, 
+//						gameController.getCoinIds(), gameController.getVictoryIds()));
+				
 				break;
 //			case PLAY_TREASURES:
 //				server.sendMessage(port, new PacketPlayTreasures());
@@ -80,21 +86,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 	}
 
 	private void nextActivePlayer() {
-
-		Player activePlayer = this.server.getGameController().getActivePlayer();
-		LinkedList<Player> players = this.server.getGameController().getPlayers();
-		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
-			Player player = players.get(i);
-			if (player.equals(activePlayer)) {
-				this.server.getGameController().setActivePlayer(players.get(i < GameConstant.HUMAN_PLAYERS ? i + 1 : 0));
-				break;
-			}
-		}
+		this.server.getGameController().setNextActivePlayer();
 		try {
-			server.broadcastMessage(new PacketEnableDisable(activePlayer.getClientId()));
+			server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientId()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 	private void updatePortOfPlayer(int port, Packet packet) {
@@ -129,15 +127,20 @@ public class ServerGamePacketHandler extends PacketHandler {
 	}
 	
 	/**
-	 * opens the Gui by all Players and sends the handcards to all Players
+	 * opens the gui for all Players sends the board with all buyable cards to all guis
+	 *  and sends the handcards to all Players
 	 * @throws IOException
 	 */
 	private void setUpGui() throws IOException {
 		server.broadcastMessage(new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientId()));
-		
+		GameBoard gameBoard = this.server.getGameController().getGameBoard();
+		server.broadcastMessage(new PacketSendBoard(gameBoard.getCoinCardIds(), gameBoard.getVictoryCardIds(),
+													gameBoard.getActionCardIds()));
 		LinkedList<Player> players = server.getGameController().getPlayers();
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++){
-			server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(players.get(i).getDeck().getCardHandIDs()));
+			server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
 		}
+
+
 	}
 }

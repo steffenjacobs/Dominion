@@ -1,5 +1,6 @@
 package com.tpps.technicalServices.util;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
@@ -125,5 +126,14 @@ public final class CollectionsUtil {
 		for (Card card : cards) {
 			destination.addLast(card);
 		}
+	}
+	
+	
+	public static LinkedList<String> getCardIDs(LinkedList<Card> cards){
+		LinkedList<String> cardHandIDs = new LinkedList<String>();
+		for (Iterator<Card> iterator = cards.iterator(); iterator.hasNext();) {
+			cardHandIDs.add(((Card) iterator.next()).getId());			
+		}
+		return cardHandIDs;
 	}
 }

@@ -81,17 +81,6 @@ public class Deck {
 	public LinkedList<Card> getCardHand() {
 		return this.cardHand;
 	}
-	
-	/**
-	 * @return a list with the ID of every card in cardHand
-	 */
-	public LinkedList<String> getCardHandIDs(){
-		LinkedList<String> cardHandIDs = new LinkedList<String>();
-		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
-			cardHandIDs.add(((Card) iterator.next()).getId());			
-		}
-		return cardHandIDs;
-	}
 
 	/**
 	 * @param cardHand the cardHand to set

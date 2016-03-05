@@ -21,10 +21,9 @@ public class PacketOpenGuiAndEnableOne extends Packet {
 	 * @author ladler - Lukas Adler
 	 */
 	public PacketOpenGuiAndEnableOne(int clientId) {
-		super(PacketType.OPEN_GUI);
+		super(PacketType.OPEN_GUI_AND_ENABLE_ONE);
 		this.clientId = clientId;
 	}
-
 	
 	/**
 	 * 
