@@ -41,6 +41,15 @@ public class Card extends GameObject {
 		this.id = this.name + classID++;
 	}
 
+	/**
+	 * constructor for Card, taking all required data
+	 * 
+	 * @param actions the list of CardActions mapped to their value
+	 * @param types the list of CardTypes
+	 * @param cost the card-cost
+	 * @param name the name of the card 
+	 * @param _parent graphic framework where the card will be drawn
+	 */
 	public Card(LinkedHashMap<CardAction, Integer> actions,
 			LinkedList<CardType> types, String name, int cost,
 			GraphicFramework _parent) {
