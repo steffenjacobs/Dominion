@@ -16,7 +16,11 @@ import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.util.GraphicsUtil;
 
-/** represents a Card which can be serialized very efficiently */
+/**
+ * represents a Card which can be serialized very efficiently
+ * 
+ * @author Steffen Jacobs
+ */
 public class SerializedCard {
 
 	private final LinkedHashMap<CardAction, Integer> actions;
@@ -25,6 +29,20 @@ public class SerializedCard {
 	private final String name;
 	private final BufferedImage image;
 
+	/**
+	 * constructor for SerializedCard, taking all required data
+	 * 
+	 * @param action
+	 *            the list of CardActions mapped to their value
+	 * @param types
+	 *            the list of CardTypes
+	 * @param cost
+	 *            the card-cost
+	 * @param name
+	 *            the name of the card
+	 * @param image
+	 *            the image of the card (ARGB or RGB)
+	 */
 	public SerializedCard(LinkedHashMap<CardAction, Integer> actions, LinkedList<CardType> types, int cost, String name,
 			BufferedImage image) {
 		this.actions = actions;
@@ -34,26 +52,13 @@ public class SerializedCard {
 		this.image = image;
 	}
 
-	public LinkedHashMap<CardAction, Integer> getActions() {
-		return this.actions;
-	}
-
-	public LinkedList<CardType> getTypes() {
-		return this.types;
-	}
-
-	public int getCost() {
-		return this.cost;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public BufferedImage getImage() {
-		return this.image;
-	}
-
+	/**
+	 * constructor for SerializedCard, taking a serialized byte-array with all
+	 * data
+	 * 
+	 * @param bytes
+	 *            byte-array containing all important data
+	 */
 	public SerializedCard(byte[] bytes) throws IOException {
 		if (bytes.length == 0) {
 			throw new RuntimeException("ERROR: Bad Card-Storage.");
@@ -87,6 +92,56 @@ public class SerializedCard {
 		}
 	}
 
+	/**
+	 * getter for the actions of the card
+	 * 
+	 * @return actions of the card
+	 */
+	public LinkedHashMap<CardAction, Integer> getActions() {
+		return this.actions;
+	}
+
+	/**
+	 * getter for the types of the card
+	 * 
+	 * @return types of the card
+	 */
+	public LinkedList<CardType> getTypes() {
+		return this.types;
+	}
+
+	/**
+	 * getter for the cost of the card
+	 * 
+	 * @return cost of the card
+	 */
+	public int getCost() {
+		return this.cost;
+	}
+
+	/**
+	 * getter for the name of the card
+	 * 
+	 * @return name of the card
+	 */
+	public String getName() {
+		return this.name;
+	}
+
+	/**
+	 * getter for the image of the card
+	 * 
+	 * @return image of the card
+	 */
+	public BufferedImage getImage() {
+		return this.image;
+	}
+
+	/**
+	 * converts this instance to a byte-array
+	 * 
+	 * @return a serialized representation of this instance of a SerializedCard
+	 */
 	public byte[] getBytes() throws IOException {
 
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
@@ -117,6 +172,14 @@ public class SerializedCard {
 		return buff.array();
 	}
 
+	/**
+	 * equals-by-name method
+	 * 
+	 * @param other
+	 *            second object to compare with
+	 * 
+	 * @return whether the two objects are equal by name
+	 */
 	@Override
 	public boolean equals(Object other) {
 		if (other instanceof SerializedCard) {
@@ -125,7 +188,13 @@ public class SerializedCard {
 		return false;
 	}
 
-	/** needed for testing */
+	/**
+	 * equals-by-all-properties-method - needed for testing
+	 * 
+	 * @param card
+	 *            second object to compare with
+	 * @return whether every property matches
+	 */
 	public boolean equalsEntirely(SerializedCard card) {
 		if (!this.equals(card))
 			return false;
@@ -141,6 +210,11 @@ public class SerializedCard {
 		return true;
 	}
 
+	/**
+	 * overridden toString-method
+	 * 
+	 * @return a readable representation of the object
+	 */
 	@Override
 	public String toString() {
 		String res = "--" + this.getClass().getSimpleName() + "--\nName: " + this.name + "\nPrice:" + this.cost
