@@ -21,7 +21,7 @@ public class PacketReconnect extends Packet {
 	 * @author ladler - Lukas Adler
 	 */
 	public PacketReconnect(int clientId) {
-		super(PacketType.RECONECT);
+		super(PacketType.RECONNECT);
 		this.clientId = clientId;
 	}
 	

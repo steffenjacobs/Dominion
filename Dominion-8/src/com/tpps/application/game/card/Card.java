@@ -1,12 +1,19 @@
 package com.tpps.application.game.card;
 
+import java.awt.Image;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+import javax.swing.JFrame;
+
+import com.tpps.application.game.DominionController;
+import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
+import com.tpps.ui.RelativeGeom2D;
 
 public class Card extends GameObject {
 
@@ -18,6 +25,22 @@ public class Card extends GameObject {
 	private final String id;
 	private static int classID = 0;
 
+	public Card(LinkedHashMap<CardAction, Integer> actions, LinkedList<CardType> types, String name, int cost,
+			double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int _layer,
+			Image sourceImage, GraphicFramework _parent){ 
+		super (relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer,
+				sourceImage, _parent);
+		
+		this.name = name;
+		this.actions = actions;
+		this.cost = cost;
+		this.types = types;
+		this.id = this.name + classID++;
+	}
+	
+	
+	
+	
 	public Card(LinkedHashMap<CardAction, Integer> actions, LinkedList<CardType> types, String name, int cost,
 			GraphicFramework _parent) {
 		super(_parent);
@@ -38,6 +61,11 @@ public class Card extends GameObject {
 		this.id = this.name + classID++;
 		System.out.println(id);
 	}
+	
+	// clone constructor
+	//	private GraphicFramework gf_test = new GraphicFramework(new JFrame());
+		
+	// equals
 
 	public LinkedHashMap<CardAction, Integer> getActions() {
 		return actions;
@@ -61,20 +89,27 @@ public class Card extends GameObject {
 
 	@Override
 	public Card clone() {
-//		remember to add parameter this.getParent
-		return new Card(this.getActions(), this.getTypes(), this.getName(), this.getCost());
+		return new Card(this.getActions(), this.getTypes(), this.getName(), this.getCost()/*, this.getParent()*/);
 	}
 
 	@Override
 	public void onMouseEnter() {
+		System.out.println("entered");
 	}
 
 	@Override
 	public void onMouseExit() {
+		try {
+			DominionController.getInstance().getGameClient().sendMessage(new PacketPlayCard(this.id));
+		} catch (IOException e) {
+		
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void onMouseClick() {
+		System.out.println("hier");
 	}
 
 	@Override
@@ -107,11 +142,11 @@ public class Card extends GameObject {
 		}
 		return sBuf.append(">\nCost: " + this.cost).toString();
 	}
-	
+
 	/**
 	 * sets the classId to zero
 	 */
-	public static void resetClassID(){
+	public static void resetClassID() {
 		Card.classID = 0;
 	}
 
@@ -122,9 +157,13 @@ public class Card extends GameObject {
 		LinkedList<CardAction> act = CollectionsUtil.linkedList(new CardAction[] { CardAction.ADD_ACTION_TO_PLAYER,
 				CardAction.ADD_PURCHASE, CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, CardAction.DRAW_CARD });
 		LinkedList<Integer> ints = CollectionsUtil.linkedList(new Integer[] { 1, 2, 4, 3 });
-		LinkedList<CardType> type = CollectionsUtil.linkedList(new CardType[] { CardType.ACTION });
+		LinkedList<CardType> type = CollectionsUtil.linkedList(CardType.ACTION);
+		
+		JFrame frame = new JFrame();
+		GraphicFramework gf = new GraphicFramework(frame);
+		gf.setSize(1,1);
 
-		Card card = new Card(CollectionsUtil.linkedHashMapAction(act, ints), type, "Market", 5);
+		Card card = new Card(CollectionsUtil.linkedHashMapAction(act, ints), type, "Market", 5, gf);
 		System.out.println(card.toString());
 	}
 }

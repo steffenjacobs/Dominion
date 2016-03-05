@@ -95,16 +95,15 @@ public abstract class GameObject implements Cloneable, Serializable {
 	/**
 	 * constructor for all objects that are not visible instantaneous
 	 * 
-	 * @author nwipfler - Nicolas Wipfler
 	 * @author Steffen Jacobs
 	 */
 	public GameObject(GraphicFramework _parent) {
-		this.location = new RelativeGeom2D(0, 0);
-		this.dimension = new RelativeGeom2D(0, 0);
-		this.originalImage = new BufferedImage(0, 0, BufferedImage.TYPE_INT_ARGB);
+		this.location = new RelativeGeom2D(1, 1);
+		this.dimension = new RelativeGeom2D(1, 1);
 		this.parent = _parent;
 		this.id = GameObject.objectCounter++;
-		this.resizeObject(0, 0);
+		this.resizeObject(_parent.getWidth(), _parent.getHeight());
+		this.originalImage = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
 		this.visible = false;
 	}
 	

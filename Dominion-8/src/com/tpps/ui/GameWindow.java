@@ -10,6 +10,10 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardAction;
+import com.tpps.application.game.card.CardType;
+import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.components.GFButton;
 
@@ -52,9 +56,15 @@ public class GameWindow extends JFrame {
 
 		framework.addComponent(new TestButton(.3, .3, .4, .4, WIDTH, HEIGHT, 6, im, framework, "first"));
 		framework.addComponent(new TestButton(.2, .2, .4, .4, WIDTH, HEIGHT, 4, im, framework, "second"));
+		
 		GFButton gfb = new TestButton(.1, .1, .4, .4, WIDTH, HEIGHT, 5, im, framework, "third");
-
+		
+		
 		framework.addComponent(gfb);
+		framework.addComponent(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.ADD_ACTION_TO_PLAYER), CollectionsUtil.linkedList(2)), 
+				CollectionsUtil.linkedList(CardType.ACTION), "Copper", 4, 0.8, 0.9, 0.9, 0.9, 1, ImageIO.read(ClassLoader
+				.getSystemResource("resources/img/mainMenu/Dominion.jpg")), this.framework));
+		
 
 		new Thread(() -> {
 			try {

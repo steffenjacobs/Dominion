@@ -12,6 +12,7 @@ import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketReconnect;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
+import com.tpps.application.network.gameSession.packets.PacketUpdateValues;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
@@ -39,15 +40,15 @@ public class ServerGamePacketHandler extends PacketHandler {
 				int clientId = GameServer.getCLIENT_ID();
 				addPlayerAndCheckPlayerCount(port, clientId);
 				break;
-			case RECONECT:
-				updatePortByPlayer(port, packet);
+			case RECONNECT:
+				updatePortOfPlayer(port, packet);
 				break;
 			case CARD_PLAYED:
-				server.getGameController().getActivePlayer().doAction(((PacketPlayCard) packet).getCardID());
+				server.getGameController().getActivePlayer().doAction(((PacketPlayCard)packet).getCardID());
 				System.out.println("packet received from Client of type " + packet.getType() + " card id "
-						+ ((PacketPlayCard) packet).getCardID());
+						+ ((PacketPlayCard)packet).getCardID());
 
-				server.sendMessage(port, new PacketPlayCard("Chappel2", "anna"));
+				server.sendMessage(port, new PacketPlayCard(new PacketUpdateValues(actions, buys, coins));
 
 				break;
 			case END_TURN:
@@ -86,7 +87,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 	}
 
-	private void updatePortByPlayer(int port, Packet packet) {
+	private void updatePortOfPlayer(int port, Packet packet) {
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
 			Player player = server.getGameController().getPlayers().get(i);
 			if (player.getClientId() == ((PacketReconnect) packet).getClientId()) {
