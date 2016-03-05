@@ -7,6 +7,11 @@ public class GameConstant {
 	
 	public static int HUMAN_PLAYERS = 4; // add setter
 	
+	// s. Deck: init()
+	// CardAction.IS_VICTORY ; GameConstant.ESTATE_VALUE ; CardType.ESTATE ; "Estate"
+	// redundant, create Constructor which only takes GameConstant.'CARDNAME' (e.g. GameConstant.COPPER) 
+	// and add switch case to GameConstant class to compute the outcome/created card
+	
 	/**
 	 * INIT VALUES
 	 * */

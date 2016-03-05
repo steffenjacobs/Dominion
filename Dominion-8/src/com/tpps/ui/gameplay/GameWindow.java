@@ -33,6 +33,7 @@ public class GameWindow extends JFrame {
 	private BufferedImage[] actionCards;
 	private GraphicFramework framework;
 	private Card[] gfcAction;
+	private LinkedList<Card> estate,coins,actions;
 
 	public static GameWindow getInstance() {
 		return instance;
@@ -69,8 +70,10 @@ public class GameWindow extends JFrame {
 		framework.addComponent(closeButton);
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.33, 0.01, 0.38, 0.38, 2, tableImage, framework));
-//		basicCardsImages();
-		tableActionCards();
+		
+
+		
+//		tableActionCards();
 		this.revalidate();
 		this.repaint();
 	}
@@ -86,137 +89,13 @@ public class GameWindow extends JFrame {
 
 	}
 
-	private void basicCardsImages() {
-
-		// double shift = 0.315;
-		// double shiftBottom = 0.315;
-		// int k =3;
-		// for (int i = 0; i < actionCards.length; i++) {
-		// int random =(int) (Math.random()*25+1);
-		// actionCards[i] = loadingImage(actionCards[i],
-		// "resources/img/gameObjects/baseCards/"+random+".jpg");
-		// if(i <5){
-		// gfcAction[i] = new GFCards(shift+=0.06,0.02, 0.05, 0.15,k++ ,
-		// actionCards[i], framework);
-		// }
-		// else{
-		// gfcAction[i] = new GFCards(shiftBottom+=0.06,0.2, 0.05, 0.15, k++,
-		// actionCards[i], framework);
-		// }
-		// switch (random) {
-		// case 1:
-		// gfcAction[i].setCardName(BaseCardAction.Adventurer.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 2:
-		// gfcAction[i].setCardName(BaseCardAction.Bureaucrat.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 3:
-		// gfcAction[i].setCardName(BaseCardAction.Cellar.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 4:
-		// gfcAction[i].setCardName(BaseCardAction.Chancellor.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 5:
-		// gfcAction[i].setCardName(BaseCardAction.Chapel.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 6:
-		// gfcAction[i].setCardName(BaseCardAction.CouncilRoom.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 7:
-		// gfcAction[i].setCardName(BaseCardAction.Feast.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 8:
-		// gfcAction[i].setCardName(BaseCardAction.Festival.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 9:
-		// gfcAction[i].setCardName(BaseCardAction.Gardens.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 10:
-		// gfcAction[i].setCardName(BaseCardAction.Laboratory.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 11:
-		// gfcAction[i].setCardName(BaseCardAction.Library.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 12:
-		// gfcAction[i].setCardName(BaseCardAction.Market.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 13:
-		// gfcAction[i].setCardName(BaseCardAction.Militia.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 14:
-		// gfcAction[i].setCardName(BaseCardAction.Mine.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 15:
-		// gfcAction[i].setCardName(BaseCardAction.Moat.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 16:
-		// gfcAction[i].setCardName(BaseCardAction.Moneylender.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 17:
-		// gfcAction[i].setCardName(BaseCardAction.Remodel.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 18:
-		// gfcAction[i].setCardName(BaseCardAction.Smithy.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 19:
-		// gfcAction[i].setCardName(BaseCardAction.Spy.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 20:
-		// gfcAction[i].setCardName(BaseCardAction.Thief.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 21:
-		// gfcAction[i].setCardName(BaseCardAction.ThroneRoom.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 22:
-		// gfcAction[i].setCardName(BaseCardAction.Village.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 23:
-		// gfcAction[i].setCardName(BaseCardAction.Witch.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 24:
-		// gfcAction[i].setCardName(BaseCardAction.Woodcutter.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		// case 25:
-		// gfcAction[i].setCardName(BaseCardAction.Workshop.name());
-		// framework.addComponent(gfcAction[i]);
-		// break;
-		//
-		// }
-		//
-		// }
-	}
-
-	private void tableActionCards() {
+	public void tableActionCards(LinkedList<Card>action) {
 		double shift = 0.315;
 		double shiftBottom = 0.315;
 		int k = 3;
 		for (int i = 0; i < actionCards.length; i++) {
 
-			actionCards[i] = loadingImage(actionCards[i], "resources/img/gameObjects/baseCards/Copper.jpg");
+			loadingImage(actionCards[i], "resources/img/gameObjects/baseCards/Copper.jpg");
 			
 			if(i<5){
 			gfcAction[i] = new Card(
@@ -233,6 +112,14 @@ public class GameWindow extends JFrame {
 			framework.addComponent(gfcAction[i]);
 			}
 		}
+	}
+	
+	public void coinCards(LinkedList<Card>coins){
+		
+	}
+	
+	public void estateCards(LinkedList<Card>estate){
+		
 	}
 
 	private class ButtonClass extends GFButton {
