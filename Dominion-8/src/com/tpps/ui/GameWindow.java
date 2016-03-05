@@ -11,6 +11,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardAction;
+import com.tpps.application.game.card.CardType;
+import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.components.GFButton;
 
@@ -43,39 +46,46 @@ public class GameWindow extends JFrame {
 		gf.setSize(100, 100);
 		gf.addComponent(new Card(null, null, "Lachs", 100,gf));
 		frame.add(gf);
-//		final int WIDTH = 1280, HEIGHT = 720;
-//
-//		c = this.getContentPane();
-//		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-//		this.setSize(WIDTH, HEIGHT);
-//		this.setMinimumSize(new Dimension(1280, 720));
-//		this.setVisible(true);
-//		framework = new GraphicFramework(this);
-//		this.add(framework);
-//
-//		BufferedImage im = ImageIO
-//				.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
-//		im = GraphicsUtil.resize(im, (int) (im.getWidth() * .4), (int) (im.getHeight() * 0.8));
-//
-//		framework.addComponent(new TestButton(.3, .3, .4, .4, WIDTH, HEIGHT, 6, im, framework, "first"));
-//		framework.addComponent(new TestButton(.2, .2, .4, .4, WIDTH, HEIGHT, 4, im, framework, "second"));
-//		GFButton gfb = new TestButton(.1, .1, .4, .4, WIDTH, HEIGHT, 5, im, framework, "third");
-//
-//		framework.addComponent(gfb);
-//
-//		new Thread(() -> {
-//			try {
-//				Thread.sleep(5000);
-//				framework.moveObject(gfb, new RelativeGeom2D(.4, .4));
-//				Thread.sleep(5000);
-//				framework.removeComponent(gfb);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}).start();
-//
-//		this.revalidate();
-//		this.repaint();
+		final int WIDTH = 1280, HEIGHT = 720;
+
+		c = this.getContentPane();
+		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setSize(WIDTH, HEIGHT);
+		this.setMinimumSize(new Dimension(1280, 720));
+		this.setVisible(true);
+		framework = new GraphicFramework(this);
+		this.add(framework);
+
+		BufferedImage im = ImageIO
+				.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
+		im = GraphicsUtil.resize(im, (int) (im.getWidth() * .4), (int) (im.getHeight() * 0.8));
+
+		framework.addComponent(new TestButton(.3, .3, .4, .4, WIDTH, HEIGHT, 6, im, framework, "first"));
+		framework.addComponent(new TestButton(.2, .2, .4, .4, WIDTH, HEIGHT, 4, im, framework, "second"));
+		
+		GFButton gfb = new TestButton(.1, .1, .4, .4, WIDTH, HEIGHT, 5, im, framework, "third");
+		
+		
+		framework.addComponent(gfb);
+		Card.resetClassID();
+		framework.addComponent(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.ADD_ACTION_TO_PLAYER), CollectionsUtil.linkedList(2)), 
+				CollectionsUtil.linkedList(CardType.ACTION), "Copper", 4, 0.8, 0.9, 0.9, 0.9, 1, ImageIO.read(ClassLoader
+				.getSystemResource("resources/img/mainMenu/Dominion.jpg")), this.framework));
+		
+
+		new Thread(() -> {
+			try {
+				Thread.sleep(5000);
+				framework.moveObject(gfb, new RelativeGeom2D(.4, .4));
+				Thread.sleep(5000);
+				framework.removeComponent(gfb);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
+
+		this.revalidate();
+		this.repaint();
 	}
 
 	private class TestButton extends GFButton {

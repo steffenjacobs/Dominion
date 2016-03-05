@@ -1,5 +1,7 @@
 package com.tpps.application.network.gameSession.packets;
 
+import java.util.LinkedList;
+
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.core.packet.PacketType;
 
@@ -9,9 +11,10 @@ import com.tpps.application.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketRegistratePlayerByServer extends Packet {
+public class PacketSendHandCards extends Packet {
 
-	private static final long serialVersionUID = -3390002980740295573L;
+	private static final long serialVersionUID = -3848200270426455963L;
+	LinkedList<String> cardIds;
 
 	/**
 	 * initializes the Packet with the id of the card which had been played and
@@ -19,8 +22,9 @@ public class PacketRegistratePlayerByServer extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketRegistratePlayerByServer() {
-		super(PacketType.REGISTRATE_PLAYER_BY_SERVER);			
+	public PacketSendHandCards(LinkedList<String> cardIds) {
+		super(PacketType.SEND_HAND_CARDS);
+		this.cardIds = cardIds;
 	}
 
 	/**

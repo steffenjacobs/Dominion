@@ -6,25 +6,25 @@ import com.tpps.application.network.core.packet.PacketType;
 public class PacketSendChatAll extends Packet{
 	
 	private static final long serialVersionUID = 1L;
-	private String chatmessage;
+	private final String chatmessage;
+	private final String username;
 	
-	public PacketSendChatAll(String chatmessage) {
+	public PacketSendChatAll(String username, String chatmessage) {
 		super(PacketType.SEND_CHAT_ALL);
 		this.chatmessage  = chatmessage;
-	}
-	
+		this.username = username;
+	}	
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Sender: " + getUsername() + " Message to all: " + getChatmessage();
 	}
 	
 	public String getChatmessage() {
 		return chatmessage;
 	}
-	public void setChatmessage(String chatmessage) {
-		this.chatmessage = chatmessage;
+	
+	public String getUsername() {
+		return username;
 	}
-
 }

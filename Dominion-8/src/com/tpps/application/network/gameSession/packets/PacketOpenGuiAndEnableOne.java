@@ -9,9 +9,10 @@ import com.tpps.application.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketClientShouldDisconect extends Packet {
+public class PacketOpenGuiAndEnableOne extends Packet {
 
-	private static final long serialVersionUID = -2463725032477442146L;
+	private static final long serialVersionUID = 545503397600298278L;
+	private final int clientId;
 
 	/**
 	 * 
@@ -19,9 +20,21 @@ public class PacketClientShouldDisconect extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketClientShouldDisconect() {
-		super(PacketType.CLIENT_SHOULD_DISCONECT);
+	public PacketOpenGuiAndEnableOne(int clientId) {
+		super(PacketType.OPEN_GUI);
+		this.clientId = clientId;
 	}
+
+	
+	/**
+	 * 
+	 * @return the clientId
+	 */
+	public int getClientId() {
+		return clientId;
+	}
+
+
 
 	/**
 	 * @return a readable String
@@ -29,6 +42,6 @@ public class PacketClientShouldDisconect extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName();
+		return this.getClass().getSimpleName() + "clientId: " + this.clientId;
 	}
 }

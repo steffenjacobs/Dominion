@@ -1,8 +1,13 @@
 package com.tpps.application.game;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.UUID;
 
 import com.tpps.application.network.clientSession.client.SessionClient;
+import com.tpps.application.network.game.ClientGamePacketHandler;
+import com.tpps.application.network.game.GameClient;
+import com.tpps.ui.GameWindow;
 import com.tpps.ui.loginscreen.LoginGUIController;
 
 /**
@@ -17,6 +22,7 @@ public final class DominionController {
 	private String username, email;
 	private UUID sessionID;
 	private SessionClient sessionClient;
+	private GameClient gameClient;
 
 	/** main entry point for client application */
 	public static void main(String[] stuff) {
@@ -25,7 +31,13 @@ public final class DominionController {
 
 	/* constructor */
 	public DominionController() {
-		new LoginGUIController();
+//		new LoginGUIController();
+		try {
+			gameClient = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());
+		} catch (IOException e) {		
+			e.printStackTrace();
+		}
+		
 	}
 
 	/** sets the session-client instance and starts keep-alive */
@@ -53,6 +65,15 @@ public final class DominionController {
 	/** @return the users username */
 	public String getUsername() {
 		return username;
+	}
+	
+	
+	/**
+	 * 
+	 * @return the GameClientObject
+	 */
+	public GameClient getGameClient() {
+		return gameClient;
 	}
 
 	/** @return the users email-address */

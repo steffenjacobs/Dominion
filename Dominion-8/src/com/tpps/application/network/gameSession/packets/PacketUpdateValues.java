@@ -9,9 +9,10 @@ import com.tpps.application.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketRegistratePlayerByServer extends Packet {
+public class PacketUpdateValues extends Packet {
 
-	private static final long serialVersionUID = -3390002980740295573L;
+	private static final long serialVersionUID = 4833326642942479357L;
+	private int actions, buys, coins;
 
 	/**
 	 * initializes the Packet with the id of the card which had been played and
@@ -19,8 +20,11 @@ public class PacketRegistratePlayerByServer extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketRegistratePlayerByServer() {
-		super(PacketType.REGISTRATE_PLAYER_BY_SERVER);			
+	public PacketUpdateValues(int actions, int buys, int coins) {
+		super(PacketType.UPDATE_VALUES);
+		this.actions = actions;
+		this.buys = buys;
+		this.coins = coins;
 	}
 
 	/**
@@ -29,6 +33,6 @@ public class PacketRegistratePlayerByServer extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName();
+		return this.getClass().getSimpleName() + "coins: " + coins + "buys: " + buys + "actions: " + actions;
 	}
 }

@@ -9,9 +9,10 @@ import com.tpps.application.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketRegistratePlayerByServer extends Packet {
+public class PacketEnableMoneyCardsDisableActionCards extends Packet {
 
-	private static final long serialVersionUID = -3390002980740295573L;
+	private static final long serialVersionUID = 8869904290942834312L;
+	
 
 	/**
 	 * initializes the Packet with the id of the card which had been played and
@@ -19,8 +20,9 @@ public class PacketRegistratePlayerByServer extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketRegistratePlayerByServer() {
-		super(PacketType.REGISTRATE_PLAYER_BY_SERVER);			
+	public PacketEnableMoneyCardsDisableActionCards() {
+		super(PacketType.ENABLE_MONEY_CARDS_DISABLE_ACTION_CARDS);
+		
 	}
 
 	/**
