@@ -15,9 +15,9 @@ import com.tpps.technicalServices.util.GameConstant;
  */
 public class Deck {
 
-	private LinkedList<Card> drawPile;
-	private LinkedList<Card> discardPile;
-	private LinkedList<Card> cardHand;
+	private LinkedList<Card> drawPile; // Nachziehstapel
+	private LinkedList<Card> discardPile; // Ablagestapel
+	private LinkedList<Card> cardHand; // Handkarten
 
 	protected Deck() {
 		this.drawPile = new LinkedList<Card>();
@@ -163,36 +163,33 @@ public class Deck {
 	}
 	
 	private void shuffleIfLessThan(int drawAmount) {
-		if (drawAmount < (this.drawPile.size() + this.discardPile.size())) {
-			if (this.drawPile.size() < drawAmount) {
-				int remaining = drawAmount - this.drawPile.size();
-				draw(this.drawPile.size());
-				shuffle();
-				draw(remaining);
-			} else {
-				draw(drawAmount);
-			}	
-		} else {
+		if (drawAmount < (this.drawPile.size() + this.discardPile.size())) 
+			if (this.drawPile.size() < drawAmount) 
+				shuffle();		
+		else
 			shuffle();
-			draw(this.drawPile.size());
-		}
 	}
 	
 	private void shuffleDrawPile() {
 		Collections.shuffle(this.drawPile);
 	}
 	
+	/**
+	 * if the drawPile is not empty, the method adds one card from drawPile to cardHand and removes
+	 * this card from drawPile
+	 */
 	public void draw() {
-		this.cardHand.addLast(this.drawPile.removeLast());
+		if (!this.drawPile.isEmpty())
+			this.cardHand.addLast(this.drawPile.removeLast());
 	}
 	
+	
 	/**
-	 * adds 1 card from the drawPile to the cardHand of the player and removes
-	 * this card from the drawPile. Logic of comparism should be added to
-	 * shuffle() method
+	 * calls shuffleIfLessThan(amount) so there if the drawPile is not empty, the method adds 'amount' cards from drawPile to cardHand and removes
+	 * this card from drawPile
 	 */
 	private void draw(int amount) {
-//		this.shuffleIfLessThan(amount);
+		this.shuffleIfLessThan(amount);
 		for (int i = 0; i < amount; i++) {
 			this.draw();
 		}
