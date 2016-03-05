@@ -8,7 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-
+import java.awt.image.DataBuffer;
 
 /**
  * provides some useful methods for manipulating graphic objects
@@ -18,7 +18,8 @@ import java.awt.image.BufferedImage;
 public final class GraphicsUtil {
 
 	/**
-	 * @author Steffen Jacobs, Johannes Huhn sets the alpha-value for an image synchronously
+	 * @author Steffen Jacobs, Johannes Huhn sets the alpha-value for an image
+	 *         synchronously
 	 * @param transparency
 	 *            new Alpha-Value for desired image
 	 * @param img
@@ -103,5 +104,56 @@ public final class GraphicsUtil {
 		result.createGraphics();
 		result.getGraphics().drawImage(buffImg, 0, 0, newWidth, newHeight, null);
 		return result;
+	}
+
+	/**
+	 * compares to image based on their pixel values (RGBA)
+	 * 
+	 * @param image1
+	 *            first image to compare
+	 * @param image2
+	 *            second image to compare
+	 * @param debug
+	 *            whether to output debug-messages
+	 * @return whether all RGBA-values for all pixel were identical in both
+	 *         images
+	 * @author Steffen Jacobs
+	 */
+	public static boolean compareImages(BufferedImage image1, BufferedImage image2, boolean debug) {
+
+		DataBuffer buff1 = image1.getAlphaRaster().getDataBuffer();
+		DataBuffer buff2 = image2.getAlphaRaster().getDataBuffer();
+
+		if (buff1.getSize() != buff2.getSize())
+			return false;
+
+		long now = System.currentTimeMillis();
+		for (int cnt = 0; cnt < buff1.getSize(); cnt++) {
+			if (buff1.getElem(cnt) != buff2.getElem(cnt)) {
+				if (debug)
+					System.err.println("Pixels do not match @ " + cnt);
+				return false;
+			}
+		}
+		if (debug)
+			System.out.println(
+					"time to compare " + buff1.getSize() + " values: " + (System.currentTimeMillis() - now) + "ms");
+
+		return true;
+	}
+
+	/**
+	 * compares to image based on their pixel values (RGBA)
+	 * 
+	 * @param image1
+	 *            first image to compare
+	 * @param image2
+	 *            second image to compare
+	 * @return wheter all RGBA-values for all pixel were identical in both
+	 *         images
+	 * @author Steffen Jacobs
+	 */
+	public static boolean compareImages(BufferedImage image1, BufferedImage image2) {
+		return compareImages(image1, image2, false);
 	}
 }
