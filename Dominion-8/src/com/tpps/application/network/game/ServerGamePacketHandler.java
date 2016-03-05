@@ -9,6 +9,7 @@ import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
+import com.tpps.application.network.gameSession.packets.PacketOpenGui;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.application.network.gameSession.packets.PacketReconnect;
@@ -56,17 +57,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 				
 //				server.sendMessage(port, new PacketSendHandCards(activePlayer.getDeck().getCardHandIds()));
 				break;
-			case PLAY_TREASURES:
-				server.sendMessage(port, new PacketPlayTreasures());
-				break;
+//			case PLAY_TREASURES:
+//				server.sendMessage(port, new PacketPlayTreasures());
+//				break;
 			case END_TURN:
 //				alle Karten ablegen
-//				this.server.getGameController().getActivePlayer().getDeck().
+				this.server.getGameController().getActivePlayer().getDeck().refreshCardHand();
 //				sollen hier auch gleich die neuen karten genommen werden
 				nextActivePlayer();
-//				neuer spieler nimmt Karten auf
-				
-
 				break;
 			default:
 				System.out.println("unknown packed type");
@@ -119,8 +117,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			server.getGameController().addPlayer(new Player(clientId, port));
 			server.sendMessage(port, new PacketSendClientId(clientId));
 			if (server.getGameController().getPlayers().size() == 4) {
-				server.broadcastMessage(
-						new PacketEnableDisable(server.getGameController().getActivePlayer().getClientId()));
+				server.broadcastMessage(new PacketOpenGui(server.getGameController().getActivePlayer().getClientId()));
+				server.getGameController().startGame();
+				System.out.println("gameStarted");
 			}
 			System.out.println(
 					"registrate one more client to server with id: " + clientId + "listening on port: " + port);
