@@ -98,6 +98,13 @@ public class Card extends GameObject {
 		return id;
 	}
 
+	/**
+	 * sets the classID to zero
+	 */
+	public static void resetClassID() {
+		Card.classID = 0;
+	}
+	
 	@Override
 	public Card clone() {
 		return new Card(this.getActions(), this.getTypes(), this.getName(),
@@ -137,6 +144,7 @@ public class Card extends GameObject {
 	/**
 	 * @override toString()
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sBuf = new StringBuffer();
 		sBuf.append("Card: " + "'" + this.name + "'\nActions: <");
@@ -156,13 +164,6 @@ public class Card extends GameObject {
 				sBuf.append(" ");
 		}
 		return sBuf.append(">\nCost: " + this.cost).toString();
-	}
-
-	/**
-	 * sets the classId to zero
-	 */
-	public static void resetClassID() {
-		Card.classID = 0;
 	}
 
 	/**
