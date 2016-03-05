@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.game.ClientGamePacketHandler;
 import com.tpps.application.network.game.GameClient;
+import com.tpps.ui.GameWindow;
 import com.tpps.ui.loginscreen.LoginGUIController;
 
 /**
@@ -30,12 +31,13 @@ public final class DominionController {
 
 	/* constructor */
 	public DominionController() {
-		new LoginGUIController();
+//		new LoginGUIController();
 		try {
 			gameClient = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}
+		
 	}
 
 	/** sets the session-client instance and starts keep-alive */

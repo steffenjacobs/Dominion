@@ -1,5 +1,6 @@
 package com.tpps.application.game;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -76,16 +77,8 @@ public class GameController {
 	}
 
 	/** CONTROLLER LOGIC; not sure whether the loops are necessary */
-	public void startGame() {
-		Iterator<Player> it = players.iterator();
-		while (gameNotFinished) {
-			while (it.hasNext()) {
-				if (gameFinished()) {
-					break;
-				}
-				turn(it.next());
-			}
-		}
+	public void startGame() {	
+		System.out.println(Arrays.toString(this.activePlayer.getDeck().getCardHand().toArray()));
 	}
 
 	private void turn(Player player) {

@@ -61,6 +61,7 @@ public class GameWindow extends JFrame {
 		
 		
 		framework.addComponent(gfb);
+		Card.resetClassID();
 		framework.addComponent(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.ADD_ACTION_TO_PLAYER), CollectionsUtil.linkedList(2)), 
 				CollectionsUtil.linkedList(CardType.ACTION), "Copper", 4, 0.8, 0.9, 0.9, 0.9, 1, ImageIO.read(ClassLoader
 				.getSystemResource("resources/img/mainMenu/Dominion.jpg")), this.framework));
