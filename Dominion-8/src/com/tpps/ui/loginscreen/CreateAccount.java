@@ -38,7 +38,7 @@ public class CreateAccount extends JFrame {
 	private ImageIcon loading;
 	private BufferedImage background;
 	private JButton createAccount;
-	private JTextField email, describing, username;
+	private JTextField email, username;
 	private JPasswordField passwordbox, passwordboxRetype;
 	private JLabel[] description;
 	private JLabel header;
@@ -78,7 +78,6 @@ public class CreateAccount extends JFrame {
 		this.createpanel4();
 		this.createpanel5();
 		this.createpanel6();
-		this.createpanel7();
 		this.revalidate();
 	}
 
@@ -92,15 +91,15 @@ public class CreateAccount extends JFrame {
 		all = new JLabel(loading);
 		all.setLayout(new GridLayout(7, 1, 0, 30));
 		this.setSize(width / 4, height / 2);
-		this.setLocation((int) (width * 0.65), height / 4);
+		this.setLocationRelativeTo(null);
 		this.setTitle("Create Account");
 		this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		smallfont = new Font("Calibri", Font.BOLD, 19);
 
-		description = new JLabel[5];
-		panels = new JPanel[7];
+		description = new JLabel[4];
+		panels = new JPanel[6];
 		for (int i = 0; i < panels.length; i++) {
 			panels[i] = new JPanel(new FlowLayout());
 		}
@@ -248,47 +247,47 @@ public class CreateAccount extends JFrame {
 		panels[4].revalidate();
 	}
 	
-	/**
-	 * User-Description panel. 
-	 */
-
-	private void createpanel6() {
-		panels[5].setLayout(new GridLayout(1, 2));
-
-		description[4] = new JLabel("Description: ");
-		description[4].setFont(smallfont);
-		description[4].setHorizontalAlignment(JLabel.CENTER);
-		describing = new JTextField();
-
-		describing.setOpaque(false);
-		describing.setFont(smallfont);
-		panels[5].add(description[4]);
-		panels[5].add(describing);
-		panels[5].setOpaque(false);
-		// panels[1].setBorder(BorderFactory.createLineBorder(Color.RED, 4));
-		all.add(panels[5]);
-		panels[5].revalidate();
-	}
+//	/**
+//	 * User-Description panel. 
+//	 */
+//
+//	private void createpanel6() {
+//		panels[5].setLayout(new GridLayout(1, 2));
+//
+//		description[4] = new JLabel("Description: ");
+//		description[4].setFont(smallfont);
+//		description[4].setHorizontalAlignment(JLabel.CENTER);
+//		describing = new JTextField();
+//
+//		describing.setOpaque(false);
+//		describing.setFont(smallfont);
+//		panels[5].add(description[4]);
+//		panels[5].add(describing);
+//		panels[5].setOpaque(false);
+//		// panels[1].setBorder(BorderFactory.createLineBorder(Color.RED, 4));
+//		all.add(panels[5]);
+//		panels[5].revalidate();
+//	}
 	
 	/**
 	 * Create Account button with specific listener.
 	 */
 
-	private void createpanel7() {
-		panels[6].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
+	private void createpanel6() {
+		panels[5].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
 		// panels[3].setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 
 		createAccount = new JButton("Create New Account");
 		createAccount.setFont(customFont.deriveFont(15f));
 		createAccount.setPreferredSize(new Dimension(180, 30));
-		panels[6].add(createAccount);
-		panels[6].setOpaque(false);
-		all.add(panels[6]);
+		panels[5].add(createAccount);
+		panels[5].setOpaque(false);
+		all.add(panels[5]);
 		c.add(all);
 
 		createAccount.addActionListener(new CreateAccountListener(this, guicontroller));
 
-		panels[6].revalidate();
+		panels[5].revalidate();
 	}
 	
 	/**
@@ -298,15 +297,6 @@ public class CreateAccount extends JFrame {
 
 	public JTextField getEmail() {
 		return email;
-	}
-
-	/**
-	 * Description getter
-	 * @return describing
-	 */
-	
-	public JTextField getDescribing() {
-		return describing;
 	}
 	
 	/**

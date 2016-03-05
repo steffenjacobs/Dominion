@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import com.google.common.base.CharMatcher;
 
 /**
  * 
@@ -14,22 +15,26 @@ import javax.swing.JOptionPane;
 public class CreateAccountListener implements ActionListener {
 	CreateAccount ca;
 	LoginGUIController guicontroller;
+
 	/**
 	 * simple constructor initializing a parameter
+	 * 
 	 * @param createAccount
 	 */
-			
+
 	public CreateAccountListener(CreateAccount createAccount, LoginGUIController guicontroller) {
 		this.ca = createAccount;
 		this.guicontroller = guicontroller;
 	}
-	
+
 	/**
 	 * 
-	 * listener method, checking validity of password,email and user-name. Creating new Account as well. 
+	 * listener method, checking validity of password,email and user-name.
+	 * Creating new Account as well.
+	 * 
 	 * @param e
 	 */
-	
+
 	public void actionPerformed(ActionEvent e) {
 
 		if (!(String.valueOf(ca.getPasswordbox().getPassword())
@@ -49,8 +54,14 @@ public class CreateAccountListener implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Email invalid. Please recheck");
 			return;
 		}
-		if (ca.getDescribing().getText().length() > 40) {
-			JOptionPane.showMessageDialog(null, "Your Description is too long");
+		// if (ca.getDescribing().getText().length() > 40) {
+		// JOptionPane.showMessageDialog(null, "Your Description is too long");
+		// return;
+		// }
+
+		if (ca.getUsername().getText().equals("cmd") || ca.getUsername().getText().equals("command")
+				|| ca.getUsername().getText().equals("help") || CharMatcher.WHITESPACE.matchesAnyOf(ca.getUsername().getText())) {
+			JOptionPane.showMessageDialog(null, "Username not allowed");
 			return;
 		}
 
@@ -60,12 +71,16 @@ public class CreateAccountListener implements ActionListener {
 		}
 
 		// --------------------------------------
-		guicontroller.createAccountWithServer(ca.getUsername().getText(), String.valueOf(ca.getPasswordbox().getPassword()), ca.getEmail().getText());
-		//new LoginClient().handleAccountCreation(ca.getUsername().getText(), String.valueOf(ca.getPasswordbox().getPassword()),ca.getEmail().getText());
-		// --------------------------------------
+		guicontroller.createAccountWithServer(ca.getUsername().getText(),
+				String.valueOf(ca.getPasswordbox().getPassword()), ca.getEmail().getText());
+				// new
+				// LoginClient().handleAccountCreation(ca.getUsername().getText(),
+				// String.valueOf(ca.getPasswordbox().getPassword()),ca.getEmail().getText());
+				// --------------------------------------
 
-//		new LogInGUI(ca.getUsername().getText(), ca.getPasswordbox().getPassword());
-//		ca.dispose();
+		// new LogInGUI(ca.getUsername().getText(),
+		// ca.getPasswordbox().getPassword());
+		// ca.dispose();
 	}
 
 }
