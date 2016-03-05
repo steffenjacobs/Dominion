@@ -44,9 +44,9 @@ public class RelativeGeom2D implements Cloneable {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public RelativeGeom2D(double locX, double locY) {
-		this.x = locX;
-		this.y = locY;
+	public RelativeGeom2D(double _x, double _y) {
+		this.x = _x;
+		this.y = _y;
 	}
 
 	/**

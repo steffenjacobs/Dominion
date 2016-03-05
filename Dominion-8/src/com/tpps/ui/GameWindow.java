@@ -37,39 +37,45 @@ public class GameWindow extends JFrame {
 	 * @author Steffen Jacobs
 	 */
 	public GameWindow() throws IOException {
-		final int WIDTH = 1280, HEIGHT = 720;
-
-		c = this.getContentPane();
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setSize(WIDTH, HEIGHT);
-		this.setMinimumSize(new Dimension(1280, 720));
-		this.setVisible(true);
-		framework = new GraphicFramework(this);
-		this.add(framework);
-
-		BufferedImage im = ImageIO
-				.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
-		im = GraphicsUtil.resize(im, (int) (im.getWidth() * .4), (int) (im.getHeight() * 0.8));
-
-		framework.addComponent(new TestButton(.3, .3, .4, .4, WIDTH, HEIGHT, 6, im, framework, "first"));
-		framework.addComponent(new TestButton(.2, .2, .4, .4, WIDTH, HEIGHT, 4, im, framework, "second"));
-		GFButton gfb = new TestButton(.1, .1, .4, .4, WIDTH, HEIGHT, 5, im, framework, "third");
-
-		framework.addComponent(gfb);
-
-		new Thread(() -> {
-			try {
-				Thread.sleep(5000);
-				framework.moveObject(gfb, new RelativeGeom2D(.4, .4));
-				Thread.sleep(5000);
-				framework.removeComponent(gfb);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}).start();
-
-		this.revalidate();
-		this.repaint();
+		JFrame frame = new JFrame();
+		frame.setSize(100, 100);
+		GraphicFramework gf = new GraphicFramework(frame);
+		gf.setSize(100, 100);
+		gf.addComponent(new Card(null, null, "Lachs", 100,gf));
+		frame.add(gf);
+//		final int WIDTH = 1280, HEIGHT = 720;
+//
+//		c = this.getContentPane();
+//		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+//		this.setSize(WIDTH, HEIGHT);
+//		this.setMinimumSize(new Dimension(1280, 720));
+//		this.setVisible(true);
+//		framework = new GraphicFramework(this);
+//		this.add(framework);
+//
+//		BufferedImage im = ImageIO
+//				.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
+//		im = GraphicsUtil.resize(im, (int) (im.getWidth() * .4), (int) (im.getHeight() * 0.8));
+//
+//		framework.addComponent(new TestButton(.3, .3, .4, .4, WIDTH, HEIGHT, 6, im, framework, "first"));
+//		framework.addComponent(new TestButton(.2, .2, .4, .4, WIDTH, HEIGHT, 4, im, framework, "second"));
+//		GFButton gfb = new TestButton(.1, .1, .4, .4, WIDTH, HEIGHT, 5, im, framework, "third");
+//
+//		framework.addComponent(gfb);
+//
+//		new Thread(() -> {
+//			try {
+//				Thread.sleep(5000);
+//				framework.moveObject(gfb, new RelativeGeom2D(.4, .4));
+//				Thread.sleep(5000);
+//				framework.removeComponent(gfb);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}).start();
+//
+//		this.revalidate();
+//		this.repaint();
 	}
 
 	private class TestButton extends GFButton {

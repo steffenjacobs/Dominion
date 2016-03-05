@@ -17,14 +17,43 @@ import com.tpps.technicalServices.util.PhysicsUtil;
 import com.tpps.ui.GameObject.CompareByLayer;
 
 /**
- * general framework handling all the graphic objects@author Steffen
- * Jacobs
+ * general framework handling all the graphic objects@author Steffen Jacobs
  */
 public class GraphicFramework extends JPanel {
 	private static final long serialVersionUID = 5135999956197786309L;
 	private JFrame parent;
 
 	private Mouse mouseListener;
+
+	/**
+	 * moves a game object to a new location
+	 * 
+	 * @param x
+	 *            new x-location
+	 * @param y
+	 *            new y-location
+	 * @param obj
+	 *            the game-object to move
+	 * @author Steffen Jacobs
+	 */
+	public void moveGameObjectTo(GameObject obj, double x, double y) {
+		obj.moveTo(new RelativeGeom2D(x, y));
+	}
+
+	/**
+	 * updates the relative-size of an gameobject
+	 * 
+	 * @param width
+	 *            new width
+	 * @param height
+	 *            new height
+	 * @param obj
+	 *            the game-object to move
+	 * @author Steffen Jacobs
+	 */
+	public void updateGameObjectSize(GameObject obj, double width, double height) {
+		obj.updateRelativeSize(width, height);
+	}
 
 	// Integer represents ID
 	private ConcurrentHashMap<Integer, GameObject> gameObjects = new ConcurrentHashMap<>();
@@ -247,8 +276,7 @@ public class GraphicFramework extends JPanel {
 	}
 
 	/**
-	 * @author Steffen Jacobs @return the parent frame everything is
-	 *         drawn upon
+	 * @author Steffen Jacobs @return the parent frame everything is drawn upon
 	 */
 	public JFrame getDisplayFrame() {
 		return this.parent;
