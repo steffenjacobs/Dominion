@@ -82,4 +82,15 @@ public class ByteUtil {
 		return (Packet) res;
 	}
 
+	/**
+	 * converts an integer to a byte-array
+	 * 
+	 * @param value
+	 *            integer to convert
+	 * @return converted integer
+	 */
+	public static final byte[] intToByteArray(int value) {
+		return new byte[] { (byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value };
+	}
+
 }
