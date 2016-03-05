@@ -12,14 +12,14 @@ import com.tpps.application.network.core.packet.PacketType;
 public class PacketBuyCard extends Packet {
 
 	private static final long serialVersionUID = 2232669430503735578L;
-	private int cardId;
+	private String cardId;
 
 	/**
 	 * initializes the Packet with the id of the card which had been buyed and
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketBuyCard(int cardId) {
+	public PacketBuyCard(String cardId) {
 		super(PacketType.BUY_CARD);			
 		this.cardId = cardId;		
 	}
@@ -29,7 +29,7 @@ public class PacketBuyCard extends Packet {
 	 * 
 	 * @return a cardId
 	 */
-	public int getCardId() {
+	public String getCardId() {
 		return cardId;
 	}
 

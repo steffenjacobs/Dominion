@@ -3,6 +3,8 @@ package com.tpps.application.game;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import com.tpps.application.game.card.Card;
+import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.game.TooMuchPlayerException;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -77,9 +79,10 @@ public class GameController {
 	}
 
 	/**
+	 * adds one player to the gameController if four players are registered on the gameController
+	 * one randomly choosen player is set as active(this player will begin the game)
 	 * @param player
-	 * @return if there are four players
-	 * @throws TooMuchPlayerException
+	 * @throws TooMuchPlayerException if there connects one more player
 	 */
 	public void addPlayer(Player player) throws TooMuchPlayerException {
 		if (this.players.size() < 4) {
@@ -90,6 +93,11 @@ public class GameController {
 		} else {
 			throw new TooMuchPlayerException();
 		}
+	}
+	
+	public void buyOneCard(String cardId) throws SynchronisationException{
+		Card card = gameBoard.findCard(cardId);
+		this.getActivePlayer().getDeck().getDiscardPile().add(card);
 	}
 
 	/** 

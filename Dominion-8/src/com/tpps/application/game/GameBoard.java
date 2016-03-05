@@ -9,6 +9,7 @@ import java.util.Set;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
+import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -183,6 +184,29 @@ public class GameBoard {
 				CollectionsUtil.linkedList(CardType.ACTION), "Test6", 3), 10, villageList);
 		this.tableForActionCards.put("Test6", villageList);
 		Card.resetClassID();
+	}
+
+	protected Card findCard(String cardId) throws SynchronisationException {
+		String key = cardId.substring(0, cardId.length() - 1);
+		LinkedList<Card> cardList = this.tableForCoinCards.get(key);
+		if (cardList != null) {
+			return cardList.remove(cardList.size() - 1);
+		} else {
+			cardList = this.tableForVictoryCards.get(key);
+			if (cardList != null) {
+				return cardList.remove(cardList.size() - 1);
+			} else {
+				cardList = this.tableForActionCards.get(key);
+				if (cardList != null) {
+					return cardList.remove(cardList.size() - 1);
+				}else{
+					throw new SynchronisationException();
+				}
+
+			}
+		}
+
+		
 	}
 
 	public LinkedList<String> getCoinCardIds(LinkedHashMap<String, LinkedList<Card>> table) {

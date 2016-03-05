@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import com.tpps.application.game.GameBoard;
+import com.tpps.application.game.GameController;
 import com.tpps.application.game.Player;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
+import com.tpps.application.network.gameSession.packets.PacketBuyCard;
 import com.tpps.application.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
@@ -49,29 +51,26 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case CARD_PLAYED:
 				Player activePlayer = server.getGameController().getActivePlayer();
-				activePlayer.doAction(((PacketPlayCard)packet).getCardID());
+				activePlayer.doAction(((PacketPlayCard) packet).getCardID());
 				System.out.println("packet received from Client of type " + packet.getType() + " card id "
-						+ ((PacketPlayCard)packet).getCardID());
+						+ ((PacketPlayCard) packet).getCardID());
 
-				server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), 
-						activePlayer.getBuys(), activePlayer.getCoins()));
-				
-//				server.sendMessage(port, new PacketSendHandCards(activePlayer.getDeck().getCardHandIds()));
+				server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
+						activePlayer.getCoins()));
+
+				// server.sendMessage(port, new
+				// PacketSendHandCards(activePlayer.getDeck().getCardHandIds()));
 				break;
 			case BUY_CARD:
-//				take a card from the boardClass
-//				GameController gameController = this.server.getGameController(); 
-//				server.broadcastMessage(new PacketSendTable(gameController, 
-//						gameController.getCoinIds(), gameController.getVictoryIds()));
-				
+				buyCardAndUpdateBoards(packet);
 				break;
-//			case PLAY_TREASURES:
-//				server.sendMessage(port, new PacketPlayTreasures());
-//				break;
+			// case PLAY_TREASURES:
+			// server.sendMessage(port, new PacketPlayTreasures());
+			// break;
 			case END_TURN:
-//				alle Karten ablegen
+				// alle Karten ablegen
 				this.server.getGameController().getActivePlayer().getDeck().refreshCardHand();
-//				sollen hier auch gleich die neuen karten genommen werden
+				// sollen hier auch gleich die neuen karten genommen werden
 				nextActivePlayer();
 				break;
 			default:
@@ -85,14 +84,26 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 	}
 
+	private void buyCardAndUpdateBoards(Packet packet) throws IOException {
+		try {
+			GameBoard gameBoard = this.server.getGameController().getGameBoard();
+			this.server.getGameController().buyOneCard(((PacketBuyCard) packet).getCardId());
+			server.broadcastMessage(new PacketSendBoard(gameBoard.getCoinCardIds(),
+					gameBoard.getVictoryCardIds(), gameBoard.getActionCardIds()));
+		} catch (SynchronisationException e) {
+			e.printStackTrace();
+		}
+	}
+
 	private void nextActivePlayer() {
 		this.server.getGameController().setNextActivePlayer();
 		try {
-			server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
+			server.broadcastMessage(
+					new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	private void updatePortOfPlayer(int port, Packet packet) {
@@ -119,36 +130,37 @@ public class ServerGamePacketHandler extends PacketHandler {
 				setUpGui();
 				System.out.println("gameStarted");
 			}
-			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
+			System.out.println(
+					"registrate one more client to server with id: " + clientId + "listening on port: " + port);
 		} catch (TooMuchPlayerException tmpe) {
 			server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * opens the gui for all Players sends the board with all buyable cards to all guis
-	 *  and sends the handcards to all Players
+	 * opens the gui for all Players sends the board with all buyable cards to
+	 * all guis and sends the handcards to all Players
+	 * 
 	 * @throws IOException
 	 */
 	private void setUpGui() throws IOException {
 
-		server.broadcastMessage(new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
+		server.broadcastMessage(
+				new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
 		GameBoard gameBoard = this.server.getGameController().getGameBoard();
-		
+
 		server.broadcastMessage(new PacketSendBoard(gameBoard.getCoinCardIds(), gameBoard.getVictoryCardIds(),
-													gameBoard.getActionCardIds()));
-		
+				gameBoard.getActionCardIds()));
+
 		LinkedList<Player> players = server.getGameController().getPlayers();
-		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++){
-			server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
+		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
+			server.sendMessage(players.get(i).getPort(),
+					new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
 		}
-		
-		server.broadcastMessage(new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
-		
 
-
-
+		server.broadcastMessage(
+				new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
 
 	}
 }
