@@ -3,8 +3,8 @@ package com.tpps.application.game.card;
 /**
  * enumeration of all actions a card can possibly cause
  * 
- * @author ladler - Lukas Adler
- * @author nwipfler - Nicolas Wipfler
+ * @author Lukas Adler
+ * @author Nicolas Wipfler
  */
 public enum CardAction {
 

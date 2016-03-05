@@ -1,6 +1,9 @@
 package com.tpps.technicalServices.util;
 
-/** provides some useful mathematical-calculations @author Steffen Jacobs */
+/** 
+ * provides some useful mathematical-calculations 
+ * @author Steffen Jacobs 
+ */
 public final class MathUtil {
 	
 	/**

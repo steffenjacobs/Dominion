@@ -3,7 +3,7 @@ package com.tpps.application.game.card;
 /**
  * enumeration of all different card types
  * 
- * @author nwipfler - Nicolas Wipfler
+ * @author Nicolas Wipfler
  */
 public enum CardType {
 	

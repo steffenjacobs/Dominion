@@ -1,8 +1,10 @@
 package com.tpps.application.game;
 
 /**
- * Setup window to start all applications
- * */
+ * Setup -- Serverside? discuss
+ 
+ * @author Nicolas Wipfler
+ */
 public class Setup {
 
 //	private MYCLASS anything;

@@ -14,6 +14,9 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 
+/**
+ * @author Nicolas Wipfler
+ */
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = -4157717625890678601L;
