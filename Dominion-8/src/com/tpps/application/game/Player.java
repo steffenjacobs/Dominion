@@ -13,8 +13,8 @@ public class Player {
 	private Deck deck;
 
 	private int actions;
-	private int purchases;
-	private int money;
+	private int buys;
+	private int coins;
 	private final int CLIENT_ID;
 	private int port;
 
@@ -39,8 +39,8 @@ public class Player {
 		this.deck = deck;
 		this.id = playerID++;
 		this.actions = GameConstant.INIT_ACTIONS;
-		this.purchases = GameConstant.INIT_PURCHASES;
-		this.money = GameConstant.INIT_MONEY;
+		this.buys = GameConstant.INIT_PURCHASES;
+		this.coins = GameConstant.INIT_MONEY;
 		this.CLIENT_ID = clientId;
 		this.port = port;
 	}
@@ -80,29 +80,29 @@ public class Player {
 	/**
 	 * @return the purchases
 	 */
-	public int getPurchases() {
-		return purchases;
+	public int getBuys() {
+		return buys;
 	}
 
 	/**
-	 * @param purchases the purchases to set
+	 * @param buys the purchases to set
 	 */
-	public void setPurchases(int purchase) {
-		this.purchases = purchase;
+	public void setBuys(int buys) {
+		this.buys = buys;
 	}
 
 	/**
 	 * @return the money
 	 */
-	public int getMoney() {
-		return money;
+	public int getCoins() {
+		return coins;
 	}
 
 	/**
 	 * @param money the money to set
 	 */
-	public void setMoney(int money) {
-		this.money = money;
+	public void setCoins(int coins) {
+		this.coins = coins;
 	}
 
 	/**
@@ -134,11 +134,11 @@ public class Player {
 
 				break;
 			case ADD_PURCHASE:
-				purchases += serverCard.getActions().get(
+				buys += serverCard.getActions().get(
 						CardAction.ADD_PURCHASE);
 				break;
 			case ADD_TEMPORARY_MONEY_FOR_TURN:
-				money += serverCard.getActions().get(
+				coins += serverCard.getActions().get(
 						CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
 				break;
 			case DRAW_CARD:

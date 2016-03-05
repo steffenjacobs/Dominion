@@ -44,11 +44,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 				updatePortOfPlayer(port, packet);
 				break;
 			case CARD_PLAYED:
-				server.getGameController().getActivePlayer().doAction(((PacketPlayCard)packet).getCardID());
+				Player activePlayer = server.getGameController().getActivePlayer();
+				activePlayer.doAction(((PacketPlayCard)packet).getCardID());
 				System.out.println("packet received from Client of type " + packet.getType() + " card id "
 						+ ((PacketPlayCard)packet).getCardID());
 
-				server.sendMessage(port, new PacketPlayCard(new PacketUpdateValues(actions, buys, coins));
+				server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), 
+						activePlayer.getBuys(), activePlayer.getCoins()));
 
 				break;
 			case END_TURN:
