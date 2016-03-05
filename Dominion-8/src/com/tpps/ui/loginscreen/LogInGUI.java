@@ -244,13 +244,17 @@ public class LogInGUI extends JFrame {
 
 		execute = new JButton("Login");
 		execute.setFont(customFont.deriveFont(15f));
-		execute.setPreferredSize(new Dimension(120, 30));
+		
 		cancel = new JButton("Cancel");
 		cancel.setFont(customFont.deriveFont(15f));
+		
 		createAccount = new JButton("New Account");
 		createAccount.setFont(customFont.deriveFont(10f));
+		
 		cancel.setPreferredSize(new Dimension(120, 30));
 		createAccount.setPreferredSize(new Dimension(120, 30));
+		execute.setPreferredSize(new Dimension(120, 30));
+		
 		panels[3].add(execute);
 		panels[3].add(createAccount);
 		panels[3].add(cancel);
@@ -270,7 +274,7 @@ public class LogInGUI extends JFrame {
 	 * @param args
 	 */
 
-	public static void main(String[] args) {
-		new LogInGUI(null);
-	}
+//	public static void main(String[] args) {
+//		new LogInGUI(null);
+//	}
 }
