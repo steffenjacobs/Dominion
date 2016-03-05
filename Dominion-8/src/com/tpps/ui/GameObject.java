@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Comparator;
 
-
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.MathUtil;
 import com.tpps.technicalServices.util.PhysicsUtil;
@@ -38,11 +37,11 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * Dummy **SORRY** =D
 	 * 
 	 * @author - Nico
-	 * */
+	 */
 	public GameObject() {
-		
+
 	}
-	
+
 	/**
 	 * creates a game object, only used for cloning
 	 * 
@@ -106,7 +105,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.originalImage = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
 		this.visible = false;
 	}
-	
+
 	/**
 	 * changes the visibility of the game object
 	 * 
@@ -148,6 +147,20 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 */
 	public boolean overlap(Rectangle area) {
 		return PhysicsUtil.collides(area, new Rectangle(this.x, this.y, this.width, this.height));
+	}
+
+	/**
+	 * updates the size
+	 * 
+	 * @param width
+	 *            new width
+	 * @param height
+	 *            new height
+	 * @author Steffen Jacobs
+	 */
+	public void updateRelativeSize(double width, double height) {
+		this.dimension = new RelativeGeom2D(width, height);
+		this.onResize(this.parent.getWidth(), this.parent.getHeight());
 	}
 
 	/**

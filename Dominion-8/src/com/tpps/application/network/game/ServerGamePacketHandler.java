@@ -88,7 +88,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void nextActivePlayer() {
 		this.server.getGameController().setNextActivePlayer();
 		try {
-			server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientId()));
+			server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -98,7 +98,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void updatePortOfPlayer(int port, Packet packet) {
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
 			Player player = server.getGameController().getPlayers().get(i);
-			if (player.getClientId() == ((PacketReconnect) packet).getClientId()) {
+			if (player.getClientID() == ((PacketReconnect) packet).getClientId()) {
 				player.setPort(port);
 			}
 		}
@@ -132,14 +132,22 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 * @throws IOException
 	 */
 	private void setUpGui() throws IOException {
-		server.broadcastMessage(new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientId()));
+
+		server.broadcastMessage(new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
 		GameBoard gameBoard = this.server.getGameController().getGameBoard();
+		
 		server.broadcastMessage(new PacketSendBoard(gameBoard.getCoinCardIds(), gameBoard.getVictoryCardIds(),
 													gameBoard.getActionCardIds()));
+		
 		LinkedList<Player> players = server.getGameController().getPlayers();
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++){
 			server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
 		}
+		
+		server.broadcastMessage(new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
+		
+
+
 
 
 	}

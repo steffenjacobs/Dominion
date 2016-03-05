@@ -40,6 +40,12 @@ public class GameWindow extends JFrame {
 	 * @author Steffen Jacobs
 	 */
 	public GameWindow() throws IOException {
+		JFrame frame = new JFrame();
+		frame.setSize(100, 100);
+		GraphicFramework gf = new GraphicFramework(frame);
+		gf.setSize(100, 100);
+		gf.addComponent(new Card(null, null, "Lachs", 100,gf));
+		frame.add(gf);
 		final int WIDTH = 1280, HEIGHT = 720;
 
 		c = this.getContentPane();

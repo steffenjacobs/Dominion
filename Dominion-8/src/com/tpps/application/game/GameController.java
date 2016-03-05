@@ -34,32 +34,49 @@ public class GameController {
 
 	}
 
+	/**
+	 * 
+	 */
 	public LinkedList<Player> getPlayers() {
 		return this.players;
 	}
 
+	/**
+	 * 
+	 */
 	public void setPlayers(LinkedList<Player> players) {
 		this.players = players;
 	}
 
+	/**
+	 * 
+	 */
 	public Player getActivePlayer() {
 		return this.activePlayer;
 	}
 
+	/**
+	 * 
+	 */
 	public void setActivePlayer(Player aP) {
 		this.activePlayer = aP;
 	}
-
+	
+	/**
+	 * 
+	 */
 	public boolean isGameNotFinished() {
 		return this.gameNotFinished;
 	}
 
-	public boolean setGameNotFinished(boolean gameNotFinished) {
-		return this.gameNotFinished = gameNotFinished;
+	/**
+	 * 
+	 */
+	public void setGameNotFinished(boolean gameNotFinished) {
+		this.gameNotFinished = gameNotFinished;
 	}
 
 	/**
-	 * 
 	 * @param player
 	 * @return if there are four players
 	 * @throws TooMuchPlayerException
@@ -73,11 +90,9 @@ public class GameController {
 		} else {
 			throw new TooMuchPlayerException();
 		}
-
 	}
 
-	/**
-	 * 
+	/** 
 	 * @return one of the four players who is randomly choosen
 	 */
 	private Player getRandomPlayer() {
@@ -90,18 +105,30 @@ public class GameController {
 		return gameBoard;
 	}
 
-	private boolean gameFinished() {
-		/* Checkt die Stapel durch, ob 3 Stapel leer sind bzw. Provinzen leer */
-		/* Wenn ja: */
-		return !setGameNotFinished(false);
-	}
+	/**
+	 * 
+	 */
+	// private boolean gameFinished() {
+	// /* Checkt die Stapel durch, ob 3 Stapel leer sind bzw. Provinzen leer */
+	// /* Wenn ja: */
+	// setGameNotFinished(false);
+	// return false; // überarbeiten
+	// }
 
-	/** CONTROLLER LOGIC; not sure whether the loops are necessary */
-	public void startGame() {
+
+	/** 
+	 * CONTROLLER LOGIC; not sure whether the loops are necessary 
+	 */
+	public void startGame() {	
+
 		System.out.println(Arrays.toString(this.activePlayer.getDeck().getCardHand().toArray()));
 	}
 
-	private void turn(Player player) {
-		setActivePlayer(player);
-	}
+	/**
+	 * 
+	 */
+	// private void turn(Player player) {
+	// // turn
+	// setActivePlayer(player);
+	// }
 }
