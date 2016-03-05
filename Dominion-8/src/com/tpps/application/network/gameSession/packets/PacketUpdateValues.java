@@ -11,7 +11,7 @@ import com.tpps.application.network.core.packet.PacketType;
  */
 public class PacketUpdateValues extends Packet {
 
-	private static final long serialVersionUID = -3390002980740295573L;
+	private static final long serialVersionUID = 4833326642942479357L;
 	private int actions, buys, coins;
 
 	/**

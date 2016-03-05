@@ -40,10 +40,18 @@ public class ClientGamePacketHandler extends PacketHandler{
 				}
 				else{
 					System.out.println("my gameWindo is disabled");
-				}
-				
-				
+				}				
 			break;
+			case UPDATE_VALUES:
+//				gameGui.updateValues
+				break;
+			case SEND_HAND_CARDS:
+//				gameGui.paintHandCards;
+				break;
+			case PLAY_TREASURES:
+//				gameGui.disableActionCards();
+//				gameGui.enalbeMoney();
+				break;
 			default:
 				System.out.println("unknown packed type");
 			break;

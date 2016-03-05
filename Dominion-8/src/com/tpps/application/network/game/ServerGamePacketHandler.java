@@ -10,8 +10,10 @@ import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
+import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.application.network.gameSession.packets.PacketReconnect;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
+import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketUpdateValues;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -51,11 +53,19 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 				server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), 
 						activePlayer.getBuys(), activePlayer.getCoins()));
-
+				
+//				server.sendMessage(port, new PacketSendHandCards(activePlayer.getDeck().getCardHandIds()));
+				break;
+			case PLAY_TREASURES:
+				server.sendMessage(port, new PacketPlayTreasures());
 				break;
 			case END_TURN:
-
-				chooseNewActivePlayer();
+//				alle Karten ablegen
+//				this.server.getGameController().getActivePlayer().getDeck().
+//				sollen hier auch gleich die neuen karten genommen werden
+				nextActivePlayer();
+//				neuer spieler nimmt Karten auf
+				
 
 				break;
 			default:
@@ -69,7 +79,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 	}
 
-	private void chooseNewActivePlayer() {
+	private void nextActivePlayer() {
 
 		Player activePlayer = this.server.getGameController().getActivePlayer();
 		LinkedList<Player> players = this.server.getGameController().getPlayers();

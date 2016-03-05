@@ -66,6 +66,15 @@ public class Deck {
 	public LinkedList<Card> getCardHand() {
 		return this.cardHand;
 	}
+	
+	public LinkedList<String> getCardHandIds(){
+		LinkedList<String> cardHandIds = new LinkedList<String>();
+		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			cardHandIds.add(card.getId());			
+		}
+		return cardHandIds;
+	}
 
 	/**
 	 * @param cardHand the cardHand to set
