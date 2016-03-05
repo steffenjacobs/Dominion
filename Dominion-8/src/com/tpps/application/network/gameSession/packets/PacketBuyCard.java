@@ -23,6 +23,17 @@ public class PacketBuyCard extends Packet {
 		super(PacketType.BUY_CARD);			
 		this.cardId = cardId;		
 	}
+	
+	
+	/**
+	 * 
+	 * @return a cardId
+	 */
+	public int getCardId() {
+		return cardId;
+	}
+
+
 
 	/**
 	 * @return a readable String

@@ -9,7 +9,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketOpenGui extends Packet {
+public class PacketOpenGuiAndEnableOne extends Packet {
 
 	private static final long serialVersionUID = 545503397600298278L;
 	private final int clientId;
@@ -20,7 +20,7 @@ public class PacketOpenGui extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketOpenGui(int clientId) {
+	public PacketOpenGuiAndEnableOne(int clientId) {
 		super(PacketType.OPEN_GUI);
 		this.clientId = clientId;
 	}
