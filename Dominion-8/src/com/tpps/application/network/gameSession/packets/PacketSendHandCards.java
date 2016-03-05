@@ -26,6 +26,17 @@ public class PacketSendHandCards extends Packet {
 		super(PacketType.SEND_HAND_CARDS);
 		this.cardIds = cardIds;
 	}
+	
+	
+	/**
+	 * 
+	 * @return the ids of the cards the player has on his hand
+	 */
+	public LinkedList<String> getCardIds() {
+		return cardIds;
+	}
+
+
 
 	/**
 	 * @return a readable String

@@ -146,8 +146,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 */
 	private void setUpGui() throws IOException {
 
-		server.broadcastMessage(
-				new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
+		
 		GameBoard gameBoard = this.server.getGameController().getGameBoard();
 
 		server.broadcastMessage(new PacketSendBoard(gameBoard.getCoinCardIds(), gameBoard.getVictoryCardIds(),

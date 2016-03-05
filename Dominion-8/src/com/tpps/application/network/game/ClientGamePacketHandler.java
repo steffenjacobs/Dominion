@@ -1,12 +1,14 @@
 package com.tpps.application.network.game;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
+import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.ui.GameWindow;
 
 /**
@@ -43,7 +45,14 @@ public class ClientGamePacketHandler extends PacketHandler {
 //			gameGui.printBoard();
 			break;
 		case SEND_HAND_CARDS:
-			// gameGui.paintHandCards;
+			LinkedList<String> cardIds = ((PacketSendHandCards)packet).getCardIds();
+			System.out.println();
+			try {
+				this.gameClient.sendMessage(new PacketPlayCard(cardIds.get(0)));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		case UPDATE_VALUES:
 			// gameGui.updateValues
