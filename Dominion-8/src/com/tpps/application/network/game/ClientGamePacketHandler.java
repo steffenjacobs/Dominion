@@ -5,7 +5,7 @@ import java.io.IOException;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
-import com.tpps.application.network.gameSession.packets.PacketOpenGui;
+import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.ui.GameWindow;
@@ -41,7 +41,7 @@ public class ClientGamePacketHandler extends PacketHandler{
 			case OPEN_GUI:
 			try {
 				GameWindow g = new GameWindow();
-				if (((PacketOpenGui)packet).getClientId() == this.gameClient.getClientId()){
+				if (((PacketOpenGuiAndEnableOne)packet).getClientId() == this.gameClient.getClientId()){
 					g.setEnabled(true);
 					System.out.println("my gameWindow is enabled");
 				}

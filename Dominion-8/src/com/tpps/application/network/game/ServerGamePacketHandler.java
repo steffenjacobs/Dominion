@@ -7,9 +7,10 @@ import com.tpps.application.game.Player;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
+import com.tpps.application.network.gameSession.packets.PacketBuyCard;
 import com.tpps.application.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
-import com.tpps.application.network.gameSession.packets.PacketOpenGui;
+import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.application.network.gameSession.packets.PacketReconnect;
@@ -56,6 +57,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 						activePlayer.getBuys(), activePlayer.getCoins()));
 				
 //				server.sendMessage(port, new PacketSendHandCards(activePlayer.getDeck().getCardHandIds()));
+				break;
+			case BUY_CARD:
+//				take a card from the boardClass
+//				((PacketBuyCard)packet).getCardId();
 				break;
 //			case PLAY_TREASURES:
 //				server.sendMessage(port, new PacketPlayTreasures());
@@ -117,8 +122,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			server.getGameController().addPlayer(new Player(clientId, port));
 			server.sendMessage(port, new PacketSendClientId(clientId));
 			if (server.getGameController().getPlayers().size() == 4) {
-				server.broadcastMessage(new PacketOpenGui(server.getGameController().getActivePlayer().getClientId()));
 				server.getGameController().startGame();
+				setUpGui();
+				
 				System.out.println("gameStarted");
 			}
 			System.out.println(
@@ -127,6 +133,20 @@ public class ServerGamePacketHandler extends PacketHandler {
 		} catch (TooMuchPlayerException tmpe) {
 			server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();
+		}
+	}
+	
+	
+	/**
+	 * opens the Gui by all Players and sends the handcards to all Players
+	 * @throws IOException
+	 */
+	private void setUpGui() throws IOException {
+		server.broadcastMessage(new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientId()));
+		
+		LinkedList<Player> players = server.getGameController().getPlayers();
+		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++){
+			server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(players.get(i).getDeck().getCardHandIds()));
 		}
 	}
 
