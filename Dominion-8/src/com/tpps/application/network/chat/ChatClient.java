@@ -2,6 +2,7 @@ package com.tpps.application.network.chat;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.Scanner;
 
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
@@ -59,24 +60,13 @@ public class ChatClient extends PacketHandler{
 	}
 	
 	public static void main(String[] args) {
-		String msg1 = "das ist eine nachricht für alle :)";
-	//	String msg2 = "/receiver das ist eine nachricht für den receiver";
-		String msg2 = "/help";
-		ChatClient c1 = new ChatClient("client 1");
-		ChatClient c2 = new ChatClient("cleint 2");
-		ChatClient c3 = new ChatClient("client 3");
-		c1.sendMessage(msg1);
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {		
-			e.printStackTrace();
+		ChatClient c = new ChatClient("nishit");
+		System.out.println("I am: " + c.sender);
+		Scanner scanInput = new Scanner(System.in);
+		String line = null;
+		while(true){
+			line = scanInput.nextLine();
+			c.sendMessage(line);
 		}
-		c2.sendMessage(msg2);
-//		try {
-//			Thread.sleep(5000);
-//		} catch (InterruptedException e) {		
-//			e.printStackTrace();
-//		}
-	//	c3.sendMessage(msg3);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
+import com.tpps.application.network.login.SQLHandling.SQLHandler;
 import com.tpps.application.network.login.SQLHandling.SQLOperations;
 
 public class ChatPacketHandler extends PacketHandler{
@@ -76,7 +77,13 @@ public class ChatPacketHandler extends PacketHandler{
 		case servercommand2: //TODO: do sth. command
 			return true;
 		}
-		
+		String hostname = "localhost";
+		String sqlport = "3306";
+		String database = "accountmanager";
+		String user = "jojo";
+		String password = "password";
+		SQLHandler.init(hostname, sqlport, user, password, database);
+		SQLHandler.connect();
 		String[] nicknames = SQLOperations.showAllNicknames().split("\n");
 		for (int i = 0; i < nicknames.length; i++) {
 			System.out.println(nicknames[i]);
