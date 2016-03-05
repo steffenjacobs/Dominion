@@ -7,12 +7,10 @@ import com.tpps.application.game.Player;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
-import com.tpps.application.network.gameSession.packets.PacketBuyCard;
 import com.tpps.application.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
-import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.application.network.gameSession.packets.PacketReconnect;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
@@ -22,7 +20,6 @@ import com.tpps.technicalServices.util.GameConstant;
 /**
  * 
  * @author ladler - Lukas Adler
- *
  */
 public class ServerGamePacketHandler extends PacketHandler {
 	private GameServer server;
@@ -87,11 +84,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 		Player activePlayer = this.server.getGameController().getActivePlayer();
 		LinkedList<Player> players = this.server.getGameController().getPlayers();
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
-
 			Player player = players.get(i);
 			if (player.equals(activePlayer)) {
-				this.server.getGameController()
-						.setActivePlayer(players.get(i < GameConstant.HUMAN_PLAYERS ? i + 1 : 0));
+				this.server.getGameController().setActivePlayer(players.get(i < GameConstant.HUMAN_PLAYERS ? i + 1 : 0));
 				break;
 			}
 		}
@@ -124,18 +119,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 			if (server.getGameController().getPlayers().size() == 4) {
 				server.getGameController().startGame();
 				setUpGui();
-				
 				System.out.println("gameStarted");
 			}
-			System.out.println(
-					"registrate one more client to server with id: " + clientId + "listening on port: " + port);
-
+			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
 		} catch (TooMuchPlayerException tmpe) {
 			server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();
 		}
 	}
-	
 	
 	/**
 	 * opens the Gui by all Players and sends the handcards to all Players
@@ -146,8 +137,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		
 		LinkedList<Player> players = server.getGameController().getPlayers();
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++){
-			server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(players.get(i).getDeck().getCardHandIds()));
+			server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(players.get(i).getDeck().getCardHandIDs()));
 		}
 	}
-
 }
