@@ -89,7 +89,7 @@ public class CreateAccount extends JFrame {
 	private void init() {
 		c = this.getContentPane();
 		all = new JLabel(loading);
-		all.setLayout(new GridLayout(7, 1, 0, 30));
+		all.setLayout(new GridLayout(6, 1, 0, 30));
 		this.setSize(width / 4, height / 2);
 		this.setLocationRelativeTo(null);
 		this.setTitle("Create Account");
