@@ -152,7 +152,7 @@ public class Player {
 				coins += serverCard.getActions().get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
 				break;
 			case DRAW_CARD:
-				// player.getDeck().draw(serverCard.getActions().get(CardAction.DRAW_CARD));
+				 getDeck().draw(serverCard.getActions().get(CardAction.DRAW_CARD));
 				break;
 			case GAIN_CARD:
 				System.out.println("GAIN: " + serverCard.getActions().get(CardAction.GAIN_CARD));

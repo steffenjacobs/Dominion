@@ -19,7 +19,7 @@ public enum PacketType {
 											20), RECONNECT(21), UPDATE_VALUES(
 													22), SEND_HAND_CARDS(23), ENABLE_MONEY_CARDS_DISABLE_ACTION_CARDS(
 															24), PLAY_TREASURES(25), BUY_CARD(
-																	26), OPEN_GUI_AND_ENABLE_ONE(27), SEND_BOARD(28);
+																	26), OPEN_GUI_AND_ENABLE_ONE(27), SEND_BOARD(28), UPDATE_COINS(29);
 
 	private final int internalID;
 
