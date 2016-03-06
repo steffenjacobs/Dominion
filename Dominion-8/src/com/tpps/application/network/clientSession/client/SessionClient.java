@@ -4,18 +4,54 @@ import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Semaphore;
 
+import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
 import com.tpps.application.network.core.Client;
+import com.tpps.application.network.core.SuperCallable;
 
 public class SessionClient extends Client {
 
 	private static final boolean DEBUG = true;
 	private static Timer scheduler = null;
 	private static int DELTA_SEND_KEEP_ALIVE_MILLISECONDS = 5000;
+	private static ConcurrentHashMap<String, Boolean> sessionRequests = new ConcurrentHashMap<>();
 
 	public SessionClient(SocketAddress address) throws IOException {
 		super(address, new SessionPacketReceiver());
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> onStop()));
+	}
+
+	/**
+	 * checks whether a session is valid (sync)
+	 * 
+	 * @param username
+	 *            name of the user's session to check
+	 * @param uuid
+	 *            sessionID of the user to check
+	 * @return whether the session is still valid
+	 */
+	public boolean checkSessionSync(final String username, final UUID uuid) {
+		Semaphore blocker = new Semaphore(1);
+		try {
+			blocker.acquire();
+			SessionPacketSenderAPI.sendCheckRequest(this, username, uuid,
+					new SuperCallable<PacketSessionCheckAnswer>() {
+						@Override
+						public PacketSessionCheckAnswer callMeMaybe(PacketSessionCheckAnswer object) {
+							sessionRequests.put(username, object.getState());
+							blocker.release();
+							return null;
+						}
+					});
+			blocker.acquire();
+
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return sessionRequests.remove(username);
 	}
 
 	/**
@@ -35,7 +71,7 @@ public class SessionClient extends Client {
 			}
 			scheduler = new Timer();
 			final Client instance = this;
-			
+
 			scheduler.schedule(new TimerTask() {
 				@Override
 				public void run() {
