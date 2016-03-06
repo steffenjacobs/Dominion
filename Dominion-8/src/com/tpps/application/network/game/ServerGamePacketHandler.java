@@ -88,8 +88,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 		try {
 			GameBoard gameBoard = this.server.getGameController().getGameBoard();
 			this.server.getGameController().buyOneCard(((PacketBuyCard) packet).getCardId());
-			server.broadcastMessage(new PacketSendBoard(gameBoard.getCoinCardIds(),
-					gameBoard.getVictoryCardIds(), gameBoard.getActionCardIds()));
+			server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(),
+					gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
 		} catch (SynchronisationException e) {
 			e.printStackTrace();
 		}
@@ -149,8 +149,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 		
 		GameBoard gameBoard = this.server.getGameController().getGameBoard();
 
-		server.broadcastMessage(new PacketSendBoard(gameBoard.getCoinCardIds(), gameBoard.getVictoryCardIds(),
-				gameBoard.getActionCardIds()));
+		server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(),
+				gameBoard.getActionCardIDs()));
 
 		LinkedList<Player> players = server.getGameController().getPlayers();
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {

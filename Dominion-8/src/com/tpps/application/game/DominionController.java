@@ -7,8 +7,6 @@ import java.util.UUID;
 import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.game.ClientGamePacketHandler;
 import com.tpps.application.network.game.GameClient;
-import com.tpps.ui.GameWindow;
-import com.tpps.ui.loginscreen.LoginGUIController;
 
 /**
  * main controller class containing main entry point for client-application

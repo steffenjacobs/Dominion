@@ -18,14 +18,23 @@ import com.tpps.technicalServices.util.GraphicsUtil;
  */
 public class MainMenuButton {
 	private int x, y;
-	private final BufferedImage originalImage;
+	private BufferedImage originalImage;
 	private BufferedImage actualImage;
 	private final String name;
 	private int letterSize;
 
+	/**
+	 * Concstructor for the MainMenu buttons 
+	 * @param locX x coordinate of the button
+	 * @param locY y coordinate of the button
+	 * @param name of the button
+	 * @throws IOException
+	 */
 	public MainMenuButton(int locX, int locY, String name) throws IOException {
 		this.letterSize = 100;
 		this.originalImage = ImageIO.read(ClassLoader.getSystemResource("resources/img/gameObjects/testButton.png"));
+		this.originalImage = GraphicsUtil.resize(this.originalImage, this.originalImage.getWidth(), 
+				(int)(this.originalImage.getHeight() * 0.9));
 		int newWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().width / 2.35);
 		int newHeight = (int) (Toolkit.getDefaultToolkit().getScreenSize().height / 6);
 		this.name = name;
@@ -35,6 +44,9 @@ public class MainMenuButton {
 		this.y = locY;
 	}
 
+	/**
+	 * prints the names of the buttons on the images
+	 */
 	private void labelImages() {
 		Graphics2D g = this.originalImage.createGraphics();
 
@@ -46,10 +58,8 @@ public class MainMenuButton {
 	}
 
 	/**
-	 * @param x
-	 *            value of the mouse
-	 * @param y
-	 *            value of the mouse
+	 * @param x value of the mouse
+	 * @param y value of the mouse
 	 * @return true if the mouse is on the button false else
 	 */
 	public boolean isOn(double x, double y) {
@@ -61,18 +71,13 @@ public class MainMenuButton {
 		}
 	}
 
-	public void onMouseEnter() {
-		System.out.println("enter " + toString());
-	}
-
-	public void onMouseExit() {
-		System.out.println("exit " + toString());
-	}
-
-	public void onMouseClick() {
-		System.out.println("Clicked @" + this.toString());
-	}
-
+	/**
+	 * reacts on resize events of the gui and resizes the buttons
+	 * @param x new x value
+	 * @param y new y value
+	 * @param sizeFactorWidth resize factor
+	 * @param sizeFactorHeight resize factor
+	 */
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight) {
 		this.x = x;
 		this.y = y;		
@@ -81,6 +86,10 @@ public class MainMenuButton {
 				(int) (this.originalImage.getHeight() * sizeFactorHeight));
 	}
 
+	/**
+	 * 
+	 * @return the actualButtonImage
+	 */
 	public BufferedImage getActualImage() {
 		return this.actualImage;
 	}

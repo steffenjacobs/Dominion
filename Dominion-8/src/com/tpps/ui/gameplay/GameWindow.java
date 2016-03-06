@@ -1,20 +1,16 @@
 package com.tpps.ui.gameplay;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import com.tpps.application.game.card.BaseCardAction;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
@@ -22,7 +18,8 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
-import com.tpps.ui.components.*;
+import com.tpps.ui.components.GFButton;
+import com.tpps.ui.components.GameBackground;
 
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;

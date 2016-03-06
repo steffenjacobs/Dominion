@@ -7,7 +7,9 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.technicalServices.util.GameConstant;
 
-/** ServerPlayer */
+/**
+ * @author Nicolas Wipfler
+ */
 public class Player {
 
 	private Deck deck;

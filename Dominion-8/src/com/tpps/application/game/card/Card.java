@@ -14,6 +14,9 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 
+/**
+ * @author Nicolas Wipfler
+ */
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = -4157717625890678601L;
@@ -38,6 +41,15 @@ public class Card extends GameObject {
 		this.id = this.name + classID++;
 	}
 
+	/**
+	 * constructor for Card, taking all required data
+	 * 
+	 * @param actions the list of CardActions mapped to their value
+	 * @param types the list of CardTypes
+	 * @param cost the card-cost
+	 * @param name the name of the card 
+	 * @param _parent graphic framework where the card will be drawn
+	 */
 	public Card(LinkedHashMap<CardAction, Integer> actions,
 			LinkedList<CardType> types, String name, int cost,
 			GraphicFramework _parent) {
@@ -86,6 +98,13 @@ public class Card extends GameObject {
 		return id;
 	}
 
+	/**
+	 * sets the classID to zero
+	 */
+	public static void resetClassID() {
+		Card.classID = 0;
+	}
+	
 	@Override
 	public Card clone() {
 		return new Card(this.getActions(), this.getTypes(), this.getName(),
@@ -125,6 +144,7 @@ public class Card extends GameObject {
 	/**
 	 * @override toString()
 	 */
+	@Override
 	public String toString() {
 		StringBuffer sBuf = new StringBuffer();
 		sBuf.append("Card: " + "'" + this.name + "'\nActions: <");
@@ -144,13 +164,6 @@ public class Card extends GameObject {
 				sBuf.append(" ");
 		}
 		return sBuf.append(">\nCost: " + this.cost).toString();
-	}
-
-	/**
-	 * sets the classId to zero
-	 */
-	public static void resetClassID() {
-		Card.classID = 0;
 	}
 
 	/**

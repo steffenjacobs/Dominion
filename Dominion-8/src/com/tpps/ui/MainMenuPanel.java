@@ -35,16 +35,13 @@ public class MainMenuPanel extends JPanel {
 	private final int gapFactor, topGap;
 
 	/**
-	 * 
-	 * @param background: backgroundImage
-	 * @param alpha 
-	 * @param buttons
+	 * Constructor for the MainMenuPanell
+	 * @param the MainMenu which holds this panel
 	 */
 	public MainMenuPanel(MainMenu parent) {
-		this.gapFactor = 6;
+		this.gapFactor = 7;
 		this.parent = parent;
-		this.topGap = 100;
-		
+		this.topGap = Toolkit.getDefaultToolkit().getScreenSize().height / 6;
 		this.INITIALIZE_ALPHA = 0.6F;
 		MyAudioPlayer.init();
 		loadBackgroundImage();
@@ -56,7 +53,7 @@ public class MainMenuPanel extends JPanel {
 	}
 
 	/**
-	 * creates the Button
+	 * creates the Button on the Jpanel
 	 * @param parent
 	 */
 	private void createButtons(MainMenu parent) {
@@ -65,12 +62,11 @@ public class MainMenuPanel extends JPanel {
 			String[] names = new String[]{"Single Player", "Multi Player", "Settings", "Community"};
 			try {
 				for (int i = 0; i < buttons.length; i++) {
-					buttons[i] = new MainMenuButton((parent.getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1),
+					buttons[i] = new MainMenuButton((parent.getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1) + topGap,
 							names[i]);
 				}				
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}
@@ -137,7 +133,7 @@ public class MainMenuPanel extends JPanel {
 				this.parent.getWidth(), this.parent.getHeight());
 		for (int i = 0; i < buttons.length; i++) {
 			buttons[i].onResize((parent.getWidth() / 2)
-					- (buttons[i].getActualImage().getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1),
+					- (buttons[i].getActualImage().getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1) + topGap,
 					sizeFactorWidth, sizeFactorHeight);
 		}				
 	}
@@ -154,20 +150,17 @@ public class MainMenuPanel extends JPanel {
 		 */
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			MyAudioPlayer.doClick();
 			if (buttons[0].isOn(e.getX(), e.getY())) {
-				
-				MyAudioPlayer.doClick();
 				MainMenuPanel.this.parent.dispose();
-				try {
-					GameWindow.setInstance(new GameWindow()).setVisible(true);;
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
 			}
 			if (buttons[1].isOn(e.getX(), e.getY())) {
-				
-				MyAudioPlayer.doClick();				
-				
+				MainMenuPanel.this.parent.dispose();
+				try {
+					GameWindow.setInstance(new GameWindow());
+				} catch (IOException e1) {				
+					e1.printStackTrace();
+				}				
 			}
 		}
 
@@ -180,6 +173,11 @@ public class MainMenuPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * inner class which reacts on resize events of the gui
+	 * @author Lukas Adler
+	 *
+	 */
 	private class MyComponentAdapter extends ComponentAdapter {
 
 		@Override

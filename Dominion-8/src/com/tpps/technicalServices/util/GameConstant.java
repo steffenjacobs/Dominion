@@ -3,7 +3,7 @@ package com.tpps.technicalServices.util;
 /**
  * @author Nicolas Wipfler
  * */
-public class GameConstant {
+public final class GameConstant {
 	
 	public static int HUMAN_PLAYERS = 4; // add setter
 	

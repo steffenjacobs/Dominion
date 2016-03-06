@@ -8,6 +8,10 @@ import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.game.TooMuchPlayerException;
 import com.tpps.technicalServices.util.GameConstant;
 
+/**
+ * @author Lukas Adler
+ * @author Nicolas Wipfler
+ */
 public class GameController {
 
 	private LinkedList<Player> players;

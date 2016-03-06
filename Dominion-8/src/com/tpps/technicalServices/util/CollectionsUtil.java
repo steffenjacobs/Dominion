@@ -9,8 +9,8 @@ import com.tpps.application.game.card.CardAction;
 
 /**
  * 
- * @author nwipfler - Nicolas Christian Wipfler
- * @author ladler - Lukas Karl Adler
+ * @author Nicolas Christian Wipfler
+ * @author Lukas Karl Adler
  */
 public final class CollectionsUtil {
 
@@ -119,7 +119,6 @@ public final class CollectionsUtil {
 	 * 
 	 * @return adds a list of cards to the (destination-)list from parameters,
 	 *         but doesn't remove the cards from the original list
-	 * @author Nicolas Wipfler
 	 */
 	public static void appendListToList(LinkedList<Card> cards,
 			LinkedList<Card> destination) {
@@ -128,7 +127,9 @@ public final class CollectionsUtil {
 		}
 	}
 	
-	
+	/**
+	 * 
+	 * */
 	public static LinkedList<String> getCardIDs(LinkedList<Card> cards){
 		LinkedList<String> cardHandIDs = new LinkedList<String>();
 		for (Iterator<Card> iterator = cards.iterator(); iterator.hasNext();) {
