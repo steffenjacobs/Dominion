@@ -2,6 +2,7 @@ package com.tpps.application.network.chat;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,7 +15,10 @@ public class ChatPacketHandler extends PacketHandler{
 
 	private ChatServer server;
 	private final static String servercommand1 = "help";
-	private final static String servercommand2 = "cmd";
+	private final static String servercommand2 = "show all clients";
+	private final static String servercommand3 = "show all ports";
+	private final static String servercommand4 = "show all clients by ports";
+	
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
 	private ArrayList<ChatRoom> chatrooms = new ArrayList<ChatRoom>();
 	
@@ -24,9 +28,10 @@ public class ChatPacketHandler extends PacketHandler{
 		switch(packet.getType()){
 		case SEND_CHAT_ALL:
 			PacketSendChatAll castedpacket = (PacketSendChatAll) packet;
-			ChatRoom room = this.testIfPacketGoesToChatRoom(port, castedpacket.getUsername());
+			System.out.println("Chat to ALL: " + castedpacket);
+			ChatRoom room = this.getSpecificChatRoom(castedpacket.getUsername());
 			if(room != null){
-				room.sendChatToAll();
+				room.sendChatToAll(castedpacket);
 			}else{
 				PacketSendAnswer answer = new PacketSendAnswer(castedpacket.getChatmessage());
 				try {
@@ -36,26 +41,53 @@ public class ChatPacketHandler extends PacketHandler{
 				}
 			}
 			break;
+			
+		case SEND_CHAT_TO_CLIENT:
+			PacketSendChatToClient castedpacket3 = (PacketSendChatToClient) packet;
+			ChatRoom room3 = this.getSpecificChatRoom(castedpacket3.getSender());
+			System.out.println("Chat to Client " + castedpacket3);
+			if(room3 != null){
+				room3.sendChatToClient(castedpacket3);
+			}else{			
+				
+				
+				String hostname = "localhost";
+				String portsql = "3306";
+				String database = "accountmanager";
+				String user = "jojo";
+				String password = "password";
+				SQLHandler.init(hostname, portsql, user, password, database);
+				SQLHandler.connect();
+				String[] nicknames = SQLOperations.showAllNicknames().split("\n");
+				for (int i = 0; i < nicknames.length; i++) {					
+					if(castedpacket3.getReceiver().equals(nicknames[i].trim())){
+						this.sendMessageToClient(castedpacket3.getSender(), nicknames[i], castedpacket3.getMessage(), clientsByUsername.get(nicknames[i]));
+					}
+				}	
+			}
+			break;
 		case SEND_CHAT_COMMAND:
 			PacketSendChatCommand castedpacket2 = (PacketSendChatCommand) packet;		
 			String sender = castedpacket2.getSender();
 			String msg = castedpacket2.getChatmessage();
+			System.out.println("Chat Command: " + castedpacket2);
 			
-			ChatRoom room2 =  this.testIfPacketGoesToChatRoom(port, castedpacket2.getSender());
+			ChatRoom room2 =  this.getSpecificChatRoom(castedpacket2.getSender());
 			if(room2 != null){
-				
+				room2.evaluateCommand(castedpacket2);
+			}else{
+				if(!this.evaluateCommands(castedpacket2.getChatmessage(), castedpacket2.getSender(), port)){
+					PacketSendAnswer answer2 = new PacketSendAnswer("unknown command: " + msg);
+					try {
+						server.sendMessage(port, answer2);
+					} catch (IOException e) {				
+						e.printStackTrace();
+					}
+				}
 			}
-			//TODO: evaluate commands
-//			if(!this.evaluateCommands(castedpacket2.getChatmessage(), sender, port)){
-//				PacketSendAnswer answer2 = new PacketSendAnswer("unknown command: " + msg);
-//				try {
-//					server.sendMessage(port, answer2);
-//				} catch (IOException e) {				
-//					e.printStackTrace();
-//				}
-//			}
 			break;
 		case CHAT_HANDSHAKE:
+			System.out.println("handshake");
 			PacketChatHandshake shaked = (PacketChatHandshake) packet;
 			String username = shaked.getSender();
 			clientsByUsername.put(username, port);
@@ -67,17 +99,12 @@ public class ChatPacketHandler extends PacketHandler{
 		}
 	}
 	
-	private boolean evaluateCommands(String message, String sender, int port){
-		String[] split = message.split(" ");
-		String command = split[0];
-		message = "";
-		for (int i = 1; i < split.length; i++) {
-			message += split[i] + " ";
-		}
-		
+	private boolean evaluateCommands(String command, String sender, int port){
+	
 		switch(command.trim()){
 		case servercommand1: //send answer packet back to user, with all comands servercommand1 == /help
-			String allcomands = "Commands: \n" + ChatPacketHandler.servercommand1 + "\n" + ChatPacketHandler.servercommand2 + "\n";
+			String allcomands = "Commands: \n" + ChatPacketHandler.servercommand1 + "\n" + ChatPacketHandler.servercommand2 + "\n"
+			+ ChatPacketHandler.servercommand3 + "\n" + ChatPacketHandler.servercommand4 + "\n";
 			PacketSendAnswer answer = new PacketSendAnswer(allcomands);
 			try {
 				server.sendMessage(port, answer);
@@ -85,23 +112,47 @@ public class ChatPacketHandler extends PacketHandler{
 				e.printStackTrace();
 			}
 			return true;
-		case servercommand2: //TODO: do sth. command
-			return true;
-		}
-		String hostname = "localhost";
-		String sqlport = "3306";
-		String database = "accountmanager";
-		String user = "jojo";
-		String password = "password";
-		SQLHandler.init(hostname, sqlport, user, password, database);
-		SQLHandler.connect();
-		String[] nicknames = SQLOperations.showAllNicknames().split("\n");
-		for (int i = 0; i < nicknames.length; i++) {
-			System.out.println(nicknames[i]);
-			if(command.equals(nicknames[i].trim())){
-				this.sendMessageToClient(sender, nicknames[i], message, clientsByUsername.get(nicknames[i]));
-				return true;
+		case servercommand2: //show all clients
+			StringBuffer buf = new StringBuffer("All connected clients: \n");
+			Enumeration<String> clients = this.clientsByUsername.keys();
+			while (clients.hasMoreElements()) {
+				buf.append(clients.nextElement() + "\n");
+				
 			}
+			PacketSendAnswer answer2 = new PacketSendAnswer(buf.toString());
+			try {
+				server.sendMessage(port, answer2);
+			} catch (IOException e) {			
+				e.printStackTrace();
+			}
+			return true;
+		case servercommand3: //show all ports
+			StringBuffer buf2 = new StringBuffer("All connected ports: \n");
+			Enumeration<Integer> ports = this.clientsByUsername.elements();
+			while (ports.hasMoreElements()) {
+				buf2.append(ports.nextElement() + "\n");				
+			}
+			PacketSendAnswer answer3 = new PacketSendAnswer(buf2.toString());
+			try {
+				server.sendMessage(port, answer3);
+			} catch (IOException e) {			
+				e.printStackTrace();
+			}
+			return true;
+		case servercommand4://show all clients by ports
+			StringBuffer buf3 = new StringBuffer("<client> : <port> \n");
+			Enumeration<String> clients3 = this.clientsByUsername.keys();
+			Enumeration<Integer> ports3 = this.clientsByUsername.elements();
+			while (clients3.hasMoreElements()) {
+				buf3.append(clients3.nextElement() + " : " + ports3.nextElement() + "\n");				
+			}
+			PacketSendAnswer answer4 = new PacketSendAnswer(buf3.toString());
+			try {
+				server.sendMessage(port, answer4);
+			} catch (IOException e) {			
+				e.printStackTrace();
+			}
+			return true;			
 		}
 		return false;
 	}
@@ -115,7 +166,7 @@ public class ChatPacketHandler extends PacketHandler{
 		}
 	}
 	
-	public ChatRoom testIfPacketGoesToChatRoom(int port, String sender){
+	public ChatRoom getSpecificChatRoom(String sender){
 		Iterator<ChatRoom> chatiter = this.chatrooms.iterator();
 		while(chatiter.hasNext()){
 			ChatRoom room = chatiter.next();
@@ -129,12 +180,22 @@ public class ChatPacketHandler extends PacketHandler{
 		return null;
 	}
 	
-	public void addChatRoom(ArrayList<String> clients){
-		this.chatrooms.add(new ChatRoom(clients));
+	public void createChatRoom(String user1, String user2, String user3, String user4){
+		ArrayList<String> clients = new ArrayList<String>();
+		clients.add(user1);
+		clients.add(user2);
+		clients.add(user3);
+		clients.add(user4);
+		this.addChatRoom(clients);
 	}
 	
-	public void addChatRoom(String user1, String user2, String user3, String user4){
-		this.chatrooms.add(new ChatRoom(user1, user2, user3, user4));
+	public void addChatRoom(ArrayList<String> clients){
+		ConcurrentHashMap<String, Integer> clientsByUserRoom = new ConcurrentHashMap<String, Integer>();
+		for (int j = 0; j < clients.size(); j++) {
+			int port = this.clientsByUsername.get(clients.get(j));
+			clientsByUserRoom.put(clients.get(j), port);
+		}
+		this.chatrooms.add(new ChatRoom(clientsByUserRoom, server));
 	}
 
 	public ChatServer getServer() {

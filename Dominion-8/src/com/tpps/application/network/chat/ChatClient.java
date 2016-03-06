@@ -40,6 +40,9 @@ public class ChatClient extends PacketHandler{
 	public void sendMessage(String chatmessage){
 		if(chatmessage.startsWith("/")){
 			this.sendCommand(new StringBuffer(chatmessage).deleteCharAt(0).toString());
+		}
+		else if(chatmessage.startsWith("@")){
+			this.sendMessageToClient(new StringBuffer(chatmessage).deleteCharAt(0).toString());
 		}else{
 			PacketSendChatAll packet = new PacketSendChatAll(sender, chatmessage);
 			try {
@@ -47,6 +50,22 @@ public class ChatClient extends PacketHandler{
 			} catch (IOException e) {			
 				e.printStackTrace();
 			}
+		}
+	}
+	
+	private void sendMessageToClient(String message){
+		String[] split = message.split(" ");
+		String receiver = split[0];
+		message = "";
+		for (int i = 1; i < split.length; i++) {
+			message += split[i] + " ";
+		}
+		
+		PacketSendChatToClient packet = new PacketSendChatToClient(this.sender, message, receiver);
+		try {
+			chatclient.sendMessage(packet);
+		} catch (IOException e) {		
+			e.printStackTrace();
 		}
 	}
 	
@@ -60,7 +79,7 @@ public class ChatClient extends PacketHandler{
 	}
 	
 	public static void main(String[] args) {
-		ChatClient c = new ChatClient("nishit");
+		ChatClient c = new ChatClient("Jojo");
 		System.out.println("I am: " + c.sender);
 		Scanner scanInput = new Scanner(System.in);
 		String line = null;
