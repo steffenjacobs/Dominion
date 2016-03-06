@@ -5,13 +5,20 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
 
+/**
+ * 
+ * @author ladler - Lukas Adler
+ *
+ */
 public class MainMenu extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private final Container c;
-	// private int width, height;
-	private MainMenuPanel panel;
+	private final MainMenuPanel panel;
 
+	/**
+	 * Contructor for the mainMenu
+	 */
 	public MainMenu() {
 		this.c = this.getContentPane();
 		int width = Toolkit.getDefaultToolkit().getScreenSize().width;

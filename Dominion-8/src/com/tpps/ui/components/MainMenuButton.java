@@ -10,7 +10,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.MyAudioPlayer;
 
 /**
  * 
@@ -24,6 +23,13 @@ public class MainMenuButton {
 	private final String name;
 	private int letterSize;
 
+	/**
+	 * Concstructor for the MainMenu buttons 
+	 * @param locX x coordinate of the button
+	 * @param locY y coordinate of the button
+	 * @param name of the button
+	 * @throws IOException
+	 */
 	public MainMenuButton(int locX, int locY, String name) throws IOException {
 		this.letterSize = 100;
 		this.originalImage = ImageIO.read(ClassLoader.getSystemResource("resources/img/gameObjects/testButton.png"));
@@ -38,6 +44,9 @@ public class MainMenuButton {
 		this.y = locY;
 	}
 
+	/**
+	 * prints the names of the buttons on the images
+	 */
 	private void labelImages() {
 		Graphics2D g = this.originalImage.createGraphics();
 
@@ -49,10 +58,8 @@ public class MainMenuButton {
 	}
 
 	/**
-	 * @param x
-	 *            value of the mouse
-	 * @param y
-	 *            value of the mouse
+	 * @param x value of the mouse
+	 * @param y value of the mouse
 	 * @return true if the mouse is on the button false else
 	 */
 	public boolean isOn(double x, double y) {
@@ -64,18 +71,13 @@ public class MainMenuButton {
 		}
 	}
 
-	public void onMouseEnter() {
-		System.out.println("enter " + toString());
-	}
-
-	public void onMouseExit() {
-		System.out.println("exit " + toString());
-	}
-
-	public void onMouseClick() {
-				
-	}
-
+	/**
+	 * reacts on resize events of the gui and resizes the buttons
+	 * @param x new x value
+	 * @param y new y value
+	 * @param sizeFactorWidth resize factor
+	 * @param sizeFactorHeight resize factor
+	 */
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight) {
 		this.x = x;
 		this.y = y;		
@@ -84,6 +86,10 @@ public class MainMenuButton {
 				(int) (this.originalImage.getHeight() * sizeFactorHeight));
 	}
 
+	/**
+	 * 
+	 * @return the actualButtonImage
+	 */
 	public BufferedImage getActualImage() {
 		return this.actualImage;
 	}

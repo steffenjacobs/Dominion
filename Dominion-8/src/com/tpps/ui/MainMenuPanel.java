@@ -35,10 +35,8 @@ public class MainMenuPanel extends JPanel {
 	private final int gapFactor, topGap;
 
 	/**
-	 * 
-	 * @param background: backgroundImage
-	 * @param alpha 
-	 * @param buttons
+	 * Constructor for the MainMenuPanell
+	 * @param the MainMenu which holds this panel
 	 */
 	public MainMenuPanel(MainMenu parent) {
 		this.gapFactor = 7;
@@ -56,7 +54,7 @@ public class MainMenuPanel extends JPanel {
 	}
 
 	/**
-	 * creates the Button
+	 * creates the Button on the Jpanel
 	 * @param parent
 	 */
 	private void createButtons(MainMenu parent) {
@@ -182,6 +180,11 @@ public class MainMenuPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * inner class which reacts on resize events of the gui
+	 * @author Lukas Adler
+	 *
+	 */
 	private class MyComponentAdapter extends ComponentAdapter {
 
 		@Override
