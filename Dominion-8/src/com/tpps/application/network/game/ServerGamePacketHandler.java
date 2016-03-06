@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 import com.tpps.application.game.GameBoard;
-import com.tpps.application.game.GameController;
 import com.tpps.application.game.Player;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
@@ -18,6 +17,7 @@ import com.tpps.application.network.gameSession.packets.PacketReconnect;
 import com.tpps.application.network.gameSession.packets.PacketSendBoard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
+import com.tpps.application.network.gameSession.packets.PacketUpdateCoins;
 import com.tpps.application.network.gameSession.packets.PacketUpdateValues;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
@@ -64,9 +64,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case BUY_CARD:
 				buyCardAndUpdateBoards(packet);
 				break;
-			// case PLAY_TREASURES:
-			// server.sendMessage(port, new PacketPlayTreasures());
-			// break;
+			 case PLAY_TREASURES:
+			 server.sendMessage(port, new PacketUpdateCoins(server.getGameController().getActivePlayer().getCoins()));
+			 break;
 			case END_TURN:
 				// alle Karten ablegen
 				this.server.getGameController().getActivePlayer().getDeck().refreshCardHand();

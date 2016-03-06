@@ -55,7 +55,10 @@ public class ClientGamePacketHandler extends PacketHandler {
 			}
 			break;
 		case UPDATE_VALUES:
-			// gameGui.updateValues
+			// gameGui.updateValues();
+			break;
+		case UPDATE_COINS:
+//			gameGui.updateCoins();
 			break;
 		
 		// case PLAY_TREASURES:
