@@ -115,6 +115,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 */
 	public void setLayer(int layer) {
 		this.layer = layer;
+		parent.repaint(this.getHitbox());
 	}
 
 	/**
