@@ -23,7 +23,7 @@ public final class SessionPacketReceiverAPI {
 	 * @author Steffen Jacobs
 	 */
 	public static void onPacketSessionCheckAnswer(PacketSessionCheckAnswer packet) {
-		SuperCallable<PacketSessionCheckAnswer> toCall = checkRequests.get(packet.getRequest().getUsername());
+		SuperCallable<PacketSessionCheckAnswer> toCall = checkRequests.remove(packet.getRequest().getUsername());
 		try {
 			if (toCall != null)
 				toCall.callMeMaybe(packet);
@@ -38,8 +38,7 @@ public final class SessionPacketReceiverAPI {
 	 * @author Steffen Jacobs
 	 */
 	public static void onPacketSessionGetAnswer(PacketSessionGetAnswer packet) {
-		SuperCallable<PacketSessionGetAnswer> toCall = getRequests.get(packet.getRequest().getUsername());
-		System.out.println("call: " + toCall);
+		SuperCallable<PacketSessionGetAnswer> toCall = getRequests.remove(packet.getRequest().getUsername());
 		try {
 			if (toCall != null)
 				toCall.callMeMaybe(packet);
