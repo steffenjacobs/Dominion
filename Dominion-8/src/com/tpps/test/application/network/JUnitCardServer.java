@@ -27,6 +27,14 @@ import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
 
+/**
+ * test the CardServer: client can send a check-card-name-request to the server,
+ * server answers with a correct get-request - client can send an
+ * add-card-packet to the server, server adds new card to it's storage - client
+ * can send a get-card-request to the server, server returns the requested card
+ * 
+ * @author Steffen Jacobs
+ */
 public class JUnitCardServer {
 
 	private final boolean DEBUG = false;
@@ -67,7 +75,7 @@ public class JUnitCardServer {
 		CardClient client = new CardClient(new InetSocketAddress("127.0.0.1", 1336), cHandler, false, dom);
 		cHandler.setCardClient(client);
 
-		// add card to remote-server
+		// check-card-request, then add card to remote-storage
 		client.askIfCardnameExists(sc.getName(), new SuperCallable<Boolean>() {
 
 			@Override
