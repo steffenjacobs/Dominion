@@ -42,7 +42,6 @@ public class MainMenuPanel extends JPanel {
 		this.gapFactor = 7;
 		this.parent = parent;
 		this.topGap = Toolkit.getDefaultToolkit().getScreenSize().height / 6;
-		System.out.println(topGap);
 		this.INITIALIZE_ALPHA = 0.6F;
 		MyAudioPlayer.init();
 		loadBackgroundImage();
@@ -68,7 +67,6 @@ public class MainMenuPanel extends JPanel {
 				}				
 				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}
