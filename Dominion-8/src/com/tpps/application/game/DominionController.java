@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.game.ClientGamePacketHandler;
 import com.tpps.application.network.game.GameClient;
+import com.tpps.application.storage.CardStorageController;
 
 /**
  * main controller class containing main entry point for client-application
@@ -21,6 +22,7 @@ public final class DominionController {
 	private UUID sessionID;
 	private SessionClient sessionClient;
 	private GameClient gameClient;
+	private CardStorageController storageController;
 
 	/** main entry point for client application */
 	public static void main(String[] stuff) {
@@ -29,6 +31,7 @@ public final class DominionController {
 
 	/* constructor */
 	public DominionController() {
+		storageController = new CardStorageController();
 //		new LoginGUIController();
 		try {
 			gameClient = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());
@@ -36,6 +39,14 @@ public final class DominionController {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public CardStorageController getStorageController(){
+		return storageController;
+	}
+	
+	public CardStorageController getCardRegistry(){
+		return storageController;
 	}
 	
 	public DominionController(boolean test){
