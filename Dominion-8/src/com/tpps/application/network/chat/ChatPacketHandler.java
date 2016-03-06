@@ -1,6 +1,8 @@
 package com.tpps.application.network.chat;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.network.core.PacketHandler;
@@ -14,6 +16,7 @@ public class ChatPacketHandler extends PacketHandler{
 	private final static String servercommand1 = "help";
 	private final static String servercommand2 = "cmd";
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
+	private ArrayList<ChatRoom> chatrooms = new ArrayList<ChatRoom>();
 	
 	@Override
 	public void handleReceivedPacket(int port, final Packet packet) {
@@ -21,28 +24,36 @@ public class ChatPacketHandler extends PacketHandler{
 		switch(packet.getType()){
 		case SEND_CHAT_ALL:
 			PacketSendChatAll castedpacket = (PacketSendChatAll) packet;
-			System.out.println(castedpacket.toString());
-			//TODO: send answerpacket to all clients
-			PacketSendAnswer answer = new PacketSendAnswer(castedpacket.getChatmessage());
-			try {
-				this.parent.broadcastMessage(port, answer);
-			} catch (IOException e1) {			
-				e1.printStackTrace();
+			ChatRoom room = this.testIfPacketGoesToChatRoom(port, castedpacket.getUsername());
+			if(room != null){
+				room.sendChatToAll();
+			}else{
+				PacketSendAnswer answer = new PacketSendAnswer(castedpacket.getChatmessage());
+				try {
+					this.parent.broadcastMessage(port, answer);
+				} catch (IOException e1) {			
+					e1.printStackTrace();
+				}
 			}
 			break;
 		case SEND_CHAT_COMMAND:
-			PacketSendChatCommand castedpacket2 = (PacketSendChatCommand) packet;
-			System.out.println(castedpacket2.toString());
+			PacketSendChatCommand castedpacket2 = (PacketSendChatCommand) packet;		
 			String sender = castedpacket2.getSender();
 			String msg = castedpacket2.getChatmessage();
-			if(!this.evaluateCommands(castedpacket2.getChatmessage(), sender, port)){
-				PacketSendAnswer answer2 = new PacketSendAnswer("unknown command: " + msg);
-				try {
-					server.sendMessage(port, answer2);
-				} catch (IOException e) {				
-					e.printStackTrace();
-				}
+			
+			ChatRoom room2 =  this.testIfPacketGoesToChatRoom(port, castedpacket2.getSender());
+			if(room2 != null){
+				
 			}
+			//TODO: evaluate commands
+//			if(!this.evaluateCommands(castedpacket2.getChatmessage(), sender, port)){
+//				PacketSendAnswer answer2 = new PacketSendAnswer("unknown command: " + msg);
+//				try {
+//					server.sendMessage(port, answer2);
+//				} catch (IOException e) {				
+//					e.printStackTrace();
+//				}
+//			}
 			break;
 		case CHAT_HANDSHAKE:
 			PacketChatHandshake shaked = (PacketChatHandshake) packet;
@@ -102,6 +113,28 @@ public class ChatPacketHandler extends PacketHandler{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public ChatRoom testIfPacketGoesToChatRoom(int port, String sender){
+		Iterator<ChatRoom> chatiter = this.chatrooms.iterator();
+		while(chatiter.hasNext()){
+			ChatRoom room = chatiter.next();
+			Iterator<String>  clientsiter = room.getClients().iterator();			
+			while(clientsiter.hasNext()){
+				if(sender.equals(clientsiter.next())){
+					return room;
+				}
+			}
+		}
+		return null;
+	}
+	
+	public void addChatRoom(ArrayList<String> clients){
+		this.chatrooms.add(new ChatRoom(clients));
+	}
+	
+	public void addChatRoom(String user1, String user2, String user3, String user4){
+		this.chatrooms.add(new ChatRoom(user1, user2, user3, user4));
 	}
 
 	public ChatServer getServer() {

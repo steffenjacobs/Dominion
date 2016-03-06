@@ -25,7 +25,7 @@ public enum PacketType {
 																							31), CARD_GET_CARD_REQUEST(
 																									32), CARD_GET_CARD_ANSWER(
 																											33), UPDATE_COINS(
-																													34);
+																													34), SEND_CHAT_TO_CLIENT(35);
 
 	private final int internalID;
 
