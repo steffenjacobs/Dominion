@@ -107,6 +107,18 @@ public abstract class GameObject implements Cloneable, Serializable {
 	}
 
 	/**
+	 * sets the layer the game object is on
+	 * 
+	 * @param layer
+	 *            new layer
+	 * @author Steffen Jacobs
+	 */
+	public void setLayer(int layer) {
+		this.layer = layer;
+		parent.repaint(this.getHitbox());
+	}
+
+	/**
 	 * changes the visibility of the game object
 	 * 
 	 * @author Steffen Jacobs

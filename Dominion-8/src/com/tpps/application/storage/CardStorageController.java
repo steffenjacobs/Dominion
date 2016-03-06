@@ -85,10 +85,12 @@ public final class CardStorageController {
 	 * @param card
 	 *            the card to add to the storage. Note: The card will be
 	 *            packaged internally into a different class-type. Note 2: adds
-	 *            the card to the file after calling save().
+	 *            the card to the file after calling save(). Note 3: If a card
+	 *            with the same name already exists, the card will not be
+	 *            overwritten.
 	 */
 	public static void addCard(Card card) {
-		storedCards.put(card.getName(), new SerializedCard(card.getActions(), card.getTypes(), card.getCost(),
+		storedCards.putIfAbsent(card.getName(), new SerializedCard(card.getActions(), card.getTypes(), card.getCost(),
 				card.getName(), (BufferedImage) card.getImage()));
 	}
 
@@ -98,10 +100,11 @@ public final class CardStorageController {
 	 * @param card
 	 *            the card to add to the storage. Note: This Card-Object will be
 	 *            directly added to the storage. Note 2: Adds the Card to the
-	 *            file after calling save().
+	 *            file after calling save(). Note 3: If a card with the same
+	 *            name already exists, the card will not be overwritten.
 	 */
 	public static void addCard(SerializedCard card) {
-		storedCards.put(card.getName(), card);
+		storedCards.putIfAbsent(card.getName(), card);
 	}
 
 	/**
@@ -132,5 +135,16 @@ public final class CardStorageController {
 	 */
 	public static void clearCards() {
 		storedCards.clear();
+	}
+
+	/**
+	 * checks if a card with a given name already exists
+	 * 
+	 * @param cardName
+	 *            the given name to be checked
+	 * @return whether the given card existed or not
+	 */
+	public static boolean hasCard(String cardName) {
+		return storedCards.containsKey(cardName);
 	}
 }
