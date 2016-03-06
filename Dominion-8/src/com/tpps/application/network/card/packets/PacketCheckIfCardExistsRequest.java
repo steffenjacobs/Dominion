@@ -17,6 +17,7 @@ public class PacketCheckIfCardExistsRequest extends Packet {
 
 	private final String cardName;
 	private final UUID requesterID;
+	private final String requesterName;
 
 	/**
 	 * constructor for the check-existance-request-packet
@@ -25,11 +26,23 @@ public class PacketCheckIfCardExistsRequest extends Packet {
 	 *            the name of the card
 	 * @param requesterID
 	 *            sessionID of the requester to authenticate
+	 * @param requesterName
+	 *            the requester's name
 	 */
-	public PacketCheckIfCardExistsRequest(String nameToCheck, UUID requesterID) {
+	public PacketCheckIfCardExistsRequest(String nameToCheck, UUID requesterID, String requesterName) {
 		super(PacketType.CARD_CHECK_IF_CARD_EXISTS_REQUEST);
 		this.cardName = nameToCheck;
 		this.requesterID = requesterID;
+		this.requesterName = requesterName;
+	}
+
+	/**
+	 * getter for the requester's name
+	 * 
+	 * @return the requester's name
+	 */
+	public String getRequesterName() {
+		return this.requesterName;
 	}
 
 	/**

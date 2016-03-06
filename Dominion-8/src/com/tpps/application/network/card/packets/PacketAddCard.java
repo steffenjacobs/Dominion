@@ -18,6 +18,7 @@ public class PacketAddCard extends Packet {
 
 	private final byte[] serializedCard;
 	private final UUID requesterID;
+	private final String requesterName;
 
 	/**
 	 * constructor with requesterID and the card to add
@@ -26,11 +27,23 @@ public class PacketAddCard extends Packet {
 	 *            sessionID of the requester, used for authentification-purpose
 	 * @param cardToAdd
 	 *            the card to add to the remote-storage
+	 * @param requesterName
+	 *            the requester's name
 	 */
-	public PacketAddCard(UUID requesterID, SerializedCard cardToAdd) {
+	public PacketAddCard(UUID requesterID, String requesterName, SerializedCard cardToAdd) {
 		super(PacketType.CARD_ADD_CARD);
 		this.serializedCard = cardToAdd != null ? cardToAdd.getBytes() : null;
 		this.requesterID = requesterID;
+		this.requesterName = requesterName;
+	}
+
+	/**
+	 * getter for the requester's name
+	 * 
+	 * @return the requester's name
+	 */
+	public String getRequesterName() {
+		return this.requesterName;
 	}
 
 	/**

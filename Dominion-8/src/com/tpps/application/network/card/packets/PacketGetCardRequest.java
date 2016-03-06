@@ -16,6 +16,7 @@ public class PacketGetCardRequest extends Packet {
 
 	private final String requestedCardName;
 	private final UUID requesterID;
+	private final String requesterName;
 
 	/**
 	 * constructor for the get-request
@@ -24,11 +25,23 @@ public class PacketGetCardRequest extends Packet {
 	 *            the name of the requested card
 	 * @param requesterID
 	 *            requester's sessionID to authenticate
+	 * @param requesterName
+	 *            the requester's name
 	 */
-	public PacketGetCardRequest(String requestedCardName, UUID requesterID) {
+	public PacketGetCardRequest(String requestedCardName, UUID requesterID, String requesterName) {
 		super(PacketType.CARD_GET_CARD_REQUEST);
 		this.requestedCardName = requestedCardName;
 		this.requesterID = requesterID;
+		this.requesterName = requesterName;
+	}
+
+	/**
+	 * getter for the requester's name
+	 * 
+	 * @return the requester's name
+	 */
+	public String getRequesterName() {
+		return this.requesterName;
 	}
 
 	/**
