@@ -10,6 +10,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 
 /**
  * 
@@ -18,7 +19,7 @@ import com.tpps.technicalServices.util.GraphicsUtil;
  */
 public class MainMenuButton {
 	private int x, y;
-	private final BufferedImage originalImage;
+	private BufferedImage originalImage;
 	private BufferedImage actualImage;
 	private final String name;
 	private int letterSize;
@@ -26,6 +27,8 @@ public class MainMenuButton {
 	public MainMenuButton(int locX, int locY, String name) throws IOException {
 		this.letterSize = 100;
 		this.originalImage = ImageIO.read(ClassLoader.getSystemResource("resources/img/gameObjects/testButton.png"));
+		this.originalImage = GraphicsUtil.resize(this.originalImage, this.originalImage.getWidth(), 
+				(int)(this.originalImage.getHeight() * 0.9));
 		int newWidth = (int) (Toolkit.getDefaultToolkit().getScreenSize().width / 2.35);
 		int newHeight = (int) (Toolkit.getDefaultToolkit().getScreenSize().height / 6);
 		this.name = name;
@@ -70,7 +73,7 @@ public class MainMenuButton {
 	}
 
 	public void onMouseClick() {
-		System.out.println("Clicked @" + this.toString());
+				
 	}
 
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight) {

@@ -41,10 +41,10 @@ public class MainMenuPanel extends JPanel {
 	 * @param buttons
 	 */
 	public MainMenuPanel(MainMenu parent) {
-		this.gapFactor = 6;
+		this.gapFactor = 7;
 		this.parent = parent;
-		this.topGap = 100;
-		
+		this.topGap = Toolkit.getDefaultToolkit().getScreenSize().height / 6;
+		System.out.println(topGap);
 		this.INITIALIZE_ALPHA = 0.6F;
 		MyAudioPlayer.init();
 		loadBackgroundImage();
@@ -65,7 +65,7 @@ public class MainMenuPanel extends JPanel {
 			String[] names = new String[]{"Single Player", "Multi Player", "Settings", "Community"};
 			try {
 				for (int i = 0; i < buttons.length; i++) {
-					buttons[i] = new MainMenuButton((parent.getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1),
+					buttons[i] = new MainMenuButton((parent.getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1) + topGap,
 							names[i]);
 				}				
 				
@@ -137,7 +137,7 @@ public class MainMenuPanel extends JPanel {
 				this.parent.getWidth(), this.parent.getHeight());
 		for (int i = 0; i < buttons.length; i++) {
 			buttons[i].onResize((parent.getWidth() / 2)
-					- (buttons[i].getActualImage().getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1),
+					- (buttons[i].getActualImage().getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1) + topGap,
 					sizeFactorWidth, sizeFactorHeight);
 		}				
 	}
@@ -154,20 +154,22 @@ public class MainMenuPanel extends JPanel {
 		 */
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			MyAudioPlayer.doClick();
 			if (buttons[0].isOn(e.getX(), e.getY())) {
-				
-				MyAudioPlayer.doClick();
 				MainMenuPanel.this.parent.dispose();
 				try {
-					new GameWindow().setVisible(true);
-				} catch (IOException e1) {
+					new GameWindow();
+				} catch (IOException e1) {				
 					e1.printStackTrace();
-				}
+				}				
 			}
 			if (buttons[1].isOn(e.getX(), e.getY())) {
-				
-				MyAudioPlayer.doClick();				
-				
+				MainMenuPanel.this.parent.dispose();
+				try {
+					new GameWindow();
+				} catch (IOException e1) {				
+					e1.printStackTrace();
+				}				
 			}
 		}
 
