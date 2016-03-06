@@ -51,7 +51,8 @@ public class ClientConnectionThread extends Thread {
 					System.out.println(length);
 					byte[] data = new byte[length];
 					inStream.readFully(data);
-					receiver.handleReceivedPacket(clientSocket.getLocalPort(), PacketType.getPacket(data));
+					new Thread(() -> receiver.handleReceivedPacket(clientSocket.getLocalPort(),
+							PacketType.getPacket(data))).start();
 				} catch (IOException e) {
 					System.out.println("Network Error: Connection Lost.");
 					interrupt();
