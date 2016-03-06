@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.UUID;
+import java.util.concurrent.Semaphore;
 
 import javax.imageio.ImageIO;
 
@@ -23,6 +23,10 @@ import com.tpps.application.network.card.CardClient;
 import com.tpps.application.network.card.CardPacketHandlerClient;
 import com.tpps.application.network.card.CardPacketHandlerServer;
 import com.tpps.application.network.card.CardServer;
+import com.tpps.application.network.clientSession.client.SessionClient;
+import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
+import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
+import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
@@ -37,7 +41,7 @@ import com.tpps.application.storage.SerializedCard;
  */
 public class JUnitCardServer {
 
-	private final boolean DEBUG = false;
+	private final boolean DEBUG = true;
 
 	@Test
 	public void test() throws IOException, InterruptedException {
@@ -64,10 +68,36 @@ public class JUnitCardServer {
 
 		// setup Dummy-DominionController
 		DominionController dom = new DominionController(true);
-		dom.setSessionID(UUID.randomUUID());
+		dom.setCredentials("testname", "test@test.test");
+
+		// setup session-server
+		new Thread(() -> {
+			try {
+				new SessionServer();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
+		Thread.sleep(100);
+
+		//get valid session
+		SessionClient sess = new SessionClient(new InetSocketAddress("127.0.0.1", 1337));
+		Semaphore halt = new Semaphore(1);
+		halt.acquire();
+		SessionPacketSenderAPI.sendGetRequest(sess, dom.getUsername(), new SuperCallable<PacketSessionGetAnswer>() {
+
+			@Override
+			public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer object) {
+				dom.setSessionID(object.getLoginSessionID());
+				halt.release();
+				return null;
+			}
+		});
+		halt.acquire();
+		halt.release();
 
 		// start server
-		new CardServer(new InetSocketAddress("127.0.0.1", 1336), new CardPacketHandlerServer(serverStorage),
+		new CardServer(new InetSocketAddress("127.0.0.1", 1336), new CardPacketHandlerServer(serverStorage, sess),
 				serverStorage);
 
 		// start client
@@ -76,6 +106,8 @@ public class JUnitCardServer {
 		cHandler.setCardClient(client);
 
 		// check-card-request, then add card to remote-storage
+		
+		halt.acquire();
 		client.askIfCardnameExists(sc.getName(), new SuperCallable<Boolean>() {
 
 			@Override
@@ -89,28 +121,44 @@ public class JUnitCardServer {
 						e.printStackTrace();
 					}
 				}
+				if (DEBUG)
+					System.out.println("CHECK #1");
+				halt.release();
 				return null;
 			}
 		});
 
-		// check if card is still there
+		halt.acquire();
+		halt.release();
+		
+		//wait until card is saved on server
 		Thread.sleep(100);
+		
+		// check if card is still there
 		if (DEBUG)
 			serverStorage.listCards();
+		
+		halt.acquire();
 		client.askIfCardnameExists(sc.getName(), new SuperCallable<Boolean>() {
 
 			@Override
 			public Boolean callMeMaybe(Boolean object) {
-				if (DEBUG)
-					System.out.println(object);
 				assertNotNull(object);
 				assertTrue(object.booleanValue());
+				if (DEBUG)
+					System.out.println("CHECK #2");
+				halt.release();
 				return null;
 			}
 		});
+		
+		halt.acquire();
+		halt.release();
 
 		// get card from server and store it automatically
 		client.requestCardFromServer(sc.getName());
+		
+		//wait until card is back
 		Thread.sleep(100);
 
 		// check if card was stored properly
