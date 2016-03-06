@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 
+import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.core.packet.PacketType;
 
 /**
@@ -109,5 +110,17 @@ public class ServerConnectionThread extends Thread {
 		} catch (SocketException e) {
 			return false;
 		}
+	}
+
+	/**
+	 * sends the data over the network to the connected server
+	 * 
+	 * @param packet
+	 *            packet to send
+	 * @author Steffen Jacobs
+	 * @throws IOException
+	 */
+	public boolean sendPacket(Packet packet) throws IOException {
+		return sendMessage(PacketType.getBytes(packet));
 	}
 }
