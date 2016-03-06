@@ -25,6 +25,11 @@ public class GameWindow extends JFrame {
 	public static GameWindow getInstance() {
 		return instance;
 	}
+	
+	public static GameWindow setInstance(GameWindow gw){
+		instance = gw;
+		return gw;
+	}
 
 	public static void main(String[] args) throws IOException {
 		instance = new GameWindow();
@@ -40,21 +45,21 @@ public class GameWindow extends JFrame {
 	 * @author Steffen Jacobs
 	 */
 	public GameWindow() throws IOException {
-		JFrame frame = new JFrame();
-		frame.setSize(100, 100);
-		GraphicFramework gf = new GraphicFramework(frame);
-		gf.setSize(100, 100);
-		gf.addComponent(new Card(null, null, "Lachs", 100,gf));
-		frame.add(gf);
+//		JFrame frame = new JFrame();
+//		frame.setSize(100, 100);
+//		GraphicFramework gf = new GraphicFramework(frame);
+//		gf.setSize(100, 100);
+//		gf.addComponent(new Card(null, null, "Lachs", 100,gf));
+//		frame.add(gf);
 		final int WIDTH = 1280, HEIGHT = 720;
 
 		c = this.getContentPane();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(WIDTH, HEIGHT);
-		this.setMinimumSize(new Dimension(1280, 720));
+		this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
 		this.setVisible(true);
 		framework = new GraphicFramework(this);
-		this.add(framework);
+		this.setContentPane(framework);
 
 		BufferedImage im = ImageIO
 				.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
@@ -65,7 +70,7 @@ public class GameWindow extends JFrame {
 		
 		GFButton gfb = new TestButton(.1, .1, .4, .4, WIDTH, HEIGHT, 5, im, framework, "third");
 		
-		
+		this.revalidate();
 		framework.addComponent(gfb);
 		Card.resetClassID();
 		framework.addComponent(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.ADD_ACTION_TO_PLAYER), CollectionsUtil.linkedList(2)), 

@@ -159,7 +159,7 @@ public class MainMenuPanel extends JPanel {
 				MyAudioPlayer.doClick();
 				MainMenuPanel.this.parent.dispose();
 				try {
-					new GameWindow().setVisible(true);
+					GameWindow.setInstance(new GameWindow()).setVisible(true);;
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
