@@ -7,6 +7,7 @@ import com.tpps.application.network.card.packets.PacketCheckIfCardExistsAnswer;
 import com.tpps.application.network.card.packets.PacketCheckIfCardExistsRequest;
 import com.tpps.application.network.card.packets.PacketGetCardAnswer;
 import com.tpps.application.network.card.packets.PacketGetCardRequest;
+import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
@@ -19,16 +20,22 @@ import com.tpps.application.storage.CardStorageController;
  */
 public class CardPacketHandlerServer extends PacketHandler {
 
-	CardStorageController cardStorage;
+	private CardStorageController cardStorage;
+
+	private SessionClient sessionTester;
 
 	/**
 	 * constructor taking a card-storage
 	 * 
 	 * @param cardStorage
 	 *            the card-storage to use
+	 * @param sessionClient
+	 *            the instance of the SessionClient to check the requesters
+	 *            validity
 	 */
-	public CardPacketHandlerServer(CardStorageController cardStorage) {
+	public CardPacketHandlerServer(CardStorageController cardStorage, SessionClient sessionClient) {
 		this.cardStorage = cardStorage;
+		this.sessionTester = sessionClient;
 	}
 
 	/**
@@ -44,8 +51,13 @@ public class CardPacketHandlerServer extends PacketHandler {
 		ServerConnectionThread connThread = parent.getClientThread(port);
 		switch (packet.getType()) {
 		case CARD_CHECK_IF_CARD_EXISTS_REQUEST:
-			// TODO: infer uuid-test (via port-map?)
+
 			PacketCheckIfCardExistsRequest request = (PacketCheckIfCardExistsRequest) packet;
+
+			// check session-validity
+			if (!sessionTester.checkSessionSync(request.getRequesterName(), request.getRequesterID()))
+				break;
+
 			PacketCheckIfCardExistsAnswer answer = new PacketCheckIfCardExistsAnswer(
 					this.cardStorage.hasCard(request.getCardName()), request);
 			try {
@@ -56,18 +68,27 @@ public class CardPacketHandlerServer extends PacketHandler {
 			break;
 		case CARD_ADD_CARD:
 			PacketAddCard cardAdd = (PacketAddCard) packet;
-			// TODO: infer uuid-test
+
+			// check session-validity
+			if (!sessionTester.checkSessionSync(cardAdd.getRequesterName(), cardAdd.getRequesterID()))
+				break;
+
 			this.cardStorage.addCard(cardAdd.getSerializedCard());
 			break;
 		case CARD_GET_CARD_REQUEST:
 			PacketGetCardRequest request2 = (PacketGetCardRequest) packet;
-			// TODO: infer uuid-test
+
+			// check session-validity
+			if (!sessionTester.checkSessionSync(request2.getRequesterName(), request2.getRequesterID()))
+				break;
+
 			try {
 				connThread.sendPacket(
 						new PacketGetCardAnswer(this.cardStorage.getCard(request2.getRequestedCardName()), request2));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			break;
 		default:
 			break;
 		}

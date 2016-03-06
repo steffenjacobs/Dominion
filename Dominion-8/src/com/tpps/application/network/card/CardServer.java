@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 
+import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.Server;
 import com.tpps.application.storage.CardStorageController;
@@ -35,7 +36,8 @@ public class CardServer extends Server {
 	/** main entry-point for the CardServer */
 	public static void main(String[] input) throws IOException {
 		CardStorageController tmpStorage = new CardStorageController("serverCards.bin");
-		new CardServer(new InetSocketAddress(SERVER_INTERFACE, PORT), new CardPacketHandlerServer(tmpStorage),
+		new CardServer(new InetSocketAddress(SERVER_INTERFACE, PORT),
+				new CardPacketHandlerServer(tmpStorage, new SessionClient(new InetSocketAddress("127.0.0.1", 1337))),
 				tmpStorage);
 	}
 

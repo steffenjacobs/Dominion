@@ -55,7 +55,7 @@ public class CardClient extends Client {
 	 */
 	public void askIfCardnameExists(String name, SuperCallable<Boolean> callable) {
 		try {
-			super.sendMessage(new PacketCheckIfCardExistsRequest(name, parent.getSessionID()));
+			super.sendMessage(new PacketCheckIfCardExistsRequest(name, parent.getSessionID(), parent.getUsername()));
 			addRequests.put(name, callable);
 
 		} catch (IOException e) {
@@ -94,7 +94,7 @@ public class CardClient extends Client {
 	 */
 	public void addCardToRemoteStorage(SerializedCard card) {
 		try {
-			super.sendMessage(new PacketAddCard(parent.getSessionID(), card));
+			super.sendMessage(new PacketAddCard(parent.getSessionID(), parent.getUsername(), card));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -109,7 +109,7 @@ public class CardClient extends Client {
 	 */
 	public void requestCardFromServer(String cardName) {
 		try {
-			super.sendMessage(new PacketGetCardRequest(cardName, parent.getSessionID()));
+			super.sendMessage(new PacketGetCardRequest(cardName, parent.getSessionID(), parent.getUsername()));
 			this.getRequests.put(cardName, new SuperCallable<SerializedCard>() {
 
 				@Override
