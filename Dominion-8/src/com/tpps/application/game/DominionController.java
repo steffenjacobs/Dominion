@@ -37,6 +37,10 @@ public final class DominionController {
 		}
 		
 	}
+	
+	public DominionController(boolean test){
+		//do nothing, just init object
+	}
 
 	/** sets the session-client instance and starts keep-alive */
 	public void setSessionClient(SessionClient sc) {

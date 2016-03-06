@@ -1,6 +1,6 @@
 package com.tpps.test.application.storage;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -55,31 +55,34 @@ public class JUnitCardStorageController {
 
 		SerializedCard sc2 = new SerializedCard(actions2, types2, 4, "♞ ♞ ♞ TestCardäöü♞ ", img);
 
+		//create standard Card-Storage-Controller
+		CardStorageController registry = new CardStorageController();
+		
 		// add first card to Card-Storage-Controller
-		CardStorageController.addCard(sc);
+		registry.addCard(sc);
 
 		// remove first card from Card-Storage-Controller to check if it can be
 		// added and removed successfully
-		assertEquals(sc, CardStorageController.removeCard(sc));
+		assertEquals(sc, registry.removeCard(sc));
 
 		// add both cards
-		CardStorageController.addCard(sc);
-		CardStorageController.addCard(sc2);
+		registry.addCard(sc);
+		registry.addCard(sc2);
 
 		// save all added cards to file
-		CardStorageController.saveCards();
+		registry.saveCards();
 
 		// remove all cards from cache
-		CardStorageController.clearCards();
+		registry.clearCards();
 
 		// load cards from file
-		CardStorageController.loadCards();
+		registry.loadCards();
 
 		// check if both cards are still correct
-		SerializedCard sc3 = CardStorageController.getCard(sc.getName());
+		SerializedCard sc3 = registry.getCard(sc.getName());
 		assertEquals(sc, sc3);
 
-		SerializedCard sc4 = CardStorageController.getCard(sc2.getName());
+		SerializedCard sc4 = registry.getCard(sc2.getName());
 		assertEquals(sc2, sc4);
 
 		// print both cards

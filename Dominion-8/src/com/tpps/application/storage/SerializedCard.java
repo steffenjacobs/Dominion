@@ -142,34 +142,39 @@ public class SerializedCard {
 	 * 
 	 * @return a serialized representation of this instance of a SerializedCard
 	 */
-	public byte[] getBytes() throws IOException {
-
+	public byte[] getBytes() {
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-		ImageIO.write(image, "png", byteStream);
-		byte[] serializedJPG = byteStream.toByteArray();
+		try {
+			ImageIO.write(image, "png", byteStream);
 
-		ByteBuffer buff = ByteBuffer.allocate(serializedJPG.length + 1024);
-		buff.putInt(serializedJPG.length);
-		buff.put(serializedJPG);
+			byte[] serializedJPG = byteStream.toByteArray();
 
-		byte[] tmp = this.name.getBytes(Charset.forName("UTF-8"));
-		buff.putInt(tmp.length);
-		buff.put(tmp);
-		buff.putInt(this.cost);
-		buff.putInt(this.types.size());
-		for (CardType ct : this.types) {
-			tmp = ct.name().getBytes(Charset.forName("UTF-8"));
+			ByteBuffer buff = ByteBuffer.allocate(serializedJPG.length + 1024);
+			buff.putInt(serializedJPG.length);
+			buff.put(serializedJPG);
+
+			byte[] tmp = this.name.getBytes(Charset.forName("UTF-8"));
 			buff.putInt(tmp.length);
 			buff.put(tmp);
-		}
+			buff.putInt(this.cost);
+			buff.putInt(this.types.size());
+			for (CardType ct : this.types) {
+				tmp = ct.name().getBytes(Charset.forName("UTF-8"));
+				buff.putInt(tmp.length);
+				buff.put(tmp);
+			}
 
-		buff.putInt(this.actions.size());
-		for (Entry<CardAction, Integer> entr : this.actions.entrySet()) {
-			buff.putInt(entr.getKey().name().length());
-			buff.put(entr.getKey().name().getBytes());
-			buff.putInt(entr.getValue());
+			buff.putInt(this.actions.size());
+			for (Entry<CardAction, Integer> entr : this.actions.entrySet()) {
+				buff.putInt(entr.getKey().name().length());
+				buff.put(entr.getKey().name().getBytes());
+				buff.putInt(entr.getValue());
+			}
+			return buff.array();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return buff.array();
+		return null;
 	}
 
 	/**

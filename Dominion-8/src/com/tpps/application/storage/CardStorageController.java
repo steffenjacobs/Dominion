@@ -16,17 +16,26 @@ import com.tpps.technicalServices.util.ByteUtil;
  * 
  * @author Steffen Jacobs
  */
-public final class CardStorageController {
+public class CardStorageController {
 
-	private static ConcurrentHashMap<String, SerializedCard> storedCards = new ConcurrentHashMap<String, SerializedCard>();
+	private ConcurrentHashMap<String, SerializedCard> storedCards = new ConcurrentHashMap<String, SerializedCard>();
 	private static final String STORAGE_FILE = "cards.bin";
+	private String storageFile;
+
+	public CardStorageController() {
+		this.storageFile = STORAGE_FILE;
+	}
+
+	public CardStorageController(String filename) {
+		this.storageFile = filename;
+	}
 
 	/**
 	 * loads all cards from file
 	 */
-	public static void loadCards() {
+	public void loadCards() {
 		try {
-			byte[] bytes = Files.readAllBytes(Paths.get(STORAGE_FILE));
+			byte[] bytes = Files.readAllBytes(Paths.get(storageFile));
 			ByteBuffer buff = ByteBuffer.wrap(bytes);
 			int count = buff.getInt();
 			int length;
@@ -48,7 +57,7 @@ public final class CardStorageController {
 	/**
 	 * saves all stored cards to file
 	 */
-	public static void saveCards() {
+	public void saveCards() {
 		try {
 			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
 			bytes.write(ByteUtil.intToByteArray(storedCards.size()));
@@ -60,7 +69,7 @@ public final class CardStorageController {
 			}
 			bytes.flush();
 
-			Files.write(Paths.get(STORAGE_FILE), bytes.toByteArray());
+			Files.write(Paths.get(storageFile), bytes.toByteArray());
 			bytes.close();
 
 		} catch (IOException e) {
@@ -75,7 +84,7 @@ public final class CardStorageController {
 	 *            the name of the card
 	 * @return the requested card or null
 	 */
-	public static SerializedCard getCard(String name) {
+	public SerializedCard getCard(String name) {
 		return storedCards.get(name);
 	}
 
@@ -89,7 +98,7 @@ public final class CardStorageController {
 	 *            with the same name already exists, the card will not be
 	 *            overwritten.
 	 */
-	public static void addCard(Card card) {
+	public void addCard(Card card) {
 		storedCards.putIfAbsent(card.getName(), new SerializedCard(card.getActions(), card.getTypes(), card.getCost(),
 				card.getName(), (BufferedImage) card.getImage()));
 	}
@@ -103,7 +112,7 @@ public final class CardStorageController {
 	 *            file after calling save(). Note 3: If a card with the same
 	 *            name already exists, the card will not be overwritten.
 	 */
-	public static void addCard(SerializedCard card) {
+	public void addCard(SerializedCard card) {
 		storedCards.putIfAbsent(card.getName(), card);
 	}
 
@@ -114,7 +123,7 @@ public final class CardStorageController {
 	 * @param card
 	 *            the card to be removed
 	 */
-	public static SerializedCard removeCard(SerializedCard card) {
+	public SerializedCard removeCard(SerializedCard card) {
 		return storedCards.remove(card.getName());
 	}
 
@@ -125,7 +134,7 @@ public final class CardStorageController {
 	 * @param card
 	 *            the name of the card to be removed
 	 */
-	public static SerializedCard removeCard(String cardName) {
+	public SerializedCard removeCard(String cardName) {
 		return storedCards.remove(cardName);
 	}
 
@@ -133,7 +142,7 @@ public final class CardStorageController {
 	 * removes all cards from the storage. Note: Removes the cards from the file
 	 * after calling save().
 	 */
-	public static void clearCards() {
+	public void clearCards() {
 		storedCards.clear();
 	}
 
@@ -144,7 +153,14 @@ public final class CardStorageController {
 	 *            the given name to be checked
 	 * @return whether the given card existed or not
 	 */
-	public static boolean hasCard(String cardName) {
+	public boolean hasCard(String cardName) {
 		return storedCards.containsKey(cardName);
+	}
+
+	/** lists all stored cards in the console */
+	public void listCards() {
+		for (SerializedCard card : storedCards.values()) {
+			System.out.println(card.toString());
+		}
 	}
 }
