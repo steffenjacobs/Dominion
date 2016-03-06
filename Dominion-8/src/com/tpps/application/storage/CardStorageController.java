@@ -35,6 +35,9 @@ public class CardStorageController {
 	 */
 	public void loadCards() {
 		try {
+			if (!Files.exists(Paths.get(storageFile)))
+				Files.createFile(Paths.get(storageFile));
+
 			byte[] bytes = Files.readAllBytes(Paths.get(storageFile));
 			ByteBuffer buff = ByteBuffer.wrap(bytes);
 			int count = buff.getInt();
@@ -159,8 +162,10 @@ public class CardStorageController {
 
 	/** lists all stored cards in the console */
 	public void listCards() {
+		System.out.println("--- Cards in storage (" + storedCards.size() + "): ---");
 		for (SerializedCard card : storedCards.values()) {
 			System.out.println(card.toString());
 		}
+		System.out.println("---                       ---");
 	}
 }

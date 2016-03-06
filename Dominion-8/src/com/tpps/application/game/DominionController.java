@@ -50,7 +50,8 @@ public final class DominionController {
 	}
 	
 	public DominionController(boolean test){
-		//do nothing, just init object
+		storageController = new CardStorageController();
+		//do nothing else, just init object
 	}
 
 	/** sets the session-client instance and starts keep-alive */
