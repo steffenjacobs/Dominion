@@ -5,15 +5,35 @@ import com.tpps.application.network.card.packets.PacketGetCardAnswer;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
 
+/**
+ * Packet-Handler for the Card-Client
+ * 
+ * @author Steffen Jacobs
+ */
 public class CardPacketHandlerClient extends PacketHandler {
 
 	CardClient cardClient;
 
+	/**
+	 * setter setting the parent card-client to manage the callables
+	 * 
+	 * @param cardClient
+	 *            the card-client instance to be set
+	 * @return the current instance of the PacketHandler
+	 */
 	public CardPacketHandlerClient setCardClient(CardClient cardClient) {
 		this.cardClient = cardClient;
 		return this;
 	}
 
+	/**
+	 * handles the incoming traffic from the server
+	 * 
+	 * @param port
+	 *            the server is connected
+	 * @param packet
+	 *            packet the server sent
+	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {
 		switch (packet.getType()) {

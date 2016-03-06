@@ -12,14 +12,33 @@ import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.storage.CardStorageController;
 
+/**
+ * Packet-Handler for the Card-Server
+ * 
+ * @author Steffen Jacobs
+ */
 public class CardPacketHandlerServer extends PacketHandler {
 
 	CardStorageController cardStorage;
 
+	/**
+	 * constructor taking a card-storage
+	 * 
+	 * @param cardStorage
+	 *            the card-storage to use
+	 */
 	public CardPacketHandlerServer(CardStorageController cardStorage) {
 		this.cardStorage = cardStorage;
 	}
 
+	/**
+	 * handles all the packets for the card-server
+	 * 
+	 * @param port
+	 *            port of the client who sent the packet
+	 * @param packet
+	 *            packet a client sent
+	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {
 		ServerConnectionThread connThread = parent.getClientThread(port);

@@ -13,15 +13,46 @@ import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.storage.SerializedCard;
 
+/**
+ * represents the Card-Client exchanging data with the card-server
+ * 
+ * @author Steffen Jacobs
+ */
 public class CardClient extends Client {
-	DominionController parent;
 
+	private final DominionController parent;
+
+	private ConcurrentHashMap<String, SuperCallable<SerializedCard>> getRequests = new ConcurrentHashMap<String, SuperCallable<SerializedCard>>();
+	private ConcurrentHashMap<String, SuperCallable<Boolean>> addRequests = new ConcurrentHashMap<String, SuperCallable<Boolean>>();
+
+	/**
+	 * constructor taking: the address of the server, a packet-handler, whether
+	 * to connect async and the parent main-instance of the entire application
+	 * 
+	 * @param _address
+	 *            the address to find the server
+	 * @param _handler
+	 *            the packet-handler for the card-client
+	 * @param connectAsync
+	 *            whether to connect asynchronously
+	 * @param _parent
+	 *            the main instance of the entire application
+	 */
 	public CardClient(SocketAddress _address, PacketHandler _handler, boolean connectAsync, DominionController _parent)
 			throws IOException {
 		super(_address, _handler, connectAsync);
 		this.parent = _parent;
 	}
 
+	/**
+	 * sends a packet to the card-server if the requested card exists
+	 * 
+	 * @param name
+	 *            name of the card to check
+	 * @param callable
+	 *            the callable that will be called when the answer-packet
+	 *            arrives
+	 */
 	public void askIfCardnameExists(String name, SuperCallable<Boolean> callable) {
 		try {
 			super.sendMessage(new PacketCheckIfCardExistsRequest(name, parent.getSessionID()));
@@ -32,14 +63,35 @@ public class CardClient extends Client {
 		}
 	}
 
+	/**
+	 * getter for the get-request-callable, called by the client-packet-handler
+	 * 
+	 * @param name
+	 *            the requested name
+	 * @return the callable for the name
+	 */
 	public SuperCallable<SerializedCard> getGetCallable(String name) {
 		return getRequests.get(name);
 	}
 
+	/**
+	 * getter for the add-request-callable, called by the client-packet-handler
+	 * 
+	 * @param name
+	 *            the requested name
+	 * @return the callable for the name
+	 */
 	public SuperCallable<Boolean> getAddCallable(String name) {
 		return addRequests.get(name);
 	}
 
+	/**
+	 * adds a card to the remote-storage. Note: It could take a few milliseconds
+	 * until the card has been added
+	 * 
+	 * @param card
+	 *            card to add to the remote storage
+	 */
 	public void addCardToRemoteStorage(SerializedCard card) {
 		try {
 			super.sendMessage(new PacketAddCard(parent.getSessionID(), card));
@@ -48,6 +100,13 @@ public class CardClient extends Client {
 		}
 	}
 
+	/**
+	 * requests a card from a server and automatically puts it into the own
+	 * storage
+	 * 
+	 * @param cardName
+	 *            the name of the requested card
+	 */
 	public void requestCardFromServer(String cardName) {
 		try {
 			super.sendMessage(new PacketGetCardRequest(cardName, parent.getSessionID()));
@@ -64,8 +123,5 @@ public class CardClient extends Client {
 			e.printStackTrace();
 		}
 	}
-
-	private ConcurrentHashMap<String, SuperCallable<SerializedCard>> getRequests = new ConcurrentHashMap<String, SuperCallable<SerializedCard>>();
-	private ConcurrentHashMap<String, SuperCallable<Boolean>> addRequests = new ConcurrentHashMap<String, SuperCallable<Boolean>>();
 
 }
