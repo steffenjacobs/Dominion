@@ -1,8 +1,9 @@
 package com.tpps.test.application.network;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,12 +13,10 @@ import org.junit.Test;
 
 import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
-import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
 import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
 import com.tpps.application.network.clientSession.server.SessionManager;
 import com.tpps.application.network.clientSession.server.SessionPacketHandler;
 import com.tpps.application.network.clientSession.server.SessionServer;
-import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.SuperCallable;
 
@@ -42,17 +41,15 @@ import com.tpps.application.network.core.SuperCallable;
 public class JUnitSessionServerTest {
 	private final static int MAX_TIMEOUT = 100;
 	private final String TEST_USER = "Test-User";
+	private static final boolean doLongTest = false;
 
-	// easy way to get data over from the other thread
 	private static UUID receivedUUID;
-	private static boolean state = false;
 
 	/** tests the Session-Server */
 	@Test
 	public void test() throws IOException, InterruptedException {
 		// initialize variables
 		SessionPacketHandler serverPacketHandler = new SessionPacketHandler();
-		boolean doLongTest = true;
 
 		int sessionPort = 1337;
 
@@ -98,51 +95,33 @@ public class JUnitSessionServerTest {
 		assertNotNull(receivedUUID);
 
 		// check if session is still valid
-		assertTrue(checkSession(sessionClient));
+		assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
+
+		// bulk-test 
+		for (int i = 0; i < 1000; i++) {
+			assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
+		}
 
 		if (doLongTest) {
 			// Start keep-alive
 			sessionClient.keepAlive(TEST_USER, true);
 
 			// wait until session would be invalidated without keep-alive
-			System.out.println("Waiting " + (SessionManager.getExpiration() * 1000 + 5000)/1000 + " seconds");
+			System.out.println("Waiting " + (SessionManager.getExpiration() * 1000 + 5000) / 1000 + " seconds");
 			Thread.sleep(SessionManager.getExpiration() * 1000 + 5000);
 
 			// check if session is still valid
-			assertTrue(checkSession(sessionClient));
+			assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 
 			// stop keep-alive
 			sessionClient.keepAlive(TEST_USER, false);
 
 			// wait again
-			System.out.println("Waiting " + (SessionManager.getExpiration() * 1000 + 5000)/1000 + " seconds (again)");
+			System.out.println("Waiting " + (SessionManager.getExpiration() * 1000 + 5000) / 1000 + " seconds (again)");
 			Thread.sleep(SessionManager.getExpiration() * 1000 + 5000);
 
 			// check if session is still valid
-			assertFalse(checkSession(sessionClient));
+			assertFalse(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 		}
-	}
-
-	/**
-	 * checks if the session is still valid
-	 * 
-	 * @return if the session is still valid
-	 * @author Steffen Jacobs
-	 */
-	private boolean checkSession(Client sessionClient) throws InterruptedException {
-		SessionPacketSenderAPI.sendCheckRequest(sessionClient, TEST_USER, receivedUUID,
-				new SuperCallable<PacketSessionCheckAnswer>() {
-					@Override
-					public PacketSessionCheckAnswer callMeMaybe(PacketSessionCheckAnswer answer) {
-						state = answer.getState();
-						// check if request is not null
-						assertThat(answer.getRequest(), is(notNullValue()));
-
-						return null;
-					}
-				});
-
-		Thread.sleep(MAX_TIMEOUT);
-		return state;
 	}
 }
