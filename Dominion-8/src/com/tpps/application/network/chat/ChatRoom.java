@@ -3,6 +3,7 @@ package com.tpps.application.network.chat;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -133,5 +134,14 @@ public class ChatRoom {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public String toString(){
+		Iterator<String> members = this.getClients().iterator();
+		String membersAsString = "";
+		while(members.hasNext()){
+			membersAsString += members.next() + ", ";
+		}
+		return "ID: " + this.id + " Members: " + membersAsString;
 	}
 }

@@ -3,6 +3,7 @@ package com.tpps.application.network.chat;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import com.tpps.application.network.core.Server;
@@ -43,6 +44,8 @@ public class ChatServer extends Server{
 				if (line.startsWith("help")) {
 					System.out.println("help");
 					System.out.println("create chatroom <nick1> <nick2> <nick3> <nick4>");
+					System.out.println("show all chatrooms");
+					System.out.println("delete chatroom <nickname>");
 				}
 				else if(line.startsWith("create chatroom")){
 					String[] words = line.split("\\s+");
@@ -50,8 +53,14 @@ public class ChatServer extends Server{
 						System.out.println(words[i]);
 					}
 					chatpackethandler.createChatRoom(words[2], words[3], words[4], words[5]);
+				}else if(line.startsWith("show all chatrooms")){
+					for (Iterator<ChatRoom> iterator = this.chatpackethandler.getChatrooms().iterator(); iterator.hasNext();) {
+						System.out.println(iterator.next());						
+					}
+				}else if(line.startsWith("delete chatroom")){
+					String[] words = line.split("\\s+");
+					this.chatpackethandler.deleteChatRoom(words[2]);
 				}
-				
 		}
 	}
 

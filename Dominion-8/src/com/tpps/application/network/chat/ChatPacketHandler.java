@@ -38,6 +38,9 @@ public class ChatPacketHandler extends PacketHandler{
 				PacketSendAnswer answer = new PacketSendAnswer(castedpacket.getChatmessage());
 				for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 				    String nickname = entry.getKey();
+				    if(nickname.equals(castedpacket.getUsername())){
+				    	continue;
+				    }				    
 				    if(!this.isUserInChatRoom(nickname)){
 				    	try {
 							this.server.sendMessage(entry.getValue(), answer);
@@ -109,8 +112,8 @@ public class ChatPacketHandler extends PacketHandler{
 	
 		switch(command.trim()){
 		case servercommand1: //send answer packet back to user, with all comands servercommand1 == /help
-			String allcomands = "Commands: \n" + ChatPacketHandler.servercommand1 + "\n" + ChatPacketHandler.servercommand2 + "\n"
-			+ ChatPacketHandler.servercommand3 + "\n" + ChatPacketHandler.servercommand4 + "\n";
+			String allcomands = "Commands: \n/" + ChatPacketHandler.servercommand1 + "\n/" + ChatPacketHandler.servercommand2 + "\n/"
+			+ ChatPacketHandler.servercommand3 + "\n/" + ChatPacketHandler.servercommand4;
 			PacketSendAnswer answer = new PacketSendAnswer(allcomands);
 			try {
 				server.sendMessage(port, answer);
@@ -195,6 +198,28 @@ public class ChatPacketHandler extends PacketHandler{
 		this.addChatRoom(clients);
 	}
 	
+	public boolean deleteChatRoom(int id){
+		for (Iterator<ChatRoom> iterator = chatrooms.iterator(); iterator.hasNext();) {
+			ChatRoom chatroom = iterator.next();
+			if(chatroom.getId() == id){
+				chatrooms.remove(chatroom);
+				chatroom = null;
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean deleteChatRoom(String user){
+		ChatRoom room = this.getSpecificChatRoom(user);
+		if(room != null){
+			this.chatrooms.remove(room);
+			room = null;
+			return true;
+		}
+		return false;
+	}
+	
 	public void addChatRoom(ArrayList<String> clients){
 		ConcurrentHashMap<String, Integer> clientsByUserRoom = new ConcurrentHashMap<String, Integer>();
 		for (int j = 0; j < clients.size(); j++) {
@@ -224,6 +249,10 @@ public class ChatPacketHandler extends PacketHandler{
 
 	public void setServer(ChatServer server) {
 		this.server = server;
+	}
+	
+	public ArrayList<ChatRoom> getChatrooms() {
+		return chatrooms;
 	}
 
 }
