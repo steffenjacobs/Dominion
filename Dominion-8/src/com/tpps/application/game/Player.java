@@ -143,16 +143,16 @@ public class Player {
 		while (cardIt.hasNext()) {
 			switch (cardIt.next()) {
 			case ADD_ACTION_TO_PLAYER:
-				actions += serverCard.getActions().get(CardAction.ADD_ACTION_TO_PLAYER);
+				actions += Integer.parseInt(serverCard.getActions().get(CardAction.ADD_ACTION_TO_PLAYER));
 				break;
 			case ADD_PURCHASE:
-				buys += serverCard.getActions().get(CardAction.ADD_PURCHASE);
+				buys += Integer.parseInt(serverCard.getActions().get(CardAction.ADD_PURCHASE));
 				break;
 			case ADD_TEMPORARY_MONEY_FOR_TURN:
-				coins += serverCard.getActions().get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
+				coins += Integer.parseInt(serverCard.getActions().get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN));
 				break;
 			case DRAW_CARD:
-				 getDeck().draw(serverCard.getActions().get(CardAction.DRAW_CARD));
+				 getDeck().draw(Integer.parseInt(serverCard.getActions().get(CardAction.DRAW_CARD)));
 				break;
 			case GAIN_CARD:
 				System.out.println("GAIN: " + serverCard.getActions().get(CardAction.GAIN_CARD));

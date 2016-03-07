@@ -20,14 +20,14 @@ import com.tpps.ui.GraphicFramework;
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = -4157717625890678601L;
-	private final LinkedHashMap<CardAction, Integer> actions; // if the card is VICTORY/TREASURE, Int is the value (not the cost)
+	private final LinkedHashMap<CardAction, String> actions; // if the card is VICTORY/TREASURE, Int is the value (not the cost)
 	private final LinkedList<CardType> types;
 	private final int cost; // cost of the card
 	private final String name;
 	private final String id;
 	private static int classID = 0;
 
-	public Card(LinkedHashMap<CardAction, Integer> actions,
+	public Card(LinkedHashMap<CardAction, String> actions,
 			LinkedList<CardType> types, String name, int cost,
 			double relativeLocX, double relativeLocY, double relativeWidth,
 			double relativeHeight, int _layer, Image sourceImage,
@@ -50,7 +50,7 @@ public class Card extends GameObject {
 	 * @param name the name of the card 
 	 * @param _parent graphic framework where the card will be drawn
 	 */
-	public Card(LinkedHashMap<CardAction, Integer> actions,
+	public Card(LinkedHashMap<CardAction, String> actions,
 			LinkedList<CardType> types, String name, int cost,
 			GraphicFramework _parent) {
 		super(_parent);
@@ -62,7 +62,7 @@ public class Card extends GameObject {
 	}
 
 	/** Test Konstruktor ohne Graphic Framework */
-	public Card(LinkedHashMap<CardAction, Integer> actions,
+	public Card(LinkedHashMap<CardAction, String> actions,
 			LinkedList<CardType> types, String name, int cost) {
 		super();
 		this.name = name;
@@ -78,7 +78,7 @@ public class Card extends GameObject {
 
 	// equals
 
-	public LinkedHashMap<CardAction, Integer> getActions() {
+	public LinkedHashMap<CardAction, String> getActions() {
 		return actions;
 	}
 
@@ -149,7 +149,7 @@ public class Card extends GameObject {
 		StringBuffer sBuf = new StringBuffer();
 		sBuf.append("Card: " + "'" + this.name + "'\nActions: <");
 		Iterator<CardAction> actionsIt = actions.keySet().iterator();
-		Iterator<Integer> intsIt = actions.values().iterator();
+		Iterator<String> intsIt = actions.values().iterator();
 		while (actionsIt.hasNext() && intsIt.hasNext()) {
 			sBuf.append("<" + actionsIt.next().toString() + ": "
 					+ intsIt.next() + ">");
@@ -174,7 +174,7 @@ public class Card extends GameObject {
 						CardAction.ADD_PURCHASE,
 						CardAction.ADD_TEMPORARY_MONEY_FOR_TURN,
 						CardAction.DRAW_CARD });
-		LinkedList<Integer> ints = CollectionsUtil.linkedList(new Integer[] {1, 2, 4, 3});
+		LinkedList<String> ints = CollectionsUtil.linkedList(new String[] {"1", "2", "4", "3"});
 		LinkedList<CardType> type = CollectionsUtil.linkedList(CardType.ACTION);
 
 		JFrame frame = new JFrame();

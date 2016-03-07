@@ -19,9 +19,9 @@ public final class CollectionsUtil {
 	 * @return creates a sorted hashmap (LinkedHashMap) from the given
 	 *         parameters (single element)
 	 */
-	public static LinkedHashMap<CardAction, Integer> linkedHashMapAction(
-			CardAction action, Integer number) {
-		LinkedHashMap<CardAction, Integer> hashMap = new LinkedHashMap<CardAction, Integer>();
+	public static LinkedHashMap<CardAction, String> linkedHashMapAction(
+			CardAction action, String number) {
+		LinkedHashMap<CardAction, String> hashMap = new LinkedHashMap<CardAction, String>();
 		hashMap.put(action, number);
 		return hashMap;
 	}
@@ -31,10 +31,10 @@ public final class CollectionsUtil {
 	 * @return creates a sorted hashmap (LinkedHashMap) from the given
 	 *         parameters (list)
 	 */
-	public static LinkedHashMap<CardAction, Integer> linkedHashMapAction(
-			LinkedList<CardAction> actions, LinkedList<Integer> numbers) {
+	public static LinkedHashMap<CardAction, String> linkedHashMapAction(
+			LinkedList<CardAction> actions, LinkedList<String> numbers) {
 		if (actions.size() == numbers.size()) {
-			LinkedHashMap<CardAction, Integer> hashMap = new LinkedHashMap<CardAction, Integer>();
+			LinkedHashMap<CardAction, String> hashMap = new LinkedHashMap<CardAction, String>();
 			for (int i = 0; i < actions.size(); i++) {
 				hashMap.put(actions.get(i), numbers.get(i));
 			}

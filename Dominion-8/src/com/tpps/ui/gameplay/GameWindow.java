@@ -96,14 +96,14 @@ public class GameWindow extends JFrame {
 			
 			if(i<5){
 			gfcAction[i] = new Card(
-					CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, GameConstant.COPPER_VALUE),
+					CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.COPPER_VALUE)),
 					CollectionsUtil.linkedList(CardType.TREASURE), "Copper", GameConstant.COPPER_COST, shift += 0.06,
 					0.02, 0.05, 0.15, k++, actionCards[i], framework);
 			framework.addComponent(gfcAction[i]);
 			}
 			else{
 			gfcAction[i] = new Card(
-					CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, GameConstant.COPPER_VALUE),
+					CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.COPPER_VALUE)),
 					CollectionsUtil.linkedList(CardType.TREASURE), "Copper", GameConstant.COPPER_COST, shiftBottom += 0.06,
 					0.2, 0.05, 0.15, k++, actionCards[i], framework);
 			framework.addComponent(gfcAction[i]);

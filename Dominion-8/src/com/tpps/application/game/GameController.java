@@ -98,7 +98,12 @@ public class GameController {
 			throw new TooMuchPlayerException();
 		}
 	}
-	
+	/**
+	 * search for the card with the given cardId on the gameBoard if the card exists add this
+	 * card to the discardPile of the active player. If the card not exists throw a 
+	 * @param cardId
+	 * @throws SynchronisationException
+	 */
 	public void buyOneCard(String cardId) throws SynchronisationException{
 		Card card = gameBoard.findCard(cardId);
 		this.getActivePlayer().getDeck().getDiscardPile().add(card);

@@ -23,7 +23,7 @@ import com.tpps.technicalServices.util.GraphicsUtil;
  */
 public class SerializedCard {
 
-	private final LinkedHashMap<CardAction, Integer> actions;
+	private final LinkedHashMap<CardAction, String> actions;
 	private final LinkedList<CardType> types;
 	private final int cost;
 	private final String name;
@@ -43,7 +43,7 @@ public class SerializedCard {
 	 * @param image
 	 *            the image of the card (ARGB or RGB)
 	 */
-	public SerializedCard(LinkedHashMap<CardAction, Integer> actions, LinkedList<CardType> types, int cost, String name,
+	public SerializedCard(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, int cost, String name,
 			BufferedImage image) {
 		this.actions = actions;
 		this.types = types;
