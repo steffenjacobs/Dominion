@@ -3,6 +3,7 @@ package com.tpps.ui.loginscreen;
 import javax.swing.JOptionPane;
 
 import com.tpps.application.network.login.client.LoginClient;
+import com.tpps.ui.MainMenu;
 
 /**
  * Tis class is used as an interface between LoginGUI and 
@@ -80,6 +81,8 @@ public class LoginGUIController{
 	public void getStateOfLoginRequest(boolean state){
 		if (state) { // logged in successfully
 			JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.INFORMATION_MESSAGE);
+			new MainMenu().setVisible(true);
+			this.logingui.dispose();
 		} else {	//login request failed 
 			JOptionPane.showMessageDialog(null, "Wrong Password or nickname", "Login", JOptionPane.ERROR_MESSAGE);
 		}

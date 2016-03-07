@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 
+import com.tpps.application.network.card.CardClient;
 import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.game.ClientGamePacketHandler;
 import com.tpps.application.network.game.GameClient;
@@ -22,6 +23,7 @@ public final class DominionController {
 	private UUID sessionID;
 	private SessionClient sessionClient;
 	private GameClient gameClient;
+	private CardClient cardClient;
 	private CardStorageController storageController;
 
 	/** main entry point for client application */
