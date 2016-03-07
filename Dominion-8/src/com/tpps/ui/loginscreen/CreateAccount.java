@@ -105,6 +105,12 @@ public class CreateAccount extends JFrame {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		smallfont = new Font("Calibri", Font.BOLD, 19);
+		try {
+			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 
 		description = new JLabel[4];
 		panels = new JPanel[6];

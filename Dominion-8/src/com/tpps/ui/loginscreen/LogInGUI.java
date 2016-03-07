@@ -50,19 +50,20 @@ public class LogInGUI extends JFrame {
 	private JPanel[] panels;
 	private Font smallfont, customFont;
 	LoginGUIController guicontroller;
-	
+
 	/**
 	 * constructor first call
-	 * @param loginGUIController 
+	 * 
+	 * @param loginGUIController
 	 */
 
 	public LogInGUI(LoginGUIController loginGUIController) {
 		this.guicontroller = loginGUIController;
 		createdComponent();
 	}
-	
+
 	public LogInGUI(LoginGUIController loginGUIController, String username, String plaintext) {
-		this.guicontroller = loginGUIController;		
+		this.guicontroller = loginGUIController;
 		createdComponent();
 		this.userinfo.setText(username);
 		this.passwordbox.setText(plaintext);
@@ -76,11 +77,11 @@ public class LogInGUI extends JFrame {
 	 * @param password
 	 */
 
-//	public LogInGUI(String text, char[] password) {
-//		createdComponent();
-//		this.userinfo.setText(text);
-//		this.passwordbox.setText(String.valueOf(password));
-//	}
+	// public LogInGUI(String text, char[] password) {
+	// createdComponent();
+	// this.userinfo.setText(text);
+	// this.passwordbox.setText(String.valueOf(password));
+	// }
 
 	/**
 	 * All components merged together
@@ -134,6 +135,12 @@ public class LogInGUI extends JFrame {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		smallfont = new Font("Calibri", Font.BOLD, 19);
+		try {
+			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 
 		description = new JLabel[2];
 		panels = new JPanel[4];
@@ -142,7 +149,6 @@ public class LogInGUI extends JFrame {
 		}
 		// this.setContentPane(new JLabel(loading));
 	}
-
 
 	/**
 	 * loading an image from resources
@@ -236,17 +242,17 @@ public class LogInGUI extends JFrame {
 
 		execute = new JButton("Login");
 		execute.setFont(customFont.deriveFont(15f));
-		
+
 		cancel = new JButton("Cancel");
 		cancel.setFont(customFont.deriveFont(15f));
-		
+
 		createAccount = new JButton("New Account");
 		createAccount.setFont(customFont.deriveFont(10f));
-		
+
 		cancel.setPreferredSize(new Dimension(120, 30));
 		createAccount.setPreferredSize(new Dimension(120, 30));
 		execute.setPreferredSize(new Dimension(120, 30));
-		
+
 		panels[3].add(execute);
 		panels[3].add(createAccount);
 		panels[3].add(cancel);
@@ -266,7 +272,7 @@ public class LogInGUI extends JFrame {
 	 * @param args
 	 */
 
-//	public static void main(String[] args) {
-//		new LogInGUI(null);
-//	}
+	// public static void main(String[] args) {
+	// new LogInGUI(null);
+	// }
 }
