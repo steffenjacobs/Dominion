@@ -2,6 +2,7 @@ package com.tpps.ui.components;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.Loader;
 
 /**
  * 
@@ -31,7 +33,7 @@ public class MainMenuButton {
 	 * @throws IOException
 	 */
 	public MainMenuButton(int locX, int locY, String name) throws IOException {
-		this.letterSize = 100;
+		this.letterSize = 83;
 		this.originalImage = ImageIO.read(ClassLoader.getSystemResource("resources/img/gameObjects/testButton.png"));
 		this.originalImage = GraphicsUtil.resize(this.originalImage, this.originalImage.getWidth(), 
 				(int)(this.originalImage.getHeight() * 0.9));
@@ -50,11 +52,20 @@ public class MainMenuButton {
 	private void labelImages() {
 		Graphics2D g = this.originalImage.createGraphics();
 
-		g.setFont(new Font("Comic Sans MS", Font.PLAIN, letterSize));
+//		g.setFont(Loader.importFont(), Font.PLAIN, letterSize);
+		try {
+			g.setFont(Loader.importFont().deriveFont(Font.PLAIN, this.letterSize));
+			g.setColor(Color.BLACK);
+			g.drawString(this.name, (originalImage.getWidth() / 2) - this.name.length() * 22,
+					(int) (originalImage.getHeight() / 1.5));
+		} catch (FontFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		g.setColor(Color.BLACK);
-		g.drawString(this.name, (originalImage.getWidth() / 2) - this.name.length() * 22,
-				(int) (originalImage.getHeight() / 1.4));
 	}
 
 	/**

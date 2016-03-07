@@ -5,7 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
+import java.awt.FontFormatException;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -22,6 +22,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import com.tpps.technicalServices.util.Loader;
 
 //TODO: underline Header, set Background, set transparent, map 'RETURN' key to Login
 
@@ -90,7 +92,13 @@ public class LogInGUI extends JFrame {
 
 		loadImage();
 		resizeImage();
-		importFont();
+		try {
+			this.customFont = Loader.importFont();
+		} catch (FontFormatException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -135,22 +143,6 @@ public class LogInGUI extends JFrame {
 		// this.setContentPane(new JLabel(loading));
 	}
 
-	/**
-	 * importing font from resources
-	 */
-
-	private void importFont() {
-
-		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT,
-					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF"));
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
-					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF")));
-		} catch (Exception e) {
-			System.err.println(e);
-		}
-	}
 
 	/**
 	 * loading an image from resources

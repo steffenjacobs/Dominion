@@ -5,7 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
+import java.awt.FontFormatException;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -22,6 +22,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+
+import com.tpps.technicalServices.util.Loader;
 
 /**
  * 
@@ -58,7 +60,13 @@ public class CreateAccount extends JFrame {
 		
 		loadImage();
 		resizeImage();
-		importFont();
+		try {
+			this.customFont = Loader.importFont();
+		} catch (FontFormatException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -106,22 +114,6 @@ public class CreateAccount extends JFrame {
 		// this.setContentPane(new JLabel(loading));
 	}
 
-	
-	/**
-	 * importing font from resources
-	 */
-	
-	private void importFont() {
-		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT,
-					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF"));
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
-					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF")));
-		} catch (Exception e) {
-			System.err.println(e);
-		}
-	}
 	
 	/**
 	 * importing background image from resources
