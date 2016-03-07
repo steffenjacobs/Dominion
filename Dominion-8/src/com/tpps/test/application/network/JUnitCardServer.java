@@ -168,5 +168,8 @@ public class JUnitCardServer {
 		// check if card was sended over the network and back successfully
 		assertEquals(sc, sc2);
 		assertTrue(sc.equalsEntirely(sc2));
+		
+		//Save cards
+		dom.getCardRegistry().saveCards();
 	}
 }

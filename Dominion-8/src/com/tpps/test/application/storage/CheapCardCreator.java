@@ -228,6 +228,9 @@ public class CheapCardCreator {
 
 		if (DEBUG)
 			System.out.println("finished.");
+		
+		//Save Storage
+		dom.getCardRegistry().saveCards();
 
 	}
 
