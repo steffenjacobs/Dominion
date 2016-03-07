@@ -174,7 +174,7 @@ public class CardStorageController {
 		for (SerializedCard card : storedCards.values()) {
 			System.out.println(card.toString());
 		}
-		System.out.println("---                       ---");
+		System.out.println("---       (" + storedCards.size() + ")         ---");
 	}
 
 	/**
