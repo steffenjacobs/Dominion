@@ -11,6 +11,8 @@ public class ChatRoom {
 
 	private ChatServer server;
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
+	private static int id;
+	private static int idcounter = 1;
 	
 	private final static String servercommand1 = "help";
 	private final static String servercommand2 = "show all clients";
@@ -29,6 +31,7 @@ public class ChatRoom {
 	public ChatRoom(ConcurrentHashMap<String, Integer> clientsByUser, ChatServer server){
 		this.clientsByUsername = clientsByUser;
 		this.server = server;
+		this.id = idcounter++;
 	}
 	
 	public void sendChatToAll(PacketSendChatAll packet){
