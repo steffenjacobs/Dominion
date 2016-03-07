@@ -127,8 +127,8 @@ public class JUnitSessionServerTest {
 				assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 				bulk.release(1);
 			}).start();
-			
-			//or else you get heap-space errors
+
+			// or else you get heap-space errors
 			Thread.sleep(1);
 		}
 		Thread.sleep(1000);

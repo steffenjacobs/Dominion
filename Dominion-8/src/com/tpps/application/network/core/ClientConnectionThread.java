@@ -43,8 +43,8 @@ public class ClientConnectionThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			inStream = new DataInputStream(clientSocket.getInputStream());
-			outStream = new DataOutputStream(clientSocket.getOutputStream());
+				inStream = new DataInputStream(clientSocket.getInputStream());
+				outStream = new DataOutputStream(clientSocket.getOutputStream());
 			while (!Thread.interrupted()) {
 				try {
 					int length = inStream.readInt();

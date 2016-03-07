@@ -65,12 +65,14 @@ public class ServerConnectionThread extends Thread {
 		try {
 			inStream = new DataInputStream(clientSocket.getInputStream());
 			outStream = new DataOutputStream(clientSocket.getOutputStream());
+
 			while (!Thread.interrupted()) {
 				try {
 					int length = inStream.readInt();
 					byte[] data = new byte[length];
 					inStream.readFully(data);
-					new Thread(() -> receiver.handleReceivedPacket(clientSocket.getPort(), PacketType.getPacket(data))).start();
+					new Thread(() -> receiver.handleReceivedPacket(clientSocket.getPort(), PacketType.getPacket(data)))
+							.start();
 				} catch (IOException e) {
 					parent.getHandler().output("Connection Lost with " + this.clientSocket.getInetAddress() + ":"
 							+ this.clientSocket.getPort());
