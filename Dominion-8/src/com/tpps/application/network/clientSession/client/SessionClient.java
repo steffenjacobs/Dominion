@@ -33,7 +33,9 @@ public class SessionClient extends Client {
 	 *            sessionID of the user to check
 	 * @return whether the session is still valid
 	 */
+	
 	public boolean checkSessionSync(final String username, final UUID uuid) {
+		
 		Semaphore blocker = new Semaphore(1);
 		try {
 			blocker.acquire();

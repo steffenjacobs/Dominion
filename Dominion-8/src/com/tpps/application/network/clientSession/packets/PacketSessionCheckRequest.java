@@ -15,6 +15,7 @@ public class PacketSessionCheckRequest extends Packet {
 	private static final long serialVersionUID = 3207961189002304124L;
 	private final String username;
 	private final UUID sessionID;
+	private final long timestamp;
 
 	/**
 	 * @return the username to check
@@ -33,6 +34,14 @@ public class PacketSessionCheckRequest extends Packet {
 	}
 
 	/**
+	 * @return the timestamp the packet was created
+	 * @author Steffen Jacobs
+	 */
+	public long getTimestamp() {
+		return this.timestamp;
+	}
+
+	/**
 	 * initializes the Packet with a username and a sessionID to check
 	 * 
 	 * @author Steffen Jacobs
@@ -41,6 +50,7 @@ public class PacketSessionCheckRequest extends Packet {
 		super(PacketType.SESSION_CHECK_REQUEST);
 		this.username = name;
 		this.sessionID = sID;
+		this.timestamp = System.currentTimeMillis();
 	}
 
 	/**

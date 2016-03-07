@@ -28,7 +28,7 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	
+
 	private static void sendPacket(Client c, Packet packet) {
 		if (c.isConnected()) {
 			try {
@@ -53,7 +53,7 @@ public final class SessionPacketSenderAPI {
 	 */
 	public static void sendGetRequest(Client c, String username, SuperCallable<PacketSessionGetAnswer> callable) {
 		SessionPacketReceiverAPI.addGetRequest(username, callable);
-		sendPacket(c, new PacketSessionGetRequest( username));
+		sendPacket(c, new PacketSessionGetRequest(username));
 	}
 
 	/**
@@ -63,9 +63,11 @@ public final class SessionPacketSenderAPI {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public static void sendCheckRequest(Client c, String username, UUID sessionID, SuperCallable<PacketSessionCheckAnswer> callable) {
-		SessionPacketReceiverAPI.addCheckRequest(username, callable);
-		sendPacket(c, new PacketSessionCheckRequest(username, sessionID));
+	public static void sendCheckRequest(Client c, String username, UUID sessionID,
+			SuperCallable<PacketSessionCheckAnswer> callable) {
+		PacketSessionCheckRequest req = new PacketSessionCheckRequest(username, sessionID);
+		SessionPacketReceiverAPI.addCheckRequest(username, callable, req.getTimestamp());
+		sendPacket(c, req);
 	}
 
 	/**

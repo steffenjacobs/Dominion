@@ -1,5 +1,7 @@
 package com.tpps.application.network.clientSession.client;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
@@ -23,7 +25,28 @@ public final class SessionPacketReceiverAPI {
 	 * @author Steffen Jacobs
 	 */
 	public static void onPacketSessionCheckAnswer(PacketSessionCheckAnswer packet) {
-		SuperCallable<PacketSessionCheckAnswer> toCall = checkRequests.remove(packet.getRequest().getUsername());
+		SuperCallable<PacketSessionCheckAnswer> toCall = null;
+
+		if (checkRequests.get(packet.getRequest().getUsername()).size() == 1) {
+			toCall = checkRequests.remove(packet.getRequest().getUsername()).getFirst().getCallable();
+		} else {
+			LinkedList<CheckRequest> requests = checkRequests.get(packet.getRequest().getUsername());
+			Iterator<CheckRequest> it = requests.iterator();
+			while (it.hasNext()) {
+				CheckRequest req = it.next();
+				if (req.getTimestamp() == packet.getRequest().getTimestamp()) {
+					toCall = req.getCallable();
+					it.remove();
+					break;
+				}
+			}
+			if (requests.size() == 0) {
+				checkRequests.remove(packet.getRequest().getUsername());
+			} else {
+				checkRequests.put(packet.getRequest().getUsername(), requests);
+			}
+		}
+
 		try {
 			if (toCall != null)
 				toCall.callMeMaybe(packet);
@@ -47,18 +70,55 @@ public final class SessionPacketReceiverAPI {
 		}
 	}
 
-	/**adds a get-Request
-	 * @author Steffen Jacobs*/
+	/**
+	 * adds a get-Request
+	 * 
+	 * @author Steffen Jacobs
+	 */
 	static void addGetRequest(String username, SuperCallable<PacketSessionGetAnswer> callable) {
 		getRequests.putIfAbsent(username, callable);
 	}
 
-	/** adds a check-Request
-	 * @author Steffen Jacobs*/
-	static void addCheckRequest(String username, SuperCallable<PacketSessionCheckAnswer> callable) {
-		checkRequests.putIfAbsent(username, callable);
+	/**
+	 * adds a check-Request
+	 * 
+	 * @author Steffen Jacobs
+	 */
+
+	static void addCheckRequest(String username, SuperCallable<PacketSessionCheckAnswer> callable,
+			long sendedTimestamp) {
+
+		LinkedList<CheckRequest> requestList;
+
+		if (checkRequests.containsKey(username)) {
+			requestList = checkRequests.get(username);
+		} else {
+			requestList = new LinkedList<CheckRequest>();
+		}
+
+		requestList.add(new CheckRequest(sendedTimestamp, callable));
+		checkRequests.put(username, requestList);
 	}
-	
+
 	private static ConcurrentHashMap<String, SuperCallable<PacketSessionGetAnswer>> getRequests = new ConcurrentHashMap<>();
-	private static ConcurrentHashMap<String, SuperCallable<PacketSessionCheckAnswer>> checkRequests = new ConcurrentHashMap<>();
+	private static ConcurrentHashMap<String, LinkedList<CheckRequest>> checkRequests = new ConcurrentHashMap<>();
+
+	private static class CheckRequest {
+		private final long timestamp;
+		private final SuperCallable<PacketSessionCheckAnswer> callable;
+
+		public CheckRequest(long timestamp, SuperCallable<PacketSessionCheckAnswer> pack) {
+			super();
+			this.timestamp = timestamp;
+			this.callable = pack;
+		}
+
+		public long getTimestamp() {
+			return timestamp;
+		}
+
+		public SuperCallable<PacketSessionCheckAnswer> getCallable() {
+			return callable;
+		}
+	}
 }
