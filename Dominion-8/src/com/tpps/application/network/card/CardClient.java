@@ -3,6 +3,7 @@ package com.tpps.application.network.card;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Semaphore;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.application.network.card.packets.PacketAddCard;
@@ -82,7 +83,7 @@ public class CardClient extends Client {
 	 * @return the callable for the name
 	 */
 	public SuperCallable<Boolean> getAddCallable(String name) {
-		return addRequests.get(name);
+		return addRequests.remove(name);
 	}
 
 	/**
@@ -102,7 +103,7 @@ public class CardClient extends Client {
 
 	/**
 	 * requests a card from a server and automatically puts it into the own
-	 * storage
+	 * storage when it arrived
 	 * 
 	 * @param cardName
 	 *            the name of the requested card
@@ -124,4 +125,38 @@ public class CardClient extends Client {
 		}
 	}
 
+	/**
+	 * requests a card from a server and automatically puts it into the own
+	 * storage
+	 * 
+	 * @param cardName
+	 *            the name of the requested card
+	 * @param async
+	 *            tells whether you check your storage later again or you wait
+	 *            until the card is there.
+	 */
+	public void requestCardFromServer(String cardName, boolean async) {
+		if (async) {
+			this.requestCardFromServer(cardName);
+			return;
+		}
+
+		try {
+			Semaphore sem = new Semaphore(1);
+			sem.acquire();
+			super.sendMessage(new PacketGetCardRequest(cardName, parent.getSessionID(), parent.getUsername()));
+			this.getRequests.put(cardName, new SuperCallable<SerializedCard>() {
+
+				@Override
+				public SerializedCard callMeMaybe(SerializedCard object) {
+					parent.getStorageController().addCard(object);
+					sem.release();
+					return null;
+				}
+			});
+			sem.acquire();
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }

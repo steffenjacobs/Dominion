@@ -9,6 +9,7 @@ import com.tpps.application.network.card.packets.PacketGetCardAnswer;
 import com.tpps.application.network.card.packets.PacketGetCardRequest;
 import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.core.PacketHandler;
+import com.tpps.application.network.core.Server;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.storage.CardStorageController;
@@ -55,8 +56,15 @@ public class CardPacketHandlerServer extends PacketHandler {
 			PacketCheckIfCardExistsRequest request = (PacketCheckIfCardExistsRequest) packet;
 
 			// check session-validity
-			if (!sessionTester.checkSessionSync(request.getRequesterName(), request.getRequesterID()))
+			if (!sessionTester.checkSessionSync(request.getRequesterName(), request.getRequesterID())) {
+				System.err.println(request.getRequesterName() + " FAILED CHECK!" + System.identityHashCode(packet));
 				break;
+			}
+
+			// debug-message
+			if (Server.DEBUG) {
+				System.out.println(request.getRequesterName() + " requested " + request.getCardName());
+			}
 
 			PacketCheckIfCardExistsAnswer answer = new PacketCheckIfCardExistsAnswer(
 					this.cardStorage.hasCard(request.getCardName()), request);
@@ -73,6 +81,11 @@ public class CardPacketHandlerServer extends PacketHandler {
 			if (!sessionTester.checkSessionSync(cardAdd.getRequesterName(), cardAdd.getRequesterID()))
 				break;
 
+			// debug-message
+			if (Server.DEBUG) {
+				System.out.println(cardAdd.getRequesterName() + " added " + cardAdd.getSerializedCard().getName());
+			}
+
 			this.cardStorage.addCard(cardAdd.getSerializedCard());
 			break;
 		case CARD_GET_CARD_REQUEST:
@@ -81,6 +94,11 @@ public class CardPacketHandlerServer extends PacketHandler {
 			// check session-validity
 			if (!sessionTester.checkSessionSync(request2.getRequesterName(), request2.getRequesterID()))
 				break;
+
+			// debug-message
+			if (Server.DEBUG) {
+				System.out.println(request2.getRequesterName() + " wants " + request2.getRequestedCardName());
+			}
 
 			try {
 				connThread.sendPacket(

@@ -3,10 +3,12 @@ package com.tpps.application.network.card;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Scanner;
 
 import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.Server;
+import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.storage.CardStorageController;
 
 /**
@@ -31,6 +33,7 @@ public class CardServer extends Server {
 		this.serverStorage = cardStorage;
 		this.serverStorage.loadCards();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> onApplicationExit()));
+		new Thread(() -> setConsoleInput()).start();
 	}
 
 	/** main entry-point for the CardServer */
@@ -44,5 +47,64 @@ public class CardServer extends Server {
 	/** is called on exit */
 	private void onApplicationExit() {
 		this.serverStorage.saveCards();
+	}
+
+	/**
+	 * sets up the console-input
+	 * 
+	 * @author Steffen Jacobs
+	 */
+	private void setConsoleInput() {
+		System.out.println("            * * * * * * * * * * * * * *      ");
+		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
+		System.out.println("* * * * * Dominion Card Server - Team ++; * * * * *");
+		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
+		System.out.println("            * * * * * * * * * * * * * *      ");
+		System.out.println();
+		System.out.println("Enter 'help' to see all available commands.");
+		System.out.println();
+
+		String line = null;
+		Scanner scanInput = new Scanner(System.in);
+		while (true) {
+			line = scanInput.nextLine();
+			try {
+				if (line.equals("exit") || line.equals("stop")) {
+					System.exit(0);
+					break;
+				} else if (line.startsWith("show")) {
+					this.serverStorage.listCards();
+				} else if (line.startsWith("clear")) {
+					final int cnt = this.serverStorage.getCardCount();
+					this.serverStorage.clearCards();
+					System.out.println("Cleared " + cnt + " cards!");
+				} else if (line.startsWith("list")) {
+					int cnt = 0;
+					for (ServerConnectionThread client : super.clients.values()) {
+						System.out.println(client);
+						cnt++;
+					}
+					if (cnt == 0)
+						System.out.println("(empty)");
+				} else if (line.startsWith("reload")) {
+					super.stopListening();
+					super.startListening();
+				} else if (line.startsWith("help")) {
+					System.out.println("-------- Available Commands --------");
+					System.out.println("list");
+					System.out.println("show");
+					System.out.println("clear");
+					System.out.println("reload");
+					System.out.println("exit");
+					System.out.println("help");
+					System.out.println("------------------------------------");
+				} else {
+					System.out.println("Bad command: " + line);
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.err.println("Bad syntax.");
+			}
+		}
+		scanInput.close();
 	}
 }
