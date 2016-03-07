@@ -3,6 +3,7 @@ package com.tpps.application.storage;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -39,6 +40,12 @@ public class CardStorageController {
 				Files.createFile(Paths.get(storageFile));
 
 			byte[] bytes = Files.readAllBytes(Paths.get(storageFile));
+			if (bytes.length == 0) {
+				System.err.println("ERROR: Storage-Container is empty!");
+				Files.copy(Paths.get(storageFile), Paths.get(storageFile + "_old_" + System.currentTimeMillis()));
+				return;
+			}
+			System.out.println("File length: " + bytes.length);
 			ByteBuffer buff = ByteBuffer.wrap(bytes);
 			int count = buff.getInt();
 			int length;
@@ -51,7 +58,8 @@ public class CardStorageController {
 				card = new SerializedCard(arr);
 				storedCards.put(card.getName(), card);
 			}
-		} catch (IOException e) {
+		} catch (BufferUnderflowException | IOException e) {
+			System.err.println("ERROR: Storage-Container is broken!");
 			e.printStackTrace();
 		}
 
@@ -167,5 +175,14 @@ public class CardStorageController {
 			System.out.println(card.toString());
 		}
 		System.out.println("---                       ---");
+	}
+
+	/**
+	 * getter for the number of stored cards
+	 * 
+	 * @return the number of stored cards
+	 */
+	public int getCardCount() {
+		return this.storedCards.size();
 	}
 }
