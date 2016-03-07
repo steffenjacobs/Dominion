@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
@@ -14,6 +15,7 @@ import javax.swing.JFrame;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
+import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.ui.GameObject;
@@ -69,18 +71,6 @@ public class GameWindow extends JFrame {
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.33, 0.01, 0.38, 0.38, 2, tableImage, framework));
 
-		// testing
-		tableCards = new LinkedList<Card>();
-		
-		for (int i = 0; i < actionCards.length; i++) {
-
-			loadingImage(actionCards[i], "resources/img/gameObjects/baseCards/Copper.jpg");
-			tableCards.add(
-					new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.COPPER_VALUE)),
-							CollectionsUtil.linkedList(CardType.TREASURE), "Copper", GameConstant.COPPER_COST));
-		}
-
-		tableActionCards(tableCards);
 		this.revalidate();
 		this.repaint();
 	}
@@ -96,68 +86,36 @@ public class GameWindow extends JFrame {
 
 	}
 
-	public void tableActionCards(LinkedList<Card> tableCards) {
-		
-		 double shift = 0.315;
-		 double shiftBottom = 0.315;
-		 int k = 3;
+	public void tableActionCards(ArrayList<SerializedCard> table) {
 
-		for (int i = 0; i < tableCards.size(); i++) {
+		double shift = 0.315;
+		double shiftBottom = 0.315;
+		int k = 3;
+
+		for (int i = 0; i < table.size(); i++) {
 
 			if (i < 5) {
-				tableCards.get(i).forceSetImage(actionCards[i]);
-//				tableCards.get(i).updateRelativeSize(0.05, 0.15);
-				tableCards.get(i).moveTo(new RelativeGeom2D(shift+=0.06, 0.02));
-				framework.addComponent(tableCards.get(i));
-				tableCards.get(i).setVisible(true);
+				framework.addComponent(new Card(table.get(i).getActions(), table.get(i).getTypes(),
+						table.get(i).getName(), table.get(i).getCost(), shift += 0.06, 0.02, 0.05, 0.15, k++,
+						table.get(i).getImage(), framework));
 			} else {
-				tableCards.get(i).forceSetImage(actionCards[i]);
-				tableCards.get(i).updateRelativeSize(0.05, 0.15);
-				tableCards.get(i).moveTo(new RelativeGeom2D(shiftBottom+=0.06, 0.2));
-				framework.addComponent(tableCards.get(i));
-				
+				framework.addComponent(new Card(table.get(i).getActions(), table.get(i).getTypes(),
+						table.get(i).getName(), table.get(i).getCost(), shiftBottom += 0.06, 0.2, 0.05, 0.15, k++,
+						table.get(i).getImage(), framework));
 			}
 
 		}
-
-		// double shift = 0.315;
-		// double shiftBottom = 0.315;
-		// int k = 3;
-		// for (int i = 0; i < actionCards.length; i++) {
-		//
-		// loadingImage(actionCards[i],
-		// "resources/img/gameObjects/baseCards/Copper.jpg");
-		//
-		// if(i<5){
-		// gfcAction[i] = new Card(
-		// CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE,
-		// GameConstant.COPPER_VALUE),
-		// CollectionsUtil.linkedList(CardType.TREASURE), "Copper",
-		// GameConstant.COPPER_COST, shift += 0.06,
-		// 0.02, 0.05, 0.15, k++, actionCards[i], framework);
-		// framework.addComponent(gfcAction[i]);
-		// }
-		// else{
-		// gfcAction[i] = new Card(
-		// CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE,
-		// GameConstant.COPPER_VALUE),
-		// CollectionsUtil.linkedList(CardType.TREASURE), "Copper",
-		// GameConstant.COPPER_COST, shiftBottom += 0.06,
-		// 0.2, 0.05, 0.15, k++, actionCards[i], framework);
-		// framework.addComponent(gfcAction[i]);
-		// }
-		// }
 	}
 
-	public void coinCards(LinkedList<Card> coins) {
+	public void coinCards(ArrayList<SerializedCard> coins) {
 
 	}
 
-	public void handCards(LinkedList<Card> handCards) {
+	public void handCards(ArrayList<SerializedCard> handCards) {
 
 	}
 
-	public void estateCards(LinkedList<Card> estate) {
+	public void estateCards(ArrayList<SerializedCard> estate) {
 
 	}
 
