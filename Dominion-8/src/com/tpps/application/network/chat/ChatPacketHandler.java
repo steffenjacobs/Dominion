@@ -21,7 +21,6 @@ public class ChatPacketHandler extends PacketHandler{
 	private final static String servercommand4 = "show all clients by ports";
 	
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
-	private ConcurrentHashMap<String, Integer> blacklist = new ConcurrentHashMap<String, Integer>();
 	private ArrayList<ChatRoom> chatrooms = new ArrayList<ChatRoom>();
 	
 	@Override
@@ -38,6 +37,9 @@ public class ChatPacketHandler extends PacketHandler{
 				PacketSendAnswer answer = new PacketSendAnswer(castedpacket.getChatmessage());
 				for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 				    String nickname = entry.getKey();
+				    if(nickname.equals(castedpacket.getUsername())){
+				    	continue;
+				    }				    
 				    if(!this.isUserInChatRoom(nickname)){
 				    	try {
 							this.server.sendMessage(entry.getValue(), answer);
@@ -74,7 +76,6 @@ public class ChatPacketHandler extends PacketHandler{
 			break;
 		case SEND_CHAT_COMMAND:
 			PacketSendChatCommand castedpacket2 = (PacketSendChatCommand) packet;		
-			String sender = castedpacket2.getSender();
 			String msg = castedpacket2.getChatmessage();
 			System.out.println("Chat Command: " + castedpacket2);
 			
@@ -109,8 +110,8 @@ public class ChatPacketHandler extends PacketHandler{
 	
 		switch(command.trim()){
 		case servercommand1: //send answer packet back to user, with all comands servercommand1 == /help
-			String allcomands = "Commands: \n" + ChatPacketHandler.servercommand1 + "\n" + ChatPacketHandler.servercommand2 + "\n"
-			+ ChatPacketHandler.servercommand3 + "\n" + ChatPacketHandler.servercommand4 + "\n";
+			String allcomands = "Commands: \n/" + ChatPacketHandler.servercommand1 + "\n/" + ChatPacketHandler.servercommand2 + "\n/"
+			+ ChatPacketHandler.servercommand3 + "\n/" + ChatPacketHandler.servercommand4;
 			PacketSendAnswer answer = new PacketSendAnswer(allcomands);
 			try {
 				server.sendMessage(port, answer);
@@ -122,8 +123,10 @@ public class ChatPacketHandler extends PacketHandler{
 			StringBuffer buf = new StringBuffer("All connected clients: \n");
 			Enumeration<String> clients = this.clientsByUsername.keys();
 			while (clients.hasMoreElements()) {
-				buf.append(clients.nextElement() + "\n");
-				
+				String user = clients.nextElement();
+				if(!this.isUserInChatRoom(user)){
+					buf.append(user + "\n");
+				}								
 			}
 			PacketSendAnswer answer2 = new PacketSendAnswer(buf.toString());
 			try {
@@ -135,8 +138,12 @@ public class ChatPacketHandler extends PacketHandler{
 		case servercommand3: //show all ports
 			StringBuffer buf2 = new StringBuffer("All connected ports: \n");
 			Enumeration<Integer> ports = this.clientsByUsername.elements();
+			Enumeration<String> clients2 = this.clientsByUsername.keys();
 			while (ports.hasMoreElements()) {
-				buf2.append(ports.nextElement() + "\n");				
+				int port2 = ports.nextElement();
+				if(!this.isUserInChatRoom(clients2.nextElement())){
+					buf2.append(port2 + "\n");
+				}							
 			}
 			PacketSendAnswer answer3 = new PacketSendAnswer(buf2.toString());
 			try {
@@ -150,7 +157,11 @@ public class ChatPacketHandler extends PacketHandler{
 			Enumeration<String> clients3 = this.clientsByUsername.keys();
 			Enumeration<Integer> ports3 = this.clientsByUsername.elements();
 			while (clients3.hasMoreElements()) {
-				buf3.append(clients3.nextElement() + " : " + ports3.nextElement() + "\n");				
+				String user = clients3.nextElement();
+				int port3 = ports3.nextElement();
+				if(!this.isUserInChatRoom(user)){
+					buf3.append(user + " : " + port3 + "\n");
+				}				
 			}
 			PacketSendAnswer answer4 = new PacketSendAnswer(buf3.toString());
 			try {
@@ -195,6 +206,28 @@ public class ChatPacketHandler extends PacketHandler{
 		this.addChatRoom(clients);
 	}
 	
+	public boolean deleteChatRoom(int id){
+		for (Iterator<ChatRoom> iterator = chatrooms.iterator(); iterator.hasNext();) {
+			ChatRoom chatroom = iterator.next();
+			if(chatroom.getId() == id){
+				chatrooms.remove(chatroom);
+				chatroom = null;
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean deleteChatRoom(String user){
+		ChatRoom room = this.getSpecificChatRoom(user);
+		if(room != null){
+			this.chatrooms.remove(room);
+			room = null;
+			return true;
+		}
+		return false;
+	}
+	
 	public void addChatRoom(ArrayList<String> clients){
 		ConcurrentHashMap<String, Integer> clientsByUserRoom = new ConcurrentHashMap<String, Integer>();
 		for (int j = 0; j < clients.size(); j++) {
@@ -224,6 +257,10 @@ public class ChatPacketHandler extends PacketHandler{
 
 	public void setServer(ChatServer server) {
 		this.server = server;
+	}
+	
+	public ArrayList<ChatRoom> getChatrooms() {
+		return chatrooms;
 	}
 
 }

@@ -3,6 +3,7 @@ package com.tpps.application.network.chat;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,6 +18,8 @@ public class ChatRoom {
 	private final static String servercommand2 = "show all clients";
 	private final static String servercommand3 = "show all ports";
 	private final static String servercommand4 = "show all clients by ports";
+	//private final static String servercommand5 = "leave";
+	//private final static String servercommand6 = "votekick";
 	
 	public ChatRoom(ConcurrentHashMap<String, Integer> clientsByUser, ChatServer server){
 		this.clientsByUsername = clientsByUser;
@@ -133,5 +136,14 @@ public class ChatRoom {
 	
 	public int getId() {
 		return id;
+	}
+	
+	public String toString(){
+		Iterator<String> members = this.getClients().iterator();
+		String membersAsString = "";
+		while(members.hasNext()){
+			membersAsString += members.next() + ", ";
+		}
+		return "ID: " + this.id + " Members: " + membersAsString;
 	}
 }
