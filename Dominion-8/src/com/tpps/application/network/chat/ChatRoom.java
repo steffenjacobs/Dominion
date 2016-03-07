@@ -18,6 +18,8 @@ public class ChatRoom {
 	private final static String servercommand2 = "show all clients";
 	private final static String servercommand3 = "show all ports";
 	private final static String servercommand4 = "show all clients by ports";
+	//private final static String servercommand5 = "leave";
+	//private final static String servercommand6 = "votekick";
 	
 	public ChatRoom(ConcurrentHashMap<String, Integer> clientsByUser, ChatServer server){
 		this.clientsByUsername = clientsByUser;
