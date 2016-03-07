@@ -20,6 +20,7 @@ public class ChatPacketHandler extends PacketHandler{
 	private final static String servercommand4 = "show all clients by ports";
 	
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
+	private ConcurrentHashMap<String, Integer> blacklist = new ConcurrentHashMap<String, Integer>();
 	private ArrayList<ChatRoom> chatrooms = new ArrayList<ChatRoom>();
 	
 	@Override
@@ -34,11 +35,15 @@ public class ChatPacketHandler extends PacketHandler{
 				room.sendChatToAll(castedpacket);
 			}else{
 				PacketSendAnswer answer = new PacketSendAnswer(castedpacket.getChatmessage());
-				try {
-					this.parent.broadcastMessage(port, answer);
-				} catch (IOException e1) {			
-					e1.printStackTrace();
-				}
+//				try {
+//				//	this.parent.broadcastMessage(port, answer);
+//					Iterator<ChatRoom> roomIter = chatrooms.iterator();
+//					while(roomIter.hasNext()){
+//						
+//					}
+//				} catch (IOException e1) {			
+//					e1.printStackTrace();
+//				}
 			}
 			break;
 			
@@ -48,9 +53,7 @@ public class ChatPacketHandler extends PacketHandler{
 			System.out.println("Chat to Client " + castedpacket3);
 			if(room3 != null){
 				room3.sendChatToClient(castedpacket3);
-			}else{			
-				
-				
+			}else{							
 				String hostname = "localhost";
 				String portsql = "3306";
 				String database = "accountmanager";
