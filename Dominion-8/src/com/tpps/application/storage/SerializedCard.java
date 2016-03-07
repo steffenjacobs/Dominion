@@ -85,10 +85,14 @@ public class SerializedCard {
 
 		this.actions = new LinkedHashMap<>();
 		length = buff.getInt();
+		String tmp;
 		for (int cnt = 0; cnt < length; cnt++) {
 			arr = new byte[buff.getInt()];
 			buff.get(arr);
-			this.actions.put(CardAction.valueOf(new String(arr)), buff.getInt());
+			tmp = new String(arr);
+			arr = new byte[buff.getInt()];
+			buff.get(arr);
+			this.actions.put(CardAction.valueOf(tmp), new String(arr));
 		}
 	}
 
@@ -97,7 +101,7 @@ public class SerializedCard {
 	 * 
 	 * @return actions of the card
 	 */
-	public LinkedHashMap<CardAction, Integer> getActions() {
+	public LinkedHashMap<CardAction, String> getActions() {
 		return this.actions;
 	}
 
@@ -165,10 +169,12 @@ public class SerializedCard {
 			}
 
 			buff.putInt(this.actions.size());
-			for (Entry<CardAction, Integer> entr : this.actions.entrySet()) {
+			for (Entry<CardAction, String> entr : this.actions.entrySet()) {
 				buff.putInt(entr.getKey().name().length());
 				buff.put(entr.getKey().name().getBytes());
-				buff.putInt(entr.getValue());
+				tmp = entr.getValue().getBytes(Charset.forName("UTF-8"));
+				buff.putInt(tmp.length);
+				buff.put(tmp);
 			}
 			return buff.array();
 		} catch (IOException e) {
@@ -228,7 +234,7 @@ public class SerializedCard {
 			res += "- " + ct.name() + "\n";
 		}
 		res += "Actions:\n";
-		for (Entry<CardAction, Integer> entr : this.actions.entrySet()) {
+		for (Entry<CardAction, String> entr : this.actions.entrySet()) {
 			res += "- " + entr.getKey().name() + " - " + entr.getValue();
 		}
 		res += "\n-- --";
