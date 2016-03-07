@@ -112,7 +112,9 @@ public class ChatRoom {
 				e.printStackTrace();
 			}
 			break;
-		case servercommand5:	
+		case servercommand5:
+			Votekick kick = new Votekick();
+			break;
 		default:
 			PacketSendAnswer answer5 = new PacketSendAnswer("Wrong command: " + packet.getChatmessage());
 			try {
