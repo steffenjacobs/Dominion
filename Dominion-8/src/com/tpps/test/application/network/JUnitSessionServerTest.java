@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 
 import org.junit.Test;
 
@@ -39,9 +40,11 @@ import com.tpps.application.network.core.SuperCallable;
  */
 
 public class JUnitSessionServerTest {
-	private final static int MAX_TIMEOUT = 100;
+	private final static int MAX_TIMEOUT = 1000;
 	private final String TEST_USER = "Test-User";
 	private static final boolean doLongTest = false;
+
+	private static final boolean REMOTE = true;
 
 	private static UUID receivedUUID;
 
@@ -54,13 +57,19 @@ public class JUnitSessionServerTest {
 		int sessionPort = 1337;
 
 		// test server startup
-		SessionServer server = new SessionServer(serverPacketHandler);
-		serverPacketHandler.setParent(server);
-		assertNotNull(server);
+		SessionServer server = null;
+		if (!REMOTE) {
+			server = new SessionServer(serverPacketHandler);
+			serverPacketHandler.setParent(server);
+			assertNotNull(server);
+		}
 
 		// test client startup
-		SessionClient sessionClient = new SessionClient(
-				new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort()));
+		SessionClient sessionClient;
+		if (REMOTE)
+			sessionClient = new SessionClient(new InetSocketAddress("78.31.66.224", SessionServer.getStandardPort()));
+		else
+			sessionClient = new SessionClient(new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort()));
 		assertNotNull(sessionClient);
 
 		// wait to connect.
@@ -73,10 +82,16 @@ public class JUnitSessionServerTest {
 
 		// check if client is connected to the correct port
 		assertEquals(sessionPort, sessionClient.getConnectionThread().getRemotePort());
-		ServerConnectionThread connectedClient = server.getClientThread(localPort);
-		assertNotNull(connectedClient);
+		if (!REMOTE) {
+			assertNotNull(server);
+			ServerConnectionThread connectedClient = server.getClientThread(localPort);
+			assertNotNull(connectedClient);
+		}
 
 		// send get-request and create session
+		Semaphore blocker = new Semaphore(1);
+		long oldTime = System.currentTimeMillis();
+		blocker.acquire();
 		SessionPacketSenderAPI.sendGetRequest(sessionClient, TEST_USER, new SuperCallable<PacketSessionGetAnswer>() {
 			@Override
 			public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer answer) {
@@ -84,12 +99,14 @@ public class JUnitSessionServerTest {
 				receivedUUID = answer.getLoginSessionID();
 				// check if session is not null
 				assertNotNull(answer.getLoginSessionID());
-
+				blocker.release();
 				return null;
 			}
 		});
+		blocker.acquire();
+		blocker.release();
 
-		Thread.sleep(MAX_TIMEOUT);
+		assertTrue(System.currentTimeMillis() < oldTime + MAX_TIMEOUT);
 
 		// check if session was created
 		assertNotNull(receivedUUID);
@@ -97,10 +114,25 @@ public class JUnitSessionServerTest {
 		// check if session is still valid
 		assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 
-		// bulk-test 
-		for (int i = 0; i < 1000; i++) {
-			assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
+		// bulk-test
+		final int count = 50;
+		Semaphore bulk = new Semaphore(count);
+		for (int i = 0; i < count; i++) {
+			new Thread(() -> {
+				try {
+					bulk.acquire(1);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
+				bulk.release(1);
+			}).start();
+			
+			//or else you get heap-space errors
+			Thread.sleep(1);
 		}
+		Thread.sleep(1000);
+		assertEquals(count, bulk.availablePermits());
 
 		if (doLongTest) {
 			// Start keep-alive
