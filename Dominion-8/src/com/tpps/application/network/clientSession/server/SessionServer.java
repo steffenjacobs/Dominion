@@ -9,7 +9,7 @@ import com.tpps.application.network.core.ServerConnectionThread;
 
 /** @author Steffen Jacobs */
 public class SessionServer extends Server {
-	
+
 	private final static int standardPort = 1337;
 
 	/**
@@ -59,7 +59,7 @@ public class SessionServer extends Server {
 		while (true) {
 			line = scanInput.nextLine();
 			try {
-				if (line.equals("exit")) {
+				if (line.equals("exit") || line.equals("stop")) {
 					System.exit(0);
 					break;
 				} else if (line.startsWith("create")) {
@@ -95,7 +95,6 @@ public class SessionServer extends Server {
 		}
 		scanInput.close();
 	}
-	
 
 	/**
 	 * getter for standard-port for session-server @return standard-port for

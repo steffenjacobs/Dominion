@@ -14,13 +14,13 @@ import com.tpps.application.network.core.SuperCallable;
 
 public class SessionClient extends Client {
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	private static Timer scheduler = null;
 	private static int DELTA_SEND_KEEP_ALIVE_MILLISECONDS = 5000;
 	private static ConcurrentHashMap<String, Boolean> sessionRequests = new ConcurrentHashMap<>();
 
 	public SessionClient(SocketAddress address) throws IOException {
-		super(address, new SessionPacketReceiver());
+		super(address, new SessionPacketReceiver(), false);
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> onStop()));
 	}
 
