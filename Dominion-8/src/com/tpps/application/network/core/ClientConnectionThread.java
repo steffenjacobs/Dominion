@@ -5,9 +5,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
 
 import com.tpps.application.network.core.packet.PacketType;
+import com.tpps.technicalServices.util.ByteUtil;
 
 /**
  * represents the connection-thread on the client (very similar to the server
@@ -48,7 +48,8 @@ public class ClientConnectionThread extends Thread {
 			while (!Thread.interrupted()) {
 				try {
 					int length = inStream.readInt();
-					System.out.println(length);
+					if (Server.DEBUG)
+						System.out.println("[NETWORK] TCP-Packet received. Length: " + length);
 					byte[] data = new byte[length];
 					inStream.readFully(data);
 					new Thread(() -> receiver.handleReceivedPacket(clientSocket.getLocalPort(),
@@ -83,7 +84,7 @@ public class ClientConnectionThread extends Thread {
 	public void sendPacket(byte[] data) throws IOException {
 		if (parent.isConnected()) {
 			try {
-				outStream.write(ByteBuffer.allocate(4).putInt(data.length).array());
+				outStream.write(ByteUtil.intToByteArray(data.length));
 				outStream.write(data);
 				outStream.flush();
 			} catch (SocketException | NullPointerException e) {

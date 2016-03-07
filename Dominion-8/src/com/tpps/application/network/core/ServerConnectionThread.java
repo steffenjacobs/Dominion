@@ -5,10 +5,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
 
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.core.packet.PacketType;
+import com.tpps.technicalServices.util.ByteUtil;
 
 /**
  * represents the connectoin-thread on the server (very similar to the client
@@ -103,7 +103,7 @@ public class ServerConnectionThread extends Thread {
 	 */
 	public boolean sendMessage(byte[] data) throws IOException {
 		try {
-			outStream.write(ByteBuffer.allocate(4).putInt(data.length).array());
+			outStream.write(ByteUtil.intToByteArray(data.length));
 			outStream.write(data);
 			outStream.flush();
 			return true;

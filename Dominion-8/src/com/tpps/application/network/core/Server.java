@@ -19,6 +19,9 @@ import com.tpps.application.network.core.packet.PacketType;
  * @author Steffen Jacobs
  */
 public class Server {
+	
+	public static final boolean DEBUG = true;
+	
 	private ServerSocket serverSocket;
 	private PacketHandler handler;
 	private Thread acceptor;
