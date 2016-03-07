@@ -79,7 +79,7 @@ public class ChatClient extends PacketHandler{
 	}
 	
 	public static void main(String[] args) {
-		ChatClient c = new ChatClient("steffen");
+		ChatClient c = new ChatClient("bbb");
 		System.out.println("I am: " + c.sender);
 		Scanner scanInput = new Scanner(System.in);
 		String line = null;

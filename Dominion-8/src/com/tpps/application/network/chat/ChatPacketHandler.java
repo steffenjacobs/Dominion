@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.network.core.PacketHandler;
@@ -35,15 +36,17 @@ public class ChatPacketHandler extends PacketHandler{
 				room.sendChatToAll(castedpacket);
 			}else{
 				PacketSendAnswer answer = new PacketSendAnswer(castedpacket.getChatmessage());
-//				try {
-//				//	this.parent.broadcastMessage(port, answer);
-//					Iterator<ChatRoom> roomIter = chatrooms.iterator();
-//					while(roomIter.hasNext()){
-//						
-//					}
-//				} catch (IOException e1) {			
-//					e1.printStackTrace();
-//				}
+				for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
+				    String nickname = entry.getKey();
+				    if(!this.isUserInChatRoom(nickname)){
+				    	try {
+							this.server.sendMessage(entry.getValue(), answer);
+						} catch (IOException e) {						
+							e.printStackTrace();
+							continue;
+						}
+				    }
+				}
 			}
 			break;
 			
@@ -161,7 +164,7 @@ public class ChatPacketHandler extends PacketHandler{
 	}
 	
 	private void sendMessageToClient(String sender, String receiver, String msg, int port){
-		PacketSendAnswer answer = new PacketSendAnswer(msg);
+		PacketSendAnswer answer = new PacketSendAnswer("Message from " + sender + ": " + msg);
 		try {
 			server.sendMessage(port, answer);
 		} catch (IOException e) {
@@ -199,6 +202,20 @@ public class ChatPacketHandler extends PacketHandler{
 			clientsByUserRoom.put(clients.get(j), port);
 		}
 		this.chatrooms.add(new ChatRoom(clientsByUserRoom, server));
+	}
+	
+	private boolean isUserInChatRoom(String user){
+		Iterator<ChatRoom> chatIter = this.chatrooms.iterator();
+		while(chatIter.hasNext()){
+			ChatRoom temp = chatIter.next();
+			Iterator<String> clientsIter = temp.getClients().iterator();
+			while(clientsIter.hasNext()){
+				if(user.equals(clientsIter.next())){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public ChatServer getServer() {
