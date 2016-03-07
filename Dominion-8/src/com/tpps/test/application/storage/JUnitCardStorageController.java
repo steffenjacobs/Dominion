@@ -32,9 +32,9 @@ public class JUnitCardStorageController {
 	public void test() throws IOException {
 
 		// create first test-card
-		LinkedHashMap<CardAction, Integer> actions = new LinkedHashMap<>();
-		actions.put(CardAction.ADD_ACTION_TO_PLAYER, 2);
-		actions.put(CardAction.DRAW_CARD, 5);
+		LinkedHashMap<CardAction, String> actions = new LinkedHashMap<>();
+		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "2");
+		actions.put(CardAction.DRAW_CARD, "5");
 		LinkedList<CardType> types = new LinkedList<>();
 		types.add(CardType.CURSE);
 		types.add(CardType.VICTORY);
@@ -49,9 +49,9 @@ public class JUnitCardStorageController {
 		types2.remove(CardType.VICTORY);
 		types2.add(CardType.KNIGHT);
 
-		LinkedHashMap<CardAction, Integer> actions2 = (LinkedHashMap<CardAction, Integer>) actions.clone();
+		LinkedHashMap<CardAction, String> actions2 = (LinkedHashMap<CardAction, String>) actions.clone();
 		actions2.remove(CardAction.DRAW_CARD);
-		actions2.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, 3);
+		actions2.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, "3");
 
 		SerializedCard sc2 = new SerializedCard(actions2, types2, 4, "♞ ♞ ♞ TestCardäöü♞ ", img);
 

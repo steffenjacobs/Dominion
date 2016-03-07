@@ -35,9 +35,9 @@ public class JUnitSerializedCard {
 	public void test() throws IOException, InterruptedException {
 
 		// create test-card
-		LinkedHashMap<CardAction, Integer> actions = new LinkedHashMap<>();
-		actions.put(CardAction.ADD_ACTION_TO_PLAYER, 2);
-		actions.put(CardAction.DRAW_CARD, 5);
+		LinkedHashMap<CardAction, String> actions = new LinkedHashMap<>();
+		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "2");
+		actions.put(CardAction.DRAW_CARD, "5");
 		LinkedList<CardType> types = new LinkedList<>();
 		types.add(CardType.CURSE);
 		types.add(CardType.VICTORY);
