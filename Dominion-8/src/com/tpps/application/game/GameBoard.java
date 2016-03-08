@@ -161,7 +161,7 @@ public class GameBoard {
 		
 //		 1
 		LinkedList<Card> cellarList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.ADD_ACTION_TO_PLAYER, "1"), CollectionsUtil.linkedList(CardType.ACTION), "Celar", 2), 10, cellarList);
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.ADD_ACTION_TO_PLAYER, "1"), CollectionsUtil.linkedList(CardType.ACTION), "Cellar", 2), 10, cellarList);
 		this.tableForActionCards.put("Cellar", cellarList);
 		Card.resetClassID();
 //		

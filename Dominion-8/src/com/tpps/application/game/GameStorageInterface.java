@@ -34,6 +34,7 @@ public class GameStorageInterface {
 			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, handCardId.length() - 1));
 
 			if (serializedCard != null) {
+				System.out.println("hier");
 				serializedCard = new SerializedCard(serializedCard.getActions(), serializedCard.getTypes(),
 						serializedCard.getCost(), serializedCard.getName(), serializedCard.getImage());
 			}
