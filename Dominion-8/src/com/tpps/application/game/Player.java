@@ -128,10 +128,11 @@ public class Player {
 		this.coins = coins;
 	}
 	
-	public void playTreasures(){
-//		LinkedList<Card> treasureCards = this.getActivePlayer().getDeck().getTreasureCardsFromHand();
+	public LinkedList<Card> playTreasures(){
+//		LinkedList<Card> treasureCards = this.getDeck().getTreasureCardsFromHand();
 //		this.activePlayer.getDeck().
 ////		CollectionsUtil.appendListToList(treasureCards, this.getPlayedCards());
+		return null;
 	}
 
 	/**
