@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
+import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
@@ -126,6 +127,10 @@ public class Player {
 	 */
 	public void setCoins(int coins) {
 		this.coins = coins;
+	}
+	
+	public Card playCard(String cardID){		
+		return doAction(cardID);
 	}
 	
 	public LinkedList<Card> playTreasures(){

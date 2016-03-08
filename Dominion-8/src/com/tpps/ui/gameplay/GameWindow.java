@@ -54,8 +54,8 @@ public class GameWindow extends JFrame {
 		gfcAction = new Card[10];
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
-		 this.setUndecorated(true);
+//		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
+//		 this.setUndecorated(true);
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.setVisible(true);
 		framework = new GraphicFramework(this);

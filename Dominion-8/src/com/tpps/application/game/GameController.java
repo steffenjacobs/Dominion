@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.game.TooMuchPlayerException;
 import com.tpps.technicalServices.util.CollectionsUtil;
@@ -21,14 +22,13 @@ public class GameController {
 	private Player activePlayer;
 	private GameBoard gameBoard;
 	private String gamePhase;
-	
 
 	public GameController() {
 		// new Setup().start();
 		this.players = new LinkedList<Player>();
 		this.playedCards = new LinkedList<Card>();
 		this.gameBoard = new GameBoard();
-		
+
 		this.gameNotFinished = true;
 	}
 
@@ -44,11 +44,21 @@ public class GameController {
 		}
 
 	}
-	
-	public void playTreasures(){
+
+	public void checkCardExistsAppendToPlayedCardList(String cardID) {
+		if (this.getGamePhase().equals("actionPhase")) {
+			Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
+			if (card != null && card.getTypes().contains(CardType.ACTION)){
+			CollectionsUtil.addCardToList(this.getActivePlayer().playCard(cardID), this.playedCards);
+			}
+		}
+
+	}
+
+	public void playTreasures() {
 		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().playTreasures());
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -62,8 +72,6 @@ public class GameController {
 	public void setPlayers(LinkedList<Player> players) {
 		this.players = players;
 	}
-	
-	
 
 	public LinkedList<Card> getPlayedCards() {
 		return playedCards;
@@ -82,7 +90,7 @@ public class GameController {
 	public void setActivePlayer(Player aP) {
 		this.activePlayer = aP;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -98,10 +106,13 @@ public class GameController {
 	}
 
 	/**
-	 * adds one player to the gameController if four players are registered on the gameController
-	 * one randomly choosen player is set as active(this player will begin the game)
+	 * adds one player to the gameController if four players are registered on
+	 * the gameController one randomly choosen player is set as active(this
+	 * player will begin the game)
+	 * 
 	 * @param player
-	 * @throws TooMuchPlayerException if there connects one more player
+	 * @throws TooMuchPlayerException
+	 *             if there connects one more player
 	 */
 	public void addPlayer(Player player) throws TooMuchPlayerException {
 		if (this.players.size() < 4) {
@@ -113,25 +124,26 @@ public class GameController {
 			throw new TooMuchPlayerException();
 		}
 	}
+
 	/**
-	 * search for the card with the given cardId on the gameBoard if the card exists add this
-	 * card to the discardPile of the active player. If the card not exists throw a 
+	 * search for the card with the given cardId on the gameBoard if the card
+	 * exists add this card to the discardPile of the active player. If the card
+	 * not exists throw a
+	 * 
 	 * @param cardId
 	 * @throws SynchronisationException
 	 */
-	public void buyOneCard(String cardId) throws SynchronisationException{
+	public void buyOneCard(String cardId) throws SynchronisationException {
 		Card card = gameBoard.findAndRemoveCardFromBoard(cardId);
 		this.getActivePlayer().getDeck().getDiscardPile().add(card);
 	}
 
-	/** 
+	/**
 	 * @return one of the four players who is randomly choosen
 	 */
 	private Player getRandomPlayer() {
 		return this.players.get((int) (Math.random() * 4));
 	}
-	
-	
 
 	public GameBoard getGameBoard() {
 		return gameBoard;
@@ -147,29 +159,29 @@ public class GameController {
 	// return false; // überarbeiten
 	// }
 
-	public void setDiscardPhase(){
+	public void setDiscardPhase() {
 		System.out.println("DiscardPhaseWasSet");
 		this.gamePhase = "discardPhase";
 	}
-	
-	public void setActionPhase(){
+
+	public void setActionPhase() {
 		System.out.println("ActionPhaseWasSet");
 		this.gamePhase = "actionPhase";
 	}
-	
-	public void setBuyPhase(){
+
+	public void setBuyPhase() {
 		System.out.println("BuyPhaseWasSet");
 		this.gamePhase = "buyPhase";
 	}
-	
-	public String getGamePhase(){
+
+	public String getGamePhase() {
 		return this.gamePhase;
 	}
 
-	/** 
-	 * CONTROLLER LOGIC; not sure whether the loops are necessary 
+	/**
+	 * CONTROLLER LOGIC; not sure whether the loops are necessary
 	 */
-	public void startGame() {	
+	public void startGame() {
 		this.gamePhase = "actionPhase";
 	}
 

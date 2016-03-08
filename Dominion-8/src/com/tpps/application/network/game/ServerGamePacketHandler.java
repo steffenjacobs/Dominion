@@ -55,15 +55,16 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case CARD_PLAYED:
 				String cardID = ((PacketPlayCard) packet).getCardID();
 				System.out.println(server.getGameController().getGamePhase());
-				if (server.getGameController().getGamePhase().equals("actionPhase")) {
-					Player activePlayer = server.getGameController().getActivePlayer();
-					Card card = activePlayer.getDeck().getCardFromHand(cardID);
-					if (card != null && card.getTypes().contains(CardType.ACTION)) {
-						activePlayer.doAction(((PacketPlayCard) packet).getCardID());
+				
+					this.server.getGameController().checkCardExistsAppendToPlayedCardList(cardID);
+					Player activePlayer = this.server.getGameController().getActivePlayer();
+					
+				
 						server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
 								activePlayer.getCoins()));
-					}
-				}
+						server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
+			
+				
 			
 
 				// server.sendMessage(port, new
