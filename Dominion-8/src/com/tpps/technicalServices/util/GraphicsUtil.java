@@ -100,6 +100,10 @@ public final class GraphicsUtil {
 	 * @author Steffen Jacobs
 	 */
 	public static BufferedImage resize(BufferedImage buffImg, int newWidth, int newHeight) {
+		if (newWidth <= 0)
+			newWidth = 1;
+		if (newHeight <= 0)
+			newHeight = 1;
 		BufferedImage result = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
 		result.createGraphics();
 		result.getGraphics().drawImage(buffImg, 0, 0, newWidth, newHeight, null);
