@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.application.network.gameSession.packets.PacketEndActionPhase;
+import com.tpps.application.network.gameSession.packets.PacketEndTurn;
 import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
@@ -61,6 +62,15 @@ public class ButtonClass extends GFButton {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+		}
+		System.out.println("Caption: " + this.getCaption());
+		if (this.getCaption().equals("End Turn")){
+			try {
+				System.out.println("Packet EndTurn");
+				DominionController.getInstance().getGameClient().sendMessage(new PacketEndTurn());
+			}catch(IOException ioe){
+				ioe.printStackTrace();
 			}
 		}
 	}

@@ -55,17 +55,16 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case CARD_PLAYED:
 				String cardID = ((PacketPlayCard) packet).getCardID();
 				System.out.println(server.getGameController().getGamePhase());
-				
-					this.server.getGameController().checkCardExistsAppendToPlayedCardList(cardID);
+
+				if (this.server.getGameController().checkCardExistsAppendToPlayedCardList(cardID)) {
 					Player activePlayer = this.server.getGameController().getActivePlayer();
-					
-				
-						server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
-								activePlayer.getCoins()));
-						server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
-			
-				
-			
+
+					server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
+							activePlayer.getCoins()));
+					server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+					server.broadcastMessage(new PacketSendPlayedCardsToAllClients(
+							CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
+				}
 
 				// server.sendMessage(port, new
 				// PacketSendHandCards(activePlayer.getDeck().getCardHandIds()));
@@ -78,18 +77,19 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case PLAY_TREASURES:
 				this.server.getGameController().playTreasures();
-				
-				server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-				server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
+
+				server.sendMessage(port, new PacketSendHandCards(CollectionsUtil
+						.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+				server.broadcastMessage(new PacketSendPlayedCardsToAllClients(
+						CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
 				server.sendMessage(port,
 						new PacketUpdateCoins(server.getGameController().getActivePlayer().getCoins()));
 				break;
 			case END_TURN:
 				// alle Karten ablegen
-				this.server.getGameController().getActivePlayer().getDeck().refreshCardHand();
-				// sollen hier auch gleich die neuen karten genommen werden
-				nextActivePlayer();
-				this.server.getGameController().setActionPhase();
+
+				nextActivePlayer(port);
+
 				break;
 			default:
 				System.out.println("unknown packed type");
@@ -113,9 +113,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 	}
 
-	private void nextActivePlayer() {
-		this.server.getGameController().setNextActivePlayer();
+	private void nextActivePlayer(int port) {
 		try {
+			this.server.getGameController().refreshCardHand();
+
+			server.sendMessage(port, new PacketSendHandCards(CollectionsUtil
+					.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+			this.server.getGameController().endTurn();
 			server.broadcastMessage(
 					new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
 		} catch (IOException e) {

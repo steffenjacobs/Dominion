@@ -137,7 +137,7 @@ public class Card extends GameObject {
 
 	@Override
 	public void onMouseClick() {
-		System.out.println("hier");
+		System.out.println("MouseClick on Card");
 		try {
 			DominionController.getInstance().getGameClient()
 					.sendMessage(new PacketPlayCard(this.id));

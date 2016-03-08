@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import com.tpps.application.game.GameStorageInterface;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
+import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketSendBoard;
@@ -45,13 +46,15 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case OPEN_GUI_AND_ENABLE_ONE:
 			openGuiAndEnableOne(packet);
 			break;
+		case ENABLE_DISABLE:
+			enableDisable(packet);	 			
+			break;
 		case SEND_BOARD:			
 			this.gameStorageInterface.loadActionCardsAndPassToGameWindow(((PacketSendBoard)packet).getActionCardIds());
 			break;
 		case SEND_HAND_CARDS:
 			LinkedList<String> handCardIds = ((PacketSendHandCards)packet).getCardIds();
-			this.gameStorageInterface.loadHandCardsAndPassToGameWindow(handCardIds);
-			
+			this.gameStorageInterface.loadHandCardsAndPassToGameWindow(handCardIds);			
 			break;
 		case UPDATE_VALUES:
 			// gameGui.updateValues();
@@ -70,6 +73,16 @@ public class ClientGamePacketHandler extends PacketHandler {
 
 		}
 
+	}
+
+	private void enableDisable(Packet packet) {
+		if (((PacketEnableDisable) packet).getClientId() == this.gameClient.getClientId()) {
+			this.gameWindow.setEnabled(true);
+			System.out.println("my gameWindow is enabled");
+		} else {
+			this.gameWindow.setEnabled(false);
+			System.out.println("my gameWindo is disabled");
+		}
 	}
 
 	private void openGuiAndEnableOne(Packet packet) {

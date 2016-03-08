@@ -38,25 +38,65 @@ public class GameController {
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
 			Player player = players.get(i);
 			if (player.equals(activePlayer)) {
-				this.setActivePlayer(players.get(i < GameConstant.HUMAN_PLAYERS ? i + 1 : 0));
+				this.setActivePlayer(players.get(i < GameConstant.HUMAN_PLAYERS - 1 ? i + 1 : 0));
 				break;
 			}
 		}
 
 	}
 
-	public void checkCardExistsAppendToPlayedCardList(String cardID) {
-		if (this.getGamePhase().equals("actionPhase")) {
+	/**
+	 * checks whether a card which was clicked exists and if it is allowed to
+	 * play this card in this phase of the game. If it is allowed the card is
+	 * played
+	 * 
+	 * @param cardID
+	 */
+	public boolean checkCardExistsAppendToPlayedCardList(String cardID) {
+		if (this.gamePhase.equals("actionPhase")) {
 			Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
-			if (card != null && card.getTypes().contains(CardType.ACTION)){
-			CollectionsUtil.addCardToList(this.getActivePlayer().playCard(cardID), this.playedCards);
+			if (card != null && card.getTypes().contains(CardType.ACTION)) {
+				CollectionsUtil.addCardToList(this.getActivePlayer().playCard(cardID), this.playedCards);
+				return true;
+			}
+			
+		}
+		
+
+		if (this.gamePhase.equals("buyPhase")) {
+			Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
+			if (card != null && card.getTypes().contains(CardType.TREASURE)) {
+				System.out.println("thecard is a Treasure clicked in the buyphase");
+				CollectionsUtil.addCardToList(this.getActivePlayer().playCard(cardID), this.playedCards);
+				return true;
 			}
 		}
+		return false;
 
 	}
 
+	/**
+	 * calls the play Treasures method of the player adds the returned treasure
+	 * cards from the player cardHand to the playedCard list
+	 */
 	public void playTreasures() {
 		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().playTreasures());
+	}
+
+	/**
+	 * gives the active Player five new Cards
+	 */
+	public void refreshCardHand() {
+		this.getActivePlayer().getDeck().refreshCardHand();
+	}
+
+	public void endTurn() {
+		this.getActivePlayer().getDeck().discardCardHand();
+		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().getDeck().getDiscardPile());
+		this.playedCards = new LinkedList<Card>();
+		
+		this.setNextActivePlayer();
+		this.setActionPhase();
 	}
 
 	/**
