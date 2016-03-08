@@ -9,7 +9,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketEnableMoneyCardsDisableActionCards extends Packet {
+public class PacketEndActionPhase extends Packet {
 
 	private static final long serialVersionUID = 8869904290942834312L;
 	
@@ -20,8 +20,8 @@ public class PacketEnableMoneyCardsDisableActionCards extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketEnableMoneyCardsDisableActionCards() {
-		super(PacketType.ENABLE_MONEY_CARDS_DISABLE_ACTION_CARDS);
+	public PacketEndActionPhase() {
+		super(PacketType.END_ACTION_PHASE);
 		
 	}
 

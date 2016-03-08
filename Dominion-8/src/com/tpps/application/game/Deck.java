@@ -106,6 +106,17 @@ public class Deck {
 		return getCardFromPile(cardID, this.cardHand);
 	}
 	
+	public LinkedList<Card> getTreasureCardsFromHand(){
+		LinkedList<Card> treasureCards = new LinkedList<Card>();
+		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(CardType.TREASURE)){
+				treasureCards.add(card);
+			}		
+		}
+		return treasureCards;
+	}
+	
 	/**
 	 * @param cardID individual id of the card as a String
 	 * @param searchPile the list where to search the cardID
