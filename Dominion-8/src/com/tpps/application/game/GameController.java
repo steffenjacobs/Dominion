@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.game.TooMuchPlayerException;
+import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
@@ -43,7 +44,12 @@ public class GameController {
 		}
 
 	}
-
+	
+	public void playTreasures(){
+		LinkedList<Card> treasureCards = this.getActivePlayer().getDeck().getTreasureCardsFromHand();
+		CollectionsUtil.appendListToList(treasureCards, this.getPlayedCards());
+	}
+	
 	/**
 	 * 
 	 */
@@ -56,6 +62,12 @@ public class GameController {
 	 */
 	public void setPlayers(LinkedList<Player> players) {
 		this.players = players;
+	}
+	
+	
+
+	public LinkedList<Card> getPlayedCards() {
+		return playedCards;
 	}
 
 	/**
