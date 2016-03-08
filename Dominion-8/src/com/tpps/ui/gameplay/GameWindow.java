@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
@@ -77,7 +78,7 @@ public class GameWindow extends JFrame {
 
 	}
 
-	public void tableActionCards(HashMap<String, SerializedCard> table) {
+	public void tableActionCards(LinkedHashMap<String, SerializedCard> table) {
 
 		double shift = 0.295;
 		double shiftBottom = 0.295;
@@ -104,7 +105,7 @@ public class GameWindow extends JFrame {
 
 	}
 
-	public void handCards(HashMap<String, SerializedCard> handCards) {
+	public void handCards(LinkedHashMap<String, SerializedCard> handCards) {
 		LinkedList<String> actionCardlds = new LinkedList<>(handCards.keySet());
 		int k = 14;
 		double sub = handCards.size();

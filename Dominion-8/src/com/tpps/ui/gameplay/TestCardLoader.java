@@ -2,6 +2,7 @@ package com.tpps.ui.gameplay;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
@@ -11,8 +12,8 @@ public class TestCardLoader {
 
 	public void loading() throws IOException{
 		 CardStorageController cs =  new CardStorageController();
-		 HashMap<String,SerializedCard> hand = new HashMap<>();
-		 HashMap<String,SerializedCard> table = new HashMap<>();
+		 LinkedHashMap<String,SerializedCard> hand = new LinkedHashMap<>();
+		 LinkedHashMap<String,SerializedCard> table = new LinkedHashMap<String, SerializedCard>();
 		 HashMap<String,SerializedCard> estate = new HashMap<>();
 		 HashMap<String,SerializedCard> coins = new HashMap<>();
 		 cs.loadCards();
