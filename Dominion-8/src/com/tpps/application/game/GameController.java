@@ -46,8 +46,7 @@ public class GameController {
 	}
 	
 	public void playTreasures(){
-		this.getActivePlayer().playTreasures();
-
+		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().playTreasures());
 	}
 	
 	/**

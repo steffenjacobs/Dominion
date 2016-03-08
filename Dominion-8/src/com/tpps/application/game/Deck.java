@@ -106,7 +106,7 @@ public class Deck {
 		return getCardFromPile(cardID, this.cardHand);
 	}
 	
-	public LinkedList<Card> getTreasureCardsFromHand(){
+	public LinkedList<String> getTreasureCardsFromHand(){
 		LinkedList<Card> treasureCards = new LinkedList<Card>();
 		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
@@ -114,7 +114,8 @@ public class Deck {
 				treasureCards.add(card);
 			}		
 		}
-		return treasureCards;
+		return CollectionsUtil.getCardIDs(treasureCards);
+		
 	}
 	
 	/**

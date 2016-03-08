@@ -129,10 +129,16 @@ public class Player {
 	}
 	
 	public LinkedList<Card> playTreasures(){
-//		LinkedList<Card> treasureCards = this.getDeck().getTreasureCardsFromHand();
+		LinkedList<Card> cards = new LinkedList<Card>();
+		LinkedList<String> treasureCards = this.getDeck().getTreasureCardsFromHand();
+		for (Iterator<String> iterator = treasureCards.iterator(); iterator.hasNext();) {
+			String cardId = (String) iterator.next();
+			cards.add(doAction(cardId));			
+			System.out.println("Treasures auf der Hand: " + cardId);
+		}
 //		this.activePlayer.getDeck().
 ////		CollectionsUtil.appendListToList(treasureCards, this.getPlayedCards());
-		return null;
+		return cards;
 	}
 
 	/**
@@ -140,7 +146,7 @@ public class Player {
 	 * 
 	 * @author Lukas Adler
 	 */
-	public void doAction(String cardID) {
+	public Card doAction(String cardID) {
 		this.getDeck().draw();
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 		// Player player = GameController.getActivePlayer();
@@ -186,5 +192,8 @@ public class Player {
 				break;
 			}
 		}
+		
+		this.getDeck().getCardHand().remove(serverCard);
+		return serverCard;
 	}
 }
