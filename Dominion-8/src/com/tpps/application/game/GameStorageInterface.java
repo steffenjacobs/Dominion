@@ -47,25 +47,21 @@ public class GameStorageInterface {
 	}
 
 	public void loadActionCardsAndPassToGameWindow(LinkedList<String> actionCardIds) {
-		CardStorageController cs = new CardStorageController();
-		LinkedHashMap<String, SerializedCard> serializedCardWithId = new LinkedHashMap<String, SerializedCard>();
-
-		cs.loadCards();
-		cs.listCards();
-
-		for (Iterator<String> iterator = actionCardIds.iterator(); iterator.hasNext();) {
-			String actionCardId = (String) iterator.next();
-			SerializedCard serializedCard = cs.getCard(actionCardId.substring(0, actionCardId.length() - 1));
-			// System.out.println(serializedCard);
-			// System.out.println("actions: " +serializedCard.getActions());
-			// System.out.println("types: " +serializedCard.getTypes());
-			// System.out.println("costs: " + serializedCard.getCost());
-			// System.out.println("name: " + serializedCard.getName());
-			//
-			serializedCard = new SerializedCard(serializedCard.getActions(), serializedCard.getTypes(),
-					serializedCard.getCost(), serializedCard.getName(), serializedCard.getImage());
-			serializedCardWithId.put(actionCardId, serializedCard);
-		}
+//		CardStorageController cs = new CardStorageController();
+//		LinkedHashMap<String, SerializedCard> serializedCardWithId = new LinkedHashMap<String, SerializedCard>();
+//
+//		cs.loadCards();
+//		
+//
+//		for (Iterator<String> iterator = actionCardIds.iterator(); iterator.hasNext();) {
+//			String actionCardId = (String) iterator.next();
+//			SerializedCard serializedCard = cs.getCard(actionCardId.substring(0, actionCardId.length() - 1));
+//			
+//			serializedCard = new SerializedCard(serializedCard.getActions(), serializedCard.getTypes(),
+//					serializedCard.getCost(), serializedCard.getName(), serializedCard.getImage());
+//			serializedCardWithId.put(actionCardId, serializedCard);
+//		}
+		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(actionCardIds);
 		this.gameWindow.tableActionCards(serializedCardWithId);
 	}
 

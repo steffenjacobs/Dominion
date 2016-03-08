@@ -7,6 +7,7 @@ import com.tpps.application.game.GameStorageInterface;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.gameSession.packets.PacketRegistratePlayerByServer;
+import com.tpps.ui.gameplay.GameWindow;
 
 /**
  * 
@@ -20,6 +21,10 @@ public class GameClient extends Client{
 	public GameClient(SocketAddress _address, PacketHandler _handler) throws IOException {
 		super(_address, _handler, false);	
 		((ClientGamePacketHandler)super.getHandler()).setGameClient(this);
+		GameWindow gameWindow = new GameWindow();
+		gameWindow.setVisible(false);
+		((ClientGamePacketHandler)super.getHandler()).setGameWindow(gameWindow);
+		((ClientGamePacketHandler)super.getHandler()).setGameStorageInterface(new GameStorageInterface(gameWindow));
 		registrateByServer();
 	}	
 

@@ -1,6 +1,5 @@
 package com.tpps.application.network.game;
 
-import java.io.IOException;
 import java.util.LinkedList;
 
 import com.tpps.application.game.GameStorageInterface;
@@ -46,7 +45,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case OPEN_GUI_AND_ENABLE_ONE:
 			openGuiAndEnableOne(packet);
 			break;
-		case SEND_BOARD:
+		case SEND_BOARD:			
 			this.gameStorageInterface.loadActionCardsAndPassToGameWindow(((PacketSendBoard)packet).getActionCardIds());
 			break;
 		case SEND_HAND_CARDS:
@@ -74,20 +73,25 @@ public class ClientGamePacketHandler extends PacketHandler {
 	}
 
 	private void openGuiAndEnableOne(Packet packet) {
-		try {
-			this.gameWindow = new GameWindow();
-			this.gameStorageInterface = new GameStorageInterface(this.gameWindow);
+		
+			this.gameWindow.setVisible(true);
 			if (((PacketOpenGuiAndEnableOne) packet).getClientId() == this.gameClient.getClientId()) {
 				this.gameWindow.setEnabled(true);
 				System.out.println("my gameWindow is enabled");
 			} else {
 				this.gameWindow.setEnabled(false);
 				System.out.println("my gameWindo is disabled");
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			}	
+	}
+	
+	
+
+	public void setGameWindow(GameWindow gameWindow) {
+		this.gameWindow = gameWindow;
+	}
+
+	public void setGameStorageInterface(GameStorageInterface gameStorageInterface) {
+		this.gameStorageInterface = gameStorageInterface;
 	}
 
 	public void setGameClient(GameClient gameClient) {
