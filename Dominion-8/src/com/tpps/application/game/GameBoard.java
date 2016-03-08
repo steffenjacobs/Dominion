@@ -65,7 +65,11 @@ public class GameBoard {
 		for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
 			String string = (String) iterator.next();
 			cardList = table.get(string);
-			cardIds.add(cardList.get(cardList.size() - 1).getId());
+			if (cardList.size() > 0){
+				cardIds.add(cardList.get(cardList.size() - 1).getId());
+			}else{
+				cardIds.add("NIL");
+			}
 		}
 		return cardIds;
 	}
