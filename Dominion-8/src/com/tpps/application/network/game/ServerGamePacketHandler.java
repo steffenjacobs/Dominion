@@ -77,6 +77,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case PLAY_TREASURES:
 				this.server.getGameController().playTreasures();
 				
+//				server.sendMessage(port, new PacketSendHandCards(cardIds));
 				server.sendMessage(port,
 						new PacketUpdateCoins(server.getGameController().getActivePlayer().getCoins()));
 				break;
