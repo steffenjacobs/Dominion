@@ -105,7 +105,7 @@ public class GameController {
 	 * @throws SynchronisationException
 	 */
 	public void buyOneCard(String cardId) throws SynchronisationException{
-		Card card = gameBoard.findCard(cardId);
+		Card card = gameBoard.findAndRemoveCardFromBoard(cardId);
 		this.getActivePlayer().getDeck().getDiscardPile().add(card);
 	}
 

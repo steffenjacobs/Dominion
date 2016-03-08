@@ -40,6 +40,20 @@ public class Card extends GameObject {
 		this.types = types;
 		this.id = this.name + classID++;
 	}
+	
+	public Card(LinkedHashMap<CardAction, String> actions,
+			LinkedList<CardType> types, String name, int cost, String cardId,
+			double relativeLocX, double relativeLocY, double relativeWidth,
+			double relativeHeight, int _layer, Image sourceImage,
+			GraphicFramework _parent) {
+		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight,
+				_layer, sourceImage, _parent);
+		this.name = name;
+		this.actions = actions;
+		this.cost = cost;
+		this.types = types;
+		this.id = cardId;
+	}
 
 	/**
 	 * constructor for Card, taking all required data

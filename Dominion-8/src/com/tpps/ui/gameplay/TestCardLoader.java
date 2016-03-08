@@ -23,7 +23,8 @@ public class TestCardLoader {
 		 for (int i = 0; i < 10; i++) {
 			table.add(cs.getCard("Province"));
 		}
-		 new GameWindow().tableActionCards(table);
+		 
+//		 new GameWindow().tableActionCards(table);
 	}
 	
 	public static void main(String[] args) throws IOException {

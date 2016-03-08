@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
@@ -86,22 +87,23 @@ public class GameWindow extends JFrame {
 
 	}
 
-	public void tableActionCards(ArrayList<SerializedCard> table) {
-
+	public void tableActionCards(HashMap<String, SerializedCard> serializedCardWithId) {
+		
 		double shift = 0.315;
 		double shiftBottom = 0.315;
 		int k = 3;
+		LinkedList<String> actionCardIds = new LinkedList<>(serializedCardWithId.keySet());
 
-		for (int i = 0; i < table.size(); i++) {
-
+		for (int i = 0; i < actionCardIds.size(); i++) {
+			SerializedCard serializedCard = serializedCardWithId.get(actionCardIds.get(i));
 			if (i < 5) {
-				framework.addComponent(new Card(table.get(i).getActions(), table.get(i).getTypes(),
-						table.get(i).getName(), table.get(i).getCost(), shift += 0.06, 0.02, 0.05, 0.15, k++,
-						table.get(i).getImage(), framework));
+				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
+						serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), shift += 0.06, 0.02, 0.05, 0.15, k++,
+						serializedCard.getImage(), framework));
 			} else {
-				framework.addComponent(new Card(table.get(i).getActions(), table.get(i).getTypes(),
-						table.get(i).getName(), table.get(i).getCost(), shiftBottom += 0.06, 0.2, 0.05, 0.15, k++,
-						table.get(i).getImage(), framework));
+				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
+						serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), shiftBottom += 0.06, 0.2, 0.05, 0.15, k++,
+						serializedCard.getImage(), framework));
 			}
 
 		}

@@ -33,6 +33,34 @@ public class PacketSendBoard extends Packet {
 		this.victoryCardIds = victoryCardIds;
 		this.actionCardIds = actionCardIds;		
 	}
+	
+	
+	/**
+	 * 
+	 * @return a LinkedList containing actionCardIds
+	 */
+	public LinkedList<String> getActionCardIds() {
+		return actionCardIds;
+	}
+	
+	/**
+	 * 
+	 * @return a LinkedList containing coinCardIds
+	 */
+	public LinkedList<String> getCoinCardIds() {
+		return coinCardIds;
+	}
+
+
+	/**
+	 * 
+	 * @return a LinkedList containing victoryCardIds
+	 */
+	public LinkedList<String> getVictoryCardIds() {
+		return victoryCardIds;
+	}
+
+
 
 	/**
 	 * @return a readable String

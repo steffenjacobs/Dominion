@@ -149,6 +149,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 		
 		GameBoard gameBoard = this.server.getGameController().getGameBoard();
 
+		server.broadcastMessage(
+				new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
+		System.out.println("Wie viel actions: " + gameBoard.getActionCardIDs());
 		server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(),
 				gameBoard.getActionCardIDs()));
 
@@ -158,8 +161,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 					new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
 		}
 
-		server.broadcastMessage(
-				new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
+		
 
 	}
 }

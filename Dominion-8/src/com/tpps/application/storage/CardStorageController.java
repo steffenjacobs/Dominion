@@ -38,7 +38,7 @@ public class CardStorageController {
 		try {
 			if (!Files.exists(Paths.get(storageFile)))
 				Files.createFile(Paths.get(storageFile));
-
+			System.out.println(Paths.get(storageFile));
 			byte[] bytes = Files.readAllBytes(Paths.get(storageFile));
 			if (bytes.length == 0) {
 				System.err.println("ERROR: Storage-Container is empty!");

@@ -3,13 +3,16 @@ package com.tpps.application.network.game;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import com.tpps.application.game.GameStorageInterface;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
+import com.tpps.application.network.gameSession.packets.PacketSendBoard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
-import com.tpps.ui.GameWindow;
+import com.tpps.ui.gameplay.GameWindow;
+
 
 /**
  * 
@@ -18,6 +21,8 @@ import com.tpps.ui.GameWindow;
  */
 public class ClientGamePacketHandler extends PacketHandler {
 	private GameClient gameClient;
+	private GameWindow gameWindow;
+	private GameStorageInterface gameStorageInterface;
 
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {
@@ -42,7 +47,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			openGuiAndEnableOne(packet);
 			break;
 		case SEND_BOARD:
-//			gameGui.printBoard();
+			this.gameStorageInterface.loadActionCardsAndPassToGameWindow(((PacketSendBoard)packet).getActionCardIds());
 			break;
 		case SEND_HAND_CARDS:
 			LinkedList<String> cardIds = ((PacketSendHandCards)packet).getCardIds();
@@ -75,12 +80,13 @@ public class ClientGamePacketHandler extends PacketHandler {
 
 	private void openGuiAndEnableOne(Packet packet) {
 		try {
-			GameWindow g = new GameWindow();
+			this.gameWindow = new GameWindow();
+			this.gameStorageInterface = new GameStorageInterface(this.gameWindow);
 			if (((PacketOpenGuiAndEnableOne) packet).getClientId() == this.gameClient.getClientId()) {
-				g.setEnabled(true);
+				this.gameWindow.setEnabled(true);
 				System.out.println("my gameWindow is enabled");
 			} else {
-				g.setEnabled(false);
+				this.gameWindow.setEnabled(false);
 				System.out.println("my gameWindo is disabled");
 			}
 		} catch (IOException e) {

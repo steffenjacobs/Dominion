@@ -3,6 +3,7 @@ package com.tpps.application.network.game;
 import java.io.IOException;
 import java.net.SocketAddress;
 
+import com.tpps.application.game.GameStorageInterface;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.gameSession.packets.PacketRegistratePlayerByServer;
