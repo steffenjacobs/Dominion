@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 public class ChatRoom {
 
@@ -19,6 +22,11 @@ public class ChatRoom {
 	private final static String servercommand3 = "show all ports";
 	private final static String servercommand4 = "show all clients by ports";
 	private final static String servercommand5 = "votekick";
+	
+	private Timer timer;
+	private int seconds = 45;
+	
+	private Votekick votekick;
 	
 	public ChatRoom(ConcurrentHashMap<String, Integer> clientsByUser, ChatServer server){
 		this.clientsByUsername = clientsByUser;
@@ -44,6 +52,19 @@ public class ChatRoom {
 		}
 	}
 	
+	public void handleVote(PacketChatVote packet){
+		if(votekick.getNotvotedyet().contains(packet.getSender())){
+			votekick.getNotvotedyet().add(packet.getSender());
+			votekick.addVote(packet.getSender(), packet.getVoted());
+		}else{
+			PacketSendAnswer answer = new PacketSendAnswer("You voted already");
+			try {
+				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
+			} catch (IOException e) {			
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	public void sendChatToClient(PacketSendChatToClient packet){
 		String sender = packet.getSender();
@@ -113,7 +134,46 @@ public class ChatRoom {
 			}
 			break;
 		case servercommand5:
-			Votekick kick = new Votekick();
+			if(this.votekick != null){
+				PacketSendAnswer answer6 = new PacketSendAnswer("There is an active vote currently");
+				try {
+					this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer6);
+				} catch (IOException e) {				
+					e.printStackTrace();
+				}
+			}else{
+				try{	//sets up the votekick
+					String[] words = packet.getChatmessage().split("\\s+");
+					ArrayList<String> notvoted = this.getClients();
+					notvoted.remove(packet.getSender());
+					this.votekick = new Votekick(notvoted, words[1]);
+					this.votekick.setVote_yes(1);
+					
+					//----------------------
+					this.timer = new Timer();
+			        TimerTask task;
+			        task = new TimerTask() {			        	
+			            @Override
+			            public void run() { 
+			                while (seconds > 0) {
+			                    System.out.println("Seconds = " + seconds);
+			                    seconds++;
+			                }
+			                //votekick is end now
+			            }
+			        };
+			         timer.schedule(task, 0, 45);
+			         //----------------------
+					
+				}catch(ArrayIndexOutOfBoundsException e){
+					PacketSendAnswer answer7 = new PacketSendAnswer("Wrong command " + packet.getChatmessage());
+					try {
+						this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer7);
+					} catch (IOException e1) {					
+						e1.printStackTrace();
+					}
+				}
+			}
 			break;
 		default:
 			PacketSendAnswer answer5 = new PacketSendAnswer("Wrong command: " + packet.getChatmessage());

@@ -99,6 +99,13 @@ public class ChatPacketHandler extends PacketHandler{
 			String username = shaked.getSender();
 			clientsByUsername.put(username, port);
 			break;
+		case SEND_CHAT_VOTE:
+			PacketChatVote castedpacket5 = (PacketChatVote) packet;
+			ChatRoom room5 = this.getSpecificChatRoom(castedpacket5.getSender());
+			if(room5 != null){
+				room5.handleVote(castedpacket5);
+			}
+			break;
 		default:
 			System.out.println("sth went wrong with received packet");
 			break;
