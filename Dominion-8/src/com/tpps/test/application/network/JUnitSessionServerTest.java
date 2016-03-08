@@ -115,7 +115,7 @@ public class JUnitSessionServerTest {
 		assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 
 		// bulk-test
-		final int count = 50;
+		final int count = 2000;
 		Semaphore bulk = new Semaphore(count);
 		for (int i = 0; i < count; i++) {
 			new Thread(() -> {

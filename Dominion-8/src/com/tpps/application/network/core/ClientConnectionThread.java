@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.concurrent.Semaphore;
 
 import com.tpps.application.network.core.packet.PacketType;
 import com.tpps.technicalServices.util.ByteUtil;
@@ -23,6 +24,9 @@ public class ClientConnectionThread extends Thread {
 	private final Socket clientSocket;
 	private final Client parent;
 	private final PacketHandler receiver;
+
+	// This one is holy, too, like in ServerConnectionThread
+	private Semaphore holySemaphore = new Semaphore(1);
 
 	/**
 	 * constructor for ConnectionThread
@@ -43,8 +47,8 @@ public class ClientConnectionThread extends Thread {
 	@Override
 	public void run() {
 		try {
-				inStream = new DataInputStream(clientSocket.getInputStream());
-				outStream = new DataOutputStream(clientSocket.getOutputStream());
+			inStream = new DataInputStream(clientSocket.getInputStream());
+			outStream = new DataOutputStream(clientSocket.getOutputStream());
 			while (!Thread.interrupted()) {
 				try {
 					int length = inStream.readInt();
@@ -80,8 +84,10 @@ public class ClientConnectionThread extends Thread {
 	 * sends the bytes over the network to the connected server.
 	 * 
 	 * @author Steffen Jacobs
+	 * @throws InterruptedException 
 	 */
-	public void sendPacket(byte[] data) throws IOException {
+	public void sendPacket(byte[] data) throws IOException, InterruptedException {
+			holySemaphore.acquire();
 		if (parent.isConnected()) {
 			try {
 				outStream.write(ByteUtil.intToByteArray(data.length));
@@ -95,6 +101,7 @@ public class ClientConnectionThread extends Thread {
 		} else {
 			System.out.println("NETWORK-ERROR: Could not send packet: Server not connected.");
 		}
+		holySemaphore.release();
 	}
 
 	/**

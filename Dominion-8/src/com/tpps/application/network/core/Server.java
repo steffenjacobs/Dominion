@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.net.ServerSocketFactory;
 
 import com.tpps.application.network.core.packet.Packet;
-import com.tpps.application.network.core.packet.PacketType;
 
 /**
  * represents a general server that can send and receive packets from and to
@@ -19,9 +18,9 @@ import com.tpps.application.network.core.packet.PacketType;
  * @author Steffen Jacobs
  */
 public class Server {
-	
+
 	public static final boolean DEBUG = true;
-	
+
 	private ServerSocket serverSocket;
 	private PacketHandler handler;
 	private Thread acceptor;
@@ -150,7 +149,7 @@ public class Server {
 		if (!clients.containsKey(port)) {
 			throw new IllegalArgumentException("No such client connected: " + port);
 		}
-		clients.get(port).sendMessage(PacketType.getBytes(packet));
+		clients.get(port).sendPacket(packet);
 	}
 
 	/**
@@ -167,7 +166,7 @@ public class Server {
 		for (Entry<Integer, ServerConnectionThread> entr : clients.entrySet()) {
 			if (entr.getKey().intValue() == senderPort)
 				continue;
-			entr.getValue().sendMessage(PacketType.getBytes(packet));
+			entr.getValue().sendPacket(packet);
 		}
 	}
 
@@ -179,7 +178,7 @@ public class Server {
 	 */
 	public void broadcastMessage(Packet packet) throws IOException {
 		for (ServerConnectionThread entr : clients.values()) {
-			entr.sendMessage(PacketType.getBytes(packet));
+			entr.sendPacket(packet);
 		}
 	}
 

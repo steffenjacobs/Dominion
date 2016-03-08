@@ -4,11 +4,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.SocketException;
+import java.util.concurrent.Semaphore;
 
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.core.packet.PacketType;
-import com.tpps.technicalServices.util.ByteUtil;
 
 /**
  * represents the connectoin-thread on the server (very similar to the client
@@ -23,6 +22,9 @@ public class ServerConnectionThread extends Thread {
 	private DataInputStream inStream;
 	private DataOutputStream outStream;
 	private final Server parent;
+
+	// this is the holy semaphore. Don't touch it. Don't even look at it.
+	private Semaphore holySemaphore = new Semaphore(1);
 
 	/**
 	 * constructor
@@ -97,32 +99,37 @@ public class ServerConnectionThread extends Thread {
 	}
 
 	/**
-	 * sends the data over the network to the connected server
+	 * sends the data synchronously over the network to the connected server
 	 * 
 	 * @param data
 	 *            bytes to send
 	 * @author Steffen Jacobs
+	 * @throws InterruptedException
 	 */
-	public boolean sendMessage(byte[] data) throws IOException {
-		try {
-			outStream.write(ByteUtil.intToByteArray(data.length));
-			outStream.write(data);
-			outStream.flush();
-			return true;
-		} catch (SocketException e) {
-			return false;
-		}
+	public void sendMessage(byte[] data) throws IOException, InterruptedException {
+		holySemaphore.acquire();
+		outStream.writeInt(data.length);
+		outStream.write(data);
+		outStream.flush();
+		holySemaphore.release();
 	}
 
 	/**
-	 * sends the data over the network to the connected server
+	 * sends the data asynchronously over the network to the connected server.
 	 * 
 	 * @param packet
 	 *            packet to send
 	 * @author Steffen Jacobs
 	 * @throws IOException
+	 * @throws InterruptedException
 	 */
-	public boolean sendPacket(Packet packet) throws IOException {
-		return sendMessage(PacketType.getBytes(packet));
+	public void sendPacket(Packet packet) {
+		new Thread(() -> {
+			try {
+				sendMessage(PacketType.getBytes(packet));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
 	}
 }

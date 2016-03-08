@@ -34,8 +34,6 @@ public class Client {
 		return this.connectionThread;
 	}
 
-	
-
 	/**
 	 * Tries to connect to the loaded server synchronously until a connection is
 	 * established.
@@ -184,12 +182,20 @@ public class Client {
 	 */
 	public void sendMessage(Packet packet) throws IOException {
 		if (this.connected) {
-			connectionThread.sendPacket(PacketType.getBytes(packet));
+			new Thread(() -> {
+				try {
+					connectionThread.sendPacket(PacketType.getBytes(packet));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}).start();
+
 		} else {
 			System.out.println("NETWORK ERROR: Could not send packet: No Connection.");
 			this.connectAndLoop(true);
 		}
 	}
+
 	/**
 	 * 
 	 * @return the packetHandler of the client
@@ -197,5 +203,5 @@ public class Client {
 	public PacketHandler getHandler() {
 		return handler;
 	}
-	
+
 }

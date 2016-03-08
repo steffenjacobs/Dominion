@@ -1,6 +1,5 @@
 package com.tpps.application.network.clientSession.server;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
@@ -11,7 +10,6 @@ import com.tpps.application.network.clientSession.packets.PacketSessionKeepAlive
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
-import com.tpps.application.network.core.packet.PacketType;
 
 /**
  * this class handles all the packet-stuff
@@ -19,7 +17,6 @@ import com.tpps.application.network.core.packet.PacketType;
  * @author Steffen Jacobs
  */
 public class SessionPacketHandler extends PacketHandler {
-
 
 	/**
 	 * is called in async thread when a packet was received
@@ -39,27 +36,19 @@ public class SessionPacketHandler extends PacketHandler {
 			SessionManager.revalidate(((PacketSessionKeepAlive) packet).getUsername());
 			break;
 		case SESSION_GET_REQUEST:
-			try {
-				PacketSessionGetRequest pack = (PacketSessionGetRequest) packet;
-				super.output("-> Session-Get-Request for " + pack.getUsername());
-				UUID uid = SessionManager.getValidSession(pack.getUsername());
-				requester.sendMessage(PacketType.getBytes(new PacketSessionGetAnswer(pack, uid)));
-				super.output("<- Created Session: " + pack.getUsername() + " - " + uid.toString());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			PacketSessionGetRequest pack = (PacketSessionGetRequest) packet;
+			super.output("-> Session-Get-Request for " + pack.getUsername());
+			UUID uid = SessionManager.getValidSession(pack.getUsername());
+			requester.sendPacket(new PacketSessionGetAnswer(pack, uid));
+			super.output("<- Created Session: " + pack.getUsername() + " - " + uid.toString());
 			break;
 		case SESSION_CHECK_REQUEST:
-			try {
-				PacketSessionCheckRequest pack = (PacketSessionCheckRequest) packet;
-				super.output("-> Session-Check-Request for " + pack.getUsername());
-				boolean result = SessionManager.isValid(pack.getUsername(), pack.getSessionID());
-				requester.sendMessage(PacketType.getBytes(new PacketSessionCheckAnswer(pack, result)));
-				super.output("<- Checked Session: " + pack.getUsername() + " - " + pack.getSessionID() + " - Result: "
-						+ result);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			PacketSessionCheckRequest pack2 = (PacketSessionCheckRequest) packet;
+			super.output("-> Session-Check-Request for " + pack2.getUsername());
+			boolean result = SessionManager.isValid(pack2.getUsername(), pack2.getSessionID());
+			requester.sendPacket(new PacketSessionCheckAnswer(pack2, result));
+			super.output("<- Checked Session: " + pack2.getUsername() + " - " + pack2.getSessionID() + " - Result: "
+					+ result);
 			break;
 		default:
 			super.output("<- Bad Packet: " + packet);
