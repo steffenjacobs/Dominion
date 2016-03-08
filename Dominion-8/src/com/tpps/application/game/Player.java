@@ -152,7 +152,6 @@ public class Player {
 	 * @author Lukas Adler
 	 */
 	public Card doAction(String cardID) {
-		this.getDeck().draw();
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 		// Player player = GameController.getActivePlayer();
 		LinkedList<CardAction> actionsList = new LinkedList<CardAction>(serverCard.getActions().keySet());
