@@ -38,7 +38,6 @@ public class ByteUtil {
 				out.flush();
 				out.close();
 				bos.close();
-				System.out.println("closed the stream.");
 			} catch (IOException ex) {
 			}
 		}

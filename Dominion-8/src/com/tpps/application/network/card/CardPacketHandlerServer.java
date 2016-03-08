@@ -1,7 +1,5 @@
 package com.tpps.application.network.card;
 
-import java.io.IOException;
-
 import com.tpps.application.network.card.packets.PacketAddCard;
 import com.tpps.application.network.card.packets.PacketCheckIfCardExistsAnswer;
 import com.tpps.application.network.card.packets.PacketCheckIfCardExistsRequest;
@@ -68,11 +66,14 @@ public class CardPacketHandlerServer extends PacketHandler {
 
 			PacketCheckIfCardExistsAnswer answer = new PacketCheckIfCardExistsAnswer(
 					this.cardStorage.hasCard(request.getCardName()), request);
-			try {
-				connThread.sendPacket(answer);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+
+			new Thread(() -> {
+				try {
+					connThread.sendPacket(answer);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}).start();
 			break;
 		case CARD_ADD_CARD:
 			PacketAddCard cardAdd = (PacketAddCard) packet;
@@ -100,12 +101,8 @@ public class CardPacketHandlerServer extends PacketHandler {
 				System.out.println(request2.getRequesterName() + " wants " + request2.getRequestedCardName());
 			}
 
-			try {
-				connThread.sendPacket(
-						new PacketGetCardAnswer(this.cardStorage.getCard(request2.getRequestedCardName()), request2));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			connThread.sendPacket(
+					new PacketGetCardAnswer(this.cardStorage.getCard(request2.getRequestedCardName()), request2));
 			break;
 		default:
 			break;
