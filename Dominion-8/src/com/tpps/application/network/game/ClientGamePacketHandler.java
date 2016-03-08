@@ -50,14 +50,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameStorageInterface.loadActionCardsAndPassToGameWindow(((PacketSendBoard)packet).getActionCardIds());
 			break;
 		case SEND_HAND_CARDS:
-			LinkedList<String> cardIds = ((PacketSendHandCards)packet).getCardIds();
-			System.out.println();
-			try {
-				this.gameClient.sendMessage(new PacketPlayCard(cardIds.get(0)));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			LinkedList<String> handCardIds = ((PacketSendHandCards)packet).getCardIds();
+			this.gameStorageInterface.loadHandCardsAndPassToGameWindow(handCardIds);
+			
 			break;
 		case UPDATE_VALUES:
 			// gameGui.updateValues();

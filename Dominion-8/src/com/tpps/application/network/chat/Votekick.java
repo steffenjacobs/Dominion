@@ -10,15 +10,12 @@ public class Votekick {
 	private ArrayList<String> notvotedyet;
 	private int vote_yes;
 	private int vote_no;
+	private String usertogetkicked;
 	
-	public Votekick(){
-		alreadyvoted = new ConcurrentHashMap<String, Boolean>();
-		notvotedyet = new ArrayList<String>();
-	}
-	
-	public Votekick(ArrayList<String> notvotedyet){
+	public Votekick(ArrayList<String> notvotedyet, String usertogetkicked){
 		alreadyvoted = new ConcurrentHashMap<String, Boolean>();
 		this.notvotedyet = notvotedyet;
+		this.usertogetkicked = usertogetkicked;
 	}
 	
 	public void addVote(String user, boolean vote){
@@ -69,5 +66,17 @@ public class Votekick {
 	}
 	public int getVote_yes() {
 		return vote_yes;
+	}
+	
+	public void setVote_yes(int vote_yes) {
+		this.vote_yes = vote_yes;
+	}
+	
+	public String getUsertogetkicked() {
+		return usertogetkicked;
+	}
+	
+	public ArrayList<String> getNotvotedyet() {
+		return notvotedyet;
 	}
 }
