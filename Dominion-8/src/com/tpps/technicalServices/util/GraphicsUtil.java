@@ -143,6 +143,35 @@ public final class GraphicsUtil {
 	}
 
 	/**
+	 * rotates the image by an angle. Returns a copy of.
+	 * 
+	 * @param img
+	 *            the image to rotate
+	 * @angle angle of rotation (degree)
+	 * @return a new image which is the old image rotated by the angle
+	 * 
+	 */
+	public static BufferedImage rotate(BufferedImage img, double angle) {
+		double sinAngle = Math.abs(Math.sin(Math.toRadians(angle))),
+				cosAngle = Math.abs(Math.cos(Math.toRadians(angle)));
+
+		int w = img.getWidth(null), h = img.getHeight(null);
+
+		int newWidth = (int) Math.floor(w * cosAngle + h * sinAngle),
+				newHeight = (int) Math.floor(h * cosAngle + w * sinAngle);
+
+		BufferedImage bimg = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = bimg.createGraphics();
+
+		g.translate((newWidth - w) / 2, (newHeight - h) / 2);
+		g.rotate(Math.toRadians(angle), w / 2, h / 2);
+		g.drawRenderedImage(img, null);
+		g.dispose();
+
+		return bimg;
+	}
+
+	/**
 	 * compares to image based on their pixel values (RGBA)
 	 * 
 	 * @param image1
