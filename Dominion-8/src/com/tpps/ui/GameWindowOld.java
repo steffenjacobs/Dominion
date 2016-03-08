@@ -17,22 +17,22 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.components.GFButton;
 
-public class GameWindow extends JFrame {
+public class GameWindowOld extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
 
-	private static GameWindow instance;
+	private static GameWindowOld instance;
 
-	public static GameWindow getInstance() {
+	public static GameWindowOld getInstance() {
 		return instance;
 	}
 	
-	public static GameWindow setInstance(GameWindow gw){
+	public static GameWindowOld setInstance(GameWindowOld gw){
 		instance = gw;
 		return gw;
 	}
 
 	public static void main(String[] args) throws IOException {
-		instance = new GameWindow();
+		instance = new GameWindowOld();
 	}
 
 	Container c;
@@ -44,7 +44,8 @@ public class GameWindow extends JFrame {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public GameWindow() throws IOException {
+	public GameWindowOld() throws IOException {
+		instance = this;
 //		JFrame frame = new JFrame();
 //		frame.setSize(100, 100);
 //		GraphicFramework gf = new GraphicFramework(frame);

@@ -48,14 +48,15 @@ public class GameWindow extends JFrame {
 	 * @author Steffen Jacobs
 	 */
 	public GameWindow() throws IOException {
+		instance = this;
 		final int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
 		final int HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 		actionCards = new BufferedImage[10];
 		gfcAction = new Card[10];
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
-		 this.setUndecorated(true);
+//		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
+//		 this.setUndecorated(true);
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.setVisible(true);
 		framework = new GraphicFramework(this);
