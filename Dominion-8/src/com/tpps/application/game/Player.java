@@ -127,6 +127,12 @@ public class Player {
 	public void setCoins(int coins) {
 		this.coins = coins;
 	}
+	
+	public void playTreasures(){
+//		LinkedList<Card> treasureCards = this.getActivePlayer().getDeck().getTreasureCardsFromHand();
+//		this.activePlayer.getDeck().
+////		CollectionsUtil.appendListToList(treasureCards, this.getPlayedCards());
+	}
 
 	/**
 	 * calls the static method which executes the actions
