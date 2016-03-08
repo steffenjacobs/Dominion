@@ -50,7 +50,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			break;
 		case SEND_HAND_CARDS:
 			LinkedList<String> handCardIds = ((PacketSendHandCards)packet).getCardIds();
-//			this.gameStorageInterface.loadHandCardsAndPassToGameWindow(handCardIds);
+			this.gameStorageInterface.loadHandCardsAndPassToGameWindow(handCardIds);
 			
 			break;
 		case UPDATE_VALUES:

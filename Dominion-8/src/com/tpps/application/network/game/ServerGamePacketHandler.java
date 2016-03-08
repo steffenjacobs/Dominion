@@ -5,6 +5,8 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
+import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
@@ -50,13 +52,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 				updatePortOfPlayer(port, packet);
 				break;
 			case CARD_PLAYED:
-				Player activePlayer = server.getGameController().getActivePlayer();
-				activePlayer.doAction(((PacketPlayCard) packet).getCardID());
-				System.out.println("packet received from Client of type " + packet.getType() + " card id "
-						+ ((PacketPlayCard) packet).getCardID());
-
-				server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
-						activePlayer.getCoins()));
+				String cardID = ((PacketPlayCard) packet).getCardID();
+				System.out.println(server.getGameController().getGamePhase());
+				if (server.getGameController().getGamePhase().equals("actionPhase")) {
+					Player activePlayer = server.getGameController().getActivePlayer();
+					Card card = activePlayer.getDeck().getCardFromHand(cardID);
+					if (card != null && card.getTypes().contains(CardType.ACTION)) {
+						activePlayer.doAction(((PacketPlayCard) packet).getCardID());
+						server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
+								activePlayer.getCoins()));
+					}
+				}
+			
 
 				// server.sendMessage(port, new
 				// PacketSendHandCards(activePlayer.getDeck().getCardHandIds()));
@@ -64,14 +71,16 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case BUY_CARD:
 				buyCardAndUpdateBoards(packet);
 				break;
-			 case PLAY_TREASURES:
-			 server.sendMessage(port, new PacketUpdateCoins(server.getGameController().getActivePlayer().getCoins()));
-			 break;
+			case PLAY_TREASURES:
+				server.sendMessage(port,
+						new PacketUpdateCoins(server.getGameController().getActivePlayer().getCoins()));
+				break;
 			case END_TURN:
 				// alle Karten ablegen
 				this.server.getGameController().getActivePlayer().getDeck().refreshCardHand();
 				// sollen hier auch gleich die neuen karten genommen werden
 				nextActivePlayer();
+				this.server.getGameController().setActionPhase();
 				break;
 			default:
 				System.out.println("unknown packed type");
@@ -88,8 +97,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 		try {
 			GameBoard gameBoard = this.server.getGameController().getGameBoard();
 			this.server.getGameController().buyOneCard(((PacketBuyCard) packet).getCardId());
-			server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(),
-					gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
+			server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(),
+					gameBoard.getActionCardIDs()));
 		} catch (SynchronisationException e) {
 			e.printStackTrace();
 		}
@@ -146,7 +155,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 */
 	private void setUpGui() throws IOException {
 
-		
 		GameBoard gameBoard = this.server.getGameController().getGameBoard();
 
 		server.broadcastMessage(
@@ -160,8 +168,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 			server.sendMessage(players.get(i).getPort(),
 					new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
 		}
-
-		
 
 	}
 }

@@ -139,7 +139,7 @@ public class Player {
 		// Player player = GameController.getActivePlayer();
 		LinkedList<CardAction> actionsList = new LinkedList<CardAction>(serverCard.getActions().keySet());
 		Iterator<CardAction> cardIt = actionsList.iterator();
-
+		System.out.println("DoAction");
 		while (cardIt.hasNext()) {
 			switch (cardIt.next()) {
 			case ADD_ACTION_TO_PLAYER:

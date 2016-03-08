@@ -18,6 +18,7 @@ public class GameController {
 	private boolean gameNotFinished;
 	private Player activePlayer;
 	private GameBoard gameBoard;
+	private String gamePhase;
 
 	public GameController() {
 		// new Setup().start();
@@ -132,13 +133,27 @@ public class GameController {
 	// return false; // überarbeiten
 	// }
 
+	public void setDiscardPhase(){
+		this.gamePhase = "discardPhase";
+	}
+	
+	public void setActionPhase(){
+		this.gamePhase = "actionPhase";
+	}
+	
+	public void setBuyPhase(){
+		this.gamePhase = "buyPhase";
+	}
+	
+	public String getGamePhase(){
+		return this.gamePhase;
+	}
 
 	/** 
 	 * CONTROLLER LOGIC; not sure whether the loops are necessary 
 	 */
 	public void startGame() {	
-
-		System.out.println(Arrays.toString(this.activePlayer.getDeck().getCardHand().toArray()));
+		this.gamePhase = "actionPhase";
 	}
 
 	/**
