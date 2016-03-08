@@ -46,8 +46,10 @@ public class GameController {
 	}
 	
 	public void playTreasures(){
-		LinkedList<Card> treasureCards = this.getActivePlayer().getDeck().getTreasureCardsFromHand();
-		CollectionsUtil.appendListToList(treasureCards, this.getPlayedCards());
+////		this.getActivePlayer().playTreasures();
+//		LinkedList<Card> treasureCards = this.getActivePlayer().getDeck().getTreasureCardsFromHand();
+//		this.activePlayer.getDeck().
+////		CollectionsUtil.appendListToList(treasureCards, this.getPlayedCards());
 	}
 	
 	/**
