@@ -48,6 +48,7 @@ public class GameWindow extends JFrame {
 	 * @author Steffen Jacobs
 	 */
 	public GameWindow() throws IOException {
+		instance = this;
 		final int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
 		final int HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 		actionCards = new BufferedImage[10];
@@ -70,10 +71,13 @@ public class GameWindow extends JFrame {
 
 		endActionPhase = new ButtonClass(0.75, 0.1, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End ActionPhase");
 		playTreasures = new ButtonClass(0.75, 0.2, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Play Treasures");
+		endTurn = new ButtonClass(0.75, 0.3, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
+
 
 		framework.addComponent(closeButton);
 		framework.addComponent(endActionPhase);
 		framework.addComponent(playTreasures);
+		framework.addComponent(endTurn);
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 

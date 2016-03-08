@@ -157,7 +157,7 @@ public class MainMenuPanel extends JPanel {
 			if (buttons[1].isOn(e.getX(), e.getY())) {
 				MainMenuPanel.this.parent.dispose();
 				try {
-					GameWindow.setInstance(new GameWindow());
+					GameWindowOld.setInstance(new GameWindowOld());
 				} catch (IOException e1) {				
 					e1.printStackTrace();
 				}				

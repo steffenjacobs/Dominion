@@ -4,15 +4,14 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-
 import java.awt.image.BufferedImage;
-
 import java.io.Serializable;
 import java.util.Comparator;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.MathUtil;
 import com.tpps.technicalServices.util.PhysicsUtil;
+import com.tpps.ui.gameplay.GameWindow;
 
 /**
  * represents the visualization of a game-object
@@ -304,6 +303,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @author Steffen Jacobs
 	 */
 	public void updateImage(Image newImage) {
+		System.out.println(GameWindow.getInstance());
 		updateImage(newImage, GameWindow.getInstance().getWidth(), GameWindow.getInstance().getHeight());
 	}
 
