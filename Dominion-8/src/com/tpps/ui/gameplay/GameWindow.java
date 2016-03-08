@@ -6,7 +6,6 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -14,14 +13,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.tpps.application.game.card.Card;
-import com.tpps.application.game.card.CardAction;
-import com.tpps.application.game.card.CardType;
 import com.tpps.application.storage.SerializedCard;
-import com.tpps.technicalServices.util.CollectionsUtil;
-import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
-import com.tpps.ui.RelativeGeom2D;
 import com.tpps.ui.components.GFButton;
 import com.tpps.ui.components.GameBackground;
 
@@ -124,15 +118,15 @@ public class GameWindow extends JFrame {
 
 			if (handCards.size() <= 5 && handCards.size() > 1) {
 				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), shiftSmall += 0.075, 0.70, 0.1, 0.3, k++,
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftSmall += 0.075, 0.70, 0.1, 0.3, k++,
 						serializedCard.getImage(), framework));
 			} else if (handCards.size() == 1) {
 				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), shiftOne += 0.075, 0.70, 0.1, 0.3, k++,
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftOne += 0.075, 0.70, 0.1, 0.3, k++,
 						serializedCard.getImage(), framework));
 			} else {
 				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), shift += 0.075, 0.70, 0.1, 0.3, k++,
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.075, 0.70, 0.1, 0.3, k++,
 						serializedCard.getImage(), framework));
 			}
 		}
