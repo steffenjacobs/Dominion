@@ -72,6 +72,7 @@ public class GameWindow extends JFrame {
 		playTreasures = new ButtonClass(0.75, 0.2, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Play Treasures");
 		endTurn = new ButtonClass(0.75, 0.3, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
 
+
 		framework.addComponent(closeButton);
 		framework.addComponent(endActionPhase);
 		framework.addComponent(playTreasures);
