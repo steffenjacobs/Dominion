@@ -5,19 +5,19 @@ import java.net.SocketAddress;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 
 import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.SuperCallable;
+import com.tpps.technicalServices.util.ConcurrentMultiMap;
 
 public class SessionClient extends Client {
 
 	private static final boolean DEBUG = false;
 	private static Timer scheduler = null;
 	private static int DELTA_SEND_KEEP_ALIVE_MILLISECONDS = 5000;
-	private static ConcurrentHashMap<String, Boolean> sessionRequests = new ConcurrentHashMap<>();
+	private static ConcurrentMultiMap<String, Boolean> sessionRequests = new ConcurrentMultiMap<>();
 
 	public SessionClient(SocketAddress address) throws IOException {
 		super(address, new SessionPacketReceiver(), false);
@@ -53,6 +53,7 @@ public class SessionClient extends Client {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
 		return sessionRequests.remove(username);
 	}
 

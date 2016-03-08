@@ -35,19 +35,15 @@ public class ByteUtil {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (out != null) {
-					out.close();
-				}
-			} catch (IOException ex) {
-				// ignore close exception
-			}
-			try {
+				out.flush();
+				out.close();
 				bos.close();
+				System.out.println("closed the stream.");
 			} catch (IOException ex) {
-				// ignore close exception
 			}
 		}
 		return res;
+
 	}
 
 	/**
@@ -69,13 +65,8 @@ public class ByteUtil {
 			e.printStackTrace();
 		} finally {
 			try {
+				in.close();
 				bis.close();
-			} catch (IOException ex) {
-			}
-			try {
-				if (in != null) {
-					in.close();
-				}
 			} catch (IOException ex) {
 			}
 		}

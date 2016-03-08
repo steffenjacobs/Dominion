@@ -157,7 +157,7 @@ public class Password {
 	 * @author jhuhn - Johannes Huhn
 	 * @return a String representaion of the salt
 	 */
-	public String getSaltAsString(){		
+	public String getSaltAsString(){
 		return new String(this.salt);
 	}
 	

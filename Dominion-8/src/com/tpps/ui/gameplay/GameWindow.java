@@ -40,10 +40,6 @@ public class GameWindow extends JFrame {
 		return instance;
 	}
 
-	public static void main(String[] args) throws IOException {
-		instance = new GameWindow();
-	}
-
 	/**
 	 * creates the GameWindow
 	 * 
@@ -70,7 +66,7 @@ public class GameWindow extends JFrame {
 
 		framework.addComponent(closeButton);
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
-		framework.addComponent(new GameBackground(0.33, 0.01, 0.38, 0.38, 2, tableImage, framework));
+		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 
 		this.revalidate();
 		this.repaint();
@@ -87,37 +83,62 @@ public class GameWindow extends JFrame {
 
 	}
 
-	public void tableActionCards(HashMap<String, SerializedCard> serializedCardWithId) {
-		
-		double shift = 0.315;
-		double shiftBottom = 0.315;
-		int k = 3;
-		LinkedList<String> actionCardIds = new LinkedList<>(serializedCardWithId.keySet());
+	public void tableActionCards(HashMap<String, SerializedCard> table) {
 
-		for (int i = 0; i < actionCardIds.size(); i++) {
-			SerializedCard serializedCard = serializedCardWithId.get(actionCardIds.get(i));
+		double shift = 0.295;
+		double shiftBottom = 0.295;
+		int k = 3;
+		LinkedList<String> actionCardlds = new LinkedList<>(table.keySet());
+
+		for (int i = 0; i < table.size(); i++) {
+			SerializedCard serializedCard = table.get(actionCardlds.get(i));
+
 			if (i < 5) {
 				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), shift += 0.06, 0.02, 0.05, 0.15, k++,
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.06, 0.02, 0.05, 0.15, k++,
 						serializedCard.getImage(), framework));
 			} else {
 				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), shiftBottom += 0.06, 0.2, 0.05, 0.15, k++,
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftBottom += 0.06, 0.2, 0.05, 0.15, k++,
 						serializedCard.getImage(), framework));
 			}
 
 		}
 	}
 
-	public void coinCards(ArrayList<SerializedCard> coins) {
+	public void coinCards(HashMap<String, SerializedCard>coins) {
 
 	}
 
-	public void handCards(ArrayList<SerializedCard> handCards) {
+	public void handCards(HashMap<String, SerializedCard> handCards) {
+		LinkedList<String> actionCardlds = new LinkedList<>(handCards.keySet());
+		int k = 14;
+		double sub = handCards.size();
+		double shift = (1 - (sub / 10)) / 2;
+		double shiftSmall = shift - 0.03;
+		double shiftOne = shiftSmall - 0.03;
+		System.out.println(shift);
+		for (int i = 0; i < handCards.size(); i++) {
 
+			SerializedCard serializedCard = handCards.get(actionCardlds.get(i));
+
+			if (handCards.size() <= 5 && handCards.size() > 1) {
+				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
+						serializedCard.getName(), serializedCard.getCost(), shiftSmall += 0.075, 0.70, 0.1, 0.3, k++,
+						serializedCard.getImage(), framework));
+			} else if (handCards.size() == 1) {
+				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
+						serializedCard.getName(), serializedCard.getCost(), shiftOne += 0.075, 0.70, 0.1, 0.3, k++,
+						serializedCard.getImage(), framework));
+			} else {
+				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
+						serializedCard.getName(), serializedCard.getCost(), shift += 0.075, 0.70, 0.1, 0.3, k++,
+						serializedCard.getImage(), framework));
+			}
+		}
 	}
 
-	public void estateCards(ArrayList<SerializedCard> estate) {
+	public void estateCards(HashMap<String, SerializedCard>estate) {
 
 	}
 

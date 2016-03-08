@@ -1,8 +1,8 @@
 package com.tpps.application.network.clientSession.client;
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
 import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
@@ -28,18 +28,21 @@ public final class SessionPacketReceiverAPI {
 		SuperCallable<PacketSessionCheckAnswer> toCall = null;
 
 		if (checkRequests.get(packet.getRequest().getUsername()).size() == 1) {
-			toCall = checkRequests.remove(packet.getRequest().getUsername()).getFirst().getCallable();
+			toCall = checkRequests.remove(packet.getRequest().getUsername()).get(0).getCallable();
 		} else {
-			LinkedList<CheckRequest> requests = checkRequests.get(packet.getRequest().getUsername());
-			Iterator<CheckRequest> it = requests.iterator();
+			CopyOnWriteArrayList<CheckRequest> requests = checkRequests.get(packet.getRequest().getUsername());
+			ListIterator<CheckRequest> it = requests.listIterator();
+			int id = -1;
 			while (it.hasNext()) {
+				id++;
 				CheckRequest req = it.next();
 				if (req.getTimestamp() == packet.getRequest().getTimestamp()) {
 					toCall = req.getCallable();
-					it.remove();
+//					it.remove();
 					break;
 				}
 			}
+			requests.remove(id);
 			if (requests.size() == 0) {
 				checkRequests.remove(packet.getRequest().getUsername());
 			} else {
@@ -88,12 +91,12 @@ public final class SessionPacketReceiverAPI {
 	static void addCheckRequest(String username, SuperCallable<PacketSessionCheckAnswer> callable,
 			long sendedTimestamp) {
 
-		LinkedList<CheckRequest> requestList;
+		CopyOnWriteArrayList<CheckRequest> requestList;
 
 		if (checkRequests.containsKey(username)) {
 			requestList = checkRequests.get(username);
 		} else {
-			requestList = new LinkedList<CheckRequest>();
+			requestList = new CopyOnWriteArrayList<CheckRequest>();
 		}
 
 		requestList.add(new CheckRequest(sendedTimestamp, callable));
@@ -101,7 +104,7 @@ public final class SessionPacketReceiverAPI {
 	}
 
 	private static ConcurrentHashMap<String, SuperCallable<PacketSessionGetAnswer>> getRequests = new ConcurrentHashMap<>();
-	private static ConcurrentHashMap<String, LinkedList<CheckRequest>> checkRequests = new ConcurrentHashMap<>();
+	private static ConcurrentHashMap<String, CopyOnWriteArrayList<CheckRequest>> checkRequests = new ConcurrentHashMap<>();
 
 	private static class CheckRequest {
 		private final long timestamp;

@@ -1,30 +1,37 @@
 package com.tpps.ui.gameplay;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
 
 public class TestCardLoader {
+	String s="asdf";
 
 	public void loading() throws IOException{
 		 CardStorageController cs =  new CardStorageController();
-		 ArrayList<SerializedCard> hand = new ArrayList<>();
-		 ArrayList<SerializedCard> table = new ArrayList<>();
-		 ArrayList<SerializedCard> estate = new ArrayList<>();
-		 ArrayList<SerializedCard> coins = new ArrayList<>();
+		 HashMap<String,SerializedCard> hand = new HashMap<>();
+		 HashMap<String,SerializedCard> table = new HashMap<>();
+		 HashMap<String,SerializedCard> estate = new HashMap<>();
+		 HashMap<String,SerializedCard> coins = new HashMap<>();
 		 cs.loadCards();
 		 for (int i = 0; i < 3; i++) {
-			coins.add(cs.getCard("Copper"));
-			estate.add(cs.getCard("Duchy"));
+			coins.put(s+="s",cs.getCard("Copper"));
+			estate.put(s+="s",cs.getCard("Duchy"));
 		}
 		 
 		 for (int i = 0; i < 10; i++) {
-			table.add(cs.getCard("Province"));
+			table.put(s+=s,cs.getCard("Province"));
 		}
-		 
-//		 new GameWindow().tableActionCards(table);
+
+		 for (int i = 0; i < 9; i++) {
+			hand.put(s+=s,cs.getCard("Gold"));
+		}
+		 GameWindow gw = new GameWindow();
+		 gw.tableActionCards(table);
+		 gw.handCards(hand);
+
 	}
 	
 	public static void main(String[] args) throws IOException {
