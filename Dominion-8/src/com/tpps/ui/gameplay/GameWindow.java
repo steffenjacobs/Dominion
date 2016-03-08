@@ -27,12 +27,12 @@ import com.tpps.ui.components.GameBackground;
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
 	private GFButton closeButton;
-	private GFButton endActionPhase; 
+	private GFButton endActionPhase;
 	private GFButton playTreasures;
 	private GFButton endTurn;
 	private static GameWindow instance;
 
-	private BufferedImage closeImage, backgroundImage, tableImage;
+	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage;
 	private BufferedImage[] actionCards;
 	private GraphicFramework framework;
 	private Card[] gfcAction;
@@ -49,12 +49,13 @@ public class GameWindow extends JFrame {
 	 */
 	public GameWindow() throws IOException {
 		final int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
+		final int HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 		actionCards = new BufferedImage[10];
 		gfcAction = new Card[10];
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		// this.setExtendedState(Frame.MAXIMIZED_BOTH);
-		// this.setUndecorated(true);
+		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
+		 this.setUndecorated(true);
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.setVisible(true);
 		framework = new GraphicFramework(this);
@@ -63,19 +64,20 @@ public class GameWindow extends JFrame {
 		backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
 		closeImage = this.loadingImage(closeImage, "resources/img/gameObjects/close.png");
 		tableImage = this.loadingImage(tableImage, "resources/img/gameObjects/table.jpg");
+		buttonImage = this.loadingImage(buttonImage, "resources/img/gameObjects/testButton.png");
 
-		closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015, WIDTH, WIDTH, 1, closeImage, framework, "");
+		closeButton = new ButtonClass(0.98, 0.01, 0.015, 0.015, WIDTH, WIDTH, 1, closeImage, framework, "");
 
-		ButtonClass endActionPhase = new ButtonClass(0.97, 0.1, 0.015, 0.015, WIDTH, WIDTH, 1, closeImage, framework, "endActionPhase");
-		ButtonClass playTreasures = new ButtonClass(0.97, 0.2, 0.015, 0.015, WIDTH, WIDTH, 1, closeImage, framework, "playTreasures");
-		
+		endActionPhase = new ButtonClass(0.75, 0.1, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End ActionPhase");
+		playTreasures = new ButtonClass(0.75, 0.2, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Play Treasures");
+
 		framework.addComponent(closeButton);
 		framework.addComponent(endActionPhase);
 		framework.addComponent(playTreasures);
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 
-		this.setSize(1280, 720);
+//		this.setSize(1280, 720);
 		this.revalidate();
 		this.repaint();
 
@@ -169,77 +171,4 @@ public class GameWindow extends JFrame {
 
 		}
 	}
-
-	private class ButtonClass extends GFButton {
-		private static final long serialVersionUID = 1520424079770080041L;
-
-		public ButtonClass(double relativeX, double relativeY, double relativeWidth, double relativeHeight,
-				int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
-			super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage,
-					_parent, caption);
-		}
-
-		@Override
-		public GameObject clone() {
-			return null;// return new TestButton(super.get);
-		}
-
-		@Override
-		public void onMouseEnter() {
-			System.out.println("entered " + this.toString());
-
-		}
-
-		@Override
-		public void onMouseExit() {
-
-		}
-
-		@Override
-		public void onMouseClick() {
-			System.out.println("clicked " + this.toString());
-			
-			if (this.getCaption().equals("")) {
-				System.exit(0);
-			}
-			if (this.getCaption().equals("endActionPhase")){
-				try {
-					System.out.println("EndActionPhase");
-					DominionController.getInstance().getGameClient().sendMessage(new PacketEndActionPhase());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			if (this.getCaption().equals("playTreasures")){
-				try {
-					System.out.println("PacketPlayTreasures");
-					DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-
-		@Override
-		public void onMouseDrag() {
-			System.out.println("dragged " + this.toString());
-
-		}
-
-		@Override
-		public String toString() {
-			return "@" + System.identityHashCode(this) + " - " + super.getLocation() + " , " + super.getDimension()
-					+ " , " + super.getLayer() + " , " + super.getImage() + " , " + super.getParent() + " , "
-					+ super.getCaption();
-		}
-
-		@Override
-		public void onResize(int absWidth, int absHeight) {
-			super.onResize(absWidth, absHeight);
-		}
-
-	}
-
 }

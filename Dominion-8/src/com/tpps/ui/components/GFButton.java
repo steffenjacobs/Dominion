@@ -2,10 +2,13 @@ package com.tpps.ui.components;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.io.IOException;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.Loader;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 
@@ -43,29 +46,45 @@ public abstract class GFButton extends GameObject {
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent);
 		this.caption = caption;
-		onResize(absWidth, absHeight);
+		this.onResize(absWidth, absHeight);
+	}
+	
+	/**
+	 * different constructor
+	 * 
+	 * @param relativeX
+	 * @param relativeY
+	 * @param relativeWidth
+	 * @param relativeHeight
+	 * @param _layer
+	 * @param sourceImage
+	 * @param _parent
+	 * @param caption
+	 * 
+	 * @ Nishit Agrawal
+	 */
+
+	public GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int _layer,
+			Image sourceImage, GraphicFramework _parent, String caption) {
+		super(relativeX, relativeY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
+		this.caption = caption;
 	}
 
 	@Override
 	public void onResize(int absWidth, int absHeight) {
-		if (this.caption != null)
-		super.forceSetImage(GraphicsUtil.drawStringCentered(super.getImage(), this.caption,
-				new Font("Blackadder ITC", Font.BOLD, 80), Color.BLACK));
-	}
-	
-	private void importFont() {
-
 		try {
-			customFont = Font.createFont(Font.TRUETYPE_FONT,
-					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF"));
-			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
-					ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF")));
-		} catch (Exception e) {
-			System.err.println(e);
+			customFont = Loader.importFont();
+		} catch (FontFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		if (this.caption != null)
+			super.forceSetImage(GraphicsUtil.drawStringCentered(super.getImage(), this.caption,
+					customFont.deriveFont(Font.PLAIN, 22), Color.BLACK));
 	}
-
 	/**
 	 * @author Steffen Jacobs
 	 * @return the object-caption
