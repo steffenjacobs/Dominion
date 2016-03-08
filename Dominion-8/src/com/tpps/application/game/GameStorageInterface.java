@@ -30,7 +30,7 @@ public class GameStorageInterface {
 		for (Iterator<String> iterator = handCardIds.iterator(); iterator.hasNext();) {
 
 			String handCardId = (String) iterator.next();
-			System.out.println(handCardId);
+			System.out.println("HandCard: " + handCardId);
 			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, handCardId.length() - 1));
 
 			if (serializedCard != null) {

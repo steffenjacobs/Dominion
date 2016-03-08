@@ -50,12 +50,6 @@ public class GameWindow extends JFrame {
 //		this.setUndecorated(true);
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.setVisible(true);
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		framework = new GraphicFramework(this);
 		this.add(framework);
 
@@ -68,9 +62,11 @@ public class GameWindow extends JFrame {
 		framework.addComponent(closeButton);
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
-
+		
+		this.setSize(1280, 720);
 		this.revalidate();
 		this.repaint();
+		
 	}
 
 	private BufferedImage loadingImage(BufferedImage im, String resource) {
