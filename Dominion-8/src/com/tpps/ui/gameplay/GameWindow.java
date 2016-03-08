@@ -13,7 +13,10 @@ import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.Card;
+import com.tpps.application.network.gameSession.packets.PacketEndActionPhase;
+import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
@@ -24,6 +27,9 @@ import com.tpps.ui.components.GameBackground;
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
 	private GFButton closeButton;
+	private GFButton endActionPhase; 
+	private GFButton playTreasures;
+	private GFButton endTurn;
 	private static GameWindow instance;
 
 	private BufferedImage closeImage, backgroundImage, tableImage;
@@ -60,7 +66,12 @@ public class GameWindow extends JFrame {
 
 		closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015, WIDTH, WIDTH, 1, closeImage, framework, "");
 
+		ButtonClass endActionPhase = new ButtonClass(0.97, 0.1, 0.015, 0.015, WIDTH, WIDTH, 1, closeImage, framework, "endActionPhase");
+		ButtonClass playTreasures = new ButtonClass(0.97, 0.2, 0.015, 0.015, WIDTH, WIDTH, 1, closeImage, framework, "playTreasures");
+		
 		framework.addComponent(closeButton);
+		framework.addComponent(endActionPhase);
+		framework.addComponent(playTreasures);
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 
@@ -187,8 +198,27 @@ public class GameWindow extends JFrame {
 		@Override
 		public void onMouseClick() {
 			System.out.println("clicked " + this.toString());
-			if (closeButton.getCaption().equals("")) {
+			
+			if (this.getCaption().equals("")) {
 				System.exit(0);
+			}
+			if (this.getCaption().equals("endActionPhase")){
+				try {
+					System.out.println("EndActionPhase");
+					DominionController.getInstance().getGameClient().sendMessage(new PacketEndActionPhase());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+			if (this.getCaption().equals("playTreasures")){
+				try {
+					System.out.println("PacketPlayTreasures");
+					DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 

@@ -15,14 +15,17 @@ import com.tpps.technicalServices.util.GameConstant;
 public class GameController {
 
 	private LinkedList<Player> players;
+	private LinkedList<Card> playedCards;
 	private boolean gameNotFinished;
 	private Player activePlayer;
 	private GameBoard gameBoard;
 	private String gamePhase;
+	
 
 	public GameController() {
 		// new Setup().start();
 		this.players = new LinkedList<Player>();
+		this.playedCards = new LinkedList<Card>();
 		this.gameBoard = new GameBoard();
 		
 		this.gameNotFinished = true;
@@ -134,14 +137,17 @@ public class GameController {
 	// }
 
 	public void setDiscardPhase(){
+		System.out.println("DiscardPhaseWasSet");
 		this.gamePhase = "discardPhase";
 	}
 	
 	public void setActionPhase(){
+		System.out.println("ActionPhaseWasSet");
 		this.gamePhase = "actionPhase";
 	}
 	
 	public void setBuyPhase(){
+		System.out.println("BuyPhaseWasSet");
 		this.gamePhase = "buyPhase";
 	}
 	

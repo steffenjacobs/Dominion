@@ -71,7 +71,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case BUY_CARD:
 				buyCardAndUpdateBoards(packet);
 				break;
+			case END_ACTION_PHASE:
+				this.server.getGameController().setBuyPhase();
+				break;
 			case PLAY_TREASURES:
+				LinkedList<Card> treasureCards = server.getGameController().getActivePlayer().getDeck().getTreasureCardsFromHand();
+				
 				server.sendMessage(port,
 						new PacketUpdateCoins(server.getGameController().getActivePlayer().getCoins()));
 				break;
