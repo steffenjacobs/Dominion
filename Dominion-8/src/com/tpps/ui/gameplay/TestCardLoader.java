@@ -23,16 +23,17 @@ public class TestCardLoader {
 		}
 		 
 		 for (int i = 0; i < 10; i++) {
-			table.put(s+=s,cs.getCard("Province"));
+			table.put(s+="s",cs.getCard("Province"));
 		}
 
 		 for (int i = 0; i < 9; i++) {
-			hand.put(s+=s,cs.getCard("Gold"));
+			hand.put(s+="s",cs.getCard("Gold"));
 		}
 		 GameWindow gw = new GameWindow();
 		 gw.tableActionCards(table);
 		 gw.handCards(hand);
-
+		 gw.coinCards(coins);
+		 gw.estateCards(estate);
 	}
 	
 	public static void main(String[] args) throws IOException {

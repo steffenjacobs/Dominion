@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.GFButton;
@@ -46,8 +47,8 @@ public class GameWindow extends JFrame {
 		gfcAction = new Card[10];
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-//		this.setExtendedState(Frame.MAXIMIZED_BOTH);
-//		this.setUndecorated(true);
+		// this.setExtendedState(Frame.MAXIMIZED_BOTH);
+		// this.setUndecorated(true);
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.setVisible(true);
 		framework = new GraphicFramework(this);
@@ -62,11 +63,11 @@ public class GameWindow extends JFrame {
 		framework.addComponent(closeButton);
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
-		
+
 		this.setSize(1280, 720);
 		this.revalidate();
 		this.repaint();
-		
+
 	}
 
 	private BufferedImage loadingImage(BufferedImage im, String resource) {
@@ -92,18 +93,28 @@ public class GameWindow extends JFrame {
 
 			if (i < 5) {
 				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.06, 0.02, 0.05, 0.15, k++,
-						serializedCard.getImage(), framework));
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.06, 0.02,
+						0.05, 0.15, k++, serializedCard.getImage(), framework));
 			} else {
 				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftBottom += 0.06, 0.2, 0.05, 0.15, k++,
-						serializedCard.getImage(), framework));
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftBottom += 0.06,
+						0.2, 0.05, 0.15, k++, serializedCard.getImage(), framework));
 			}
 
 		}
 	}
 
-	public void coinCards(HashMap<String, SerializedCard>coins) {
+	public void coinCards(HashMap<String, SerializedCard> coins) {
+		LinkedList<String> actionCardlds = new LinkedList<>(coins.keySet());
+		double shift = -0.05;
+		int k = 3;
+		for (int i = 0; i < coins.size(); i++) {
+			SerializedCard serializedCard = coins.get(actionCardlds.get(i));
+			framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
+					serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), 0.95, shift += 0.12, 0.1,
+					0.1, k++, GraphicsUtil.rotate(serializedCard.getImage(), 270), framework));
+
+		}
 
 	}
 
@@ -121,22 +132,31 @@ public class GameWindow extends JFrame {
 
 			if (handCards.size() <= 5 && handCards.size() > 1) {
 				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftSmall += 0.075, 0.70, 0.1, 0.3, k++,
-						serializedCard.getImage(), framework));
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftSmall += 0.075,
+						0.70, 0.1, 0.3, k++, serializedCard.getImage(), framework));
 			} else if (handCards.size() == 1) {
 				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftOne += 0.075, 0.70, 0.1, 0.3, k++,
-						serializedCard.getImage(), framework));
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftOne += 0.075,
+						0.70, 0.1, 0.3, k++, serializedCard.getImage(), framework));
 			} else {
 				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.075, 0.70, 0.1, 0.3, k++,
-						serializedCard.getImage(), framework));
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.075, 0.70,
+						0.1, 0.3, k++, serializedCard.getImage(), framework));
 			}
 		}
 	}
 
-	public void estateCards(HashMap<String, SerializedCard>estate) {
+	public void estateCards(HashMap<String, SerializedCard> estate) {
+		LinkedList<String> actionCardlds = new LinkedList<>(estate.keySet());
+		double shift = -0.05;
+		int k = 3;
+		for (int i = 0; i < estate.size(); i++) {
+			SerializedCard serializedCard = estate.get(actionCardlds.get(i));
+			framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
+					serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1,
+					0.1, k++, GraphicsUtil.rotate(serializedCard.getImage(), 90), framework));
 
+		}
 	}
 
 	private class ButtonClass extends GFButton {
