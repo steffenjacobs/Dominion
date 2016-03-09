@@ -52,14 +52,15 @@ public class GameController {
 	 * played
 	 * 
 	 * @param cardID
+	 * @throws SynchronisationException
 	 */
-	public boolean checkCardExistsAppendToPlayedCardList(String cardID) {
+	public boolean checkHandCardExistsAppendToPlayedCardList(String cardID) {
 		if (this.gamePhase.equals("actionPhase")) {
 			Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
 			if (card != null && card.getTypes().contains(CardType.ACTION)) {
 				CollectionsUtil.addCardToList(this.getActivePlayer().playCard(cardID), this.playedCards);
 				return true;
-			}	
+			}
 		}
 		if (this.gamePhase.equals("buyPhase")) {
 			Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
@@ -70,6 +71,21 @@ public class GameController {
 			}
 		}
 		return false;
+	}
+
+	public boolean checkBoardCardExistsAppenToDiscardPile(String cardID) throws SynchronisationException {
+		LinkedList<Card> cards = this.getGameBoard().findCardListFromBoard(cardID);
+		Card card = cards.get(cards.size() - 1);
+		Player player = this.getActivePlayer();
+		if (player.getBuys() > 0 && player.getCoins() >= card.getCost()) {
+			player.setBuys(player.getBuys() - 1);
+			player.setCoins(player.getCoins() - card.getCost());
+			cards.remove(cards.size() - 1);
+			CollectionsUtil.addCardToList(card, player.getDeck().getDiscardPile());
+			return true;
+		}
+		return false;
+
 	}
 
 	/**
@@ -83,17 +99,19 @@ public class GameController {
 	/**
 	 * 
 	 */
-	public void organizePilesAndrefreshCardHand(){
+	public void organizePilesAndrefreshCardHand() {
 		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().getDeck().getDiscardPile());
 		this.getActivePlayer().getDeck().refreshCardHand();
 		this.playedCards = new LinkedList<Card>();
 	}
-	
+
 	/**
-	 * 
+	 * sets the nextActivePlayer, resets the PlayerValues, set the gamePhase to
+	 * ActionPhase
 	 */
-	public void endTurn() {		
+	public void endTurn() {
 		this.setNextActivePlayer();
+		this.getActivePlayer().resetPlayerValues();
 		this.setActionPhase();
 	}
 

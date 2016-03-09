@@ -43,6 +43,12 @@ public class Player {
 	public Player(int clientID, int port) {
 		this(new Deck(), clientID, port);		
 	}
+	
+	public void resetPlayerValues(){
+		this.coins = 0;
+		this.buys = 1;
+		this.actions = 1;
+	}
 
 	/**
 	 * @return the deck

@@ -58,18 +58,29 @@ public class ServerGamePacketHandler extends PacketHandler {
 				String cardID = ((PacketPlayCard) packet).getCardID();
 				System.out.println(server.getGameController().getGamePhase());
 
-				if (this.server.getGameController().checkCardExistsAppendToPlayedCardList(cardID)) {
-					Player activePlayer = this.server.getGameController().getActivePlayer();
 
-					server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
-							activePlayer.getCoins()));
-					server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-					server.broadcastMessage(new PacketSendPlayedCardsToAllClients(
-							CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
-				}
+					if (this.server.getGameController().checkHandCardExistsAppendToPlayedCardList(cardID)) {
+						Player activePlayer = this.server.getGameController().getActivePlayer();
 
-				// server.sendMessage(port, new
-				// PacketSendHandCards(activePlayer.getDeck().getCardHandIds()));
+						server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
+								activePlayer.getCoins()));
+						server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+						server.broadcastMessage(new PacketSendPlayedCardsToAllClients(
+								CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
+					}else{
+						try {
+							if (this.server.getGameController().checkBoardCardExistsAppenToDiscardPile(cardID)){
+								GameBoard gameBoard = this.server.getGameController().getGameBoard();
+								server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(),
+										gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
+							}
+						} catch (SynchronisationException e) {
+							e.printStackTrace();
+						}
+					}
+				
+
+
 				break;
 			case BUY_CARD:
 				buyCardAndUpdateBoards(packet);
