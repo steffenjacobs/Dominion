@@ -57,7 +57,8 @@ public class GameController {
 	public boolean checkHandCardExistsAppendToPlayedCardList(String cardID) {
 		if (this.gamePhase.equals("actionPhase")) {
 			Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
-			if (card != null && card.getTypes().contains(CardType.ACTION)) {
+			if (card != null && card.getTypes().contains(CardType.ACTION) &&
+					this.getActivePlayer().getActions() > 0) {
 				CollectionsUtil.addCardToList(this.getActivePlayer().playCard(cardID), this.playedCards);
 				return true;
 			}
