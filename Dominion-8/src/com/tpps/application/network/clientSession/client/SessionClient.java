@@ -13,9 +13,13 @@ public class SessionClient extends Client {
 	private static final boolean DEBUG = false;
 	private static Timer scheduler = null;
 	private static int DELTA_SEND_KEEP_ALIVE_MILLISECONDS = 5000;
-	// private static ConcurrentMultiMap2<String, Boolean> sessionRequests = new
-	// ConcurrentMultiMap2<>();
 
+	/**
+	 * constructor for session-client
+	 * 
+	 * @param address
+	 *            SocketAddress to connect to
+	 */
 	public SessionClient(SocketAddress address) throws IOException {
 		super(address, new SessionPacketReceiver(), false);
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> onStop()));
