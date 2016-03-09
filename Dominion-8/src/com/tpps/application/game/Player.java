@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
-import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
@@ -153,29 +152,36 @@ public class Player {
 	 */
 	public Card doAction(String cardID) {
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
-		// Player player = GameController.getActivePlayer();
-		LinkedList<CardAction> actionsList = new LinkedList<CardAction>(serverCard.getActions().keySet());
-		Iterator<CardAction> cardIt = actionsList.iterator();
+		Iterator<CardAction> cardIterator = serverCard.getActions().keySet().iterator();
+		
 		System.out.println("DoAction");
-		while (cardIt.hasNext()) {
-			switch (cardIt.next()) {
+		while (cardIterator.hasNext()) {
+			CardAction act = cardIterator.next();
+			String value = serverCard.getActions().get(act);
+			switch (act) {
 			case ADD_ACTION_TO_PLAYER:
-				actions += Integer.parseInt(serverCard.getActions().get(CardAction.ADD_ACTION_TO_PLAYER));
+				actions += Integer.parseInt(value);
 				break;
 			case ADD_PURCHASE:
-				buys += Integer.parseInt(serverCard.getActions().get(CardAction.ADD_PURCHASE));
+				buys += Integer.parseInt(value);
 				break;
 			case ADD_TEMPORARY_MONEY_FOR_TURN:
-				coins += Integer.parseInt(serverCard.getActions().get(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN));
+				coins += Integer.parseInt(value);
 				break;
 			case DRAW_CARD:
-				 getDeck().draw(Integer.parseInt(serverCard.getActions().get(CardAction.DRAW_CARD)));
+				 getDeck().draw(Integer.parseInt(value));
 				break;
 			case GAIN_CARD:
-				System.out.println("GAIN: " + serverCard.getActions().get(CardAction.GAIN_CARD));
+				System.out.println(value);
+				switch(value.toUpperCase()) {
+					case "CURSE": break;
+					case "SILVER": break;
+					case "": break;
+					default: break;
+				}
 				break;
 			case DISCARD_CARD:
-				System.out.println("DISCARD: " + serverCard.getActions().get(CardAction.DISCARD_CARD));
+				this.getDeck().discardCard(serverCard);
 				break;
 			case TRASH_CARD:
 				System.out.println("TRASH: " + serverCard.getActions().get(CardAction.TRASH_CARD));

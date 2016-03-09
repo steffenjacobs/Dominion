@@ -1,6 +1,5 @@
 package com.tpps.application.game;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
