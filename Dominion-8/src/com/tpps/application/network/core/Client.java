@@ -8,7 +8,6 @@ import java.net.SocketAddress;
 import javax.net.SocketFactory;
 
 import com.tpps.application.network.core.packet.Packet;
-import com.tpps.application.network.core.packet.PacketType;
 
 /**
  * represents a client connected to a server on a higher layer then
@@ -179,11 +178,13 @@ public class Client {
 	 * @throws IOException
 	 * @author Steffen Jacobs
 	 */
+
 	public void sendMessage(Packet packet) throws IOException {
 		if (this.connected) {
 			new Thread(() -> {
 				try {
-					connectionThread.sendPacket(PacketType.getBytes(packet));
+					connectionThread.addPacketToQueue(packet);
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

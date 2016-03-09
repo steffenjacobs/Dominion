@@ -149,7 +149,7 @@ public class Server {
 		if (!clients.containsKey(port)) {
 			throw new IllegalArgumentException("No such client connected: " + port);
 		}
-		clients.get(port).sendPacket(packet);
+		clients.get(port).addPacketToQueue(packet);
 	}
 
 	/**
@@ -166,7 +166,7 @@ public class Server {
 		for (Entry<Integer, ServerConnectionThread> entr : clients.entrySet()) {
 			if (entr.getKey().intValue() == senderPort)
 				continue;
-			entr.getValue().sendPacket(packet);
+			entr.getValue().addPacketToQueue(packet);
 		}
 	}
 
@@ -178,7 +178,7 @@ public class Server {
 	 */
 	public void broadcastMessage(Packet packet) throws IOException {
 		for (ServerConnectionThread entr : clients.values()) {
-			entr.sendPacket(packet);
+			entr.addPacketToQueue(packet);
 		}
 	}
 

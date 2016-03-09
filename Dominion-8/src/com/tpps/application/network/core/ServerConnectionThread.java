@@ -26,6 +26,8 @@ public class ServerConnectionThread extends Thread {
 	// this is the holy semaphore. Don't touch it. Don't even look at it.
 	private Semaphore holySemaphore = new Semaphore(1);
 
+	private PacketQueue<Packet> packetQueue = new PacketQueue<>();
+
 	/**
 	 * constructor
 	 * 
@@ -67,6 +69,9 @@ public class ServerConnectionThread extends Thread {
 		try {
 			inStream = new DataInputStream(clientSocket.getInputStream());
 			outStream = new DataOutputStream(clientSocket.getOutputStream());
+
+			// start async sender
+			new Thread(() -> this.workQueue()).start();
 
 			while (!Thread.interrupted()) {
 				try {
@@ -115,21 +120,31 @@ public class ServerConnectionThread extends Thread {
 	}
 
 	/**
-	 * sends the data asynchronously over the network to the connected server.
+	 * adds a packet to the queue and allows the queue-worker to work the queue
 	 * 
-	 * @param packet
-	 *            packet to send
-	 * @author Steffen Jacobs
-	 * @throws IOException
-	 * @throws InterruptedException
+	 * @param pack
+	 *            packet to add to the queue
 	 */
-	public void sendPacket(Packet packet) {
-		new Thread(() -> {
-			try {
-				sendMessage(PacketType.getBytes(packet));
-			} catch (Exception e) {
-				e.printStackTrace();
+	public void addPacketToQueue(Packet pack) {
+		packetQueue.offer(pack);
+	}
+
+	/**
+	 * works the queue until it is empty and sleeps, until new packets are added
+	 */
+	private void workQueue() {
+		System.out.println("started working" + System.currentTimeMillis());
+		Packet pack;
+		while (true) {
+			while ((pack = packetQueue.poll()) != null) {
+				try {
+					sendMessage(PacketType.getBytes(pack));
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
-		}).start();
+		}
 	}
 }
