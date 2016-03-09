@@ -1,8 +1,13 @@
 package com.tpps.application.network.clientSession.server;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.net.InetSocketAddress;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.tpps.application.network.core.Server;
 import com.tpps.application.network.core.ServerConnectionThread;
@@ -31,12 +36,15 @@ public class SessionServer extends Server {
 		super(new InetSocketAddress("0.0.0.0", standardPort), handler);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		try {
 			new SessionServer();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		// setup logging
+		Files.createFile(Paths.get("session.log"));
+		System.setOut(new PrintStream(new FileOutputStream("session.log")));
 	}
 
 	/**
@@ -64,6 +72,9 @@ public class SessionServer extends Server {
 					break;
 				} else if (line.startsWith("create")) {
 					SessionManager.getValidSession(line.split("\\s")[1]);
+				} else if (line.startsWith("count")) {
+					System.out.println(data.size());
+					data.clear();
 				} else if (line.startsWith("show")) {
 					SessionManager.outputAll(System.out);
 				} else if (line.startsWith("list")) {
@@ -102,6 +113,13 @@ public class SessionServer extends Server {
 	 */
 	public static int getStandardPort() {
 		return standardPort;
+	}
+
+	// TODO: remove both
+	private static CopyOnWriteArrayList<String> data = new CopyOnWriteArrayList<>();
+
+	public static void log(String s) {
+		data.add(s);
 	}
 
 }

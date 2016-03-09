@@ -39,14 +39,15 @@ public class SessionPacketHandler extends PacketHandler {
 			PacketSessionGetRequest pack = (PacketSessionGetRequest) packet;
 			super.output("-> Session-Get-Request for " + pack.getUsername());
 			UUID uid = SessionManager.getValidSession(pack.getUsername());
-			requester.sendPacket(new PacketSessionGetAnswer(pack, uid));
+			requester.addPacketToQueue(new PacketSessionGetAnswer(pack, uid));
 			super.output("<- Created Session: " + pack.getUsername() + " - " + uid.toString());
 			break;
 		case SESSION_CHECK_REQUEST:
+			SessionServer.log("req");
 			PacketSessionCheckRequest pack2 = (PacketSessionCheckRequest) packet;
 			super.output("-> Session-Check-Request for " + pack2.getUsername());
 			boolean result = SessionManager.isValid(pack2.getUsername(), pack2.getSessionID());
-			requester.sendPacket(new PacketSessionCheckAnswer(pack2, result));
+			requester.addPacketToQueue(new PacketSessionCheckAnswer(pack2, result));
 			super.output("<- Checked Session: " + pack2.getUsername() + " - " + pack2.getSessionID() + " - Result: "
 					+ result);
 			break;
