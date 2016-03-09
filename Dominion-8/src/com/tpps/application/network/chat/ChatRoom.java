@@ -107,8 +107,7 @@ public class ChatRoom {
 					String[] words = packet.getChatmessage().split("\\s+");
 					ArrayList<String> notvoted = this.getClients();
 					notvoted.remove(packet.getSender());
-					this.votekick = new Votekick(notvoted, words[1]);
-					this.votekick.setVote_yes(1);
+					this.votekick = new Votekick(notvoted, words[1], packet.getSender());					
 					
 					//------------Timer----------
 					Timer t = new Timer();
@@ -128,6 +127,7 @@ public class ChatRoom {
 			            		this.cancel();
 			            		t.cancel();
 			            		//evaluate vote
+			            		ChatRoom.this.evaluateVotekick();
 			            		kill = true;
 			            		ChatRoom.this.votekick = null;
 			            	}
@@ -253,6 +253,10 @@ public class ChatRoom {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void evaluateVotekick(){
+		System.out.println(this.votekick.printResults());
 	}
 	
 	

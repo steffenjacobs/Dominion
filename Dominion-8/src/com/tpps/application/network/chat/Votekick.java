@@ -1,6 +1,7 @@
 package com.tpps.application.network.chat;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -12,10 +13,12 @@ public class Votekick {
 	private int vote_no;
 	private String usertogetkicked;
 	
-	public Votekick(ArrayList<String> notvotedyet, String usertogetkicked){
+	public Votekick(ArrayList<String> notvotedyet, String usertogetkicked, String userstartedvotekick){
 		alreadyvoted = new ConcurrentHashMap<String, Boolean>();
 		this.notvotedyet = notvotedyet;
 		this.usertogetkicked = usertogetkicked;
+		this.alreadyvoted.put(userstartedvotekick, true);
+		this.vote_yes++;
 	}
 	
 	public void addVote(String user, boolean vote){
@@ -58,6 +61,20 @@ public class Votekick {
 		}else{
 			return false;//no kick
 		}
+	}
+	
+	public String printResults(){
+		StringBuffer buf = new StringBuffer("Voted: \n");
+		for (Entry<String, Boolean> entry : alreadyvoted.entrySet()) {
+			buf.append(entry.getKey() + " voted with " + entry.getValue() + "\n");
+		}
+		buf.append("Voted not: \n");
+		for (Iterator<String> iterator = notvotedyet.iterator(); iterator.hasNext();) {
+			 buf.append(iterator.next() + "\n");
+			
+		}
+		buf.append("Votekick result: " + this.fastEvaluateVote());
+		return buf.toString();
 	}
 	
 	public boolean checkIfUserVoted(String user){
