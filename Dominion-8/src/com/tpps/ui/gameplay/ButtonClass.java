@@ -62,7 +62,7 @@ public class ButtonClass extends GFButton {
 		if (this.getCaption().equals("Play Treasures")){
 			try {
 				System.out.println("PacketPlayTreasures");
-//				this.getParent().removeC
+				this.getParent().removeComponent(this);
 				DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -72,6 +72,7 @@ public class ButtonClass extends GFButton {
 		System.out.println("Caption: " + this.getCaption());
 		if (this.getCaption().equals("End Turn")){
 			try {
+				this.getParent().addComponent(GameWindow.endActionPhase);
 				System.out.println("Packet EndTurn");
 				DominionController.getInstance().getGameClient().sendMessage(new PacketEndTurn());
 			}catch(IOException ioe){

@@ -115,7 +115,7 @@ public class JUnitSessionServerTest {
 		assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 
 		// bulk-test
-		final int count = 2000;
+		final int count = 20;
 		Semaphore bulk = new Semaphore(count);
 		for (int i = 0; i < count; i++) {
 			new Thread(() -> {
@@ -129,7 +129,7 @@ public class JUnitSessionServerTest {
 			}).start();
 
 			// or else you get heap-space errors
-			Thread.sleep(1);
+//			Thread.sleep(50);
 		}
 		Thread.sleep(1000);
 		assertEquals(count, bulk.availablePermits());
