@@ -214,4 +214,9 @@ public class GameWindow extends JFrame {
 
 		}
 	}
+	
+	public void endActionPhase(){
+		framework.removeComponent(this.endActionPhase);
+		framework.addComponent(this.playTreasures);
+	}
 }

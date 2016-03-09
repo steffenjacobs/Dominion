@@ -91,7 +91,7 @@ public class GameController {
 	}
 
 	public void endTurn() {
-		this.getActivePlayer().getDeck().discardCardHand();
+//		this.getActivePlayer().getDeck().discardCardHand();
 		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().getDeck().getDiscardPile());
 		this.playedCards = new LinkedList<Card>();
 		

@@ -1,8 +1,10 @@
 package com.tpps.application.network.game;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 
+import com.tpps.application.game.Deck;
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
@@ -87,7 +89,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case END_TURN:
 				// alle Karten ablegen
-
+				Deck deck = this.server.getGameController().getActivePlayer().getDeck();
+				System.out.println("DiscardPile: " + Arrays.toString(deck.getDiscardPile().toArray()));
+				System.out.println("DrawPile: " + Arrays.toString(deck.getDrawPile().toArray()));
+				System.out.println("Hand: " + Arrays.toString(deck.getCardHand().toArray()));
 				nextActivePlayer(port);
 
 				break;
@@ -119,6 +124,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 			server.sendMessage(port, new PacketSendHandCards(CollectionsUtil
 					.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+			System.out.println("Karten zum client geschickt: " + this.server.getGameController().getActivePlayer().getDeck().getCardHand().size());
 			this.server.getGameController().endTurn();
 			server.broadcastMessage(
 					new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
