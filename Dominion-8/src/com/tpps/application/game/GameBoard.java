@@ -302,5 +302,33 @@ public class GameBoard {
 			}
 		}
 	}
+	
+	protected LinkedList<Card> findCardListFromBoard(String cardId) throws SynchronisationException {
+		String key = cardId.substring(0, cardId.length() - 1);
+		
+		
+		if (this.tableForTreasureCards.containsKey(key)) {
+			LinkedList<Card> cardList = this.tableForTreasureCards.get(key);
+			return cardList;
+		} else {
+			
+			if (this.tableForVictoryCards.containsKey(key)) {
+				LinkedList<Card> cardList = this.tableForVictoryCards.get(key);
+				return cardList;
+			} else {
+				
+				if (this.tableForActionCards.containsKey(key)) {
+					LinkedList<Card> cardList = this.tableForActionCards.get(key);
+					return cardList;
+				} else {
+					throw new SynchronisationException();
+				}
+			}
+		}
+	}
+	
+	
+	
+	
 
 }

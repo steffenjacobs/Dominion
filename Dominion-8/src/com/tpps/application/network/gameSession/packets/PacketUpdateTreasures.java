@@ -9,7 +9,7 @@ import com.tpps.application.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketUpdateCoins extends Packet {
+public class PacketUpdateTreasures extends Packet {
 
 	private static final long serialVersionUID = 3379175636512685560L;
 	private int coins;
@@ -19,7 +19,7 @@ public class PacketUpdateCoins extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketUpdateCoins(int coins) {
+	public PacketUpdateTreasures(int coins) {
 		super(PacketType.UPDATE_TREASURES);
 		this.coins = coins;
 	}
