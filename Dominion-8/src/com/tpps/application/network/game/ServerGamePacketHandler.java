@@ -15,6 +15,7 @@ import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.gameSession.packets.PacketBuyCard;
 import com.tpps.application.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
+import com.tpps.application.network.gameSession.packets.PacketEndActionPhase;
 import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketReconnect;
@@ -58,21 +59,28 @@ public class ServerGamePacketHandler extends PacketHandler {
 				String cardID = ((PacketPlayCard) packet).getCardID();
 				System.out.println(server.getGameController().getGamePhase());
 
-
+				Player activePlayer = this.server.getGameController().getActivePlayer();
+				
 					if (this.server.getGameController().checkHandCardExistsAppendToPlayedCardList(cardID)) {
-						Player activePlayer = this.server.getGameController().getActivePlayer();
-
+						
+						System.out.println("My Coins: " + activePlayer.getCoins());
 						server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
 								activePlayer.getCoins()));
+						server.sendMessage(port, new PacketEndActionPhase());
 						server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 						server.broadcastMessage(new PacketSendPlayedCardsToAllClients(
 								CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
 					}else{
 						try {
-							if (this.server.getGameController().checkBoardCardExistsAppenToDiscardPile(cardID)){
+							if (this.server.getGameController().checkBoardCardExistsAppendToDiscardPile(cardID)){
 								GameBoard gameBoard = this.server.getGameController().getGameBoard();
 								server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(),
 										gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
+								server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
+										activePlayer.getCoins()));
+								if (this.server.getGameController().getActivePlayer().getBuys() == 0){
+									nextActivePlayer(port);
+								}
 							}
 						} catch (SynchronisationException e) {
 							e.printStackTrace();
@@ -133,13 +141,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			server.sendMessage(port, new PacketSendHandCards(CollectionsUtil
 					.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-			System.out.println("Karten zum client geschickt: " + this.server.getGameController().getActivePlayer().getDeck().getCardHand().size());
+			
 			
 			this.server.getGameController().endTurn();
-			Deck deck = this.server.getGameController().getActivePlayer().getDeck();
-			System.out.println("DiscardPile: " + Arrays.toString(deck.getDiscardPile().toArray()));
-			System.out.println("DrawPile: " + Arrays.toString(deck.getDrawPile().toArray()));
-			System.out.println("Hand: " + Arrays.toString(deck.getCardHand().toArray()));
+			
+			
 			server.broadcastMessage(
 					new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
 		} catch (IOException e) {
@@ -170,7 +176,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			if (server.getGameController().getPlayers().size() == 4) {
 				server.getGameController().startGame();
 				setUpGui();
-				System.out.println("gameStarted");
+				
 			}
 			System.out.println(
 					"registrate one more client to server with id: " + clientId + "listening on port: " + port);
@@ -192,7 +198,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 		server.broadcastMessage(
 				new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
-		System.out.println("Wie viel actions: " + gameBoard.getActionCardIDs());
+		
 		server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(),
 				gameBoard.getActionCardIDs()));
 

@@ -19,6 +19,7 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.network.gameSession.packets.PacketEndActionPhase;
 import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -35,6 +36,7 @@ public class GameWindow extends JFrame {
 	private GraphicFramework framework;
 	private Card[] gfcAction;
 	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards;
+	public static String coins, buys, actions;
 
 	public static GameWindow getInstance() {
 		return instance;
@@ -58,6 +60,9 @@ public class GameWindow extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 //		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
 //		 this.setUndecorated(true);
+		coins = "Coins: ";
+		buys = "Buys: ";
+		actions = "Actions: ";
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.setVisible(true);
 		framework = new GraphicFramework(this);
@@ -74,13 +79,14 @@ public class GameWindow extends JFrame {
 		playTreasures = new ButtonClass(0.75, 0.2, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Play Treasures");
 		endTurn = new ButtonClass(0.75, 0.3, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
 
-
+		
 		
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 		framework.addComponent(closeButton);
 		framework.addComponent(endActionPhase);		
 		framework.addComponent(endTurn);
+		
 //		this.setSize(1280, 720);
 		this.revalidate();
 		this.repaint();
@@ -96,6 +102,14 @@ public class GameWindow extends JFrame {
 		}
 		return im;
 
+	}
+	
+	public void reset() {
+		GameWindow.actions = "Actions " + GameConstant.INIT_ACTIONS;
+		GameWindow.coins = "Coins " + GameConstant.INIT_TREASURES;
+		GameWindow.buys = "Purchases " + GameConstant.INIT_PURCHASES;
+		this.framework.addComponent(endActionPhase);
+		this.repaint();
 	}
 
 	public void tableActionCards(LinkedHashMap<String, SerializedCard> table) {
@@ -225,15 +239,15 @@ public class GameWindow extends JFrame {
 	}
 	
 	public void endActionPhase(){
-		framework.removeComponent(this.endActionPhase);
-		framework.addComponent(this.playTreasures);
+		framework.removeComponent(endActionPhase);
+		framework.addComponent(playTreasures);
 	}
 	public void playTreasures(){
-		framework.removeComponent(this.playTreasures);
+		framework.removeComponent(playTreasures);
 	}
 	
 	public void endTurn(){
-		framework.addComponent(this.endActionPhase);
+		framework.addComponent(endActionPhase);
 	}
 	
 	

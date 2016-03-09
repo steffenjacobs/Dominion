@@ -26,7 +26,7 @@ public final class GameConstant {
 	
 	public static final int INIT_ACTIONS = 1;
 	public static final int INIT_PURCHASES = 1;
-	public static final int INIT_MONEY = 0;
+	public static final int INIT_TREASURES = 0;
 	
 	/**
 	 * VICTORY

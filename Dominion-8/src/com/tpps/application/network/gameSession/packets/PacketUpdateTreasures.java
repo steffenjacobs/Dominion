@@ -23,6 +23,17 @@ public class PacketUpdateTreasures extends Packet {
 		super(PacketType.UPDATE_TREASURES);
 		this.coins = coins;
 	}
+	
+	
+	/**
+	 * 
+	 * @return the coins of the activePlayer
+	 */
+	public int getCoins() {
+		return coins;
+	}
+
+
 
 	/**
 	 * @return a readable String

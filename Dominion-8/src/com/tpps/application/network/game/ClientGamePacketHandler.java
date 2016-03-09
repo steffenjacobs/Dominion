@@ -11,6 +11,8 @@ import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketSendBoard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
+import com.tpps.application.network.gameSession.packets.PacketUpdateTreasures;
+import com.tpps.application.network.gameSession.packets.PacketUpdateValues;
 import com.tpps.ui.gameplay.GameWindow;
 
 /**
@@ -44,7 +46,10 @@ public class ClientGamePacketHandler extends PacketHandler {
 			openGuiAndEnableOne(packet);
 			break;
 		case ENABLE_DISABLE:
-			enableDisable(packet);	 			
+			enableDisable(packet);
+			
+			this.gameWindow.reset();
+			
 			break;
 		case SEND_BOARD:
 			PacketSendBoard packetSendBoard = (PacketSendBoard)packet;
@@ -57,10 +62,21 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameStorageInterface.loadHandCardsAndPassToGameWindow(handCardIds);			
 			break;
 		case UPDATE_VALUES:
-			// gameGui.updateValues();
+			PacketUpdateValues puv = ((PacketUpdateValues)packet);
+			
+			GameWindow.actions = "Actions " + puv.getActions();
+			GameWindow.coins = "Coins " + puv.getCoins();
+			GameWindow.buys = "Buys " + puv.getBuys();
+			this.gameWindow.repaint();
 			break;
 		case UPDATE_TREASURES:
-			//gameGui.updateCoins();
+			PacketUpdateTreasures put = (PacketUpdateTreasures)(packet);
+			System.out.println("update Treasures client");
+			GameWindow.coins = "Coins " + put.getCoins();
+			this.gameWindow.repaint();
+			break;
+		case END_ACTION_PHASE:
+			this.gameWindow.endActionPhase();
 			break;
 		// case PLAY_TREASURES:
 		// gameGui.disableActionCards();

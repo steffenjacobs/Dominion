@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 import com.tpps.technicalServices.util.PhysicsUtil;
 import com.tpps.ui.GameObject.CompareByLayer;
+import com.tpps.ui.gameplay.GameWindow;
 
 /**
  * general framework handling all the graphic objects@author Steffen Jacobs
@@ -147,6 +148,9 @@ public class GraphicFramework extends JPanel {
 			if (obj.isVisible())
 				g.drawImage(obj.getImage(), (int) obj.getLocation().getX(), (int) obj.getLocation().getY(), null);
 		}
+		g.drawString(GameWindow.coins, 10, 10);
+		g.drawString(GameWindow.buys, 10, 20);
+		g.drawString(GameWindow.actions, 10, 30);
 	}
 
 	/**

@@ -14,13 +14,11 @@ import com.tpps.ui.components.GFButton;
 
 public class ButtonClass extends GFButton {
 	private static final long serialVersionUID = 1520424079770080041L;
-	private GameWindow gameWindow;
 
 	public ButtonClass(double relativeX, double relativeY, double relativeWidth, double relativeHeight,
 			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage,
 				_parent, caption);
-		this.gameWindow = gameWindow;
 	}
 
 	@Override

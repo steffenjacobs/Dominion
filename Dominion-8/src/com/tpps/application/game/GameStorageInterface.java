@@ -29,19 +29,13 @@ public class GameStorageInterface {
 	
 	
 	public void loadVictoryCardsAndPassToGameWindow(LinkedList<String> victoryCardIds){
-		for (Iterator<String> iterator = victoryCardIds.iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
-			System.out.println("VictoryCards: " + string);			
-		}
+	
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(victoryCardIds);
 		this.gameWindow.victoryCards(serializedCardWithId);
 	}
 	
 	public void loadCoinCardsAndPassToGameWindow(LinkedList<String> coinCardIds){
-		for (Iterator<String> iterator = coinCardIds.iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
-			System.out.println("CoinCards: " + string);			
-		}
+	
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(coinCardIds);
 		this.gameWindow.coinCards(serializedCardWithId);
 	}
@@ -69,20 +63,11 @@ public class GameStorageInterface {
 	}
 
 	public void loadActionCardsAndPassToGameWindow(LinkedList<String> actionCardIds) {
-//		CardStorageController cs = new CardStorageController();
-//		LinkedHashMap<String, SerializedCard> serializedCardWithId = new LinkedHashMap<String, SerializedCard>();
-//
-//		cs.loadCards();
-//		
-//
-//		for (Iterator<String> iterator = actionCardIds.iterator(); iterator.hasNext();) {
-//			String actionCardId = (String) iterator.next();
-//			SerializedCard serializedCard = cs.getCard(actionCardId.substring(0, actionCardId.length() - 1));
-//			
-//			serializedCard = new SerializedCard(serializedCard.getActions(), serializedCard.getTypes(),
-//					serializedCard.getCost(), serializedCard.getName(), serializedCard.getImage());
-//			serializedCardWithId.put(actionCardId, serializedCard);
-//		}
+		for (Iterator<String> iterator = actionCardIds.iterator(); iterator.hasNext();) {
+			String string = (String) iterator.next();
+			System.out.println("ActionCards: " + string);			
+		}
+
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(actionCardIds);
 		this.gameWindow.tableActionCards(serializedCardWithId);
 	}

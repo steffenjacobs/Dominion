@@ -60,6 +60,9 @@ public class GameController {
 			if (card != null && card.getTypes().contains(CardType.ACTION) &&
 					this.getActivePlayer().getActions() > 0) {
 				CollectionsUtil.addCardToList(this.getActivePlayer().playCard(cardID), this.playedCards);
+				if (this.getActivePlayer().getActions() == 0){
+					this.setBuyPhase();
+				}
 				return true;
 			}
 		}
@@ -74,15 +77,20 @@ public class GameController {
 		return false;
 	}
 
-	public boolean checkBoardCardExistsAppenToDiscardPile(String cardID) throws SynchronisationException {
+	public boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException {
 		LinkedList<Card> cards = this.getGameBoard().findCardListFromBoard(cardID);
 		Card card = cards.get(cards.size() - 1);
 		Player player = this.getActivePlayer();
-		if (player.getBuys() > 0 && player.getCoins() >= card.getCost()) {
+		System.out.println("Boardcard: " + card);
+		System.out.println("Buys: " + this.getActivePlayer().getBuys());
+		System.out.println("coins: " + this.getActivePlayer().getCoins());
+		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0 && 
+				player.getCoins() >= card.getCost()) {
 			player.setBuys(player.getBuys() - 1);
 			player.setCoins(player.getCoins() - card.getCost());
 			cards.remove(cards.size() - 1);
 			CollectionsUtil.addCardToList(card, player.getDeck().getDiscardPile());
+			System.out.println("card buyed");
 			return true;
 		}
 		return false;

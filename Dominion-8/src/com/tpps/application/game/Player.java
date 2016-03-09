@@ -32,7 +32,7 @@ public class Player {
 		this.id = playerID++;
 		this.actions = GameConstant.INIT_ACTIONS;
 		this.buys = GameConstant.INIT_PURCHASES;
-		this.coins = GameConstant.INIT_MONEY;
+		this.coins = GameConstant.INIT_TREASURES;
 		this.CLIENT_ID = clientID;
 		this.port = port;
 	}
@@ -159,7 +159,7 @@ public class Player {
 	public Card doAction(String cardID) {
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 		Iterator<CardAction> cardIterator = serverCard.getActions().keySet().iterator();
-		
+		this.actions--;
 		System.out.println("DoAction");
 		while (cardIterator.hasNext()) {
 			CardAction act = cardIterator.next();
@@ -199,7 +199,7 @@ public class Player {
 				System.out.println("REVEAL: " + serverCard.getActions().get(CardAction.REVEAL_CARD));
 				break;
 			case IS_TREASURE:
-				System.out.println("treasure received");
+				this.coins += Integer.parseInt(serverCard.getActions().get(CardAction.IS_TREASURE));
 				break;
 			case IS_VICTORY:
 				System.out.println("is victory");
@@ -208,6 +208,8 @@ public class Player {
 				break;
 			}
 		}
+		
+		
 		
 		this.getDeck().getCardHand().remove(serverCard);
 		return serverCard;
