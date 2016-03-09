@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
+import com.tpps.application.network.core.Server;
 import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.game.TooMuchPlayerException;
 import com.tpps.technicalServices.util.CollectionsUtil;
@@ -80,21 +81,18 @@ public class GameController {
 	 * cards from the player cardHand to the playedCard list
 	 */
 	public void playTreasures() {
-		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().playTreasures());
+		CollectionsUtil.appendListToList(this.getActivePlayer().playTreasures(), this.playedCards);
 	}
 
-	/**
-	 * gives the active Player five new Cards
-	 */
-	public void refreshCardHand() {
-		this.getActivePlayer().getDeck().refreshCardHand();
-	}
 
-	public void endTurn() {
-//		this.getActivePlayer().getDeck().discardCardHand();
+	public void organizePilesAndrefreshCardHand(){
 		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().getDeck().getDiscardPile());
+		this.getActivePlayer().getDeck().refreshCardHand();
 		this.playedCards = new LinkedList<Card>();
-		
+	}
+	
+	
+	public void endTurn() {		
 		this.setNextActivePlayer();
 		this.setActionPhase();
 	}
