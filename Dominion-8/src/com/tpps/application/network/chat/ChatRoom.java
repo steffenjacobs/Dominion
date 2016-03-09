@@ -21,11 +21,12 @@ public class ChatRoom {
 	private final static String servercommand2 = "show all clients";
 	private final static String servercommand3 = "show all ports";
 	private final static String servercommand4 = "show all clients by ports";
-	private final static String servercommand5 = "votekick";
-	private boolean kill = false;
+	private final static String servercommand5 = "votekick <nickname>";
+	private final static String servercommand6 = "vote [y/n] only use in a active vote";
+	private final static String servercommand7 = "show votekickresults";
 	
-	private Timer timer;
-	private int seconds = 45;
+	private String votekickresults;
+	private boolean kill = false;
 	
 	private Votekick votekick;
 	
@@ -183,7 +184,10 @@ public class ChatRoom {
 		
 		switch(packet.getChatmessage()){
 		case servercommand1: 
-			String msg = "Commands: \n/" + servercommand1 + "\n/" + servercommand2 + "\n/" + servercommand3 + "\n/" + servercommand4;
+			String msg = "Commands: \n/" + servercommand1 + "\n/"
+					+ servercommand2 + "\n/" + servercommand3 + "\n/"
+					+ servercommand4 + "\n/" + servercommand5 + "\n/"
+					+ servercommand6 + "\n/" + servercommand7 + "\n";
 			PacketSendAnswer answer = new PacketSendAnswer(msg);
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
@@ -231,7 +235,15 @@ public class ChatRoom {
 				e.printStackTrace();
 			}
 			break;
-			
+		case servercommand7:
+			if(this.votekickresults == null){
+				PacketSendAnswer answerx = new PacketSendAnswer("There are no votekick results");
+				this.sendToSpecificClient(packet.getSender(), answerx);
+			}else{
+				PacketSendAnswer answerx = new PacketSendAnswer(this.votekickresults);
+				this.sendToSpecificClient(packet.getSender(), answerx);
+			}
+			break;
 		default:
 			PacketSendAnswer answer5 = new PacketSendAnswer("Wrong command: " + packet.getChatmessage());
 			try {
@@ -256,7 +268,8 @@ public class ChatRoom {
 	}
 	
 	public void evaluateVotekick(){
-		System.out.println(this.votekick.printResults());
+		this.votekickresults = this.votekick.printResults();
+		System.out.println(this.votekickresults);
 	}
 	
 	
