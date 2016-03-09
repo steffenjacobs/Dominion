@@ -115,8 +115,11 @@ public class JUnitSessionServerTest {
 		assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 
 		// bulk-test
-		final int count = 20;
+		final int count = 10000;
 		Semaphore bulk = new Semaphore(count);
+
+		sessionClient.getConnectionThread().resetsMetrics();
+		
 		for (int i = 0; i < count; i++) {
 			new Thread(() -> {
 				try {
@@ -127,11 +130,10 @@ public class JUnitSessionServerTest {
 				assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 				bulk.release(1);
 			}).start();
-
-			// or else you get heap-space errors
-//			Thread.sleep(50);
 		}
-		Thread.sleep(1000);
+		Thread.sleep(10000);
+		assertEquals(sessionClient.getConnectionThread().getCountReceived(), count);
+		assertEquals(sessionClient.getConnectionThread().getCountSent(), count);
 		assertEquals(count, bulk.availablePermits());
 
 		if (doLongTest) {
