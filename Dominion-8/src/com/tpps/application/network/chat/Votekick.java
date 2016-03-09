@@ -60,6 +60,9 @@ public class Votekick {
 		}
 	}
 	
+	public boolean checkIfUserVoted(String user){
+		return !this.notvotedyet.contains(user);
+	}
 	
 	public int getVote_no() {
 		return vote_no;

@@ -81,6 +81,15 @@ public class ChatRoom {
 		}
 	}
 	
+	public void sendToSpecificClient(String sender, PacketSendAnswer answer){
+		int port = this.clientsByUsername.get(sender);
+		try {
+			this.server.sendMessage(port, answer);
+		} catch (IOException e) {		
+			e.printStackTrace();
+		}
+	}
+	
 	
 	
 	public void evaluateCommand(PacketSendChatCommand packet){
@@ -108,7 +117,8 @@ public class ChatRoom {
 			            @Override
 			            public void run() {
 			            	second--;
-			            	if(second % 5 == 0 && second != 0){
+			            	//if(second % 5 == 0 && second != 0){
+			            	if(second == 5  && second != 0){
 			            		System.out.println("Noch " + second + " Sekunden");
 			            		ChatRoom.this.sendMEssageToAll("Noch " + second + " Sekunden!");
 			            	}else 
@@ -119,6 +129,7 @@ public class ChatRoom {
 			            		t.cancel();
 			            		//evaluate vote
 			            		kill = true;
+			            		ChatRoom.this.votekick = null;
 			            	}
 			            }   
 			        },0, 1000);
@@ -133,6 +144,36 @@ public class ChatRoom {
 					}
 				}
 			}
+		}else if(packet.getChatmessage().startsWith("vote ")){
+			if(this.votekick == null){
+				PacketSendAnswer answer = new PacketSendAnswer("Derzeit läuft keine Abstimmung");
+				String sender = packet.getSender();
+				this.sendToSpecificClient(sender, answer);
+			}		
+			
+			if(this.votekick.checkIfUserVoted(packet.getSender())){
+				PacketSendAnswer answer = new PacketSendAnswer("Du hast schon abgestimmt");
+				String sender = packet.getSender();
+				this.sendToSpecificClient(sender, answer);
+				return;
+			}
+			
+			if(packet.getChatmessage().startsWith("vote y")){
+				this.votekick.addVote(packet.getSender(), true);
+				PacketSendAnswer answer = new PacketSendAnswer("You voted successfully");
+				String sender = packet.getSender();
+				this.sendToSpecificClient(sender, answer);
+			}else if(packet.getChatmessage().startsWith("vote n")){
+				this.votekick.addVote(packet.getSender(), false);
+				PacketSendAnswer answer = new PacketSendAnswer("You voted successfully");
+				String sender = packet.getSender();
+				this.sendToSpecificClient(sender, answer);
+			}else{
+				PacketSendAnswer answer = new PacketSendAnswer("Vote wird nicht gewertet, [y/n] ist erlaubt");
+				String sender = packet.getSender();
+				this.sendToSpecificClient(sender, answer);
+			}
+			kill = true;
 		}
 		
 		if(kill){
