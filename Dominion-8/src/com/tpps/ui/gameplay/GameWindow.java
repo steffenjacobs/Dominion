@@ -175,6 +175,8 @@ public class GameWindow extends JFrame {
 		for (int i = 0; i < handCards.size(); i++) {
 
 			SerializedCard serializedCard = handCards.get(actionCardlds.get(i));
+			//Example For nishit
+//			actionCardlds.get(i).substring(actionCardlds.get(i).length()-1,actionCardlds.get(i).length());
 
 			if (handCards.size() <= 5 && handCards.size() > 1) {
 				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),

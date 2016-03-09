@@ -91,6 +91,7 @@ public class GameStorageInterface {
 		try {
 			new GameStorageInterface(new GameWindow())
 					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));
+			System.out.println("Cellar2".substring("Cellar2".length()-1, "Cellar2".length()));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
