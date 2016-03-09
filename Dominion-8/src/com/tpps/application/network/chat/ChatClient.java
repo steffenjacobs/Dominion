@@ -38,7 +38,10 @@ public class ChatClient extends PacketHandler{
 
 	
 	public void sendMessage(String chatmessage){
-		if(chatmessage.startsWith("/")){
+		if(chatmessage.startsWith("/votekick ")){
+			this.sendCommand(new StringBuffer(chatmessage).deleteCharAt(0).toString());
+		}
+		else if(chatmessage.startsWith("/")){
 			this.sendCommand(new StringBuffer(chatmessage).deleteCharAt(0).toString());
 		}
 		else if(chatmessage.startsWith("@")){
@@ -79,7 +82,7 @@ public class ChatClient extends PacketHandler{
 	}
 	
 	public static void main(String[] args) {
-		ChatClient c = new ChatClient("bbb");
+		ChatClient c = new ChatClient("nico");
 		System.out.println("I am: " + c.sender);
 		Scanner scanInput = new Scanner(System.in);
 		String line = null;
