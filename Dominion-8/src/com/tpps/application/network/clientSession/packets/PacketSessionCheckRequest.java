@@ -46,11 +46,11 @@ public class PacketSessionCheckRequest extends Packet {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public PacketSessionCheckRequest(String name, UUID sID) {
+	public PacketSessionCheckRequest(String name, UUID sID, long timestamp) {
 		super(PacketType.SESSION_CHECK_REQUEST);
 		this.username = name;
 		this.sessionID = sID;
-		this.timestamp = System.currentTimeMillis();
+		this.timestamp = timestamp;
 	}
 
 	/**
