@@ -236,7 +236,12 @@ public class Deck {
 			this.putBack(card);
 		}
 	}
+	
+	public void trash(Card card) {
+		
+	}
 
+	
 	/**
 	 * @return String representation of a deck object
 	 */

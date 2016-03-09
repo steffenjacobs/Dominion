@@ -23,7 +23,6 @@ public class GameController {
 	private String gamePhase;
 
 	public GameController() {
-		// new Setup().start();
 		this.players = new LinkedList<Player>();
 		this.playedCards = new LinkedList<Card>();
 		this.gameBoard = new GameBoard();
@@ -31,6 +30,9 @@ public class GameController {
 		this.gameNotFinished = true;
 	}
 
+	/**
+	 * 
+	 */
 	public void setNextActivePlayer() {
 		Player activePlayer = this.getActivePlayer();
 		LinkedList<Player> players = this.getPlayers();
@@ -89,6 +91,9 @@ public class GameController {
 		this.getActivePlayer().getDeck().refreshCardHand();
 	}
 
+	/**
+	 * 
+	 */
 	public void endTurn() {
 //		this.getActivePlayer().getDeck().discardCardHand();
 		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().getDeck().getDiscardPile());
@@ -112,6 +117,10 @@ public class GameController {
 		this.players = players;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public LinkedList<Card> getPlayedCards() {
 		return playedCards;
 	}
@@ -184,6 +193,10 @@ public class GameController {
 		return this.players.get((int) (Math.random() * 4));
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public GameBoard getGameBoard() {
 		return gameBoard;
 	}
@@ -198,21 +211,34 @@ public class GameController {
 	// return false; // überarbeiten
 	// }
 
+	/**
+	 * 
+	 */
 	public void setDiscardPhase() {
 		System.out.println("DiscardPhaseWasSet");
 		this.gamePhase = "discardPhase";
 	}
 
+	/**
+	 * 
+	 */
 	public void setActionPhase() {
 		System.out.println("ActionPhaseWasSet");
 		this.gamePhase = "actionPhase";
 	}
 
+	/**
+	 * 
+	 */
 	public void setBuyPhase() {
 		System.out.println("BuyPhaseWasSet");
 		this.gamePhase = "buyPhase";
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getGamePhase() {
 		return this.gamePhase;
 	}
