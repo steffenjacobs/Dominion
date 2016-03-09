@@ -243,6 +243,10 @@ public class GameController {
 	public void startGame() {
 		this.gamePhase = "actionPhase";
 	}
+	
+	public void endGame() {
+		
+	}
 
 	/**
 	 * 
