@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+
+<groupId>de.dominion8</groupId>
+<artifactId>dominion8</artifactId>
+<version>1.0-SNAPSHOT</version>
+<packaging>jar</packaging>
+
+<build>
+	<sourceDirectory>src</sourceDirectory>
+	<testSourceDirectory>src</testSourceDirectory>
+	
+	<plugins>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<version>3.5.1</version>
+			<configuration>
+				<source>1.8</source>
+				<target>1.8</target>
+			</configuration>
+		</plugin>
+	</plugins>
+</build>
+
+<dependencies>
+	<dependency>
+		<groupId>junit</groupId>
+		<artifactId>junit</artifactId>
+		<version>4.8.2</version>
+	</dependency>
+	<dependency>
+		<groupId>guava</groupId>
+		<artifactId>com.google</artifactId>
+		<version>19.0</version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/guava-19.0.jar</systemPath>
+	</dependency>
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>com.mysql</artifactId>
+		<version>5.1.38</version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/mysql-connector-java-5.1.38-bin.jar</systemPath>
+	</dependency>
+	<dependency>
+		<groupId>sound</groupId>
+		<artifactId>com.jaco</artifactId>
+		<version>1.0</version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/sound.jar</systemPath>
+	</dependency>
+</dependencies>
+
+</project>

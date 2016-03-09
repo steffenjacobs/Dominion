@@ -26,15 +26,13 @@ public class ClientGamePacketHandler extends PacketHandler {
 
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {
-
 		if (packet == null) {
 			super.output("<- Empty Packet from (" + port + ")");
 			return;
 		}
 		switch (packet.getType()) {
 		case CARD_PLAYED:
-			System.out.println("packet received from Server of type " + packet.getType() + "id: "
-					+ ((PacketPlayCard) packet).getCardID());
+			System.out.println("packet received from Server of type " + packet.getType() + "id: " + ((PacketPlayCard) packet).getCardID());
 			break;
 		case SEND_CLIENT_ID:
 			this.gameClient.setClientId(((PacketSendClientId) packet).getClientId());
@@ -62,10 +60,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case UPDATE_VALUES:
 			// gameGui.updateValues();
 			break;
-		case UPDATE_COINS:
-//			gameGui.updateCoins();
+		case UPDATE_TREASURES:
+			//gameGui.updateCoins();
 			break;
-		
 		// case PLAY_TREASURES:
 		// gameGui.disableActionCards();
 		// gameGui.enalbeMoney();
@@ -73,11 +70,13 @@ public class ClientGamePacketHandler extends PacketHandler {
 		default:
 			System.out.println("unknown packed type");
 			break;
-
 		}
-
 	}
 
+	/**
+	 * 
+	 * @param packet
+	 */
 	private void enableDisable(Packet packet) {
 		if (((PacketEnableDisable) packet).getClientId() == this.gameClient.getClientId()) {
 			this.gameWindow.setEnabled(true);
@@ -88,6 +87,10 @@ public class ClientGamePacketHandler extends PacketHandler {
 		}
 	}
 
+	/**
+	 * 
+	 * @param packet
+	 */
 	private void openGuiAndEnableOne(Packet packet) {
 		
 			this.gameWindow.setVisible(true);
@@ -99,17 +102,26 @@ public class ClientGamePacketHandler extends PacketHandler {
 				System.out.println("my gameWindo is disabled");
 			}	
 	}
-	
-	
 
+	/**
+	 * 
+	 */
 	public void setGameWindow(GameWindow gameWindow) {
 		this.gameWindow = gameWindow;
 	}
 
+	/**
+	 * 
+	 * @param gameStorageInterface
+	 */
 	public void setGameStorageInterface(GameStorageInterface gameStorageInterface) {
 		this.gameStorageInterface = gameStorageInterface;
 	}
 
+	/**
+	 * 
+	 * @param gameClient
+	 */
 	public void setGameClient(GameClient gameClient) {
 		this.gameClient = gameClient;
 	}

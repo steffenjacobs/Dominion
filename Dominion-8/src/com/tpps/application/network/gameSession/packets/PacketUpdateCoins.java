@@ -20,7 +20,7 @@ public class PacketUpdateCoins extends Packet {
 	 * @author ladler - Lukas Adler
 	 */
 	public PacketUpdateCoins(int coins) {
-		super(PacketType.UPDATE_COINS);
+		super(PacketType.UPDATE_TREASURES);
 		this.coins = coins;
 	}
 
