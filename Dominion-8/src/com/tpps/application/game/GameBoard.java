@@ -27,10 +27,8 @@ public class GameBoard {
 		this.tableForVictoryCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.tableForTreasureCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
-		
-		initHashMapTreasureCards();
-		initHashMapVictoryCards();
-		initHashMapActionCards();
+		this.trashPile = new LinkedList<Card>();
+		init();
 	}
 
 	/**
@@ -129,6 +127,15 @@ public class GameBoard {
 		}
 		return cardIds;
 	}
+	
+	/**
+	 * 
+	 */
+	private void init() {
+		initHashMapTreasureCards();
+		initHashMapVictoryCards();
+		initHashMapActionCards();
+	}
 
 	/**
 	 * initializes the tableForTreasureCards with 3 piles à 10 cards of Copper, Silver and Gold
@@ -207,13 +214,6 @@ public class GameBoard {
 		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.PROVINCE_VALUE)), CollectionsUtil.linkedList(CardType.VICTORY), "Province", GameConstant.PROVINCE_COST), GameConstant.INIT_PILE_SIZE, provinceList);
 		this.tableForActionCards.put("Province", provinceList);
 		Card.resetClassID();
-
-		
-		
-		
-		
-		
-		
 		
 //		 1
 		LinkedList<Card> cellarList = new LinkedList<Card>();

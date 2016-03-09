@@ -4,7 +4,6 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
-import com.tpps.application.network.core.Server;
 import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.game.TooMuchPlayerException;
 import com.tpps.technicalServices.util.CollectionsUtil;
@@ -24,7 +23,6 @@ public class GameController {
 	private String gamePhase;
 
 	public GameController() {
-		// new Setup().start();
 		this.players = new LinkedList<Player>();
 		this.playedCards = new LinkedList<Card>();
 		this.gameBoard = new GameBoard();
@@ -32,6 +30,9 @@ public class GameController {
 		this.gameNotFinished = true;
 	}
 
+	/**
+	 * 
+	 */
 	public void setNextActivePlayer() {
 		Player activePlayer = this.getActivePlayer();
 		LinkedList<Player> players = this.getPlayers();
@@ -58,11 +59,8 @@ public class GameController {
 			if (card != null && card.getTypes().contains(CardType.ACTION)) {
 				CollectionsUtil.addCardToList(this.getActivePlayer().playCard(cardID), this.playedCards);
 				return true;
-			}
-			
+			}	
 		}
-		
-
 		if (this.gamePhase.equals("buyPhase")) {
 			Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
 			if (card != null && card.getTypes().contains(CardType.TREASURE)) {
@@ -72,7 +70,6 @@ public class GameController {
 			}
 		}
 		return false;
-
 	}
 
 	/**
@@ -83,14 +80,18 @@ public class GameController {
 		CollectionsUtil.appendListToList(this.getActivePlayer().playTreasures(), this.playedCards);
 	}
 
-
+	/**
+	 * 
+	 */
 	public void organizePilesAndrefreshCardHand(){
 		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().getDeck().getDiscardPile());
 		this.getActivePlayer().getDeck().refreshCardHand();
 		this.playedCards = new LinkedList<Card>();
 	}
 	
-	
+	/**
+	 * 
+	 */
 	public void endTurn() {		
 		this.setNextActivePlayer();
 		this.setActionPhase();
@@ -110,6 +111,10 @@ public class GameController {
 		this.players = players;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public LinkedList<Card> getPlayedCards() {
 		return playedCards;
 	}
@@ -182,6 +187,10 @@ public class GameController {
 		return this.players.get((int) (Math.random() * 4));
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public GameBoard getGameBoard() {
 		return gameBoard;
 	}
@@ -196,21 +205,34 @@ public class GameController {
 	// return false; // überarbeiten
 	// }
 
+	/**
+	 * 
+	 */
 	public void setDiscardPhase() {
 		System.out.println("DiscardPhaseWasSet");
 		this.gamePhase = "discardPhase";
 	}
 
+	/**
+	 * 
+	 */
 	public void setActionPhase() {
 		System.out.println("ActionPhaseWasSet");
 		this.gamePhase = "actionPhase";
 	}
 
+	/**
+	 * 
+	 */
 	public void setBuyPhase() {
 		System.out.println("BuyPhaseWasSet");
 		this.gamePhase = "buyPhase";
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getGamePhase() {
 		return this.gamePhase;
 	}
