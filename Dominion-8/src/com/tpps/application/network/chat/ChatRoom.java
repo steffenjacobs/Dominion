@@ -22,6 +22,7 @@ public class ChatRoom {
 	private final static String servercommand3 = "show all ports";
 	private final static String servercommand4 = "show all clients by ports";
 	private final static String servercommand5 = "votekick";
+	private boolean kill = false;
 	
 	private Timer timer;
 	private int seconds = 45;
@@ -83,6 +84,62 @@ public class ChatRoom {
 	
 	
 	public void evaluateCommand(PacketSendChatCommand packet){
+		this.kill = false;
+		if(packet.getChatmessage().startsWith("votekick ")){
+			if(this.votekick != null){
+				PacketSendAnswer answer6 = new PacketSendAnswer("There is an active vote currently");
+				try {
+					this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer6);
+				} catch (IOException e) {				
+					e.printStackTrace();
+				}
+			}else{
+				try{	//sets up the votekick
+					String[] words = packet.getChatmessage().split("\\s+");
+					ArrayList<String> notvoted = this.getClients();
+					notvoted.remove(packet.getSender());
+					this.votekick = new Votekick(notvoted, words[1]);
+					this.votekick.setVote_yes(1);
+					
+					//------------Timer----------
+					Timer t = new Timer();
+					t.schedule(new TimerTask(){
+			            int second = 31;
+			            @Override
+			            public void run() {
+			            	second--;
+			            	if(second % 5 == 0 && second != 0){
+			            		System.out.println("Noch " + second + " Sekunden");
+			            		ChatRoom.this.sendMEssageToAll("Noch " + second + " Sekunden!");
+			            	}else 
+			            	if(second <= 0){
+			            		System.out.println("Timer zu ende :D");
+			            		ChatRoom.this.sendMEssageToAll("Der Votekick ist vorbei");
+			            		this.cancel();
+			            		t.cancel();
+			            		//evaluate vote
+			            		kill = true;
+			            	}
+			            }   
+			        },0, 1000);
+			         //----------------------
+					
+				}catch(ArrayIndexOutOfBoundsException e){
+					PacketSendAnswer answer7 = new PacketSendAnswer("Wrong command " + packet.getChatmessage());
+					try {
+						this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer7);
+					} catch (IOException e1) {					
+						e1.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		if(kill){
+			return;
+		}
+		
+		
 		switch(packet.getChatmessage()){
 		case servercommand1: 
 			String msg = "Commands: \n/" + servercommand1 + "\n/" + servercommand2 + "\n/" + servercommand3 + "\n/" + servercommand4;
@@ -133,48 +190,7 @@ public class ChatRoom {
 				e.printStackTrace();
 			}
 			break;
-		case servercommand5:
-			if(this.votekick != null){
-				PacketSendAnswer answer6 = new PacketSendAnswer("There is an active vote currently");
-				try {
-					this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer6);
-				} catch (IOException e) {				
-					e.printStackTrace();
-				}
-			}else{
-				try{	//sets up the votekick
-					String[] words = packet.getChatmessage().split("\\s+");
-					ArrayList<String> notvoted = this.getClients();
-					notvoted.remove(packet.getSender());
-					this.votekick = new Votekick(notvoted, words[1]);
-					this.votekick.setVote_yes(1);
-					
-					//----------------------
-					this.timer = new Timer();
-			        TimerTask task;
-			        task = new TimerTask() {			        	
-			            @Override
-			            public void run() { 
-			                while (seconds > 0) {
-			                    System.out.println("Seconds = " + seconds);
-			                    seconds++;
-			                }
-			                //votekick is end now
-			            }
-			        };
-			         timer.schedule(task, 0, 45);
-			         //----------------------
-					
-				}catch(ArrayIndexOutOfBoundsException e){
-					PacketSendAnswer answer7 = new PacketSendAnswer("Wrong command " + packet.getChatmessage());
-					try {
-						this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer7);
-					} catch (IOException e1) {					
-						e1.printStackTrace();
-					}
-				}
-			}
-			break;
+			
 		default:
 			PacketSendAnswer answer5 = new PacketSendAnswer("Wrong command: " + packet.getChatmessage());
 			try {
@@ -184,6 +200,18 @@ public class ChatRoom {
 			}
 			break;
 		}		
+	}
+	
+	public void sendMEssageToAll(String msg){
+		PacketSendAnswer answer = new PacketSendAnswer(msg);
+		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
+			int port = entry.getValue();
+			try {
+				this.server.sendMessage(port, answer);
+			} catch (IOException e) {			
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	
