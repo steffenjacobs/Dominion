@@ -20,12 +20,30 @@ public class GameStorageInterface {
 	public void loadHandCardsAndPassToGameWindow(LinkedList<String> handCardIds) {
 		for (Iterator<String> iterator = handCardIds.iterator(); iterator.hasNext();) {
 			String string = (String) iterator.next();
-			System.out.println("HandCards: " + string);
-			
+			System.out.println("HandCards: " + string);			
 		}
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(handCardIds);
 		
 		this.gameWindow.handCards(serializedCardWithId);
+	}
+	
+	
+	public void loadVictoryCardsAndPassToGameWindow(LinkedList<String> victoryCardIds){
+		for (Iterator<String> iterator = victoryCardIds.iterator(); iterator.hasNext();) {
+			String string = (String) iterator.next();
+			System.out.println("VictoryCards: " + string);			
+		}
+		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(victoryCardIds);
+		this.gameWindow.victoryCards(serializedCardWithId);
+	}
+	
+	public void loadCoinCardsAndPassToGameWindow(LinkedList<String> coinCardIds){
+		for (Iterator<String> iterator = coinCardIds.iterator(); iterator.hasNext();) {
+			String string = (String) iterator.next();
+			System.out.println("CoinCards: " + string);			
+		}
+		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(coinCardIds);
+		this.gameWindow.coinCards(serializedCardWithId);
 	}
 
 	private LinkedHashMap<String, SerializedCard> loadCards(LinkedList<String> handCardIds) {

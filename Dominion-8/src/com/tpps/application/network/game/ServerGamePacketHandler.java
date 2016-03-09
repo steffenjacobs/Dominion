@@ -108,6 +108,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		try {
 			GameBoard gameBoard = this.server.getGameController().getGameBoard();
 			this.server.getGameController().buyOneCard(((PacketBuyCard) packet).getCardId());
+			
 			server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(),
 					gameBoard.getActionCardIDs()));
 		} catch (SynchronisationException e) {

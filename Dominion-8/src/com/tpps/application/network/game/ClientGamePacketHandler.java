@@ -49,8 +49,11 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case ENABLE_DISABLE:
 			enableDisable(packet);	 			
 			break;
-		case SEND_BOARD:			
-			this.gameStorageInterface.loadActionCardsAndPassToGameWindow(((PacketSendBoard)packet).getActionCardIds());
+		case SEND_BOARD:
+			PacketSendBoard packetSendBoard = (PacketSendBoard)packet;
+			this.gameStorageInterface.loadActionCardsAndPassToGameWindow(packetSendBoard.getActionCardIds());
+			this.gameStorageInterface.loadCoinCardsAndPassToGameWindow(packetSendBoard.getCoinCardIds());
+			this.gameStorageInterface.loadVictoryCardsAndPassToGameWindow(packetSendBoard.getVictoryCardIds());
 			break;
 		case SEND_HAND_CARDS:
 			LinkedList<String> handCardIds = ((PacketSendHandCards)packet).getCardIds();
