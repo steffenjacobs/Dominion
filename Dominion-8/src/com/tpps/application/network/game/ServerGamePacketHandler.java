@@ -22,7 +22,7 @@ import com.tpps.application.network.gameSession.packets.PacketSendBoard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
-import com.tpps.application.network.gameSession.packets.PacketUpdateCoins;
+import com.tpps.application.network.gameSession.packets.PacketUpdateTreasures;
 import com.tpps.application.network.gameSession.packets.PacketUpdateValues;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
@@ -96,7 +96,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				server.broadcastMessage(new PacketSendPlayedCardsToAllClients(
 						CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
 				server.sendMessage(port,
-						new PacketUpdateCoins(server.getGameController().getActivePlayer().getCoins()));
+						new PacketUpdateTreasures(server.getGameController().getActivePlayer().getCoins()));
 				break;
 			case END_TURN:
 				// alle Karten ablegen
