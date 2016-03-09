@@ -44,7 +44,7 @@ public class Deck {
 			Card.resetClassID();
 			this.shuffleDrawPile();
 		}
-		this.draw(5);
+		this.draw(GameConstant.INIT_CARD_HAND_SIZE);
 	}
 
 	/**
@@ -101,11 +101,14 @@ public class Deck {
 	 * @return the card with cardID in cardHand (without removing it from the list)
 	 *         null if the list doesn't contain the card
 	 */
-	// suche cardHand mit der card ID durch und returne card
 	public Card getCardFromHand(String cardID) {
 		return getCardFromPile(cardID, this.cardHand);
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public LinkedList<String> getTreasureCardsFromHand(){
 		LinkedList<Card> treasureCards = new LinkedList<Card>();
 		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
@@ -135,12 +138,12 @@ public class Deck {
 	}
 	
 	/**
-	 * calls discardCardHand() and draw(5) 
+	 * calls discardCardHand() and draw(INIT_CARD_HAND_SIZE) 
 	 * (discards the cardHand and redraws 5 cards for the new turn)
 	 */
 	public void refreshCardHand() {
 		this.discardCardHand();
-		this.draw(5);
+		this.draw(GameConstant.INIT_CARD_HAND_SIZE);
 	}
 	
 	/**

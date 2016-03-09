@@ -34,26 +34,26 @@ public final class DominionController {
 	/* constructor */
 	public DominionController() {
 		storageController = new CardStorageController();
-//		new LoginGUIController();
+		// new LoginGUIController();
 		try {
 			gameClient = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());
-		} catch (IOException e) {		
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	public CardStorageController getStorageController(){
+
+	public CardStorageController getStorageController() {
 		return storageController;
 	}
-	
-	public CardStorageController getCardRegistry(){
+
+	public CardStorageController getCardRegistry() {
 		return storageController;
 	}
-	
-	public DominionController(boolean test){
+
+	public DominionController(boolean test) {
 		storageController = new CardStorageController();
-		//do nothing else, just init object
+		// do nothing else, just init object
 	}
 
 	/** sets the session-client instance and starts keep-alive */
@@ -71,8 +71,7 @@ public final class DominionController {
 	/* getters and setters */
 
 	/**
-	 * @param sessionID
-	 *            new session-id
+	 * @param sessionID new session-id
 	 */
 	public void setSessionID(UUID sessionID) {
 		this.sessionID = sessionID;
@@ -82,10 +81,8 @@ public final class DominionController {
 	public String getUsername() {
 		return username;
 	}
-	
-	
+
 	/**
-	 * 
 	 * @return the GameClientObject
 	 */
 	public GameClient getGameClient() {

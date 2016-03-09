@@ -1,6 +1,5 @@
 package com.tpps.application.game;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -22,15 +21,72 @@ public class GameBoard {
 	private LinkedHashMap<String, LinkedList<Card>> tableForVictoryCards;
 	private LinkedHashMap<String, LinkedList<Card>> tableForTreasureCards;
 	private LinkedHashMap<String, LinkedList<Card>> tableForActionCards;
+	private LinkedList<Card> trashPile;
 
 	public GameBoard() {
 		this.tableForVictoryCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.tableForTreasureCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
-
+		
 		initHashMapTreasureCards();
 		initHashMapVictoryCards();
 		initHashMapActionCards();
+	}
+
+	/**
+	 * @return the tableForVictoryCards
+	 */
+	public LinkedHashMap<String, LinkedList<Card>> getTableForVictoryCards() {
+		return tableForVictoryCards;
+	}
+
+	/**
+	 * @param tableForVictoryCards the tableForVictoryCards to set
+	 */
+	public void setTableForVictoryCards(LinkedHashMap<String, LinkedList<Card>> tableForVictoryCards) {
+		this.tableForVictoryCards = tableForVictoryCards;
+	}
+
+	/**
+	 * @return the tableForTreasureCards
+	 */
+	public LinkedHashMap<String, LinkedList<Card>> getTableForTreasureCards() {
+		return tableForTreasureCards;
+	}
+
+	/**
+	 * @param tableForTreasureCards the tableForTreasureCards to set
+	 */
+	public void setTableForTreasureCards(LinkedHashMap<String, LinkedList<Card>> tableForTreasureCards) {
+		this.tableForTreasureCards = tableForTreasureCards;
+	}
+
+	/**
+	 * @return the tableForActionCards
+	 */
+	public LinkedHashMap<String, LinkedList<Card>> getTableForActionCards() {
+		return tableForActionCards;
+	}
+
+	/**
+	 * @param tableForActionCards the tableForActionCards to set
+	 */
+	public void setTableForActionCards(LinkedHashMap<String, LinkedList<Card>> tableForActionCards) {
+		this.tableForActionCards = tableForActionCards;
+	}
+
+	/**
+	 * @return the trashPile
+	 */
+	public LinkedList<Card> getTrashPile() {
+		return trashPile;
+	}
+
+	/**
+	 * @param trashPile the trashPile to set
+	 */
+	public void setTrashPile(LinkedList<Card> trashPile) {
+		this.trashPile = trashPile;
 	}
 
 	/**
