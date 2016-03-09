@@ -13,7 +13,6 @@ import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.ui.gameplay.GameWindow;
 
-
 /**
  * 
  * @author ladler - Lukas Adler

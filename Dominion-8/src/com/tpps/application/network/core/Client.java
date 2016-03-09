@@ -60,7 +60,6 @@ public class Client {
 					this.connected = false;
 					System.out.println("Connection refused. Reconnecting...");
 				}
-
 				Thread.sleep(50);
 				if (this.connected) {
 					break;

@@ -28,6 +28,10 @@ public class GameClient extends Client{
 		registrateByServer();
 	}	
 
+	/**
+	 * 
+	 * @throws IOException
+	 */
 	private void registrateByServer() throws IOException {		
 		this.sendMessage(new PacketRegistratePlayerByServer());
 	}

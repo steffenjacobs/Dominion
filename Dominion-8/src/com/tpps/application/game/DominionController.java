@@ -43,33 +43,44 @@ public final class DominionController {
 
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public CardStorageController getStorageController() {
 		return storageController;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public CardStorageController getCardRegistry() {
 		return storageController;
 	}
 
+	/**
+	 * 
+	 * @param test
+	 */
 	public DominionController(boolean test) {
 		storageController = new CardStorageController();
 		// do nothing else, just init object
 	}
 
-	/** sets the session-client instance and starts keep-alive */
+	/**
+	 * sets the session-client instance and starts keep-alive 
+	 */
 	public void setSessionClient(SessionClient sc) {
-
 		if (this.sessionClient != null) {
 			this.sessionClient.keepAlive(username, false);
 			this.sessionClient.disconnect();
 		}
-
 		this.sessionClient = sc;
 		this.sessionClient.keepAlive(username, true);
 	}
 
 	/* getters and setters */
-
 	/**
 	 * @param sessionID new session-id
 	 */
@@ -77,7 +88,9 @@ public final class DominionController {
 		this.sessionID = sessionID;
 	}
 
-	/** @return the users username */
+	/** 
+	 * @return the users username 
+	 */
 	public String getUsername() {
 		return username;
 	}
@@ -89,30 +102,33 @@ public final class DominionController {
 		return gameClient;
 	}
 
-	/** @return the users email-address */
+	/**
+	 * @return the users email-address 
+	 */
 	public String getEmail() {
 		return email;
 	}
 
-	/** @return the current Session-ID */
+	/**
+	 * @return the current Session-ID
+	 */
 	public UUID getSessionID() {
 		return sessionID;
 	}
 
-	/** @return the current instance of the game */
+	/**
+	 * @return the current instance of the game 
+	 */
 	public static DominionController getInstance() {
 		return instance;
 	}
 
 	/**
-	 * @param username
-	 *            new Username
-	 * @param mailAddress
-	 *            new Email-Address
+	 * @param username new Username
+	 * @param mailAddress new Email-Address
 	 */
 	public void setCredentials(String username, String mailAddress) {
 		this.username = username;
 		this.email = mailAddress;
 	}
-
 }
