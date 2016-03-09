@@ -59,11 +59,8 @@ public class GameController {
 			if (card != null && card.getTypes().contains(CardType.ACTION)) {
 				CollectionsUtil.addCardToList(this.getActivePlayer().playCard(cardID), this.playedCards);
 				return true;
-			}
-			
+			}	
 		}
-		
-
 		if (this.gamePhase.equals("buyPhase")) {
 			Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
 			if (card != null && card.getTypes().contains(CardType.TREASURE)) {
@@ -73,7 +70,6 @@ public class GameController {
 			}
 		}
 		return false;
-
 	}
 
 	/**
@@ -81,24 +77,22 @@ public class GameController {
 	 * cards from the player cardHand to the playedCard list
 	 */
 	public void playTreasures() {
-		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().playTreasures());
-	}
-
-	/**
-	 * gives the active Player five new Cards
-	 */
-	public void refreshCardHand() {
-		this.getActivePlayer().getDeck().refreshCardHand();
+		CollectionsUtil.appendListToList(this.getActivePlayer().playTreasures(), this.playedCards);
 	}
 
 	/**
 	 * 
 	 */
-	public void endTurn() {
-//		this.getActivePlayer().getDeck().discardCardHand();
+	public void organizePilesAndrefreshCardHand(){
 		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().getDeck().getDiscardPile());
+		this.getActivePlayer().getDeck().refreshCardHand();
 		this.playedCards = new LinkedList<Card>();
-		
+	}
+	
+	/**
+	 * 
+	 */
+	public void endTurn() {		
 		this.setNextActivePlayer();
 		this.setActionPhase();
 	}

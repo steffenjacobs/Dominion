@@ -33,7 +33,7 @@ public class TestCardLoader {
 		 gw.tableActionCards(table);
 		 gw.handCards(hand);
 		 gw.coinCards(coins);
-		 gw.estateCards(estate);
+		 gw.victoryCards(estate);
 	}
 	
 	public static void main(String[] args) throws IOException {

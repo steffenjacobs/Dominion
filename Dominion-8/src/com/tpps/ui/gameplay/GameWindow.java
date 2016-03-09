@@ -37,7 +37,7 @@ public class GameWindow extends JFrame {
 	private BufferedImage[] actionCards;
 	private GraphicFramework framework;
 	private Card[] gfcAction;
-	private LinkedList<Card> estateCards, coinCards, handCards, tableCards;
+	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards;
 
 	public static GameWindow getInstance() {
 		return instance;
@@ -56,7 +56,7 @@ public class GameWindow extends JFrame {
 		gfcAction = new Card[10];
 		this.handCards = new LinkedList<Card>();
 		this.tableCards = new LinkedList<Card>();
-		this.estateCards = new LinkedList<Card>();
+		this.victoryCards = new LinkedList<Card>();
 		this.coinCards = new LinkedList<Card>();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 //		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -78,13 +78,13 @@ public class GameWindow extends JFrame {
 		endTurn = new ButtonClass(0.75, 0.3, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
 
 
+		
+		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
+		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 		framework.addComponent(closeButton);
 		framework.addComponent(endActionPhase);
 		framework.addComponent(playTreasures);
 		framework.addComponent(endTurn);
-		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
-		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
-
 //		this.setSize(1280, 720);
 		this.revalidate();
 		this.repaint();
@@ -202,15 +202,26 @@ public class GameWindow extends JFrame {
 		}
 	}
 
-	public void estateCards(HashMap<String, SerializedCard> estate) {
-		LinkedList<String> actionCardlds = new LinkedList<>(estate.keySet());
+	public void victoryCards(HashMap<String, SerializedCard> victory) {
+		LinkedList<String> actionCardlds = new LinkedList<>(victory.keySet());
 		double shift = -0.05;
 		int k = 3;
-		for (int i = 0; i < estate.size(); i++) {
-			SerializedCard serializedCard = estate.get(actionCardlds.get(i));
-			framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
+		
+		for (Iterator<Card> iterator = this.victoryCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.victoryCards = new LinkedList<Card>();
+		
+		
+		
+		for (int i = 0; i < victory.size(); i++) {
+			SerializedCard serializedCard = victory.get(actionCardlds.get(i));
+			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 					serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1,
-					0.1, k++, GraphicsUtil.rotate(serializedCard.getImage(), 90), framework));
+					0.1, k++, GraphicsUtil.rotate(serializedCard.getImage(), 90), framework);
+			framework.addComponent(card);
+			this.victoryCards.add(card);
 
 		}
 	}
