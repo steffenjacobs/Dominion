@@ -1,5 +1,6 @@
 package com.tpps.application.storage;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,8 +10,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
 import com.tpps.application.game.card.Card;
 import com.tpps.technicalServices.util.ByteUtil;
+import com.tpps.technicalServices.util.GraphicsUtil;
 
 /**
  * This class represents a card-storage
@@ -62,6 +67,23 @@ public class CardStorageController {
 			System.err.println("ERROR: Storage-Container is broken!");
 			e.printStackTrace();
 		}
+
+		JFrame frame = new JFrame();
+		frame.setSize(1280, 720);
+		frame.setVisible(true);
+		frame.setContentPane(new JPanel() {
+			private static final long serialVersionUID = -3085424480905334248L;
+
+			@Override
+			public void paintComponent(Graphics g) {
+				int i = 0;
+				for (SerializedCard sc : storedCards.values()) {
+					BufferedImage bim = GraphicsUtil.rotate(sc.getImage(), 360/storedCards.size()*i);
+					g.drawImage(bim, i, 0, bim.getWidth(), bim.getHeight(), null);
+					i += bim.getWidth();
+				}
+			}
+		});
 
 	}
 
