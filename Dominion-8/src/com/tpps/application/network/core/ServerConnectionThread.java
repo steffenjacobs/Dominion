@@ -133,7 +133,6 @@ public class ServerConnectionThread extends Thread {
 	 * works the queue until it is empty and sleeps, until new packets are added
 	 */
 	private void workQueue() {
-		System.out.println("started working" + System.currentTimeMillis());
 		Packet pack;
 		while (true) {
 			while ((pack = packetQueue.poll()) != null) {
