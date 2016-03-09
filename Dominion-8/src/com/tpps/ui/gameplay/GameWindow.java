@@ -27,10 +27,7 @@ import com.tpps.ui.components.GameBackground;
 
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
-	private GFButton closeButton;
-	private GFButton endActionPhase;
-	private GFButton playTreasures;
-	private GFButton endTurn;
+	static GFButton closeButton, endActionPhase, playTreasures, endTurn;
 	private static GameWindow instance;
 
 	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage;
@@ -82,8 +79,7 @@ public class GameWindow extends JFrame {
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 		framework.addComponent(closeButton);
-		framework.addComponent(endActionPhase);
-		framework.addComponent(playTreasures);
+		framework.addComponent(endActionPhase);		
 		framework.addComponent(endTurn);
 //		this.setSize(1280, 720);
 		this.revalidate();
@@ -230,4 +226,13 @@ public class GameWindow extends JFrame {
 		framework.removeComponent(this.endActionPhase);
 		framework.addComponent(this.playTreasures);
 	}
+	public void playTreasures(){
+		framework.removeComponent(this.playTreasures);
+	}
+	
+	public void endTurn(){
+		framework.addComponent(this.endActionPhase);
+	}
+	
+	
 }

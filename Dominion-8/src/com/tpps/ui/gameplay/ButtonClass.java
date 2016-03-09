@@ -14,11 +14,13 @@ import com.tpps.ui.components.GFButton;
 
 public class ButtonClass extends GFButton {
 	private static final long serialVersionUID = 1520424079770080041L;
+	private GameWindow gameWindow;
 
 	public ButtonClass(double relativeX, double relativeY, double relativeWidth, double relativeHeight,
 			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage,
 				_parent, caption);
+		this.gameWindow = gameWindow;
 	}
 
 	@Override
@@ -49,6 +51,8 @@ public class ButtonClass extends GFButton {
 		if (this.getCaption().equals("End ActionPhase")){
 			try {
 				System.out.println("EndActionPhase");
+				this.getParent().removeComponent(this);
+				this.getParent().addComponent(GameWindow.playTreasures);
 				DominionController.getInstance().getGameClient().sendMessage(new PacketEndActionPhase());
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -58,6 +62,7 @@ public class ButtonClass extends GFButton {
 		if (this.getCaption().equals("Play Treasures")){
 			try {
 				System.out.println("PacketPlayTreasures");
+//				this.getParent().removeC
 				DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
