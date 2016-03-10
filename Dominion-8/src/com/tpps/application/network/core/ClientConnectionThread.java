@@ -28,6 +28,11 @@ public class ClientConnectionThread extends Thread {
 	private final PacketHandler receiver;
 	private int countSent = 0, countReceived = 0;
 
+	/** disconnects from the server */
+	public void disconnect() throws IOException {
+		clientSocket.close();
+	}
+
 	/** resets the metrics (how many packets where sent & received) */
 	public void resetsMetrics() {
 		this.countSent = 0;
@@ -76,6 +81,7 @@ public class ClientConnectionThread extends Thread {
 		try {
 			inStream = new DataInputStream(clientSocket.getInputStream());
 			outStream = new DataOutputStream(clientSocket.getOutputStream());
+			parent.getListenerManager().fireConnectEvent(this.getRemotePort());
 
 			// start async sender
 			new Thread(() -> this.workQueue()).start();
@@ -95,12 +101,14 @@ public class ClientConnectionThread extends Thread {
 
 				} catch (IOException e) {
 					System.out.println("Network Error: Connection Lost.");
+					parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
 					interrupt();
 					parent.tryReconnect();
 				}
 			}
 		} catch (IOException e) {
 			System.out.println("Network Error: Connection Lost.");
+			parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
 			interrupt();
 			parent.tryReconnect();
 		}
@@ -135,10 +143,12 @@ public class ClientConnectionThread extends Thread {
 			} catch (SocketException | NullPointerException e) {
 				parent.setDisconnected();
 				System.out.println("NETWORK-ERROR: Connection to Server lost! Reconnecting...");
+				parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
 				parent.connectAndLoop(true);
 			}
 		} else {
 			System.out.println("NETWORK-ERROR: Could not send packet: Server not connected.");
+			parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
 		}
 		holySemaphore.release();
 	}

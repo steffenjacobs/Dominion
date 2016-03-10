@@ -7,6 +7,7 @@ import java.net.SocketAddress;
 
 import javax.net.SocketFactory;
 
+import com.tpps.application.network.core.events.NetworkListenerManager;
 import com.tpps.application.network.core.packet.Packet;
 
 /**
@@ -23,14 +24,42 @@ public class Client {
 	private ClientConnectionThread connectionThread;
 	private SocketAddress address;
 
+	private NetworkListenerManager listenerManager = new NetworkListenerManager();
+	
+
+
 	/**
-	 * needed for testing
-	 * 
+	 * Tries to connect to the specified server (5sec timeout)
+	 *
+	 * @param address
+	 *            SocketAddress of the server
+	 * @param _handler
+	 *            an implementation of the interface
+	 * @param async:
+	 *            make the thread wait until the connection is established
+	 * @throws IOException
 	 * @author Steffen Jacobs
-	 * @return ClientConnectionThread holding the connection to the server
 	 */
-	public ClientConnectionThread getConnectionThread() {
-		return this.connectionThread;
+	public Client(SocketAddress _address, PacketHandler _handler, boolean connectAsync) throws IOException {
+		this.address = _address;
+		this.handler = _handler;
+		connectAndLoop(connectAsync);
+	}
+
+	/**
+	 * Tries to connect to the specified server (5sec timeout)
+	 *
+	 * @param address
+	 *            SocketAddress of the server
+	 * @param _handler
+	 *            an implementation of the interface
+	 * @throws IOException
+	 * @author Steffen Jacobs
+	 */
+	public Client(SocketAddress _address, PacketHandler _handler) throws IOException {
+		this.address = _address;
+		this.handler = _handler;
+		connectAndLoop(true);
 	}
 
 	/**
@@ -108,58 +137,6 @@ public class Client {
 		connectAndLoop(true);
 	}
 
-	//
-	/**
-	 * @return wheter the client is connected to the server
-	 * @author Steffen Jacobs
-	 */
-	public boolean isConnected() {
-		return connected;
-	}
-
-	/**
-	 * sets the connected-boolean to false
-	 *
-	 * @author Steffen Jacobs
-	 */
-	public void setDisconnected() {
-		this.connected = false;
-	}
-
-	/**
-	 * Tries to connect to the specified server (5sec timeout)
-	 *
-	 * @param address
-	 *            SocketAddress of the server
-	 * @param _handler
-	 *            an implementation of the interface
-	 * @param async:
-	 *            make the thread wait until the connection is established
-	 * @throws IOException
-	 * @author Steffen Jacobs
-	 */
-	public Client(SocketAddress _address, PacketHandler _handler, boolean connectAsync) throws IOException {
-		this.address = _address;
-		this.handler = _handler;
-		connectAndLoop(connectAsync);
-	}
-
-	/**
-	 * Tries to connect to the specified server (5sec timeout)
-	 *
-	 * @param address
-	 *            SocketAddress of the server
-	 * @param _handler
-	 *            an implementation of the interface
-	 * @throws IOException
-	 * @author Steffen Jacobs
-	 */
-	public Client(SocketAddress _address, PacketHandler _handler) throws IOException {
-		this.address = _address;
-		this.handler = _handler;
-		connectAndLoop(true);
-	}
-
 	/**
 	 * Closes the connection
 	 * 
@@ -167,6 +144,11 @@ public class Client {
 	 */
 	public void disconnect() {
 		this.connected = false;
+		try {
+			this.connectionThread.disconnect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.connectionThread.interrupt();
 	}
 
@@ -195,6 +177,34 @@ public class Client {
 			this.connectAndLoop(true);
 		}
 	}
+	
+
+	/**
+	 * @return wheter the client is connected to the server
+	 * @author Steffen Jacobs
+	 */
+	public boolean isConnected() {
+		return connected;
+	}
+
+	/**
+	 * sets the connected-boolean to false
+	 *
+	 * @author Steffen Jacobs
+	 */
+	public void setDisconnected() {
+		this.connected = false;
+	}
+	
+	/**
+	 * needed for testing
+	 * 
+	 * @author Steffen Jacobs
+	 * @return ClientConnectionThread holding the connection to the server
+	 */
+	public ClientConnectionThread getConnectionThread() {
+		return this.connectionThread;
+	}
 
 	/**
 	 * 
@@ -202,6 +212,16 @@ public class Client {
 	 */
 	public PacketHandler getHandler() {
 		return handler;
+	}
+
+	/**
+	 * getter for the NetworkListenerManager
+	 * 
+	 * @return the NetworkListenerManager instance for registering listeners to
+	 *         this client
+	 */
+	public NetworkListenerManager getListenerManager() {
+		return listenerManager;
 	}
 
 }
