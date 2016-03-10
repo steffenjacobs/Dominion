@@ -158,9 +158,9 @@ public class GraphicFramework extends JPanel {
 		//TODO: NISHIT! YOU WILL DIE FOR THIS!
 		//TODO: NISHIT! YOU WILL DIE FOR THIS!
 		
-		g.drawString(GameWindow.coins, 10, 10);
-		g.drawString(GameWindow.buys, 10, 20);
-		g.drawString(GameWindow.actions, 10, 30);
+		// g.drawString(GameWindow.coins, 10, 10);
+		// g.drawString(GameWindow.buys, 10, 20);
+		// g.drawString(GameWindow.actions, 10, 30);
 
 		//TODO: NISHIT! YOU WILL DIE FOR THIS!
 		//TODO: NISHIT! YOU WILL DIE FOR THIS!

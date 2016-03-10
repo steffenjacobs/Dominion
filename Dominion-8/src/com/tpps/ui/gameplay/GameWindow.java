@@ -1,6 +1,7 @@
 package com.tpps.ui.gameplay;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GraphicFramework;
+import com.tpps.ui.components.DisplayValue;
 import com.tpps.ui.components.GFButton;
 import com.tpps.ui.components.GameBackground;
 
@@ -25,12 +27,13 @@ public class GameWindow extends JFrame {
 	static GFButton closeButton, endActionPhase, playTreasures, endTurn;
 	private static GameWindow instance;
 
-	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage;
-	private BufferedImage[] actionCards;
+	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage,displayImageBuys,displayImageActions,displayImageCoins;
 	private GraphicFramework framework;
-	private Card[] gfcAction;
+	private DisplayValue buy,coin,action;
 	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards;
 	public static String coins, buys, actions;
+	private static final double CORRECTION_16TO9 = 16/ (double) 9;
+	
 
 	public static GameWindow getInstance() {
 		return instance;
@@ -45,15 +48,13 @@ public class GameWindow extends JFrame {
 		instance = this;
 		final int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
 		final int HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
-		actionCards = new BufferedImage[10];
-		gfcAction = new Card[10];
 		this.handCards = new LinkedList<Card>();
 		this.tableCards = new LinkedList<Card>();
 		this.victoryCards = new LinkedList<Card>();
 		this.coinCards = new LinkedList<Card>();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-//		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
-//		 this.setUndecorated(true);
+		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
+		 this.setUndecorated(true);
 		coins = "Coins: ";
 		buys = "Buys: ";
 		actions = "Actions: ";
@@ -66,20 +67,28 @@ public class GameWindow extends JFrame {
 		closeImage = this.loadingImage(closeImage, "resources/img/gameObjects/close.png");
 		tableImage = this.loadingImage(tableImage, "resources/img/gameObjects/table.jpg");
 		buttonImage = this.loadingImage(buttonImage, "resources/img/gameObjects/testButton.png");
+		displayImageBuys= this.loadingImage(displayImageBuys, "resources/img/gameObjects/Buys.png");
+		displayImageCoins= this.loadingImage(displayImageCoins, "resources/img/gameObjects/Coins.png");
+		displayImageActions= this.loadingImage(displayImageActions, "resources/img/gameObjects/Actions.png");
 
-		closeButton = new ButtonClass(0.98, 0.01, 0.015, 0.015, WIDTH, WIDTH, 1, closeImage, framework, "");
+		closeButton = new ButtonClass(0.98, 0.01, 0.015, 0.015*CORRECTION_16TO9, WIDTH, WIDTH, 1, closeImage, framework, "");
 
 		endActionPhase = new ButtonClass(0.75, 0.1, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End ActionPhase");
 		playTreasures = new ButtonClass(0.75, 0.2, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Play Treasures");
 		endTurn = new ButtonClass(0.75, 0.3, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
-
 		
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,String.valueOf(GameConstant.INIT_ACTIONS));
+		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework,String.valueOf(GameConstant.INIT_TREASURES));
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework,String.valueOf(GameConstant.INIT_PURCHASES));
 		
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 		framework.addComponent(closeButton);
 		framework.addComponent(endActionPhase);		
 		framework.addComponent(endTurn);
+		framework.addComponent(action);
+		framework.addComponent(coin);
+		framework.addComponent(buy);
 		
 		this.revalidate();
 		this.repaint();
@@ -98,9 +107,12 @@ public class GameWindow extends JFrame {
 	}
 	
 	public void reset() {
-		GameWindow.actions = "Actions " + GameConstant.INIT_ACTIONS;
-		GameWindow.coins = "Coins " + GameConstant.INIT_TREASURES;
-		GameWindow.buys = "Purchases " + GameConstant.INIT_PURCHASES;
+//		GameWindow.actions = "Actions " + GameConstant.INIT_ACTIONS;
+//		GameWindow.coins = "Coins " + GameConstant.INIT_TREASURES;
+//		GameWindow.buys = "Purchases " + GameConstant.INIT_PURCHASES;
+		buy.renewCaption(String.valueOf(GameConstant.INIT_PURCHASES));
+		coin.renewCaption(String.valueOf(GameConstant.INIT_TREASURES));
+		action.renewCaption(String.valueOf(GameConstant.INIT_ACTIONS));
 		this.framework.addComponent(endActionPhase);
 		this.repaint();
 	}
