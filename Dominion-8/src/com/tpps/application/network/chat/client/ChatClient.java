@@ -25,6 +25,7 @@ public class ChatClient extends PacketHandler{
 	
 	/**
 	 * initializes the chat client object, sends a handshake packet to the chatserver
+	 * @author jhuhn - Johannes Huhn
 	 * @param username a String representation of the nickname
 	 */
 	public ChatClient(String username) {
@@ -41,6 +42,7 @@ public class ChatClient extends PacketHandler{
 	/**
 	 * this method is called, when the client gets a packet from the chatserver.
 	 * It displays a message on the gui
+	 * @author jhuhn - Johannes Huhn
 	 */
 	@Override
 	public void handleReceivedPacket(int port, final Packet packet) {
@@ -60,7 +62,8 @@ public class ChatClient extends PacketHandler{
 	 * ... /votekick : the client starts a vote to kick a player
 	 * .../	: the client executes a chatcommand
 	 * ...@	:the client sends a private message to one player
-	 * If the chatmessage starts not in the given template, the chatmessage goes to globalchat / chatroom	
+	 * If the chatmessage starts not in the given template, the chatmessage goes to globalchat / chatroom
+	 * @author jhuhn - Johannes Huhn	
 	 * @param chatmessage a String representation of a command or text message
 	 */
 	public void sendMessage(String chatmessage){
@@ -85,6 +88,7 @@ public class ChatClient extends PacketHandler{
 	/**
 	 * This method parses the chatmessage in important tokens and sends it to the chatserver
 	 * e.g: "@player2 this is a message for player2"
+	 * @author jhuhn - Johannes Huhn
 	 * @param message a String representation of the chatmessage which goes to one specific client
 	 */
 	private void sendMessageToClient(String message){
@@ -105,6 +109,7 @@ public class ChatClient extends PacketHandler{
 	
 	/**
 	 * This method embeds the command in a packet and sends it to the chat server
+	 * @author jhuhn - Johannes Huhn
 	 * @param command a String representation of the used command
 	 */
 	private void sendCommand(String command){
