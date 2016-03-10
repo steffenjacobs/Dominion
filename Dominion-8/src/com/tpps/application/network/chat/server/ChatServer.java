@@ -1,4 +1,4 @@
-package com.tpps.application.network.chat;
+package com.tpps.application.network.chat.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -11,12 +11,13 @@ public class ChatServer extends Server{
 	
 	public static String domain = "127.0.0.1";
 	public static int port = 1340;
-	private ChatPacketHandler chatpackethandler;
+	private ChatPacketHandler chatpackethandler ;
 
 	public ChatServer() throws IOException {
-		super(new InetSocketAddress(domain, port), new ChatPacketHandler());
-		((ChatPacketHandler)super.getHandler()).setServer(this);
+		super(new InetSocketAddress(domain, port), new ChatPacketHandler());		
 		this.chatpackethandler = (ChatPacketHandler) super.getHandler();
+		this.chatpackethandler.setParent(this);
+		this.chatpackethandler.setServer(this);
 		this.setConsoleOutput();		
 	}
 	
@@ -70,9 +71,10 @@ public class ChatServer extends Server{
 				}
 			}catch(ArrayIndexOutOfBoundsException e){
 				System.out.println("Bad Syntax, Type in 'help' for info");
+				scanInput.close();
 			}
 		}
-	//	scanInput.close();
+		
 	}
 
 	public static void main(String[] args) {

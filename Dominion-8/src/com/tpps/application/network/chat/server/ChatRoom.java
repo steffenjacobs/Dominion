@@ -1,4 +1,4 @@
-package com.tpps.application.network.chat;
+package com.tpps.application.network.chat.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +8,12 @@ import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.tpps.application.network.chat.packets.PacketChatVote;
+import com.tpps.application.network.chat.packets.PacketSendAnswer;
+import com.tpps.application.network.chat.packets.PacketSendChatAll;
+import com.tpps.application.network.chat.packets.PacketSendChatCommand;
+import com.tpps.application.network.chat.packets.PacketSendChatToClient;
 
 public class ChatRoom {
 
@@ -316,5 +322,9 @@ public class ChatRoom {
 			membersAsString += members.next() + ", ";
 		}
 		return "ID: " + this.id + " Members: " + membersAsString;
+	}
+	
+	public ConcurrentHashMap<String, Integer> getClientsByUsername() {
+		return clientsByUsername;
 	}
 }

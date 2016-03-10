@@ -1,9 +1,14 @@
-package com.tpps.application.network.chat;
+package com.tpps.application.network.chat.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Scanner;
 
+import com.tpps.application.network.chat.packets.PacketChatHandshake;
+import com.tpps.application.network.chat.packets.PacketSendAnswer;
+import com.tpps.application.network.chat.packets.PacketSendChatAll;
+import com.tpps.application.network.chat.packets.PacketSendChatCommand;
+import com.tpps.application.network.chat.packets.PacketSendChatToClient;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
