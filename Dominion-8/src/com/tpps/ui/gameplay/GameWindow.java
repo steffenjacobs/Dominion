@@ -247,6 +247,16 @@ public class GameWindow extends JFrame {
 		}
 	}
 	
+	public void setCaptionCoins(String caption){
+		coin.renewCaption(caption);
+	}
+	public void setCaptionActions(String caption){
+		action.renewCaption(caption);
+	}
+	public void setCaptionBuys(String caption){
+		buy.renewCaption(caption);
+	}
+	
 	public void endActionPhase(){
 		framework.removeComponent(endActionPhase);
 		framework.addComponent(playTreasures);
