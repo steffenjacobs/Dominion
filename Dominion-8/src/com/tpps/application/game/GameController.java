@@ -86,6 +86,7 @@ public class GameController {
 		System.out.println("coins: " + this.getActivePlayer().getCoins());
 		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0 && 
 				player.getCoins() >= card.getCost()) {
+			System.out.println("co");
 			player.setBuys(player.getBuys() - 1);
 			player.setCoins(player.getCoins() - card.getCost());
 			cards.remove(cards.size() - 1);

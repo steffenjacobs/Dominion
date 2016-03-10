@@ -66,7 +66,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 						System.out.println("My Coins: " + activePlayer.getCoins());
 						server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
 								activePlayer.getCoins()));
-						server.sendMessage(port, new PacketEndActionPhase());
+						if(this.server.getGameController().getActivePlayer().getActions() == 0){
+							server.sendMessage(port, new PacketEndActionPhase());
+						}
 						server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 						server.broadcastMessage(new PacketSendPlayedCardsToAllClients(
 								CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
