@@ -52,7 +52,4 @@ public class GameClient extends Client{
 	public int getClientId() {
 		return clientId;
 	}
-	
-	
-
 }

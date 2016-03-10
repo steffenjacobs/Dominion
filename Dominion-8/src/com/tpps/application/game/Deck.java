@@ -19,6 +19,9 @@ public class Deck {
 	private LinkedList<Card> discardPile;
 	private LinkedList<Card> cardHand;
 
+	/**
+	 * 
+	 */
 	public Deck() {
 		this.drawPile = new LinkedList<Card>();
 		this.discardPile = new LinkedList<Card>();
@@ -26,6 +29,12 @@ public class Deck {
 		this.init();
 	}
 
+	/**
+	 * 
+	 * @param draw
+	 * @param discard
+	 * @param cardHand
+	 */
 	public Deck(LinkedList<Card> draw, LinkedList<Card> discard, LinkedList<Card> cardHand) {
 		this.drawPile = draw;
 		this.discardPile = discard;
@@ -237,11 +246,16 @@ public class Deck {
 		}
 	}
 	
-	public void trash(Card card) {
-		
+	/**
+	 * 
+	 * @param card
+	 * @param trashPile
+	 */
+	public void trash(Card card, LinkedList<Card> trashPile ) {
+		this.getCardHand().remove(card);
+		trashPile.addLast(card);
 	}
 
-	
 	/**
 	 * @return String representation of a deck object
 	 */

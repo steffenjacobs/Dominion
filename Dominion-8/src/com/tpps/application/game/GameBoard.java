@@ -23,6 +23,9 @@ public class GameBoard {
 	private LinkedHashMap<String, LinkedList<Card>> tableForActionCards;
 	private LinkedList<Card> trashPile;
 
+	/**
+	 * 
+	 */
 	public GameBoard() {
 		this.tableForVictoryCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.tableForTreasureCards = new LinkedHashMap<String, LinkedList<Card>>();
@@ -121,7 +124,7 @@ public class GameBoard {
 			cardList = table.get(string);
 			if (cardList.size() > 0){
 				cardIds.add(cardList.get(cardList.size() - 1).getId());
-			}else{
+			} else {
 				cardIds.add("NIL");
 			}
 		}
@@ -215,7 +218,7 @@ public class GameBoard {
 		this.tableForActionCards.put("Province", provinceList);
 		Card.resetClassID();
 		
-//		 1
+		// 1
 		LinkedList<Card> cellarList = new LinkedList<Card>();
 		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.ADD_ACTION_TO_PLAYER, "1"), CollectionsUtil.linkedList(CardType.ACTION), "Cellar", 2), 10, cellarList);
 		this.tableForActionCards.put("Cellar", cellarList);
@@ -281,54 +284,40 @@ public class GameBoard {
 	 */
 	protected Card findAndRemoveCardFromBoard(String cardId) throws SynchronisationException {
 		String key = cardId.substring(0, cardId.length() - 1);
-		
-		
 		if (this.tableForTreasureCards.containsKey(key)) {
 			LinkedList<Card> cardList = this.tableForTreasureCards.get(key);
 			return cardList.remove(cardList.size() - 1);
+		} else if (this.tableForVictoryCards.containsKey(key)) {
+			LinkedList<Card> cardList = this.tableForVictoryCards.get(key);
+			return cardList.remove(cardList.size() - 1);
+		} else if (this.tableForActionCards.containsKey(key)) {
+			LinkedList<Card> cardList = this.tableForActionCards.get(key);
+			return cardList.remove(cardList.size() - 1);
 		} else {
-			
-			if (this.tableForVictoryCards.containsKey(key)) {
-				LinkedList<Card> cardList = this.tableForVictoryCards.get(key);
-				return cardList.remove(cardList.size() - 1);
-			} else {
-				
-				if (this.tableForActionCards.containsKey(key)) {
-					LinkedList<Card> cardList = this.tableForActionCards.get(key);
-					return cardList.remove(cardList.size() - 1);
-				} else {
-					throw new SynchronisationException();
-				}
-			}
+			throw new SynchronisationException();
 		}
 	}
 	
+	/**
+	 * 
+	 * @param cardId
+	 * @return
+	 * @throws SynchronisationException
+	 */
+	/*------- schoener machen? -----------*/
 	protected LinkedList<Card> findCardListFromBoard(String cardId) throws SynchronisationException {
 		String key = cardId.substring(0, cardId.length() - 1);
-		
-		
 		if (this.tableForTreasureCards.containsKey(key)) {
 			LinkedList<Card> cardList = this.tableForTreasureCards.get(key);
 			return cardList;
+		} else if (this.tableForVictoryCards.containsKey(key)) {
+			LinkedList<Card> cardList = this.tableForVictoryCards.get(key);
+			return cardList;
+		} else if (this.tableForActionCards.containsKey(key)) {
+			LinkedList<Card> cardList = this.tableForActionCards.get(key);
+			return cardList;
 		} else {
-			
-			if (this.tableForVictoryCards.containsKey(key)) {
-				LinkedList<Card> cardList = this.tableForVictoryCards.get(key);
-				return cardList;
-			} else {
-				
-				if (this.tableForActionCards.containsKey(key)) {
-					LinkedList<Card> cardList = this.tableForActionCards.get(key);
-					return cardList;
-				} else {
-					throw new SynchronisationException();
-				}
-			}
+			throw new SynchronisationException();
 		}
 	}
-	
-	
-	
-	
-
 }
