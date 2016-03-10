@@ -1,8 +1,6 @@
 package com.tpps.ui.gameplay;
 
 import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -14,14 +12,10 @@ import java.util.LinkedList;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.Card;
-import com.tpps.application.network.gameSession.packets.PacketEndActionPhase;
-import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.GFButton;
 import com.tpps.ui.components.GameBackground;
@@ -87,7 +81,6 @@ public class GameWindow extends JFrame {
 		framework.addComponent(endActionPhase);		
 		framework.addComponent(endTurn);
 		
-//		this.setSize(1280, 720);
 		this.revalidate();
 		this.repaint();
 
