@@ -13,11 +13,20 @@ import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
 
+/**
+ * This class represents one client for chat purposes.
+ * This class is responsilbe for sending messages/chatpackets to the chatserver
+ * @author jhuhn - Johannes Huhn
+ */
 public class ChatClient extends PacketHandler{
 
 	private Client chatclient;
 	private String sender;
 	
+	/**
+	 * initializes the chat client object, sends a handshake packet to the chatserver
+	 * @param username a String representation of the nickname
+	 */
 	public ChatClient(String username) {
 		this.sender = username;
 		try {
@@ -29,6 +38,10 @@ public class ChatClient extends PacketHandler{
 		}
 	}
 	
+	/**
+	 * this method is called, when the client gets a packet from the chatserver.
+	 * It displays a message on the gui
+	 */
 	@Override
 	public void handleReceivedPacket(int port, final Packet packet) {
 		switch(packet.getType()){
@@ -37,11 +50,19 @@ public class ChatClient extends PacketHandler{
 			System.out.println(answer.getAnswer());
 			break;
 		default:System.out.println("sth with answer packet is wrong"); break;
-		}
-		
+		}	
 	}
 
-	
+	/**
+	 * This method is responsible for sending packets to the chatserver.
+	 * The chatmessage to send will be parsed and embedded in the right packet.
+	 * if the chatmessage starts with..
+	 * ... /votekick : the client starts a vote to kick a player
+	 * .../	: the client executes a chatcommand
+	 * ...@	:the client sends a private message to one player
+	 * If the chatmessage starts not in the given template, the chatmessage goes to globalchat / chatroom	
+	 * @param chatmessage a String representation of a command or text message
+	 */
 	public void sendMessage(String chatmessage){
 		if(chatmessage.startsWith("/votekick ")){
 			this.sendCommand(new StringBuffer(chatmessage).deleteCharAt(0).toString());
@@ -61,6 +82,11 @@ public class ChatClient extends PacketHandler{
 		}
 	}
 	
+	/**
+	 * This method parses the chatmessage in important tokens and sends it to the chatserver
+	 * e.g: "@player2 this is a message for player2"
+	 * @param message a String representation of the chatmessage which goes to one specific client
+	 */
 	private void sendMessageToClient(String message){
 		String[] split = message.split(" ");
 		String receiver = split[0];
@@ -77,6 +103,10 @@ public class ChatClient extends PacketHandler{
 		}
 	}
 	
+	/**
+	 * This method embeds the command in a packet and sends it to the chat server
+	 * @param command a String representation of the used command
+	 */
 	private void sendCommand(String command){
 		PacketSendChatCommand packet = new PacketSendChatCommand(sender, command);
 		try {
