@@ -42,27 +42,6 @@ public class Votekick {
 		}
 	}
 	
-	public boolean fullEvaluateVote(){
-		int voteyes = 0;
-		int voteno = 0;
-		for (Entry<String, Boolean> entry : alreadyvoted.entrySet()) {
-		    boolean vote = entry.getValue();
-		    if(vote){
-		    	voteyes++;
-		    }else{
-		    	voteno++;
-		    }
-		}
-		if((voteyes + voteno) <= notvotedyet.size()){	//the minority has voted => no kick
-			return false;
-		}
-		if(voteyes > voteno){//go for kick
-			return true;
-		}else{
-			return false;//no kick
-		}
-	}
-	
 	public String printResults(){
 		StringBuffer buf = new StringBuffer("Voted: \n");
 		for (Entry<String, Boolean> entry : alreadyvoted.entrySet()) {

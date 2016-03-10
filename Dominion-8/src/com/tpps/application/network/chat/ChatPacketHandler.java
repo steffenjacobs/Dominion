@@ -32,7 +32,7 @@ public class ChatPacketHandler extends PacketHandler{
 			System.out.println("Chat to ALL: " + castedpacket);
 			ChatRoom room = this.getSpecificChatRoom(castedpacket.getUsername());
 			if(room != null){
-				room.sendChatToAll(castedpacket);
+				room.sendChatToAllExceptSender(castedpacket);
 			}else{
 				PacketSendAnswer answer = new PacketSendAnswer(castedpacket.getChatmessage());
 				for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
@@ -57,7 +57,7 @@ public class ChatPacketHandler extends PacketHandler{
 			ChatRoom room3 = this.getSpecificChatRoom(castedpacket3.getSender());
 			System.out.println("Chat to Client " + castedpacket3);
 			if(room3 != null){
-				room3.sendChatToClient(castedpacket3);
+				room3.sendChatToChatRoomClient(castedpacket3);
 			}else{							
 				String hostname = "localhost";
 				String portsql = "3306";
