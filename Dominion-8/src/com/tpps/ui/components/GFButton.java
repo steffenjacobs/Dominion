@@ -6,6 +6,8 @@ import java.awt.FontFormatException;
 import java.awt.Image;
 import java.io.IOException;
 
+import javax.swing.JTextField;
+
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.Loader;
 import com.tpps.ui.GameObject;
