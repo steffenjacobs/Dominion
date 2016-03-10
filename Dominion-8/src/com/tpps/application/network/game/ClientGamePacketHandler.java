@@ -93,6 +93,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 	 * @param packet
 	 */
 	private void enableDisable(Packet packet) {
+		if (this.gameClient.getClientId() == -1){
+			System.out.println();
+		}
 		if (((PacketEnableDisable) packet).getClientId() == this.gameClient.getClientId()) {
 			this.gameWindow.setEnabled(true);
 			System.out.println("my gameWindow is enabled");
@@ -107,7 +110,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 	 * @param packet
 	 */
 	private void openGuiAndEnableOne(Packet packet) {
-		
+			
+		while(this.gameClient.getClientId() == -1)
+			
 			this.gameWindow.setVisible(true);
 			if (((PacketOpenGuiAndEnableOne) packet).getClientId() == this.gameClient.getClientId()) {
 				this.gameWindow.setEnabled(true);

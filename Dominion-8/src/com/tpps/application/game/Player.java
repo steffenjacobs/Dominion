@@ -5,6 +5,8 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
+import com.tpps.application.game.card.Tuple;
+import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
@@ -23,11 +25,15 @@ public class Player {
 	private int actions;
 	private int buys;
 	private int coins;
+	private boolean discardMode;
+	private LinkedList<Card> playedCards;
+	private Tuple<CardAction, Integer> discardAction;
 	
 	/**
 	 * 
 	 */
 	public Player(Deck deck, int clientID, int port) {
+		this.discardMode = false;
 		this.deck = deck;
 		this.id = playerID++;
 		this.actions = GameConstant.INIT_ACTIONS;
@@ -35,6 +41,7 @@ public class Player {
 		this.coins = GameConstant.INIT_TREASURES;
 		this.CLIENT_ID = clientID;
 		this.port = port;
+		this.playedCards = new LinkedList<Card>();
 	}
 
 	/**
@@ -112,6 +119,22 @@ public class Player {
 	public int getBuys() {
 		return buys;
 	}
+	
+	
+	/**
+	 * 
+	 * @return the played cards of the player in his turn
+	 */
+	public LinkedList<Card> getPlayedCards() {
+		return playedCards;
+	}
+	
+	/**
+	 * new played cardsList
+	 */
+	public void refreshPlayedCardsList(){
+		
+	}
 
 	/**
 	 * @param buys the buys to set
@@ -134,11 +157,17 @@ public class Player {
 		this.coins = coins;
 	}
 	
-	public Card playCard(String cardID){		
-		return doAction(cardID);
+	public void playCard(String cardID){
+		if (!discardMode){
+			System.out.println("kein discard mode");
+		 this.playedCards.addLast(doAction(cardID));
+		}
+		else{
+			this.getDeck().getDiscardPile().add(doAction(cardID));
+		}
 	}
 	
-	public LinkedList<Card> playTreasures(){
+	public void playTreasures(){
 		LinkedList<Card> cards = new LinkedList<Card>();
 		LinkedList<String> treasureCards = this.getDeck().getTreasureCardsFromHand();
 		for (Iterator<String> iterator = treasureCards.iterator(); iterator.hasNext();) {
@@ -148,7 +177,7 @@ public class Player {
 		}
 //		this.activePlayer.getDeck().
 ////		CollectionsUtil.appendListToList(treasureCards, this.getPlayedCards());
-		return cards;
+		CollectionsUtil.appendListToList(cards, this.playedCards);
 	}
 
 	/**
@@ -158,6 +187,13 @@ public class Player {
 	 */
 	public Card doAction(String cardID) {
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
+		if (this.discardMode){
+			discard(serverCard);
+			return null;
+		}else{
+		
+		boolean dontRemoveFlag = false;
+		
 		Iterator<CardAction> cardIterator = serverCard.getActions().keySet().iterator();
 		this.actions--;
 		System.out.println("DoAction");
@@ -186,8 +222,9 @@ public class Player {
 					default: break;
 				}
 				break;
-			case DISCARD_CARD:
-				this.getDeck().discardCard(serverCard);
+			case DISCARD_AND_DRAW:
+				this.discardMode = true;				
+				this.discardAction = new Tuple<CardAction, Integer>(act, Integer.parseInt(value));
 				break;
 			case TRASH_CARD:
 				this.getDeck().trash(serverCard, new LinkedList<Card>() /* HOW?? muss der trashPile uebergeben werden, wir koennen aber aus der trash Methode nicht drauf zugreifen */);
@@ -209,7 +246,25 @@ public class Player {
 				break;
 			}
 		}
-//		this.getDeck().getCardHand().remove(serverCard);
+		if (!dontRemoveFlag){
+			System.out.println("card was removed");
+			this.getDeck().getCardHand().remove(serverCard);
+		}
 		return serverCard;
 	}
+	}
+	
+	public void discard(Card card){
+		switch (this.discardAction.getFirstEntry()) {
+		case DISCARD_AND_DRAW:
+			this.getDeck().getCardHand().remove(card);
+			this.getDeck().draw(1);
+			break;
+
+		default:
+			break;
+		}
+		
+	}
+	
 }

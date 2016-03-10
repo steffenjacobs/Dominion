@@ -21,6 +21,7 @@ public class GameClient extends Client{
 	public GameClient(SocketAddress _address, PacketHandler _handler) throws IOException {
 		super(_address, _handler, false);	
 		((ClientGamePacketHandler)super.getHandler()).setGameClient(this);
+		this.clientId = -1;
 		GameWindow gameWindow = new GameWindow();
 		gameWindow.setVisible(false);
 		((ClientGamePacketHandler)super.getHandler()).setGameWindow(gameWindow);
