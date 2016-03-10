@@ -5,7 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
 import com.tpps.application.network.core.packet.Packet;
@@ -27,6 +28,8 @@ public class ClientConnectionThread extends Thread {
 	private final Client parent;
 	private final PacketHandler receiver;
 	private int countSent = 0, countReceived = 0;
+
+	private ExecutorService threadPool = Executors.newCachedThreadPool();
 
 	/** disconnects from the server */
 	public void disconnect() throws IOException {
@@ -95,22 +98,23 @@ public class ClientConnectionThread extends Thread {
 					byte[] data = new byte[length];
 					inStream.readFully(data);
 					countReceived++;
+					
 					// start async receiver
-					new Thread(() -> receiver.handleReceivedPacket(clientSocket.getLocalPort(),
-							PacketType.getPacket(data))).start();
+					threadPool.submit(() -> receiver.handleReceivedPacket(clientSocket.getLocalPort(),
+							PacketType.getPacket(data)));
 
 				} catch (IOException e) {
-					System.out.println("Network Error: Connection Lost.");
+					System.out.println("[Network] Error: Connection Lost.");
 					parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
-					interrupt();
 					parent.tryReconnect();
+					this.interrupt();
 				}
 			}
 		} catch (IOException e) {
-			System.out.println("Network Error: Connection Lost.");
+			System.out.println("[Network] Error: Connection Lost.");
 			parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
-			interrupt();
 			parent.tryReconnect();
+			this.interrupt();
 		}
 
 		if (!clientSocket.isClosed()) {
@@ -121,9 +125,10 @@ public class ClientConnectionThread extends Thread {
 			}
 		}
 		parent.setDisconnected();
+		return;
 	}
 
-	private ConcurrentLinkedQueue<Packet> packetQueue = new ConcurrentLinkedQueue<>();
+	private PacketQueue<Packet> packetQueue = new PacketQueue<>();
 
 	/**
 	 * sends the bytes over the network to the connected server.

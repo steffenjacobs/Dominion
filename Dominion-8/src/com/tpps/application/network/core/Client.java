@@ -25,8 +25,6 @@ public class Client {
 	private SocketAddress address;
 
 	private NetworkListenerManager listenerManager = new NetworkListenerManager();
-	
-
 
 	/**
 	 * Tries to connect to the specified server (5sec timeout)
@@ -71,22 +69,26 @@ public class Client {
 	 * @author Steffen Jacobs
 	 */
 	private void connectAndLoopLogic() {
-		long CONNECTION_TIMEOUT = 5000;
-
+		int CONNECTION_TIMEOUT = 5000;
+		Socket clientSocket = null;
 		while (!Thread.interrupted()) {
+			System.out.println("trying again");
 			this.connected = false;
 			try {
 				try {
-					final Socket clientSocket = SocketFactory.getDefault().createSocket();
-					clientSocket.connect(address, 5000);
-					System.out.println("Connected to Server.");
+					clientSocket = SocketFactory.getDefault().createSocket();
+					clientSocket.connect(address, CONNECTION_TIMEOUT);
+					System.out.println("[NETWORK-INFO] Connected to Server.");
 					this.connected = true;
 					connectionThread = new ClientConnectionThread(clientSocket, handler, this);
 					connectionThread.start();
-					Thread.yield();
 				} catch (ConnectException ex) {
 					this.connected = false;
-					System.out.println("Connection refused. Reconnecting...");
+					clientSocket.close();
+					if (connectionThread != null && !connectionThread.isInterrupted()) {
+						connectionThread.interrupt();
+					}
+					System.out.println("NETWORK-ERROR] Connection refused. Reconnecting...");
 				}
 				Thread.sleep(50);
 				if (this.connected) {
@@ -134,7 +136,12 @@ public class Client {
 	 */
 	public void tryReconnect() {
 		connected = false;
-		connectAndLoop(true);
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		new Thread(() -> connectAndLoop(false)).start();
 	}
 
 	/**
@@ -150,6 +157,11 @@ public class Client {
 			e.printStackTrace();
 		}
 		this.connectionThread.interrupt();
+
+		if (this.connecting) {
+			this.tryToConnectThread.interrupt();
+			System.out.println("stoppped reconnect-attempt");
+		}
 	}
 
 	/**
@@ -173,11 +185,10 @@ public class Client {
 			}).start();
 
 		} else {
-			System.out.println("NETWORK ERROR: Could not send packet: No Connection.");
+			System.out.println("[NETWORK] Error: Could not send packet: No Connection.");
 			this.connectAndLoop(true);
 		}
 	}
-	
 
 	/**
 	 * @return wheter the client is connected to the server
@@ -195,7 +206,7 @@ public class Client {
 	public void setDisconnected() {
 		this.connected = false;
 	}
-	
+
 	/**
 	 * needed for testing
 	 * 
