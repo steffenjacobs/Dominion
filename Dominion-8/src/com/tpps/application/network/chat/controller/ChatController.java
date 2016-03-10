@@ -3,9 +3,9 @@ package com.tpps.application.network.chat.controller;
 import java.util.ArrayList;
 
 public class ChatController {
+	
+	public ChatController(String user) {
 
-	public ChatController() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	public void createChatroom(ArrayList<String> members){

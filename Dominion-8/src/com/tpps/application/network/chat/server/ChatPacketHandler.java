@@ -114,7 +114,6 @@ public class ChatPacketHandler extends PacketHandler{
 		this.chatrooms.add(new ChatRoom(clientsByUserRoom, server));
 	}
 		
-	//TODO: test this epic method
 	public boolean deleteChatRoom(int id){		
 		for (Iterator<ChatRoom> iterator = chatrooms.iterator(); iterator.hasNext();) {
 			ChatRoom chatroom = iterator.next();
@@ -164,7 +163,7 @@ public class ChatPacketHandler extends PacketHandler{
 		return server;
 	}
 
-	public void setServer(ChatServer server) {
+	public void init(ChatServer server) {
 		this.server = server;
 		this.global = new GlobalChat(server, this);
 	}
