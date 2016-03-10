@@ -28,6 +28,7 @@ public class ClientConnectionThread extends Thread {
 	private final Client parent;
 	private final PacketHandler receiver;
 	private int countSent = 0, countReceived = 0;
+	private Thread sendThread=null;
 
 	private ExecutorService threadPool = Executors.newCachedThreadPool();
 
@@ -87,7 +88,8 @@ public class ClientConnectionThread extends Thread {
 			parent.getListenerManager().fireConnectEvent(this.getRemotePort());
 
 			// start async sender
-			new Thread(() -> this.workQueue()).start();
+			sendThread = new Thread(() -> this.workQueue());
+			sendThread.start();
 
 			// start sync receiver
 			while (!Thread.interrupted()) {
@@ -108,6 +110,7 @@ public class ClientConnectionThread extends Thread {
 					parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
 					parent.tryReconnect();
 					this.interrupt();
+					this.sendThread.interrupt();
 				}
 			}
 		} catch (IOException e) {
@@ -115,6 +118,7 @@ public class ClientConnectionThread extends Thread {
 			parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
 			parent.tryReconnect();
 			this.interrupt();
+			this.sendThread.interrupt();
 		}
 
 		if (!clientSocket.isClosed()) {
