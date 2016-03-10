@@ -31,6 +31,7 @@ public class GameWindow extends JFrame {
 	private GraphicFramework framework;
 	private DisplayValue buy,coin,action;
 	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards;
+	private ButtonClass stopDiscard;
 	public static String coins, buys, actions;
 	private static final double CORRECTION_16TO9 = 16/ (double) 9;
 	
@@ -73,9 +74,10 @@ public class GameWindow extends JFrame {
 
 		closeButton = new ButtonClass(0.98, 0.01, 0.015, 0.015*CORRECTION_16TO9, WIDTH, WIDTH, 1, closeImage, framework, "");
 
-		endActionPhase = new ButtonClass(0.75, 0.1, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End ActionPhase");
-		playTreasures = new ButtonClass(0.75, 0.2, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Play Treasures");
-		endTurn = new ButtonClass(0.75, 0.3, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
+		endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End ActionPhase");
+		playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Play Treasures");
+		stopDiscard = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Discard");
+		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
 		
 		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,String.valueOf(GameConstant.INIT_ACTIONS));
 		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework,String.valueOf(GameConstant.INIT_TREASURES));
@@ -85,7 +87,9 @@ public class GameWindow extends JFrame {
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 		framework.addComponent(closeButton);
 		framework.addComponent(endActionPhase);		
+		framework.addComponent(stopDiscard);
 		framework.addComponent(endTurn);
+		
 		framework.addComponent(action);
 		framework.addComponent(coin);
 		framework.addComponent(buy);
