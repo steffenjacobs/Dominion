@@ -37,6 +37,7 @@ public class ServerConnectionThread extends Thread {
 		this.receiver = receiver;
 		this.clientSocket = clientSocket;
 		this.parent = _parent;
+		parent.getListenerManager().fireConnectEvent(this.clientSocket.getPort());
 	}
 
 	/**
@@ -84,6 +85,7 @@ public class ServerConnectionThread extends Thread {
 					parent.getHandler().output("Connection Lost with " + this.clientSocket.getInetAddress() + ":"
 							+ this.clientSocket.getPort());
 					parent.removeClientThread(this.clientSocket.getPort());
+					parent.getListenerManager().fireDisconnectEvent(this.clientSocket.getPort());
 					interrupt();
 				}
 			}
@@ -91,6 +93,7 @@ public class ServerConnectionThread extends Thread {
 			parent.getHandler().output(
 					"Connection Lost with " + this.clientSocket.getInetAddress() + ":" + this.clientSocket.getPort());
 			parent.removeClientThread(this.clientSocket.getPort());
+			parent.getListenerManager().fireDisconnectEvent(this.clientSocket.getPort());
 			interrupt();
 		}
 
@@ -145,5 +148,10 @@ public class ServerConnectionThread extends Thread {
 				}
 			}
 		}
+	}
+	
+	/**@return the client's port*/
+	public int getPort(){
+		return clientSocket.getPort();
 	}
 }

@@ -148,9 +148,27 @@ public class GraphicFramework extends JPanel {
 			if (obj.isVisible())
 				g.drawImage(obj.getImage(), (int) obj.getLocation().getX(), (int) obj.getLocation().getY(), null);
 		}
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		
 		g.drawString(GameWindow.coins, 10, 10);
 		g.drawString(GameWindow.buys, 10, 20);
 		g.drawString(GameWindow.actions, 10, 30);
+
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
+		//TODO: NISHIT! YOU WILL DIE FOR THIS!
 	}
 
 	/**
@@ -159,7 +177,9 @@ public class GraphicFramework extends JPanel {
 	 * @author Steffen Jacobs
 	 */
 	private void redrawWithoutRaytrace(GameObject obj) {
-		this.repaint((int) obj.getLocation().getX(), (int) obj.getLocation().getY(), obj.getWidth(), obj.getHeight());
+		obj.resizeObject(parent.getWidth(), parent.getHeight());
+		this.repaint(obj.getHitbox());
+		System.out.println(obj.getHitbox());
 	}
 
 	/**
@@ -197,7 +217,7 @@ public class GraphicFramework extends JPanel {
 	public void addComponent(GameObject obj) {
 		gameObjects.put(obj.getID(), obj);
 		this.redrawWithoutRaytrace(obj);
-		this.repaint(obj.getHitbox());
+//		this.repaint(obj.getHitbox());
 	}
 
 	/**

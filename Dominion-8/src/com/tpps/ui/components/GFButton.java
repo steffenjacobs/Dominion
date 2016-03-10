@@ -3,7 +3,6 @@ package com.tpps.ui.components;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.io.IOException;
 
@@ -75,10 +74,8 @@ public abstract class GFButton extends GameObject {
 		try {
 			customFont = Loader.importFont();
 		} catch (FontFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if (this.caption != null)

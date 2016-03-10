@@ -1,4 +1,4 @@
-package com.tpps.application.network.chat;
+package com.tpps.application.network.chat.packets;
 
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.core.packet.PacketType;
@@ -8,7 +8,7 @@ public class PacketSendAnswer extends Packet{
 	private static final long serialVersionUID = 1L;
 	private String answer;
 	
-	protected PacketSendAnswer(String answer) {
+	public PacketSendAnswer(String answer) {
 		super(PacketType.SEND_CHAT_ANSWER);
 		this.answer = answer;
 	}	

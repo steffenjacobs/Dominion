@@ -1,4 +1,4 @@
-package com.tpps.application.network.chat;
+package com.tpps.application.network.chat.server;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,27 +36,6 @@ public class Votekick {
 			return false;
 		}
 		if(this.vote_yes > this.vote_no){//go for kick
-			return true;
-		}else{
-			return false;//no kick
-		}
-	}
-	
-	public boolean fullEvaluateVote(){
-		int voteyes = 0;
-		int voteno = 0;
-		for (Entry<String, Boolean> entry : alreadyvoted.entrySet()) {
-		    boolean vote = entry.getValue();
-		    if(vote){
-		    	voteyes++;
-		    }else{
-		    	voteno++;
-		    }
-		}
-		if((voteyes + voteno) <= notvotedyet.size()){	//the minority has voted => no kick
-			return false;
-		}
-		if(voteyes > voteno){//go for kick
 			return true;
 		}else{
 			return false;//no kick

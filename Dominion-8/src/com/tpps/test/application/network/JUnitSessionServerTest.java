@@ -131,7 +131,7 @@ public class JUnitSessionServerTest {
 				bulk.release(1);
 			}).start();
 		}
-		Thread.sleep(10000);
+		Thread.sleep(120000);
 		assertEquals(sessionClient.getConnectionThread().getCountReceived(), count);
 		assertEquals(sessionClient.getConnectionThread().getCountSent(), count);
 		assertEquals(count, bulk.availablePermits());

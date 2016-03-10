@@ -14,11 +14,14 @@ import com.tpps.ui.components.GFButton;
 
 public class ButtonClass extends GFButton {
 	private static final long serialVersionUID = 1520424079770080041L;
+	private Image original;
 
-	public ButtonClass(double relativeX, double relativeY, double relativeWidth, double relativeHeight,
-			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
-		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage,
-				_parent, caption);
+	public ButtonClass(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
+			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
+		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,
+				caption);
+		this.original = super.getOriginalImage();
+		super.updateImage(GraphicsUtil.setAlpha(super.getOriginalImage(), .6f));
 	}
 
 	@Override
@@ -28,25 +31,23 @@ public class ButtonClass extends GFButton {
 
 	@Override
 	public void onMouseEnter() {
+		super.updateImage(original);
 
 	}
 
 	@Override
 	public void onMouseExit() {
-		if (this.getCaption().equals("End ActionPhase")){
-			this.updateImage(GraphicsUtil.setAlpha(this.getImage(), 0.6f));
-		}
+		super.updateImage(GraphicsUtil.setAlpha(super.getOriginalImage(), .6f));
 
 	}
 
 	@Override
 	public void onMouseClick() {
 
-		
 		if (this.getCaption().equals("")) {
 			System.exit(0);
 		}
-		if (this.getCaption().equals("End ActionPhase")){
+		if (this.getCaption().equals("End ActionPhase")) {
 			try {
 				System.out.println("EndActionPhase");
 				this.getParent().removeComponent(this);
@@ -56,8 +57,8 @@ public class ButtonClass extends GFButton {
 				e.printStackTrace();
 			}
 		}
-		
-		if (this.getCaption().equals("Play Treasures")){
+
+		if (this.getCaption().equals("Play Treasures")) {
 			try {
 				System.out.println("PacketPlayTreasures");
 				this.getParent().removeComponent(this);
@@ -68,12 +69,12 @@ public class ButtonClass extends GFButton {
 			}
 		}
 		System.out.println("Caption: " + this.getCaption());
-		if (this.getCaption().equals("End Turn")){
+		if (this.getCaption().equals("End Turn")) {
 			try {
 				this.getParent().addComponent(GameWindow.endActionPhase);
 				System.out.println("Packet EndTurn");
 				DominionController.getInstance().getGameClient().sendMessage(new PacketEndTurn());
-			}catch(IOException ioe){
+			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			}
 		}
@@ -87,9 +88,8 @@ public class ButtonClass extends GFButton {
 
 	@Override
 	public String toString() {
-		return "@" + System.identityHashCode(this) + " - " + super.getLocation() + " , " + super.getDimension()
-				+ " , " + super.getLayer() + " , " + super.getImage() + " , " + super.getParent() + " , "
-				+ super.getCaption();
+		return "@" + System.identityHashCode(this) + " - " + super.getLocation() + " , " + super.getDimension() + " , "
+				+ super.getLayer() + " , " + super.getImage() + " , " + super.getParent() + " , " + super.getCaption();
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.components.MainMenuButton;
+import com.tpps.ui.gameplay.GameWindow;
 
 /**
  * 
@@ -157,7 +158,7 @@ public class MainMenuPanel extends JPanel {
 			if (buttons[1].isOn(e.getX(), e.getY())) {
 				MainMenuPanel.this.parent.dispose();
 				try {
-					GameWindowOld.setInstance(new GameWindowOld());
+					new GameWindow();
 				} catch (IOException e1) {				
 					e1.printStackTrace();
 				}				

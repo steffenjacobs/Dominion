@@ -1,9 +1,14 @@
-package com.tpps.application.network.chat;
+package com.tpps.application.network.chat.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Scanner;
 
+import com.tpps.application.network.chat.packets.PacketChatHandshake;
+import com.tpps.application.network.chat.packets.PacketSendAnswer;
+import com.tpps.application.network.chat.packets.PacketSendChatAll;
+import com.tpps.application.network.chat.packets.PacketSendChatCommand;
+import com.tpps.application.network.chat.packets.PacketSendChatToClient;
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
@@ -82,7 +87,7 @@ public class ChatClient extends PacketHandler{
 	}
 	
 	public static void main(String[] args) {
-		ChatClient c = new ChatClient("nico");
+		ChatClient c = new ChatClient("steffen");
 		System.out.println("I am: " + c.sender);
 		Scanner scanInput = new Scanner(System.in);
 		String line = null;

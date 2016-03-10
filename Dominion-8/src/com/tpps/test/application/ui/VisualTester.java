@@ -1,6 +1,5 @@
-package com.tpps.ui;
+package com.tpps.test.application.ui;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -15,27 +14,29 @@ import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.ui.GameObject;
+import com.tpps.ui.GraphicFramework;
+import com.tpps.ui.RelativeGeom2D;
 import com.tpps.ui.components.GFButton;
 
-public class GameWindowOld extends JFrame {
+public class VisualTester extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
 
-	private static GameWindowOld instance;
+	private static VisualTester instance;
 
-	public static GameWindowOld getInstance() {
+	public static VisualTester getInstance() {
 		return instance;
 	}
 	
-	public static GameWindowOld setInstance(GameWindowOld gw){
+	public static VisualTester setInstance(VisualTester gw){
 		instance = gw;
 		return gw;
 	}
 
 	public static void main(String[] args) throws IOException {
-		instance = new GameWindowOld();
+		instance = new VisualTester();
 	}
 
-	Container c;
 	JButton button;
 	private GraphicFramework framework;
 
@@ -44,7 +45,7 @@ public class GameWindowOld extends JFrame {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public GameWindowOld() throws IOException {
+	public VisualTester() throws IOException {
 		instance = this;
 //		JFrame frame = new JFrame();
 //		frame.setSize(100, 100);
@@ -54,7 +55,6 @@ public class GameWindowOld extends JFrame {
 //		frame.add(gf);
 		final int WIDTH = 1280, HEIGHT = 720;
 
-		c = this.getContentPane();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(WIDTH, HEIGHT);
 		this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
@@ -81,8 +81,10 @@ public class GameWindowOld extends JFrame {
 
 		new Thread(() -> {
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				framework.moveObject(gfb, new RelativeGeom2D(.4, .4));
+				Thread.sleep(2000);
+				gfb.updateImage(GraphicsUtil.setAlpha(gfb.getOriginalImage(), .5f));
 				Thread.sleep(5000);
 				framework.removeComponent(gfb);
 			} catch (Exception e) {

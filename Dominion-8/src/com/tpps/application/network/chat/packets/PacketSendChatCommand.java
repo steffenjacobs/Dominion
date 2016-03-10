@@ -1,4 +1,4 @@
-package com.tpps.application.network.chat;
+package com.tpps.application.network.chat.packets;
 
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.core.packet.PacketType;
@@ -10,7 +10,7 @@ public class PacketSendChatCommand extends Packet{
 	private String chatcommand;
 	
 	
-	protected PacketSendChatCommand(String sender, String chatmessage) {
+	public PacketSendChatCommand(String sender, String chatmessage) {
 		super(PacketType.SEND_CHAT_COMMAND);
 		this.sender = sender;
 		this.chatcommand = chatmessage;
