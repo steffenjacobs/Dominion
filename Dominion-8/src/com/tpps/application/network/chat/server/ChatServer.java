@@ -17,7 +17,7 @@ public class ChatServer extends Server{
 		super(new InetSocketAddress(domain, port), new ChatPacketHandler());		
 		this.chatpackethandler = (ChatPacketHandler) super.getHandler();
 		this.chatpackethandler.setParent(this);
-		this.chatpackethandler.setServer(this);
+		this.chatpackethandler.init(this);
 		this.setConsoleOutput();		
 	}
 	
@@ -73,8 +73,7 @@ public class ChatServer extends Server{
 				System.out.println("Bad Syntax, Type in 'help' for info");
 				scanInput.close();
 			}
-		}
-		
+		}		
 	}
 
 	public static void main(String[] args) {
