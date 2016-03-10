@@ -317,4 +317,8 @@ public class ChatRoom {
 		}
 		return "ID: " + this.id + " Members: " + membersAsString;
 	}
+	
+	public ConcurrentHashMap<String, Integer> getClientsByUsername() {
+		return clientsByUsername;
+	}
 }
