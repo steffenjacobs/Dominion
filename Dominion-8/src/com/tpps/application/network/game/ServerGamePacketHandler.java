@@ -58,12 +58,16 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case CARD_PLAYED:
 				String cardID = ((PacketPlayCard) packet).getCardID();
 				System.out.println(server.getGameController().getGamePhase());
-
-				Player activePlayer = this.server.getGameController().getActivePlayer();
 				
-					if (this.server.getGameController().checkHandCardExistsAppendToPlayedCardList(cardID)) {
+				Player activePlayer = this.server.getGameController().getActivePlayer();
+					
+					if (this.server.getGameController().isTreasureOnHand(cardID)){
+						return;
+					}
+				
+					if (this.server.getGameController().validateTurnAndExecute(cardID)) {
 						
-						System.out.println("My Coins: " + activePlayer.getCoins());
+						
 						server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
 								activePlayer.getCoins()));
 						if(this.server.getGameController().getActivePlayer().getActions() == 0){
@@ -71,7 +75,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 						}
 						server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 						server.broadcastMessage(new PacketSendPlayedCardsToAllClients(
-								CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
+								CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getPlayedCards())));
 					}else{
 						try {
 							if (this.server.getGameController().checkBoardCardExistsAppendToDiscardPile(cardID)){
@@ -104,7 +108,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				server.sendMessage(port, new PacketSendHandCards(CollectionsUtil
 						.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 				server.broadcastMessage(new PacketSendPlayedCardsToAllClients(
-						CollectionsUtil.getCardIDs(this.server.getGameController().getPlayedCards())));
+						CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getPlayedCards())));
 				server.sendMessage(port,
 						new PacketUpdateTreasures(server.getGameController().getActivePlayer().getCoins()));
 				break;

@@ -48,4 +48,6 @@ public final class GameConstant {
 	public static final int GOLD_VALUE = 3;
 	public static final int GOLD_COST = 6;	
 	
+	
+	
 }

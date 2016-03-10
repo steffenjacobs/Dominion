@@ -34,6 +34,8 @@ public enum CardAction {
 	/* z.B. bei Miliz */
 	DISCARD_CARD, 
 	
+	DISCARD_AND_DRAW,
+	
 	/* z.B. bei Kapelle */
 	TRASH_CARD, 
 	

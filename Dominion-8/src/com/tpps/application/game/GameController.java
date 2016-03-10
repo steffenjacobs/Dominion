@@ -16,7 +16,7 @@ import com.tpps.technicalServices.util.GameConstant;
 public class GameController {
 
 	private LinkedList<Player> players;
-	private LinkedList<Card> playedCards;
+	
 	private boolean gameNotFinished;
 	private Player activePlayer;
 	private GameBoard gameBoard;
@@ -24,7 +24,7 @@ public class GameController {
 
 	public GameController() {
 		this.players = new LinkedList<Player>();
-		this.playedCards = new LinkedList<Card>();
+		
 		this.gameBoard = new GameBoard();
 
 		this.gameNotFinished = true;
@@ -46,6 +46,10 @@ public class GameController {
 
 	}
 
+	public void checkForVictoryCard() {
+
+	}
+
 	/**
 	 * checks whether a card which was clicked exists and if it is allowed to
 	 * play this card in this phase of the game. If it is allowed the card is
@@ -54,24 +58,34 @@ public class GameController {
 	 * @param cardID
 	 * @throws SynchronisationException
 	 */
-	public boolean checkHandCardExistsAppendToPlayedCardList(String cardID) {
-		if (this.gamePhase.equals("actionPhase")) {
-			Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
-			if (card != null && card.getTypes().contains(CardType.ACTION) &&
-					this.getActivePlayer().getActions() > 0) {
-				CollectionsUtil.addCardToList(this.getActivePlayer().playCard(cardID), this.playedCards);
-				if (this.getActivePlayer().getActions() == 0){
-					this.setBuyPhase();
-				}
-				return true;
+	public boolean validateTurnAndExecute(String cardID) {
+
+		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
+		
+		if (card != null) {
+			if (this.gamePhase.equals("actionPhase")) {
+				
+				if (card.getTypes().contains(CardType.ACTION) && this.getActivePlayer().getActions() > 0) {
+					System.out.println("in der if");
+				
+						
+						this.getActivePlayer().playCard(cardID);
+						
+					} else {
+						
+						this.setBuyPhase();
+					}
+					return true;
+				
 			}
-		}
-		if (this.gamePhase.equals("buyPhase")) {
-			Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
-			if (card != null && card.getTypes().contains(CardType.TREASURE)) {
-				System.out.println("thecard is a Treasure clicked in the buyphase");
-				CollectionsUtil.addCardToList(this.getActivePlayer().playCard(cardID), this.playedCards);
-				return true;
+			if (this.gamePhase.equals("buyPhase")) {
+
+				if (card.getTypes().contains(CardType.TREASURE)) {
+					
+					System.out.println("thecard is a Treasure clicked in the buyphase");
+					this.getActivePlayer().playCard(cardID);
+					return true;
+				}
 			}
 		}
 		return false;
@@ -84,8 +98,7 @@ public class GameController {
 		System.out.println("Boardcard: " + card);
 		System.out.println("Buys: " + this.getActivePlayer().getBuys());
 		System.out.println("coins: " + this.getActivePlayer().getCoins());
-		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0 && 
-				player.getCoins() >= card.getCost()) {
+		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0 && player.getCoins() >= card.getCost()) {
 			System.out.println("co");
 			player.setBuys(player.getBuys() - 1);
 			player.setCoins(player.getCoins() - card.getCost());
@@ -97,22 +110,42 @@ public class GameController {
 		return false;
 
 	}
+	
+	/**
+	 * checks if the card according to the given cardId is a tresure card on the hand
+	 * @param cardId
+	 */
+	public boolean isTreasureOnHand(String cardId){
+		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardId);
+		if (card == null){
+			return false;
+		}else{
+			if (card.getTypes().contains(CardType.TREASURE)){
+				return true;
+			}
+			else{
+				return false;
+			}
+			
+		}		
+	}
 
 	/**
 	 * calls the play Treasures method of the player adds the returned treasure
 	 * cards from the player cardHand to the playedCard list
 	 */
 	public void playTreasures() {
-		CollectionsUtil.appendListToList(this.getActivePlayer().playTreasures(), this.playedCards);
+		this.getActivePlayer().playTreasures();
 	}
 
 	/**
 	 * 
 	 */
 	public void organizePilesAndrefreshCardHand() {
-		CollectionsUtil.appendListToList(this.playedCards, this.getActivePlayer().getDeck().getDiscardPile());
+		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
 		this.getActivePlayer().getDeck().refreshCardHand();
-		this.playedCards = new LinkedList<Card>();
+		
+		this.getActivePlayer().refreshPlayedCardsList();
 	}
 
 	/**
@@ -139,13 +172,6 @@ public class GameController {
 		this.players = players;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	public LinkedList<Card> getPlayedCards() {
-		return playedCards;
-	}
 
 	/**
 	 * 
@@ -271,9 +297,9 @@ public class GameController {
 	public void startGame() {
 		this.gamePhase = "actionPhase";
 	}
-	
+
 	public void endGame() {
-		
+
 	}
 
 	/**
