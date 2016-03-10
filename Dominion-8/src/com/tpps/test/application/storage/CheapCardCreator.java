@@ -94,6 +94,7 @@ public class CheapCardCreator {
 //		Cellar		
 		actions.remove(CardAction.IS_VICTORY);
 		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "1");
+		actions.put(CardAction.DISCARD_AND_DRAW, "-1");
 		types.remove(CardType.VICTORY);
 		types.add(CardType.ACTION);
 		cards.put("Cellar", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(), 
