@@ -1,4 +1,4 @@
-package com.tpps.application.network.chat;
+package com.tpps.application.network.chat.server;
 
 import java.util.ArrayList;
 import java.util.Iterator;

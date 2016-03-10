@@ -1,4 +1,4 @@
-package com.tpps.application.network.chat;
+package com.tpps.application.network.chat.controller;
 
 import java.util.ArrayList;
 

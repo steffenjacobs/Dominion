@@ -1,10 +1,15 @@
-package com.tpps.application.network.chat;
+package com.tpps.application.network.chat.server;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.tpps.application.network.chat.packets.PacketChatHandshake;
+import com.tpps.application.network.chat.packets.PacketChatVote;
+import com.tpps.application.network.chat.packets.PacketSendChatAll;
+import com.tpps.application.network.chat.packets.PacketSendChatCommand;
+import com.tpps.application.network.chat.packets.PacketSendChatToClient;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
 

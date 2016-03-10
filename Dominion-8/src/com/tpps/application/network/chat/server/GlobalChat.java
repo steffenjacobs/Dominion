@@ -1,10 +1,14 @@
-package com.tpps.application.network.chat;
+package com.tpps.application.network.chat.server;
 
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.tpps.application.network.chat.packets.PacketSendAnswer;
+import com.tpps.application.network.chat.packets.PacketSendChatAll;
+import com.tpps.application.network.chat.packets.PacketSendChatCommand;
+import com.tpps.application.network.chat.packets.PacketSendChatToClient;
 import com.tpps.application.network.login.SQLHandling.SQLHandler;
 import com.tpps.application.network.login.SQLHandling.SQLOperations;
 
