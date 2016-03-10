@@ -1,4 +1,4 @@
-package com.tpps.ui;
+package com.tpps.test.application.ui;
 
 import java.awt.Dimension;
 import java.awt.Image;
@@ -14,24 +14,27 @@ import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.ui.GameObject;
+import com.tpps.ui.GraphicFramework;
+import com.tpps.ui.RelativeGeom2D;
 import com.tpps.ui.components.GFButton;
 
-public class GameWindowOld extends JFrame {
+public class VisualTester extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
 
-	private static GameWindowOld instance;
+	private static VisualTester instance;
 
-	public static GameWindowOld getInstance() {
+	public static VisualTester getInstance() {
 		return instance;
 	}
 	
-	public static GameWindowOld setInstance(GameWindowOld gw){
+	public static VisualTester setInstance(VisualTester gw){
 		instance = gw;
 		return gw;
 	}
 
 	public static void main(String[] args) throws IOException {
-		instance = new GameWindowOld();
+		instance = new VisualTester();
 	}
 
 	JButton button;
@@ -42,7 +45,7 @@ public class GameWindowOld extends JFrame {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public GameWindowOld() throws IOException {
+	public VisualTester() throws IOException {
 		instance = this;
 //		JFrame frame = new JFrame();
 //		frame.setSize(100, 100);
