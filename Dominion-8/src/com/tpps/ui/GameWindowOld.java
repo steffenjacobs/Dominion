@@ -1,6 +1,5 @@
 package com.tpps.ui;
 
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -35,7 +34,6 @@ public class GameWindowOld extends JFrame {
 		instance = new GameWindowOld();
 	}
 
-	Container c;
 	JButton button;
 	private GraphicFramework framework;
 
@@ -54,7 +52,6 @@ public class GameWindowOld extends JFrame {
 //		frame.add(gf);
 		final int WIDTH = 1280, HEIGHT = 720;
 
-		c = this.getContentPane();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setSize(WIDTH, HEIGHT);
 		this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
@@ -81,8 +78,10 @@ public class GameWindowOld extends JFrame {
 
 		new Thread(() -> {
 			try {
-				Thread.sleep(5000);
+				Thread.sleep(2000);
 				framework.moveObject(gfb, new RelativeGeom2D(.4, .4));
+				Thread.sleep(2000);
+				gfb.updateImage(GraphicsUtil.setAlpha(gfb.getOriginalImage(), .5f));
 				Thread.sleep(5000);
 				framework.removeComponent(gfb);
 			} catch (Exception e) {
