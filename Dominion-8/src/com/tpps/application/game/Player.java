@@ -166,16 +166,16 @@ public class Player {
 			String value = serverCard.getActions().get(act);
 			switch (act) {
 			case ADD_ACTION_TO_PLAYER:
-				actions += Integer.parseInt(value);
+				this.actions += Integer.parseInt(value);
 				break;
 			case ADD_PURCHASE:
-				buys += Integer.parseInt(value);
+				this.buys += Integer.parseInt(value);
 				break;
 			case ADD_TEMPORARY_MONEY_FOR_TURN:
-				coins += Integer.parseInt(value);
+				this.coins += Integer.parseInt(value);
 				break;
 			case DRAW_CARD:
-				 getDeck().draw(Integer.parseInt(value));
+				this.getDeck().draw(Integer.parseInt(value));
 				break;
 			case GAIN_CARD:
 				System.out.println(value);
@@ -190,10 +190,11 @@ public class Player {
 				this.getDeck().discardCard(serverCard);
 				break;
 			case TRASH_CARD:
-				System.out.println("TRASH: " + serverCard.getActions().get(CardAction.TRASH_CARD));
+				this.getDeck().trash(serverCard, new LinkedList<Card>() /* HOW?? muss der trashPile uebergeben werden, wir koennen aber aus der trash Methode nicht drauf zugreifen */);
+				// return?
 				break;
 			case PUT_BACK:
-				System.out.println("PUT_BACK: " + serverCard.getActions().get(CardAction.PUT_BACK));
+				this.getDeck().putBack(serverCard);
 				break;
 			case REVEAL_CARD:
 				System.out.println("REVEAL: " + serverCard.getActions().get(CardAction.REVEAL_CARD));
@@ -202,16 +203,13 @@ public class Player {
 				this.coins += Integer.parseInt(serverCard.getActions().get(CardAction.IS_TREASURE));
 				break;
 			case IS_VICTORY:
-				System.out.println("is victory");
+				// what?
 				break;
 			default:
 				break;
 			}
 		}
-		
-		
-		
-		this.getDeck().getCardHand().remove(serverCard);
+//		this.getDeck().getCardHand().remove(serverCard);
 		return serverCard;
 	}
 }
