@@ -78,6 +78,9 @@ public class ButtonClass extends GFButton {
 				ioe.printStackTrace();
 			}
 		}
+		if (this.getCaption().equals("Stop Discard")) {
+			System.out.println("juhuu Lukas");
+		}
 	}
 
 	@Override
