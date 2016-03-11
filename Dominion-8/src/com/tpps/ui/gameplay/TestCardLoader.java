@@ -14,6 +14,7 @@ public class TestCardLoader {
 		 CardStorageController cs =  new CardStorageController();
 		 LinkedHashMap<String,SerializedCard> hand = new LinkedHashMap<>();
 		 LinkedHashMap<String,SerializedCard> table = new LinkedHashMap<String, SerializedCard>();
+		 LinkedHashMap<String,SerializedCard> middle = new LinkedHashMap<String, SerializedCard>();
 		 HashMap<String,SerializedCard> estate = new HashMap<>();
 		 HashMap<String,SerializedCard> coins = new HashMap<>();
 		 cs.loadCards();
@@ -29,11 +30,17 @@ public class TestCardLoader {
 		 for (int i = 0; i < 9; i++) {
 			hand.put(s+="s",cs.getCard("Gold"));
 		}
+		 
+		 for (int i = 0; i < 15; i++) {
+			middle.put(s+="s",cs.getCard("Gold"));
+		}
+		 
 		 GameWindow gw = new GameWindow();
 		 gw.tableActionCards(table);
 		 gw.handCards(hand);
 		 gw.coinCards(coins);
 		 gw.victoryCards(estate);
+		 gw.middleCards(middle);
 	}
 	
 	public static void main(String[] args) throws IOException {

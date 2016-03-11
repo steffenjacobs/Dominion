@@ -29,7 +29,7 @@ public class GameWindow extends JFrame {
 	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage,displayImageBuys,displayImageActions,displayImageCoins;
 	private GraphicFramework framework;
 	private DisplayValue buy,coin,action;
-	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards;
+	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards,middleCards;
 	private ButtonClass stopDiscard;
 	public static String coins, buys, actions;
 	private static final double CORRECTION_16TO9 = 16/ (double) 9;
@@ -52,6 +52,7 @@ public class GameWindow extends JFrame {
 		this.tableCards = new LinkedList<Card>();
 		this.victoryCards = new LinkedList<Card>();
 		this.coinCards = new LinkedList<Card>();
+		this.middleCards = new LinkedList<Card>();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 //		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
 //		 this.setUndecorated(true);
@@ -184,7 +185,31 @@ public class GameWindow extends JFrame {
 		}
 
 	}
-
+	
+	public void middleCards(LinkedHashMap<String,SerializedCard> middleCards){
+		LinkedList<String> actionCardlds = new LinkedList<>(middleCards.keySet());
+		int k = 14;
+		double sub = handCards.size();
+		double shift = ((1 - (sub / 10)) / 2);
+		
+		for (Iterator<Card> iterator = this.middleCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.middleCards = new LinkedList<Card>();
+	for (int i = 0; i < middleCards.size(); i++) {
+		
+		SerializedCard serializedCard = middleCards.get(actionCardlds.get(i));
+		
+		Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+				serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.05,
+				0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+		framework.addComponent(card);
+		this.middleCards.add(card);
+	}	
+	}
+	
+	
 	public void handCards(LinkedHashMap<String, SerializedCard> handCards) {
 		LinkedList<String> actionCardlds = new LinkedList<>(handCards.keySet());
 		int k = 14;
@@ -192,8 +217,7 @@ public class GameWindow extends JFrame {
 		double shift = (1 - (sub / 10)) / 2;
 		double shiftSmall = shift - 0.03;
 		double shiftOne = shiftSmall - 0.03;
-		System.out.println(shift);
-		
+
 		
 		for (Iterator<Card> iterator = this.handCards.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
