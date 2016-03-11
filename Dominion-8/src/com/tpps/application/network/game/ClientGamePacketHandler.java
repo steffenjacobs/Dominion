@@ -80,6 +80,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			break;
 		case START_DISCARD_MODE:
 			this.gameWindow.addStopDiscardButton();
+			
 			break;
 		case END_DISCARD_MODE:
 			this.gameWindow.removeStopDiscardButton();

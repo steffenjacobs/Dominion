@@ -14,7 +14,7 @@ public class PacketStartDiscardMode extends Packet {
 	private static final long serialVersionUID = 6105464482068904968L;
 
 	public PacketStartDiscardMode() {
-		super(PacketType.END_DISCARD_MODE);
+		super(PacketType.START_DISCARD_MODE);
 	}
 
 	/**

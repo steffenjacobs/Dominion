@@ -277,6 +277,7 @@ public class Player {
 				this.discardMode = true;
 				this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
 				((GameServer)(GameServer.getInstance())).sendMessage(port, new PacketStartDiscardMode());
+				
 				break;
 			case TRASH_CARD:
 				// this.getDeck().trash(serverCard, new LinkedList<Card>() /*
@@ -284,6 +285,7 @@ public class Player {
 				// aus der trash Methode nicht drauf zugreifen */);
 				System.out.println((GameServer.getInstance()));
 				((GameServer)(GameServer.getInstance())).sendMessage(port, new PacketStartTrashMode());
+				
 				this.trashMode = true;
 				this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
 				// return?
