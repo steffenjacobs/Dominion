@@ -142,7 +142,7 @@ public class ChatPacketHandler extends PacketHandler{
 			this.global.getClientsByUsername().remove(clients.get(j));
 			clientsByUserRoom.put(clients.get(j), port);
 		}
-		this.chatrooms.add(new ChatRoom(clientsByUserRoom, server));
+		this.chatrooms.add(new ChatRoom(clientsByUserRoom, server, this));
 	}
 		
 	/**
@@ -239,4 +239,13 @@ public class ChatPacketHandler extends PacketHandler{
 	public ArrayList<ChatRoom> getChatrooms() {
 		return chatrooms;
 	}
+	
+	public void kickPlayer(String usertogetkicked){
+		ChatRoom chatroom = this.getSpecificChatRoom(usertogetkicked);
+		int port = chatroom.getClientsByUsername().get(usertogetkicked);
+		chatroom.getClientsByUsername().remove(usertogetkicked, port);
+		
+		this.global.getClientsByUsername().put(usertogetkicked, port);
+	}
+	
 }
