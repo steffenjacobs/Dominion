@@ -22,11 +22,11 @@ public class Deck {
 	/**
 	 * 
 	 */
-	public Deck() {
+	public Deck(LinkedList<Card> initCards) {
 		this.drawPile = new LinkedList<Card>();
 		this.discardPile = new LinkedList<Card>();
 		this.cardHand = new LinkedList<Card>();
-		this.init();
+		this.init(initCards);
 	}
 
 	/**
@@ -45,12 +45,10 @@ public class Deck {
 	 * initializes the deck with 7 COPPER cards and 3 ESTATE cards
 	 * shuffles the deck and draws 5 cards from the drawPile
 	 */
-	private void init() {
+	private void init(LinkedList<Card> initCards) {
 		if (this.drawPile != null) {
-			CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.ESTATE_VALUE)),CollectionsUtil.linkedList(CardType.VICTORY),"Estate", GameConstant.ESTATE_COST), 3,	this.drawPile);
-			Card.resetClassID();
-			CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.COPPER_VALUE)),CollectionsUtil.linkedList(CardType.TREASURE),"Copper", GameConstant.COPPER_COST), 7, this.drawPile);
-			Card.resetClassID();
+			CollectionsUtil.appendListToList(initCards, this.drawPile);		
+			
 			this.shuffleDrawPile();
 		}
 		this.draw(GameConstant.INIT_CARD_HAND_SIZE);

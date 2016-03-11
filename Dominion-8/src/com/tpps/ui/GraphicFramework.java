@@ -179,7 +179,7 @@ public class GraphicFramework extends JPanel {
 	private void redrawWithoutRaytrace(GameObject obj) {
 		obj.resizeObject(parent.getWidth(), parent.getHeight());
 		this.repaint(obj.getHitbox());
-		System.out.println(obj.getHitbox());
+//		System.out.println(obj.getHitbox());
 	}
 
 	/**

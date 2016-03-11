@@ -1,24 +1,28 @@
 package com.tpps.application.game.card;
 
-public class Tuple<A, B> {
+public class Tuple<A> {
 	private A a;
-	private B b;
+	private int val;
 	
-	public Tuple(A a, B b){
+	public Tuple(A a, int val){
 		this.a = a;
-		this.b = b;
+		this.val = val;
 	}
 
 	public A getFirstEntry() {
 		return a;
 	}
 
-	public B getB() {
-		return b;
+	public int getSecondEntry() {
+		return val;
+	}
+	
+	public void decrementSecondEntry(){
+		this.val--;
 	}
 	
 	public String toString(){
-		return "First entry: " + a + "second entry: " + b;
+		return "First entry: " + a + "second entry: " + val;
 	}
 	
 	

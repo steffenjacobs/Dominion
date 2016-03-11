@@ -1,7 +1,6 @@
 package com.tpps.ui.gameplay;
 
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -54,8 +53,8 @@ public class GameWindow extends JFrame {
 		this.victoryCards = new LinkedList<Card>();
 		this.coinCards = new LinkedList<Card>();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
-		 this.setUndecorated(true);
+//		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
+//		 this.setUndecorated(true);
 		coins = "Coins: ";
 		buys = "Buys: ";
 		actions = "Actions: ";
@@ -111,12 +110,19 @@ public class GameWindow extends JFrame {
 	}
 	
 	public void reset() {
-//		GameWindow.actions = "Actions " + GameConstant.INIT_ACTIONS;
-//		GameWindow.coins = "Coins " + GameConstant.INIT_TREASURES;
-//		GameWindow.buys = "Purchases " + GameConstant.INIT_PURCHASES;
-		buy.renewCaption(String.valueOf(GameConstant.INIT_PURCHASES));
-		coin.renewCaption(String.valueOf(GameConstant.INIT_TREASURES));
-		action.renewCaption(String.valueOf(GameConstant.INIT_ACTIONS));
+
+		this.framework.removeComponent(action);
+		this.framework.removeComponent(coin);
+		this.framework.removeComponent(buy);
+		
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,String.valueOf(GameConstant.INIT_ACTIONS));
+		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework,String.valueOf(GameConstant.INIT_TREASURES));
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework,String.valueOf(GameConstant.INIT_PURCHASES));
+		
+		this.framework.addComponent(action);
+		this.framework.addComponent(coin);
+		this.framework.addComponent(buy);
+		
 		this.framework.addComponent(endActionPhase);
 		this.repaint();
 	}
@@ -195,6 +201,7 @@ public class GameWindow extends JFrame {
 		}
 		this.handCards = new LinkedList<Card>();
 		
+		System.out.println("im Gamewindow handcardSize" + handCards.size());
 		for (int i = 0; i < handCards.size(); i++) {
 
 			SerializedCard serializedCard = handCards.get(actionCardlds.get(i));
@@ -248,13 +255,25 @@ public class GameWindow extends JFrame {
 	}
 	
 	public void setCaptionCoins(String caption){
-		coin.renewCaption(caption);
+		framework.removeComponent(coin);
+		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework, caption);
+		framework.addComponent(coin);
+//		coin.renewCaption(caption);
+//		this.repaint();
 	}
 	public void setCaptionActions(String caption){
-		action.renewCaption(caption);
+		framework.removeComponent(action);
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,String.valueOf(GameConstant.INIT_ACTIONS));
+		framework.addComponent(action);
+//		action.renewCaption(caption);
+//		this.repaint();
 	}
 	public void setCaptionBuys(String caption){
-		buy.renewCaption(caption);
+		framework.removeComponent(buy);
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework,String.valueOf(GameConstant.INIT_PURCHASES));
+		framework.addComponent(buy);;
+//		buy.renewCaption(caption);
+//		this.repaint();
 	}
 	
 	public void endActionPhase(){

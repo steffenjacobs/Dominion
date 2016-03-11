@@ -1,14 +1,10 @@
 package com.tpps.application.network.game;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 
-import com.tpps.application.game.Deck;
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
-import com.tpps.application.game.card.Card;
-import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
@@ -61,9 +57,19 @@ public class ServerGamePacketHandler extends PacketHandler {
 				
 				Player activePlayer = this.server.getGameController().getActivePlayer();
 					
-					if (this.server.getGameController().isTreasureOnHand(cardID)){
+					if (this.server.getGameController().isVictoryCardOnHand(cardID) && 
+							!this.server.getGameController().getActivePlayer().getDiscardMode()
+							&& !this.server.getGameController().getActivePlayer().getTrashMode()){
 						return;
 					}
+					
+					if (this.server.getGameController().getActivePlayer().getDiscardMode() || 
+							this.server.getGameController().getActivePlayer().getTrashMode()){
+						if (this.server.getGameController().checkCardExistsAndDiscardOrTrash(cardID)){
+							server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+							return;
+						}
+					}					
 				
 					if (this.server.getGameController().validateTurnAndExecute(cardID)) {
 						
@@ -92,7 +98,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 							e.printStackTrace();
 						}
 					}
-				
+					
 
 
 				break;
@@ -177,7 +183,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 */
 	private void addPlayerAndCheckPlayerCount(int port, int clientId) throws IOException {
 		try {
-			server.getGameController().addPlayer(new Player(clientId, port));
+			server.getGameController().addPlayer(new Player(clientId, port, 
+					this.server.getGameController().getGameBoard().getStartSet()));
 			server.sendMessage(port, new PacketSendClientId(clientId));
 			if (server.getGameController().getPlayers().size() == 4) {
 				server.getGameController().startGame();

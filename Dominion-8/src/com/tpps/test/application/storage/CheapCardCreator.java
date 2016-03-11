@@ -99,7 +99,12 @@ public class CheapCardCreator {
 		types.add(CardType.ACTION);
 		cards.put("Cellar", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(), 
 				(LinkedList<CardType>) types.clone(), 2, "Cellar", getImg("Cellar")));
-		
+//		Chapel
+		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
+		actions.remove(CardAction.DISCARD_AND_DRAW);
+		actions.put(CardAction.TRASH_CARD, "4");
+		cards.put("Chapel", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 2, "Chapel", getImg("Chapel")));
 		
 
 		// setup Dummy-DominionController

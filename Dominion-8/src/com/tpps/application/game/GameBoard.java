@@ -91,21 +91,21 @@ public class GameBoard {
 	}
 
 	/**
-	 * 
+	 * return the ids of the treasure Cards lying at the top of the treasureCards table
 	 */
 	public LinkedList<String> getTreasureCardIDs() {
 		return getCardIDs(this.tableForTreasureCards);
 	}
 
 	/**
-	 * 
+	 * returns the ids of the victory Cards lying at the top of the victoryCards table
 	 */
 	public LinkedList<String> getVictoryCardIDs() {
 		return getCardIDs(this.tableForVictoryCards);
 	}
 
 	/**
-	 * 
+	 * returns the ids of the action Cards lying at the top of the actionCards table
 	 */
 	public LinkedList<String> getActionCardIDs() {
 		return getCardIDs(this.tableForActionCards);
@@ -113,7 +113,7 @@ public class GameBoard {
 	
 
 	/**
-	 * 
+	 * returns the ids of the cards selected through the key of the hashMap lying at the end of the list
 	 */
 	public LinkedList<String> getCardIDs(LinkedHashMap<String, LinkedList<Card>> table) {
 		Set<String> keys = table.keySet();
@@ -158,6 +158,7 @@ public class GameBoard {
 		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.GOLD_VALUE)), CollectionsUtil.linkedList(CardType.TREASURE), "Gold", GameConstant.GOLD_COST), GameConstant.INIT_PILE_SIZE, goldList);
 		this.tableForTreasureCards.put("Gold", goldList);
 		Card.resetClassID();
+		
 	}
 
 	/**
@@ -223,6 +224,12 @@ public class GameBoard {
 		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[]{CardAction.ADD_ACTION_TO_PLAYER, CardAction.DISCARD_AND_DRAW}), CollectionsUtil.linkedList(new String[]{"1", "-1"})), 
 				CollectionsUtil.linkedList(CardType.ACTION), "Cellar", 2), 10, cellarList);
 		this.tableForActionCards.put("Cellar", cellarList);
+		Card.resetClassID();
+		
+		LinkedList<Card> chapelList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.TRASH_CARD, "4"), 
+				CollectionsUtil.linkedList(CardType.ACTION), "Chapel", 2), 10, chapelList);
+		this.tableForActionCards.put("Chapel", chapelList);
 		Card.resetClassID();
 //		
 //		// 2
@@ -297,6 +304,21 @@ public class GameBoard {
 		} else {
 			throw new SynchronisationException();
 		}
+	}
+	
+	public LinkedList<Card> getStartSet(){
+		LinkedList<Card> startCards = new LinkedList<Card>();
+		LinkedList<Card> copperList = this.tableForTreasureCards.get(GameConstant.COPPER);
+		
+		for (int i = 0; i < GameConstant.INIT_COPPER_CARDS; i++){
+			startCards.add(copperList.get(i));
+		}
+		
+		LinkedList<Card> estateList = this.tableForVictoryCards.get(GameConstant.ESTATE);
+		for (int i = 0; i < GameConstant.INIT_ESTATE_CARDS; i++){
+			startCards.add(estateList.get(i));
+		}
+		return startCards;
 	}
 	
 	/**

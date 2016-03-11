@@ -1,5 +1,6 @@
 package com.tpps.application.game;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
@@ -49,6 +50,15 @@ public class GameController {
 	public void checkForVictoryCard() {
 
 	}
+	
+	public boolean checkCardExistsAndDiscardOrTrash(String cardID){
+		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
+		if (card != null){
+			this.getActivePlayer().discardOrTrash(cardID, this.getGameBoard().getTrashPile());
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * checks whether a card which was clicked exists and if it is allowed to
@@ -63,6 +73,7 @@ public class GameController {
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
 		
 		if (card != null) {
+			
 			if (this.gamePhase.equals("actionPhase")) {
 				
 				if (card.getTypes().contains(CardType.ACTION) && this.getActivePlayer().getActions() > 0) {
@@ -95,16 +106,13 @@ public class GameController {
 		LinkedList<Card> cards = this.getGameBoard().findCardListFromBoard(cardID);
 		Card card = cards.get(cards.size() - 1);
 		Player player = this.getActivePlayer();
-		System.out.println("Boardcard: " + card);
-		System.out.println("Buys: " + this.getActivePlayer().getBuys());
-		System.out.println("coins: " + this.getActivePlayer().getCoins());
+		
 		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0 && player.getCoins() >= card.getCost()) {
-			System.out.println("co");
+			
 			player.setBuys(player.getBuys() - 1);
 			player.setCoins(player.getCoins() - card.getCost());
 			cards.remove(cards.size() - 1);
-			CollectionsUtil.addCardToList(card, player.getDeck().getDiscardPile());
-			System.out.println("card buyed");
+			CollectionsUtil.addCardToList(card, player.getDeck().getDiscardPile());			
 			return true;
 		}
 		return false;
@@ -115,12 +123,12 @@ public class GameController {
 	 * checks if the card according to the given cardId is a tresure card on the hand
 	 * @param cardId
 	 */
-	public boolean isTreasureOnHand(String cardId){
+	public boolean isVictoryCardOnHand(String cardId){
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardId);
 		if (card == null){
 			return false;
 		}else{
-			if (card.getTypes().contains(CardType.TREASURE)){
+			if (card.getTypes().contains(CardType.VICTORY)){
 				return true;
 			}
 			else{
@@ -142,6 +150,9 @@ public class GameController {
 	 * 
 	 */
 	public void organizePilesAndrefreshCardHand() {
+		System.out.println("organize and refresh");
+		System.out.println(Arrays.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getDeck().getDiscardPile()).toArray()));
+		System.out.println(Arrays.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getPlayedCards()).toArray()));
 		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
 		this.getActivePlayer().getDeck().refreshCardHand();
 		

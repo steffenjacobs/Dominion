@@ -84,7 +84,7 @@ public class Card extends GameObject {
 		this.cost = cost;
 		this.types = types;
 		this.id = this.name + classID++;
-		System.out.println(id);
+//		System.out.println(id);
 	}
 
 	// clone constructor
@@ -127,7 +127,7 @@ public class Card extends GameObject {
 
 	@Override
 	public void onMouseEnter() {
-		System.out.println("entered");
+		
 	}
 
 	@Override
