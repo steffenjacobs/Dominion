@@ -166,6 +166,7 @@ public class GameController {
 	public void endTurn() {
 		this.setNextActivePlayer();
 		this.getActivePlayer().resetPlayerValues();
+		this.getActivePlayer().refreshPlayedCardsList();
 		this.setActionPhase();
 	}
 

@@ -2,6 +2,7 @@ package com.tpps.application.network.chat.server;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map.Entry;
@@ -64,7 +65,7 @@ public class ChatRoom {
 		    	continue;
 		    }
 		    int port = entry.getValue();
-		    PacketSendAnswer answer = new PacketSendAnswer(message);
+		    PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + sender + ": " + message);
 		    try {
 				server.sendMessage(port, answer);
 			} catch (IOException e) {			
@@ -82,7 +83,7 @@ public class ChatRoom {
 			votekick.getNotvotedyet().add(packet.getSender());
 			votekick.addVote(packet.getSender(), packet.getVoted());
 		}else{
-			PacketSendAnswer answer = new PacketSendAnswer("You voted already");
+			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "You voted already");
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
 			} catch (IOException e) {			
@@ -97,11 +98,21 @@ public class ChatRoom {
 	 */
 	public void sendChatToChatRoomClient(PacketSendChatToClient packet){
 		String sender = packet.getSender();
-		String receiver = packet.getReceiver();
+		String receiver = packet.getReceiver().trim();
 		String message = packet.getMessage();
 		
+		if(!this.clientsByUsername.containsKey(receiver)){
+			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "The User '" + receiver + "' doesn't exist in this chatroom" );
+			try {
+				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
+			} catch (IOException e) {			
+				e.printStackTrace();
+			}
+			return;
+		}
+		
 		int port = this.clientsByUsername.get(receiver);
-		PacketSendAnswer answer = new PacketSendAnswer("Message from " + sender + ": " + message);
+		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "PM from " + sender + ": " + message);
 		try {
 			server.sendMessage(port, answer);
 		} catch (IOException e) {		
@@ -110,7 +121,7 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * This method is responsible to send a private message to a client
+	 * This method is responsible to send a message back to a client
 	 * @param sender a String representation of the nickname who sent the message
 	 * @param answer the packet which receive the receiver (including the message)
 	 */
@@ -130,7 +141,7 @@ public class ChatRoom {
 	public void evaluateCommand(PacketSendChatCommand packet){		
 		if(packet.getChatmessage().startsWith("votekick ")){
 			if(this.votekick != null){
-				PacketSendAnswer answer6 = new PacketSendAnswer("There is an active vote currently");
+				PacketSendAnswer answer6 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There is an active vote currently");
 				try {
 					this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer6);
 				} catch (IOException e) {				
@@ -285,7 +296,7 @@ public class ChatRoom {
 	         //----------------------
 			
 		}catch(ArrayIndexOutOfBoundsException e){
-			PacketSendAnswer answer7 = new PacketSendAnswer("Wrong command " + packet.getChatmessage());
+			PacketSendAnswer answer7 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "Wrong command " + packet.getChatmessage());
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer7);
 			} catch (IOException e1) {					
@@ -301,13 +312,13 @@ public class ChatRoom {
 	 */
 	private void evaluateCommand6(PacketSendChatCommand packet){
 		if(this.votekick == null){
-			PacketSendAnswer answer = new PacketSendAnswer("There is currently no vote");
+			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There is currently no vote");
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
 		}		
 		
 		if(this.votekick.checkIfUserVoted(packet.getSender())){
-			PacketSendAnswer answer = new PacketSendAnswer("You voted already");
+			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "You voted already");
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
 			return;
@@ -315,16 +326,16 @@ public class ChatRoom {
 		
 		if(packet.getChatmessage().startsWith("vote y")){
 			this.votekick.addVote(packet.getSender(), true);
-			PacketSendAnswer answer = new PacketSendAnswer("You voted successfully");
+			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "You voted successfully");
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
 		}else if(packet.getChatmessage().startsWith("vote n")){
 			this.votekick.addVote(packet.getSender(), false);
-			PacketSendAnswer answer = new PacketSendAnswer("You voted successfully");
+			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "You voted successfully");
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
 		}else{
-			PacketSendAnswer answer = new PacketSendAnswer("Your vote command failed, [y/n] is avaible ");
+			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "Your vote command failed, [y/n] is avaible ");
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
 		}
@@ -336,7 +347,7 @@ public class ChatRoom {
 	 */
 	private void evaluateCommand7(PacketSendChatCommand packet){
 		if(this.votekickresults == null){
-			PacketSendAnswer answerx = new PacketSendAnswer("There are no votekick results");
+			PacketSendAnswer answerx = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There are no votekick results");
 			this.sendChatToChatRoomClient(packet.getSender(), answerx);
 		}else{
 			PacketSendAnswer answerx = new PacketSendAnswer(this.votekickresults);
@@ -349,7 +360,8 @@ public class ChatRoom {
 	 * @param msg a String representation of text message to send
 	 */
 	public void sendMessageToAll(String msg){
-		PacketSendAnswer answer = new PacketSendAnswer(msg);
+		String message = ChatServer.sdf.format(new Date().getTime()) + msg;
+		PacketSendAnswer answer = new PacketSendAnswer(message);
 		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 			int port = entry.getValue();
 			try {
