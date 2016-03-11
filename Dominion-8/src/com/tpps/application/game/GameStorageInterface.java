@@ -106,17 +106,17 @@ public class GameStorageInterface {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		try {
-//			new GameStorageInterface(new GameWindow())
-//					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		Matcher matcher = Pattern.compile("\\d+").matcher("TESt243");
-		matcher.find();		
-		System.out.println("Start: " + matcher.start() + "Ende: " + matcher.end());
-		System.out.println("TESt243".substring(matcher.start(), matcher.end()));
+		try {
+			new GameStorageInterface(new GameWindow())
+					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		Matcher matcher = Pattern.compile("\\d+").matcher("TESt243");
+//		matcher.find();		
+//		System.out.println("Start: " + matcher.start() + "Ende: " + matcher.end());
+//		System.out.println("TESt243".substring(matcher.start(), matcher.end()));
 		
 
 	}

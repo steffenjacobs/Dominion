@@ -79,7 +79,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameWindow.endActionPhase();
 			break;
 		case SEND_PLAYED_CARDS_TO_ALL_CLIENTS:
-			
+//			this.
 			break;
 		// case PLAY_TREASURES:
 		// gameGui.disableActionCards();
