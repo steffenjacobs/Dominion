@@ -57,7 +57,7 @@ public class LoginClient extends PacketHandler {
 		Password pw = new Password(plaintext, new String("defsalt")); // defsalt is a standardsalt
 																					
 		try {
-			String pwAsString = pw.getHashedPasswordAsString();
+			String pwAsString = pw.getHashedPassword();
 			PacketLoginCheckRequest check = new PacketLoginCheckRequest(nickname, pwAsString);
 			c_login.sendMessage(check);
 			System.out.println("sent accountinformation hashed to the login server");
@@ -105,7 +105,7 @@ public class LoginClient extends PacketHandler {
 		this.usernamenewacc = username;
 		this.plaintext = plaintext;
 		Password pw = new Password(plaintext, new String("defsalt"));
-		PacketRegisterRequest packet = new PacketRegisterRequest(username, pw.getHashedPasswordAsString(), email);
+		PacketRegisterRequest packet = new PacketRegisterRequest(username, pw.getHashedPassword(), email);
 		try {
 			c_login.sendMessage(packet);
 		} catch (IOException e) {

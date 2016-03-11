@@ -61,7 +61,7 @@ public class LoginPacketHandler extends PacketHandler{
 			try {
 				Password pw = new Password(pac.getHashedPW(), salt);
 				pw.createHashedPassword();
-				String doublehashed = pw.getHashedPasswordAsString();
+				String doublehashed = pw.getHashedPassword();
 				waitingForSessionAnswer.put(pac.getUsername(), port);
 				if(SQLOperations.rightDoubleHashedPassword(pac.getUsername(), doublehashed)){
 					System.out.println("calculated hash match with hash out of the database");
@@ -102,8 +102,8 @@ public class LoginPacketHandler extends PacketHandler{
 			String email = castedPac.getEmail();
 			String firsthashedpw = castedPac.getHashedPW();
 			Password pw2 = new Password(firsthashedpw);
-			String genereatedrandomsalt = pw2.getSaltAsString();
-			String doublehashedpw = pw2.getHashedPasswordAsString();
+			String genereatedrandomsalt = pw2.getSalt();
+			String doublehashedpw = pw2.getHashedPassword();
 			
 			int state = SQLOperations.createAccount(username, email, doublehashedpw, genereatedrandomsalt);
 			if(state == 1){
