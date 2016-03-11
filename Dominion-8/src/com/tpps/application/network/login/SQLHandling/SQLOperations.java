@@ -69,7 +69,7 @@ public class SQLOperations {
 				+ "nickname NVARCHAR(24) PRIMARY KEY NOT NULL,"
 				+ "email NVARCHAR(256) NOT NULL,"
 				+ "salt_hashed_pw NVARCHAR(256) NOT NULL,"
-				+ "salt NVARCHAR(8) NOT NULL);";
+				+ "salt NVARCHAR(16) NOT NULL);";
 		try {
 			Statement stmt = SQLHandler.getConnection().createStatement();
 			stmt.executeUpdate(sqlStatement);
@@ -104,6 +104,7 @@ public class SQLOperations {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Nickname already in use, Primary Key vialotion");
+			e.printStackTrace();
 			return 2;			
 		}
 		System.out.println("Account " + nickname + " created successful");		

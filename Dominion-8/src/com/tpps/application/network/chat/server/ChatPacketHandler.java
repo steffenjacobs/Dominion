@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.tpps.application.network.chat.packets.PacketChatController;
 import com.tpps.application.network.chat.packets.PacketChatHandshake;
 import com.tpps.application.network.chat.packets.PacketChatVote;
 import com.tpps.application.network.chat.packets.PacketSendChatAll;
@@ -86,10 +87,25 @@ public class ChatPacketHandler extends PacketHandler{
 				room5.handleVote(castedpacket5);
 			}
 			break;
+		case CHAT_CONTROLLER:
+			PacketChatController castedpacket6 = (PacketChatController) packet;
+			this.evaluateChatController(castedpacket6);
+			break;
 		default:
 			System.out.println("sth went wrong with received packet");
 			break;
 		
+		}
+	}
+	
+	private void evaluateChatController(PacketChatController packet){
+		switch(packet.getCommand()){
+		case "createChatroom":
+			this.addChatRoom(packet.getMembers());
+			break;
+		case "deleteChatroom":
+			this.deleteChatRoom(packet.getMemberOfChatRoom());
+			break;
 		}
 	}
 	
@@ -240,6 +256,10 @@ public class ChatPacketHandler extends PacketHandler{
 		return chatrooms;
 	}
 	
+	/**
+	 * This method moves the kicked player from the old chatroom to the global chat
+	 * @param usertogetkicked
+	 */
 	public void kickPlayer(String usertogetkicked){
 		ChatRoom chatroom = this.getSpecificChatRoom(usertogetkicked);
 		int port = chatroom.getClientsByUsername().get(usertogetkicked);
@@ -247,5 +267,7 @@ public class ChatPacketHandler extends PacketHandler{
 		
 		this.global.getClientsByUsername().put(usertogetkicked, port);
 	}
+	
+	
 	
 }
