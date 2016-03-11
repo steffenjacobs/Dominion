@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 
 import com.tpps.technicalServices.util.PhysicsUtil;
 import com.tpps.ui.GameObject.CompareByLayer;
-import com.tpps.ui.gameplay.GameWindow;
 
 /**
  * general framework handling all the graphic objects@author Steffen Jacobs
@@ -38,7 +37,9 @@ public class GraphicFramework extends JPanel {
 	 * @author Steffen Jacobs
 	 */
 	public void moveGameObjectTo(GameObject obj, double x, double y) {
+		Rectangle area = obj.getHitbox();
 		obj.moveTo(new RelativeGeom2D(x, y));
+		this.repaintSpecificArea(area);
 	}
 
 	/**
@@ -179,7 +180,7 @@ public class GraphicFramework extends JPanel {
 	private void redrawWithoutRaytrace(GameObject obj) {
 		obj.resizeObject(parent.getWidth(), parent.getHeight());
 		this.repaint(obj.getHitbox());
-//		System.out.println(obj.getHitbox());
+
 	}
 
 	/**

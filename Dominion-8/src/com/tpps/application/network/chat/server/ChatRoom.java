@@ -15,9 +15,14 @@ import com.tpps.application.network.chat.packets.PacketSendChatAll;
 import com.tpps.application.network.chat.packets.PacketSendChatCommand;
 import com.tpps.application.network.chat.packets.PacketSendChatToClient;
 
+/**
+ * This class delivers all functionalities to run a chatroom
+ * @author jhuhn - Johannes Huhn
+ */
 public class ChatRoom {
 
 	private ChatServer server;
+	private ChatPacketHandler chatpackethandler;
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
 	private int id;
 	private static int idcounter = 1;
@@ -30,16 +35,26 @@ public class ChatRoom {
 	private final static String servercommand6 = "vote [y/n] only use in a active vote";
 	private final static String servercommand7 = "show votekickresults";
 	
-	private String votekickresults;
-	
+	private String votekickresults;	
 	private Votekick votekick;
 	
-	public ChatRoom(ConcurrentHashMap<String, Integer> clientsByUser, ChatServer server){
+	/**
+	 * initializes the ChatRoom object
+	 * @param clientsByUser a ConcuttentHashMap that handle all clients and ports for this chatroom object
+	 * @param server the serverobject which is important to send packets
+	 */
+	public ChatRoom(ConcurrentHashMap<String, Integer> clientsByUser, ChatServer server, ChatPacketHandler chatpackethandler){
 		this.clientsByUsername = clientsByUser;
 		this.server = server;
 		this.id = idcounter++;
+		this.chatpackethandler = chatpackethandler;
 	}
 	
+	/**
+	 * This method sends a packet to all clients in a chatroom except the user that sent the packet,
+	 * used for public chat in chatroom
+	 * @param packet a packet that received the server from a user (public chat)
+	 */	
 	public void sendChatToAllExceptSender(PacketSendChatAll packet){
 		String message = packet.getChatmessage();
 		String sender = packet.getUsername();
@@ -58,6 +73,10 @@ public class ChatRoom {
 		}
 	}
 	
+	/**
+	 * this method either counts a vote from a user or sends a message back that he already voited
+	 * @param packet the packet that received to cast a vote
+	 */
 	public void handleVote(PacketChatVote packet){
 		if(votekick.getNotvotedyet().contains(packet.getSender())){
 			votekick.getNotvotedyet().add(packet.getSender());
@@ -72,6 +91,10 @@ public class ChatRoom {
 		}
 	}
 	
+	/**
+	 * This method is responsible to send a private message to a client
+	 * @param packet the packet that received the server. it contains a private message
+	 */
 	public void sendChatToChatRoomClient(PacketSendChatToClient packet){
 		String sender = packet.getSender();
 		String receiver = packet.getReceiver();
@@ -86,6 +109,11 @@ public class ChatRoom {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param sender
+	 * @param answer
+	 */
 	public void sendChatToChatRoomClient(String sender, PacketSendAnswer answer){
 		int port = this.clientsByUsername.get(sender);
 		try {
@@ -215,7 +243,7 @@ public class ChatRoom {
 	            	//if(second % 5 == 0 && second != 0){
 	            	if(second == 5  && second != 0){
 	            		System.out.println("Noch " + second + " Sekunden");
-	            		ChatRoom.this.sendMEssageToAll("Noch " + second + " Sekunden!");
+	            		ChatRoom.this.sendMessageToAll("Noch " + second + " Sekunden!");
 	            	}else 
 	            	if(second <= 0){
 	            		System.out.println("Votekick zu ende");	            		
@@ -281,7 +309,7 @@ public class ChatRoom {
 	}
 	
 	
-	public void sendMEssageToAll(String msg){
+	public void sendMessageToAll(String msg){
 		PacketSendAnswer answer = new PacketSendAnswer(msg);
 		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 			int port = entry.getValue();
@@ -293,12 +321,17 @@ public class ChatRoom {
 		}
 	}
 	
-	public void evaluateVotekick(){		
+	public void evaluateVotekick(){
+		String getkicked = this.votekick.getUsertogetkicked();
+		if(this.votekick.fastEvaluateVote()){			
+			this.chatpackethandler.kickPlayer(getkicked);
+			this.sendMessageToAll("Der Spieler " + getkicked + " wird gekickt!");			
+		}else{
+			this.sendMessageToAll("Der Spieler " + getkicked + " wird nicht gekickt!");
+		}
 		this.votekickresults = this.votekick.printResults();
 		System.out.println(this.votekickresults);
-		ChatRoom.this.votekick = null;
-		ChatRoom.this.sendMEssageToAll("Der Votekick ist vorbei.");//TODO: say clients userxy will be kicked or not
-																	//TODO: execute the kick
+		ChatRoom.this.votekick = null; 			//TODO: execute the kick
 	}
 	
 	

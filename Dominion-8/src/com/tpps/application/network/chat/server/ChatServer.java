@@ -7,12 +7,22 @@ import java.util.Scanner;
 
 import com.tpps.application.network.core.Server;
 
+/**
+ * This class represents one instance of the serverobject
+ * This serverobject is able to read and interprete commands
+ * @author jhuhn - Johannes Huhn
+ */
 public class ChatServer extends Server{
 	
 	public static String domain = "127.0.0.1";
 	public static int port = 1340;
 	private ChatPacketHandler chatpackethandler ;
 
+	/**
+	 * initializes the chatserver object
+	 * @throws IOException
+	 * @author jhuhn - Johannes Huhn
+	 */
 	public ChatServer() throws IOException {
 		super(new InetSocketAddress(domain, port), new ChatPacketHandler());		
 		this.chatpackethandler = (ChatPacketHandler) super.getHandler();
@@ -21,6 +31,16 @@ public class ChatServer extends Server{
 		this.setConsoleOutput();		
 	}
 	
+	/**
+	 * This method puts a 'Dominion Chat Server' Banner to the console.
+	 * Furthermore this method provides different commands to handle the chatserver
+	 * Commands:
+	 * 	- 'help' This command shows all avaible commands
+	 * 	- 'create chatroom <nick1> <nick2> <nick3> <nick4>' This command create a chatroom with 4 different users
+	 * 	- 'show all chatrooms' This command shows all used chatrooms on this server
+	 * 	- 'delete chatroom <nickname>' This command deletes a chatromm by its ID or by one chatroom member
+	 * @author jhuhn - Johannes Huhn
+	 */
 	private void setConsoleOutput(){
 		System.out.println("            * * * * * * * * * * * * * *      ");
 		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
