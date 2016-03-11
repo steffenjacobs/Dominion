@@ -156,7 +156,7 @@ public class Player {
 	 * new played cardsList
 	 */
 	public void refreshPlayedCardsList() {
-
+		this.playedCards = new LinkedList<Card>();
 	}
 
 	/**

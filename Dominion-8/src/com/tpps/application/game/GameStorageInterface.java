@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
@@ -70,7 +72,12 @@ public class GameStorageInterface {
 		cs.loadCards();
 		for (Iterator<String> iterator = handCardIds.iterator(); iterator.hasNext();) {
 			String handCardId = (String) iterator.next();
-			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, handCardId.length() - 1));
+			
+			
+			Matcher matcher = Pattern.compile("\\d+").matcher(handCardId);
+			matcher.find();		
+			
+			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, matcher.start()));
 			if (serializedCard != null) {
 				System.out.println("hier");
 				serializedCard = new SerializedCard(serializedCard.getActions(), serializedCard.getTypes(),
@@ -99,15 +106,17 @@ public class GameStorageInterface {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		try {
-			new GameStorageInterface(new GameWindow())
-					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));
-			System.out.println("Cellar2".substring("Cellar2".length()-1, "Cellar2".length()));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+//		try {
+//			new GameStorageInterface(new GameWindow())
+//					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));			
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		Matcher matcher = Pattern.compile("\\d+").matcher("TESt243");
+		matcher.find();		
+		System.out.println("Start: " + matcher.start() + "Ende: " + matcher.end());
+		System.out.println("TESt243".substring(matcher.start(), matcher.end()));
 		
 
 	}
