@@ -7,10 +7,27 @@ package com.tpps.technicalServices.logger;
  */
 public enum MsgType {
 
-	INIT,
-	INFO,
-	DEBUG,
-	EXCEPTION,
-	GAME
+	INIT("[INI]"),
+	INFO("[INF]"),
+	DEBUG("[BUG]"),
+	EXCEPTION("[EXC]"),
+	GAME("[GAM]");
+	
+	private String slang;
 
+	/**
+	 * 
+	 * @param slang
+	 */
+	private MsgType(String slang) {
+		this.slang = slang;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public String getSlang() {
+		return this.slang;
+	}
 }
