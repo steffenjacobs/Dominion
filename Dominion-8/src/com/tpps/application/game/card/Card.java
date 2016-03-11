@@ -20,9 +20,12 @@ import com.tpps.ui.GraphicFramework;
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = -4157717625890678601L;
-	private final LinkedHashMap<CardAction, String> actions; // if the card is VICTORY/TREASURE, String is the value (not the cost)
+	/**
+	 * if the card is VICTORY/TREASURE, String is the value (not the cost)
+	 * */
+	private final LinkedHashMap<CardAction, String> actions;
 	private final LinkedList<CardType> types;
-	private final int cost; // cost of the card
+	private final int cost;
 	private final String name;
 	private final String id;
 	private static int classID = 0;
@@ -120,22 +123,42 @@ public class Card extends GameObject {
 
 	// equals
 
+	/**
+	 * 
+	 * @return
+	 */
 	public LinkedHashMap<CardAction, String> getActions() {
 		return actions;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public LinkedList<CardType> getTypes() {
 		return types;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getCost() {
 		return this.cost;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getName() {
 		return this.name;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public String getId() {
 		return id;
 	}
@@ -146,23 +169,35 @@ public class Card extends GameObject {
 	public static void resetClassID() {
 		Card.classID = 0;
 	}
-	
+
+	/**
+	 * 
+	 */
 	@Override
 	public Card clone() {
 		return new Card(this.getActions(), this.getTypes(), this.getName(),
 				this.getCost()/* , this.getParent() */);
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void onMouseEnter() {
 		System.out.println("entered");
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void onMouseExit() {
 		
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void onMouseClick() {
 		System.out.println("MouseClick on Card");
@@ -175,10 +210,16 @@ public class Card extends GameObject {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void onMouseDrag() {
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void onResize(int absWidth, int absHeight) {
 	}

@@ -20,17 +20,24 @@ public class GameLog {
 	private static Color msgtypeColor = Color.red;
 	private static Color msgColor = new Color(215,215,215);
 
-	private static boolean ansiPluginInstalled = true;
+	/**
+	 * if the user has the ANSI plugin installed, set this flag to true so the console log will be colored 
+	 */
+	private static boolean ansiPluginInstalled = false;
 
 	static {
-		init();
+		init(true);
 	}
 	/**
 	 * 
 	 */
-	public static void init() {
-		GameLog.logUI = new LogUI();
-		writeUI("GameLogger4Team++;\n\n", false);
+	public static void init(boolean ui) {
+		String team = "GameLogger4Team++;\n\n";
+		if (ui) {
+			GameLog.logUI = new LogUI();
+			writeUI(team, false);
+		}		
+		writeConsole(team);
 	}
 
 	/**
@@ -158,13 +165,5 @@ public class GameLog {
 			writeConsole(lineAnsi(type) + line);
 		else
 			writeConsole(lineWithoutAnsi(type) + line);
-	}
-
-	/**
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		GameLog.log(MsgType.GAME, "Test");
 	}
 }
