@@ -240,6 +240,10 @@ public class ChatPacketHandler extends PacketHandler{
 		return chatrooms;
 	}
 	
+	/**
+	 * This method moves the kicked player from the old chatroom to the global chat
+	 * @param usertogetkicked
+	 */
 	public void kickPlayer(String usertogetkicked){
 		ChatRoom chatroom = this.getSpecificChatRoom(usertogetkicked);
 		int port = chatroom.getClientsByUsername().get(usertogetkicked);

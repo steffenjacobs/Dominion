@@ -110,9 +110,9 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * 
-	 * @param sender
-	 * @param answer
+	 * This method is responsible to send a private message to a client
+	 * @param sender a String representation of the nickname who sent the message
+	 * @param answer the packet which receive the receiver (including the message)
 	 */
 	public void sendChatToChatRoomClient(String sender, PacketSendAnswer answer){
 		int port = this.clientsByUsername.get(sender);
@@ -123,7 +123,10 @@ public class ChatRoom {
 		}
 	}
 	
-		
+	/**
+	 * 	This method evaluates commands and passes to the right method
+	 * @param packet the packet that received the server from a client
+	 */
 	public void evaluateCommand(PacketSendChatCommand packet){		
 		if(packet.getChatmessage().startsWith("votekick ")){
 			if(this.votekick != null){
@@ -169,6 +172,10 @@ public class ChatRoom {
 		}		
 	}
 	
+	/**
+	 * executes the help command
+	 * @param packet the packet that received the server from a client
+	 */
 	private void evaluateCommand1(PacketSendChatCommand packet){
 		String msg = "Commands: \n/" + servercommand1 + "\n/"
 				+ servercommand2 + "\n/" + servercommand3 + "\n/"
@@ -182,6 +189,10 @@ public class ChatRoom {
 		}
 	}
 	
+	/**
+	 * executes the 'show all clients' command
+	 * @param packet the packet that received the server from a client
+	 */
 	private void evaluateCommand2(PacketSendChatCommand packet){
 		Enumeration<String> clients = this.clientsByUsername.keys();
 		String msg2 = "All connected Clients in this chatroom: \n";
@@ -196,6 +207,10 @@ public class ChatRoom {
 		}
 	}
 	
+	/**
+	 * executes the 'show all ports' command
+	 * @param packet the packet that received the server from a client
+	 */
 	private void evaluateCommand3(PacketSendChatCommand packet){
 		Enumeration<Integer> ports = this.clientsByUsername.elements();
 		String msg3 = "All connected ports in this chatroom: \n";
@@ -210,6 +225,10 @@ public class ChatRoom {
 		}
 	}
 	
+	/**
+	 * executes the 'show all client and ports' command. This command combines servercommand3 & servercommand2
+	 * @param packet the packet that received the server from a client
+	 */
 	private void evaluateCommand4(PacketSendChatCommand packet){
 		Enumeration<Integer> ports2 = this.clientsByUsername.elements();
 		Enumeration<String> clients2 = this.clientsByUsername.keys();
@@ -225,14 +244,23 @@ public class ChatRoom {
 		}
 	}
 	
+	/**
+	 * sets up the votekick command
+	 * @param packet the packet that received the server from a client
+	 */
 	private void evaluateCommand5(PacketSendChatCommand packet){
 		try{	//sets up the votekick
 			String[] words = packet.getChatmessage().split("\\s+");
 			ArrayList<String> notvoted = this.getClients();
 			notvoted.remove(packet.getSender());
-			//TODO: is words[1](user to get kicked) really a username ?
-			this.votekick = new Votekick(notvoted, words[1], packet.getSender());					
 			
+			if(!clientsByUsername.containsKey(words[1])){
+				this.sendChatToChatRoomClient(packet.getSender(), new PacketSendAnswer("The Client '" + words[1] + "' doesn't exist in this chatroom") );
+				return;
+			}
+			
+			this.votekick = new Votekick(notvoted, words[1], packet.getSender());					
+			this.sendMessageToAll("Do you want to kick '" + words[1] + "' vote with '/vote [y/n]'  30 seconds to go"  );
 			//------------Timer----------
 			Timer t = new Timer();
 			t.schedule(new TimerTask(){
@@ -243,10 +271,10 @@ public class ChatRoom {
 	            	//if(second % 5 == 0 && second != 0){
 	            	if(second == 5  && second != 0){
 	            		System.out.println("Noch " + second + " Sekunden");
-	            		ChatRoom.this.sendMessageToAll("Noch " + second + " Sekunden!");
+	            		ChatRoom.this.sendMessageToAll(second + " seconds to go!");
 	            	}else 
 	            	if(second <= 0){
-	            		System.out.println("Votekick zu ende");	            		
+	            		System.out.println("Votekick ends");	            		
 	            		this.cancel();
 	            		t.cancel();
 	            		//evaluate vote
@@ -266,16 +294,20 @@ public class ChatRoom {
 		}
 
 	}
-	
+
+	/**
+	 * evaluate the '/vote ' command
+	 * @param packet the packet that received the server from a client
+	 */
 	private void evaluateCommand6(PacketSendChatCommand packet){
 		if(this.votekick == null){
-			PacketSendAnswer answer = new PacketSendAnswer("Derzeit läuft keine Abstimmung");
+			PacketSendAnswer answer = new PacketSendAnswer("There is currently no vote");
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
 		}		
 		
 		if(this.votekick.checkIfUserVoted(packet.getSender())){
-			PacketSendAnswer answer = new PacketSendAnswer("Du hast schon abgestimmt");
+			PacketSendAnswer answer = new PacketSendAnswer("You voted already");
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
 			return;
@@ -292,12 +324,16 @@ public class ChatRoom {
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
 		}else{
-			PacketSendAnswer answer = new PacketSendAnswer("Vote wird nicht gewertet, [y/n] ist erlaubt");
+			PacketSendAnswer answer = new PacketSendAnswer("Your vote command failed, [y/n] is avaible ");
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
 		}
 	}
 	
+	/**
+	 * executes the votekickresults command
+	 * @param packet the packet that received the server from a client
+	 */
 	private void evaluateCommand7(PacketSendChatCommand packet){
 		if(this.votekickresults == null){
 			PacketSendAnswer answerx = new PacketSendAnswer("There are no votekick results");
@@ -308,7 +344,10 @@ public class ChatRoom {
 		}
 	}
 	
-	
+	/**
+	 * This methods sends a message to all clients in the chatroom
+	 * @param msg a String representation of text message to send
+	 */
 	public void sendMessageToAll(String msg){
 		PacketSendAnswer answer = new PacketSendAnswer(msg);
 		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
@@ -321,20 +360,26 @@ public class ChatRoom {
 		}
 	}
 	
+	/**
+	 * This method evaluates the votekick, if necessary the player gets kicked
+	 */
 	public void evaluateVotekick(){
 		String getkicked = this.votekick.getUsertogetkicked();
 		if(this.votekick.fastEvaluateVote()){			
 			this.chatpackethandler.kickPlayer(getkicked);
-			this.sendMessageToAll("Der Spieler " + getkicked + " wird gekickt!");			
+			this.sendMessageToAll("The player '" + getkicked + "' gets kicked!");			
 		}else{
-			this.sendMessageToAll("Der Spieler " + getkicked + " wird nicht gekickt!");
+			this.sendMessageToAll("The player '" + getkicked + "' stays in the match!");
 		}
 		this.votekickresults = this.votekick.printResults();
 		System.out.println(this.votekickresults);
-		ChatRoom.this.votekick = null; 			//TODO: execute the kick
+		ChatRoom.this.votekick = null; 		
 	}
 	
-	
+	/**
+	 * gets all clients in the chatroom
+	 * @return an Arraylist of Strings with all clients that are connected in the chatroom
+	 */
 	public ArrayList<String> getClients() {
 		ArrayList<String> clientsInChatRoom = new ArrayList<String>();
 		Enumeration<String> clients = this.clientsByUsername.keys();
@@ -344,10 +389,18 @@ public class ChatRoom {
 		return clientsInChatRoom;
 	}
 	
+	/**
+	 * 
+	 * @return the chatroom id as an Integer
+	 */
 	public int getId() {
 		return id;
 	}
 	
+	/**
+	 * overrides the toString() method to get a useful String representation of the chatroom
+	 */
+	@Override
 	public String toString(){
 		Iterator<String> members = this.getClients().iterator();
 		String membersAsString = "";
@@ -357,6 +410,12 @@ public class ChatRoom {
 		return "ID: " + this.id + " Members: " + membersAsString;
 	}
 	
+	/**
+	 * 
+	 * @return the ConcurrentHashMap included all clients by its ports
+	 * 	Key: String: username
+	 * Object: Integer: port
+	 */
 	public ConcurrentHashMap<String, Integer> getClientsByUsername() {
 		return clientsByUsername;
 	}
