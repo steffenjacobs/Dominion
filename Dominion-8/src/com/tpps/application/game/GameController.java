@@ -1,5 +1,6 @@
 package com.tpps.application.game;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -51,7 +52,7 @@ public class GameController {
 
 	}
 	
-	public boolean checkCardExistsAndDiscardOrTrash(String cardID){
+	public boolean checkCardExistsAndDiscardOrTrash(String cardID) throws IOException{
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
 		if (card != null){
 			this.getActivePlayer().discardOrTrash(cardID, this.getGameBoard().getTrashPile());
@@ -66,9 +67,10 @@ public class GameController {
 	 * played
 	 * 
 	 * @param cardID
+	 * @throws IOException 
 	 * @throws SynchronisationException
 	 */
-	public boolean validateTurnAndExecute(String cardID) {
+	public boolean validateTurnAndExecute(String cardID) throws IOException {
 
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
 		
@@ -141,8 +143,9 @@ public class GameController {
 	/**
 	 * calls the play Treasures method of the player adds the returned treasure
 	 * cards from the player cardHand to the playedCard list
+	 * @throws IOException 
 	 */
-	public void playTreasures() {
+	public void playTreasures() throws IOException {
 		this.getActivePlayer().playTreasures();
 	}
 
@@ -169,6 +172,7 @@ public class GameController {
 		this.getActivePlayer().refreshPlayedCardsList();
 		this.setActionPhase();
 	}
+	
 
 	/**
 	 * 

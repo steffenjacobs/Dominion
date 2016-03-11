@@ -11,6 +11,7 @@ import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketSendBoard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
+import com.tpps.application.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
 import com.tpps.application.network.gameSession.packets.PacketUpdateTreasures;
 import com.tpps.application.network.gameSession.packets.PacketUpdateValues;
 import com.tpps.ui.gameplay.GameWindow;
@@ -48,8 +49,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case ENABLE_DISABLE:
 			enableDisable(packet);
 			
-			this.gameWindow.reset();
-			
+			this.gameWindow.reset();	
 			
 			break;
 		case SEND_BOARD:
@@ -78,8 +78,21 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case END_ACTION_PHASE:
 			this.gameWindow.endActionPhase();
 			break;
+		case START_DISCARD_MODE:
+			this.gameWindow.addStopDiscardButton();
+			break;
+		case END_DISCARD_MODE:
+			this.gameWindow.removeStopDiscardButton();
+			break;
+		case START_TRASH_MODE:
+			this.gameWindow.addStopTrashButton();
+			break;
+		case END_TRASH_MODE:
+			this.gameWindow.removeStopTrashButton();
+			break;
 		case SEND_PLAYED_CARDS_TO_ALL_CLIENTS:
-//			this.
+			
+			this.gameStorageInterface.loadPlayedCardsAndPassToGameWindow(((PacketSendPlayedCardsToAllClients)packet).getCardIds());
 			break;
 		// case PLAY_TREASURES:
 		// gameGui.disableActionCards();

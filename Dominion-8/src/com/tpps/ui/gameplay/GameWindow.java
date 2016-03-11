@@ -62,7 +62,7 @@ public class GameWindow extends JFrame {
 		buys = "Buys: ";
 		actions = "Actions: ";
 		this.setMinimumSize(new Dimension(1280, 720));
-		this.setVisible(true);
+//		this.setVisible(true);
 		framework = new GraphicFramework(this);
 		this.add(framework);
 
@@ -89,7 +89,7 @@ public class GameWindow extends JFrame {
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 		framework.addComponent(closeButton);
 		framework.addComponent(endActionPhase);		
-		framework.addComponent(stopDiscard);
+		
 		framework.addComponent(endTurn);
 		
 		framework.addComponent(action);
@@ -127,6 +127,14 @@ public class GameWindow extends JFrame {
 		this.framework.addComponent(buy);
 		
 		this.framework.addComponent(endActionPhase);
+		
+		for (Iterator<Card> iterator = this.middleCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.middleCards = new LinkedList<Card>();
+		
+		
 		this.repaint();
 	}
 
@@ -194,11 +202,7 @@ public class GameWindow extends JFrame {
 		double sub = handCards.size();
 		double shift = ((1 - (sub / 10)) / 2);
 		
-		for (Iterator<Card> iterator = this.middleCards.iterator(); iterator.hasNext();) {
-			Card card = (Card) iterator.next();
-			this.framework.removeComponent(card);		
-		}
-		this.middleCards = new LinkedList<Card>();
+		
 	for (int i = 0; i < middleCards.size(); i++) {
 		
 		SerializedCard serializedCard = middleCards.get(actionCardlds.get(i));
@@ -308,7 +312,27 @@ public class GameWindow extends JFrame {
 	public void endActionPhase(){
 		framework.removeComponent(endActionPhase);
 		framework.addComponent(playTreasures);
+		this.repaint();
 	}
+	
+	public void addStopDiscardButton() {
+		framework.addComponent(stopDiscard);
+		this.repaint();
+	}
+	
+	public void removeStopDiscardButton() {
+		framework.removeComponent(stopDiscard);
+		this.repaint();
+	}
+	
+	public void addStopTrashButton() {
+		
+	}
+	
+	public void removeStopTrashButton() {
+		
+	}
+	
 	public void playTreasures(){
 		framework.removeComponent(playTreasures);
 	}

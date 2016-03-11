@@ -100,6 +100,11 @@ public class GameStorageInterface {
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(actionCardIds);
 		this.gameWindow.tableActionCards(serializedCardWithId);
 	}
+	
+	public void loadPlayedCardsAndPassToGameWindow(LinkedList<String> playedCardIds) {
+		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(playedCardIds);
+		this.gameWindow.middleCards(serializedCardWithId);
+	}
 
 	/**
 	 * 

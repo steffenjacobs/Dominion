@@ -7,6 +7,7 @@ import com.tpps.application.game.DominionController;
 import com.tpps.application.network.gameSession.packets.PacketEndActionPhase;
 import com.tpps.application.network.gameSession.packets.PacketEndTurn;
 import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
+import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -79,7 +80,12 @@ public class ButtonClass extends GFButton {
 			}
 		}
 		if (this.getCaption().equals("Stop Discard")) {
-			System.out.println("juhuu Lukas");
+			try {
+				DominionController.getInstance().getGameClient().sendMessage(new PacketEndDiscardMode());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

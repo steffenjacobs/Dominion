@@ -72,7 +72,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 					}					
 				
 					if (this.server.getGameController().validateTurnAndExecute(cardID)) {
-						
+						if (this.server.getGameController().getActivePlayer().getDiscardMode())
 						
 						server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(),
 								activePlayer.getCoins()));
@@ -123,6 +123,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 				
 				nextActivePlayer(port);
 
+				break;
+			case END_DISCARD_MODE:
+				this.server.getGameController().getActivePlayer().endDiscardMode();
 				break;
 			default:
 				System.out.println("unknown packed type");
