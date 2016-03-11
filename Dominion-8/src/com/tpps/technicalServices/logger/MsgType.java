@@ -15,10 +15,18 @@ public enum MsgType {
 	
 	private String slang;
 
+	/**
+	 * 
+	 * @param slang
+	 */
 	private MsgType(String slang) {
 		this.slang = slang;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public String getSlang() {
 		return this.slang;
 	}

@@ -15,11 +15,19 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+/**
+ * 
+ * @author Nicolas
+ *
+ */
 public class LogUI {
 
 	private Display dis;
 	private JFrame frame;
 
+	/**
+	 * 
+	 */
 	public LogUI() {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -38,6 +46,11 @@ public class LogUI {
 		}
 	}
 
+	/**
+	 * 
+	 * @param line
+	 * @param isLog
+	 */
 	public void updateLogger(final String line, boolean isLog) {
 		if (isLog) {
 			this.dis.updateTextArea(line.split("]")[0] + "]", GameLog.getTimestampColor());
@@ -48,15 +61,27 @@ public class LogUI {
 		}
 	}
 
+	/**
+	 * 
+	 * @author Nicolas
+	 *
+	 */
 	@SuppressWarnings("serial")
 	public class Display extends JPanel {
 
 		private JTextPane textPane;
 
+		/**
+		 * 
+		 * @return
+		 */
 		public JTextPane getTextPane() {
 			return this.textPane;
 		}
 
+		/**
+		 * 
+		 */
 		public Display() {
 			this.textPane = new JTextPane();
 			this.textPane.setEditable(false);
@@ -66,6 +91,11 @@ public class LogUI {
 			this.add(new JScrollPane(this.textPane));
 		}
 
+		/**
+		 * 
+		 * @param text
+		 * @param font
+		 */
 		public void updateTextArea(final String text, Color font) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
