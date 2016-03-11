@@ -59,7 +59,7 @@ public class LoginPacketHandler extends PacketHandler{
 
 			//System.out.println("salt aus db: " + salt);
 			try {
-				Password pw = new Password(pac.getHashedPW(), salt.getBytes());
+				Password pw = new Password(pac.getHashedPW(), salt);
 				pw.createHashedPassword();
 				String doublehashed = pw.getHashedPasswordAsString();
 				waitingForSessionAnswer.put(pac.getUsername(), port);

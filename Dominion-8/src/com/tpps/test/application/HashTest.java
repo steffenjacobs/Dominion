@@ -20,7 +20,7 @@ public class HashTest {
 		byte[] digest = md.digest();
 
 		String res = String.format("%064x", new java.math.BigInteger(1, digest));
-
+		System.out.println(res);
 		final String calculated = "480a032c0a49eeaccc43b40bab41281f91bc4eae226c9d6a97ea73729ea86496";
 		
 		assertEquals(calculated, res);

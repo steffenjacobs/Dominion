@@ -39,7 +39,7 @@ public class LoginClient extends PacketHandler {
 	public LoginClient(LoginGUIController guicontroller) {
 		try {
 			this.guicontroller = guicontroller;
-			c_login = new Client(new InetSocketAddress("127.0.0.1", 1338), this);
+			c_login = new Client(new InetSocketAddress("127.0.0.1", 1338), this, false);
 			c_session = new SessionClient(new InetSocketAddress("127.0.0.1", 1337));
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -54,7 +54,7 @@ public class LoginClient extends PacketHandler {
 	 */
 	public void handlelogin(String nickname, String plaintext) {
 		this.usernamelogin = nickname;
-		Password pw = new Password(plaintext, new String("defsalt").getBytes()); // defsalt is a standardsalt
+		Password pw = new Password(plaintext, new String("defsalt")); // defsalt is a standardsalt
 																					
 		try {
 			String pwAsString = pw.getHashedPasswordAsString();
@@ -104,7 +104,7 @@ public class LoginClient extends PacketHandler {
 	public void handleAccountCreation(String username, String plaintext, String email) {
 		this.usernamenewacc = username;
 		this.plaintext = plaintext;
-		Password pw = new Password(plaintext, new String("defsalt").getBytes());
+		Password pw = new Password(plaintext, new String("defsalt"));
 		PacketRegisterRequest packet = new PacketRegisterRequest(username, pw.getHashedPasswordAsString(), email);
 		try {
 			c_login.sendMessage(packet);

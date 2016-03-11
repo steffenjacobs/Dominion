@@ -66,10 +66,10 @@ public class LoginServer extends Server{
 					break;
 				} else if (line.startsWith("create account")) {
 					String[] words = line.split("\\s+");
-					Password temp1 = new Password(words[3], new String("defsalt").getBytes());
+					Password temp1 = new Password(words[3], new String("defsalt"));
 					String firsthash = temp1.getHashedPasswordAsString();
 					byte[] randomsalt = temp1.generateSalt();
-					Password temp2 = new Password(firsthash, randomsalt);
+					Password temp2 = new Password(firsthash, String.format("%064x", new java.math.BigInteger(1, randomsalt)));
 					SQLOperations.createAccount(words[2], "", temp2.getHashedPasswordAsString(), new String(randomsalt));
 					SQLStatisticsHandler.insertRowForFirstLogin(words[2]);
 				} else if (line.startsWith("show nicknames")) {
