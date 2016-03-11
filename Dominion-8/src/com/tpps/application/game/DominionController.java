@@ -40,7 +40,6 @@ public final class DominionController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/**

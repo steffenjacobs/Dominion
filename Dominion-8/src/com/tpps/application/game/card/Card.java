@@ -27,6 +27,20 @@ public class Card extends GameObject {
 	private final String id;
 	private static int classID = 0;
 
+	/**
+	 * 
+	 * @param actions
+	 * @param types
+	 * @param name
+	 * @param cost
+	 * @param relativeLocX
+	 * @param relativeLocY
+	 * @param relativeWidth
+	 * @param relativeHeight
+	 * @param _layer
+	 * @param sourceImage
+	 * @param _parent
+	 */
 	public Card(LinkedHashMap<CardAction, String> actions,
 			LinkedList<CardType> types, String name, int cost,
 			double relativeLocX, double relativeLocY, double relativeWidth,
@@ -41,6 +55,21 @@ public class Card extends GameObject {
 		this.id = this.name + classID++;
 	}
 	
+	/**
+	 * 
+	 * @param actions
+	 * @param types
+	 * @param name
+	 * @param cost
+	 * @param cardId
+	 * @param relativeLocX
+	 * @param relativeLocY
+	 * @param relativeWidth
+	 * @param relativeHeight
+	 * @param _layer
+	 * @param sourceImage
+	 * @param _parent
+	 */
 	public Card(LinkedHashMap<CardAction, String> actions,
 			LinkedList<CardType> types, String name, int cost, String cardId,
 			double relativeLocX, double relativeLocY, double relativeWidth,
@@ -88,7 +117,6 @@ public class Card extends GameObject {
 	}
 
 	// clone constructor
-	// private GraphicFramework gf_test = new GraphicFramework(new JFrame());
 
 	// equals
 
