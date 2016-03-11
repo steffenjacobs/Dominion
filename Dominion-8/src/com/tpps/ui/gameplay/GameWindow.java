@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -211,7 +213,8 @@ public class GameWindow extends JFrame {
 	
 	
 	public void handCards(LinkedHashMap<String, SerializedCard> handCards) {
-		LinkedList<String> actionCardlds = new LinkedList<>(handCards.keySet());
+		LinkedList<String> actionCardIds = new LinkedList<>(handCards.keySet());
+		
 		int k = 14;
 		double sub = handCards.size();
 		double shift = (1 - (sub / 10)) / 2;
@@ -228,25 +231,27 @@ public class GameWindow extends JFrame {
 		System.out.println("im Gamewindow handcardSize" + handCards.size());
 		for (int i = 0; i < handCards.size(); i++) {
 
-			SerializedCard serializedCard = handCards.get(actionCardlds.get(i));
+			SerializedCard serializedCard = handCards.get(actionCardIds.get(i));
 			//Example For nishit
-//			actionCardlds.get(i).substring(actionCardlds.get(i).length()-1,actionCardlds.get(i).length());
+//			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardIds.get(i));
+//			matcher.find();	
+//			actionCardIds.get(i).substring(matcher.start(), matcher.end());
 
 			if (handCards.size() <= 5 && handCards.size() > 1) {
 				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftSmall += 0.075,
+						serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), shiftSmall += 0.075,
 						0.70, 0.1, 0.3, k++, serializedCard.getImage(), framework);
 				framework.addComponent(card);
 				this.handCards.add(card);
 			} else if (handCards.size() == 1) {
 				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftOne += 0.075,
+						serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), shiftOne += 0.075,
 						0.70, 0.1, 0.3, k++, serializedCard.getImage(), framework);
 				framework.addComponent(card);
 				this.handCards.add(card);
 			} else {
 				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.075, 0.70,
+						serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), shift += 0.075, 0.70,
 						0.1, 0.3, k++, serializedCard.getImage(), framework);
 				framework.addComponent(card);
 				this.handCards.add(card);

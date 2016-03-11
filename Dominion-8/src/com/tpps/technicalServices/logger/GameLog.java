@@ -166,4 +166,8 @@ public class GameLog {
 		else
 			writeConsole(lineWithoutAnsi(type) + line);
 	}
+	
+	public static void main(String[] args) {
+		GameLog.log(MsgType.INIT, "GameLogger initialized");
+	}
 }

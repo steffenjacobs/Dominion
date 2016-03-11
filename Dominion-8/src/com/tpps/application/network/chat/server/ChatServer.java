@@ -2,6 +2,7 @@ package com.tpps.application.network.chat.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -17,6 +18,7 @@ public class ChatServer extends Server{
 	public static String domain = "127.0.0.1";
 	public static int port = 1340;
 	private ChatPacketHandler chatpackethandler ;
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("<HH:mm:ss>: ");
 
 	/**
 	 * initializes the chatserver object
@@ -64,9 +66,6 @@ public class ChatServer extends Server{
 				}
 				else if(line.startsWith("create chatroom")){
 					String[] words = line.split("\\s+");
-					for (int i = 0; i < words.length; i++) {
-						System.out.println(words[i]);
-					}
 					chatpackethandler.createChatRoom(words[2], words[3], words[4], words[5]);
 				}else if(line.startsWith("show all chatrooms")){
 					for (Iterator<ChatRoom> iterator = this.chatpackethandler.getChatrooms().iterator(); iterator.hasNext();) {

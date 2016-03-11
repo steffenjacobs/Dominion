@@ -124,7 +124,7 @@ public class MainMenuPanel extends JPanel {
 	 * registrates the MouseListener on the panel
 	 */
 	private void registrateMouseListener() {
-		Mouse m = new Mouse();
+		MainMenuMouseListener m = new MainMenuMouseListener();
 		this.addMouseListener(m);
 		this.addMouseMotionListener(m);
 	}
@@ -144,7 +144,7 @@ public class MainMenuPanel extends JPanel {
 	 * @author Lukas
 	 *
 	 */
-	private class Mouse extends MouseAdapter {
+	private class MainMenuMouseListener extends MouseAdapter {
 
 		/**
 		 * reacts on mouseclicked event
