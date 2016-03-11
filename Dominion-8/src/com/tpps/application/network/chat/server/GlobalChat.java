@@ -1,6 +1,7 @@
 package com.tpps.application.network.chat.server;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,8 +10,6 @@ import com.tpps.application.network.chat.packets.PacketSendAnswer;
 import com.tpps.application.network.chat.packets.PacketSendChatAll;
 import com.tpps.application.network.chat.packets.PacketSendChatCommand;
 import com.tpps.application.network.chat.packets.PacketSendChatToClient;
-import com.tpps.application.network.login.SQLHandling.SQLHandler;
-import com.tpps.application.network.login.SQLHandling.SQLOperations;
 
 public class GlobalChat {
 	
@@ -47,19 +46,17 @@ public class GlobalChat {
 	}
 	
 	public void sendChatToClient(PacketSendChatToClient packet){
-		String hostname = "localhost";
-		String portsql = "3306";
-		String database = "accountmanager";
-		String user = "jojo";
-		String password = "password";
-		SQLHandler.init(hostname, portsql, user, password, database);
-		SQLHandler.connect();
-		String[] nicknames = SQLOperations.showAllNicknames().split("\n");
-		for (int i = 0; i < nicknames.length; i++) {					
-			if(packet.getReceiver().equals(nicknames[i].trim())){
-				this.sendMessageToClient(packet.getSender(), nicknames[i], packet.getMessage(), clientsByUsername.get(nicknames[i]));
+		String receiver = packet.getReceiver().trim();
+		if(!this.clientsByUsername.containsKey(receiver)){
+			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "The User '" + receiver + "' doesn't exist in global chat");
+			try {
+				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
+			} catch (IOException e) {			
+				e.printStackTrace();
 			}
-		}	
+			return;
+		}		
+		this.sendMessageToClient(packet.getSender(), receiver, packet.getMessage(), this.clientsByUsername.get(packet.getReceiver()));		
 	}
 	
 	public void sendChatCommand(int port, PacketSendChatCommand packet){
@@ -67,7 +64,7 @@ public class GlobalChat {
 		System.out.println("Chat Command: " + packet);
 		
 		if(!this.evaluateCommands(packet.getChatmessage(), packet.getSender(), port)){
-			PacketSendAnswer answer2 = new PacketSendAnswer("unknown command: " + msg);
+			PacketSendAnswer answer2 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "unknown command: " + msg);
 			try {
 				server.sendMessage(port, answer2);
 			} catch (IOException e) {				
@@ -79,7 +76,7 @@ public class GlobalChat {
 	
 	
 	private void sendMessageToClient(String sender, String receiver, String msg, int port){
-		PacketSendAnswer answer = new PacketSendAnswer("Message from " + sender + ": " + msg);
+		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "PM from " + sender + ": " + msg);
 		try {
 			server.sendMessage(port, answer);
 		} catch (IOException e) {
