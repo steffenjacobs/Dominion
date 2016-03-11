@@ -200,7 +200,7 @@ public class GameWindow extends JFrame {
 		LinkedList<String> actionCardlds = new LinkedList<>(middleCards.keySet());
 		int k = 14;
 		double sub = handCards.size();
-		double shift = ((1 - (sub / 10)) / 2);
+		double shift = ((1 - (sub / 10)) / 2)+0.20;
 		
 		
 	for (int i = 0; i < middleCards.size(); i++) {
