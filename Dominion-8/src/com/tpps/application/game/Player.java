@@ -8,6 +8,7 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.Tuple;
 import com.tpps.application.network.game.GameServer;
+import com.tpps.application.network.gameSession.packets.PacketDisable;
 import com.tpps.application.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
@@ -201,7 +202,7 @@ public class Player {
 	}
 
 	public void discardOrTrash(String cardID, LinkedList<Card> trashPile) throws IOException {
-		if (discardMode) {
+		if (this.discardMode) {
 			this.getDeck().getDiscardPile().add(doAction(cardID));
 			return;
 		}
@@ -354,6 +355,10 @@ public class Player {
 				}
 			}
 			break;
+		case DISCARD_CARD:
+			if (this.discardOrTrashAction.getSecondEntry() == 0){
+				GameServer.getInstance().sendMessage(port, new PacketDisable());
+			}
 		case TRASH_CARD:
 			LinkedList<Card> cardHand = this.getDeck().getCardHand();
 			if (cardHand.size() == 0) {
