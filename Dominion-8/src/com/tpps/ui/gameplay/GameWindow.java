@@ -31,8 +31,8 @@ public class GameWindow extends JFrame {
 	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage,displayImageBuys,displayImageActions,displayImageCoins;
 	private GraphicFramework framework;
 	private DisplayValue buy,coin,action;
-	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards;
-	private ButtonClass stopDiscard;
+	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards,middleCards;
+	private ButtonClass stopDiscard, stopTrash, discardDeck, endReactions;
 	public static String coins, buys, actions;
 	private static final double CORRECTION_16TO9 = 16/ (double) 9;
 	
@@ -54,6 +54,7 @@ public class GameWindow extends JFrame {
 		this.tableCards = new LinkedList<Card>();
 		this.victoryCards = new LinkedList<Card>();
 		this.coinCards = new LinkedList<Card>();
+		this.middleCards = new LinkedList<Card>();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 //		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
 //		 this.setUndecorated(true);
@@ -61,7 +62,7 @@ public class GameWindow extends JFrame {
 		buys = "Buys: ";
 		actions = "Actions: ";
 		this.setMinimumSize(new Dimension(1280, 720));
-		this.setVisible(true);
+//		this.setVisible(true);
 		framework = new GraphicFramework(this);
 		this.add(framework);
 
@@ -78,7 +79,10 @@ public class GameWindow extends JFrame {
 		endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End ActionPhase");
 		playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Play Treasures");
 		stopDiscard = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Discard");
+		stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Trash");
+		discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Discard Deck");
 		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
+		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Reactions");
 		
 		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,String.valueOf(GameConstant.INIT_ACTIONS));
 		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework,String.valueOf(GameConstant.INIT_TREASURES));
@@ -88,7 +92,7 @@ public class GameWindow extends JFrame {
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 		framework.addComponent(closeButton);
 		framework.addComponent(endActionPhase);		
-		framework.addComponent(stopDiscard);
+		
 		framework.addComponent(endTurn);
 		
 		framework.addComponent(action);
@@ -126,6 +130,14 @@ public class GameWindow extends JFrame {
 		this.framework.addComponent(buy);
 		
 		this.framework.addComponent(endActionPhase);
+		
+		for (Iterator<Card> iterator = this.middleCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.middleCards = new LinkedList<Card>();
+		
+		
 		this.repaint();
 	}
 
@@ -186,7 +198,33 @@ public class GameWindow extends JFrame {
 		}
 
 	}
-
+	
+	public void middleCards(LinkedHashMap<String,SerializedCard> middleCards){
+		LinkedList<String> actionCardlds = new LinkedList<>(middleCards.keySet());
+		int k = 14;
+		double sub = handCards.size();
+		double shift = ((1 - (sub / 10)) / 2)+0.20;
+		
+		for (Iterator<Card> iterator = this.middleCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.middleCards = new LinkedList<Card>();
+		
+		
+	for (int i = 0; i < middleCards.size(); i++) {
+		
+		SerializedCard serializedCard = middleCards.get(actionCardlds.get(i));
+		
+		Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+				serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.05,
+				0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+		framework.addComponent(card);
+		this.middleCards.add(card);
+	}	
+	}
+	
+	
 	public void handCards(LinkedHashMap<String, SerializedCard> handCards) {
 		LinkedList<String> actionCardIds = new LinkedList<>(handCards.keySet());
 		
@@ -195,8 +233,7 @@ public class GameWindow extends JFrame {
 		double shift = (1 - (sub / 10)) / 2;
 		double shiftSmall = shift - 0.03;
 		double shiftOne = shiftSmall - 0.03;
-		System.out.println(shift);
-		
+
 		
 		for (Iterator<Card> iterator = this.handCards.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
@@ -268,14 +305,14 @@ public class GameWindow extends JFrame {
 	}
 	public void setCaptionActions(String caption){
 		framework.removeComponent(action);
-		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,String.valueOf(GameConstant.INIT_ACTIONS));
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework, caption);
 		framework.addComponent(action);
 //		action.renewCaption(caption);
 //		this.repaint();
 	}
 	public void setCaptionBuys(String caption){
 		framework.removeComponent(buy);
-		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework,String.valueOf(GameConstant.INIT_PURCHASES));
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework, caption);
 		framework.addComponent(buy);;
 //		buy.renewCaption(caption);
 //		this.repaint();
@@ -284,7 +321,31 @@ public class GameWindow extends JFrame {
 	public void endActionPhase(){
 		framework.removeComponent(endActionPhase);
 		framework.addComponent(playTreasures);
+		this.repaint();
 	}
+	
+	public void addStopDiscardButton() {
+		framework.addComponent(stopDiscard);
+		this.repaint();
+	}
+	
+	public void removeStopDiscardButton() {
+		framework.removeComponent(stopDiscard);
+		this.repaint();
+	}
+	
+	public void addStopTrashButton() {
+		framework.addComponent(this.stopTrash);
+	}
+	
+	public void removeStopTrashButton() {
+		framework.removeComponent(this.stopTrash);
+	}
+	
+	public void addDiscardDeckButton(){
+		framework.addComponent(this.discardDeck);
+	}
+	
 	public void playTreasures(){
 		framework.removeComponent(playTreasures);
 	}

@@ -14,22 +14,34 @@ public class GameServer extends Server{
 	private static int CLIENT_ID;
 
 	private GameController gameController;
+	private static GameServer instance;
 	
 	public GameServer() throws IOException{
 		super(new InetSocketAddress("0.0.0.0", 1339), new ServerGamePacketHandler());
 		((ServerGamePacketHandler)super.getHandler()).setServer(this);
 		this.gameController = new GameController();
-
+		instance = this;
 		setConsoleInput();		
 	}
 	
+	
+	/**
+	 * 
+	 * @return an instance of the GameServer
+	 */
+	public static GameServer getInstance() {
+		return instance;
+	}
+
+
+
 	public static int getCLIENT_ID() {
 		return CLIENT_ID++;
 	}
 	
 	public static void main(String[] args) {
 		try {
-			new GameServer();		
+			new GameServer();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

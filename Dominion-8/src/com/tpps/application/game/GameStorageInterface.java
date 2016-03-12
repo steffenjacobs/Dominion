@@ -78,8 +78,7 @@ public class GameStorageInterface {
 			matcher.find();		
 			
 			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, matcher.start()));
-			if (serializedCard != null) {
-				System.out.println("hier");
+			if (serializedCard != null) {				
 				serializedCard = new SerializedCard(serializedCard.getActions(), serializedCard.getTypes(),
 						serializedCard.getCost(), serializedCard.getName(), serializedCard.getImage());
 			}
@@ -100,23 +99,31 @@ public class GameStorageInterface {
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(actionCardIds);
 		this.gameWindow.tableActionCards(serializedCardWithId);
 	}
+	
+	public void loadPlayedCardsAndPassToGameWindow(LinkedList<String> playedCardIds) {
+		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(playedCardIds);
+		this.gameWindow.middleCards(serializedCardWithId);
+	}
 
 	/**
 	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
-//		try {
-//			new GameStorageInterface(new GameWindow())
-//					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));			
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		Matcher matcher = Pattern.compile("\\d+").matcher("TESt243");
-		matcher.find();		
-		System.out.println("Start: " + matcher.start() + "Ende: " + matcher.end());
-		System.out.println("TESt243".substring(matcher.start(), matcher.end()));
+		try {
+			GameWindow gameWindow = new GameWindow();
+			gameWindow.setVisible(true);
+			gameWindow.addStopDiscardButton();
+			new GameStorageInterface(gameWindow)
+					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		Matcher matcher = Pattern.compile("\\d+").matcher("TESt243");
+//		matcher.find();		
+//		System.out.println("Start: " + matcher.start() + "Ende: " + matcher.end());
+//		System.out.println("TESt243".substring(matcher.start(), matcher.end()));
 		
 
 	}
