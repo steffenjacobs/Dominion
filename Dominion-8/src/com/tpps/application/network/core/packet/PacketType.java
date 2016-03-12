@@ -52,7 +52,8 @@ public enum PacketType {
 	START_DISCARD_MODE(40),
 	END_TRASH_MODE(41),
 	START_TRASH_MODE(42),
-	DISCARD_DECK(43);
+	DISCARD_DECK(43),
+	ENABLE_GUI(44);
 
 	private final int internalID;
 

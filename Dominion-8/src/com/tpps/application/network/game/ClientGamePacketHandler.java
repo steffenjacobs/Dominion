@@ -48,9 +48,10 @@ public class ClientGamePacketHandler extends PacketHandler {
 			break;
 		case ENABLE_DISABLE:
 			enableDisable(packet);
-			
 			this.gameWindow.reset();	
-			
+			break;
+		case ENABLE_GUI:
+			this.gameWindow.setEnabled(true);
 			break;
 		case SEND_BOARD:
 			PacketSendBoard packetSendBoard = (PacketSendBoard)packet;

@@ -46,6 +46,8 @@ public enum CardAction {
 	IS_TREASURE, 
 	
 	/* z.B. wenn eine Karte keine Aktion hat und eine Punktekarte ist */
-	IS_VICTORY;
+	IS_VICTORY,
+	
+	DISCARD_OTHER_DOWNTO;
 	
 }

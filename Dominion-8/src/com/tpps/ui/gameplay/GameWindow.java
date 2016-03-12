@@ -32,7 +32,7 @@ public class GameWindow extends JFrame {
 	private GraphicFramework framework;
 	private DisplayValue buy,coin,action;
 	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards,middleCards;
-	private ButtonClass stopDiscard, stopTrash, discardDeck;
+	private ButtonClass stopDiscard, stopTrash, discardDeck, endReactions;
 	public static String coins, buys, actions;
 	private static final double CORRECTION_16TO9 = 16/ (double) 9;
 	
@@ -82,6 +82,7 @@ public class GameWindow extends JFrame {
 		stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Trash");
 		discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Discard Deck");
 		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
+		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Reactions");
 		
 		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,String.valueOf(GameConstant.INIT_ACTIONS));
 		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework,String.valueOf(GameConstant.INIT_TREASURES));

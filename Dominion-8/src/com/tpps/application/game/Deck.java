@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
-import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
@@ -250,11 +249,22 @@ public class Deck {
 	 * @return one Card from the discardPile
 	 */
 	public Card removeSaveFromDiscardPile() {
-		this.shuffleIfLessThan(1);
-		
-		return this.drawPile.removeLast();
-		
-		
+		this.shuffleIfLessThan(1);		
+		return this.drawPile.removeLast();		
+	}
+	
+	/**
+	 * 
+	 * @return true if the cardHand contains a reaction card. false otherwise.
+	 */
+	public boolean cardHandContainsReactionCard() {
+		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(CardType.REACTION)){
+				return true;
+			}			
+		}
+		return false;		
 	}
 
 	/**
