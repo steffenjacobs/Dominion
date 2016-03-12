@@ -11,7 +11,7 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
- * @author Nicolas Wipfler
+ * @author Nicolas Wipfler, Lukas Adler
  */
 public class Deck {
 
@@ -208,6 +208,23 @@ public class Deck {
 	}
 	
 	/**
+	 * appends drawPile to discardPile and creates a new list for drawPile
+	 * (discards the drawPile)
+	 */
+	public void discardDrawPile() {
+		CollectionsUtil.appendListToList(this.drawPile, this.discardPile);
+		this.drawPile = new LinkedList<Card>();
+	}
+	
+	/**
+	 * discards all cards the player has
+	 */
+	public void discardDeck() {
+		discardCardHand();
+		discardDrawPile();		
+	}
+	
+	/**
 	 * if the drawPile is not empty, the method adds one card from drawPile to cardHand 
 	 * and removes this card from drawPile
 	 */
@@ -265,6 +282,8 @@ public class Deck {
 		this.getCardHand().remove(card);
 		trashPile.addLast(card);
 	}
+	
+
 
 	/**
 	 * @return String representation of a deck object

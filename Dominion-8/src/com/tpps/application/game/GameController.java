@@ -52,6 +52,11 @@ public class GameController {
 
 	}
 	
+	public void updateTrashPile(LinkedList<Card> temporaryTrashPile) {
+		System.out.println("trashPile vor dem hinzufügen " + this.gameBoard.getTrashPile());
+		CollectionsUtil.appendListToList(temporaryTrashPile, this.gameBoard.getTrashPile());		
+	}
+	
 	public boolean checkCardExistsAndDiscardOrTrash(String cardID) throws IOException{
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
 		if (card != null){
@@ -83,12 +88,12 @@ public class GameController {
 				
 						
 						this.getActivePlayer().playCard(cardID);
-						
-					} else {
-						
-						this.setBuyPhase();
-					}
-					return true;
+						if (this.getActivePlayer().getActions() == 0){
+							this.setBuyPhase();
+						}
+						return true;
+					} 
+					
 				
 			}
 			if (this.gamePhase.equals("buyPhase")) {

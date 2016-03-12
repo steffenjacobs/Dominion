@@ -10,6 +10,7 @@ import com.tpps.application.game.card.Tuple;
 import com.tpps.application.network.card.CardPacketHandlerClient;
 import com.tpps.application.network.game.GameServer;
 import com.tpps.application.network.game.ServerGamePacketHandler;
+import com.tpps.application.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.application.network.gameSession.packets.PacketStartDiscardMode;
@@ -36,8 +37,9 @@ public class Player {
 	private boolean discardMode, trashMode;
 	private Tuple<CardAction> discardOrTrashAction;
 
-	private LinkedList<Card> playedCards;
-	private LinkedList<Card> discardList;
+	private LinkedList<Card> playedCards, discardList;
+	
+	
 
 	/**
 	 * 
@@ -99,7 +101,6 @@ public class Player {
 	public void setDeck(Deck deck) {
 		this.deck = deck;
 	}
-
 	/**
 	 * @return the id
 	 */
@@ -205,6 +206,10 @@ public class Player {
 		this.discardMode = false;
 		discardList = new LinkedList<Card>();
 	}
+	
+	public void endTrashMode() {
+		this.trashMode = false;
+	}
 
 	public void playCard(String cardID) throws IOException {
 		System.out.println("kein discard mode oder trash mode");
@@ -273,6 +278,11 @@ public class Player {
 					break;
 				}
 				break;
+			case DISCARD_CARD:
+				if (value.toLowerCase().equals("deck")){
+					GameServer.getInstance().sendMessage(port, new PacketDiscardDeck());
+				}
+				break;
 			case DISCARD_AND_DRAW:
 				this.discardMode = true;
 				this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
@@ -336,6 +346,7 @@ public class Player {
 				((GameServer)(GameServer.getInstance())).sendMessage(port, new PacketEndTrashMode());
 			}
 			this.getDeck().getCardHand().remove(card);
+			System.out.println("card added to trashPile" + card);
 			this.discardOrTrashAction.decrementSecondEntry();
 			if (this.discardOrTrashAction.getSecondEntry() == 0) {
 				this.trashMode = false;

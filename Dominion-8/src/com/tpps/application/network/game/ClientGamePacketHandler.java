@@ -91,6 +91,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case END_TRASH_MODE:
 			this.gameWindow.removeStopTrashButton();
 			break;
+		case DISCARD_DECK:
+			this.gameWindow.addDiscardDeckButton();
+			break;
 		case SEND_PLAYED_CARDS_TO_ALL_CLIENTS:
 			
 			this.gameStorageInterface.loadPlayedCardsAndPassToGameWindow(((PacketSendPlayedCardsToAllClients)packet).getCardIds());

@@ -78,8 +78,7 @@ public class GameStorageInterface {
 			matcher.find();		
 			
 			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, matcher.start()));
-			if (serializedCard != null) {
-				System.out.println("hier");
+			if (serializedCard != null) {				
 				serializedCard = new SerializedCard(serializedCard.getActions(), serializedCard.getTypes(),
 						serializedCard.getCost(), serializedCard.getName(), serializedCard.getImage());
 			}
@@ -112,7 +111,10 @@ public class GameStorageInterface {
 	 */
 	public static void main(String[] args) {
 		try {
-			new GameStorageInterface(new GameWindow())
+			GameWindow gameWindow = new GameWindow();
+			gameWindow.setVisible(true);
+			gameWindow.addStopDiscardButton();
+			new GameStorageInterface(gameWindow)
 					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

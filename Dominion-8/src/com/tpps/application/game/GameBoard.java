@@ -235,10 +235,11 @@ public class GameBoard {
 		Card.resetClassID();
 //		
 //		// 2
-//		LinkedList<Card> villageList = new LinkedList<Card>();
-//		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.DRAW_CARD, CardAction.ADD_ACTION_TO_PLAYER }), CollectionsUtil.linkedList(new String[] {"1", "2"})),CollectionsUtil.linkedList(CardType.ACTION), "Village", 3), GameConstant.INIT_PILE_SIZE, villageList);
-//		this.tableForActionCards.put("Village", villageList);
-//		Card.resetClassID();
+		LinkedList<Card> chancellorList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, CardAction.DISCARD_CARD}), 
+				CollectionsUtil.linkedList(new String[] {"2", "Deck"})),CollectionsUtil.linkedList(CardType.ACTION), "Chancellor", 3), GameConstant.INIT_PILE_SIZE, chancellorList);
+		this.tableForActionCards.put("Chancellor", chancellorList);
+		Card.resetClassID();
 //		
 //		// 3
 //		LinkedList<Card> smithyList = new LinkedList<Card>();
@@ -316,7 +317,7 @@ public class GameBoard {
 		LinkedList<Card> copperList = this.tableForTreasureCards.get(GameConstant.COPPER);
 		
 		for (int i = 0; i < GameConstant.INIT_COPPER_CARDS; i++){
-			startCards.add(copperList.removeLast());
+			startCards.addFirst(copperList.removeLast());			
 			
 		}
 		

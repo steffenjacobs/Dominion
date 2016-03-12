@@ -32,7 +32,7 @@ public class GameWindow extends JFrame {
 	private GraphicFramework framework;
 	private DisplayValue buy,coin,action;
 	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards,middleCards;
-	private ButtonClass stopDiscard;
+	private ButtonClass stopDiscard, stopTrash, discardDeck;
 	public static String coins, buys, actions;
 	private static final double CORRECTION_16TO9 = 16/ (double) 9;
 	
@@ -79,6 +79,8 @@ public class GameWindow extends JFrame {
 		endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End ActionPhase");
 		playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Play Treasures");
 		stopDiscard = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Discard");
+		stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Trash");
+		discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Discard Deck");
 		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
 		
 		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,String.valueOf(GameConstant.INIT_ACTIONS));
@@ -202,6 +204,12 @@ public class GameWindow extends JFrame {
 		double sub = handCards.size();
 		double shift = ((1 - (sub / 10)) / 2)+0.20;
 		
+		for (Iterator<Card> iterator = this.middleCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.middleCards = new LinkedList<Card>();
+		
 		
 	for (int i = 0; i < middleCards.size(); i++) {
 		
@@ -296,14 +304,14 @@ public class GameWindow extends JFrame {
 	}
 	public void setCaptionActions(String caption){
 		framework.removeComponent(action);
-		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,String.valueOf(GameConstant.INIT_ACTIONS));
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework, caption);
 		framework.addComponent(action);
 //		action.renewCaption(caption);
 //		this.repaint();
 	}
 	public void setCaptionBuys(String caption){
 		framework.removeComponent(buy);
-		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework,String.valueOf(GameConstant.INIT_PURCHASES));
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework, caption);
 		framework.addComponent(buy);;
 //		buy.renewCaption(caption);
 //		this.repaint();
@@ -326,11 +334,15 @@ public class GameWindow extends JFrame {
 	}
 	
 	public void addStopTrashButton() {
-		
+		framework.addComponent(this.stopTrash);
 	}
 	
 	public void removeStopTrashButton() {
-		
+		framework.removeComponent(this.stopTrash);
+	}
+	
+	public void addDiscardDeckButton(){
+		framework.addComponent(this.discardDeck);
 	}
 	
 	public void playTreasures(){
