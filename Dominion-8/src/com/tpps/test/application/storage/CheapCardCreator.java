@@ -15,6 +15,7 @@ import javax.imageio.ImageIO;
 import org.junit.Test;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.card.CardClient;
@@ -28,6 +29,8 @@ import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.util.CollectionsUtil;
+import com.tpps.technicalServices.util.GameConstant;
 
 public class CheapCardCreator {
 	private static final boolean DEBUG = false;
@@ -106,6 +109,12 @@ public class CheapCardCreator {
 		cards.put("Chapel", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 2, "Chapel", getImg("Chapel")));
 		
+//		Chancellor
+		actions.remove(CardAction.TRASH_CARD);		
+		actions.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, "2");
+		actions.put(CardAction.DISCARD_CARD, "Deck");
+		cards.put("Chancellor", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 3, "Chancellor", getImg("Chancellor")));
 
 		// setup Dummy-DominionController
 		DominionController dom = new DominionController(true);

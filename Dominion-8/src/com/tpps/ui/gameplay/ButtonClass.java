@@ -4,10 +4,12 @@ import java.awt.Image;
 import java.io.IOException;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.application.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.application.network.gameSession.packets.PacketEndActionPhase;
 import com.tpps.application.network.gameSession.packets.PacketEndTurn;
 import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
+import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -81,12 +83,33 @@ public class ButtonClass extends GFButton {
 		}
 		if (this.getCaption().equals("Stop Discard")) {
 			try {
+				System.out.println("packet send end discard mode");
 				DominionController.getInstance().getGameClient().sendMessage(new PacketEndDiscardMode());
+				this.getParent().removeComponent(this);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
+		if (this.getCaption().equals("Stop Trash")) {
+			try {
+				DominionController.getInstance().getGameClient().sendMessage(new PacketEndTrashMode());
+				this.getParent().removeComponent(this);
+			} catch (IOException e) {
+				
+				e.printStackTrace();
+			}			
+		}
+		if (this.getCaption().equals("Discard Deck")){
+			try {
+				System.out.println("PacketDiscardDeck");
+				DominionController.getInstance().getGameClient().sendMessage(new PacketDiscardDeck());
+				this.getParent().removeComponent(this);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 	@Override

@@ -7,9 +7,8 @@ import java.util.LinkedList;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.Tuple;
-import com.tpps.application.network.card.CardPacketHandlerClient;
 import com.tpps.application.network.game.GameServer;
-import com.tpps.application.network.game.ServerGamePacketHandler;
+import com.tpps.application.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.application.network.gameSession.packets.PacketStartDiscardMode;
@@ -33,11 +32,11 @@ public class Player {
 	private int actions;
 	private int buys;
 	private int coins;
-	private boolean discardMode, trashMode;
+	private boolean discardMode, trashMode, reactionMode;
 	private Tuple<CardAction> discardOrTrashAction;
-
-	private LinkedList<Card> playedCards;
-	private LinkedList<Card> discardList;
+	private LinkedList<Card> playedCards, discardList;
+	
+	
 
 	/**
 	 * 
@@ -48,6 +47,7 @@ public class Player {
 	public Player(Deck deck, int clientID, int port) {
 		this.discardMode = false;
 		this.trashMode = false;
+		this.reactionMode = false;
 		this.discardList = new LinkedList<Card>();
 		this.deck = deck;
 		this.id = playerID++;
@@ -84,6 +84,14 @@ public class Player {
 	public Deck getDeck() {
 		return deck;
 	}
+	
+	public void setDiscardMode() {
+		this.discardMode = true;
+	}
+	
+	public void setDiscardOrTrashAction(CardAction cardAction, int val) {
+		this.discardOrTrashAction = new Tuple<CardAction>(cardAction, val);		
+	}
 
 	/**
 	 * 
@@ -108,7 +116,6 @@ public class Player {
 	public void setDeck(Deck deck) {
 		this.deck = deck;
 	}
-
 	/**
 	 * @return the id
 	 */
@@ -197,6 +204,10 @@ public class Player {
 	public void setCoins(int coins) {
 		this.coins = coins;
 	}
+	
+	public void setReactionMode(){
+		this.reactionMode = true;
+	}
 
 	public void discardOrTrash(String cardID, LinkedList<Card> trashPile) throws IOException {
 		if (discardMode) {
@@ -213,6 +224,10 @@ public class Player {
 		CollectionsUtil.appendListToList(discardList, this.getDeck().getCardHand());
 		this.discardMode = false;
 		discardList = new LinkedList<Card>();
+	}
+	
+	public void endTrashMode() {
+		this.trashMode = false;
 	}
 
 	public void playCard(String cardID) throws IOException {
@@ -282,10 +297,20 @@ public class Player {
 					break;
 				}
 				break;
+			case DISCARD_CARD:
+				if (value.toLowerCase().equals("deck")){
+					GameServer.getInstance().sendMessage(port, new PacketDiscardDeck());
+				}
+				break;
 			case DISCARD_AND_DRAW:
 				this.discardMode = true;
 				this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
 				((GameServer)(GameServer.getInstance())).sendMessage(port, new PacketStartDiscardMode());
+				
+				break;
+			case DISCARD_OTHER_DOWNTO:
+				GameServer.getInstance().getGameController().discardOtherDownto(value);
+				
 				
 				break;
 			case TRASH_CARD:
@@ -345,6 +370,7 @@ public class Player {
 				((GameServer)(GameServer.getInstance())).sendMessage(port, new PacketEndTrashMode());
 			}
 			this.getDeck().getCardHand().remove(card);
+			System.out.println("card added to trashPile" + card);
 			this.discardOrTrashAction.decrementSecondEntry();
 			if (this.discardOrTrashAction.getSecondEntry() == 0) {
 				this.trashMode = false;
