@@ -1,13 +1,15 @@
 package com.tpps.ui.lobbyscreen;
 
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 
@@ -16,12 +18,14 @@ public class LobbyScreenPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	private BufferedImage originalBackground, actualBackground;
 	private LobbyScreen parent;
-	private JTextArea chatwindow;
-	
 	
 	public LobbyScreenPanel(LobbyScreen parent) {
+		this.setLayout(new GridLayout(1,2,0,0));
 		this.parent =  parent;
 		this.loadBackgroundImage();
+		this.addComponentListener(new MyComponentAdapter());
+		this.add(new ChatPanel());
+		this.add(new SearchPanel());
 	}
 	
 	private void loadBackgroundImage() {
@@ -35,12 +39,23 @@ public class LobbyScreenPanel extends JPanel{
 		}
 	}
 	
-	private void createChatWindow(){
-		this.chatwindow = new JTextArea();
+	@Override
+	public void paintComponent(Graphics g) {
+		g.drawImage(actualBackground, 0, 0, null);
 	}
 	
-	public void paint(Graphics g) {
-		g.drawImage(actualBackground, 0, 0, null);
+	private class MyComponentAdapter extends ComponentAdapter {
+
+		@Override
+		public void componentResized(ComponentEvent e) {
+			super.componentResized(e);
+
+			int width = LobbyScreenPanel.this.parent.getContentPane().getWidth();
+			int height = LobbyScreenPanel.this.parent.getContentPane().getHeight();
+			
+			LobbyScreenPanel.this.actualBackground = GraphicsUtil.resize(LobbyScreenPanel.this.originalBackground, width , height);			
+			LobbyScreenPanel.this.repaint();
+		}
 	}
 	
 }
