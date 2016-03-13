@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
@@ -70,9 +72,13 @@ public class GameStorageInterface {
 		cs.loadCards();
 		for (Iterator<String> iterator = handCardIds.iterator(); iterator.hasNext();) {
 			String handCardId = (String) iterator.next();
-			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, handCardId.length() - 1));
-			if (serializedCard != null) {
-				System.out.println("hier");
+			
+			
+			Matcher matcher = Pattern.compile("\\d+").matcher(handCardId);
+			matcher.find();		
+			
+			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, matcher.start()));
+			if (serializedCard != null) {				
 				serializedCard = new SerializedCard(serializedCard.getActions(), serializedCard.getTypes(),
 						serializedCard.getCost(), serializedCard.getName(), serializedCard.getImage());
 			}
@@ -93,6 +99,11 @@ public class GameStorageInterface {
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(actionCardIds);
 		this.gameWindow.tableActionCards(serializedCardWithId);
 	}
+	
+	public void loadPlayedCardsAndPassToGameWindow(LinkedList<String> playedCardIds) {
+		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(playedCardIds);
+		this.gameWindow.middleCards(serializedCardWithId);
+	}
 
 	/**
 	 * 
@@ -100,14 +111,19 @@ public class GameStorageInterface {
 	 */
 	public static void main(String[] args) {
 		try {
-			new GameStorageInterface(new GameWindow())
-					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));
-			System.out.println("Cellar2".substring("Cellar2".length()-1, "Cellar2".length()));
+			GameWindow gameWindow = new GameWindow();
+			gameWindow.setVisible(true);
+			gameWindow.addStopDiscardButton();
+			new GameStorageInterface(gameWindow)
+					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+//		Matcher matcher = Pattern.compile("\\d+").matcher("TESt243");
+//		matcher.find();		
+//		System.out.println("Start: " + matcher.start() + "Ende: " + matcher.end());
+//		System.out.println("TESt243".substring(matcher.start(), matcher.end()));
 		
 
 	}

@@ -13,7 +13,7 @@ public class PacketSendChatToClient extends Packet{
 	public PacketSendChatToClient(String sender, String message, String receiver) {
 		super(PacketType.SEND_CHAT_TO_CLIENT);
 		this.sender = sender;
-		this.message = message;
+		this.message = message.trim();
 		this.receiver = receiver;
 	}
 

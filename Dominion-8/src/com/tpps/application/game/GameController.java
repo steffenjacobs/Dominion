@@ -1,12 +1,17 @@
 package com.tpps.application.game;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
+import com.tpps.application.network.game.GameServer;
 import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.game.TooMuchPlayerException;
+import com.tpps.application.network.gameSession.packets.PacketEnableAll;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -17,7 +22,7 @@ import com.tpps.technicalServices.util.GameConstant;
 public class GameController {
 
 	private LinkedList<Player> players;
-	
+
 	private boolean gameNotFinished;
 	private Player activePlayer;
 	private GameBoard gameBoard;
@@ -25,7 +30,7 @@ public class GameController {
 
 	public GameController() {
 		this.players = new LinkedList<Player>();
-		
+
 		this.gameBoard = new GameBoard();
 
 		this.gameNotFinished = true;
@@ -50,10 +55,15 @@ public class GameController {
 	public void checkForVictoryCard() {
 
 	}
-	
-	public boolean checkCardExistsAndDiscardOrTrash(String cardID){
+
+	public void updateTrashPile(LinkedList<Card> temporaryTrashPile) {
+		System.out.println("trashPile vor dem hinzufügen " + this.gameBoard.getTrashPile());
+		CollectionsUtil.appendListToList(temporaryTrashPile, this.gameBoard.getTrashPile());
+	}
+
+	public boolean checkCardExistsAndDiscardOrTrash(String cardID) throws IOException {
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
-		if (card != null){
+		if (card != null) {
 			this.getActivePlayer().discardOrTrash(cardID, this.getGameBoard().getTrashPile());
 			return true;
 		}
@@ -66,33 +76,32 @@ public class GameController {
 	 * played
 	 * 
 	 * @param cardID
+	 * @throws IOException
 	 * @throws SynchronisationException
 	 */
-	public boolean validateTurnAndExecute(String cardID) {
+	public boolean validateTurnAndExecute(String cardID) throws IOException {
 
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
-		
+
 		if (card != null) {
-			
+
 			if (this.gamePhase.equals("actionPhase")) {
-				
+
 				if (card.getTypes().contains(CardType.ACTION) && this.getActivePlayer().getActions() > 0) {
 					System.out.println("in der if");
-				
-						
-						this.getActivePlayer().playCard(cardID);
-						
-					} else {
-						
+
+					this.getActivePlayer().playCard(cardID);
+					if (this.getActivePlayer().getActions() == 0) {
 						this.setBuyPhase();
 					}
 					return true;
-				
+				}
+
 			}
 			if (this.gamePhase.equals("buyPhase")) {
 
 				if (card.getTypes().contains(CardType.TREASURE)) {
-					
+
 					System.out.println("thecard is a Treasure clicked in the buyphase");
 					this.getActivePlayer().playCard(cardID);
 					return true;
@@ -106,43 +115,46 @@ public class GameController {
 		LinkedList<Card> cards = this.getGameBoard().findCardListFromBoard(cardID);
 		Card card = cards.get(cards.size() - 1);
 		Player player = this.getActivePlayer();
-		
+
 		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0 && player.getCoins() >= card.getCost()) {
-			
+
 			player.setBuys(player.getBuys() - 1);
 			player.setCoins(player.getCoins() - card.getCost());
 			cards.remove(cards.size() - 1);
-			CollectionsUtil.addCardToList(card, player.getDeck().getDiscardPile());			
+			CollectionsUtil.addCardToList(card, player.getDeck().getDiscardPile());
 			return true;
 		}
 		return false;
 
 	}
-	
+
 	/**
-	 * checks if the card according to the given cardId is a tresure card on the hand
+	 * checks if the card according to the given cardId is a tresure card on the
+	 * hand
+	 * 
 	 * @param cardId
 	 */
-	public boolean isVictoryCardOnHand(String cardId){
+	public boolean isVictoryCardOnHand(String cardId) {
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardId);
-		if (card == null){
+		if (card == null) {
 			return false;
-		}else{
-			if (card.getTypes().contains(CardType.VICTORY)){
+		} else {
+			if (card.getTypes().contains(CardType.VICTORY)) {
 				return true;
-			}
-			else{
+			} else {
 				return false;
 			}
-			
-		}		
+
+		}
 	}
 
 	/**
 	 * calls the play Treasures method of the player adds the returned treasure
 	 * cards from the player cardHand to the playedCard list
+	 * 
+	 * @throws IOException
 	 */
-	public void playTreasures() {
+	public void playTreasures() throws IOException {
 		this.getActivePlayer().playTreasures();
 	}
 
@@ -151,12 +163,38 @@ public class GameController {
 	 */
 	public void organizePilesAndrefreshCardHand() {
 		System.out.println("organize and refresh");
-		System.out.println(Arrays.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getDeck().getDiscardPile()).toArray()));
-		System.out.println(Arrays.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getPlayedCards()).toArray()));
-		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
+		System.out.println(Arrays
+				.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getDeck().getDiscardPile()).toArray()));
+		System.out.println(
+				Arrays.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getPlayedCards()).toArray()));
+		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(),
+				this.getActivePlayer().getDeck().getDiscardPile());
 		this.getActivePlayer().getDeck().refreshCardHand();
-		
+
 		this.getActivePlayer().refreshPlayedCardsList();
+	}
+
+	public void discardOtherDownto(String value) {
+
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (!player.equals(activePlayer)) {
+
+				if (!player.getDeck().cardHandContainsReactionCard()) {
+					player.setDiscardMode();
+					player.setDiscardOrTrashAction(CardAction.DISCARD_CARD,
+							player.getDeck().getCardHand().size() - Integer.parseInt(value));
+				}
+				player.setReactionMode();
+				 try {
+					GameServer.getInstance().broadcastMessage(player.getPort(), new PacketEnableAll());
+				} catch (IOException e) {
+				
+					e.printStackTrace();
+				}
+
+			}
+		}
 	}
 
 	/**
@@ -166,6 +204,7 @@ public class GameController {
 	public void endTurn() {
 		this.setNextActivePlayer();
 		this.getActivePlayer().resetPlayerValues();
+		this.getActivePlayer().refreshPlayedCardsList();
 		this.setActionPhase();
 	}
 
@@ -182,7 +221,6 @@ public class GameController {
 	public void setPlayers(LinkedList<Player> players) {
 		this.players = players;
 	}
-
 
 	/**
 	 * 

@@ -1,5 +1,9 @@
 package com.tpps.application.game.card;
 
+/**
+ *
+ * @param <A>
+ */
 public class Tuple<A> {
 
 	private A a;
@@ -18,16 +22,23 @@ public class Tuple<A> {
 		return a;
 	}
 
+	/**
+	 * 
+	 */
 	public int getSecondEntry() {
 		return val;
 	}
 
+	/**
+	 * 
+	 */
 	public void decrementSecondEntry() {
 		this.val--;
 	}
-
-	public String toString() {
+	
+	/**
+	 * 
+	 */	public String toString() {
 		return "First entry: " + a + "second entry: " + val;
-
 	}
 }

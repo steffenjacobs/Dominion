@@ -5,13 +5,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
-import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
- * @author Nicolas Wipfler
+ * @author Nicolas Wipfler, Lukas Adler
  */
 public class Deck {
 
@@ -208,6 +207,23 @@ public class Deck {
 	}
 	
 	/**
+	 * appends drawPile to discardPile and creates a new list for drawPile
+	 * (discards the drawPile)
+	 */
+	public void discardDrawPile() {
+		CollectionsUtil.appendListToList(this.drawPile, this.discardPile);
+		this.drawPile = new LinkedList<Card>();
+	}
+	
+	/**
+	 * discards all cards the player has
+	 */
+	public void discardDeck() {
+		discardCardHand();
+		discardDrawPile();		
+	}
+	
+	/**
 	 * if the drawPile is not empty, the method adds one card from drawPile to cardHand 
 	 * and removes this card from drawPile
 	 */
@@ -226,6 +242,29 @@ public class Deck {
 		for (int i = 0; i < amount; i++) {
 			this.draw();
 		}
+	}
+	
+	/**
+	 * if the discardPile contains not enough card the shuffleIfLessThan(1) method is called. 
+	 * @return one Card from the discardPile
+	 */
+	public Card removeSaveFromDiscardPile() {
+		this.shuffleIfLessThan(1);		
+		return this.drawPile.removeLast();		
+	}
+	
+	/**
+	 * 
+	 * @return true if the cardHand contains a reaction card. false otherwise.
+	 */
+	public boolean cardHandContainsReactionCard() {
+		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(CardType.REACTION)){
+				return true;
+			}			
+		}
+		return false;		
 	}
 
 	/**
@@ -253,6 +292,8 @@ public class Deck {
 		this.getCardHand().remove(card);
 		trashPile.addLast(card);
 	}
+	
+
 
 	/**
 	 * @return String representation of a deck object
