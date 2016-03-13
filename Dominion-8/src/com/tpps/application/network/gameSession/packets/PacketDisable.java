@@ -9,9 +9,9 @@ import com.tpps.application.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketEnableAll extends Packet {
-	
-	private static final long serialVersionUID = -457011106248167767L;
+public class PacketDisable extends Packet {
+
+	private static final long serialVersionUID = 3025276399757464287L;
 
 	/**
 	 * 
@@ -19,8 +19,8 @@ public class PacketEnableAll extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketEnableAll() {
-		super(PacketType.ENABLE_ALL);	
+	public PacketDisable() {
+		super(PacketType.DISABLE);	
 	}
 
 	/**
