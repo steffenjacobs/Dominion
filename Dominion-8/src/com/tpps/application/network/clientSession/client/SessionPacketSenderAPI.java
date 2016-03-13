@@ -55,6 +55,12 @@ public final class SessionPacketSenderAPI {
 		SessionPacketReceiverAPI.addGetRequest(username, callable);
 		sendPacket(c, new PacketSessionGetRequest(username));
 	}
+	
+	private static long cnt = 0;
+	
+	private static synchronized long getNewTS(){
+		return cnt++;
+	}
 
 	/**
 	 * Asks the session-server to check a session and a username. It will be
@@ -65,8 +71,8 @@ public final class SessionPacketSenderAPI {
 	 */
 	public static void sendCheckRequest(Client c, String username, UUID sessionID,
 			SuperCallable<PacketSessionCheckAnswer> callable) {
-		PacketSessionCheckRequest req = new PacketSessionCheckRequest(username, sessionID);
-		SessionPacketReceiverAPI.addCheckRequest(username, callable, req.getTimestamp());
+		PacketSessionCheckRequest req = new PacketSessionCheckRequest(username, sessionID, getNewTS());
+		SessionPacketReceiverAPI.addCheckRequest(req, callable, req.getTimestamp());
 		sendPacket(c, req);
 	}
 

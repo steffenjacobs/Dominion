@@ -26,6 +26,35 @@ public class PacketUpdateValues extends Packet {
 		this.buys = buys;
 		this.coins = coins;
 	}
+	
+	
+	/**
+	 * 
+	 * @return the actions of the activePlayer
+	 */
+	public int getActions() {
+		return actions;
+	}
+
+
+	/**
+	 * 
+	 * @return the buys of the activePlayer
+	 */
+	public int getBuys() {
+		return buys;
+	}
+
+
+	/**
+	 * 
+	 * @return the coins of the activePlayer
+	 */
+	public int getCoins() {
+		return coins;
+	}
+
+
 
 	/**
 	 * @return a readable String

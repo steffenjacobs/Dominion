@@ -5,13 +5,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.tpps.application.game.card.Card;
-import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
- * @author Nicolas Wipfler
+ * @author Nicolas Wipfler, Lukas Adler
  */
 public class Deck {
 
@@ -19,13 +18,22 @@ public class Deck {
 	private LinkedList<Card> discardPile;
 	private LinkedList<Card> cardHand;
 
-	public Deck() {
+	/**
+	 * 
+	 */
+	public Deck(LinkedList<Card> initCards) {
 		this.drawPile = new LinkedList<Card>();
 		this.discardPile = new LinkedList<Card>();
 		this.cardHand = new LinkedList<Card>();
-		this.init();
+		this.init(initCards);
 	}
 
+	/**
+	 * 
+	 * @param draw
+	 * @param discard
+	 * @param cardHand
+	 */
 	public Deck(LinkedList<Card> draw, LinkedList<Card> discard, LinkedList<Card> cardHand) {
 		this.drawPile = draw;
 		this.discardPile = discard;
@@ -36,15 +44,13 @@ public class Deck {
 	 * initializes the deck with 7 COPPER cards and 3 ESTATE cards
 	 * shuffles the deck and draws 5 cards from the drawPile
 	 */
-	private void init() {
+	private void init(LinkedList<Card> initCards) {
 		if (this.drawPile != null) {
-			CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.ESTATE_VALUE)),CollectionsUtil.linkedList(CardType.VICTORY),"Estate", GameConstant.ESTATE_COST), 3,	this.drawPile);
-			Card.resetClassID();
-			CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.COPPER_VALUE)),CollectionsUtil.linkedList(CardType.TREASURE),"Copper", GameConstant.COPPER_COST), 7, this.drawPile);
-			Card.resetClassID();
+			CollectionsUtil.appendListToList(initCards, this.drawPile);		
+			
 			this.shuffleDrawPile();
 		}
-		this.draw(5);
+		this.draw(GameConstant.INIT_CARD_HAND_SIZE);
 	}
 
 	/**
@@ -101,12 +107,15 @@ public class Deck {
 	 * @return the card with cardID in cardHand (without removing it from the list)
 	 *         null if the list doesn't contain the card
 	 */
-	// suche cardHand mit der card ID durch und returne card
 	public Card getCardFromHand(String cardID) {
 		return getCardFromPile(cardID, this.cardHand);
 	}
 	
-	public LinkedList<Card> getTreasureCardsFromHand(){
+	/**
+	 * 
+	 * @return
+	 */
+	public LinkedList<String> getTreasureCardsFromHand(){
 		LinkedList<Card> treasureCards = new LinkedList<Card>();
 		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
@@ -114,7 +123,8 @@ public class Deck {
 				treasureCards.add(card);
 			}		
 		}
-		return treasureCards;
+		return CollectionsUtil.getCardIDs(treasureCards);
+		
 	}
 	
 	/**
@@ -134,12 +144,12 @@ public class Deck {
 	}
 	
 	/**
-	 * calls discardCardHand() and draw(5) 
+	 * calls discardCardHand() and draw(INIT_CARD_HAND_SIZE) 
 	 * (discards the cardHand and redraws 5 cards for the new turn)
 	 */
 	public void refreshCardHand() {
 		this.discardCardHand();
-		this.draw(5);
+		this.draw(GameConstant.INIT_CARD_HAND_SIZE);
 	}
 	
 	/**
@@ -197,6 +207,23 @@ public class Deck {
 	}
 	
 	/**
+	 * appends drawPile to discardPile and creates a new list for drawPile
+	 * (discards the drawPile)
+	 */
+	public void discardDrawPile() {
+		CollectionsUtil.appendListToList(this.drawPile, this.discardPile);
+		this.drawPile = new LinkedList<Card>();
+	}
+	
+	/**
+	 * discards all cards the player has
+	 */
+	public void discardDeck() {
+		discardCardHand();
+		discardDrawPile();		
+	}
+	
+	/**
 	 * if the drawPile is not empty, the method adds one card from drawPile to cardHand 
 	 * and removes this card from drawPile
 	 */
@@ -216,6 +243,29 @@ public class Deck {
 			this.draw();
 		}
 	}
+	
+	/**
+	 * if the discardPile contains not enough card the shuffleIfLessThan(1) method is called. 
+	 * @return one Card from the discardPile
+	 */
+	public Card removeSaveFromDiscardPile() {
+		this.shuffleIfLessThan(1);		
+		return this.drawPile.removeLast();		
+	}
+	
+	/**
+	 * 
+	 * @return true if the cardHand contains a reaction card. false otherwise.
+	 */
+	public boolean cardHandContainsReactionCard() {
+		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(CardType.REACTION)){
+				return true;
+			}			
+		}
+		return false;		
+	}
 
 	/**
 	 * @param card which will be put back on top of the drawPile
@@ -232,6 +282,18 @@ public class Deck {
 			this.putBack(card);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param card
+	 * @param trashPile
+	 */
+	public void trash(Card card, LinkedList<Card> trashPile ) {
+		this.getCardHand().remove(card);
+		trashPile.addLast(card);
+	}
+	
+
 
 	/**
 	 * @return String representation of a deck object

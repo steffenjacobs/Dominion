@@ -62,7 +62,6 @@ public class CardStorageController {
 			System.err.println("ERROR: Storage-Container is broken!");
 			e.printStackTrace();
 		}
-
 	}
 
 	/**

@@ -51,6 +51,19 @@ public class SerializedCard {
 		this.name = name;
 		this.image = image;
 	}
+	
+	/**
+	 * copy constructor
+	 * 
+	 * @param serializedCard the card to copy
+	 */
+	public SerializedCard(SerializedCard serializedCard) {
+		this.actions = serializedCard.getActions();
+		this.types = serializedCard.getTypes();
+		this.cost = serializedCard.getCost();
+		this.name = serializedCard.getName();
+		this.image = serializedCard.getImage();
+	}
 
 	/**
 	 * constructor for SerializedCard, taking a serialized byte-array with all
@@ -217,7 +230,6 @@ public class SerializedCard {
 			return false;
 		if (!GraphicsUtil.compareImages(this.image, card.image))
 			return false;
-
 		return true;
 	}
 
@@ -238,7 +250,6 @@ public class SerializedCard {
 			res += "- " + entr.getKey().name() + " - " + entr.getValue();
 		}
 		res += "\n-- --";
-
 		return res;
 	}
 }

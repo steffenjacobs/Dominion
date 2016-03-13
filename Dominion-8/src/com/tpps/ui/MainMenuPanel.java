@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.components.MainMenuButton;
+import com.tpps.ui.gameplay.GameWindow;
 
 /**
  * 
@@ -123,7 +124,7 @@ public class MainMenuPanel extends JPanel {
 	 * registrates the MouseListener on the panel
 	 */
 	private void registrateMouseListener() {
-		Mouse m = new Mouse();
+		MainMenuMouseListener m = new MainMenuMouseListener();
 		this.addMouseListener(m);
 		this.addMouseMotionListener(m);
 	}
@@ -143,7 +144,7 @@ public class MainMenuPanel extends JPanel {
 	 * @author Lukas
 	 *
 	 */
-	private class Mouse extends MouseAdapter {
+	private class MainMenuMouseListener extends MouseAdapter {
 
 		/**
 		 * reacts on mouseclicked event
@@ -157,7 +158,7 @@ public class MainMenuPanel extends JPanel {
 			if (buttons[1].isOn(e.getX(), e.getY())) {
 				MainMenuPanel.this.parent.dispose();
 				try {
-					GameWindow.setInstance(new GameWindow());
+					new GameWindow();
 				} catch (IOException e1) {				
 					e1.printStackTrace();
 				}				

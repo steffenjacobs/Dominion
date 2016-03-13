@@ -12,7 +12,6 @@ public class SessionPacketReceiver extends PacketHandler {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {
 		if (packet == null) {

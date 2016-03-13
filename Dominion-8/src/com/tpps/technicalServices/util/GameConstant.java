@@ -26,7 +26,7 @@ public final class GameConstant {
 	
 	public static final int INIT_ACTIONS = 1;
 	public static final int INIT_PURCHASES = 1;
-	public static final int INIT_MONEY = 0;
+	public static final int INIT_TREASURES = 0;
 	
 	/**
 	 * VICTORY
@@ -47,5 +47,17 @@ public final class GameConstant {
 	public static final int SILVER_COST = 3;
 	public static final int GOLD_VALUE = 3;
 	public static final int GOLD_COST = 6;	
+	
+	/**
+	 * Init card amount for players
+	 **/
+	public static final int INIT_COPPER_CARDS = 5;
+	public static final int INIT_ESTATE_CARDS = 3;
+	
+	public static final String ESTATE = "Estate";
+	public static final String COPPER = "Copper";
+	
+	
+	
 	
 }

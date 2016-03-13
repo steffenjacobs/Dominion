@@ -4,9 +4,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
-
 import java.awt.image.BufferedImage;
-
 import java.io.Serializable;
 import java.util.Comparator;
 
@@ -172,7 +170,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 */
 	public void updateRelativeSize(double width, double height) {
 		this.dimension = new RelativeGeom2D(width, height);
-		this.onResize(this.parent.getWidth(), this.parent.getHeight());
+		this.resizeObject(this.parent.getWidth(), this.parent.getHeight());
 	}
 
 	/**
@@ -232,6 +230,14 @@ public abstract class GameObject implements Cloneable, Serializable {
 	}
 
 	/**
+	 * @return the original image of the game object
+	 * @author Steffen Jacobs
+	 */
+	public Image getOriginalImage() {
+		return this.originalImage;
+	}
+
+	/**
 	 * @return the current image of the game object
 	 * @author Steffen Jacobs
 	 */
@@ -276,15 +282,32 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * resizes the new image to the relative layout, replaces the image with the
 	 * newImage and udpates the framework
 	 * 
+	 * @param newImage
+	 *            the new image
+	 * @param absWidth
+	 *            absolute width of the framework-frame
+	 * @param absHeight
+	 *            absolute height of the framework-frame
+	 * 
 	 * @author Steffen Jacobs
 	 */
-	public void updateImage(Image newImage, int absWidth, int absHeight) {
-		this.image = newImage;
-		this.height = this.image.getHeight(null);
-		this.width = this.image.getWidth(null);
+	private void updateImage(Image newImage, int absWidth, int absHeight) {
+		this.originalImage = newImage;
 		if (this.isVisible())
 			parent.repaintSpecificArea(this.getHitbox());
-		this.resizeObject(absWidth, absHeight);
+	}
+
+	/**
+	 * resizes the new image to the relative layout, replaces the image with the
+	 * newImage and udpates the framework
+	 * 
+	 * @param newImage
+	 *            the new image
+	 * 
+	 * @author Steffen Jacobs
+	 */
+	public void updateImage(Image newImage) {
+		updateImage(newImage, parent.getWidth(), parent.getHeight());
 	}
 
 	/**
@@ -295,16 +318,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 */
 	public void forceSetImage(Image newImage) {
 		this.image = newImage;
-	}
-
-	/**
-	 * resizes the new image to the relative layout, replaces the image with the
-	 * newImage and udpates the framework
-	 * 
-	 * @author Steffen Jacobs
-	 */
-	public void updateImage(Image newImage) {
-		updateImage(newImage, GameWindow.getInstance().getWidth(), GameWindow.getInstance().getHeight());
 	}
 
 	/**

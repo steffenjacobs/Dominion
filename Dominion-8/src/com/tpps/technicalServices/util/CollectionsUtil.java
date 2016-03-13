@@ -102,6 +102,7 @@ public final class CollectionsUtil {
 	 */
 	public static void cloneCardToList(Card card, int amount,
 			LinkedList<Card> destination) {
+		destination.addLast(card);
 		for (int i = 0; i < amount - 1; i++) {
 			destination.addLast(card.clone());
 		}

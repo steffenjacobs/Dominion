@@ -34,88 +34,100 @@ public final class DominionController {
 	/* constructor */
 	public DominionController() {
 		storageController = new CardStorageController();
-//		new LoginGUIController();
+		// new LoginGUIController();
 		try {
 			gameClient = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());
-		} catch (IOException e) {		
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
-	
-	public CardStorageController getStorageController(){
+
+	/**
+	 * 
+	 * @return
+	 */
+	public CardStorageController getStorageController() {
 		return storageController;
 	}
-	
-	public CardStorageController getCardRegistry(){
+
+	/**
+	 * 
+	 * @return
+	 */
+	public CardStorageController getCardRegistry() {
 		return storageController;
 	}
-	
-	public DominionController(boolean test){
+
+	/**
+	 * 
+	 * @param test
+	 */
+	public DominionController(boolean test) {
 		storageController = new CardStorageController();
-		//do nothing else, just init object
+		// do nothing else, just init object
 	}
 
-	/** sets the session-client instance and starts keep-alive */
+	/**
+	 * sets the session-client instance and starts keep-alive 
+	 */
 	public void setSessionClient(SessionClient sc) {
-
 		if (this.sessionClient != null) {
 			this.sessionClient.keepAlive(username, false);
 			this.sessionClient.disconnect();
 		}
-
 		this.sessionClient = sc;
 		this.sessionClient.keepAlive(username, true);
 	}
 
 	/* getters and setters */
-
 	/**
-	 * @param sessionID
-	 *            new session-id
+	 * @param sessionID new session-id
 	 */
 	public void setSessionID(UUID sessionID) {
 		this.sessionID = sessionID;
 	}
 
-	/** @return the users username */
+	/** 
+	 * @return the users username 
+	 */
 	public String getUsername() {
 		return username;
 	}
-	
-	
+
 	/**
-	 * 
 	 * @return the GameClientObject
 	 */
 	public GameClient getGameClient() {
 		return gameClient;
 	}
 
-	/** @return the users email-address */
+	/**
+	 * @return the users email-address 
+	 */
 	public String getEmail() {
 		return email;
 	}
 
-	/** @return the current Session-ID */
+	/**
+	 * @return the current Session-ID
+	 */
 	public UUID getSessionID() {
 		return sessionID;
 	}
 
-	/** @return the current instance of the game */
+	/**
+	 * @return the current instance of the game 
+	 */
 	public static DominionController getInstance() {
 		return instance;
 	}
 
 	/**
-	 * @param username
-	 *            new Username
-	 * @param mailAddress
-	 *            new Email-Address
+	 * @param username new Username
+	 * @param mailAddress new Email-Address
 	 */
 	public void setCredentials(String username, String mailAddress) {
 		this.username = username;
 		this.email = mailAddress;
 	}
-
 }

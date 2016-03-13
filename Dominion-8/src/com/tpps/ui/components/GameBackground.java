@@ -8,14 +8,11 @@ public class GameBackground extends GameObject {
 
 	private static final long serialVersionUID = -8029224710447313551L;
 	
-	
 	public GameBackground(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int _layer,
 			Image sourceImage, GraphicFramework _parent){
 		super(relativeLocX,  relativeLocY, relativeWidth, relativeHeight,  _layer,
 				sourceImage, _parent);
 	}
-	
-
 	
 	@Override
 	public GameObject clone() {
@@ -52,5 +49,4 @@ public class GameBackground extends GameObject {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

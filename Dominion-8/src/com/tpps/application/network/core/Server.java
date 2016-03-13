@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.net.ServerSocketFactory;
 
+import com.tpps.application.network.core.events.NetworkListenerManager;
 import com.tpps.application.network.core.packet.Packet;
 
 /**
@@ -24,6 +25,8 @@ public class Server {
 	private ServerSocket serverSocket;
 	private PacketHandler handler;
 	private Thread acceptor;
+
+	private NetworkListenerManager listenerManager = new NetworkListenerManager();
 
 	// Integer represents the port
 	protected ConcurrentHashMap<Integer, ServerConnectionThread> clients = new ConcurrentHashMap<>();
@@ -43,13 +46,6 @@ public class Server {
 
 		bind(address);
 		startListening();
-	}
-
-	/**
-	 * @return handler for all packets
-	 */
-	public PacketHandler getHandler() {
-		return this.handler;
 	}
 
 	/**
@@ -77,32 +73,23 @@ public class Server {
 	}
 
 	/**
-	 * is called when the server stops
+	 * Closes the connection
 	 * 
 	 */
-	private void onApplicationExit() {
-		System.out.println("Stopping server...");
-		stopListening();
-		System.out.println("Server was stopped!");
-	}
-
-	/**
-	 * @return the client thread from port
-	 * @param port
-	 *            client-thread client-port
-	 */
-	public ServerConnectionThread getClientThread(int port) {
-		return clients.get(port);
-	}
-
-	/**
-	 * removes the client thread from port
-	 * 
-	 * @param port
-	 *            client-thread client-port
-	 */
-	ServerConnectionThread removeClientThread(int port) {
-		return clients.remove(port);
+	protected void stopListening() {
+		try {
+			serverSocket.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		for (ServerConnectionThread client : clients.values()) {
+			try {
+				this.getListenerManager().fireDisconnectEvent(client.getPort());
+				client.closeSockets();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -149,7 +136,7 @@ public class Server {
 		if (!clients.containsKey(port)) {
 			throw new IllegalArgumentException("No such client connected: " + port);
 		}
-		clients.get(port).sendPacket(packet);
+		clients.get(port).addPacketToQueue(packet);
 	}
 
 	/**
@@ -166,7 +153,7 @@ public class Server {
 		for (Entry<Integer, ServerConnectionThread> entr : clients.entrySet()) {
 			if (entr.getKey().intValue() == senderPort)
 				continue;
-			entr.getValue().sendPacket(packet);
+			entr.getValue().addPacketToQueue(packet);
 		}
 	}
 
@@ -178,26 +165,53 @@ public class Server {
 	 */
 	public void broadcastMessage(Packet packet) throws IOException {
 		for (ServerConnectionThread entr : clients.values()) {
-			entr.sendPacket(packet);
+			entr.addPacketToQueue(packet);
 		}
 	}
 
 	/**
-	 * Closes the connection
+	 * is called when the server stops
 	 * 
 	 */
-	protected void stopListening() {
-		try {
-			serverSocket.close();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		for (ServerConnectionThread client : clients.values()) {
-			try {
-				client.closeSockets();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+	private void onApplicationExit() {
+		System.out.println("Stopping server...");
+		stopListening();
+		System.out.println("Server was stopped!");
+	}
+
+	/**
+	 * removes the client thread from port
+	 * 
+	 * @param port
+	 *            client-thread client-port
+	 */
+	ServerConnectionThread removeClientThread(int port) {
+		return clients.remove(port);
+	}
+
+	/**
+	 * @return the client thread from port
+	 * @param port
+	 *            client-thread client-port
+	 */
+	public ServerConnectionThread getClientThread(int port) {
+		return clients.get(port);
+	}
+
+	/**
+	 * @return handler for all packets
+	 */
+	public PacketHandler getHandler() {
+		return this.handler;
+	}
+
+	/**
+	 * getter for the NetworkListenerManager
+	 * 
+	 * @return the NetworkListenerManager instance for registering listeners to
+	 *         this server
+	 */
+	public NetworkListenerManager getListenerManager() {
+		return listenerManager;
 	}
 }

@@ -8,6 +8,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
 import org.junit.Test;
@@ -115,10 +117,14 @@ public class JUnitSessionServerTest {
 		assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 
 		// bulk-test
-		final int count = 2000;
+		final int count = 10000;
 		Semaphore bulk = new Semaphore(count);
+
+		sessionClient.getConnectionThread().resetsMetrics();
+		ExecutorService threadPool = Executors.newFixedThreadPool(count);
+
 		for (int i = 0; i < count; i++) {
-			new Thread(() -> {
+			threadPool.submit(() -> {
 				try {
 					bulk.acquire(1);
 				} catch (Exception e) {
@@ -126,12 +132,11 @@ public class JUnitSessionServerTest {
 				}
 				assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 				bulk.release(1);
-			}).start();
-
-			// or else you get heap-space errors
-			Thread.sleep(1);
+			});
 		}
-		Thread.sleep(1000);
+		Thread.sleep(120000);
+		assertEquals(sessionClient.getConnectionThread().getCountReceived(), count);
+		assertEquals(sessionClient.getConnectionThread().getCountSent(), count);
 		assertEquals(count, bulk.availablePermits());
 
 		if (doLongTest) {

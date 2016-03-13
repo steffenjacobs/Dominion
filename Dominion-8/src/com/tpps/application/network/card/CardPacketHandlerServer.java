@@ -69,7 +69,7 @@ public class CardPacketHandlerServer extends PacketHandler {
 
 			new Thread(() -> {
 				try {
-					connThread.sendPacket(answer);
+					connThread.addPacketToQueue(answer);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -101,7 +101,7 @@ public class CardPacketHandlerServer extends PacketHandler {
 				System.out.println(request2.getRequesterName() + " wants " + request2.getRequestedCardName());
 			}
 
-			connThread.sendPacket(
+			connThread.addPacketToQueue(
 					new PacketGetCardAnswer(this.cardStorage.getCard(request2.getRequestedCardName()), request2));
 			break;
 		default:

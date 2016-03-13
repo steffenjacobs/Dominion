@@ -1,41 +1,41 @@
 package com.tpps.ui.gameplay;
 
 import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.Card;
-import com.tpps.application.network.gameSession.packets.PacketEndActionPhase;
-import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.application.storage.SerializedCard;
-import com.tpps.ui.GameObject;
+import com.tpps.technicalServices.util.GameConstant;
+import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GraphicFramework;
+import com.tpps.ui.components.DisplayValue;
 import com.tpps.ui.components.GFButton;
 import com.tpps.ui.components.GameBackground;
 
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
-	private GFButton closeButton;
-	private GFButton endActionPhase; 
-	private GFButton playTreasures;
-	private GFButton endTurn;
+	static GFButton closeButton, endActionPhase, playTreasures, endTurn;
 	private static GameWindow instance;
 
-	private BufferedImage closeImage, backgroundImage, tableImage;
-	private BufferedImage[] actionCards;
+	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage,displayImageBuys,displayImageActions,displayImageCoins;
 	private GraphicFramework framework;
-	private Card[] gfcAction;
-	private LinkedList<Card> estate, coins, handCards, tableCards;
+	private DisplayValue buy,coin,action;
+	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards,middleCards;
+	private ButtonClass stopDiscard, stopTrash, discardDeck, endReactions;
+	public static String coins, buys, actions;
+	private static final double CORRECTION_16TO9 = 16/ (double) 9;
+	
 
 	public static GameWindow getInstance() {
 		return instance;
@@ -47,37 +47,61 @@ public class GameWindow extends JFrame {
 	 * @author Steffen Jacobs
 	 */
 	public GameWindow() throws IOException {
+		instance = this;
 		final int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
-		actionCards = new BufferedImage[10];
-		gfcAction = new Card[10];
-
+		final int HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
+		this.handCards = new LinkedList<Card>();
+		this.tableCards = new LinkedList<Card>();
+		this.victoryCards = new LinkedList<Card>();
+		this.coinCards = new LinkedList<Card>();
+		this.middleCards = new LinkedList<Card>();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-//		this.setExtendedState(Frame.MAXIMIZED_BOTH);
-//		this.setUndecorated(true);
+//		 this.setExtendedState(Frame.MAXIMIZED_BOTH);
+//		 this.setUndecorated(true);
+		coins = "Coins: ";
+		buys = "Buys: ";
+		actions = "Actions: ";
 		this.setMinimumSize(new Dimension(1280, 720));
-		this.setVisible(true);
+//		this.setVisible(true);
 		framework = new GraphicFramework(this);
 		this.add(framework);
 
 		backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
 		closeImage = this.loadingImage(closeImage, "resources/img/gameObjects/close.png");
 		tableImage = this.loadingImage(tableImage, "resources/img/gameObjects/table.jpg");
+		buttonImage = this.loadingImage(buttonImage, "resources/img/gameObjects/testButton.png");
+		displayImageBuys= this.loadingImage(displayImageBuys, "resources/img/gameObjects/Buys.png");
+		displayImageCoins= this.loadingImage(displayImageCoins, "resources/img/gameObjects/Coins.png");
+		displayImageActions= this.loadingImage(displayImageActions, "resources/img/gameObjects/Actions.png");
 
-		closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015, WIDTH, WIDTH, 1, closeImage, framework, "");
+		closeButton = new ButtonClass(0.98, 0.01, 0.015, 0.015*CORRECTION_16TO9, WIDTH, WIDTH, 1, closeImage, framework, "");
 
-		ButtonClass endActionPhase = new ButtonClass(0.97, 0.1, 0.015, 0.015, WIDTH, WIDTH, 1, closeImage, framework, "endActionPhase");
-		ButtonClass playTreasures = new ButtonClass(0.97, 0.2, 0.015, 0.015, WIDTH, WIDTH, 1, closeImage, framework, "playTreasures");
+		endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End ActionPhase");
+		playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Play Treasures");
+		stopDiscard = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Discard");
+		stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Trash");
+		discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Discard Deck");
+		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
+		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Reactions");
 		
-		framework.addComponent(closeButton);
-		framework.addComponent(endActionPhase);
-		framework.addComponent(playTreasures);
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,String.valueOf(GameConstant.INIT_ACTIONS));
+		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework,String.valueOf(GameConstant.INIT_TREASURES));
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework,String.valueOf(GameConstant.INIT_PURCHASES));
+		
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
+		framework.addComponent(closeButton);
+		framework.addComponent(endActionPhase);		
 		
-		this.setSize(1280, 720);
+		framework.addComponent(endTurn);
+		
+		framework.addComponent(action);
+		framework.addComponent(coin);
+		framework.addComponent(buy);
+		
 		this.revalidate();
 		this.repaint();
-		
+
 	}
 
 	private BufferedImage loadingImage(BufferedImage im, String resource) {
@@ -90,136 +114,245 @@ public class GameWindow extends JFrame {
 		return im;
 
 	}
+	
+	public void reset() {
+
+		this.framework.removeComponent(action);
+		this.framework.removeComponent(coin);
+		this.framework.removeComponent(buy);
+		
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,String.valueOf(GameConstant.INIT_ACTIONS));
+		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework,String.valueOf(GameConstant.INIT_TREASURES));
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework,String.valueOf(GameConstant.INIT_PURCHASES));
+		
+		this.framework.addComponent(action);
+		this.framework.addComponent(coin);
+		this.framework.addComponent(buy);
+		
+		this.framework.addComponent(endActionPhase);
+		
+		for (Iterator<Card> iterator = this.middleCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.middleCards = new LinkedList<Card>();
+		
+		
+		this.repaint();
+	}
 
 	public void tableActionCards(LinkedHashMap<String, SerializedCard> table) {
-
+		LinkedList<String> actionCardlds = new LinkedList<>(table.keySet());
 		double shift = 0.295;
 		double shiftBottom = 0.295;
 		int k = 3;
-		LinkedList<String> actionCardlds = new LinkedList<>(table.keySet());
+		
+		for (Iterator<Card> iterator = this.tableCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.tableCards = new LinkedList<Card>();
+		
+		
+		
 
 		for (int i = 0; i < table.size(); i++) {
 			SerializedCard serializedCard = table.get(actionCardlds.get(i));
 
 			if (i < 5) {
-				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.06, 0.02, 0.05, 0.15, k++,
-						serializedCard.getImage(), framework));
+				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.06, 0.02,
+						0.05, 0.15, k++, serializedCard.getImage(), framework);
+				framework.addComponent(card);
+				this.tableCards.add(card);
 			} else {
-				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftBottom += 0.06, 0.2, 0.05, 0.15, k++,
-						serializedCard.getImage(), framework));
+				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftBottom += 0.06,
+						0.2, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+				framework.addComponent(card);
+				this.tableCards.add(card);
 			}
 
 		}
 	}
 
-	public void coinCards(HashMap<String, SerializedCard>coins) {
+	public void coinCards(HashMap<String, SerializedCard> coins) {
+		LinkedList<String> actionCardlds = new LinkedList<>(coins.keySet());
+		double shift = -0.05;
+		int k = 3;
+		
+		for (Iterator<Card> iterator = this.coinCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.coinCards = new LinkedList<Card>();
+		
+		for (int i = 0; i < coins.size(); i++) {
+			SerializedCard serializedCard = coins.get(actionCardlds.get(i));
+			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+					serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), 0.95, shift += 0.12, 0.1,
+					0.1, k++, GraphicsUtil.rotate(serializedCard.getImage(), 270), framework);
+			framework.addComponent(card);
+			this.coinCards.add(card);
+
+		}
 
 	}
-
+	
+	public void middleCards(LinkedHashMap<String,SerializedCard> middleCards){
+		LinkedList<String> actionCardlds = new LinkedList<>(middleCards.keySet());
+		int k = 14;
+		double sub = handCards.size();
+		double shift = ((1 - (sub / 10)) / 2)+0.20;
+		
+		for (Iterator<Card> iterator = this.middleCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.middleCards = new LinkedList<Card>();
+		
+		
+	for (int i = 0; i < middleCards.size(); i++) {
+		
+		SerializedCard serializedCard = middleCards.get(actionCardlds.get(i));
+		
+		Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+				serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.05,
+				0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+		framework.addComponent(card);
+		this.middleCards.add(card);
+	}	
+	}
+	
+	
 	public void handCards(LinkedHashMap<String, SerializedCard> handCards) {
-		LinkedList<String> actionCardlds = new LinkedList<>(handCards.keySet());
+		LinkedList<String> actionCardIds = new LinkedList<>(handCards.keySet());
+		
 		int k = 14;
 		double sub = handCards.size();
 		double shift = (1 - (sub / 10)) / 2;
 		double shiftSmall = shift - 0.03;
 		double shiftOne = shiftSmall - 0.03;
-		System.out.println(shift);
+
+		
+		for (Iterator<Card> iterator = this.handCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.handCards = new LinkedList<Card>();
+		
+		System.out.println("im Gamewindow handcardSize" + handCards.size());
 		for (int i = 0; i < handCards.size(); i++) {
 
-			SerializedCard serializedCard = handCards.get(actionCardlds.get(i));
+			SerializedCard serializedCard = handCards.get(actionCardIds.get(i));
+			//Example For nishit
+//			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardIds.get(i));
+//			matcher.find();	
+//			actionCardIds.get(i).substring(matcher.start(), matcher.end());
 
 			if (handCards.size() <= 5 && handCards.size() > 1) {
-				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftSmall += 0.075, 0.70, 0.1, 0.3, k++,
-						serializedCard.getImage(), framework));
+				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+						serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), shiftSmall += 0.075,
+						0.70, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+				framework.addComponent(card);
+				this.handCards.add(card);
 			} else if (handCards.size() == 1) {
-				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftOne += 0.075, 0.70, 0.1, 0.3, k++,
-						serializedCard.getImage(), framework));
+				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+						serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), shiftOne += 0.075,
+						0.70, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+				framework.addComponent(card);
+				this.handCards.add(card);
 			} else {
-				framework.addComponent(new Card(serializedCard.getActions(), serializedCard.getTypes(),
-						serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.075, 0.70, 0.1, 0.3, k++,
-						serializedCard.getImage(), framework));
+				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+						serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), shift += 0.075, 0.70,
+						0.1, 0.3, k++, serializedCard.getImage(), framework);
+				framework.addComponent(card);
+				this.handCards.add(card);
 			}
 		}
 	}
 
-	public void estateCards(HashMap<String, SerializedCard>estate) {
+	public void victoryCards(HashMap<String, SerializedCard> victory) {
+		LinkedList<String> actionCardlds = new LinkedList<>(victory.keySet());
+		double shift = -0.05;
+		int k = 3;
+		
+		for (Iterator<Card> iterator = this.victoryCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);		
+		}
+		this.victoryCards = new LinkedList<Card>();
+		
+		
+		
+		for (int i = 0; i < victory.size(); i++) {
+			SerializedCard serializedCard = victory.get(actionCardlds.get(i));
+			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+					serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1,
+					0.1, k++, GraphicsUtil.rotate(serializedCard.getImage(), 90), framework);
+			framework.addComponent(card);
+			this.victoryCards.add(card);
 
+		}
 	}
-
-	private class ButtonClass extends GFButton {
-		private static final long serialVersionUID = 1520424079770080041L;
-
-		public ButtonClass(double relativeX, double relativeY, double relativeWidth, double relativeHeight,
-				int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
-			super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage,
-					_parent, caption);
-		}
-
-		@Override
-		public GameObject clone() {
-			return null;// return new TestButton(super.get);
-		}
-
-		@Override
-		public void onMouseEnter() {
-			System.out.println("entered " + this.toString());
-
-		}
-
-		@Override
-		public void onMouseExit() {
-
-		}
-
-		@Override
-		public void onMouseClick() {
-			System.out.println("clicked " + this.toString());
-			
-			if (this.getCaption().equals("")) {
-				System.exit(0);
-			}
-			if (this.getCaption().equals("endActionPhase")){
-				try {
-					System.out.println("EndActionPhase");
-					DominionController.getInstance().getGameClient().sendMessage(new PacketEndActionPhase());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			if (this.getCaption().equals("playTreasures")){
-				try {
-					System.out.println("PacketPlayTreasures");
-					DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-
-		@Override
-		public void onMouseDrag() {
-			System.out.println("dragged " + this.toString());
-
-		}
-
-		@Override
-		public String toString() {
-			return "@" + System.identityHashCode(this) + " - " + super.getLocation() + " , " + super.getDimension()
-					+ " , " + super.getLayer() + " , " + super.getImage() + " , " + super.getParent() + " , "
-					+ super.getCaption();
-		}
-
-		@Override
-		public void onResize(int absWidth, int absHeight) {
-			super.onResize(absWidth, absHeight);
-		}
-
+	
+	public void setCaptionCoins(String caption){
+		framework.removeComponent(coin);
+		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework, caption);
+		framework.addComponent(coin);
+//		coin.renewCaption(caption);
+//		this.repaint();
 	}
-
+	public void setCaptionActions(String caption){
+		framework.removeComponent(action);
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework, caption);
+		framework.addComponent(action);
+//		action.renewCaption(caption);
+//		this.repaint();
+	}
+	public void setCaptionBuys(String caption){
+		framework.removeComponent(buy);
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework, caption);
+		framework.addComponent(buy);;
+//		buy.renewCaption(caption);
+//		this.repaint();
+	}
+	
+	public void endActionPhase(){
+		framework.removeComponent(endActionPhase);
+		framework.addComponent(playTreasures);
+		this.repaint();
+	}
+	
+	public void addStopDiscardButton() {
+		framework.addComponent(stopDiscard);
+		this.repaint();
+	}
+	
+	public void removeStopDiscardButton() {
+		framework.removeComponent(stopDiscard);
+		this.repaint();
+	}
+	
+	public void addStopTrashButton() {
+		framework.addComponent(this.stopTrash);
+	}
+	
+	public void removeStopTrashButton() {
+		framework.removeComponent(this.stopTrash);
+	}
+	
+	public void addDiscardDeckButton(){
+		framework.addComponent(this.discardDeck);
+	}
+	
+	public void playTreasures(){
+		framework.removeComponent(playTreasures);
+	}
+	
+	public void endTurn(){
+		framework.addComponent(endActionPhase);
+	}
+	
+	
 }

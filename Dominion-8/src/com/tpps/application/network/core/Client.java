@@ -7,8 +7,8 @@ import java.net.SocketAddress;
 
 import javax.net.SocketFactory;
 
+import com.tpps.application.network.core.events.NetworkListenerManager;
 import com.tpps.application.network.core.packet.Packet;
-import com.tpps.application.network.core.packet.PacketType;
 
 /**
  * represents a client connected to a server on a higher layer then
@@ -24,14 +24,40 @@ public class Client {
 	private ClientConnectionThread connectionThread;
 	private SocketAddress address;
 
+	private NetworkListenerManager listenerManager = new NetworkListenerManager();
+
 	/**
-	 * needed for testing
-	 * 
+	 * Tries to connect to the specified server (5sec timeout)
+	 *
+	 * @param address
+	 *            SocketAddress of the server
+	 * @param _handler
+	 *            an implementation of the interface
+	 * @param async:
+	 *            make the thread wait until the connection is established
+	 * @throws IOException
 	 * @author Steffen Jacobs
-	 * @return ClientConnectionThread holding the connection to the server
 	 */
-	public ClientConnectionThread getConnectionThread() {
-		return this.connectionThread;
+	public Client(SocketAddress _address, PacketHandler _handler, boolean connectAsync) throws IOException {
+		this.address = _address;
+		this.handler = _handler;
+		connectAndLoop(connectAsync);
+	}
+
+	/**
+	 * Tries to connect to the specified server (5sec timeout)
+	 *
+	 * @param address
+	 *            SocketAddress of the server
+	 * @param _handler
+	 *            an implementation of the interface
+	 * @throws IOException
+	 * @author Steffen Jacobs
+	 */
+	public Client(SocketAddress _address, PacketHandler _handler) throws IOException {
+		this.address = _address;
+		this.handler = _handler;
+		connectAndLoop(true);
 	}
 
 	/**
@@ -43,24 +69,27 @@ public class Client {
 	 * @author Steffen Jacobs
 	 */
 	private void connectAndLoopLogic() {
-		long CONNECTION_TIMEOUT = 5000;
-
+		int CONNECTION_TIMEOUT = 5000;
+		Socket clientSocket = null;
 		while (!Thread.interrupted()) {
+			System.out.println("trying again");
 			this.connected = false;
 			try {
 				try {
-					final Socket clientSocket = SocketFactory.getDefault().createSocket();
-					clientSocket.connect(address, 5000);
-					System.out.println("Connected to Server.");
+					clientSocket = SocketFactory.getDefault().createSocket();
+					clientSocket.connect(address, CONNECTION_TIMEOUT);
+					System.out.println("[NETWORK-INFO] Connected to Server.");
 					this.connected = true;
 					connectionThread = new ClientConnectionThread(clientSocket, handler, this);
 					connectionThread.start();
-					Thread.yield();
 				} catch (ConnectException ex) {
 					this.connected = false;
-					System.out.println("Connection refused. Reconnecting...");
+					clientSocket.close();
+					if (connectionThread != null && !connectionThread.isInterrupted()) {
+						connectionThread.interrupt();
+					}
+					System.out.println("NETWORK-ERROR] Connection refused. Reconnecting...");
 				}
-
 				Thread.sleep(50);
 				if (this.connected) {
 					break;
@@ -107,10 +136,60 @@ public class Client {
 	 */
 	public void tryReconnect() {
 		connected = false;
-		connectAndLoop(true);
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		new Thread(() -> connectAndLoop(false)).start();
 	}
 
-	//
+	/**
+	 * Closes the connection
+	 * 
+	 * @author Steffen Jacobs
+	 */
+	public void disconnect() {
+		this.connected = false;
+		try {
+			this.connectionThread.disconnect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.connectionThread.interrupt();
+
+		if (this.connecting) {
+			this.tryToConnectThread.interrupt();
+			System.out.println("stoppped reconnect-attempt");
+		}
+	}
+
+	/**
+	 * Sends a message to the server - replacement for sendPacket(byte[])
+	 * 
+	 * @param data
+	 *            the data to send
+	 * @throws IOException
+	 * @author Steffen Jacobs
+	 */
+
+	public void sendMessage(Packet packet) throws IOException {
+		if (this.connected) {
+			new Thread(() -> {
+				try {
+					connectionThread.addPacketToQueue(packet);
+
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}).start();
+
+		} else {
+			System.out.println("[NETWORK] Error: Could not send packet: No Connection.");
+			this.connectAndLoop(true);
+		}
+	}
+
 	/**
 	 * @return wheter the client is connected to the server
 	 * @author Steffen Jacobs
@@ -129,71 +208,13 @@ public class Client {
 	}
 
 	/**
-	 * Tries to connect to the specified server (5sec timeout)
-	 *
-	 * @param address
-	 *            SocketAddress of the server
-	 * @param _handler
-	 *            an implementation of the interface
-	 * @param async:
-	 *            make the thread wait until the connection is established
-	 * @throws IOException
-	 * @author Steffen Jacobs
-	 */
-	public Client(SocketAddress _address, PacketHandler _handler, boolean connectAsync) throws IOException {
-		this.address = _address;
-		this.handler = _handler;
-		connectAndLoop(connectAsync);
-	}
-
-	/**
-	 * Tries to connect to the specified server (5sec timeout)
-	 *
-	 * @param address
-	 *            SocketAddress of the server
-	 * @param _handler
-	 *            an implementation of the interface
-	 * @throws IOException
-	 * @author Steffen Jacobs
-	 */
-	public Client(SocketAddress _address, PacketHandler _handler) throws IOException {
-		this.address = _address;
-		this.handler = _handler;
-		connectAndLoop(true);
-	}
-
-	/**
-	 * Closes the connection
+	 * needed for testing
 	 * 
 	 * @author Steffen Jacobs
+	 * @return ClientConnectionThread holding the connection to the server
 	 */
-	public void disconnect() {
-		this.connected = false;
-		this.connectionThread.interrupt();
-	}
-
-	/**
-	 * Sends a message to the server - replacement for sendPacket(byte[])
-	 * 
-	 * @param data
-	 *            the data to send
-	 * @throws IOException
-	 * @author Steffen Jacobs
-	 */
-	public void sendMessage(Packet packet) throws IOException {
-		if (this.connected) {
-			new Thread(() -> {
-				try {
-					connectionThread.sendPacket(PacketType.getBytes(packet));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}).start();
-
-		} else {
-			System.out.println("NETWORK ERROR: Could not send packet: No Connection.");
-			this.connectAndLoop(true);
-		}
+	public ClientConnectionThread getConnectionThread() {
+		return this.connectionThread;
 	}
 
 	/**
@@ -202,6 +223,16 @@ public class Client {
 	 */
 	public PacketHandler getHandler() {
 		return handler;
+	}
+
+	/**
+	 * getter for the NetworkListenerManager
+	 * 
+	 * @return the NetworkListenerManager instance for registering listeners to
+	 *         this client
+	 */
+	public NetworkListenerManager getListenerManager() {
+		return listenerManager;
 	}
 
 }

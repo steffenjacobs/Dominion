@@ -11,15 +11,14 @@ import com.tpps.application.network.core.packet.PacketType;
  */
 public class PacketEndTurn extends Packet {
 	private static final long serialVersionUID = -8763060018038893429L;
-	private final String username;
 
 	/**
 	 * @return the name of the player who played wants to end the turn
 	 * @author Steffen Jacobs
 	 */
-	public String getUsername() {
-		return this.username;
-	}
+//	public String getUsername() {
+//		return this.username;
+//	}
 
 	/**
 	 * initializes the Packet with the name of the player who wants to end the
@@ -27,9 +26,8 @@ public class PacketEndTurn extends Packet {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public PacketEndTurn(String playerName) {
+	public PacketEndTurn() {
 		super(PacketType.END_TURN);
-		this.username = playerName;
 	}
 
 	/**
@@ -38,6 +36,6 @@ public class PacketEndTurn extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + ": " + this.getUsername();
+		return this.getClass().getSimpleName();
 	}
 }

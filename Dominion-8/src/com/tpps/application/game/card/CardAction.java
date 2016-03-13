@@ -34,6 +34,8 @@ public enum CardAction {
 	/* z.B. bei Miliz */
 	DISCARD_CARD, 
 	
+	DISCARD_AND_DRAW,
+	
 	/* z.B. bei Kapelle */
 	TRASH_CARD, 
 	
@@ -44,6 +46,8 @@ public enum CardAction {
 	IS_TREASURE, 
 	
 	/* z.B. wenn eine Karte keine Aktion hat und eine Punktekarte ist */
-	IS_VICTORY;
+	IS_VICTORY,
+	
+	DISCARD_OTHER_DOWNTO;
 	
 }

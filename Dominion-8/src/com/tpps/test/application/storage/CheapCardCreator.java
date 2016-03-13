@@ -1,6 +1,8 @@
 package com.tpps.test.application.storage;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -94,12 +96,24 @@ public class CheapCardCreator {
 //		Cellar		
 		actions.remove(CardAction.IS_VICTORY);
 		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "1");
+		actions.put(CardAction.DISCARD_AND_DRAW, "-1");
 		types.remove(CardType.VICTORY);
 		types.add(CardType.ACTION);
 		cards.put("Cellar", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(), 
 				(LinkedList<CardType>) types.clone(), 2, "Cellar", getImg("Cellar")));
+//		Chapel
+		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
+		actions.remove(CardAction.DISCARD_AND_DRAW);
+		actions.put(CardAction.TRASH_CARD, "4");
+		cards.put("Chapel", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 2, "Chapel", getImg("Chapel")));
 		
-		
+//		Chancellor
+		actions.remove(CardAction.TRASH_CARD);		
+		actions.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, "2");
+		actions.put(CardAction.DISCARD_CARD, "Deck");
+		cards.put("Chancellor", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 3, "Chancellor", getImg("Chancellor")));
 
 		// setup Dummy-DominionController
 		DominionController dom = new DominionController(true);
