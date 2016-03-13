@@ -107,7 +107,14 @@ public class Card extends GameObject {
 		this.id = this.name + classID++;
 	}
 
-	/** Test Konstruktor ohne Graphic Framework */
+	/**
+	 * Test Konstruktor
+	 * 
+	 * @param actions
+	 * @param types
+	 * @param name
+	 * @param cost
+	 */
 	public Card(LinkedHashMap<CardAction, String> actions,
 			LinkedList<CardType> types, String name, int cost) {
 		super();
