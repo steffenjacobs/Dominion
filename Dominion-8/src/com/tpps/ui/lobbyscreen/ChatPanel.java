@@ -3,7 +3,9 @@ package com.tpps.ui.lobbyscreen;
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -31,7 +33,6 @@ public class ChatPanel extends JPanel{
 	private LobbyScreenPanel parent;
 	
 	private MessageBox messageBox;
-	private BoxLayout layout;
 	
 	public ChatPanel(LobbyScreenPanel parent) {
 		this.parent = parent;
@@ -41,13 +42,12 @@ public class ChatPanel extends JPanel{
 		this.initChatBox();
 		this.initChatTypeBox();
 		this.repaint();
-		
-		//this.setComponentOrientation(ComponentOrientation.);
 	}
 	
 	private void initChatBox(){
 		this.chatwindow = new JTextArea();
 		this.chatwindow.setFocusable(false);
+		Font font = new Font("TimesRoman", Font.PLAIN, 20);
 		this.chatwindow.setPreferredSize(new Dimension((int) (CHATWIDTH * 0.9), (int) (CHATHEIGHT* 0.9)));
 		this.chatwindow.setSize(new Dimension(CHATWIDTH, CHATHEIGHT));
 		this.chatwindow.setOpaque(false);
@@ -75,7 +75,7 @@ public class ChatPanel extends JPanel{
 	private void initChatTypeBox(){
 		this.messageBox = new MessageBox(this);
 		this.add(messageBox, BorderLayout.PAGE_END);
-		//this.messageBox.
+		this.add(Box.createRigidArea(new Dimension(0,20)));
 	}
 	
 	private void init(){
@@ -89,12 +89,19 @@ public class ChatPanel extends JPanel{
 	}
 	
 	@Override
-	public void paintComponent(Graphics g) {	
+	public void paintComponent(Graphics g) {
+		g.clearRect(0, 0, 1920, 1080);
+		this.parent.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
-
+		
 		AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, pictureAlpha);
 		g2.setComposite(ac);
 		g2.drawImage(blackBeauty, 0, 0, null);
+	//	g2.drawRenderedImage(blackBeauty, null);
 	//	System.out.println("repainted chatpanel");
-	}	
+	}
+	
+	public LobbyScreenPanel getParentX(){
+		return this.parent;
+	}
 }

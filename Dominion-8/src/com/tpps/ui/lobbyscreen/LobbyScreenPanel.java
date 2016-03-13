@@ -42,6 +42,8 @@ public class LobbyScreenPanel extends JPanel{
 	
 	@Override
 	public void paintComponent(Graphics g) {
+	//	g.drawRect(0, 0, 1920, 1080);
+	//	g.clearRect(0, 0, 1920, 1080);
 		g.drawImage(actualBackground, 0, 0, null);
 	}
 	
