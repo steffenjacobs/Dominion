@@ -1,5 +1,6 @@
 package com.tpps.ui.lobbyscreen;
 
+import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -24,7 +25,7 @@ public class LobbyScreenPanel extends JPanel{
 		this.parent =  parent;
 		this.loadBackgroundImage();
 		this.addComponentListener(new MyComponentAdapter());
-		this.add(new ChatPanel());
+		this.add(new ChatPanel(this));
 		this.add(new SearchPanel());
 	}
 	
@@ -58,4 +59,8 @@ public class LobbyScreenPanel extends JPanel{
 		}
 	}
 	
+	@Override
+	public Container getParent() {
+		return super.getParent();
+	}
 }
