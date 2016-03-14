@@ -51,7 +51,7 @@ public class SQLStatisticsHandler {
 	 */
 	public static void insertRowForFirstLogin(String nickname){
 		try {
-			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("INSERT INTO statistics (nickname, description, wins, losses) VALUES (?, '', 0, 0)");
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("INSERT INTO statistics (nickname, description, wins, losses, games_played, rank) VALUES (?, '', 0, 0,0,'silver')");
 			stmt.setString(1, nickname);
 			stmt.executeUpdate();
 			System.out.println("Added nickname Row for statistics");

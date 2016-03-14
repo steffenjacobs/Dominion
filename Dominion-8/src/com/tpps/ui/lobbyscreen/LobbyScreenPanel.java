@@ -26,7 +26,7 @@ public class LobbyScreenPanel extends JPanel{
 		this.loadBackgroundImage();
 		this.addComponentListener(new MyComponentAdapter());
 		this.add(new ChatPanel(this));
-		this.add(new SearchPanel());
+		this.add(new SearchPanel(this));
 	}
 	
 	private void loadBackgroundImage() {
