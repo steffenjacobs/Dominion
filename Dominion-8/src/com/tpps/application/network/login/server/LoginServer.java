@@ -12,6 +12,7 @@ import com.tpps.application.network.login.SQLHandling.SQLOperations;
 import com.tpps.application.network.login.SQLHandling.SQLStatisticsHandler;
 import com.tpps.application.network.login.SQLHandling.SQLType;
 import com.tpps.application.network.login.SQLHandling.Statistic;
+import com.tpps.application.network.login.SQLHandling.Utilties;
 /**
  * This class sets the LoginServer up.
  * @author jhuhn - Johannes Huhn
@@ -96,7 +97,7 @@ public class LoginServer extends Server{
 					}
 				} else if(line.trim().startsWith("CREATE TABLE statistics")){
 					if(!SQLOperations.checkTable("statistics")){
-						SQLStatisticsHandler.createStatisticsTable(this.createStatisticsList());
+						SQLStatisticsHandler.createStatisticsTable(Utilties.createStatisticsList());
 					}else{
 						System.out.println("TABLE statistics already exists");
 					}
@@ -151,23 +152,6 @@ public class LoginServer extends Server{
 		}
 	}
 	
-	private ArrayList<Statistic> createStatisticsList(){
-		Statistic one = new Statistic(SQLType.VARCHAR, "40", "description");
-		Statistic two = new Statistic(SQLType.INT, "wins");
-		Statistic tree = new Statistic(SQLType.INT, "losses");
-		Statistic four = new Statistic(SQLType.FLOAT, "4,2", "win_loss");
-		Statistic five = new Statistic(SQLType.INT, "games_played");
-		Statistic six = new Statistic(SQLType.TEXT, "rank");
-		ArrayList<Statistic> statistics = new ArrayList<Statistic>();
-		statistics.add(one);
-		statistics.add(two);
-		statistics.add(tree);
-		statistics.add(four);
-		statistics.add(five);
-		statistics.add(six);
-		return statistics;
-	}
-	
 	/**
 	 * This method is important to setup the mysql database
 	 * This method creates MySQL tables and/or databases, if they aren't created
@@ -181,7 +165,7 @@ public class LoginServer extends Server{
 			SQLOperations.createAccountdetailsTable();
 		}
 		if(!SQLOperations.checkTable("statistics")){
-			SQLStatisticsHandler.createStatisticsTable(this.createStatisticsList());
+			SQLStatisticsHandler.createStatisticsTable(Utilties.createStatisticsList());
 		}
 	}
 }

@@ -8,6 +8,7 @@ public enum SQLType {
 	VARCHAR,
 	TEXT,
 	INT,
+	BIGINT,
 	FLOAT,
 	DATE;
 	
