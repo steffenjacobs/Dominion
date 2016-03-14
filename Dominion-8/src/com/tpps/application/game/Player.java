@@ -41,6 +41,9 @@ public class Player {
 
 	/**
 	 * 
+	 * @param deck
+	 * @param clientID
+	 * @param port
 	 */
 	public Player(Deck deck, int clientID, int port) {
 		this.discardMode = false;
@@ -59,11 +62,17 @@ public class Player {
 
 	/**
 	 * 
+	 * @param clientID
+	 * @param port
+	 * @param initCards
 	 */
 	public Player(int clientID, int port, LinkedList<Card> initCards) {
 		this(new Deck(initCards), clientID, port);
 	}
 
+	/**
+	 * 
+	 */
 	public void resetPlayerValues() {
 		this.coins = 0;
 		this.buys = 1;
