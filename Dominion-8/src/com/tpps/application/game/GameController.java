@@ -12,6 +12,8 @@ import com.tpps.application.network.game.GameServer;
 import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.game.TooMuchPlayerException;
 import com.tpps.application.network.gameSession.packets.PacketEnableAll;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -57,7 +59,7 @@ public class GameController {
 	}
 
 	public void updateTrashPile(LinkedList<Card> temporaryTrashPile) {
-		System.out.println("trashPile vor dem hinzufügen " + this.gameBoard.getTrashPile());
+		System.out.println("trashPile vor dem hinzufï¿½gen " + this.gameBoard.getTrashPile());
 		CollectionsUtil.appendListToList(temporaryTrashPile, this.gameBoard.getTrashPile());
 	}
 
@@ -80,29 +82,20 @@ public class GameController {
 	 * @throws SynchronisationException
 	 */
 	public boolean validateTurnAndExecute(String cardID) throws IOException {
-
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
-
 		if (card != null) {
-
 			if (this.gamePhase.equals("actionPhase")) {
-
 				if (card.getTypes().contains(CardType.ACTION) && this.getActivePlayer().getActions() > 0) {
-					System.out.println("in der if");
-
 					this.getActivePlayer().playCard(cardID);
 					if (this.getActivePlayer().getActions() == 0) {
 						this.setBuyPhase();
 					}
 					return true;
 				}
-
 			}
 			if (this.gamePhase.equals("buyPhase")) {
-
 				if (card.getTypes().contains(CardType.TREASURE)) {
-
-					System.out.println("thecard is a Treasure clicked in the buyphase");
+//					GameLog.log(MsgType.DEBUG, "the card is a Treasure clicked in the buyphase");
 					this.getActivePlayer().playCard(cardID);
 					return true;
 				}
@@ -111,13 +104,17 @@ public class GameController {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param cardID
+	 * @return
+	 * @throws SynchronisationException
+	 */
 	public boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException {
 		LinkedList<Card> cards = this.getGameBoard().findCardListFromBoard(cardID);
 		Card card = cards.get(cards.size() - 1);
 		Player player = this.getActivePlayer();
-
 		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0 && player.getCoins() >= card.getCost()) {
-
 			player.setBuys(player.getBuys() - 1);
 			player.setCoins(player.getCoins() - card.getCost());
 			cards.remove(cards.size() - 1);
@@ -125,7 +122,6 @@ public class GameController {
 			return true;
 		}
 		return false;
-
 	}
 
 	/**
@@ -144,7 +140,6 @@ public class GameController {
 			} else {
 				return false;
 			}
-
 		}
 	}
 

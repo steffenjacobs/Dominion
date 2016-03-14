@@ -9,6 +9,8 @@ import com.tpps.application.network.clientSession.client.SessionClient;
 import com.tpps.application.network.game.ClientGamePacketHandler;
 import com.tpps.application.network.game.GameClient;
 import com.tpps.application.storage.CardStorageController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 
 /**
  * main controller class containing main entry point for client-application
@@ -34,6 +36,7 @@ public final class DominionController {
 	/* constructor */
 	public DominionController() {
 		storageController = new CardStorageController();
+		GameLog.log(MsgType.INIT, "GameLogger initialized");
 		// new LoginGUIController();
 		try {
 			gameClient = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());

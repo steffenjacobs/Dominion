@@ -36,11 +36,8 @@ public class Player {
 	private boolean discardMode, trashMode, reactionMode;
 	private Tuple<CardAction> discardOrTrashAction;
 	private LinkedList<Card> playedCards, discardList;
-	
-	
 
 	/**
-	 * 
 	 * @param deck
 	 * @param clientID
 	 * @param port
@@ -61,7 +58,6 @@ public class Player {
 	}
 
 	/**
-	 * 
 	 * @param clientID
 	 * @param port
 	 * @param initCards
@@ -85,17 +81,16 @@ public class Player {
 	public Deck getDeck() {
 		return deck;
 	}
-	
+
 	public void setDiscardMode() {
 		this.discardMode = true;
 	}
-	
+
 	public void setDiscardOrTrashAction(CardAction cardAction, int val) {
-		this.discardOrTrashAction = new Tuple<CardAction>(cardAction, val);		
+		this.discardOrTrashAction = new Tuple<CardAction>(cardAction, val);
 	}
 
 	/**
-	 * 
 	 * @return if the discardMode is set or not
 	 */
 	public boolean getDiscardMode() {
@@ -112,7 +107,6 @@ public class Player {
 	}
 
 	/**
-	 * 
 	 * @return if the trashMode is set or not
 	 */
 	public boolean getTrashMode() {
@@ -126,6 +120,7 @@ public class Player {
 	public void setDeck(Deck deck) {
 		this.deck = deck;
 	}
+
 	/**
 	 * @return the id
 	 */
@@ -178,7 +173,6 @@ public class Player {
 	}
 
 	/**
-	 * 
 	 * @return the played cards of the player in his turn
 	 */
 	public LinkedList<Card> getPlayedCards() {
@@ -214,11 +208,20 @@ public class Player {
 	public void setCoins(int coins) {
 		this.coins = coins;
 	}
-	
-	public void setReactionMode(){
+
+	/**
+	 * 
+	 */
+	public void setReactionMode() {
 		this.reactionMode = true;
 	}
 
+	/**
+	 * 
+	 * @param cardID
+	 * @param trashPile
+	 * @throws IOException
+	 */
 	public void discardOrTrash(String cardID, LinkedList<Card> trashPile) throws IOException {
 		if (this.discardMode) {
 			this.getDeck().getDiscardPile().add(doAction(cardID));
@@ -229,23 +232,38 @@ public class Player {
 			return;
 		}
 	}
-	
+
+	/**
+	 * 
+	 */
 	public void endDiscardMode() {
 		CollectionsUtil.appendListToList(discardList, this.getDeck().getCardHand());
 		this.discardMode = false;
 		discardList = new LinkedList<Card>();
 	}
-	
+
+	/**
+	 * 
+	 */
 	public void endTrashMode() {
 		this.trashMode = false;
 	}
 
+	/**
+	 * 
+	 * @param cardID
+	 * @throws IOException
+	 */
 	public void playCard(String cardID) throws IOException {
 		System.out.println("kein discard mode oder trash mode");
 		this.playedCards.addLast(doAction(cardID));
 
 	}
 
+	/**
+	 * 
+	 * @throws IOException
+	 */
 	public void playTreasures() throws IOException {
 		LinkedList<Card> cards = new LinkedList<Card>();
 		LinkedList<String> treasureCards = this.getDeck().getTreasureCardsFromHand();
@@ -255,7 +273,7 @@ public class Player {
 			System.out.println("Treasures auf der Hand: " + cardId);
 		}
 		// this.activePlayer.getDeck().
-		//// CollectionsUtil.appendListToList(treasureCards,
+		// // CollectionsUtil.appendListToList(treasureCards,
 		// this.getPlayedCards());
 		CollectionsUtil.appendListToList(cards, this.playedCards);
 	}
@@ -264,7 +282,7 @@ public class Player {
 	 * calls the static method which executes the actions
 	 * 
 	 * @author Lukas Adler
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public Card doAction(String cardID) throws IOException {
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
@@ -272,9 +290,7 @@ public class Player {
 			discardOrTrash(serverCard);
 			return serverCard;
 		}
-
 		boolean dontRemoveFlag = false;
-
 		Iterator<CardAction> cardIterator = serverCard.getActions().keySet().iterator();
 		this.actions--;
 		System.out.println("DoAction");
@@ -295,6 +311,9 @@ public class Player {
 				this.getDeck().draw(Integer.parseInt(value));
 				break;
 			case GAIN_CARD:
+
+				/* <------- ! fehlt ----> */
+
 				System.out.println(value);
 				switch (value.toUpperCase()) {
 				case "CURSE":
@@ -308,28 +327,25 @@ public class Player {
 				}
 				break;
 			case DISCARD_CARD:
-				if (value.toLowerCase().equals("deck")){
+				if (value.toLowerCase().equals("deck")) {
 					GameServer.getInstance().sendMessage(port, new PacketDiscardDeck());
 				}
 				break;
 			case DISCARD_AND_DRAW:
 				this.discardMode = true;
 				this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
-				((GameServer)(GameServer.getInstance())).sendMessage(port, new PacketStartDiscardMode());
-				
+				((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketStartDiscardMode());
 				break;
 			case DISCARD_OTHER_DOWNTO:
 				GameServer.getInstance().getGameController().discardOtherDownto(value);
-				
-				
 				break;
 			case TRASH_CARD:
 				// this.getDeck().trash(serverCard, new LinkedList<Card>() /*
 				// HOW?? muss der trashPile uebergeben werden, wir koennen aber
 				// aus der trash Methode nicht drauf zugreifen */);
 				System.out.println((GameServer.getInstance()));
-				((GameServer)(GameServer.getInstance())).sendMessage(port, new PacketStartTrashMode());
-				
+				((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketStartTrashMode());
+
 				this.trashMode = true;
 				this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
 				// return?
@@ -357,31 +373,34 @@ public class Player {
 		return serverCard;
 	}
 
+	/**
+	 * 
+	 * @param card
+	 * @throws IOException
+	 */
 	public void discardOrTrash(Card card) throws IOException {
 		switch (this.discardOrTrashAction.getFirstEntry()) {
 		case DISCARD_AND_DRAW:
 			if (this.discardOrTrashAction.getSecondEntry() == -1) {
 				System.out.println("Discard and Draw");
 				this.getDeck().getCardHand().remove(card);
-
 				discardList.add(this.getDeck().removeSaveFromDiscardPile());
 				LinkedList<Card> cardHand = this.getDeck().getCardHand();
-				
 				if (cardHand.size() == 0) {
 					endDiscardMode();
-					((GameServer)(GameServer.getInstance())).sendMessage(port, new PacketEndDiscardMode());						
+					((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketEndDiscardMode());
 				}
 			}
 			break;
 		case DISCARD_CARD:
-			if (this.discardOrTrashAction.getSecondEntry() == 0){
+			if (this.discardOrTrashAction.getSecondEntry() == 0) {
 				GameServer.getInstance().sendMessage(port, new PacketDisable());
 			}
 		case TRASH_CARD:
 			LinkedList<Card> cardHand = this.getDeck().getCardHand();
 			if (cardHand.size() == 0) {
 				this.trashMode = false;
-				((GameServer)(GameServer.getInstance())).sendMessage(port, new PacketEndTrashMode());
+				((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketEndTrashMode());
 			}
 			this.getDeck().getCardHand().remove(card);
 			System.out.println("card added to trashPile" + card);
@@ -390,11 +409,8 @@ public class Player {
 				this.trashMode = false;
 			}
 			break;
-
 		default:
 			break;
 		}
-
 	}
-
 }

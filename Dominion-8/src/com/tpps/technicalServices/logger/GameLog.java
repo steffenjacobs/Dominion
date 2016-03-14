@@ -16,8 +16,8 @@ public class GameLog {
 	 * Colors that can easily be changed for the UI Window
 	 * */
 	private static Color backgroundColor = Color.black;
-	private static Color timestampColor = Color.cyan;
-	private static Color msgtypeColor = Color.red;
+	private static Color timestampColor = Color.yellow;
+	private static Color msgtypeColor = Color.green;
 	private static Color msgColor = new Color(215,215,215);
 
 	/**
@@ -25,9 +25,13 @@ public class GameLog {
 	 */
 	private static boolean ansiPluginInstalled = false;
 
+	/**
+	 * 
+	 */
 	static {
 		init(true);
 	}
+	
 	/**
 	 * 
 	 */
@@ -165,9 +169,5 @@ public class GameLog {
 			writeConsole(lineAnsi(type) + line);
 		else
 			writeConsole(lineWithoutAnsi(type) + line);
-	}
-	
-	public static void main(String[] args) {
-		GameLog.log(MsgType.INIT, "GameLogger initialized");
 	}
 }
