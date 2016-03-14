@@ -25,8 +25,6 @@ import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
 import com.tpps.application.network.gameSession.packets.PacketUpdateTreasures;
 import com.tpps.application.network.gameSession.packets.PacketUpdateValues;
-import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -63,24 +61,25 @@ public class ServerGamePacketHandler extends PacketHandler {
 				System.out.println(server.getGameController().getGamePhase());
 
 //				Player activePlayer = this.server.getGameController().getActivePlayer();
-				Player activePlayer = this.server.getGameController().getClientById(clientID);
+				Player player = this.server.getGameController().getClientById(clientID);
 				
 				
 				
-				if (this.server.getGameController().getActivePlayer().getDiscardMode()
-						|| this.server.getGameController().getActivePlayer().getTrashMode()) {
-					if (this.server.getGameController().checkCardExistsAndDiscardOrTrash(cardID)) {
+				if (player.getDiscardMode()
+						|| player.getTrashMode()) {
+					System.out.println("im handler discard mode set");
+					if (this.server.getGameController().checkCardExistsAndDiscardOrTrash(player, cardID)) {
 						server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(
-								this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+								player.getDeck().getCardHand())));
 						return;
 					}
 				}
 
 				if (this.server.getGameController().isVictoryCardOnHand(cardID)
-						&& !this.server.getGameController().getActivePlayer().getDiscardMode()
-						&& !this.server.getGameController().getActivePlayer().getTrashMode() 
-						|| activePlayer.isReactionMode() && 
-						!activePlayer.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.REACTION)) {
+						&& !player.getDiscardMode()
+						&& !player.getTrashMode() 
+						|| player.isReactionMode() && 
+						!player.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.REACTION)) {
 					return;
 					
 				}
@@ -89,18 +88,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 				if (this.server.getGameController().validateTurnAndExecute(cardID)) {				
 
-						server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(),
-								activePlayer.getBuys(), activePlayer.getCoins()));
-					if (this.server.getGameController().getActivePlayer().getActions() == 0) {
+						server.sendMessage(port, new PacketUpdateValues(player.getActions(),
+								player.getBuys(), player.getCoins()));
+					if (player.getActions() == 0) {
 						server.sendMessage(port, new PacketEndActionPhase());
 					}
 					server.sendMessage(port, new PacketSendHandCards(CollectionsUtil
-							.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+							.getCardIDs(player.getDeck().getCardHand())));
 					server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil
-							.getCardIDs(this.server.getGameController().getActivePlayer().getPlayedCards())));
+							.getCardIDs(player.getPlayedCards())));
 
 					LinkedList<String> playedCards = CollectionsUtil
-							.getCardIDs(this.server.getGameController().getActivePlayer().getPlayedCards());
+							.getCardIDs(player.getPlayedCards());
 					for (Iterator<String> iterator = playedCards.iterator(); iterator.hasNext();) {
 						String string = (String) iterator.next();
 						System.out.println(string);
@@ -111,9 +110,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 							GameBoard gameBoard = this.server.getGameController().getGameBoard();
 							server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(),
 									gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
-							server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(),
-									activePlayer.getBuys(), activePlayer.getCoins()));
-							if (this.server.getGameController().getActivePlayer().getBuys() == 0) {
+							server.sendMessage(port, new PacketUpdateValues(player.getActions(),
+									player.getBuys(), player.getCoins()));
+							if (player.getBuys() == 0) {
 								nextActivePlayer(port);
 							}
 						}

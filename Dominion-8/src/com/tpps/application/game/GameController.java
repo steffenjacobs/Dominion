@@ -11,9 +11,8 @@ import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.game.GameServer;
 import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.game.TooMuchPlayerException;
-import com.tpps.application.network.gameSession.packets.PacketEnableAll;
-import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
+import com.tpps.application.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -59,14 +58,14 @@ public class GameController {
 	}
 
 	public void updateTrashPile(LinkedList<Card> temporaryTrashPile) {
-		System.out.println("trashPile vor dem hinzuf�gen " + this.gameBoard.getTrashPile());
+		System.out.println("trashPile vor dem hinzufuegen " + this.gameBoard.getTrashPile());
 		CollectionsUtil.appendListToList(temporaryTrashPile, this.gameBoard.getTrashPile());
 	}
 
-	public boolean checkCardExistsAndDiscardOrTrash(String cardID) throws IOException {
-		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
+	public boolean checkCardExistsAndDiscardOrTrash(Player player, String cardID) throws IOException {
+		Card card = player.getDeck().getCardFromHand(cardID);
 		if (card != null) {
-			this.getActivePlayer().discardOrTrash(cardID, this.getGameBoard().getTrashPile());
+			player.discardOrTrash(cardID, this.getGameBoard().getTrashPile());
 			return true;
 		}
 		return false;
@@ -182,13 +181,32 @@ public class GameController {
 				}
 				player.setReactionMode();
 				 try {
-					GameServer.getInstance().broadcastMessage(player.getPort(), new PacketEnableAll());
+					GameServer.getInstance().broadcastMessage(player.getPort(), new PacketEnableOthers(this.activePlayer.getClientID()));
 				} catch (IOException e) {
 				
 					e.printStackTrace();
 				}
 
 			}
+		}
+	}
+	
+	/**
+	 * enables the gui of the active Playe disables all others if the reaction mode is finished.
+	 * returns otherwise
+	 */
+	public void checkReactionModeFinishedAndEnableGuis(){
+		
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isReactionMode()){
+				return;
+			}
+		}
+		try {
+			GameServer.getInstance().broadcastMessage(new PacketEnableDisable(this.getActivePlayer().getClientID()));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

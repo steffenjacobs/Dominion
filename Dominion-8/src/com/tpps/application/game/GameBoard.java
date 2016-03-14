@@ -190,11 +190,7 @@ public class GameBoard {
 	 * 
 	 * ------ USER CHOOSES CARDS TO PLAY WITH -------
 	 */
-	private void initHashMapActionCards() {
-		LinkedList<Card> copperList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.COPPER_VALUE)), CollectionsUtil.linkedList(CardType.TREASURE), "Copper", GameConstant.COPPER_COST), GameConstant.INIT_PILE_SIZE, copperList);
-		this.tableForActionCards.put("Copper", copperList);
-		Card.resetClassID();
+	private void initHashMapActionCards() {		
 
 		LinkedList<Card> silverList = new LinkedList<Card>();
 		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.SILVER_VALUE)), CollectionsUtil.linkedList(CardType.TREASURE), "Silver", GameConstant.SILVER_COST), GameConstant.INIT_PILE_SIZE, silverList);
@@ -246,6 +242,11 @@ public class GameBoard {
 				CollectionsUtil.linkedList(new String[] {"2", "3"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION, CardType.ATTACK}), "Militia", 4), GameConstant.INIT_PILE_SIZE, militiaList);
 		this.tableForActionCards.put("Militia", militiaList);
 		Card.resetClassID();
+		
+		LinkedList<Card> moatList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, null, CardAction.DEFEND}), 
+				CollectionsUtil.linkedList(new String[] {"2", "-1"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION, CardType.REACTION}), "Moat", 2), GameConstant.INIT_PILE_SIZE, moatList);
+	
 //		
 //		// 3
 //		LinkedList<Card> smithyList = new LinkedList<Card>();
@@ -318,7 +319,7 @@ public class GameBoard {
 		}
 	}
 	
-	public LinkedList<Card> getStartSet(){
+	public synchronized LinkedList<Card> getStartSet(){
 		LinkedList<Card> startCards = new LinkedList<Card>();
 		LinkedList<Card> copperList = this.tableForTreasureCards.get(GameConstant.COPPER);
 		

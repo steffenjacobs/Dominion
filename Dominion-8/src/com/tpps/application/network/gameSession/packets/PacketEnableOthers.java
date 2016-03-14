@@ -9,9 +9,10 @@ import com.tpps.application.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketEnableAll extends Packet {
+public class PacketEnableOthers extends Packet {
 	
 	private static final long serialVersionUID = -457011106248167767L;
+	private int clientID;
 
 	/**
 	 * 
@@ -19,9 +20,18 @@ public class PacketEnableAll extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketEnableAll() {
-		super(PacketType.ENABLE_ALL);	
+	public PacketEnableOthers(int clientID) {
+		super(PacketType.ENABLE_OTHERS);	
+		this.clientID = clientID;
 	}
+	
+	
+
+	public int getClientID() {
+		return this.clientID;
+	}
+
+
 
 	/**
 	 * @return a readable String
@@ -29,6 +39,6 @@ public class PacketEnableAll extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName();
+		return this.getClass().getSimpleName() + "clientID: " + this.clientID;
 	}
 }

@@ -6,6 +6,7 @@ import com.tpps.application.game.GameStorageInterface;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
+import com.tpps.application.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketSendBoard;
@@ -50,11 +51,15 @@ public class ClientGamePacketHandler extends PacketHandler {
 			enableDisable(packet);
 			this.gameWindow.reset();	
 			break;
-		case ENABLE_ALL:
-			this.gameWindow.setEnabled(true);
+		case ENABLE_OTHERS:
+			if (((PacketEnableOthers)packet).getClientID() == this.gameClient.getClientId()){
+				this.gameWindow.setEnabled(false);
+			}else{
+				this.gameWindow.setEnabled(true);
+			}
 			break;
 		case DISABLE:
-			this.gameWindow.setEnabled(true);
+			this.gameWindow.setEnabled(false);
 			break;
 		case SEND_BOARD:
 			PacketSendBoard packetSendBoard = (PacketSendBoard)packet;

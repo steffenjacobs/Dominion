@@ -48,6 +48,10 @@ public enum CardAction {
 	/* z.B. wenn eine Karte keine Aktion hat und eine Punktekarte ist */
 	IS_VICTORY,
 	
-	DISCARD_OTHER_DOWNTO;
+	DISCARD_OTHER_DOWNTO,
+	
+	DEFEND,
+	
+	SEPERATOR;
 	
 }
