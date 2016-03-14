@@ -209,7 +209,7 @@ public class Card extends GameObject {
 	public void onMouseClick() {
 		System.out.println("MouseClick on Card");
 		try {
-			DominionController.getInstance().getGameClient()
+			DominionController.getInstance().getGameClient().
 					.sendMessage(new PacketPlayCard(this.id));
 		} catch (IOException e) {
 

@@ -101,6 +101,15 @@ public class Player {
 	public boolean getDiscardMode() {
 		return this.discardMode;
 	}
+	
+	
+/**
+ * 
+ * @return if the reactionMode is set or not
+ */
+	public boolean isReactionMode() {
+		return reactionMode;
+	}
 
 	/**
 	 * 

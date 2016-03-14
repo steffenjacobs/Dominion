@@ -74,6 +74,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 						&& !this.server.getGameController().getActivePlayer().getDiscardMode()
 						&& !this.server.getGameController().getActivePlayer().getTrashMode()) {
 					return;
+					
 				}
 
 				
