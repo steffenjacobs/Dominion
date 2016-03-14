@@ -124,7 +124,6 @@ public class Deck {
 			}		
 		}
 		return CollectionsUtil.getCardIDs(treasureCards);
-		
 	}
 	
 	/**
