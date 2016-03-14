@@ -175,11 +175,15 @@ public class LoginServer extends Server{
 			Statistic two = new Statistic(SQLType.INT, "wins");
 			Statistic tree = new Statistic(SQLType.INT, "losses");
 			Statistic four = new Statistic(SQLType.FLOAT, "4,2", "win_loss");
+			Statistic five = new Statistic(SQLType.INT, "games_played");
+			Statistic six = new Statistic(SQLType.TEXT, "rank");
 			ArrayList<Statistic> statistics = new ArrayList<Statistic>();
 			statistics.add(one);
 			statistics.add(two);
 			statistics.add(tree);
 			statistics.add(four);
+			statistics.add(five);
+			statistics.add(six);
 			SQLStatisticsHandler.createStatisticsTable(statistics);
 		}
 	}
