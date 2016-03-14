@@ -61,6 +61,8 @@ public class Statistic {
 			return type + "(" + enumvalue + ")";
 		}else if(enumvalue != null && (this.type == SQLType.FLOAT)){
 			return type + "(" + enumvalue + ")";
+		}else if(enumvalue != null && (this.type == SQLType.BIGINT)){
+			return "SIGNED " + enumvalue;
 		}else{
 			return type.toString();
 		}

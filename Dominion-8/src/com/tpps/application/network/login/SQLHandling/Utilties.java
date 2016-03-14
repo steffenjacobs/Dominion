@@ -1,4 +1,5 @@
 package com.tpps.application.network.login.SQLHandling;
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -17,5 +18,25 @@ public class Utilties {
 		byte[] random = new byte[arraylength];
 		new Random().nextBytes(random);
 		return random;
+	}
+	
+	
+	public static ArrayList<Statistic> createStatisticsList(){
+		Statistic one = new Statistic(SQLType.VARCHAR, "40", "description");
+		Statistic two = new Statistic(SQLType.INT, "wins");
+		Statistic tree = new Statistic(SQLType.INT, "losses");
+		Statistic four = new Statistic(SQLType.FLOAT, "4,2", "win_loss");
+		Statistic five = new Statistic(SQLType.INT, "games_played");
+		Statistic six = new Statistic(SQLType.TEXT, "rank");
+		Statistic seven = new Statistic(SQLType.BIGINT, "playtime");
+		ArrayList<Statistic> statistics = new ArrayList<Statistic>();
+		statistics.add(one);
+		statistics.add(two);
+		statistics.add(tree);
+		statistics.add(four);
+		statistics.add(five);
+		statistics.add(six);
+		statistics.add(seven);
+		return statistics;
 	}
 }

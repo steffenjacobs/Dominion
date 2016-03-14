@@ -51,10 +51,38 @@ public class SQLStatisticsHandler {
 	 */
 	public static void insertRowForFirstLogin(String nickname){
 		try {
-			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("INSERT INTO statistics (nickname, description, wins, losses, games_played, rank) VALUES (?, '', 0, 0, 0,'silver')");
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("INSERT INTO statistics (nickname, description, wins, losses, games_played, rank, playtime) VALUES (?, '', 0, 0, 0,'silver', 0)");
 			stmt.setString(1, nickname);
 			stmt.executeUpdate();
 			System.out.println("Added nickname Row for statistics");
+		} catch (SQLException e) {		
+			e.printStackTrace();
+		}
+	}
+	
+	public static long getPlaytime(String nickname){
+		PreparedStatement stmt;
+		try {
+			stmt = SQLHandler.getConnection().prepareStatement("SELECT playtime FROM statistics WHERE nickname = ?");
+			stmt.setString(1, nickname);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return rs.getInt("playtime");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public static void addPlaytime(String nickname, long time){
+		long oldPlaytime = getPlaytime(nickname);
+		oldPlaytime += time;
+		
+		try {
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET playtime = ?  WHERE nickname = ?");
+			stmt.setLong(1, oldPlaytime);
+			stmt.setString(2, nickname);
+			stmt.executeUpdate();
 		} catch (SQLException e) {		
 			e.printStackTrace();
 		}
@@ -71,16 +99,14 @@ public class SQLStatisticsHandler {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return -1;
+		return 0;
 	}
 	
 	private static void incrementGamesPlayed(String nickname){
-		int gamesplayed = SQLStatisticsHandler.getGamesPlayed(nickname);
-		gamesplayed++;
 		try {
-			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("INSERT INTO statistics (games_played) VALUES (?)");
-			stmt.setInt(1, gamesplayed);
-			stmt.executeQuery();
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET games_played = games_played + 1 WHERE nickname = ?");
+			stmt.setString(1, nickname);
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -126,8 +152,9 @@ public class SQLStatisticsHandler {
 	
 	public static void setRank(String nickname, String rank){
 		try {
-			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("INSERT INTO statistics (rank) VALUES (?)");
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET rank = ? WHERE nickname = ?");
 			stmt.setString(1, rank);
+			stmt.setString(2, nickname);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -183,10 +210,10 @@ public class SQLStatisticsHandler {
 			int wins = rswin.getInt(1);
 			int losses = rsloss.getInt(1);
 			if(losses != 0){
-				float ratio = (float)wins/  (float)losses;
+				double ratio = (double)wins/  (double)losses;
 				System.out.println(ratio);
 				PreparedStatement setwinloss = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET win_loss = ? WHERE nickname = ?;");
-				setwinloss.setFloat(1, ratio);
+				setwinloss.setDouble(1, ratio);
 				setwinloss.setString(2, nickname);
 				setwinloss.executeUpdate();						
 				System.out.println("Updated Win/loss successful for " + nickname);
@@ -194,6 +221,32 @@ public class SQLStatisticsHandler {
 		} catch (SQLException e) {		
 			e.printStackTrace();
 		}
+	}
+	
+	public static int getWins(String nickname){
+		try {
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT wins FROM statistics WHERE nickname = ?");
+			stmt.setString(1, nickname);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return rs.getInt("wins");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
+	public static int getLosses(String nickname){
+		try {
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT losses FROM statistics WHERE nickname = ?");
+			stmt.setString(1, nickname);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return rs.getInt("losses");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 	
 	
