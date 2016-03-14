@@ -59,13 +59,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 				System.out.println(server.getGameController().getGamePhase());
 
 				Player activePlayer = this.server.getGameController().getActivePlayer();
-
-				if (this.server.getGameController().isVictoryCardOnHand(cardID)
-						&& !this.server.getGameController().getActivePlayer().getDiscardMode()
-						&& !this.server.getGameController().getActivePlayer().getTrashMode()) {
-					return;
-				}
-
+				
+				
 				if (this.server.getGameController().getActivePlayer().getDiscardMode()
 						|| this.server.getGameController().getActivePlayer().getTrashMode()) {
 					if (this.server.getGameController().checkCardExistsAndDiscardOrTrash(cardID)) {
@@ -74,6 +69,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 						return;
 					}
 				}
+
+				if (this.server.getGameController().isVictoryCardOnHand(cardID)
+						&& !this.server.getGameController().getActivePlayer().getDiscardMode()
+						&& !this.server.getGameController().getActivePlayer().getTrashMode()) {
+					return;
+				}
+
+				
 
 				if (this.server.getGameController().validateTurnAndExecute(cardID)) {
 					System.out.println("validate turn and execute");
