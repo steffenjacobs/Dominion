@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
+import org.junit.Test;
+
 import com.tpps.application.network.login.SQLHandling.SQLHandler;
 import com.tpps.application.network.login.SQLHandling.SQLOperations;
 import com.tpps.application.network.login.SQLHandling.SQLStatisticsHandler;
@@ -45,6 +47,7 @@ public class StatisticsTest {
 		}
 	}
 	
+	@Test
 	public void testWins(){
 		int actualwins = SQLStatisticsHandler.getWins(testnickname);
 		SQLStatisticsHandler.addWinOrLoss(testnickname, true);
@@ -52,6 +55,7 @@ public class StatisticsTest {
 		assertEquals(actualwins, newwins -1);		
 	}
 	
+	@Test
 	public void testLosses(){
 		int actuallosses = SQLStatisticsHandler.getLosses(testnickname);
 		SQLStatisticsHandler.addWinOrLoss(testnickname, false);
@@ -59,13 +63,13 @@ public class StatisticsTest {
 		assertEquals(actuallosses, newlosses -1);
 	}
 	
+	@Test
 	public void addMoreWinsOrLosses(int amount, boolean win){
 		for (int i = 0; i < amount; i++) {
 			SQLStatisticsHandler.addWinOrLoss(testnickname, win);
 		}
 	}
 	
-
 
 	public double RoundTo2Decimals(double val) {
 		val = Math.round(val * 100);
@@ -74,7 +78,7 @@ public class StatisticsTest {
 	}
 
 
-	
+	@Test
 	public void testWinLossRatio(){
 		double ratioSQL = SQLStatisticsHandler.getWinLossRatio(testnickname);
 		int wins = SQLStatisticsHandler.getWins(testnickname);
@@ -94,12 +98,51 @@ public class StatisticsTest {
 	//	System.out.println("RATIO SQL: " + ratioSQL2 + " --- RATIO JAVA: " + ratioJ2);
 	}
 	
+	@Test
+	public void testDescription(){
+		String description = "testdescription";
+		SQLStatisticsHandler.setDescription(testnickname, description);
+		String descriptionSQL = SQLStatisticsHandler.getDescription(testnickname);
+	//	assertEquals(description, descriptionSQL);
+		System.out.println("desc-test: " + description.equals(descriptionSQL));
+	}
+	
+	@Test
+	public void testRank(){
+		String rank = "gold";
+		SQLStatisticsHandler.setRank(testnickname, rank);
+		String rankSQL = SQLStatisticsHandler.getRank(testnickname);
+	//	assertEquals(description, descriptionSQL);
+		System.out.println("desc-test: " + rank.equals(rankSQL));
+	}
+	
+	@Test
+	public void testGamesPlayed(){
+		int gamesplayed = SQLStatisticsHandler.getGamesPlayed(testnickname);
+		SQLStatisticsHandler.addWinOrLoss(testnickname, true);
+		int gamesplayedSQL = SQLStatisticsHandler.getGamesPlayed(testnickname);
+		assertEquals(++gamesplayed, gamesplayedSQL);
+	}
+	
+	@Test
+	public void testPlaytime(){
+		long playtime = SQLStatisticsHandler.getPlaytime(testnickname);
+		long timeToAdd = 20000;
+		SQLStatisticsHandler.addPlaytime(testnickname, timeToAdd);
+
+		assertEquals(SQLStatisticsHandler.getPlaytime(testnickname), playtime + timeToAdd);
+	}
+	
 	public static void main(String[] args) {
 		StatisticsTest t = new StatisticsTest();
 		t.setup();
 	//	t.testWins();
 	//	t.testLosses();
 	//	t.addMoreWinsOrLosses(200, true);
-		t.testWinLossRatio();
+	//	t.testWinLossRatio();
+	//	t.testDescription();
+	//	t.testRank();
+	//	t.testaddGamesPlayed();
+	//	t.testPlaytime();
 	}
 }
