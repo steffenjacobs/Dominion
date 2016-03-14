@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
@@ -24,6 +25,8 @@ import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
 import com.tpps.application.network.gameSession.packets.PacketUpdateTreasures;
 import com.tpps.application.network.gameSession.packets.PacketUpdateValues;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -56,9 +59,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case CARD_PLAYED:
 				String cardID = ((PacketPlayCard) packet).getCardID();
+				int clientID = ((PacketPlayCard) packet).getClientID();
 				System.out.println(server.getGameController().getGamePhase());
 
-				Player activePlayer = this.server.getGameController().getActivePlayer();
+//				Player activePlayer = this.server.getGameController().getActivePlayer();
+				Player activePlayer = this.server.getGameController().getClientById(clientID);
+				
 				
 				
 				if (this.server.getGameController().getActivePlayer().getDiscardMode()
@@ -72,15 +78,16 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 				if (this.server.getGameController().isVictoryCardOnHand(cardID)
 						&& !this.server.getGameController().getActivePlayer().getDiscardMode()
-						&& !this.server.getGameController().getActivePlayer().getTrashMode()) {
+						&& !this.server.getGameController().getActivePlayer().getTrashMode() 
+						|| activePlayer.isReactionMode() && 
+						!activePlayer.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.REACTION)) {
 					return;
 					
 				}
 
 				
 
-				if (this.server.getGameController().validateTurnAndExecute(cardID)) {
-					System.out.println("validate turn and execute");
+				if (this.server.getGameController().validateTurnAndExecute(cardID)) {				
 
 						server.sendMessage(port, new PacketUpdateValues(activePlayer.getActions(),
 								activePlayer.getBuys(), activePlayer.getCoins()));
@@ -139,7 +146,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 				break;
 			case END_DISCARD_MODE:
-				this.server.getGameController().getActivePlayer().endDiscardMode();
+				this.server.getGameController().getActivePlayer().endDiscardAndDrawMode();
 				
 				this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil
 						.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));

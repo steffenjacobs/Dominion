@@ -236,7 +236,7 @@ public class Player {
 	/**
 	 * 
 	 */
-	public void endDiscardMode() {
+	public void endDiscardAndDrawMode() {
 		CollectionsUtil.appendListToList(discardList, this.getDeck().getCardHand());
 		this.discardMode = false;
 		discardList = new LinkedList<Card>();
@@ -370,6 +370,10 @@ public class Player {
 			System.out.println("card was removed");
 			this.getDeck().getCardHand().remove(serverCard);
 		}
+		if (this.reactionMode){
+			this.reactionMode = false;
+			GameServer.getInstance().sendMessage(port, new PacketDisable());
+		}
 		return serverCard;
 	}
 
@@ -387,14 +391,21 @@ public class Player {
 				discardList.add(this.getDeck().removeSaveFromDiscardPile());
 				LinkedList<Card> cardHand = this.getDeck().getCardHand();
 				if (cardHand.size() == 0) {
-					endDiscardMode();
+					endDiscardAndDrawMode();
 					((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketEndDiscardMode());
 				}
 			}
 			break;
 		case DISCARD_CARD:
+			if (this.discardOrTrashAction.getSecondEntry() > 0){
+				this.discardOrTrashAction.decrementSecondEntry();
+			}
 			if (this.discardOrTrashAction.getSecondEntry() == 0) {
-				GameServer.getInstance().sendMessage(port, new PacketDisable());
+				this.discardMode = false;
+				if (this.reactionMode) {
+					this.reactionMode = false;
+					GameServer.getInstance().sendMessage(port, new PacketDisable());
+				}
 			}
 		case TRASH_CARD:
 			LinkedList<Card> cardHand = this.getDeck().getCardHand();

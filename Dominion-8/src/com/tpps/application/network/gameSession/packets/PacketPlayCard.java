@@ -12,6 +12,7 @@ import com.tpps.application.network.core.packet.PacketType;
 public class PacketPlayCard extends Packet {
 	private static final long serialVersionUID = -8763060018038893429L;
 	private final String playedCardID;
+	private final int clientID;
 	
 
 
@@ -23,6 +24,10 @@ public class PacketPlayCard extends Packet {
 		return this.playedCardID;
 	}
 	
+	public int getClientID() {
+		return this.clientID;
+	}
+	
 
 	/**
 	 * initializes the Packet with the id of the card which had been played and
@@ -30,9 +35,10 @@ public class PacketPlayCard extends Packet {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public PacketPlayCard(String cardID) {
+	public PacketPlayCard(String cardID, int clientID) {
 		super(PacketType.CARD_PLAYED);
-		this.playedCardID = cardID;		
+		this.playedCardID = cardID;
+		this.clientID = clientID;
 	}
 
 	/**
@@ -41,6 +47,6 @@ public class PacketPlayCard extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + " - " + this.getCardID();
+		return this.getClass().getSimpleName() + " - " + this.getCardID() + " - " + this.clientID;
 	}
 }

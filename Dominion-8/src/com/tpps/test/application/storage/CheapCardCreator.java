@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import org.junit.Test;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.card.CardClient;
@@ -30,6 +31,8 @@ import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.util.CollectionsUtil;
+import com.tpps.technicalServices.util.GameConstant;
 
 public class CheapCardCreator {
 	private static final boolean DEBUG = false;
@@ -114,7 +117,21 @@ public class CheapCardCreator {
 		actions.put(CardAction.DISCARD_CARD, "Deck");
 		cards.put("Chancellor", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 3, "Chancellor", getImg("Chancellor")));
-
+		
+//		Militia
+		
+		
+		actions.remove(CardAction.DISCARD_CARD);
+		actions.put(CardAction.DISCARD_OTHER_DOWNTO, "3");
+		types.add(CardType.ATTACK);
+		cards.put("Militia", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 4, "Militia", getImg("Militia")));
+//		types Attack and Action
+//		action Add_Temporary_Money
+		
+		
+		
+		
 		// setup Dummy-DominionController
 		DominionController dom = new DominionController(true);
 		dom.setCredentials("testname", "test@test.test");

@@ -209,6 +209,16 @@ public class GameController {
 	public LinkedList<Player> getPlayers() {
 		return this.players;
 	}
+	
+	public Player getClientById(int clientId){
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.getClientID() == clientId){
+				return player;
+			}			
+		}
+		return null;
+	}
 
 	/**
 	 * 
