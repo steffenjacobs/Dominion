@@ -211,7 +211,7 @@ public class SQLStatisticsHandler {
 			int losses = rsloss.getInt(1);
 			if(losses != 0){
 				double ratio = (double)wins/  (double)losses;
-				System.out.println(ratio);
+			//	System.out.println(ratio);
 				PreparedStatement setwinloss = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET win_loss = ? WHERE nickname = ?;");
 				setwinloss.setDouble(1, ratio);
 				setwinloss.setString(2, nickname);
@@ -249,6 +249,20 @@ public class SQLStatisticsHandler {
 		return 0;
 	}
 	
+	public static double getWinLossRatio(String nickname){
+		PreparedStatement stmt;
+		try {
+			stmt = SQLHandler.getConnection().prepareStatement("SELECT win_loss FROM statistics WHERE nickname = ?");
+			stmt.setString(1, nickname);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+		return rs.getDouble("win_loss");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
+	}
 	
 //	public static void main(String[] args) {
 //		String hostname = "localhost";

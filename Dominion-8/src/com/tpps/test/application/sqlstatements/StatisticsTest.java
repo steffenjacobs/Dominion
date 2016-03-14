@@ -1,11 +1,14 @@
 package com.tpps.test.application.sqlstatements;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 import com.tpps.application.network.login.SQLHandling.SQLHandler;
 import com.tpps.application.network.login.SQLHandling.SQLOperations;
@@ -56,10 +59,39 @@ public class StatisticsTest {
 		assertEquals(actuallosses, newlosses -1);
 	}
 	
-	public void addMoreWinOrLosses(int amount, boolean win){
+	public void addMoreWinsOrLosses(int amount, boolean win){
 		for (int i = 0; i < amount; i++) {
 			SQLStatisticsHandler.addWinOrLoss(testnickname, win);
 		}
+	}
+	
+
+
+	public double RoundTo2Decimals(double val) {
+		val = Math.round(val * 100);
+		val = val/100;
+		return val;
+	}
+
+
+	
+	public void testWinLossRatio(){
+		double ratioSQL = SQLStatisticsHandler.getWinLossRatio(testnickname);
+		int wins = SQLStatisticsHandler.getWins(testnickname);
+		int losses = SQLStatisticsHandler.getLosses(testnickname);
+		double ratioJ = RoundTo2Decimals(((double)wins / losses));
+	//	assertTrue(ratioSQL == ratioJ);
+	//	System.out.println("RATIO SQL: " + ratioSQL + " --- RATIO JAVA: " + ratioJ);
+		
+		SQLStatisticsHandler.addWinOrLoss(testnickname, true);
+		SQLStatisticsHandler.addWinOrLoss(testnickname, false);
+		
+		double ratioSQL2 = SQLStatisticsHandler.getWinLossRatio(testnickname);
+		int wins2 = SQLStatisticsHandler.getWins(testnickname);
+		int losses2 = SQLStatisticsHandler.getLosses(testnickname);
+		double ratioJ2 = RoundTo2Decimals(((double)wins2 / losses2));
+	//	assertTrue(ratioSQL2 == ratioJ2);
+	//	System.out.println("RATIO SQL: " + ratioSQL2 + " --- RATIO JAVA: " + ratioJ2);
 	}
 	
 	public static void main(String[] args) {
@@ -67,6 +99,7 @@ public class StatisticsTest {
 		t.setup();
 	//	t.testWins();
 	//	t.testLosses();
-		t.addMoreWinOrLosses(200, true);
+	//	t.addMoreWinsOrLosses(200, true);
+		t.testWinLossRatio();
 	}
 }
