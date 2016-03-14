@@ -68,9 +68,11 @@ public class LoginServer extends Server{
 					String[] words = line.split("\\s+");
 					Password temp1 = new Password(words[3], new String("defsalt"));
 					String firsthash = temp1.getHashedPassword();
-					byte[] randomsalt = temp1.generateSalt();
-					Password temp2 = new Password(firsthash, String.format("%064x", new java.math.BigInteger(1, randomsalt)));
-					SQLOperations.createAccount(words[2], "", temp2.getHashedPassword(), new String(randomsalt));
+					
+					Password pw2 = new Password(firsthash);
+					String doublehashed = pw2.getHashedPassword();
+					
+					System.out.println(SQLOperations.createAccount(words[2], "", doublehashed, pw2.getSalt()));
 					SQLStatisticsHandler.insertRowForFirstLogin(words[2]);
 				} else if (line.startsWith("show nicknames")) {
 					System.out.println(SQLOperations.showAllNicknames());
@@ -94,16 +96,7 @@ public class LoginServer extends Server{
 					}
 				} else if(line.trim().startsWith("CREATE TABLE statistics")){
 					if(!SQLOperations.checkTable("statistics")){
-						ArrayList<Statistic> statistics = new ArrayList<Statistic>();
-						Statistic one = new Statistic(SQLType.VARCHAR, "40", "description");
-						Statistic two = new Statistic(SQLType.INT, "wins");
-						Statistic tree = new Statistic(SQLType.INT, "losses");
-						Statistic four = new Statistic(SQLType.FLOAT, "4,2", "win_loss");
-						statistics.add(one);
-						statistics.add(two);
-						statistics.add(tree);
-						statistics.add(four);
-						SQLStatisticsHandler.createStatisticsTable(statistics);
+						SQLStatisticsHandler.createStatisticsTable(this.createStatisticsList());
 					}else{
 						System.out.println("TABLE statistics already exists");
 					}
@@ -158,6 +151,23 @@ public class LoginServer extends Server{
 		}
 	}
 	
+	private ArrayList<Statistic> createStatisticsList(){
+		Statistic one = new Statistic(SQLType.VARCHAR, "40", "description");
+		Statistic two = new Statistic(SQLType.INT, "wins");
+		Statistic tree = new Statistic(SQLType.INT, "losses");
+		Statistic four = new Statistic(SQLType.FLOAT, "4,2", "win_loss");
+		Statistic five = new Statistic(SQLType.INT, "games_played");
+		Statistic six = new Statistic(SQLType.TEXT, "rank");
+		ArrayList<Statistic> statistics = new ArrayList<Statistic>();
+		statistics.add(one);
+		statistics.add(two);
+		statistics.add(tree);
+		statistics.add(four);
+		statistics.add(five);
+		statistics.add(six);
+		return statistics;
+	}
+	
 	/**
 	 * This method is important to setup the mysql database
 	 * This method creates MySQL tables and/or databases, if they aren't created
@@ -171,20 +181,7 @@ public class LoginServer extends Server{
 			SQLOperations.createAccountdetailsTable();
 		}
 		if(!SQLOperations.checkTable("statistics")){
-			Statistic one = new Statistic(SQLType.VARCHAR, "40", "description");
-			Statistic two = new Statistic(SQLType.INT, "wins");
-			Statistic tree = new Statistic(SQLType.INT, "losses");
-			Statistic four = new Statistic(SQLType.FLOAT, "4,2", "win_loss");
-			Statistic five = new Statistic(SQLType.INT, "games_played");
-			Statistic six = new Statistic(SQLType.TEXT, "rank");
-			ArrayList<Statistic> statistics = new ArrayList<Statistic>();
-			statistics.add(one);
-			statistics.add(two);
-			statistics.add(tree);
-			statistics.add(four);
-			statistics.add(five);
-			statistics.add(six);
-			SQLStatisticsHandler.createStatisticsTable(statistics);
+			SQLStatisticsHandler.createStatisticsTable(this.createStatisticsList());
 		}
 	}
 }
