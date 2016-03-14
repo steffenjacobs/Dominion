@@ -38,7 +38,7 @@ public class LogUI {
 			this.frame.setLayout(new BorderLayout());
 			this.frame.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 			this.frame.getContentPane().add(this.dis);
-			this.frame.setSize(900, 800);
+			this.frame.setSize(900, 400);
 			this.frame.setLocationRelativeTo(null);
 			this.frame.setVisible(true);
 		} catch (Exception e) {
