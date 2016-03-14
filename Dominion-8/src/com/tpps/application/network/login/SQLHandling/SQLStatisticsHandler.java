@@ -60,6 +60,32 @@ public class SQLStatisticsHandler {
 		}
 	}
 	
+	public static int getGamesPlayed(String nickname){
+		PreparedStatement stmt;
+		try {
+			stmt = SQLHandler.getConnection().prepareStatement("SELECT games_played FROM statistics WHERE nickname = ?");
+			stmt.setString(1, nickname);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return rs.getInt("games_played");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
+	private static void incrementGamesPlayed(String nickname){
+		int gamesplayed = SQLStatisticsHandler.getGamesPlayed(nickname);
+		gamesplayed++;
+		try {
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("INSERT INTO statistics (games_played) VALUES (?)");
+			stmt.setInt(1, gamesplayed);
+			stmt.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * This method updates the wins and losses for the player statistics in the mysql database (including the ratio)
 	 * @author jhuhn - Johannes Huhn
@@ -77,11 +103,35 @@ public class SQLStatisticsHandler {
 			stmt.setString(1, nickname);
 			stmt.executeUpdate();
 			updateWinLoss(nickname);
+			incrementGamesPlayed(nickname);
 			System.out.println("Updated Wins and Losses");
 		}catch(SQLException e){
 			System.err.println("Error while updating win/loss db");
 			e.printStackTrace();
 		}		
+	}
+	
+	public static String getRank(String nickname){
+		try {
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT rank FROM statistics WHERE nickname = ?");
+			stmt.setString(1, nickname);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return rs.getString("rank");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static void setRank(String nickname, String rank){
+		try {
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("INSERT INTO statistics (rank) VALUES (?)");
+			stmt.setString(1, rank);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -100,6 +150,19 @@ public class SQLStatisticsHandler {
 		} catch (SQLException e) {		
 			e.printStackTrace();
 		}
+	}
+	
+	public static String getDescription(String nickname){
+		try {
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT description FROM statistics WHERE nickname = ?");
+			stmt.setString(1, nickname);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			return rs.getString("description");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return "no description avaible";
 	}
 	
 	/**
