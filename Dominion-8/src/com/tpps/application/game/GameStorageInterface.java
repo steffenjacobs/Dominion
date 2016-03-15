@@ -13,7 +13,7 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.gameplay.GameWindow;
 
 public class GameStorageInterface {
-	
+
 	GameWindow gameWindow;
 
 	/**
@@ -23,7 +23,7 @@ public class GameStorageInterface {
 	public GameStorageInterface(GameWindow gameWindow) {
 		this.gameWindow = gameWindow;
 	}
-	
+
 	/**
 	 * 
 	 * @param handCardIds
@@ -31,29 +31,26 @@ public class GameStorageInterface {
 	public void loadHandCardsAndPassToGameWindow(LinkedList<String> handCardIds) {
 		for (Iterator<String> iterator = handCardIds.iterator(); iterator.hasNext();) {
 			String string = (String) iterator.next();
-			System.out.println("HandCards: " + string);			
+			System.out.println("HandCards: " + string);
 		}
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(handCardIds);
-		
 		this.gameWindow.handCards(serializedCardWithId);
 	}
-	
+
 	/**
 	 * 
 	 * @param victoryCardIds
 	 */
-	public void loadVictoryCardsAndPassToGameWindow(LinkedList<String> victoryCardIds){
-	
+	public void loadVictoryCardsAndPassToGameWindow(LinkedList<String> victoryCardIds) {
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(victoryCardIds);
 		this.gameWindow.victoryCards(serializedCardWithId);
 	}
-	
+
 	/**
 	 * 
 	 * @param coinCardIds
 	 */
-	public void loadCoinCardsAndPassToGameWindow(LinkedList<String> coinCardIds){
-	
+	public void loadCoinCardsAndPassToGameWindow(LinkedList<String> coinCardIds) {
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(coinCardIds);
 		this.gameWindow.coinCards(serializedCardWithId);
 	}
@@ -69,13 +66,10 @@ public class GameStorageInterface {
 		cs.loadCards();
 		for (Iterator<String> iterator = handCardIds.iterator(); iterator.hasNext();) {
 			String handCardId = (String) iterator.next();
-			
-			
 			Matcher matcher = Pattern.compile("\\d+").matcher(handCardId);
-			matcher.find();		
-			
+			matcher.find();
 			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, matcher.start()));
-			if (serializedCard != null) {				
+			if (serializedCard != null) {
 				serializedCard = new SerializedCard(serializedCard.getActions(), serializedCard.getTypes(),
 						serializedCard.getCost(), serializedCard.getName(), serializedCard.getImage());
 			}
@@ -91,12 +85,16 @@ public class GameStorageInterface {
 	public void loadActionCardsAndPassToGameWindow(LinkedList<String> actionCardIds) {
 		for (Iterator<String> iterator = actionCardIds.iterator(); iterator.hasNext();) {
 			String string = (String) iterator.next();
-			System.out.println("ActionCards: " + string);			
+			System.out.println("ActionCards: " + string);
 		}
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(actionCardIds);
 		this.gameWindow.tableActionCards(serializedCardWithId);
 	}
-	
+
+	/**
+	 * 
+	 * @param playedCardIds
+	 */
 	public void loadPlayedCardsAndPassToGameWindow(LinkedList<String> playedCardIds) {
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(playedCardIds);
 		this.gameWindow.middleCards(serializedCardWithId);
@@ -112,16 +110,16 @@ public class GameStorageInterface {
 			gameWindow.setVisible(true);
 			gameWindow.addStopDiscardButton();
 			new GameStorageInterface(gameWindow)
-					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));			
+					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//		Matcher matcher = Pattern.compile("\\d+").matcher("TESt243");
-//		matcher.find();		
-//		System.out.println("Start: " + matcher.start() + "Ende: " + matcher.end());
-//		System.out.println("TESt243".substring(matcher.start(), matcher.end()));
-		
-
+		// Matcher matcher = Pattern.compile("\\d+").matcher("TESt243");
+		// matcher.find();
+		// System.out.println("Start: " + matcher.start() + "Ende: " +
+		// matcher.end());
+		// System.out.println("TESt243".substring(matcher.start(),
+		// matcher.end()));
 	}
 }
