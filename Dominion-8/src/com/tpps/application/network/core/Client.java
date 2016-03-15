@@ -9,6 +9,8 @@ import javax.net.SocketFactory;
 
 import com.tpps.application.network.core.events.NetworkListenerManager;
 import com.tpps.application.network.core.packet.Packet;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 
 /**
  * represents a client connected to a server on a higher layer then
@@ -72,13 +74,13 @@ public class Client {
 		int CONNECTION_TIMEOUT = 5000;
 		Socket clientSocket = null;
 		while (!Thread.interrupted()) {
-			System.out.println("trying again");
+			GameLog.log(MsgType.NETWORK_INFO, "Trying again.");
 			this.connected = false;
 			try {
 				try {
 					clientSocket = SocketFactory.getDefault().createSocket();
 					clientSocket.connect(address, CONNECTION_TIMEOUT);
-					System.out.println("[NETWORK-INFO] Connected to Server.");
+					GameLog.log(MsgType.NETWORK_INFO, "Connected to Server.");
 					this.connected = true;
 					connectionThread = new ClientConnectionThread(clientSocket, handler, this);
 					connectionThread.start();
@@ -88,7 +90,7 @@ public class Client {
 					if (connectionThread != null && !connectionThread.isInterrupted()) {
 						connectionThread.interrupt();
 					}
-					System.out.println("NETWORK-ERROR] Connection refused. Reconnecting...");
+					GameLog.log(MsgType.NETWORK_ERROR, "Connection refused. Reconnecting...");
 				}
 				Thread.sleep(50);
 				if (this.connected) {
@@ -101,6 +103,7 @@ public class Client {
 			} catch (InterruptedException e) {
 				// do nothing: this exception is normal when the program
 				// exits.
+				GameLog.log(MsgType.EXCEPTION, "Exit Program. (nothing to worry about)");
 			}
 		}
 		connecting = false;

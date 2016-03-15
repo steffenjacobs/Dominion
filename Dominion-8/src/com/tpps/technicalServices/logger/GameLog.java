@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import com.tpps.technicalServices.util.ANSIUtil;
+import com.tpps.technicalServices.util.ColorUtil;
 
 public class GameLog {
 
@@ -39,7 +40,7 @@ public class GameLog {
 		String team = "GameLogger4Team++;\n\n";
 		if (ui) {
 			GameLog.logUI = new LogUI();
-			writeUI(team, false);
+			writeUI(team, msgtypeColor, false);
 		}		
 		writeConsole(team);
 	}
@@ -145,8 +146,8 @@ public class GameLog {
 	 * @param line
 	 * @param isLog
 	 */
-	private static void writeUI(String line, boolean isLog) {
-		GameLog.logUI.updateLogger(line, isLog);
+	private static void writeUI(String line, Color msgTypeColor, boolean isLog) {
+		GameLog.logUI.updateLogger(line, msgTypeColor, isLog);
 	}
 
 	/**
@@ -164,10 +165,14 @@ public class GameLog {
 	 * @param line
 	 */
 	public static void log(MsgType type, String line) {
-		writeUI(lineWithoutAnsi(type) + line, true);
+		writeUI(lineWithoutAnsi(type) + line, type.getColor(), true);
 		if (GameLog.ansiPluginInstalled)
 			writeConsole(lineAnsi(type) + line);
 		else
 			writeConsole(lineWithoutAnsi(type) + line);
+	}
+	
+	public static void main(String[] args) {
+		javafx.scene.paint.Color c = ColorUtil.getFxColor(Color.BLUE);
 	}
 }

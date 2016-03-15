@@ -42,7 +42,7 @@ public class LogUI {
 			this.frame.setLocationRelativeTo(null);
 			this.frame.setVisible(true);
 		} catch (Exception e) {
-			// TODO
+			GameLog.log(MsgType.EXCEPTION, e.getMessage());
 		}
 	}
 
@@ -51,10 +51,10 @@ public class LogUI {
 	 * @param line
 	 * @param isLog
 	 */
-	public void updateLogger(final String line, boolean isLog) {
+	public void updateLogger(final String line, Color msgTypeColor, boolean isLog) {
 		if (isLog) {
 			this.dis.updateTextArea(line.split("]")[0] + "]", GameLog.getTimestampColor());
-			this.dis.updateTextArea(line.split("]")[1] + "]", GameLog.getMsgtypeColor());
+			this.dis.updateTextArea(line.split("]")[1] + "]", msgTypeColor);
 			this.dis.updateTextArea(line.split("]")[2] + "\n", GameLog.getMsgColor());
 		} else {
 			this.dis.updateTextArea(line, GameLog.getTimestampColor());
@@ -94,15 +94,15 @@ public class LogUI {
 		/**
 		 * 
 		 * @param text
-		 * @param font
+		 * @param fontColor
 		 */
-		public void updateTextArea(final String text, Color font) {
+		public void updateTextArea(final String text, Color fontColor) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {
 						Style style = textPane.addStyle("Style", null);
 						StyleConstants.setBackground(style, GameLog.getBackgroundColor());
-						StyleConstants.setForeground(style, font);
+						StyleConstants.setForeground(style, fontColor);
 						StyledDocument doc = textPane.getStyledDocument();
 						doc.insertString(doc.getLength(), text, style);
 					} catch (BadLocationException e) {
