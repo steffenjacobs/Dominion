@@ -26,7 +26,7 @@ public class LogUI {
 	private JFrame frame;
 
 	/**
-	 * 
+	 * constructor for the LogUI, initializes all required settings
 	 */
 	public LogUI() {
 		try {
@@ -48,11 +48,12 @@ public class LogUI {
 
 	/**
 	 * 
-	 * @param line
-	 * @param isLog
+	 * @param line the line update
+	 * @param textColor the color of the line
+	 * @param timestamp determines whether a timestamp is written in front of the text line
 	 */
-	public void updateLogger(final String line, Color textColor, boolean isLog) {
-		if (isLog) {
+	public void updateLogger(final String line, Color textColor, boolean timestamp) {
+		if (timestamp) {
 			this.dis.updateTextArea(line.split("]")[0] + "]", GameLog.getTimestampColor());
 			this.dis.updateTextArea(line.split("]")[1] + "]", textColor);
 			this.dis.updateTextArea(line.split("]")[2] + "\n", GameLog.getMsgColor());
@@ -73,14 +74,14 @@ public class LogUI {
 
 		/**
 		 * 
-		 * @return
+		 * @return the textPane
 		 */
 		public JTextPane getTextPane() {
 			return this.textPane;
 		}
 
 		/**
-		 * 
+		 * constructor for Display JPanel
 		 */
 		public Display() {
 			this.textPane = new JTextPane();
@@ -93,8 +94,8 @@ public class LogUI {
 
 		/**
 		 * 
-		 * @param text
-		 * @param fontColor
+		 * @param text the text to update on the JTextPane
+		 * @param fontColor the fontColor of the text
 		 */
 		public void updateTextArea(final String text, Color fontColor) {
 			SwingUtilities.invokeLater(new Runnable() {

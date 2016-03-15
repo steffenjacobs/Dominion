@@ -9,20 +9,22 @@ import com.tpps.technicalServices.util.ColorUtil;
  */
 public enum MsgType {
 
-	INIT("[INIT]", ColorUtil.MEDIUMGRAY),
-	INFO("[INFO]", ColorUtil.MEDIUMGRAY),
-	DEBUG("[BUG]", Color.ORANGE),
-	EXCEPTION("[EXCEPTION]", Color.RED),
-	GAME("[GAME]", Color.GREEN),
-	NETWORK_INFO("[NETWORK-INFO]", Color.BLUE),
-	NETWORK_ERROR("[NETWORK-ERROR]", Color.MAGENTA);
+	INIT("[INIT]", ColorUtil.MEDIUMGRAY, true),
+	INFO("[INFO]", ColorUtil.MEDIUMGRAY, true),
+	DEBUG("[BUG]", Color.ORANGE, true),
+	EXCEPTION("[EXCEPTION]", Color.RED, true),
+	GAME("[GAME]", Color.GREEN, true),
+	NETWORK_INFO("[NETWORK-INFO]", Color.BLUE, true),
+	NETWORK_ERROR("[NETWORK-ERROR]", Color.MAGENTA, true);
 
 	private String slang;
 	private Color color;
+	private boolean display;
 
-	private MsgType(String slang, Color awtColor) {
+	private MsgType(String slang, Color awtColor, boolean display) {
 		this.slang = slang;
 		this.color = awtColor;
+		this.display = display;
 	}
 
 	/**
@@ -38,5 +40,9 @@ public enum MsgType {
 
 	public void setColor(Color c) {
 		this.color = c;
+	}
+	
+	public boolean getDisplay() {
+		return this.display;
 	}
 }

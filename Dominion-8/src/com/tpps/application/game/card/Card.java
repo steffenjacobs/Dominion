@@ -10,6 +10,8 @@ import javax.swing.JFrame;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -266,11 +268,11 @@ public class Card extends GameObject {
 						CardAction.DRAW_CARD });
 		LinkedList<String> ints = CollectionsUtil.linkedList(new String[] {"1", "2", "4", "3"});
 		LinkedList<CardType> type = CollectionsUtil.linkedList(CardType.ACTION);
-
+	
 		JFrame frame = new JFrame();
 		GraphicFramework gf = new GraphicFramework(frame);
 		gf.setSize(1, 1);
-
+	
 		Card market = new Card(CollectionsUtil.linkedHashMapAction(act, ints), type, "Market", 5, gf);
 		System.out.println(market.toString());
 	}

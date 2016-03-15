@@ -19,6 +19,12 @@ import com.tpps.technicalServices.util.GameConstant;
 /**
  * @author Lukas Adler
  * @author Nicolas Wipfler
+ * 
+ * 
+ * 
+ * 
+ * 
+ * Methoden nach Logik sortieren und sichtbarkeit anpassen
  */
 public class GameController {
 
@@ -29,6 +35,9 @@ public class GameController {
 	private GameBoard gameBoard;
 	private String gamePhase;
 
+	/**
+	 * 
+	 */
 	public GameController() {
 		this.players = new LinkedList<Player>();
 
@@ -53,15 +62,29 @@ public class GameController {
 
 	}
 
+	/**
+	 * 
+	 */
 	public void checkForVictoryCard() {
 
 	}
 
+	/**
+	 * 
+	 * @param temporaryTrashPile
+	 */
 	public void updateTrashPile(LinkedList<Card> temporaryTrashPile) {
 		System.out.println("trashPile vor dem hinzufuegen " + this.gameBoard.getTrashPile());
 		CollectionsUtil.appendListToList(temporaryTrashPile, this.gameBoard.getTrashPile());
 	}
 
+	/**
+	 * 
+	 * @param player
+	 * @param cardID
+	 * @return
+	 * @throws IOException
+	 */
 	public boolean checkCardExistsAndDiscardOrTrash(Player player, String cardID) throws IOException {
 		Card card = player.getDeck().getCardFromHand(cardID);
 		if (card != null) {
@@ -157,23 +180,21 @@ public class GameController {
 	 */
 	public void organizePilesAndrefreshCardHand() {
 		System.out.println("organize and refresh");
-		System.out.println(Arrays
-				.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getDeck().getDiscardPile()).toArray()));
-		System.out.println(
-				Arrays.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getPlayedCards()).toArray()));
-		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(),
-				this.getActivePlayer().getDeck().getDiscardPile());
+		System.out.println(Arrays.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getDeck().getDiscardPile()).toArray()));
+		System.out.println(Arrays.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getPlayedCards()).toArray()));
+		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
 		this.getActivePlayer().getDeck().refreshCardHand();
-
 		this.getActivePlayer().refreshPlayedCardsList();
 	}
 
+	/**
+	 * 
+	 * @param value
+	 */
 	public void discardOtherDownto(String value) {
-
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (!player.equals(activePlayer)) {
-
 				if (!player.getDeck().cardHandContainsReactionCard()) {
 					player.setDiscardMode();
 					player.setDiscardOrTrashAction(CardAction.DISCARD_CARD,
@@ -183,10 +204,8 @@ public class GameController {
 				 try {
 					GameServer.getInstance().broadcastMessage(player.getPort(), new PacketEnableOthers(this.activePlayer.getClientID()));
 				} catch (IOException e) {
-				
 					e.printStackTrace();
 				}
-
 			}
 		}
 	}
@@ -196,7 +215,6 @@ public class GameController {
 	 * returns otherwise
 	 */
 	public void checkReactionModeFinishedAndEnableGuis(){
-		
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (player.isReactionMode()){
@@ -228,6 +246,11 @@ public class GameController {
 		return this.players;
 	}
 	
+	/**
+	 * 
+	 * @param clientId
+	 * @return
+	 */
 	public Player getClientById(int clientId){
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -364,12 +387,15 @@ public class GameController {
 	}
 
 	/**
-	 * CONTROLLER LOGIC; not sure whether the loops are necessary
+	 * 
 	 */
 	public void startGame() {
 		this.gamePhase = "actionPhase";
 	}
 
+	/**
+	 * 
+	 */
 	public void endGame() {
 
 	}
