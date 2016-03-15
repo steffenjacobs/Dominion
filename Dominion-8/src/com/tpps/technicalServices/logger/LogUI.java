@@ -51,13 +51,13 @@ public class LogUI {
 	 * @param line
 	 * @param isLog
 	 */
-	public void updateLogger(final String line, Color msgTypeColor, boolean isLog) {
+	public void updateLogger(final String line, Color textColor, boolean isLog) {
 		if (isLog) {
 			this.dis.updateTextArea(line.split("]")[0] + "]", GameLog.getTimestampColor());
-			this.dis.updateTextArea(line.split("]")[1] + "]", msgTypeColor);
+			this.dis.updateTextArea(line.split("]")[1] + "]", textColor);
 			this.dis.updateTextArea(line.split("]")[2] + "\n", GameLog.getMsgColor());
 		} else {
-			this.dis.updateTextArea(line, GameLog.getTimestampColor());
+			this.dis.updateTextArea(line, textColor);
 		}
 	}
 

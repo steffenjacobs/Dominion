@@ -16,21 +16,31 @@ public class GameLog {
 	/**
 	 * Colors that can easily be changed for the UI Window
 	 * */
-	private static Color backgroundColor = Color.black;
-	private static Color timestampColor = Color.yellow;
-	private static Color msgtypeColor = Color.green;
-	private static Color msgColor = new Color(215,215,215);
+	private static Color backgroundColor = Color.BLACK;
+	private static Color timestampColor = Color.CYAN;
+	private static Color msgColor = ColorUtil.MEDIUMGRAY;
+	// unused:
+	private static Color msgtypeColor = Color.blue;
 
 	/**
 	 * if the user has the ANSI plugin installed, set this flag to true so the console log will be colored 
+	 *
+	 * anyone can install the plugin with the following link:
+	 * https://marketplace.eclipse.org/content/ansi-escape-console
+	 * 
 	 */
-	private static boolean ansiPluginInstalled = false;
+	private static boolean ansiPluginInstalled = true;
+	
+	/**
+	 * determines if we want to use an extra UI for the log 
+	 */
+	private static boolean uiFlag = true;
 
 	/**
 	 * 
 	 */
 	static {
-		init(true);
+		init(uiFlag);
 	}
 	
 	/**
@@ -40,7 +50,11 @@ public class GameLog {
 		String team = "GameLogger4Team++;\n\n";
 		if (ui) {
 			GameLog.logUI = new LogUI();
-			writeUI(team, msgtypeColor, false);
+			/**
+			 * writeUI with argument false is only intern for GameLogger class to write sth into the log without
+			 * timestamp and user details
+			 */
+			writeUI(team, timestampColor, false);
 		}		
 		writeConsole(team);
 	}
@@ -146,8 +160,8 @@ public class GameLog {
 	 * @param line
 	 * @param isLog
 	 */
-	private static void writeUI(String line, Color msgTypeColor, boolean isLog) {
-		GameLog.logUI.updateLogger(line, msgTypeColor, isLog);
+	private static void writeUI(String line, Color textColor, boolean isLog) {
+		GameLog.logUI.updateLogger(line, textColor, isLog);
 	}
 
 	/**
@@ -160,6 +174,7 @@ public class GameLog {
 	}
 
 	/**
+	 * text will be logged with user details and timestamp (by hard coded 'true' value)
 	 * 
 	 * @param type
 	 * @param line
@@ -172,7 +187,17 @@ public class GameLog {
 			writeConsole(lineWithoutAnsi(type) + line);
 	}
 	
-	public static void main(String[] args) {
-		javafx.scene.paint.Color c = ColorUtil.getFxColor(Color.BLUE);
+	/**
+	 * text will be logged without timestamp and user details
+	 * 
+	 * @param type
+	 * @param line
+	 */
+	public static void log(MsgType type, String line, boolean isLog) {
+		writeUI(lineWithoutAnsi(type) + line, type.getColor(), isLog);
+		if (GameLog.ansiPluginInstalled)
+			writeConsole(lineAnsi(type) + line);
+		else
+			writeConsole(lineWithoutAnsi(type) + line);
 	}
 }

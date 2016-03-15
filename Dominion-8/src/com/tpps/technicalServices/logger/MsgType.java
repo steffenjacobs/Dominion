@@ -2,17 +2,18 @@ package com.tpps.technicalServices.logger;
 
 import java.awt.Color;
 
+import com.tpps.technicalServices.util.ColorUtil;
 
 /**
  * @author nicolaswipfler
  */
 public enum MsgType {
 
-	INIT("[INIT]", new Color(215, 215, 215)),
-	INFO("[INFO]", new Color(215, 215, 215)),
+	INIT("[INIT]", ColorUtil.MEDIUMGRAY),
+	INFO("[INFO]", ColorUtil.MEDIUMGRAY),
 	DEBUG("[BUG]", Color.ORANGE),
 	EXCEPTION("[EXCEPTION]", Color.RED),
-	GAME("[GAME]", new Color(255,250,250)),
+	GAME("[GAME]", Color.GREEN),
 	NETWORK_INFO("[NETWORK-INFO]", Color.BLUE),
 	NETWORK_ERROR("[NETWORK-ERROR]", Color.MAGENTA);
 
