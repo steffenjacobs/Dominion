@@ -290,25 +290,19 @@ public class Player {
 		if (this.reactionMode) {
 			for (int i = cardActions.size(); i > 0; i--) {
 				relevantCardActions.add(cardActions.get(i));
-				if (cardActions.get(i).equals(CardAction.SEPERATOR)){
-					
-				break;
-			}
-			}
-		} else {
-
-			if (!this.reactionMode) {
-				for (int i = 0; i < cardActions.size(); i++) {
-					relevantCardActions.add(cardActions.get(i));
-					if (cardActions.get(i).equals(CardAction.SEPERATOR)){
-						
+				if (cardActions.get(i).equals(CardAction.SEPERATOR)) {
 					break;
-					}
+				}
+			}
+		} else if (!this.reactionMode) {
+			for (int i = 0; i < cardActions.size(); i++) {
+				relevantCardActions.add(cardActions.get(i));
+				if (cardActions.get(i).equals(CardAction.SEPERATOR)) {
+					break;
 				}
 			}
 		}
 		return relevantCardActions;
-
 	}
 
 	/**
@@ -325,7 +319,7 @@ public class Player {
 		}
 		boolean dontRemoveFlag = false;
 		LinkedList<CardAction> cardActions = new LinkedList<CardAction>(serverCard.getActions().keySet());
-		if (serverCard.getTypes().contains(CardType.REACTION)){
+		if (serverCard.getTypes().contains(CardType.REACTION)) {
 			cardActions = getRelevantCardActions(cardActions);
 		}
 
@@ -407,8 +401,7 @@ public class Player {
 		if (!dontRemoveFlag) {
 			System.out.println("card was removed");
 			this.getDeck().getCardHand().remove(serverCard);
-		}
-		if (this.reactionMode) {
+		} else if (this.reactionMode) {
 			this.reactionMode = false;
 			GameServer.getInstance().sendMessage(port, new PacketDisable());
 			GameServer.getInstance().getGameController().checkReactionModeFinishedAndEnableGuis();
@@ -436,7 +429,6 @@ public class Player {
 			}
 			break;
 		case DISCARD_CARD:
-
 			if (this.discardOrTrashAction.getSecondEntry() > 0) {
 				this.discardOrTrashAction.decrementSecondEntry();
 			}

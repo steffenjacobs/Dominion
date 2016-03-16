@@ -36,7 +36,6 @@ public final class DominionController {
 	/* constructor */
 	public DominionController() {
 		storageController = new CardStorageController();
-		GameLog.log(MsgType.INIT, "GameLogger initialized");
 		// new LoginGUIController();
 		try {
 			gameClient = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());
