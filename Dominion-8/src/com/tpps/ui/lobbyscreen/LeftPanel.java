@@ -60,6 +60,7 @@ public class LeftPanel extends JPanel{
 		parent.revalidate();
 	}
 	
+	//TODO: fix resize bug -.-'
 	private JPanel createPanelForChatInput(){
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);

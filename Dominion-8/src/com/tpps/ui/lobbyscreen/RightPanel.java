@@ -76,6 +76,7 @@ public class RightPanel extends JPanel{
 				}
 			};			
 			
+			//TODO: searching thread
 //			Runnable thread1 = () -> {
 //				int points = 1;
 //				while(true){
@@ -122,6 +123,7 @@ public class RightPanel extends JPanel{
 			names[i].setForeground(Color.WHITE);
 		}
 		
+		//TODO: create space between header and playernames
 		JPanel center = new JPanel(new GridLayout(7,1));
 		center.setOpaque(false);
 	//	center.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
@@ -207,7 +209,7 @@ public class RightPanel extends JPanel{
 		panel.add(labelImages[3]);
 		
 		overhead.add(panel, BorderLayout.CENTER);
-		overhead.add(Box.createVerticalStrut(20), BorderLayout.PAGE_START);
+		overhead.add(Box.createVerticalStrut(20), BorderLayout.PAGE_START); //TODO: write header:"choose background" and set Hgap & Vgap
 		overhead.add(Box.createVerticalStrut(20), BorderLayout.PAGE_END);
 		overhead.add(Box.createHorizontalStrut(20), BorderLayout.LINE_START);
 		overhead.add(Box.createHorizontalStrut(20), BorderLayout.LINE_END);
