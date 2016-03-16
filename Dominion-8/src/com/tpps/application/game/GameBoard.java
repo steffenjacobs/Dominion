@@ -244,7 +244,7 @@ public class GameBoard {
 		Card.resetClassID();
 		
 		LinkedList<Card> moatList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, null, CardAction.DEFEND}), 
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, null, CardAction.SEPERATOR, CardAction.DEFEND}), 
 				CollectionsUtil.linkedList(new String[] {"2", "-1"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION, CardType.REACTION}), "Moat", 2), GameConstant.INIT_PILE_SIZE, moatList);
 	
 //		
