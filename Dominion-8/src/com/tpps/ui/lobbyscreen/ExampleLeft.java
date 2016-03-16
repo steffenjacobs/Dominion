@@ -3,17 +3,14 @@ package com.tpps.ui.lobbyscreen;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,7 +38,6 @@ public class ExampleLeft extends JPanel{
 		this.setOpaque(false);
 		BorderLayout layout = new BorderLayout();
 		layout.setHgap(50);
-	//	layout.setVgap();
 		this.setLayout(layout);
 		
 		this.scroller();
@@ -59,34 +55,12 @@ public class ExampleLeft extends JPanel{
 			for (int i = 0; i < 10000; i++) {
 				ExampleLeft.this.appendChat("TestString " + i + "\n");
 			}
-		}).start();
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		}).start();		
 		this.revalidate();
 		parent.revalidate();
 	}
 	
-	/*works shit */
-//	private JPanel createPanelForChatInput(){
-//		JPanel panel = new JPanel(new FlowLayout());
-//		panel.setOpaque(false);
-//		JTextField field = new JTextField("chat");
-//		field.setFont(font);
-//		field.setOpaque(false);
-//		JButton but = new JButton("SEND");
-//		field.setPreferredSize(new Dimension(500,25));
-//		panel.add(field);
-//		panel.add(but);
-//		return panel;
-//	}
-	
 	private JPanel createPanelForChatInput(){
-		BorderLayout layout = new BorderLayout();
-	//	layout.setHgap(50);
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		JTextField field = new JTextField("chat"){
@@ -94,17 +68,29 @@ public class ExampleLeft extends JPanel{
 			private static final long serialVersionUID = -3736750923112424111L;
 			
 			@Override
-			public void paint(Graphics g) {
-			//	System.out.println("field paint");
-			this.setPreferredSize(new Dimension(ExampleLeft.this.pane.getWidth() - ExampleLeft.this.but.getWidth() -3, 25));
-			System.out.println(but.getSize());
+			public void paint(Graphics g) {				
+				this.setPreferredSize(new Dimension(ExampleLeft.this.pane.getWidth() - ExampleLeft.this.but.getWidth() -3, 25));
+				g.drawImage(blackBeauty, 0, 0, null);
 				super.paint(g);
 			}
 			
 		};
 		field.setFont(font);
+		field.setForeground(Color.WHITE);
 		field.setOpaque(false);
-		but = new JButton("SEND");		
+		but = new JButton("SEND"){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(blackBeauty, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		but.setForeground(Color.WHITE);	
+		but.setContentAreaFilled(false);
+		but.setBorderPainted(true);
+		but.setOpaque(false);
 		field.setPreferredSize(new Dimension(465,25));
 		panel.add(field, BorderLayout.CENTER);
 		panel.add(but, BorderLayout.CENTER);		
@@ -143,7 +129,7 @@ public class ExampleLeft extends JPanel{
 				
 			};
 		pane.setOpaque(false);		
-//		pane.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+		pane.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 		pane.setVisible(true);
 		pane.getViewport().setOpaque(false);
 		pane.getVerticalScrollBar().setOpaque(false);

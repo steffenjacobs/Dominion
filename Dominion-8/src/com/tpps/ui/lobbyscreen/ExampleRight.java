@@ -13,12 +13,13 @@ public class ExampleRight extends JPanel{
 	
 	public ExampleRight(Example parent) {
 		this.parent = parent;
-		this.setLayout(new GridLayout(3,1, 0, 0));
-		this.add(this.firstPanel());
-		this.add(this.firstPanel());
-		this.add(this.firstPanel());
-		parent.revalidate();
-		parent.repaint();
+		this.setOpaque(false);
+//		this.setLayout(new GridLayout(3,1, 0, 0));
+//		this.add(this.firstPanel());
+//		this.add(this.firstPanel());
+//		this.add(this.firstPanel());
+//		parent.revalidate();
+//		parent.repaint();
 	}
 	
 	private JPanel firstPanel(){

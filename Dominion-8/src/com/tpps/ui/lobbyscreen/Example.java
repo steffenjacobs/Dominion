@@ -12,6 +12,8 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Example extends JFrame{
 
@@ -36,7 +38,7 @@ public class Example extends JFrame{
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+	
 		c.add(new ExampleLeft(this));
 		c.add(new ExampleRight(this));
 		
