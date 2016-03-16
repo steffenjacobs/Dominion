@@ -20,19 +20,19 @@ import javax.swing.JTextField;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 
-public class ExampleLeft extends JPanel{
+public class LeftPanel extends JPanel{
 	
 	JTextArea textbox;
 	JScrollPane pane;
 	JTextField chatmessage;
-	Example parent;
+	LobbyScreen parent;
 	BufferedImage blackBeauty;
 	Font font = new Font("Calibri", Font.PLAIN, 20);
 	JButton but;
 	
 	private static final long serialVersionUID = 1L;
 	
-	public ExampleLeft(Example parent) {
+	public LeftPanel(LobbyScreen parent) {
 		this.parent = parent;
 		this.setVisible(true);
 		this.setOpaque(false);
@@ -53,7 +53,7 @@ public class ExampleLeft extends JPanel{
 		parent.revalidate();
 		new Thread(() -> {
 			for (int i = 0; i < 10000; i++) {
-				ExampleLeft.this.appendChat("TestString " + i + "\n");
+				LeftPanel.this.appendChat("TestString " + i + "\n");
 			}
 		}).start();		
 		this.revalidate();
@@ -69,7 +69,7 @@ public class ExampleLeft extends JPanel{
 			
 			@Override
 			public void paint(Graphics g) {				
-				this.setPreferredSize(new Dimension(ExampleLeft.this.pane.getWidth() - ExampleLeft.this.but.getWidth() -3, 25));
+				this.setPreferredSize(new Dimension(LeftPanel.this.pane.getWidth() - LeftPanel.this.but.getWidth() -3, 25));
 				g.drawImage(blackBeauty, 0, 0, null);
 				super.paint(g);
 			}
@@ -77,6 +77,7 @@ public class ExampleLeft extends JPanel{
 		};
 		field.setFont(font);
 		field.setForeground(Color.WHITE);
+		field.setBorder(BorderFactory.createEmptyBorder());
 		field.setOpaque(false);
 		but = new JButton("SEND"){
 			private static final long serialVersionUID = 1L;
@@ -113,6 +114,7 @@ public class ExampleLeft extends JPanel{
 		}
 		textbox = new JTextArea();
 		textbox.setForeground(Color.WHITE);
+		textbox.setBorder(BorderFactory.createEmptyBorder());
 		textbox.setLineWrap(true);
 		textbox.setOpaque(false);
 		textbox.setText("TeSt");		
@@ -129,7 +131,7 @@ public class ExampleLeft extends JPanel{
 				
 			};
 		pane.setOpaque(false);		
-		pane.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+		pane.setBorder(BorderFactory.createEmptyBorder());
 		pane.setVisible(true);
 		pane.getViewport().setOpaque(false);
 		pane.getVerticalScrollBar().setOpaque(false);

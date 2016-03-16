@@ -2,6 +2,7 @@ package com.tpps.ui.lobbyscreen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
@@ -26,25 +27,26 @@ import javax.swing.JTextField;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 
-public class ExampleRight extends JPanel{
+public class RightPanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 	JTextField[] names = new JTextField[4];
-	Example parent;
+	LobbyScreen parent;
 	Font font = new Font("Calibri", Font.PLAIN, 20);
 	Font head = new Font("Calibri", Font.BOLD, 23);
 	
 	private BufferedImage[] images = new BufferedImage[4];
 	JLabel[] labelImages;
 	boolean imageselected;
+	BufferedImage blackBeauty;
 	
-	public ExampleRight(Example parent) {
+	public RightPanel(LobbyScreen parent) {
 		this.parent = parent;
 		this.setOpaque(false);
 		this.setLayout(new GridLayout(3,1, 0, 0));
-		this.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+	//	this.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 		this.add(this.firstPanel());
-		this.add(this.firstPanel());
+		this.add(this.middlePanel());
 		this.add(this.lastPanel());
 //		parent.revalidate();
 //		parent.repaint();
@@ -52,11 +54,27 @@ public class ExampleRight extends JPanel{
 	
 	private JPanel firstPanel(){
 		JPanel panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createLineBorder(Color.CYAN, 3));
+	//	panel.setBorder(BorderFactory.createLineBorder(Color.CYAN, 3));
 		panel.setOpaque(false);
 		
+		try {
+			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
+			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.6F);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		for (int i = 0; i < names.length; i++) {
-			names[i] = new JTextField("Loading :D");			
+			names[i] = new JTextField("Searching..."){
+
+				private static final long serialVersionUID = 1L;
+				
+				@Override
+				public void paint(Graphics g) {									
+					g.drawImage(blackBeauty, 0, 0, null);
+					super.paint(g);
+				}
+			};			
 			
 //			Runnable thread1 = () -> {
 //				int points = 1;
@@ -137,13 +155,22 @@ public class ExampleRight extends JPanel{
 		panel.add(center, BorderLayout.CENTER);
 		panel.add(header, BorderLayout.PAGE_START);
 		panel.add(Box.createVerticalStrut(30), BorderLayout.PAGE_END);
-		panel.add(Box.createHorizontalStrut(150), BorderLayout.LINE_END);
-		panel.add(Box.createHorizontalStrut(150), BorderLayout.LINE_START);
+		panel.add(Box.createHorizontalStrut(170), BorderLayout.LINE_END);
+		panel.add(Box.createHorizontalStrut(170), BorderLayout.LINE_START);
 		return panel;
 		
 	}
+	
+	private JPanel middlePanel(){
+		JPanel panel = new JPanel();
+		panel.setOpaque(false);
+		return panel;
+	}
 
 	private JPanel lastPanel(){
+		JPanel overhead = new JPanel(new BorderLayout());
+		overhead.setOpaque(false);
+		
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		panel.setLayout(new GridLayout(2,2, 20, 20));
@@ -152,6 +179,8 @@ public class ExampleRight extends JPanel{
 		for (int i = 0; i < labelImages.length; i++) {
 			labelImages[i] = new JLabel();
 			labelImages[i].addMouseListener(new ImageListener(labelImages[i]));
+			labelImages[i].setHorizontalAlignment(JLabel.CENTER);
+			labelImages[i].setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		}
 		
 		try {
@@ -177,7 +206,13 @@ public class ExampleRight extends JPanel{
 		panel.add(labelImages[2]);
 		panel.add(labelImages[3]);
 		
-		return panel;
+		overhead.add(panel, BorderLayout.CENTER);
+		overhead.add(Box.createVerticalStrut(20), BorderLayout.PAGE_START);
+		overhead.add(Box.createVerticalStrut(20), BorderLayout.PAGE_END);
+		overhead.add(Box.createHorizontalStrut(20), BorderLayout.LINE_START);
+		overhead.add(Box.createHorizontalStrut(20), BorderLayout.LINE_END);
+		
+		return overhead;
 	}
 	
 	private class ImageListener implements MouseListener{
@@ -192,7 +227,7 @@ public class ExampleRight extends JPanel{
 		public void mouseClicked(MouseEvent e) {
 			//if(e.getSource().equals(labelImages)){
 				System.out.println(labelImages.toString());
-				BufferedImage img = ExampleRight.this.iconToBufferedImage(labelImages.getIcon());
+				BufferedImage img = RightPanel.this.iconToBufferedImage(labelImages.getIcon());
 				img = (BufferedImage) GraphicsUtil.setAlpha(img, 1F);
 				labelImages.setIcon(new ImageIcon(img));
 			//	labelImages.setBorder(BorderFactory.createLineBorder(Color.GREEN, 5));				
