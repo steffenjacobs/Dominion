@@ -87,7 +87,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 				
 
 				if (this.server.getGameController().validateTurnAndExecute(cardID, player)) {				
-
+						System.out.println("validate turn: " + player.getActions() + "buys: " + player.getBuys() + "coins: " + player.getCoins());
+						
+						
 						server.sendMessage(port, new PacketUpdateValues(player.getActions(),
 								player.getBuys(), player.getCoins()));
 					if (player.getActions() == 0) {
@@ -190,6 +192,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			Player player = this.server.getGameController().getActivePlayer();
 			
 			this.server.getGameController().endTurn();
+			System.out.println("server actions: " + player.getActions() + "buys: " + player.getBuys() + "coins: " +player.getBuys());
 			server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
 			server.broadcastMessage(
 					new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));

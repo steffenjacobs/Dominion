@@ -76,7 +76,8 @@ public class ClientGamePacketHandler extends PacketHandler {
 			break;
 		case UPDATE_VALUES:
 			PacketUpdateValues puv = ((PacketUpdateValues)packet);
-			
+			System.out.println("clientGameHandler actions: " + puv.getActions() +
+					"buys: " + puv.getBuys() + "coins: " + puv.getCoins());
 			this.gameWindow.setCaptionActions(Integer.toString(puv.getActions()));
 			this.gameWindow.setCaptionBuys(Integer.toString(puv.getBuys()));
 			this.gameWindow.setCaptionCoins(Integer.toString(puv.getCoins()));			
