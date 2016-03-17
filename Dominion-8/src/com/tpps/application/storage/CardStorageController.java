@@ -20,11 +20,11 @@ import com.tpps.technicalServices.util.ByteUtil;
 public class CardStorageController {
 
 	private ConcurrentHashMap<String, SerializedCard> storedCards = new ConcurrentHashMap<String, SerializedCard>();
-	private static final String STORAGE_FILE = "cards.bin";
+	private static final String DEFAULT_STORAGE_FILE = "cards.bin";
 	private String storageFile;
 
 	public CardStorageController() {
-		this.storageFile = STORAGE_FILE;
+		this.storageFile = DEFAULT_STORAGE_FILE;
 	}
 
 	public CardStorageController(String filename) {
@@ -38,22 +38,20 @@ public class CardStorageController {
 		try {
 			if (!Files.exists(Paths.get(storageFile)))
 				Files.createFile(Paths.get(storageFile));
-			System.out.println(Paths.get(storageFile));
+			System.out.println("Loading storage from: " + Paths.get(storageFile));
 			byte[] bytes = Files.readAllBytes(Paths.get(storageFile));
 			if (bytes.length == 0) {
 				System.err.println("ERROR: Storage-Container is empty!");
 				Files.copy(Paths.get(storageFile), Paths.get(storageFile + "_old_" + System.currentTimeMillis()));
 				return;
 			}
-			System.out.println("File length: " + bytes.length);
+			System.out.println("File length: " + bytes.length + " Bytes");
 			ByteBuffer buff = ByteBuffer.wrap(bytes);
 			int count = buff.getInt();
-			int length;
 			SerializedCard card;
 			byte[] arr;
 			for (int i = 0; i < count; i++) {
-				length = buff.getInt();
-				arr = new byte[length];
+				arr = new byte[buff.getInt()];
 				buff.get(arr);
 				card = new SerializedCard(arr);
 				storedCards.put(card.getName(), card);
@@ -169,11 +167,11 @@ public class CardStorageController {
 
 	/** lists all stored cards in the console */
 	public void listCards() {
-		System.out.println("--- Cards in storage (" + storedCards.size() + "): ---");
+		System.out.println("--- Cards in storage (" + getCardCount() + "): ---");
 		for (SerializedCard card : storedCards.values()) {
 			System.out.println(card.toString());
 		}
-		System.out.println("---       (" + storedCards.size() + ")         ---");
+		System.out.println("---       (" + getCardCount() + ")         ---");
 	}
 
 	/**
