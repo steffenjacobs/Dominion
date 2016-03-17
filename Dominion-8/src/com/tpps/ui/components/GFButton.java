@@ -34,7 +34,7 @@ public abstract class GFButton extends GameObject {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,
 				_id);
 		this.caption = caption;
-		this.onResize(absWidth, absHeight);
+		this.resizeObject(absWidth, absHeight);
 	}
 
 	/**
@@ -46,7 +46,7 @@ public abstract class GFButton extends GameObject {
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent);
 		this.caption = caption;
-		this.onResize(absWidth, absHeight);
+		this.resizeObject(absWidth, absHeight);
 	}
 
 	/**

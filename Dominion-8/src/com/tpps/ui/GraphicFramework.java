@@ -9,6 +9,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -175,10 +177,27 @@ public class GraphicFramework extends JPanel {
 		_parent.getContentPane().addMouseListener(mouseListener);
 		_parent.getContentPane().addMouseMotionListener(mouseListener);
 		_parent.addComponentListener(new ComponentAdapter() {
+			private ExecutorService threadPool = Executors.newCachedThreadPool();
+			
+			long last = 0;
 
 			@Override
 			public void componentResized(ComponentEvent e) {
-				onWindowResize();
+				last = System.currentTimeMillis();
+
+				threadPool.submit(() -> {
+					try {
+						final long l = last;
+						Thread.sleep(300);
+
+						if (l == last) {
+							last = System.currentTimeMillis();
+							onWindowResize();
+						}
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				});
 			}
 		});
 	}
