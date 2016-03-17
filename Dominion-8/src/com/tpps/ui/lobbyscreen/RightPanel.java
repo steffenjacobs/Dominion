@@ -77,23 +77,31 @@ public class RightPanel extends JPanel{
 			};			
 			
 			//TODO: searching thread
-//			Runnable thread1 = () -> {
-//				int points = 1;
-//				while(true){
-//					String appender = "";
-//					for (int j = 0; j < points; j++) {
-//						appender += ".";
-//					}
-//					ExampleRight.this.names[counter].setText("Loading " + appender);
-//					points++;
-//					if(points == 4){
-//						points = 1;
-//					}
-//				}
-//
-//			};
-//			
-//			thread1.run();
+			final int k = i;
+			Runnable thread1 = () -> {
+				int points = 1;
+				while(true){
+					String appender = "";
+					for (int j = 0; j < points; j++) {
+						appender += ".";
+					}
+					names[k].setText("Loading " + appender);
+					points++;
+					if(points == 4){
+						points = 1;
+					}
+					
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+			};
+			
+			new Thread(thread1).start();
 
 			
 //			Thread t = new Thread(){

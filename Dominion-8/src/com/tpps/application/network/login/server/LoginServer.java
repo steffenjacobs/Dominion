@@ -2,7 +2,6 @@ package com.tpps.application.network.login.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import com.tpps.application.network.core.Server;
@@ -10,8 +9,6 @@ import com.tpps.application.network.login.SQLHandling.Password;
 import com.tpps.application.network.login.SQLHandling.SQLHandler;
 import com.tpps.application.network.login.SQLHandling.SQLOperations;
 import com.tpps.application.network.login.SQLHandling.SQLStatisticsHandler;
-import com.tpps.application.network.login.SQLHandling.SQLType;
-import com.tpps.application.network.login.SQLHandling.Statistic;
 import com.tpps.application.network.login.SQLHandling.Utilties;
 /**
  * This class sets the LoginServer up.
@@ -19,7 +16,7 @@ import com.tpps.application.network.login.SQLHandling.Utilties;
  */
 public class LoginServer extends Server{
 	
-	private static String domain = "127.0.0.1";
+	private static String domain = "0.0.0.0";
 	private static int port = 1338;
 	
 	/**
@@ -142,8 +139,8 @@ public class LoginServer extends Server{
 			String hostname = "localhost";
 			String port = "3306";
 			String database = "accountmanager";
-			String user = "jojo";
-			String password = "password";
+			String user = "root";
+			String password = "root";
 			SQLHandler.init(hostname, port, user, password, database);
 			SQLHandler.connect();
 			new LoginServer(hostname, port, user, password, database);
