@@ -142,7 +142,7 @@ public class Client {
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			//normal when thread is killed
 		}
 		new Thread(() -> connectAndLoop(false)).start();
 	}

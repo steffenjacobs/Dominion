@@ -39,7 +39,7 @@ public class PacketQueue<E> extends ConcurrentLinkedQueue<E> {
 		try {
 			lock.acquire();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			//normal when thread is killed
 		}
 		return super.poll();
 	}
