@@ -9,19 +9,17 @@ import com.tpps.application.network.core.packet.PacketType;
  * @author Lukas Adler
  */
 public class PacketEndReactions extends Packet {
+	
+	private static final long serialVersionUID = -7373549515047873227L;
 	private int clientID;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 382132236460850033L;
 
 	/**
 	 * 
 	 * @author Lukas Adler
 	 */
 	public PacketEndReactions(int clientID) {
-		super(PacketType.END_TURN);
+		super(PacketType.END_REACTIONS);
 		this.clientID = clientID;
 	}
 

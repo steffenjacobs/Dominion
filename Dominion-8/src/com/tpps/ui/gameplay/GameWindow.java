@@ -1,7 +1,6 @@
 package com.tpps.ui.gameplay;
 
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -9,8 +8,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -57,8 +54,8 @@ public class GameWindow extends JFrame {
 		this.coinCards = new LinkedList<Card>();
 		this.middleCards = new LinkedList<Card>();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setExtendedState(Frame.MAXIMIZED_BOTH);
-		this.setUndecorated(true);
+//		this.setExtendedState(Frame.MAXIMIZED_BOTH);
+//		this.setUndecorated(true);
 		coins = "Coins: ";
 		buys = "Buys: ";
 		actions = "Actions: ";
@@ -282,11 +279,13 @@ public class GameWindow extends JFrame {
 		for (int i = 0; i < handCards.size(); i++) {
 
 			SerializedCard serializedCard = handCards.get(actionCardIds.get(i));
-			// Example For nishit
+			// Example For nishit agrawal who lives in mannheim near the paradeplatz
+//			son of Neel agrawal who lives in 
+//			 idar-oberstein brother of nitika agrawal living in london!!!!
 			// Matcher matcher =
 			// Pattern.compile("\\d+").matcher(actionCardIds.get(i));
 			// matcher.find();
-			// actionCardIds.get(i).substring(matcher.start(), matcher.end());
+//			 String number = actionCardIds.get(i).substring(matcher.start(), matcher.end());
 			if (sub > 7) {
 				if (i == 0) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
