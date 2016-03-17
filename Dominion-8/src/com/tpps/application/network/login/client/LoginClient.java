@@ -39,8 +39,8 @@ public class LoginClient extends PacketHandler {
 	public LoginClient(LoginGUIController guicontroller) {
 		try {
 			this.guicontroller = guicontroller;
-			c_login = new Client(new InetSocketAddress("127.0.0.1", 1338), this, false);
-			c_session = new SessionClient(new InetSocketAddress("127.0.0.1", 1337));
+			c_login = new Client(new InetSocketAddress("78.31.66.224", 1338), this, false);
+			c_session = new SessionClient(new InetSocketAddress("78.31.66.224", 1337));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
