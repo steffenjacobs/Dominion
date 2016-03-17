@@ -26,7 +26,7 @@ public class ButtonClass extends GFButton {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,
 				caption);
 		this.original = super.getOriginalImage();
-		super.updateImage(GraphicsUtil.setAlpha(super.getOriginalImage(), .6f));
+		super.updatedBufferedImage(GraphicsUtil.setAlpha(super.getOriginalImage(), .6f));
 	}
 
 	@Override
@@ -36,13 +36,13 @@ public class ButtonClass extends GFButton {
 
 	@Override
 	public void onMouseEnter() {
-		super.updateImage(original);
+		super.updatedBufferedImage(original);
 
 	}
 
 	@Override
 	public void onMouseExit() {
-		super.updateImage(GraphicsUtil.setAlpha(super.getOriginalImage(), .6f));
+		super.updatedBufferedImage(GraphicsUtil.setAlpha(super.getOriginalImage(), .6f));
 
 	}
 

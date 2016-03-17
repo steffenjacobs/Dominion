@@ -27,7 +27,7 @@ public final class AnimationUtil {
 						return;
 					}
 					transparency *= .95f;
-					go.updateImage(GraphicsUtil.setAlpha(bim, transparency));
+					go.updatedBufferedImage(GraphicsUtil.setAlpha(bim, transparency));
 					try {
 						Thread.sleep(20);
 					} catch (InterruptedException e) {

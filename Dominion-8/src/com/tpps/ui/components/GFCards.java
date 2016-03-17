@@ -1,7 +1,9 @@
 package com.tpps.ui.components;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 
+import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 
@@ -50,6 +52,7 @@ public class GFCards extends GameObject {
 
 	@Override
 	public void onResize(int absWidth, int absHeight) {
+		super.renderedImage = GraphicsUtil.resize((BufferedImage) super.bufferedImage, absWidth, absHeight);
 		// TODO Auto-generated method stub
 
 	}

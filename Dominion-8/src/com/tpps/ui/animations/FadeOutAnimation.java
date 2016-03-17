@@ -44,7 +44,7 @@ public class FadeOutAnimation extends Animation {
 					if (frameCounter >= maxFrames || transparency < FADE_LOWER_BOUND || skip) {
 						System.out.println(frameCounter + "/" + maxFrames);
 						gameObject.setVisible(false);
-						gameObject.updateImage(this.baseImage);
+						gameObject.updatedBufferedImage(this.baseImage);
 						System.out.println("fade-animation finished.");
 
 						try {
@@ -56,13 +56,13 @@ public class FadeOutAnimation extends Animation {
 					}
 					// check reset-flag
 					if (reset) {
-						gameObject.updateImage(this.baseImage);
+						gameObject.updatedBufferedImage(this.baseImage);
 						return;
 					}
 
 					// update image
 					transparency -= fadePerStep;
-					gameObject.updateImage(GraphicsUtil.setAlpha(baseImage, transparency));
+					gameObject.updatedBufferedImage(GraphicsUtil.setAlpha(baseImage, transparency));
 					try {
 						Thread.sleep(DELAY_MILLIS);
 					} catch (InterruptedException e) {
