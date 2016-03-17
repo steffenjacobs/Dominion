@@ -279,9 +279,7 @@ public class GameWindow extends JFrame {
 		for (int i = 0; i < handCards.size(); i++) {
 
 			SerializedCard serializedCard = handCards.get(actionCardIds.get(i));
-			// Example For nishit agrawal who lives in mannheim near the paradeplatz
-//			son of Neel agrawal who lives in 
-//			 idar-oberstein brother of nitika agrawal living in london!!!!
+			// Example For nishit
 			// Matcher matcher =
 			// Pattern.compile("\\d+").matcher(actionCardIds.get(i));
 			// matcher.find();
