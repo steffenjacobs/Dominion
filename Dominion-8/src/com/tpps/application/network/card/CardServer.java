@@ -10,6 +10,8 @@ import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.Server;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.storage.CardStorageController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 
 /**
  * represents a card-server which handles all the storing of the cards, adding
@@ -77,15 +79,15 @@ public class CardServer extends Server {
 				} else if (line.startsWith("clear")) {
 					final int cnt = this.serverStorage.getCardCount();
 					this.serverStorage.clearCards();
-					System.out.println("Cleared " + cnt + " cards!");
+					GameLog.log(MsgType.INFO, "Cleared " + cnt + " cards!");
 				} else if (line.startsWith("list")) {
 					int cnt = 0;
 					for (ServerConnectionThread client : super.clients.values()) {
-						System.out.println(client);
+						GameLog.log(MsgType.INFO, client.toString());
 						cnt++;
 					}
 					if (cnt == 0)
-						System.out.println("(empty)");
+						GameLog.log(MsgType.INFO, "(empty)");
 				} else if (line.startsWith("reload")) {
 					super.stopListening();
 					super.startListening();
@@ -99,10 +101,10 @@ public class CardServer extends Server {
 					System.out.println("help");
 					System.out.println("------------------------------------");
 				} else {
-					System.out.println("Bad command: " + line);
+					GameLog.log(MsgType.INFO, "Bad command: " + line);
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
-				System.err.println("Bad syntax.");
+				GameLog.log(MsgType.ERROR, "Bad syntax.");
 			}
 		}
 		scanInput.close();

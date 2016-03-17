@@ -11,6 +11,8 @@ import com.tpps.application.network.core.Server;
 import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.storage.CardStorageController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 
 /**
  * Packet-Handler for the Card-Server
@@ -61,7 +63,7 @@ public class CardPacketHandlerServer extends PacketHandler {
 
 			// debug-message
 			if (Server.DEBUG) {
-				System.out.println(request.getRequesterName() + " requested " + request.getCardName());
+				GameLog.log(MsgType.DEBUG, request.getRequesterName() + " requested " + request.getCardName());
 			}
 
 			PacketCheckIfCardExistsAnswer answer = new PacketCheckIfCardExistsAnswer(
@@ -84,7 +86,8 @@ public class CardPacketHandlerServer extends PacketHandler {
 
 			// debug-message
 			if (Server.DEBUG) {
-				System.out.println(cardAdd.getRequesterName() + " added " + cardAdd.getSerializedCard().getName());
+				GameLog.log(MsgType.DEBUG,
+						cardAdd.getRequesterName() + " added " + cardAdd.getSerializedCard().getName());
 			}
 
 			this.cardStorage.addCard(cardAdd.getSerializedCard());
@@ -98,7 +101,7 @@ public class CardPacketHandlerServer extends PacketHandler {
 
 			// debug-message
 			if (Server.DEBUG) {
-				System.out.println(request2.getRequesterName() + " wants " + request2.getRequestedCardName());
+				GameLog.log(MsgType.DEBUG, request2.getRequesterName() + " wants " + request2.getRequestedCardName());
 			}
 
 			connThread.addPacketToQueue(
