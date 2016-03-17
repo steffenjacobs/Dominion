@@ -142,7 +142,7 @@ public class Client {
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
-			//normal when thread is killed
+			// normal when thread is killed
 		}
 		new Thread(() -> connectAndLoop(false)).start();
 	}
@@ -163,7 +163,7 @@ public class Client {
 
 		if (this.connecting) {
 			this.tryToConnectThread.interrupt();
-			System.out.println("stoppped reconnect-attempt");
+			GameLog.log(MsgType.NETWORK_INFO, "stoppped reconnect-attempt");
 		}
 	}
 
@@ -188,7 +188,7 @@ public class Client {
 			}).start();
 
 		} else {
-			System.out.println("[NETWORK] Error: Could not send packet: No Connection.");
+			GameLog.log(MsgType.NETWORK_ERROR, "Could not send packet: No Connection.");
 			this.connectAndLoop(true);
 		}
 	}

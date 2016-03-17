@@ -13,6 +13,8 @@ import java.util.concurrent.Semaphore;
 
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.core.packet.PacketType;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.ByteUtil;
 
 /**
@@ -99,7 +101,7 @@ public class ClientConnectionThread extends Thread {
 				try {
 					int length = inStream.readInt();
 					if (Server.DEBUG)
-						System.out.println("[NETWORK] TCP-Packet received. Length: " + length);
+						GameLog.log(MsgType.NETWORK_INFO, "TCP-Packet received. Length: " + length);
 					byte[] data = new byte[length];
 					inStream.readFully(data);
 					countReceived++;
@@ -111,7 +113,7 @@ public class ClientConnectionThread extends Thread {
 					});
 
 				} catch (IOException e) {
-					System.out.println("[Network] Error: Connection Lost.");
+					GameLog.log(MsgType.NETWORK_ERROR, "Connection Lost.");
 					parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
 					parent.tryReconnect();
 					this.interrupt();
@@ -119,7 +121,7 @@ public class ClientConnectionThread extends Thread {
 				}
 			}
 		} catch (IOException e) {
-			System.out.println("[Network] Error: Connection Lost.");
+			GameLog.log(MsgType.NETWORK_ERROR, "Connection Lost.");
 			parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
 			parent.tryReconnect();
 			this.interrupt();
@@ -130,7 +132,7 @@ public class ClientConnectionThread extends Thread {
 			try {
 				clientSocket.close();
 			} catch (IOException e) {
-				System.out.println("Could not close client-socket: " + e.getMessage());
+				GameLog.log(MsgType.NETWORK_ERROR, "Could not close client-socket: " + e.getMessage());
 			}
 		}
 		parent.setDisconnected();
@@ -156,12 +158,12 @@ public class ClientConnectionThread extends Thread {
 				countSent++;
 			} catch (SocketException | NullPointerException e) {
 				parent.setDisconnected();
-				System.out.println("NETWORK-ERROR: Connection to Server lost! Reconnecting...");
+				GameLog.log(MsgType.NETWORK_ERROR, "Connection to Server lost! Reconnecting...");
 				parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
 				parent.connectAndLoop(true);
 			}
 		} else {
-			System.out.println("NETWORK-ERROR: Could not send packet: Server not connected.");
+			GameLog.log(MsgType.NETWORK_ERROR, "Could not send packet: Server not connected.");
 			parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
 		}
 		holySemaphore.release();

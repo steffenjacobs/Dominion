@@ -11,6 +11,8 @@ import javax.net.ServerSocketFactory;
 
 import com.tpps.application.network.core.events.NetworkListenerManager;
 import com.tpps.application.network.core.packet.Packet;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 
 /**
  * represents a general server that can send and receive packets from and to
@@ -174,9 +176,9 @@ public class Server {
 	 * 
 	 */
 	private void onApplicationExit() {
-		System.out.println("Stopping server...");
+		GameLog.log(MsgType.NETWORK_INFO, "Stopping server...");
 		stopListening();
-		System.out.println("Server was stopped!");
+		GameLog.log(MsgType.NETWORK_INFO, "Server was stopped!");
 	}
 
 	/**
