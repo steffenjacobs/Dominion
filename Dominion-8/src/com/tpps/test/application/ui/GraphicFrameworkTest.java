@@ -11,7 +11,9 @@ import java.awt.AWTException;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import org.junit.Test;
@@ -52,7 +54,7 @@ public class GraphicFrameworkTest {
 	private static final int F_WIDTH = 1280, F_HEIGHT = 720;
 
 	@Test
-	public void test() throws AWTException {
+	public void test() throws AWTException, IOException {
 
 		// create a test-framework
 		GraphicFramework framework = new GraphicFramework(new TestFrame());
@@ -61,8 +63,9 @@ public class GraphicFrameworkTest {
 		assertNotNull(framework);
 
 		// add two overlapping buttons
-		TestButton button_1 = new TestButton(0, 0, .5, .5, F_WIDTH, F_HEIGHT, 1, null, framework, "TEST");
-		TestButton button_2 = new TestButton(0, 0, .25, .25, F_WIDTH, F_HEIGHT, 2, null, framework, "TEST2");
+		Image img = ImageIO.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
+		TestButton button_1 = new TestButton(0, 0, .5, .5, F_WIDTH, F_HEIGHT, 1, img, framework, "TEST");
+		TestButton button_2 = new TestButton(0, 0, .25, .25, F_WIDTH, F_HEIGHT, 2, img, framework, "TEST2");
 		framework.addComponent(button_1);
 		framework.addComponent(button_2);
 

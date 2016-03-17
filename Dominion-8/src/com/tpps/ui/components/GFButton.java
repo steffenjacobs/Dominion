@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -47,7 +48,7 @@ public abstract class GFButton extends GameObject {
 		this.caption = caption;
 		this.onResize(absWidth, absHeight);
 	}
-	
+
 	/**
 	 * different constructor
 	 * 
@@ -79,9 +80,11 @@ public abstract class GFButton extends GameObject {
 			e.printStackTrace();
 		}
 		if (this.caption != null)
-			super.setRenderedImage(GraphicsUtil.drawStringCentered(super.getRenderdImage(), this.caption,
+			super.setRenderedImage(GraphicsUtil.drawStringCentered(
+					GraphicsUtil.resize((BufferedImage) super.getBufferedImage(), absWidth, absHeight), this.caption,
 					customFont.deriveFont(Font.PLAIN, 22), Color.BLACK));
 	}
+
 	/**
 	 * @author Steffen Jacobs
 	 * @return the object-caption

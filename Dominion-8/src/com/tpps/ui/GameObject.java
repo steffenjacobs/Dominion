@@ -22,9 +22,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	private static int objectCounter = 0;
 
 	private int id;
-	private Image renderedImage;
-
-	private Image bufferedImage;
+	private Image bufferedImage, renderedImage;
 	private RelativeGeom2D location;
 	private RelativeGeom2D dimension;
 	private int x, y, height, width;
@@ -311,8 +309,8 @@ public abstract class GameObject implements Cloneable, Serializable {
 	}
 
 	/**
-	 * replaces the image which is actually drawn on the screen with the newImage and udpates the framework without
-	 * recalculating the size
+	 * replaces the image which is actually drawn on the screen with the
+	 * newImage and udpates the framework without recalculating the size
 	 * 
 	 * @author Steffen Jacobs
 	 */
