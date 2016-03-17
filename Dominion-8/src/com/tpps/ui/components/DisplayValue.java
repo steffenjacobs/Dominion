@@ -56,7 +56,7 @@ public final class DisplayValue extends GameObject {
 			e.printStackTrace();
 		}
 		if (this.getCaption() != null)
-			super.forceSetImage(GraphicsUtil.drawStringCentered(super.getOriginalImage(), this.getCaption(),
+			super.forceSetImage(GraphicsUtil.drawStringCentered(super.getImage(), this.getCaption(),
 					customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
 	}
 
