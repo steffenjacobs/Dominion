@@ -24,7 +24,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	private int id;
 	private Image bufferedImage, renderedImage;
 	private RelativeGeom2D location;
-	private RelativeGeom2D dimension;
+	protected RelativeGeom2D dimension;
 	private int x, y, height, width;
 	private GraphicFramework parent;
 	private int layer;
