@@ -110,7 +110,7 @@ public class CardStorageController {
 	 */
 	public void addCard(Card card) {
 		storedCards.putIfAbsent(card.getName(), new SerializedCard(card.getActions(), card.getTypes(), card.getCost(),
-				card.getName(), (BufferedImage) card.getImage()));
+				card.getName(), (BufferedImage) card.getRenderdImage()));
 	}
 
 	/**

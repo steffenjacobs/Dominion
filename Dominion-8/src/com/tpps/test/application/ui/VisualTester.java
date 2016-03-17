@@ -157,7 +157,7 @@ public class VisualTester extends JFrame {
 		@Override
 		public String toString() {
 			return "@" + System.identityHashCode(this) + " - " + super.getLocation() + " , " + super.getDimension()
-					+ " , " + super.getLayer() + " , " + super.getImage() + " , " + super.getParent() + " , "
+					+ " , " + super.getLayer() + " , " + super.getRenderdImage() + " , " + super.getParent() + " , "
 					+ super.getCaption();
 		}
 

@@ -79,7 +79,7 @@ public abstract class GFButton extends GameObject {
 			e.printStackTrace();
 		}
 		if (this.caption != null)
-			super.setRenderedImage(GraphicsUtil.drawStringCentered(super.getImage(), this.caption,
+			super.setRenderedImage(GraphicsUtil.drawStringCentered(super.getRenderdImage(), this.caption,
 					customFont.deriveFont(Font.PLAIN, 22), Color.BLACK));
 	}
 	/**

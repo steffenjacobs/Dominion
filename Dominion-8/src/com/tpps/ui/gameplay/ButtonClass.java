@@ -25,8 +25,8 @@ public class ButtonClass extends GFButton {
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,
 				caption);
-		this.original = super.getOriginalImage();
-		super.updatedBufferedImage(GraphicsUtil.setAlpha(super.getOriginalImage(), .6f));
+		this.original = super.getBufferedImage();
+		super.updatedBufferedImage(GraphicsUtil.setAlpha(super.getBufferedImage(), .6f));
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class ButtonClass extends GFButton {
 
 	@Override
 	public void onMouseExit() {
-		super.updatedBufferedImage(GraphicsUtil.setAlpha(super.getOriginalImage(), .6f));
+		super.updatedBufferedImage(GraphicsUtil.setAlpha(super.getBufferedImage(), .6f));
 
 	}
 
@@ -133,7 +133,7 @@ public class ButtonClass extends GFButton {
 	@Override
 	public String toString() {
 		return "@" + System.identityHashCode(this) + " - " + super.getLocation() + " , " + super.getDimension() + " , "
-				+ super.getLayer() + " , " + super.getImage() + " , " + super.getParent() + " , " + super.getCaption();
+				+ super.getLayer() + " , " + super.getRenderdImage() + " , " + super.getParent() + " , " + super.getCaption();
 	}
 
 	@Override

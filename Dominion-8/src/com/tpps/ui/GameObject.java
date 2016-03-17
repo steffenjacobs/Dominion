@@ -22,9 +22,9 @@ public abstract class GameObject implements Cloneable, Serializable {
 	private static int objectCounter = 0;
 
 	private int id;
-	protected Image renderedImage;
+	private Image renderedImage;
 
-	protected Image bufferedImage;
+	private Image bufferedImage;
 	private RelativeGeom2D location;
 	private RelativeGeom2D dimension;
 	private int x, y, height, width;
@@ -234,7 +234,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @return the original image of the game object
 	 * @author Steffen Jacobs
 	 */
-	public Image getOriginalImage() {
+	public Image getBufferedImage() {
 		return this.bufferedImage;
 	}
 
@@ -242,7 +242,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @return the current image of the game object
 	 * @author Steffen Jacobs
 	 */
-	public Image getImage() {
+	public Image getRenderdImage() {
 		return this.renderedImage;
 	}
 

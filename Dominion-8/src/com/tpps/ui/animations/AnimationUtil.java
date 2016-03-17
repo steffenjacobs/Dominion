@@ -16,9 +16,9 @@ public final class AnimationUtil {
 
 			@Override
 			public void run() {
-				this.bim = new BufferedImage(go.getImage().getWidth(null), go.getImage().getHeight(null),
+				this.bim = new BufferedImage(go.getRenderdImage().getWidth(null), go.getRenderdImage().getHeight(null),
 						BufferedImage.TYPE_INT_ARGB);
-				bim.getGraphics().drawImage(go.getImage(), 0, 0, null);
+				bim.getGraphics().drawImage(go.getRenderdImage(), 0, 0, null);
 				while (true) {
 
 					if (transparency < .01f) {

@@ -56,7 +56,7 @@ public final class DisplayValue extends GameObject {
 			e.printStackTrace();
 		}
 		if (this.getCaption() != null)
-			super.setRenderedImage(GraphicsUtil.drawStringCentered(super.getImage(), this.getCaption(),
+			super.setRenderedImage(GraphicsUtil.drawStringCentered(super.getBufferedImage(), this.getCaption(),
 					customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
 	}
 
@@ -74,7 +74,7 @@ public final class DisplayValue extends GameObject {
 			e.printStackTrace();
 		}
 		if (this.getCaption() != null){			
-			super.setRenderedImage(GraphicsUtil.drawStringCentered(super.getOriginalImage(), caption,
+			super.setRenderedImage(GraphicsUtil.drawStringCentered(super.getBufferedImage(), caption,
 					customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
 		}
 	}

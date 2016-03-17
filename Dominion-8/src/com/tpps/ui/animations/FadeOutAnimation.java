@@ -33,9 +33,9 @@ public class FadeOutAnimation extends Animation {
 			@Override
 			public void run() {
 				// backup of the basis-image
-				this.baseImage = new BufferedImage(gameObject.getImage().getWidth(null),
-						gameObject.getImage().getHeight(null), BufferedImage.TYPE_INT_ARGB);
-				baseImage.getGraphics().drawImage(gameObject.getImage(), 0, 0, null);
+				this.baseImage = new BufferedImage(gameObject.getRenderdImage().getWidth(null),
+						gameObject.getRenderdImage().getHeight(null), BufferedImage.TYPE_INT_ARGB);
+				baseImage.getGraphics().drawImage(gameObject.getRenderdImage(), 0, 0, null);
 
 				while (!isPaused && isRunning && !playAnimationThread.isInterrupted()) {
 					frameCounter++;
