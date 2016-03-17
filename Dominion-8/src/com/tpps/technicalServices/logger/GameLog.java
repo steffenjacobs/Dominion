@@ -37,7 +37,7 @@ public class GameLog {
 	 * determines if there will be an extra window for the log besides the
 	 * console
 	 */
-	private static boolean uiFlag = true;
+	private static boolean uiFlag = false;
 
 	/**
 	 * static initialization of the Game
