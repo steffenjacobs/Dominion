@@ -11,6 +11,8 @@ import com.tpps.application.network.clientSession.packets.PacketSessionKeepAlive
 import com.tpps.application.network.core.Client;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.network.core.packet.Packet;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 
 /**
  * represents some kind of API-like interface to send check- and get-requests to
@@ -33,7 +35,7 @@ public final class SessionPacketSenderAPI {
 		if (c.isConnected()) {
 			try {
 				if (SessionClient.debug()) {
-					System.out.println(packet.toString());
+					GameLog.log(MsgType.NETWORK_INFO, packet.toString());
 				}
 				c.sendMessage(packet);
 			} catch (IOException e) {
@@ -55,10 +57,10 @@ public final class SessionPacketSenderAPI {
 		SessionPacketReceiverAPI.addGetRequest(username, callable);
 		sendPacket(c, new PacketSessionGetRequest(username));
 	}
-	
+
 	private static long cnt = 0;
-	
-	private static synchronized long getNewTS(){
+
+	private static synchronized long getNewTS() {
 		return cnt++;
 	}
 

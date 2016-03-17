@@ -7,6 +7,8 @@ import java.util.TimerTask;
 import java.util.UUID;
 
 import com.tpps.application.network.core.Client;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 
 public class SessionClient extends Client {
 
@@ -57,9 +59,9 @@ public class SessionClient extends Client {
 			if (scheduler != null) {
 				scheduler.cancel();
 				scheduler.purge();
-				System.out.println("Keep-Alive changed to " + username);
+				GameLog.log(MsgType.NETWORK_INFO, "Keep-Alive changed to " + username);
 			} else {
-				System.out.println("Keep-Alive set up for " + username);
+				GameLog.log(MsgType.NETWORK_INFO, "Keep-Alive set up for " + username);
 			}
 			scheduler = new Timer();
 			final Client instance = this;
@@ -74,7 +76,7 @@ public class SessionClient extends Client {
 			if (scheduler != null) {
 				scheduler.cancel();
 				scheduler.purge();
-				System.out.println("Keep-Alive stoppped for " + username);
+				GameLog.log(MsgType.NETWORK_INFO, "Keep-Alive stoppped for " + username);
 			}
 		}
 	}
