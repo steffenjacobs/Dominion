@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.ArrayList;
 
 import javax.net.SocketFactory;
 
@@ -22,7 +23,7 @@ public class Client {
 
 	private boolean connecting = false, connected = false;
 	private Thread tryToConnectThread = null;
-	private PacketHandler handler;
+	private ArrayList<PacketHandler> handlers;
 	private ClientConnectionThread connectionThread;
 	private SocketAddress address;
 
@@ -42,7 +43,8 @@ public class Client {
 	 */
 	public Client(SocketAddress _address, PacketHandler _handler, boolean connectAsync) throws IOException {
 		this.address = _address;
-		this.handler = _handler;
+		this.handlers = new ArrayList<>();
+		this.handlers.add(_handler);
 		connectAndLoop(connectAsync);
 	}
 
@@ -57,9 +59,7 @@ public class Client {
 	 * @author Steffen Jacobs
 	 */
 	public Client(SocketAddress _address, PacketHandler _handler) throws IOException {
-		this.address = _address;
-		this.handler = _handler;
-		connectAndLoop(true);
+		this(_address, _handler, true);
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class Client {
 					clientSocket.connect(address, CONNECTION_TIMEOUT);
 					GameLog.log(MsgType.NETWORK_INFO, "Connected to Server.");
 					this.connected = true;
-					connectionThread = new ClientConnectionThread(clientSocket, handler, this);
+					connectionThread = new ClientConnectionThread(clientSocket, handlers, this);
 					connectionThread.start();
 				} catch (ConnectException ex) {
 					this.connected = false;
@@ -224,8 +224,8 @@ public class Client {
 	 * 
 	 * @return the packetHandler of the client
 	 */
-	public PacketHandler getHandler() {
-		return handler;
+	public ArrayList<PacketHandler> getHandlers() {
+		return handlers;
 	}
 
 	/**
@@ -236,6 +236,19 @@ public class Client {
 	 */
 	public NetworkListenerManager getListenerManager() {
 		return listenerManager;
+	}
+
+	/**
+	 * adds a packet handler
+	 * 
+	 * @param handler
+	 *            the packet-handler to add
+	 */
+	public void addPacketHandler(PacketHandler handler) {
+		if (this.connectionThread != null)
+			this.connectionThread.addPacketHandler(handler);
+
+		this.handlers.add(handler);
 	}
 
 }

@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -26,9 +28,9 @@ public class ClientConnectionThread extends Thread {
 
 	private final Socket clientSocket;
 	private final Client parent;
-	private final PacketHandler receiver;
+	private final CopyOnWriteArrayList<PacketHandler> receivers;
 	private int countSent = 0, countReceived = 0;
-	private Thread sendThread=null;
+	private Thread sendThread = null;
 
 	private ExecutorService threadPool = Executors.newCachedThreadPool();
 
@@ -69,8 +71,9 @@ public class ClientConnectionThread extends Thread {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	ClientConnectionThread(Socket clientSocket, PacketHandler receiver, Client _parent) {
-		this.receiver = receiver;
+	ClientConnectionThread(Socket clientSocket, ArrayList<PacketHandler> receiver, Client _parent) {
+		this.receivers = new CopyOnWriteArrayList<>();
+		this.receivers.addAll(receiver);
 		this.clientSocket = clientSocket;
 		this.parent = _parent;
 	}
@@ -100,10 +103,12 @@ public class ClientConnectionThread extends Thread {
 					byte[] data = new byte[length];
 					inStream.readFully(data);
 					countReceived++;
-					
+
 					// start async receiver
-					threadPool.submit(() -> receiver.handleReceivedPacket(clientSocket.getLocalPort(),
-							PacketType.getPacket(data)));
+					threadPool.submit(() -> {
+						for (PacketHandler handler : receivers)
+							handler.handleReceivedPacket(clientSocket.getLocalPort(), PacketType.getPacket(data));
+					});
 
 				} catch (IOException e) {
 					System.out.println("[Network] Error: Connection Lost.");
@@ -205,5 +210,14 @@ public class ClientConnectionThread extends Thread {
 	 */
 	public int getLocalPort() {
 		return clientSocket.getLocalPort();
+	}
+
+	/**
+	 * adds a packet-handler
+	 * 
+	 * @param handler
+	 */
+	public void addPacketHandler(PacketHandler handler) {
+		this.receivers.add(handler);
 	}
 }

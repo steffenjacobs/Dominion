@@ -1,6 +1,7 @@
 package com.tpps.test.application.network;
 
 import java.util.HashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.tpps.application.network.core.PacketHandler;
 import com.tpps.application.network.core.packet.Packet;
@@ -11,27 +12,40 @@ import com.tpps.application.network.core.packet.Packet;
  * @author Steffen Jacobs
  */
 public class TestPacketHandler extends PacketHandler {
-	HashMap<Integer, Packet> lastReceived = new HashMap<>();
+	private HashMap<Integer, Packet> lastReceived = new HashMap<>();
+	private CopyOnWriteArrayList<Packet> receivedPackets = new CopyOnWriteArrayList<>();
+
+	/** trivial */
+	public void clearPackets() {
+		this.receivedPackets.clear();
+	}
+
+	/** trivial */
+	public int countPackets() {
+		return this.receivedPackets.size();
+	}
 
 	/**
 	 * trivial
-	 * 
-	 * @author Steffen Jacobs
 	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {
 		System.out.println("[SUCCESS] Received Packet!");
 		this.lastReceived.put(port, packet);
+		this.receivedPackets.add(packet);
 
 	}
 
 	/**
 	 * trivial
-	 * 
-	 * @author Steffen Jacobs
 	 */
 	public Packet getLastReceived(int port) {
 		return lastReceived.get(port);
+	}
+
+	/** trivial */
+	public CopyOnWriteArrayList<Packet> getReceivedPackets() {
+		return receivedPackets;
 	}
 
 }
