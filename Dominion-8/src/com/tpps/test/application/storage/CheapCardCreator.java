@@ -140,6 +140,25 @@ public class CheapCardCreator {
 //		actions DrawCard Seperator Defend
 //		types action reaction
 		
+//		Village
+		actions.remove(CardAction.DRAW_CARD);
+		actions.remove(CardAction.SEPERATOR);
+		actions.remove(CardAction.DEFEND);
+		types.remove(CardType.REACTION);
+		actions.put(CardAction.DRAW_CARD, "1");
+		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "2");
+		cards.put("Village", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 3, "Village", getImg("Village")));
+		
+		
+//		woodcutter		
+		actions.remove(CardAction.DRAW_CARD);
+		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
+		actions.put(CardAction.ADD_PURCHASE, "1");
+		actions.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, "2");
+		cards.put("Woodcutter", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 3, "Woodcutter", getImg("Woodcutter")));
+		
 		
 		
 		

@@ -275,13 +275,12 @@ public class GameWindow extends JFrame {
 		}
 		this.handCards = new LinkedList<Card>();
 
-		System.out.println("im Gamewindow handcardSize" + handCards.size());
+		
 		for (int i = 0; i < handCards.size(); i++) {
 
 			SerializedCard serializedCard = handCards.get(actionCardIds.get(i));
 			// Example For nishit
-			// Matcher matcher =
-			// Pattern.compile("\\d+").matcher(actionCardIds.get(i));
+			// Matcher matcher = Pattern.compile("\\d+").matcher(actionCardIds.get(i));
 			// matcher.find();
 //			 String number = actionCardIds.get(i).substring(matcher.start(), matcher.end());
 			if (sub > 7) {
@@ -339,28 +338,30 @@ public class GameWindow extends JFrame {
 	}
 
 	public void setCaptionCoins(String caption) {
-		framework.removeComponent(coin);
-		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework, caption);
-		framework.addComponent(coin);
-		// coin.renewCaption(caption);
-		// this.repaint();
+//		framework.removeComponent(coin);
+//		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework, caption);
+//		framework.addComponent(coin);
+		System.out.println("setCoins: " + caption);
+		 coin.renewCaption(caption);
+		 this.repaint();
 	}
 
 	public void setCaptionActions(String caption) {
 		framework.removeComponent(action);
 		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework, caption);
 		framework.addComponent(action);
+		System.out.println("setActions: " + caption);
 		// action.renewCaption(caption);
-		// this.repaint();
+		 this.repaint();
 	}
 
 	public void setCaptionBuys(String caption) {
 		framework.removeComponent(buy);
 		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework, caption);
 		framework.addComponent(buy);
-		;
+		System.out.println("setBuys: " + caption);
 		// buy.renewCaption(caption);
-		// this.repaint();
+		 this.repaint();
 	}
 
 	public void endActionPhase() {

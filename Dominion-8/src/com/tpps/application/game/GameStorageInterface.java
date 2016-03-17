@@ -28,11 +28,7 @@ public class GameStorageInterface {
 	 * 
 	 * @param handCardIds
 	 */
-	public void loadHandCardsAndPassToGameWindow(LinkedList<String> handCardIds) {
-		for (Iterator<String> iterator = handCardIds.iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
-			System.out.println("HandCards: " + string);
-		}
+	public void loadHandCardsAndPassToGameWindow(LinkedList<String> handCardIds) {		
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(handCardIds);
 		this.gameWindow.handCards(serializedCardWithId);
 	}
@@ -83,10 +79,7 @@ public class GameStorageInterface {
 	 * @param actionCardIds
 	 */
 	public void loadActionCardsAndPassToGameWindow(LinkedList<String> actionCardIds) {
-		for (Iterator<String> iterator = actionCardIds.iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
-			System.out.println("ActionCards: " + string);
-		}
+		
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(actionCardIds);
 		this.gameWindow.tableActionCards(serializedCardWithId);
 	}
