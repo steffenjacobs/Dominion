@@ -27,11 +27,11 @@ public class TestCardLoader {
 			table.put(s+="s",cs.getCard("Province"));
 		}
 
-		 for (int i = 0; i < 7; i++) {
+		 for (int i = 0; i < 13; i++) {
 			hand.put(s+="s",cs.getCard("Gold"));
 		}
 		 
-		 for (int i = 0; i < 123; i++) {
+		 for (int i = 0; i < 15; i++) {
 			middle.put(s+="s",cs.getCard("Gold"));
 		}
 		 

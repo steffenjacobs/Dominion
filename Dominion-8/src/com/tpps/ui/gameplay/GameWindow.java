@@ -277,8 +277,6 @@ public class GameWindow extends JFrame {
 			this.framework.removeComponent(card);
 		}
 		this.handCards = new LinkedList<Card>();
-
-		System.out.println("im Gamewindow handcardSize" + handCards.size());
 		for (int i = 0; i < handCards.size(); i++) {
 
 			SerializedCard serializedCard = handCards.get(actionCardIds.get(i));
