@@ -13,9 +13,17 @@ import com.tpps.application.network.login.packets.PacketLoginCheckAnswer;
 import com.tpps.application.network.login.packets.PacketRegisterAnswer;
 import com.tpps.ui.loginscreen.LoginGUIController;
 
+/**
+ * test, if Login-System works. Check, if accounts can be created check, if
+ * accounts can't be created with the same user-name. Check, if accounts can't
+ * be created with the same email-address. Check, if created accounts can be
+ * logged into.
+ * 
+ * @author Steffen Jacobs
+ */
 public class JUnitLoginTest {
 	final boolean DO_BAD_PW_BULK_TEST = false;
-	final boolean DO_BULK_REGISTER_TEST = false;
+	final boolean DO_BULK_REGISTER_TEST = true;
 
 	@Test
 	public void test() throws InterruptedException {
@@ -25,42 +33,41 @@ public class JUnitLoginTest {
 		LoginClient lc = new LoginClient(cont);
 		TestPacketHandler handler = new TestPacketHandler();
 		lc.getClient().addPacketHandler(handler);
-		
+
 		Thread.sleep(100);
 
-		//test registration
+		// test registration
 		String accountname = "" + (Long.MAX_VALUE - System.currentTimeMillis());
 		handler.clearPackets();
-		
+
 		lc.handleAccountCreation(accountname, "password", accountname + "@test.tld");
-		Thread.sleep(600);
-		
+		Thread.sleep(700);
+
 		assertEquals(1, handler.countPackets());
 		assertEquals(PacketType.LOGIN_REGISTER_ANSWER, handler.getReceivedPackets().get(0).getType());
-		assertEquals(1, ((PacketRegisterAnswer)handler.getReceivedPackets().get(0)).getState());
-		
+		assertEquals(1, ((PacketRegisterAnswer) handler.getReceivedPackets().get(0)).getState());
+
 		handler.clearPackets();
-		
-		//same nick-name
+
+		// same nick-name
 		lc.handleAccountCreation(accountname, "password", accountname + "@test1.tld");
 
 		Thread.sleep(600);
-		
+
 		assertEquals(1, handler.countPackets());
 		assertEquals(PacketType.LOGIN_REGISTER_ANSWER, handler.getReceivedPackets().get(0).getType());
-		assertEquals(2, ((PacketRegisterAnswer)handler.getReceivedPackets().get(0)).getState());
-		
+		assertEquals(2, ((PacketRegisterAnswer) handler.getReceivedPackets().get(0)).getState());
+
 		handler.clearPackets();
-		
-		//Same email-address
+
+		// Same email-address
 		lc.handleAccountCreation(accountname + "_", "password", accountname + "@test.tld");
-		
+
 		Thread.sleep(600);
-		
+
 		assertEquals(1, handler.countPackets());
 		assertEquals(PacketType.LOGIN_REGISTER_ANSWER, handler.getReceivedPackets().get(0).getType());
-		assertEquals(3, ((PacketRegisterAnswer)handler.getReceivedPackets().get(0)).getState());
-		
+		assertEquals(3, ((PacketRegisterAnswer) handler.getReceivedPackets().get(0)).getState());
 
 		if (DO_BAD_PW_BULK_TEST) {
 			// prepare for bulk-test
@@ -70,7 +77,7 @@ public class JUnitLoginTest {
 			// bulk-test with bad pws
 			for (int i = 0; i < LOGIN_REQUEST_COUNT; i++) {
 
-				lc.handlelogin("aaa", "badpw");
+				lc.handlelogin("bad", "badpw");
 			}
 
 			// wait until finished
@@ -86,12 +93,13 @@ public class JUnitLoginTest {
 			CopyOnWriteArrayList<Long> createdAccounts = new CopyOnWriteArrayList<>();
 			final int REGISTER_REQUEST_COUNT = 100;
 			handler.clearPackets();
-			final long relName = System.currentTimeMillis();
+			final long start = System.currentTimeMillis();
 
 			// bulk-test registration
 			for (int i = 0; i < REGISTER_REQUEST_COUNT; i++) {
-				createdAccounts.add(relName + i);
-				lc.handleAccountCreation("TEST#" + relName + i, "password", relName + i + "@test.tld");
+				final long relName = start + i;
+				createdAccounts.add(relName);
+				lc.handleAccountCreation("TEST#" + relName, "password", relName + "@test.tld");
 			}
 
 			// wait...
@@ -113,7 +121,7 @@ public class JUnitLoginTest {
 			}
 
 			// wait...
-			Thread.sleep(12000);
+			Thread.sleep(5000);
 
 			// check if login was successful for all packets
 			assertEquals(createdAccounts.size(), handler.countPackets());
@@ -123,6 +131,5 @@ public class JUnitLoginTest {
 				assertEquals(true, ((PacketLoginCheckAnswer) pack).getState());
 			}
 		}
-
 	}
 }
