@@ -127,11 +127,11 @@ public class GameWindow extends JFrame {
 		this.framework.removeComponent(coin);
 		this.framework.removeComponent(buy);
 
-		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, WIDTH, HEIGHT, displayImageActions, framework,
 				String.valueOf(GameConstant.INIT_ACTIONS));
-		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework,
+		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, WIDTH, HEIGHT, displayImageCoins, framework,
 				String.valueOf(GameConstant.INIT_TREASURES));
-		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework,
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, WIDTH, HEIGHT, displayImageBuys, framework,
 				String.valueOf(GameConstant.INIT_PURCHASES));
 
 		this.framework.addComponent(action);
@@ -178,8 +178,10 @@ public class GameWindow extends JFrame {
 				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
 						serializedCard.getCost(), actionCardlds.get(i), shift += 0.06, 0.02, 0.05, 0.15, k++,
 						serializedCard.getImage(), framework);
-				GFButton button = new ButtonClass(shiftCard += 0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9, WIDTH,
-						WIDTH, l++, buttonGameImage, framework, "9");
+
+				GFButton button = new ButtonClass(shiftCard+=0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, HEIGHT, l++,
+						buttonGameImage, framework, "9");
+
 				framework.addComponent(button);
 				framework.addComponent(card);
 				this.tableCards.add(card);
@@ -187,8 +189,9 @@ public class GameWindow extends JFrame {
 				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
 						serializedCard.getCost(), actionCardlds.get(i), shiftBottom += 0.06, 0.2, 0.05, 0.15, k++,
 						serializedCard.getImage(), framework);
-				GFButton button = new ButtonClass(shiftCardBottom += 0.06, 0.2, 0.015, 0.015 * CORRECTION_16TO9, WIDTH,
-						WIDTH, l++, buttonGameImage, framework, "9");
+				GFButton button = new ButtonClass(shiftCardBottom+=0.06, 0.2, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, HEIGHT, l++,
+						buttonGameImage, framework, "9");
+
 				framework.addComponent(button);
 				framework.addComponent(card);
 				this.tableCards.add(card);
@@ -223,8 +226,9 @@ public class GameWindow extends JFrame {
 					serializedCard.getCost(), actionCardlds.get(i), 0.95, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 270), framework);
 
-			GFButton button = new ButtonClass(0.945, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, WIDTH,
-					l++, buttonGameImage, framework, "9");
+			
+			GFButton button = new ButtonClass(0.945, shiftCard+=0.12, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, HEIGHT, l++,
+					buttonGameImage, framework, "9");
 			framework.addComponent(button);
 			framework.addComponent(card);
 			this.coinCards.add(card);
