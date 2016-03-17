@@ -4,12 +4,14 @@ import java.awt.Image;
 import java.io.IOException;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.application.network.game.GameClient;
 import com.tpps.application.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.application.network.gameSession.packets.PacketEndActionPhase;
+import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
+import com.tpps.application.network.gameSession.packets.PacketEndReactions;
+import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.application.network.gameSession.packets.PacketEndTurn;
 import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
-import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
-import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -106,6 +108,16 @@ public class ButtonClass extends GFButton {
 				DominionController.getInstance().getGameClient().sendMessage(new PacketDiscardDeck());
 				this.getParent().removeComponent(this);
 			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (this.getCaption().equals("End Reactions")){
+			GameClient gameClient = DominionController.getInstance().getGameClient();
+			try {
+				gameClient.sendMessage(new PacketEndReactions(gameClient.getClientId()));
+				this.getParent().removeComponent(this);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

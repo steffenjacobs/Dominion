@@ -16,6 +16,7 @@ import com.tpps.application.network.gameSession.packets.PacketBuyCard;
 import com.tpps.application.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketEndActionPhase;
+import com.tpps.application.network.gameSession.packets.PacketEndReactions;
 import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
 import com.tpps.application.network.gameSession.packets.PacketReconnect;
@@ -29,7 +30,6 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
- * 
  * @author ladler - Lukas Adler
  */
 public class ServerGamePacketHandler extends PacketHandler {
@@ -61,12 +61,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 				System.out.println(server.getGameController().getGamePhase());
 
 //				Player activePlayer = this.server.getGameController().getActivePlayer();
-				Player player = this.server.getGameController().getClientById(clientID);
+				Player player = this.server.getGameController().getClientById(clientID);				
 				
-				
-				
-				if (player.getDiscardMode()
-						|| player.getTrashMode()) {
+				if (!player.playsReactionCard() && (player.getDiscardMode()
+						|| player.getTrashMode())) {
 					System.out.println("im handler discard mode set");
 					if (this.server.getGameController().checkCardExistsAndDiscardOrTrash(player, cardID)) {
 						server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(
@@ -75,18 +73,20 @@ public class ServerGamePacketHandler extends PacketHandler {
 					}
 				}
 
+				
+				
 				if (this.server.getGameController().isVictoryCardOnHand(cardID)
 						&& !player.getDiscardMode()
 						&& !player.getTrashMode() 
 						|| player.isReactionMode() && 
+						
 						!player.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.REACTION)) {
-					return;
-					
+					return;					
 				}
 
 				
 
-				if (this.server.getGameController().validateTurnAndExecute(cardID)) {				
+				if (this.server.getGameController().validateTurnAndExecute(cardID, player)) {				
 
 						server.sendMessage(port, new PacketUpdateValues(player.getActions(),
 								player.getBuys(), player.getCoins()));
@@ -98,12 +98,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 					server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil
 							.getCardIDs(player.getPlayedCards())));
 
-					LinkedList<String> playedCards = CollectionsUtil
-							.getCardIDs(player.getPlayedCards());
-					for (Iterator<String> iterator = playedCards.iterator(); iterator.hasNext();) {
-						String string = (String) iterator.next();
-						System.out.println(string);
-					}
 				} else {
 					try {
 						if (this.server.getGameController().checkBoardCardExistsAppendToDiscardPile(cardID)) {
@@ -154,16 +148,15 @@ public class ServerGamePacketHandler extends PacketHandler {
 				
 				
 				 this.server.getGameController().getActivePlayer().endTrashMode();
-				
-				for (Iterator<Card> iterator = this.server.getGameController().getGameBoard().getTrashPile().iterator(); iterator.hasNext();) {
-					Card card = (Card) iterator.next();
-					System.out.println("Trashpile" + card.getId());
-				}
+			
+				break;
+			case END_REACTIONS:
+				Player player1 = this.server.getGameController().getClientById(((PacketEndReactions)packet).getClientID());
+				player1.setReactionCard(false);
 				break;
 			case DISCARD_DECK:
 				this.server.getGameController().getActivePlayer().getDeck().discardDrawPile();
-				System.out.println(Arrays.toString(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getDrawPile()).toArray()));
-				System.out.println(Arrays.toString(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getDiscardPile()).toArray()));
+				
 				
 				break;
 			default:
@@ -191,26 +184,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 	private void nextActivePlayer(int port) {
 		try {
-
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			server.sendMessage(port, new PacketSendHandCards(CollectionsUtil
 					.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-			LinkedList<String> cardIds = CollectionsUtil
-					.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand());
-
-			for (Iterator<String> iterator = cardIds.iterator(); iterator.hasNext();) {
-				String string = (String) iterator.next();
-				
-			}
-
+			Player player = this.server.getGameController().getActivePlayer();
+			
 			this.server.getGameController().endTurn();
-
+			server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
 			server.broadcastMessage(
 					new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private void updatePortOfPlayer(int port, Packet packet) {

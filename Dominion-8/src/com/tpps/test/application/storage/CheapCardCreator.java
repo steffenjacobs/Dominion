@@ -118,16 +118,28 @@ public class CheapCardCreator {
 		cards.put("Chancellor", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 3, "Chancellor", getImg("Chancellor")));
 		
-//		Militia
-		
-		
+//		Militia		
 		actions.remove(CardAction.DISCARD_CARD);
 		actions.put(CardAction.DISCARD_OTHER_DOWNTO, "3");
 		types.add(CardType.ATTACK);
 		cards.put("Militia", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "Militia", getImg("Militia")));
 //		types Attack and Action
-//		action Add_Temporary_Money
+//		action Add_Temporary_Money discard other downto
+		
+//		Moat
+		actions.remove(CardAction.DISCARD_OTHER_DOWNTO);
+		actions.remove(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
+		actions.put(CardAction.DRAW_CARD, "2");
+		actions.put(CardAction.SEPERATOR, "NIL");
+		actions.put(CardAction.DEFEND, "NIL");
+		types.remove(CardType.ATTACK);
+		types.add(CardType.REACTION);
+		cards.put("Moat", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 2, "Moat", getImg("Moat")));
+//		actions DrawCard Seperator Defend
+//		types action reaction
+		
 		
 		
 		

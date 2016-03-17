@@ -51,6 +51,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 			enableDisable(packet);
 			this.gameWindow.reset();	
 			break;
+		case ENABLE:
+			this.gameWindow.setEnabled(true);
+			break;
 		case ENABLE_OTHERS:
 			if (((PacketEnableOthers)packet).getClientID() == this.gameClient.getClientId()){
 				this.gameWindow.setEnabled(false);
@@ -99,6 +102,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 			break;
 		case END_TRASH_MODE:
 			this.gameWindow.removeStopTrashButton();
+			break;
+		case SHOW_END_REACTION_MODE:
+			this.gameWindow.addEndReactionModeButton();
 			break;
 		case DISCARD_DECK:
 			this.gameWindow.addDiscardDeckButton();

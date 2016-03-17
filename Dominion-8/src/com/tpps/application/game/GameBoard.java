@@ -95,21 +95,21 @@ public class GameBoard {
 	/**
 	 * return the ids of the treasure Cards lying at the top of the treasureCards table
 	 */
-	public LinkedList<String> getTreasureCardIDs() {
+	public synchronized LinkedList<String> getTreasureCardIDs() {
 		return getCardIDs(this.tableForTreasureCards);
 	}
 
 	/**
 	 * returns the ids of the victory Cards lying at the top of the victoryCards table
 	 */
-	public LinkedList<String> getVictoryCardIDs() {
+	public synchronized LinkedList<String> getVictoryCardIDs() {
 		return getCardIDs(this.tableForVictoryCards);
 	}
 
 	/**
 	 * returns the ids of the action Cards lying at the top of the actionCards table
 	 */
-	public LinkedList<String> getActionCardIDs() {
+	public synchronized LinkedList<String> getActionCardIDs() {
 		return getCardIDs(this.tableForActionCards);
 	}
 	
@@ -117,7 +117,7 @@ public class GameBoard {
 	/**
 	 * returns the ids of the cards selected through the key of the hashMap lying at the end of the list
 	 */
-	public LinkedList<String> getCardIDs(LinkedHashMap<String, LinkedList<Card>> table) {
+	public synchronized LinkedList<String> getCardIDs(LinkedHashMap<String, LinkedList<Card>> table) {
 		Set<String> keys = table.keySet();
 		LinkedList<String> cardIds = new LinkedList<String>();
 		LinkedList<Card> cardList;
@@ -243,9 +243,12 @@ public class GameBoard {
 		this.tableForActionCards.put("Militia", militiaList);
 		Card.resetClassID();
 		
+//		moat
 		LinkedList<Card> moatList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, null, CardAction.DEFEND}), 
-				CollectionsUtil.linkedList(new String[] {"2", "-1"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION, CardType.REACTION}), "Moat", 2), GameConstant.INIT_PILE_SIZE, moatList);
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, CardAction.SEPERATOR, CardAction.DEFEND}), 
+				CollectionsUtil.linkedList(new String[] {"2", "NIL", "NIL"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION, CardType.REACTION}), "Moat", 2), GameConstant.INIT_PILE_SIZE, moatList);
+		this.tableForActionCards.put("Moat", moatList);
+		Card.resetClassID();
 	
 //		
 //		// 3
@@ -298,9 +301,9 @@ public class GameBoard {
 	}
 
 	/**
-	 * 
+	 * maybe
 	 */
-	protected Card findAndRemoveCardFromBoard(String cardId) throws SynchronisationException {
+	protected synchronized Card findAndRemoveCardFromBoard(String cardId) throws SynchronisationException {
 		Matcher matcher = Pattern.compile("\\d+").matcher(cardId);
 		matcher.find();	
 		
