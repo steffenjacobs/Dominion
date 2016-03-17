@@ -41,7 +41,7 @@ public class JUnitLoginTest {
 		handler.clearPackets();
 
 		lc.handleAccountCreation(accountname, "password", accountname + "@test.tld");
-		Thread.sleep(700);
+		Thread.sleep(500);
 
 		assertEquals(1, handler.countPackets());
 		assertEquals(PacketType.LOGIN_REGISTER_ANSWER, handler.getReceivedPackets().get(0).getType());
@@ -91,7 +91,7 @@ public class JUnitLoginTest {
 
 			// bulk-test with registering
 			CopyOnWriteArrayList<Long> createdAccounts = new CopyOnWriteArrayList<>();
-			final int REGISTER_REQUEST_COUNT = 100;
+			final int REGISTER_REQUEST_COUNT = 128;
 			handler.clearPackets();
 			final long start = System.currentTimeMillis();
 
@@ -103,7 +103,7 @@ public class JUnitLoginTest {
 			}
 
 			// wait...
-			Thread.sleep(15000);
+			Thread.sleep(20000);
 
 			// check if all requests were answered
 			assertEquals(REGISTER_REQUEST_COUNT, handler.countPackets());
