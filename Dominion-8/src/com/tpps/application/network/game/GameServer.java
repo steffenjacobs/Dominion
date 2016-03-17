@@ -47,7 +47,7 @@ public class GameServer extends Server{
 		}
 	}	
 
-	public GameController getGameController() {
+	public synchronized GameController getGameController() {
 		return this.gameController;
 	}
 

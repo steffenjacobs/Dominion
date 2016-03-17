@@ -11,8 +11,10 @@ import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.game.GameServer;
 import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.game.TooMuchPlayerException;
+import com.tpps.application.network.gameSession.packets.PacketEnable;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketEnableOthers;
+import com.tpps.application.network.gameSession.packets.PacketShowEndReactions;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -74,7 +76,6 @@ public class GameController {
 	 * @param temporaryTrashPile
 	 */
 	public void updateTrashPile(LinkedList<Card> temporaryTrashPile) {
-		System.out.println("trashPile vor dem hinzufuegen " + this.gameBoard.getTrashPile());
 		CollectionsUtil.appendListToList(temporaryTrashPile, this.gameBoard.getTrashPile());
 	}
 
@@ -103,10 +104,17 @@ public class GameController {
 	 * @throws IOException
 	 * @throws SynchronisationException
 	 */
-	public boolean validateTurnAndExecute(String cardID) throws IOException {
-		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardID);
+	public synchronized boolean validateTurnAndExecute(String cardID, Player player) throws IOException {
+		
+		Card card = player.getDeck().getCardFromHand(cardID);		
 		if (card != null) {
+			if (player.isReactionMode() && card.getTypes().contains(CardType.REACTION)){
+				System.out.println("spielt reaktionskarte");
+				player.playCard(cardID);
+				return true;
+			}
 			if (this.gamePhase.equals("actionPhase")) {
+				
 				if (card.getTypes().contains(CardType.ACTION) && this.getActivePlayer().getActions() > 0) {
 					this.getActivePlayer().playCard(cardID);
 					if (this.getActivePlayer().getActions() == 0) {
@@ -132,7 +140,8 @@ public class GameController {
 	 * @return
 	 * @throws SynchronisationException
 	 */
-	public boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException {
+	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException {
+		System.out.println("checkBoardCardExists");
 		LinkedList<Card> cards = this.getGameBoard().findCardListFromBoard(cardID);
 		Card card = cards.get(cards.size() - 1);
 		Player player = this.getActivePlayer();
@@ -171,17 +180,15 @@ public class GameController {
 	 * 
 	 * @throws IOException
 	 */
-	public void playTreasures() throws IOException {
+	public synchronized void playTreasures() throws IOException {
 		this.getActivePlayer().playTreasures();
 	}
 
 	/**
 	 * 
 	 */
-	public void organizePilesAndrefreshCardHand() {
-		System.out.println("organize and refresh");
-		System.out.println(Arrays.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getDeck().getDiscardPile()).toArray()));
-		System.out.println(Arrays.toString(CollectionsUtil.getCardIDs(this.getActivePlayer().getPlayedCards()).toArray()));
+	public synchronized void organizePilesAndrefreshCardHand() {
+		
 		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
 		this.getActivePlayer().getDeck().refreshCardHand();
 		this.getActivePlayer().refreshPlayedCardsList();
@@ -195,11 +202,19 @@ public class GameController {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (!player.equals(activePlayer)) {
-				if (!player.getDeck().cardHandContainsReactionCard()) {
+				if (player.getDeck().cardHandContainsReactionCard()) {
+					player.setReactionCard(true);
+					try {
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 					player.setDiscardMode();
 					player.setDiscardOrTrashAction(CardAction.DISCARD_CARD,
 							player.getDeck().getCardHand().size() - Integer.parseInt(value));
-				}
+				
+				
 				player.setReactionMode();
 				 try {
 					GameServer.getInstance().broadcastMessage(player.getPort(), new PacketEnableOthers(this.activePlayer.getClientID()));
@@ -214,7 +229,7 @@ public class GameController {
 	 * enables the gui of the active Playe disables all others if the reaction mode is finished.
 	 * returns otherwise
 	 */
-	public void checkReactionModeFinishedAndEnableGuis(){
+	public synchronized void checkReactionModeFinishedAndEnableGuis(){
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (player.isReactionMode()){
@@ -222,7 +237,7 @@ public class GameController {
 			}
 		}
 		try {
-			GameServer.getInstance().broadcastMessage(new PacketEnableDisable(this.getActivePlayer().getClientID()));
+			GameServer.getInstance().sendMessage(this.getActivePlayer().getPort(), new PacketEnable());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -232,10 +247,11 @@ public class GameController {
 	 * sets the nextActivePlayer, resets the PlayerValues, set the gamePhase to
 	 * ActionPhase
 	 */
-	public void endTurn() {
-		this.setNextActivePlayer();
+	public synchronized void endTurn() {
+		
 		this.getActivePlayer().resetPlayerValues();
 		this.getActivePlayer().refreshPlayedCardsList();
+		this.setNextActivePlayer();
 		this.setActionPhase();
 	}
 
@@ -251,7 +267,7 @@ public class GameController {
 	 * @param clientId
 	 * @return
 	 */
-	public Player getClientById(int clientId){
+	public synchronized Player getClientById(int clientId){
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (player.getClientID() == clientId){
@@ -271,7 +287,7 @@ public class GameController {
 	/**
 	 * 
 	 */
-	public Player getActivePlayer() {
+	public synchronized Player getActivePlayer() {
 		return this.activePlayer;
 	}
 
@@ -340,7 +356,7 @@ public class GameController {
 	 * 
 	 * @return
 	 */
-	public GameBoard getGameBoard() {
+	public synchronized GameBoard getGameBoard() {
 		return gameBoard;
 	}
 
@@ -373,7 +389,7 @@ public class GameController {
 	/**
 	 * 
 	 */
-	public void setBuyPhase() {
+	public synchronized void setBuyPhase() {
 		System.out.println("BuyPhaseWasSet");
 		this.gamePhase = "buyPhase";
 	}

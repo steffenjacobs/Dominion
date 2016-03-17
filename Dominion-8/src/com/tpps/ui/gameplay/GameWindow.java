@@ -342,6 +342,10 @@ public class GameWindow extends JFrame {
 		framework.removeComponent(this.stopTrash);
 	}
 	
+	public void addEndReactionModeButton() {
+		framework.addComponent(this.endReactions);
+	}
+	
 	public void addDiscardDeckButton(){
 		framework.addComponent(this.discardDeck);
 	}

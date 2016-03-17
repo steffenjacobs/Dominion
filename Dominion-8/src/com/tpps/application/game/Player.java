@@ -1,6 +1,7 @@
 package com.tpps.application.game;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -9,6 +10,7 @@ import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.game.card.Tuple;
 import com.tpps.application.network.game.GameServer;
+import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.gameSession.packets.PacketDisable;
 import com.tpps.application.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
@@ -34,7 +36,7 @@ public class Player {
 	private int actions;
 	private int buys;
 	private int coins;
-	private boolean discardMode, trashMode, reactionMode;
+	private boolean discardMode, trashMode, reactionMode, reactionCard;
 	private Tuple<CardAction> discardOrTrashAction;
 	private LinkedList<Card> playedCards, discardList;
 
@@ -44,6 +46,7 @@ public class Player {
 	 * @param port
 	 */
 	public Player(Deck deck, int clientID, int port) {
+		this.reactionCard = false;
 		this.discardMode = false;
 		this.trashMode = false;
 		this.reactionMode = false;
@@ -70,7 +73,7 @@ public class Player {
 	/**
 	 * 
 	 */
-	public void resetPlayerValues() {
+	public synchronized void resetPlayerValues() {
 		this.coins = 0;
 		this.buys = 1;
 		this.actions = 1;
@@ -89,6 +92,18 @@ public class Player {
 
 	public void setDiscardOrTrashAction(CardAction cardAction, int val) {
 		this.discardOrTrashAction = new Tuple<CardAction>(cardAction, val);
+	}
+
+	public void setReactionCard(boolean reactionCard) {
+		this.reactionCard = reactionCard;
+	}
+
+	/**
+	 * 
+	 * @return if the player has a reactionCard or not
+	 */
+	public boolean playsReactionCard() {
+		return this.reactionCard;
 	}
 
 	/**
@@ -155,14 +170,6 @@ public class Player {
 	 */
 	public int getActions() {
 		return actions;
-	}
-
-	/**
-	 * @param actions
-	 *            the actions to set
-	 */
-	public void setActions(int actions) {
-		this.actions = actions;
 	}
 
 	/**
@@ -288,18 +295,20 @@ public class Player {
 	public LinkedList<CardAction> getRelevantCardActions(LinkedList<CardAction> cardActions) {
 		LinkedList<CardAction> relevantCardActions = new LinkedList<CardAction>();
 		if (this.reactionMode) {
-			for (int i = cardActions.size(); i > 0; i--) {
-				relevantCardActions.add(cardActions.get(i));
+			for (int i = cardActions.size() - 1; i > 0; i--) {
+
 				if (cardActions.get(i).equals(CardAction.SEPERATOR)) {
 					break;
 				}
+				relevantCardActions.add(cardActions.get(i));
 			}
 		} else if (!this.reactionMode) {
 			for (int i = 0; i < cardActions.size(); i++) {
-				relevantCardActions.add(cardActions.get(i));
+
 				if (cardActions.get(i).equals(CardAction.SEPERATOR)) {
 					break;
 				}
+				relevantCardActions.add(cardActions.get(i));
 			}
 		}
 		return relevantCardActions;
@@ -313,7 +322,15 @@ public class Player {
 	 */
 	public Card doAction(String cardID) throws IOException {
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
-		if (this.discardMode || this.trashMode) {
+		if (serverCard == null){
+			try {
+				throw new SynchronisationException();
+			} catch (SynchronisationException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println("coins: " + coins + "buys: " + buys + "actions: " + actions);
+		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
 			return serverCard;
 		}
@@ -322,9 +339,13 @@ public class Player {
 		if (serverCard.getTypes().contains(CardType.REACTION)) {
 			cardActions = getRelevantCardActions(cardActions);
 		}
+		
+		System.out.println(Arrays.toString(cardActions.toArray()));
 
 		Iterator<CardAction> cardIterator = cardActions.iterator();
-		this.actions--;
+		if (!this.reactionMode && serverCard.getTypes().contains(CardType.ACTION)) {
+			this.actions--;
+		}
 		System.out.println("DoAction");
 		while (cardIterator.hasNext()) {
 			CardAction act = cardIterator.next();
@@ -394,6 +415,9 @@ public class Player {
 			case IS_VICTORY:
 				// what?
 				break;
+			case DEFEND:
+				
+				break;
 			default:
 				break;
 			}
@@ -401,12 +425,24 @@ public class Player {
 		if (!dontRemoveFlag) {
 			System.out.println("card was removed");
 			this.getDeck().getCardHand().remove(serverCard);
-		} else if (this.reactionMode) {
-			this.reactionMode = false;
+		}
+		if (this.reactionMode) {
+			System.out.println("coins: " + coins + "buys: " + buys + "actions: " + actions);
+			endReactionMode();
 			GameServer.getInstance().sendMessage(port, new PacketDisable());
 			GameServer.getInstance().getGameController().checkReactionModeFinishedAndEnableGuis();
 		}
 		return serverCard;
+	}
+
+	/**
+	 * sets all flags set for the reactionMode on false
+	 */
+	private void endReactionMode() {
+		this.discardMode = false;
+		this.trashMode = false;
+		this.reactionMode = false;
+		this.reactionCard = false;
 	}
 
 	/**
@@ -432,12 +468,12 @@ public class Player {
 			if (this.discardOrTrashAction.getSecondEntry() > 0) {
 				this.discardOrTrashAction.decrementSecondEntry();
 			}
-			System.out.println("DISCARD_CARD" + this.discardOrTrashAction.getSecondEntry());
+			
 			this.getDeck().getCardHand().remove(card);
 			if (this.discardOrTrashAction.getSecondEntry() == 0) {
 				this.discardMode = false;
 				if (this.reactionMode) {
-					this.reactionMode = false;
+					endReactionMode();
 					GameServer.getInstance().sendMessage(port, new PacketDisable());
 					GameServer.getInstance().getGameController().checkReactionModeFinishedAndEnableGuis();
 				}
