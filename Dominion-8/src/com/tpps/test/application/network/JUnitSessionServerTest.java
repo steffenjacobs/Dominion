@@ -117,13 +117,13 @@ public class JUnitSessionServerTest {
 		assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 
 		// bulk-test
-		final int count = 10000;
-		Semaphore bulk = new Semaphore(count);
+		final int PACKET_COUNT = 10000;
+		Semaphore bulk = new Semaphore(PACKET_COUNT);
 
 		sessionClient.getConnectionThread().resetsMetrics();
-		ExecutorService threadPool = Executors.newFixedThreadPool(count);
+		ExecutorService threadPool = Executors.newFixedThreadPool(PACKET_COUNT);
 
-		for (int i = 0; i < count; i++) {
+		for (int i = 0; i < PACKET_COUNT; i++) {
 			threadPool.submit(() -> {
 				try {
 					bulk.acquire(1);
@@ -134,10 +134,13 @@ public class JUnitSessionServerTest {
 				bulk.release(1);
 			});
 		}
-		Thread.sleep(120000);
-		assertEquals(sessionClient.getConnectionThread().getCountReceived(), count);
-		assertEquals(sessionClient.getConnectionThread().getCountSent(), count);
-		assertEquals(count, bulk.availablePermits());
+		/* If test fails, increase this variable */
+		final int sleepTime = 12000;
+		Thread.sleep(sleepTime);
+		
+		assertEquals(sessionClient.getConnectionThread().getCountReceived(), PACKET_COUNT);
+		assertEquals(sessionClient.getConnectionThread().getCountSent(), PACKET_COUNT);
+		assertEquals(PACKET_COUNT, bulk.availablePermits());
 
 		if (doLongTest) {
 			// Start keep-alive
