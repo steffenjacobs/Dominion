@@ -12,15 +12,17 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
-public class Example extends JFrame{
+public class LobbyScreen extends JFrame{
 
 	private int width = 1280;
 	private int height = 720;
 	private Container c;
 	private BufferedImage originalBackground;
 	
-	Example(){
+	LobbyScreen(){
 		try {
 			this.originalBackground = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
 		} catch (IOException e) {
@@ -36,9 +38,9 @@ public class Example extends JFrame{
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		c.add(new ExampleLeft(this));
-		c.add(new ExampleRight(this));
+	
+		c.add(new LeftPanel(this));
+		c.add(new RightPanel(this));
 		
 		this.revalidate();
 		this.repaint();
@@ -52,7 +54,7 @@ public class Example extends JFrame{
 
 	
 	public static void main(String[] args) {
-		new Example();
+		new LobbyScreen();
 	}
 
 }
