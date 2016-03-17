@@ -54,6 +54,7 @@ public class GameWindow extends JFrame {
 		this.coinCards = new LinkedList<Card>();
 		this.middleCards = new LinkedList<Card>();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
 		// this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		// this.setUndecorated(true);
 		coins = "Coins: ";
