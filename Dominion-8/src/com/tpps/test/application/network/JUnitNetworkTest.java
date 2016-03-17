@@ -38,6 +38,7 @@ public class JUnitNetworkTest {
 		// initialize variables
 		TestPacketHandler serverPacketHandler = new TestPacketHandler();
 		TestPacketHandler clientPacketHandler = new TestPacketHandler();
+		TestPacketHandler clientPacketHandler2 = new TestPacketHandler();
 
 		int port = 2222;
 		String testString = "test-string";
@@ -50,10 +51,11 @@ public class JUnitNetworkTest {
 
 		// test client startup
 		Client client = new Client(new InetSocketAddress("127.0.0.1", port), clientPacketHandler);
+		client.addPacketHandler(clientPacketHandler2);
 		assertNotNull(client);
 
 		// wait to connect.
-		Thread.sleep(10);
+		Thread.sleep(20);
 
 		int localPort = client.getConnectionThread().getLocalPort();
 
@@ -76,7 +78,7 @@ public class JUnitNetworkTest {
 		client.sendMessage(sentTestPacket);
 
 		// wait to send & receive
-		Thread.sleep(10);
+		Thread.sleep(50);
 
 		// check if test-packet was received
 		Packet receivedPacket = serverPacketHandler.getLastReceived(localPort);
@@ -108,6 +110,21 @@ public class JUnitNetworkTest {
 		// check if test-packet lost no data
 		TestPacket receivedTestPacket2 = (TestPacket) receivedPacket2;
 		assertEquals(receivedTestPacket2.getData(), toSend);
+
+		//prepare for bulk-test
+		final int PACKET_COUNT = 10000;
+		clientPacketHandler.clearPackets();
+		clientPacketHandler2.clearPackets();
+		
+		// bulk-test
+		for (int i = 0; i < PACKET_COUNT; i++) {
+			server.sendMessage(localPort, sentTestPacket);
+//			Thread.sleep(10);
+		}
+		Thread.sleep(3000);
+		
+		assertEquals(PACKET_COUNT, ((TestPacketHandler) client.getHandlers().get(0)).countPackets());
+		assertEquals(PACKET_COUNT, ((TestPacketHandler) client.getHandlers().get(1)).countPackets());
 
 	}
 }
