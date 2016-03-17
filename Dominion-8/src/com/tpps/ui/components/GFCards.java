@@ -11,15 +11,12 @@ public class GFCards extends GameObject {
 
 	private static final long serialVersionUID = -1901356244675357118L;
 	private String cardName;
-	
-	
+
 	public GFCards(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int _layer,
-			Image sourceImage, GraphicFramework _parent){
-		super(relativeLocX,relativeLocY,relativeWidth,relativeHeight,_layer,sourceImage,_parent);
+			Image sourceImage, GraphicFramework _parent) {
+		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
 	}
 
-		
-	
 	@Override
 	public GameObject clone() {
 		// TODO Auto-generated method stub
@@ -52,20 +49,18 @@ public class GFCards extends GameObject {
 
 	@Override
 	public void onResize(int absWidth, int absHeight) {
-		super.setRenderedImage(GraphicsUtil.resize((BufferedImage) super.getBufferedImage(), absWidth, absHeight));
+		super.setRenderedImage(GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
+				super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)));
 		// TODO Auto-generated method stub
 
 	}
 
-
-
 	public String getCardName() {
 		return cardName;
 	}
-	
+
 	public void setCardName(String cardName) {
 		this.cardName = cardName;
 	}
-
 
 }

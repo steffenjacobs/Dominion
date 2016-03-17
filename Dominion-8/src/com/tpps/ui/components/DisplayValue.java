@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -17,9 +18,10 @@ public final class DisplayValue extends GameObject {
 	private String caption;
 	private Font customFont;
 
-	public DisplayValue(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int absWidth,
-			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
-		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent);
+	public DisplayValue(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
+			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
+		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage,
+				_parent);
 		this.onResize(absWidth, absHeight);
 		this.caption = caption;
 	}
@@ -56,8 +58,10 @@ public final class DisplayValue extends GameObject {
 			e.printStackTrace();
 		}
 		if (this.getCaption() != null)
-			super.setRenderedImage(GraphicsUtil.drawStringCentered(super.getBufferedImage(), this.getCaption(),
-					customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
+			super.setRenderedImage(GraphicsUtil.drawStringCentered(
+					GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
+							super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)),
+					this.getCaption(), customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
 	}
 
 	public String getCaption() {
@@ -73,7 +77,7 @@ public final class DisplayValue extends GameObject {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if (this.getCaption() != null){			
+		if (this.getCaption() != null) {
 			super.setRenderedImage(GraphicsUtil.drawStringCentered(super.getBufferedImage(), caption,
 					customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
 		}

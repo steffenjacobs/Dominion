@@ -229,8 +229,7 @@ public class Card extends GameObject {
 	@Override
 	public void onResize(int absWidth, int absHeight) {
 		super.setRenderedImage(GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
-				(int) (super.dimension.getRelativeX() * absWidth),
-				(int) (super.dimension.getRelativeY() * absHeight)));
+				super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)));
 	}
 
 	/**

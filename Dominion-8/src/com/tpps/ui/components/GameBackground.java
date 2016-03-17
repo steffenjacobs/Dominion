@@ -49,7 +49,7 @@ public class GameBackground extends GameObject {
 
 	@Override
 	public void onResize(int absWidth, int absHeight) {
-		super.setRenderedImage(GraphicsUtil.resize((BufferedImage) super.getBufferedImage(), absWidth, absHeight));
+		super.setRenderedImage(GraphicsUtil.resize((BufferedImage) super.getBufferedImage(), super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)));
 		// TODO Auto-generated method stub
 		
 	}
