@@ -207,6 +207,7 @@ public class GraphicFramework extends JPanel {
 		for (GameObject go : gameObjects.values()) {
 			go.resizeObject(parent.getWidth(), parent.getHeight());
 		}
+		repaint();
 	}
 
 	/**
