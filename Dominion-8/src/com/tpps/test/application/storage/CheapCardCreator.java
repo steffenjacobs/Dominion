@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import org.junit.Test;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.card.CardClient;
@@ -30,6 +31,8 @@ import com.tpps.application.network.clientSession.server.SessionServer;
 import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.util.CollectionsUtil;
+import com.tpps.technicalServices.util.GameConstant;
 
 public class CheapCardCreator {
 	private static final boolean DEBUG = false;
@@ -157,6 +160,19 @@ public class CheapCardCreator {
 				(LinkedList<CardType>) types.clone(), 3, "Woodcutter", getImg("Woodcutter")));
 		
 		
+//		workshop		
+		actions.remove(CardAction.ADD_PURCHASE);
+		actions.remove(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
+		actions.put(CardAction.GAIN_CARD, "4");
+		cards.put("Workshop", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 3, "Workshop", getImg("Workshop")));
+		
+//		feast
+		actions.remove(CardAction.GAIN_CARD);
+		actions.put(CardAction.TRASH_CARD, "this");
+		actions.put(CardAction.GAIN_CARD, "5");
+		cards.put("Feast", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 4, "Feast", getImg("Feast")));
 		
 		
 		

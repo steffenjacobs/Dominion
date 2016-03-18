@@ -133,6 +133,24 @@ public class GameController {
 		}
 		return false;
 	}
+	
+	public boolean gain(String cardID, Player player) {
+		System.out.println("gain");
+		try{
+		LinkedList<Card> cardList = this.getGameBoard().findCardListFromBoard(cardID);
+		Card card = cardList.getLast();
+		if (card.getCost() <= player.getGainValue()){
+			getGameBoard().findAndRemoveCardFromBoard(cardID);
+			player.setGainModeFalse();
+			player.getDeck().getDiscardPile().add(card);		
+			return true;
+		}		
+		}catch(SynchronisationException e){
+			e.printStackTrace();
+		}
+		return false;
+		
+	}
 
 	/**
 	 * 
@@ -148,7 +166,7 @@ public class GameController {
 		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0 && player.getCoins() >= card.getCost()) {
 			player.setBuys(player.getBuys() - 1);
 			player.setCoins(player.getCoins() - card.getCost());
-			cards.remove(cards.size() - 1);
+			cards.removeLast();
 			CollectionsUtil.addCardToList(card, player.getDeck().getDiscardPile());
 			return true;
 		}

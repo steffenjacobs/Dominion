@@ -31,6 +31,8 @@ public enum CardAction {
 	/* z.B. "jeder Spieler nimmt sich einen Fluch" */
 	GAIN_CARD,
 	
+	GAIN_CARD_DRAW_PILE,
+	
 	/* z.B. bei Miliz */
 	DISCARD_CARD, 
 	

@@ -191,21 +191,7 @@ public class GameBoard {
 	 * ------ USER CHOOSES CARDS TO PLAY WITH -------
 	 */
 	private void initHashMapActionCards() {		
-		
-		LinkedList<Card> estateList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.ESTATE_VALUE)), CollectionsUtil.linkedList(CardType.VICTORY), "Estate", GameConstant.ESTATE_COST), GameConstant.INIT_PILE_SIZE, estateList);
-		this.tableForActionCards.put("Estate", estateList);
-		Card.resetClassID();
 
-		LinkedList<Card> duchyList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.DUCHY_VALUE)), CollectionsUtil.linkedList(CardType.VICTORY), "Duchy", GameConstant.DUCHY_COST), GameConstant.INIT_PILE_SIZE, duchyList);
-		this.tableForActionCards.put("Duchy", duchyList);
-		Card.resetClassID();
-
-		LinkedList<Card> provinceList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.PROVINCE_VALUE)), CollectionsUtil.linkedList(CardType.VICTORY), "Province", GameConstant.PROVINCE_COST), GameConstant.INIT_PILE_SIZE, provinceList);
-		this.tableForActionCards.put("Province", provinceList);
-		Card.resetClassID();
 		
 		// 1
 		LinkedList<Card> cellarList = new LinkedList<Card>();
@@ -253,7 +239,29 @@ public class GameBoard {
 				CollectionsUtil.linkedList(new String[] {"1", "2"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Woodcutter", 3), GameConstant.INIT_PILE_SIZE, woodCutterList);
 		this.tableForActionCards.put("Woodcutter", woodCutterList);
 		Card.resetClassID();
-//		
+		
+//		workshop
+		LinkedList<Card> workShopList = new LinkedList<Card>();		
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.GAIN_CARD, 
+				"4"), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Workshop", 3), GameConstant.INIT_PILE_SIZE, workShopList);
+		this.tableForActionCards.put("Workshop", workShopList);
+		Card.resetClassID();
+		
+//		bureaucrat
+//		LinkedList<Card> bureaucratList = new LinkedList<Card>();
+//		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.GAIN_CARD_DRAW_PILE, CardAction.ADD_TEMPORARY_MONEY_FOR_TURN}), 
+//				CollectionsUtil.linkedList(new String[] {"1", "2"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Woodcutter", 3), GameConstant.INIT_PILE_SIZE, woodCutterList);
+//		this.tableForActionCards.put("Woodcutter", woodCutterList);
+//		Card.resetClassID();
+		
+//		feast 
+		LinkedList<Card> feastList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.TRASH_CARD, CardAction.GAIN_CARD}), 
+				CollectionsUtil.linkedList(new String[] {"this", "5"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Feast", 4), GameConstant.INIT_PILE_SIZE, feastList);
+		this.tableForActionCards.put("Feast", feastList);
+		Card.resetClassID();
+		
+		
 //		// 3
 //		LinkedList<Card> smithyList = new LinkedList<Card>();
 //		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.DRAW_CARD, "3"), CollectionsUtil.linkedList(CardType.ACTION), "Smithy", 4), GameConstant.INIT_PILE_SIZE, smithyList);
@@ -311,15 +319,11 @@ public class GameBoard {
 		matcher.find();	
 		
 		String key = cardId.substring(0, matcher.start());
-		if (this.tableForTreasureCards.containsKey(key)) {
-			LinkedList<Card> cardList = this.tableForTreasureCards.get(key);
-			return cardList.remove(cardList.size() - 1);
-		} else if (this.tableForVictoryCards.containsKey(key)) {
-			LinkedList<Card> cardList = this.tableForVictoryCards.get(key);
-			return cardList.remove(cardList.size() - 1);
-		} else if (this.tableForActionCards.containsKey(key)) {
-			LinkedList<Card> cardList = this.tableForActionCards.get(key);
-			return cardList.remove(cardList.size() - 1);
+		if (this.tableForTreasureCards.containsKey(key) || 
+				this.tableForVictoryCards.containsKey(key) || this.tableForActionCards.containsKey(key)) {
+			
+			LinkedList<Card> cardList = findCardListFromBoard(cardId);
+			return cardList.removeLast();
 		} else {
 			throw new SynchronisationException();
 		}
@@ -348,22 +352,31 @@ public class GameBoard {
 	 * @throws SynchronisationException
 	 */
 	/*------- schoener machen? -----------*/
-	protected LinkedList<Card> findCardListFromBoard(String cardId) throws SynchronisationException {
+	public LinkedList<Card> findCardListFromBoard(String cardId) throws SynchronisationException {
 		Matcher matcher = Pattern.compile("\\d+").matcher(cardId);
 		matcher.find();	
 		
 		String key = cardId.substring(0, matcher.start());
+		LinkedList<Card> cardList;
 		if (this.tableForTreasureCards.containsKey(key)) {
-			LinkedList<Card> cardList = this.tableForTreasureCards.get(key);
-			return cardList;
+			cardList = this.tableForTreasureCards.get(key);
+			
 		} else if (this.tableForVictoryCards.containsKey(key)) {
-			LinkedList<Card> cardList = this.tableForVictoryCards.get(key);
-			return cardList;
+			cardList = this.tableForVictoryCards.get(key);
+			
 		} else if (this.tableForActionCards.containsKey(key)) {
-			LinkedList<Card> cardList = this.tableForActionCards.get(key);
-			return cardList;
+			cardList = this.tableForActionCards.get(key);
+			
 		} else {
 			throw new SynchronisationException();
 		}
+		if (cardList.getLast().getId().equals(cardId)){
+			return cardList;
+		}else{
+			throw new SynchronisationException();
+		}
+		
+		
+		
 	}
 }
