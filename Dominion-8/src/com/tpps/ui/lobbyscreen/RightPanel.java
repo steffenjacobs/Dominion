@@ -39,6 +39,7 @@ public class RightPanel extends JPanel{
 	JLabel[] labelImages;
 	boolean imageselected;
 	BufferedImage blackBeauty;
+	private BufferedImage selectedImage;
 	
 	public RightPanel(LobbyScreen parent) {
 		this.parent = parent;
@@ -188,36 +189,32 @@ public class RightPanel extends JPanel{
 		labelImages = new JLabel[4];
 		for (int i = 0; i < labelImages.length; i++) {
 			labelImages[i] = new JLabel();
-			labelImages[i].addMouseListener(new ImageListener(labelImages[i]));
+			labelImages[i].addMouseListener(new ImageListener());
 			labelImages[i].setHorizontalAlignment(JLabel.CENTER);
 			labelImages[i].setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		}
-		
-		try {
-			this.images[0] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/spring.jpg"));
-			this.images[0] = (BufferedImage) GraphicsUtil.setAlpha(images[0], 0.5F);
-			this.images[1] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/summer.jpg"));
-			this.images[1] = (BufferedImage) GraphicsUtil.setAlpha(images[1], 0.5F);
-			this.images[2] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/fall.jpg"));
-			this.images[2] = (BufferedImage) GraphicsUtil.setAlpha(images[2], 0.5F);
-			this.images[3] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/winter.jpg"));
-			this.images[3] = (BufferedImage) GraphicsUtil.setAlpha(images[3], 0.5F);
-		} catch (IOException e) {		
-			e.printStackTrace();
-		}
-		
-		labelImages[0].setIcon((new ImageIcon(images[0])));
-		labelImages[1].setIcon((new ImageIcon(images[1])));
-		labelImages[2].setIcon((new ImageIcon(images[2])));
-		labelImages[3].setIcon((new ImageIcon(images[3])));
+
+		this.changeSelectedPicture(0);
 		
 		panel.add(labelImages[0]);
 		panel.add(labelImages[1]);
 		panel.add(labelImages[2]);
 		panel.add(labelImages[3]);
 		
+		//----------------heade-----------
+		JTextField header = new JTextField("Choose Background");
+		Map attributes = head.getAttributes();
+		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+		header.setFont(head.deriveFont(attributes));
+		
+		header.setOpaque(false);
+		header.setFocusable(false);
+		header.setBorder(BorderFactory.createEmptyBorder());
+		header.setHorizontalAlignment(JTextField.LEFT);
+		header.setForeground(Color.WHITE);		
+		
 		overhead.add(panel, BorderLayout.CENTER);
-		overhead.add(Box.createVerticalStrut(20), BorderLayout.PAGE_START); //TODO: write header:"choose background" and set Hgap & Vgap
+		overhead.add(header, BorderLayout.PAGE_START);
 		overhead.add(Box.createVerticalStrut(20), BorderLayout.PAGE_END);
 		overhead.add(Box.createHorizontalStrut(20), BorderLayout.LINE_START);
 		overhead.add(Box.createHorizontalStrut(20), BorderLayout.LINE_END);
@@ -227,21 +224,17 @@ public class RightPanel extends JPanel{
 	
 	private class ImageListener implements MouseListener{
 
-		JLabel labelImages;
-		
-		public ImageListener(JLabel labelImages){
-			this.labelImages = labelImages;
-		}
-
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			//if(e.getSource().equals(labelImages)){
-				System.out.println(labelImages.toString());
-				BufferedImage img = RightPanel.this.iconToBufferedImage(labelImages.getIcon());
-				img = (BufferedImage) GraphicsUtil.setAlpha(img, 1F);
-				labelImages.setIcon(new ImageIcon(img));
-			//	labelImages.setBorder(BorderFactory.createLineBorder(Color.GREEN, 5));				
-			//}
+		public void mouseClicked(MouseEvent e) {	
+			if(e.getSource() == labelImages[0]){
+				RightPanel.this.changeSelectedPicture(0);
+			}else if(e.getSource() == labelImages[1]){
+				RightPanel.this.changeSelectedPicture(1);
+			}else if(e.getSource() == labelImages[2]){
+				RightPanel.this.changeSelectedPicture(2);
+			}else if(e.getSource() == labelImages[3]){
+				RightPanel.this.changeSelectedPicture(3);
+			}
 		}
 
 		@Override
@@ -257,12 +250,50 @@ public class RightPanel extends JPanel{
 		public void mouseReleased(MouseEvent arg0) { }		
 	}
 	
-	public BufferedImage iconToBufferedImage(Icon icon){
-		BufferedImage bi = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_RGB);
-		Graphics g = bi.createGraphics();
-		icon.paintIcon(null, g, 0,0);
-		g.dispose();
-		return bi;
+	public void changeSelectedPicture(int index){
+		try {
+			this.images[0] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/spring.jpg"));
+			this.images[0] = (BufferedImage) GraphicsUtil.setAlpha(images[0], 0.5F);
+			this.images[1] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/summer.jpg"));
+			this.images[1] = (BufferedImage) GraphicsUtil.setAlpha(images[1], 0.5F);
+			this.images[2] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/fall.jpg"));
+			this.images[2] = (BufferedImage) GraphicsUtil.setAlpha(images[2], 0.5F);
+			this.images[3] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/winter.jpg"));
+			this.images[3] = (BufferedImage) GraphicsUtil.setAlpha(images[3], 0.5F);
+		} catch (IOException e) {		
+			e.printStackTrace();
+		}
+		
+		for (int i = 0; i < images.length; i++) {
+			if(i == index){
+				this.setAlphaOnPicture(index);
+			}else{
+				labelImages[i].setIcon(new ImageIcon(images[i]));
+				labelImages[i].setBorder(BorderFactory.createLineBorder(Color.RED ,3));
+			}
+		}
 	}
-
+	
+	public void setAlphaOnPicture(int index){
+		String picture = "";
+		switch(index){
+			case 0: picture = "spring"; break;
+			case 1: picture = "summer"; break;
+			case 2: picture = "fall"; break;
+			case 3: picture = "winter"; break;
+			default:return;
+		}
+		try {
+			this.images[index] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/" + picture + ".jpg"));
+			selectedImage = this.images[index];
+			labelImages[index].setIcon(new ImageIcon(this.images[index]));
+			labelImages[index].setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+		} catch (IOException e) {		
+			e.printStackTrace();
+		}
+	}
+	
+	public BufferedImage getSelectedPicture(){
+		return this.selectedImage;
+	}
 }
