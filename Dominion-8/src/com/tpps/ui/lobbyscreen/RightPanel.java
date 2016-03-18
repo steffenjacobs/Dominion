@@ -31,19 +31,19 @@ import com.tpps.technicalServices.util.GraphicsUtil;
 public class RightPanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
-	JTextField[] names = new JTextField[4];
-	LobbyScreen parent;
-	Font font = new Font("Calibri", Font.PLAIN, 20);
-	Font head = new Font("Arial Black", Font.BOLD, 20);
-	Font optionsFont = new Font("Calibri", Font.BOLD, 21);
+	private JTextField[] names = new JTextField[4];
+	private LobbyScreen parent;
+	private final Font font = new Font("Calibri", Font.PLAIN, 20);
+	private final Font head = new Font("Arial Black", Font.BOLD, 20);
+	private final Font optionsFont = new Font("Calibri", Font.BOLD, 21);
 	
 	private BufferedImage[] images = new BufferedImage[4];
-	JLabel[] labelImages;
+	private JLabel[] labelImages;
 	boolean imageselected;
-	BufferedImage blackBeauty;
+	private BufferedImage blackBeauty;
 	private BufferedImage selectedImage;
 	
-	JCheckBox[] options;
+	private JCheckBox[] options;
 	
 	public RightPanel(LobbyScreen parent) {
 		this.parent = parent;
@@ -107,26 +107,6 @@ public class RightPanel extends JPanel{
 			};
 			
 			new Thread(thread1).start();
-
-			
-//			Thread t = new Thread(){
-//				
-//				@Override
-//				public void run(){
-//					int points = 1;
-//					while(true){
-//						String appender = "";
-//						for (int j = 0; j < points; j++) {
-//							appender += ".";
-//						}
-//						names[i].setText("Loading " + appender);
-//						points++;
-//						if(points == 4){
-//							points = 1;
-//						}
-//					}
-//				}
-//			};
 			
 			names[i].setFont(font);
 			names[i].setOpaque(false);
@@ -136,10 +116,10 @@ public class RightPanel extends JPanel{
 			names[i].setForeground(Color.WHITE);
 		}
 		
-		//TODO: create space between header and playernames
-		JPanel center = new JPanel(new GridLayout(7,1));
+		JPanel center = new JPanel(new GridLayout(8,1));
 		center.setOpaque(false);
 	//	center.setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
+		center.add(Box.createVerticalStrut(5));
 		center.add(names[0]);
 		center.add(Box.createVerticalStrut(5));
 		
