@@ -39,7 +39,7 @@ public class LobbyScreen extends JFrame{
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	
-		c.add(new LeftPanel(this));
+		c.add(new GlobalChatPanel(this));
 		c.add(new RightPanel(this));
 		
 		this.revalidate();

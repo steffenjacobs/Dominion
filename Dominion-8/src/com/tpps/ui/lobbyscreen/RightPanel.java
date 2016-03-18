@@ -50,14 +50,14 @@ public class RightPanel extends JPanel{
 		this.setOpaque(false);
 		this.setLayout(new GridLayout(3,1, 0, 25));
 	//	this.setBorder(BorderFactory.createLineBorder(Color.BLUE));
-		this.add(this.firstPanel());
-		this.add(this.middlePanel());
-		this.add(this.lastPanel());
+		this.add(this.upperAreaPanel());
+		this.add(this.middleAreaPanel());
+		this.add(this.bottomAreaPanel());
 //		parent.revalidate();
 //		parent.repaint();
 	}
 	
-	private JPanel firstPanel(){
+	private JPanel upperAreaPanel(){
 		JPanel panel = new JPanel(new BorderLayout());
 	//	panel.setBorder(BorderFactory.createLineBorder(Color.CYAN, 3));
 		panel.setOpaque(false);
@@ -147,7 +147,7 @@ public class RightPanel extends JPanel{
 		
 	}
 	
-	private JPanel middlePanel(){
+	private JPanel middleAreaPanel(){
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setOpaque(false);
 		
@@ -187,7 +187,7 @@ public class RightPanel extends JPanel{
 		return panel;
 	}
 
-	private JPanel lastPanel(){
+	private JPanel bottomAreaPanel(){
 		JPanel overhead = new JPanel(new BorderLayout());
 		overhead.setOpaque(false);
 		
