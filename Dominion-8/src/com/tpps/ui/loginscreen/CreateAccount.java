@@ -51,6 +51,7 @@ public class CreateAccount extends JFrame {
 	private Font smallfont, customFont;
 	BufferedImage blackBeauty;
 	LoginGUIController guicontroller;
+	private BufferedImage walterWhite;
 	
 	/**
 	 * simple constructor (first call) merging all elements
@@ -142,6 +143,12 @@ public class CreateAccount extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		try {
+			this.walterWhite = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/walterWhite.jpg"));
+			walterWhite = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -186,11 +193,10 @@ public class CreateAccount extends JFrame {
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(blackBeauty, 0, 0, null);
+				g.drawImage(walterWhite, 0, 0, null);
 				super.paint(g);
 			}
 		};
-		
 		email.setForeground(Color.WHITE);
 		email.setOpaque(false);
 		email.setFont(smallfont);
@@ -212,8 +218,16 @@ public class CreateAccount extends JFrame {
 		description[1] = new JLabel("Username: ");
 		description[1].setFont(smallfont);
 		description[1].setHorizontalAlignment(JLabel.CENTER);
-		username = new JTextField();
+		username = new JTextField(){			
+			private static final long serialVersionUID = 1L;
 
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(walterWhite, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		username.setForeground(Color.WHITE);
 		username.setOpaque(false);
 		username.setFont(smallfont);
 		panels[2].add(description[1]);
@@ -234,7 +248,16 @@ public class CreateAccount extends JFrame {
 		description[2] = new JLabel("Password: ");
 		description[2].setFont(smallfont);
 		description[2].setHorizontalAlignment(JLabel.CENTER);
-		passwordbox = new JPasswordField();
+		passwordbox = new JPasswordField(){			
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(walterWhite, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		passwordbox.setForeground(Color.WHITE);
 		passwordbox.setOpaque(false);
 		panels[3].add(description[2]);
 		panels[3].add(passwordbox);
@@ -254,7 +277,16 @@ public class CreateAccount extends JFrame {
 		description[3] = new JLabel("Retype Password: ");
 		description[3].setFont(smallfont);
 		description[3].setHorizontalAlignment(JLabel.CENTER);
-		passwordboxRetype = new JPasswordField();
+		passwordboxRetype = new JPasswordField(){			
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(walterWhite, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		passwordboxRetype.setForeground(Color.white);
 		passwordboxRetype.setOpaque(false);
 		panels[4].add(description[3]);
 		panels[4].add(passwordboxRetype);
