@@ -1,7 +1,12 @@
 package com.tpps.ui.loginscreen;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JOptionPane;
 
@@ -12,7 +17,7 @@ import com.google.common.base.CharMatcher;
  * @author Nishit Agrawal - nagrawal
  *
  */
-public class CreateAccountListener implements ActionListener {
+public class CreateAccountListener implements MouseListener {
 	CreateAccount ca;
 	LoginGUIController guicontroller;
 
@@ -34,9 +39,10 @@ public class CreateAccountListener implements ActionListener {
 	 * 
 	 * @param e
 	 */
+	@Override
+	public void mouseClicked(MouseEvent e) {
 
-	public void actionPerformed(ActionEvent e) {
-
+		
 		if (!(String.valueOf(ca.getPasswordbox().getPassword())
 				.equals(String.valueOf(ca.getPasswordboxRetype().getPassword())))) {
 			JOptionPane.showMessageDialog(null, "Password does not match. Please recheck");
@@ -81,6 +87,33 @@ public class CreateAccountListener implements ActionListener {
 		// new LogInGUI(ca.getUsername().getText(),
 		// ca.getPasswordbox().getPassword());
 		// ca.dispose();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {	
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		ca.getCreateAccount().setOpaque(false);
+		ca.getCreateAccount().setForeground(Color.GRAY);
+		ca.getCreateAccount().setBorderPainted(true);
+		ca.getCreateAccount().setContentAreaFilled(false);
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		ca.getCreateAccount().setOpaque(false);
+		ca.getCreateAccount().setForeground(Color.WHITE);
+		ca.getCreateAccount().setBorderPainted(true);
+		ca.getCreateAccount().setContentAreaFilled(false);	
 	}
 
 }
