@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -23,6 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.Loader;
 
 /**
@@ -47,6 +49,7 @@ public class CreateAccount extends JFrame {
 	private JLabel all;
 	private JPanel[] panels;
 	private Font smallfont, customFont;
+	BufferedImage blackBeauty;
 	LoginGUIController guicontroller;
 	
 	/**
@@ -132,6 +135,13 @@ public class CreateAccount extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		try {
+			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
+			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -171,8 +181,17 @@ public class CreateAccount extends JFrame {
 		description[0] = new JLabel("Email: ");
 		description[0].setFont(smallfont);
 		description[0].setHorizontalAlignment(JLabel.CENTER);
-		email = new JTextField();
+		email = new JTextField(){			
+			private static final long serialVersionUID = 1L;
 
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(blackBeauty, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		
+		email.setForeground(Color.WHITE);
 		email.setOpaque(false);
 		email.setFont(smallfont);
 		panels[1].add(description[0]);
@@ -274,8 +293,21 @@ public class CreateAccount extends JFrame {
 	private void createpanel6() {
 		panels[5].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
 		// panels[3].setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+		
+		createAccount = new JButton("Create New Account"){
 
-		createAccount = new JButton("Create New Account");
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(blackBeauty, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		createAccount.setOpaque(false);
+		createAccount.setForeground(Color.WHITE);
+		createAccount.setBorderPainted(true);
+		createAccount.setContentAreaFilled(false);
 		createAccount.setFont(customFont.deriveFont(15f));
 		createAccount.setPreferredSize(new Dimension(180, 30));
 		panels[5].add(createAccount);
