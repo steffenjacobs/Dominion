@@ -215,9 +215,13 @@ public class SQLStatisticsHandler {
 				PreparedStatement setwinloss = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET win_loss = ? WHERE nickname = ?;");
 				setwinloss.setDouble(1, ratio);
 				setwinloss.setString(2, nickname);
-				setwinloss.executeUpdate();						
-				System.out.println("Updated Win/loss successful for " + nickname);
+				setwinloss.executeUpdate();										
+			}else{
+				PreparedStatement setwinloss = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET win_loss = 0 WHERE nickname = ?;");
+				setwinloss.setString(1, nickname);
+				setwinloss.executeUpdate();					
 			}
+			System.out.println("Updated Win/loss successful for " + nickname);
 		} catch (SQLException e) {		
 			e.printStackTrace();
 		}

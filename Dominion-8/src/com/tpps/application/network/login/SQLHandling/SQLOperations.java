@@ -89,7 +89,7 @@ public class SQLOperations {
 	 *  		3 if email already in use 
 	 *  */
 	public static int createAccount(String nickname, String email, String salt_hashed_pw, String salt){		
-		if(doesMailExists(email) == 1){
+		if(doesMailExists(email)){
 			System.out.println("email already in use");
 			return 3;
 		}
@@ -116,7 +116,7 @@ public class SQLOperations {
 	 * @param email String representation of the plaintext of requested email
 	 * @return 1 if email already exists in database, 0 if not.
 	 */
-	public static int doesMailExists(String email){
+	public static boolean doesMailExists(String email){
 		try {
 			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT * FROM accountdetails WHERE email = ?");
 			stmt.setString(1, email);
@@ -124,12 +124,12 @@ public class SQLOperations {
 			//if the ResultSet is empty, the email adress doesn't exist in the database
 			//if the ResultSet isn't empty, the email adress already exists in the database
 			if(!rs.next()){
-				return 0;
+				return false;
 			}
 		} catch (SQLException e) {		
 			e.printStackTrace();
 		}
-		return 1;
+		return true;
 	}
 	/**
 	 * @author jhuhn - Johannes Huhn
