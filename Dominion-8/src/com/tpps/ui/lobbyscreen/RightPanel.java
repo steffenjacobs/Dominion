@@ -21,6 +21,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -33,7 +34,8 @@ public class RightPanel extends JPanel{
 	JTextField[] names = new JTextField[4];
 	LobbyScreen parent;
 	Font font = new Font("Calibri", Font.PLAIN, 20);
-	Font head = new Font("Calibri", Font.BOLD, 23);
+	Font head = new Font("Arial Black", Font.BOLD, 20);
+	Font optionsFont = new Font("Calibri", Font.BOLD, 21);
 	
 	private BufferedImage[] images = new BufferedImage[4];
 	JLabel[] labelImages;
@@ -41,10 +43,12 @@ public class RightPanel extends JPanel{
 	BufferedImage blackBeauty;
 	private BufferedImage selectedImage;
 	
+	JCheckBox[] options;
+	
 	public RightPanel(LobbyScreen parent) {
 		this.parent = parent;
 		this.setOpaque(false);
-		this.setLayout(new GridLayout(3,1, 0, 0));
+		this.setLayout(new GridLayout(3,1, 0, 25));
 	//	this.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 		this.add(this.firstPanel());
 		this.add(this.middlePanel());
@@ -150,16 +154,7 @@ public class RightPanel extends JPanel{
 		
 		
 		//-------header-----
-		JTextField header = new JTextField("Connected Players");
-		Map attributes = head.getAttributes();
-		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-		header.setFont(head.deriveFont(attributes));
-		
-		header.setOpaque(false);
-		header.setFocusable(false);
-		header.setBorder(BorderFactory.createEmptyBorder());
-		header.setHorizontalAlignment(JTextField.LEFT);
-		header.setForeground(Color.WHITE);
+		JTextField header = this.createHeader("Connected Players:");
 		//------------
 		
 		
@@ -173,8 +168,42 @@ public class RightPanel extends JPanel{
 	}
 	
 	private JPanel middlePanel(){
-		JPanel panel = new JPanel();
+		JPanel panel = new JPanel(new BorderLayout());
 		panel.setOpaque(false);
+		
+		JTextField header = this.createHeader("Options: ");
+		
+		
+		
+		JPanel optionPanel = new JPanel(new GridLayout(3,3,100,20));
+		optionPanel.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
+		optionPanel.setOpaque(false);
+	//	optionPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+		this.options = new JCheckBox[6];
+		for (int i = 0; i < 6; i++) {
+			this.options[i] = new JCheckBox("Option " + i){
+				
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public void paint(Graphics g) {
+					g.drawImage(blackBeauty, 0, 0, null);
+					super.paint(g);
+				}
+			};
+			this.options[i].setOpaque(false);
+			this.options[i].setFont(optionsFont);
+			this.options[i].setForeground(Color.WHITE);
+			this.options[i].setHorizontalAlignment(JCheckBox.CENTER);
+		//	this.options[i].setVerticalAlignment(JCheckBox.CENTER);
+			
+			optionPanel.add(options[i]);
+		}
+		
+		panel.add(header, BorderLayout.PAGE_START);
+		panel.add(optionPanel, BorderLayout.CENTER);
+		panel.add(Box.createHorizontalStrut(30), BorderLayout.LINE_START);
+		panel.add(Box.createHorizontalStrut(30), BorderLayout.LINE_END);
 		return panel;
 	}
 
@@ -202,22 +231,13 @@ public class RightPanel extends JPanel{
 		panel.add(labelImages[3]);
 		
 		//----------------heade-----------
-		JTextField header = new JTextField("Choose Background");
-		Map attributes = head.getAttributes();
-		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
-		header.setFont(head.deriveFont(attributes));
-		
-		header.setOpaque(false);
-		header.setFocusable(false);
-		header.setBorder(BorderFactory.createEmptyBorder());
-		header.setHorizontalAlignment(JTextField.LEFT);
-		header.setForeground(Color.WHITE);		
+		JTextField header = this.createHeader("Choose Background:");
 		
 		overhead.add(panel, BorderLayout.CENTER);
 		overhead.add(header, BorderLayout.PAGE_START);
 		overhead.add(Box.createVerticalStrut(20), BorderLayout.PAGE_END);
-		overhead.add(Box.createHorizontalStrut(20), BorderLayout.LINE_START);
-		overhead.add(Box.createHorizontalStrut(20), BorderLayout.LINE_END);
+		overhead.add(Box.createHorizontalStrut(30), BorderLayout.LINE_START);
+		overhead.add(Box.createHorizontalStrut(30), BorderLayout.LINE_END);
 		
 		return overhead;
 	}
@@ -291,6 +311,21 @@ public class RightPanel extends JPanel{
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}
+	}
+	
+	
+	public JTextField createHeader(String text){
+		JTextField header = new JTextField(text);
+		Map attributes = head.getAttributes();
+		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+		header.setFont(head.deriveFont(attributes));
+		
+		header.setOpaque(false);
+		header.setFocusable(false);
+		header.setBorder(BorderFactory.createEmptyBorder());
+		header.setHorizontalAlignment(JTextField.LEFT);
+		header.setForeground(Color.WHITE);
+		return header;
 	}
 	
 	public BufferedImage getSelectedPicture(){
