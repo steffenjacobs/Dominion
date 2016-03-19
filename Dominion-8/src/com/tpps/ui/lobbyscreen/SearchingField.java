@@ -17,7 +17,7 @@ public class SearchingField extends JTextField implements Runnable{
 	private static final long serialVersionUID = 1L;
 	private BufferedImage blackBeauty;
 	private final Font font = new Font("Calibri", Font.PLAIN, 20);
-	boolean playerFlag;
+	private boolean playerFlag;
 	
 	public SearchingField() {
 		playerFlag = false;
@@ -67,5 +67,14 @@ public class SearchingField extends JTextField implements Runnable{
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public boolean isPlayerFlag() {
+		return playerFlag;
+	}
+
+	public void setPlayer(String playername) {
+		this.playerFlag = true;
+		this.setText(playername);
 	}
 }

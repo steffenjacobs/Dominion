@@ -2,13 +2,9 @@ package com.tpps.ui.lobbyscreen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Panel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.font.TextAttribute;
@@ -19,7 +15,6 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -28,11 +23,11 @@ import javax.swing.JTextField;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 
-public class RightPanel extends JPanel{
+public class PlayerSettingsPanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
 	private LobbyScreen parent;
-	private final Font font = new Font("Calibri", Font.PLAIN, 20);
+ //	private final Font font = new Font("Calibri", Font.PLAIN, 20);
 	private final Font head = new Font("Arial Black", Font.BOLD, 20);
 	private final Font optionsFont = new Font("Calibri", Font.BOLD, 21);
 	
@@ -42,7 +37,7 @@ public class RightPanel extends JPanel{
 	private BufferedImage blackBeauty;
 	private BufferedImage selectedImage;
 	
-	private SearchingField[] loadings;
+	private SearchingField[] connectedPlayers;
 	
 	private JCheckBox[] options;
 	
@@ -60,7 +55,7 @@ public class RightPanel extends JPanel{
 	private static int IMG_TO_BOTTOM = 15;
 	private static final int IMG_TO_EDGE = 30;
 	
-	public RightPanel(LobbyScreen parent) {
+	public PlayerSettingsPanel(LobbyScreen parent) {
 		this.parent = parent;
 		this.setOpaque(false);
 		this.setLayout(new GridLayout(3,1, 0, SPACE_PANEL_TO_PANEL));
@@ -74,26 +69,26 @@ public class RightPanel extends JPanel{
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setOpaque(false);
 		
-		loadings = new SearchingField[4];
-		for (int i = 0; i < loadings.length; i++) {
-			loadings[i] = new SearchingField();
-			loadings[i].start();
+		connectedPlayers = new SearchingField[4];
+		for (int i = 0; i < connectedPlayers.length; i++) {
+			connectedPlayers[i] = new SearchingField();
+			connectedPlayers[i].start();
 		}
 		
 		JPanel center = new JPanel(new GridLayout(8,1));
 		center.setOpaque(false);
 		
 		center.add(Box.createVerticalStrut(SPACE_PLAYER_TO_PLAYER));
-		center.add(loadings[0]);
+		center.add(connectedPlayers[0]);
 		center.add(Box.createVerticalStrut(SPACE_PLAYER_TO_PLAYER));
 		
-		center.add(loadings[1]);
+		center.add(connectedPlayers[1]);
 		center.add(Box.createVerticalStrut(SPACE_PLAYER_TO_PLAYER));
 		
-		center.add(loadings[2]);
+		center.add(connectedPlayers[2]);
 		center.add(Box.createVerticalStrut(SPACE_PLAYER_TO_PLAYER));
 		
-		center.add(loadings[3]);
+		center.add(connectedPlayers[3]);
 		
 		JTextField header = this.createHeader("Connected Players:");		
 		
@@ -186,13 +181,13 @@ public class RightPanel extends JPanel{
 		@Override
 		public void mouseClicked(MouseEvent e) {	
 			if(e.getSource() == labelImages[0]){
-				RightPanel.this.changeSelectedPicture(0);
+				PlayerSettingsPanel.this.changeSelectedPicture(0);
 			}else if(e.getSource() == labelImages[1]){
-				RightPanel.this.changeSelectedPicture(1);
+				PlayerSettingsPanel.this.changeSelectedPicture(1);
 			}else if(e.getSource() == labelImages[2]){
-				RightPanel.this.changeSelectedPicture(2);
+				PlayerSettingsPanel.this.changeSelectedPicture(2);
 			}else if(e.getSource() == labelImages[3]){
-				RightPanel.this.changeSelectedPicture(3);
+				PlayerSettingsPanel.this.changeSelectedPicture(3);
 			}
 		}
 
@@ -271,9 +266,14 @@ public class RightPanel extends JPanel{
 		return this.selectedImage;
 	}
 	
-	//TODO: implement insert player method
-	public void insertPlayer(String player){
-		
+	public boolean insertPlayer(String player){
+		for (int i = 0; i < connectedPlayers.length; i++) {
+			if(!connectedPlayers[i].isPlayerFlag()){
+				this.connectedPlayers[i].setPlayer(player);
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public JCheckBox[] getOptions() {
