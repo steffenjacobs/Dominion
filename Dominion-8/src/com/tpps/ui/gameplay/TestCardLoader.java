@@ -42,6 +42,7 @@ public class TestCardLoader {
 		 gw.victoryCards(estate);
 		 gw.middleCards(middle);
 		 gw.extraTable(middle);
+//		 gw.removeTableComponents();
 	}
 	
 	public static void main(String[] args) throws IOException {
