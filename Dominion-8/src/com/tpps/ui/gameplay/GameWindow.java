@@ -1,6 +1,7 @@
 package com.tpps.ui.gameplay;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -30,9 +31,10 @@ public class GameWindow extends JFrame {
 
 	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage, displayImageBuys, displayImageActions,
 			displayImageCoins, buttonGameImage;
+	private GameBackground table;
 	private GraphicFramework framework;
 	private DisplayValue buy, coin, action;
-	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards, middleCards;
+	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards, middleCards, extraTableCards;
 	private LinkedList<GFButton> victoryButtons, coinButtons, tableButtons;
 	private ButtonClass stopDiscard, stopTrash, discardDeck, endReactions;
 	public static String coins, buys, actions;
@@ -42,11 +44,6 @@ public class GameWindow extends JFrame {
 		return instance;
 	}
 
-	/**
-	 * creates the GameWindow
-	 * 
-	 * @author Steffen Jacobs
-	 */
 	public GameWindow() throws IOException {
 		instance = this;
 		final int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -54,11 +51,13 @@ public class GameWindow extends JFrame {
 		this.handCards = new LinkedList<Card>();
 		this.tableCards = new LinkedList<Card>();
 		this.victoryCards = new LinkedList<Card>();
+		this.extraTableCards = new LinkedList<Card>();
 		this.coinCards = new LinkedList<Card>();
 		this.middleCards = new LinkedList<Card>();
 		this.tableButtons = new LinkedList<GFButton>();
 		this.victoryButtons = new LinkedList<GFButton>();
 		this.coinButtons = new LinkedList<GFButton>();
+
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
 		// this.setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -80,7 +79,7 @@ public class GameWindow extends JFrame {
 		displayImageActions = this.loadingImage(displayImageActions, "resources/img/gameObjects/Actions.png");
 		buttonGameImage = this.loadingImage(buttonGameImage, "resources/img/gameObjects/ButtonsGame.png");
 
-		closeButton = new ButtonClass(0.98, 0.01, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, WIDTH, 1, closeImage,
+		closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, WIDTH, 1, closeImage,
 				framework, "");
 
 		endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
@@ -165,12 +164,12 @@ public class GameWindow extends JFrame {
 		int k = 3;
 		int l = 4;
 
-		for (int i = 0; i <tableCards.size(); i++) {
+		for (int i = 0; i < tableCards.size(); i++) {
 			Card card = tableCards.get(i);
 			GFButton button = tableButtons.get(i);
 			this.framework.removeComponent(card);
 			this.framework.removeComponent(button);
-			
+
 		}
 		this.tableButtons = new LinkedList<GFButton>();
 		this.tableCards = new LinkedList<Card>();
@@ -179,19 +178,20 @@ public class GameWindow extends JFrame {
 			SerializedCard serializedCard = table.get(actionCardlds.get(i));
 
 			// // Example For nishit
-			 Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
-			 matcher.find();
-			 String number = actionCardlds.get(i).substring(matcher.start(),
-			 matcher.end());
+			// Matcher matcher =
+			// Pattern.compile("\\d+").matcher(actionCardlds.get(i));
+			// matcher.find();
+			// String number = actionCardlds.get(i).substring(matcher.start(),
+			// matcher.end());
 
 			if (i < 5) {
 				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
 						serializedCard.getCost(), actionCardlds.get(i), shift += 0.06, 0.02, 0.05, 0.15, k++,
 						serializedCard.getImage(), framework);
 
-				GFButton button = new ButtonClass(shiftCard+=0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, HEIGHT, l++,
-						buttonGameImage, framework, number);
-				
+				GFButton button = new ButtonClass(shiftCard += 0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9, WIDTH,
+						HEIGHT, l++, buttonGameImage, framework, "5");
+
 				framework.addComponent(button);
 				framework.addComponent(card);
 				this.tableCards.add(card);
@@ -200,8 +200,8 @@ public class GameWindow extends JFrame {
 				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
 						serializedCard.getCost(), actionCardlds.get(i), shiftBottom += 0.06, 0.2, 0.05, 0.15, k++,
 						serializedCard.getImage(), framework);
-				GFButton button = new ButtonClass(shiftCardBottom+=0.06, 0.2, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, HEIGHT, l++,
-						buttonGameImage, framework, number);
+				GFButton button = new ButtonClass(shiftCardBottom += 0.06, 0.2, 0.015, 0.015 * CORRECTION_16TO9, WIDTH,
+						HEIGHT, l++, buttonGameImage, framework, "4");
 
 				framework.addComponent(button);
 				framework.addComponent(card);
@@ -209,6 +209,62 @@ public class GameWindow extends JFrame {
 				this.tableButtons.add(button);
 			}
 
+		}
+	}
+
+	public void extraTable(HashMap<String, SerializedCard> cards) {
+		table = new GameBackground(0.31, 0.01, 0.38, 0.38, 15, tableImage, framework);
+		framework.addComponent(table);
+
+		int k = 16;
+		double sub = cards.size();
+		double shift = ((0.35 - (sub * 0.05))) / sub;
+		double shiftsmall = ((0.2 - (sub * 0.05))) / sub;
+		double startsmall = 0.4 - shiftsmall;
+		double start = 0.31 - shift;
+
+		LinkedList<String> actionCardlds = new LinkedList<>(cards.keySet());
+		for (Iterator<Card> iterator = this.extraTableCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			this.framework.removeComponent(card);
+		}
+		this.extraTableCards = new LinkedList<Card>();
+		for (int i = 0; i < cards.size(); i++) {
+			if (sub > 4) {
+				if (i == 0) {
+					SerializedCard serializedCard = cards.get(actionCardlds.get(i));
+
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), start += shift,
+							0.13, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+					framework.addComponent(card);
+					this.extraTableCards.add(card);
+				} else {
+					SerializedCard serializedCard = cards.get(actionCardlds.get(i));
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
+							start += (shift + 0.05), 0.13, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+					framework.addComponent(card);
+					this.extraTableCards.add(card);
+				}
+			} else {
+				if (i == 0) {
+					SerializedCard serializedCard = cards.get(actionCardlds.get(i));
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
+							startsmall += shiftsmall, 0.13, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+					framework.addComponent(card);
+					this.extraTableCards.add(card);
+				} else {
+					SerializedCard serializedCard = cards.get(actionCardlds.get(i));
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
+							startsmall += (shiftsmall + 0.05), 0.13, 0.05, 0.15, k++, serializedCard.getImage(),
+							framework);
+					framework.addComponent(card);
+					this.extraTableCards.add(card);
+				}
+			}
 		}
 	}
 
@@ -224,26 +280,26 @@ public class GameWindow extends JFrame {
 			GFButton button = coinButtons.get(i);
 			this.framework.removeComponent(card);
 			this.framework.removeComponent(button);
-			
+
 		}
 		this.coinButtons = new LinkedList<GFButton>();
 		this.coinCards = new LinkedList<Card>();
 
 		for (int i = 0; i < coins.size(); i++) {
 			System.out.println("id actionCards : " + actionCardlds.get(i));
-			 Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
-			 matcher.find();
-			 String number = actionCardlds.get(i).substring(matcher.start(),
-			 matcher.end());
+			// Matcher matcher =
+			// Pattern.compile("\\d+").matcher(actionCardlds.get(i));
+			// matcher.find();
+			// String number = actionCardlds.get(i).substring(matcher.start(),
+			// matcher.end());
 
 			SerializedCard serializedCard = coins.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
 					serializedCard.getCost(), actionCardlds.get(i), 0.95, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 270), framework);
 
-			
-			GFButton button = new ButtonClass(0.945, shiftCard+=0.12, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, HEIGHT, l++,
-					buttonGameImage, framework, number);
+			GFButton button = new ButtonClass(0.945, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, HEIGHT,
+					l++, buttonGameImage, framework, "6");
 			framework.addComponent(button);
 			framework.addComponent(card);
 			this.coinCards.add(card);
@@ -377,35 +433,35 @@ public class GameWindow extends JFrame {
 		int l = 4;
 
 		// Example For nishit
-		
 
 		for (int i = 0; i < victoryCards.size(); i++) {
 			Card card = victoryCards.get(i);
 			GFButton button = victoryButtons.get(i);
 			this.framework.removeComponent(card);
 			this.framework.removeComponent(button);
-			
+
 		}
 		this.victoryButtons = new LinkedList<GFButton>();
 		this.victoryCards = new LinkedList<Card>();
 
 		for (int i = 0; i < victory.size(); i++) {
-			
-			 Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
-					 matcher.find();
-					 String number = actionCardlds.get(i).substring(matcher.start(),
-					 matcher.end());
-			
-			
+
+			// TODO Lukas commented section. Please verify first this class.
+			// Matcher matcher =
+			// Pattern.compile("\\d+").matcher(actionCardlds.get(i));
+			// matcher.find();
+			// String number = actionCardlds.get(i).substring(matcher.start(),
+			// matcher.end());
+
 			SerializedCard serializedCard = victory.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
 					serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 90), framework);
 			GFButton button = new ButtonClass(0.04, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, WIDTH,
-					l++, buttonGameImage, framework, number);
+					l++, buttonGameImage, framework, "10");
 			framework.addComponent(button);
 			framework.addComponent(card);
-			
+
 			this.victoryCards.add(card);
 			this.victoryButtons.add(button);
 

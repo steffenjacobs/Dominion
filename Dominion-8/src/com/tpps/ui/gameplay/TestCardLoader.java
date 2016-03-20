@@ -41,6 +41,7 @@ public class TestCardLoader {
 		 gw.coinCards(coins);
 		 gw.victoryCards(estate);
 		 gw.middleCards(middle);
+		 gw.extraTable(middle);
 	}
 	
 	public static void main(String[] args) throws IOException {
