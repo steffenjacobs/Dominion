@@ -178,11 +178,10 @@ public class GameWindow extends JFrame {
 			SerializedCard serializedCard = table.get(actionCardlds.get(i));
 
 			// // Example For nishit
-			// Matcher matcher =
-			// Pattern.compile("\\d+").matcher(actionCardlds.get(i));
-			// matcher.find();
-			// String number = actionCardlds.get(i).substring(matcher.start(),
-			// matcher.end());
+			 Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
+			 matcher.find();
+			 String number = actionCardlds.get(i).substring(matcher.start(),
+			 matcher.end());
 
 			if (i < 5) {
 				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
@@ -190,7 +189,7 @@ public class GameWindow extends JFrame {
 						serializedCard.getImage(), framework);
 
 				GFButton button = new ButtonClass(shiftCard += 0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9, WIDTH,
-						HEIGHT, l++, buttonGameImage, framework, "5");
+						HEIGHT, l++, buttonGameImage, framework, number);
 
 				framework.addComponent(button);
 				framework.addComponent(card);
@@ -201,7 +200,7 @@ public class GameWindow extends JFrame {
 						serializedCard.getCost(), actionCardlds.get(i), shiftBottom += 0.06, 0.2, 0.05, 0.15, k++,
 						serializedCard.getImage(), framework);
 				GFButton button = new ButtonClass(shiftCardBottom += 0.06, 0.2, 0.015, 0.015 * CORRECTION_16TO9, WIDTH,
-						HEIGHT, l++, buttonGameImage, framework, "4");
+						HEIGHT, l++, buttonGameImage, framework, number);
 
 				framework.addComponent(button);
 				framework.addComponent(card);
@@ -215,7 +214,7 @@ public class GameWindow extends JFrame {
 	public void extraTable(HashMap<String, SerializedCard> cards) {
 		table = new GameBackground(0.31, 0.01, 0.38, 0.38, 15, tableImage, framework);
 		framework.addComponent(table);
-
+		
 		int k = 16;
 		double sub = cards.size();
 		double shift = ((0.35 - (sub * 0.05))) / sub;
@@ -287,11 +286,10 @@ public class GameWindow extends JFrame {
 
 		for (int i = 0; i < coins.size(); i++) {
 			System.out.println("id actionCards : " + actionCardlds.get(i));
-			// Matcher matcher =
-			// Pattern.compile("\\d+").matcher(actionCardlds.get(i));
-			// matcher.find();
-			// String number = actionCardlds.get(i).substring(matcher.start(),
-			// matcher.end());
+			 Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
+			 matcher.find();
+			 String number = actionCardlds.get(i).substring(matcher.start(),
+			 matcher.end());
 
 			SerializedCard serializedCard = coins.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
@@ -299,7 +297,7 @@ public class GameWindow extends JFrame {
 					GraphicsUtil.rotate(serializedCard.getImage(), 270), framework);
 
 			GFButton button = new ButtonClass(0.945, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, HEIGHT,
-					l++, buttonGameImage, framework, "6");
+					l++, buttonGameImage, framework, number);
 			framework.addComponent(button);
 			framework.addComponent(card);
 			this.coinCards.add(card);
@@ -447,18 +445,17 @@ public class GameWindow extends JFrame {
 		for (int i = 0; i < victory.size(); i++) {
 
 			// TODO Lukas commented section. Please verify first this class.
-			// Matcher matcher =
-			// Pattern.compile("\\d+").matcher(actionCardlds.get(i));
-			// matcher.find();
-			// String number = actionCardlds.get(i).substring(matcher.start(),
-			// matcher.end());
+			 Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
+			 matcher.find();
+			 String number = actionCardlds.get(i).substring(matcher.start(),
+			 matcher.end());
 
 			SerializedCard serializedCard = victory.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
 					serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 90), framework);
 			GFButton button = new ButtonClass(0.04, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, WIDTH,
-					l++, buttonGameImage, framework, "10");
+					l++, buttonGameImage, framework, number);
 			framework.addComponent(button);
 			framework.addComponent(card);
 
