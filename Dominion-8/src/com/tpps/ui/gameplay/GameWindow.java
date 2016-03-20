@@ -484,6 +484,14 @@ public class GameWindow extends JFrame {
 		buy.renewCaption(caption);
 		System.out.println("setBuys: " + caption);
 	}
+	
+	public void removeTableComponents(){
+		framework.removeComponent(table);
+		for (int i = 0; i < extraTableCards.size(); i++) {
+			framework.removeComponent(extraTableCards.get(i));
+		}
+		framework.removeComponent(table);
+	}
 
 	public void endActionPhase() {
 		framework.removeComponent(endActionPhase);
