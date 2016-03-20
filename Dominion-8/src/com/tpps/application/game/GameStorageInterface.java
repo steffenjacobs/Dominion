@@ -50,6 +50,11 @@ public class GameStorageInterface {
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(coinCardIds);
 		this.gameWindow.coinCards(serializedCardWithId);
 	}
+	
+	public void loadRevealCardsAndPassToGameWindow(LinkedList<String> revealCardIds) {
+		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(revealCardIds);
+		this.gameWindow.middleCards(serializedCardWithId);
+	}
 
 	/**
 	 * 

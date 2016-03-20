@@ -57,7 +57,8 @@ public enum PacketType {
 	DISABLE(45),
 	ENABLE(46),
 	SHOW_END_REACTION_MODE(47),
-	END_REACTIONS(48);
+	END_REACTIONS(48),
+	SEND_REVEAL_CARDS(49);
 
 	private final int internalID;
 

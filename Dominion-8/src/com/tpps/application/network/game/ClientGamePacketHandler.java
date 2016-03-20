@@ -1,5 +1,6 @@
 package com.tpps.application.network.game;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import com.tpps.application.game.GameStorageInterface;
@@ -13,6 +14,7 @@ import com.tpps.application.network.gameSession.packets.PacketSendBoard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
+import com.tpps.application.network.gameSession.packets.PacketSendRevealCards;
 import com.tpps.application.network.gameSession.packets.PacketUpdateTreasures;
 import com.tpps.application.network.gameSession.packets.PacketUpdateValues;
 import com.tpps.ui.gameplay.GameWindow;
@@ -73,6 +75,10 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case SEND_HAND_CARDS:
 			LinkedList<String> handCardIds = ((PacketSendHandCards)packet).getCardIds();
 			this.gameStorageInterface.loadHandCardsAndPassToGameWindow(handCardIds);			
+			break;
+		case SEND_REVEAL_CARDS:
+			System.out.println(Arrays.toString(((PacketSendRevealCards)packet).getCardIds().toArray()));
+			this.gameStorageInterface.loadRevealCardsAndPassToGameWindow(((PacketSendRevealCards)packet).getCardIds());
 			break;
 		case UPDATE_VALUES:
 			PacketUpdateValues puv = ((PacketUpdateValues)packet);

@@ -16,6 +16,7 @@ import com.tpps.application.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
+import com.tpps.application.network.gameSession.packets.PacketSendRevealCards;
 import com.tpps.application.network.gameSession.packets.PacketStartDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketStartTrashMode;
 import com.tpps.technicalServices.util.CollectionsUtil;
@@ -480,7 +481,8 @@ public class Player {
 				LinkedList<String> revealList = new LinkedList<String>();
 				
 				revealList.add(getDeck().removeSaveFromDrawPile().getId());
-				
+				System.out.println(Arrays.toString(revealList.toArray()));
+				GameServer.getInstance().sendMessage(port, new PacketSendRevealCards(revealList));
 //				GameServer.getInstance().sendMessage(port, 
 //						new PacketSendHandCards(revealList));
 				break;

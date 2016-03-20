@@ -287,27 +287,27 @@ public class GameBoard {
 		Card.resetClassID();
 		
 //		spy 
-//		LinkedList<Card> spyList = new LinkedList<Card>();
-//		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, CardAction.ADD_ACTION_TO_PLAYER, CardAction.REVEAL_CARD}), 
-//				CollectionsUtil.linkedList(new String[] {"1", "1", "NIL"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Spy", 0), GameConstant.INIT_PILE_SIZE, spyList);
-//		this.tableForActionCards.put("Spy", spyList);
-//		Card.resetClassID();
+		LinkedList<Card> spyList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, CardAction.ADD_ACTION_TO_PLAYER, CardAction.REVEAL_CARD}), 
+				CollectionsUtil.linkedList(new String[] {"1", "1", "NIL"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Spy", 0), GameConstant.INIT_PILE_SIZE, spyList);
+		this.tableForActionCards.put("Spy", spyList);
+		Card.resetClassID();
 		
 //		ThroneRoom
 		
-		LinkedList<Card> throneRoomList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.CHOOSE_CARD_PLAY_TWICE}), 
-				CollectionsUtil.linkedList(new String[] {"Nil"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "ThroneRoom", 0), GameConstant.INIT_PILE_SIZE, throneRoomList);
-		this.tableForActionCards.put("ThroneRoom", throneRoomList);
-		Card.resetClassID();
+//		LinkedList<Card> throneRoomList = new LinkedList<Card>();
+//		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.CHOOSE_CARD_PLAY_TWICE}), 
+//				CollectionsUtil.linkedList(new String[] {"Nil"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "ThroneRoom", 0), GameConstant.INIT_PILE_SIZE, throneRoomList);
+//		this.tableForActionCards.put("ThroneRoom", throneRoomList);
+//		Card.resetClassID();
 		
 //		CouncilRoom
 		
-		LinkedList<Card> councilRoomList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, CardAction.ADD_PURCHASE, CardAction.DRAW_CARD_OTHERS}), 
-				CollectionsUtil.linkedList(new String[] {"4", "1", "1"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "CouncilRoom", 0), GameConstant.INIT_PILE_SIZE, councilRoomList);
-		this.tableForActionCards.put("CouncilRoom", councilRoomList);
-		Card.resetClassID();
+//		LinkedList<Card> councilRoomList = new LinkedList<Card>();
+//		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, CardAction.ADD_PURCHASE, CardAction.DRAW_CARD_OTHERS}), 
+//				CollectionsUtil.linkedList(new String[] {"4", "1", "1"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "CouncilRoom", 0), GameConstant.INIT_PILE_SIZE, councilRoomList);
+//		this.tableForActionCards.put("CouncilRoom", councilRoomList);
+//		Card.resetClassID();
 		
 //		LinkedList<Card> festival
 		
