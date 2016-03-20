@@ -86,11 +86,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 					return;					
 				}
 
-				System.out.println("gainMode? " + player.isGainMode());
+				
 				if (player.isGainMode()){
-					System.out.println("handler gain mode");
+					
 				if (this.server.getGameController().gain(cardID, player)){
-					System.out.println("card gained");
+					
 					server.broadcastMessage(new PacketSendBoard(this.server.getGameController().getGameBoard().getTreasureCardIDs(),
 							this.server.getGameController().getGameBoard().getVictoryCardIDs(), 
 					

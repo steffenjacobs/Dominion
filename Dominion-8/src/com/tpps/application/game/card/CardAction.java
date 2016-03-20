@@ -20,7 +20,9 @@ public enum CardAction {
 	ADD_PURCHASE, 
 	
 	/* +1 Karte */
-	DRAW_CARD, 
+	DRAW_CARD,
+	
+	DRAW_CARD_OTHERS,
 	
 	/* z.B. für Abenteurer: ziehe Karten solange, bis... */
 	DRAW_CARD_UNTIL, 
@@ -54,6 +56,14 @@ public enum CardAction {
 	
 	DEFEND,
 	
-	SEPERATOR;
+	SEPERATOR,
+	
+	TRASH_AND_ADD_TEMPORARY_MONEY,
+	
+	TRASH_AND_GAIN,
+	
+	TRASH_AND_GAIN_MORE_THAN,
+	
+	CHOOSE_CARD_PLAY_TWICE;
 	
 }

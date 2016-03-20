@@ -174,6 +174,58 @@ public class CheapCardCreator {
 		cards.put("Feast", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "Feast", getImg("Feast")));
 		
+//		moneylender		
+		actions.remove(CardAction.TRASH_CARD);
+		actions.remove(CardAction.GAIN_CARD);
+		actions.put(CardAction.TRASH_AND_ADD_TEMPORARY_MONEY, "Copper");
+		cards.put("Moneylender", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 4, "Moneylender", getImg("Moneylender")));
+		
+//		remodel
+		
+		actions.remove(CardAction.TRASH_AND_ADD_TEMPORARY_MONEY);
+		actions.put(CardAction.TRASH_AND_GAIN_MORE_THAN, "1_2");
+		cards.put("Remodel", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 4, "Remodel", getImg("Remodel")));
+		
+//		smithy
+		
+		actions.remove(CardAction.TRASH_AND_GAIN_MORE_THAN);
+		actions.put(CardAction.DRAW_CARD, "3");
+		cards.put("Smithy", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 4, "Smithy", getImg("Smithy")));
+		
+//		spy		
+		
+		actions.remove(CardAction.DRAW_CARD);
+		actions.put(CardAction.DRAW_CARD, "1");
+		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "1");
+		actions.put(CardAction.REVEAL_CARD, "NIL");
+		cards.put("Spy", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 4, "Spy", getImg("Spy")));
+		
+//		actions Draw_card add_action_to_player reveal_card
+		
+//		throneRoom
+		
+		actions.remove(CardAction.DRAW_CARD);
+		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
+		actions.remove(CardAction.REVEAL_CARD);
+		actions.put(CardAction.CHOOSE_CARD_PLAY_TWICE, "NIL");
+		cards.put("ThroneRoom", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 4, "ThroneRoom", getImg("ThroneRoom")));
+		
+//		councilRoom	
+		
+		actions.remove(CardAction.CHOOSE_CARD_PLAY_TWICE);
+		actions.put(CardAction.DRAW_CARD, "4");
+		actions.put(CardAction.ADD_PURCHASE, "1");
+		actions.put(CardAction.DRAW_CARD_OTHERS, "1");
+		cards.put("CouncilRoom", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 4, "CouncilRoom", getImg("CouncilRoom")));
+		
+		
+		
 		
 		
 		// setup Dummy-DominionController

@@ -115,6 +115,21 @@ public class Deck {
 	
 	/**
 	 * 
+	 * @param name
+	 * @return 
+	 */
+	public Card getCardByName(String name){
+		for (Iterator<Card> iterator = getCardHand().iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getName().toLowerCase().equals(name.toLowerCase())){
+				return card;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 
 	 * @return
 	 */
 	public LinkedList<String> getTreasureCardsFromHand(){
@@ -249,7 +264,7 @@ public class Deck {
 	 * if the discardPile contains not enough card the shuffleIfLessThan(1) method is called. 
 	 * @return one Card from the discardPile
 	 */
-	public Card removeSaveFromDiscardPile() {
+	public Card removeSaveFromDrawPile() {
 		this.shuffleIfLessThan(1);		
 		return this.drawPile.removeLast();		
 	}

@@ -15,6 +15,7 @@ import com.tpps.application.network.gameSession.packets.PacketDisable;
 import com.tpps.application.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
+import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketStartDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketStartTrashMode;
 import com.tpps.technicalServices.util.CollectionsUtil;
@@ -37,7 +38,7 @@ public class Player {
 	private int buys;
 	private int coins;
 	private int gainValue;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode;
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice;
 	private Tuple<CardAction> discardOrTrashAction;
 	private LinkedList<Card> playedCards, discardList;
 
@@ -282,6 +283,10 @@ public class Player {
 		Card card = doAction(cardID);
 		if (card != null) {
 			this.playedCards.addLast(card);
+			if (playTwice){
+				playTwice = false;
+				doAction(cardID);
+			}
 		}
 
 	}
@@ -352,7 +357,7 @@ public class Player {
 			discardOrTrash(serverCard);
 			return serverCard;
 		}
-		
+
 		LinkedList<CardAction> cardActions = new LinkedList<CardAction>(serverCard.getActions().keySet());
 		if (serverCard.getTypes().contains(CardType.REACTION)) {
 			cardActions = getRelevantCardActions(cardActions);
@@ -380,6 +385,9 @@ public class Player {
 				break;
 			case DRAW_CARD:
 				this.getDeck().draw(Integer.parseInt(value));
+				break;
+			case DRAW_CARD_OTHERS:
+				GameServer.getInstance().getGameController().drawOthers();
 				break;
 			case GAIN_CARD:
 
@@ -418,11 +426,11 @@ public class Player {
 				GameServer.getInstance().getGameController().discardOtherDownto(value);
 				break;
 			case TRASH_CARD:
-			
+
 				if (value.equals("this")) {
-//			trashFlag gesetzt karte trashen null zurückgeben		
+					// trashFlag gesetzt karte trashen null zurückgeben
 					trashFlag = true;
-					
+
 				} else {
 
 					System.out.println((GameServer.getInstance()));
@@ -433,11 +441,52 @@ public class Player {
 				}
 				// return?
 				break;
+			case TRASH_AND_ADD_TEMPORARY_MONEY:
+
+				if (value.split("_")[0].toLowerCase().equals("copper")) {
+
+					Card card = getDeck().getCardByName("Copper");
+					if (card != null) {
+
+						getDeck().getCardHand().remove(card);
+						getDeck().trash(card,
+								GameServer.getInstance().getGameController().getGameBoard().getTrashPile());
+						this.coins += Integer.parseInt(value.split("_")[1]);
+					}
+				}
+				break;
+			case TRASH_AND_GAIN_MORE_THAN:
+				System.out.println("trash and gain more than");
+				this.trashMode = true;
+				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN_MORE_THAN, Integer.parseInt(value.split("_")[0]));
+				this.gainValue = Integer.parseInt(value.split("_")[1]);				
+				break;
+			case TRASH_AND_GAIN:
+				System.out.println("trash_and_gain");
+				this.trashMode = true;
+				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN, Integer.parseInt(value.split("_")[0]));
+				this.gainValue = Integer.parseInt(value.split("_")[1]);				
+				break;
+			
+				
+				
+				
+				
 			case PUT_BACK:
 				this.getDeck().putBack(serverCard);
 				break;
 			case REVEAL_CARD:
 				System.out.println("REVEAL: " + serverCard.getActions().get(CardAction.REVEAL_CARD));
+				LinkedList<String> revealList = new LinkedList<String>();
+				
+				revealList.add(getDeck().removeSaveFromDrawPile().getId());
+				
+//				GameServer.getInstance().sendMessage(port, 
+//						new PacketSendHandCards(revealList));
+				break;
+			case CHOOSE_CARD_PLAY_TWICE:
+				this.actions++;
+				
 				break;
 			case IS_TREASURE:
 				this.coins += Integer.parseInt(serverCard.getActions().get(CardAction.IS_TREASURE));
@@ -453,7 +502,6 @@ public class Player {
 			}
 		}
 
-		 
 		if (!dontRemoveFlag) {
 			System.out.println("card was removed");
 			this.getDeck().getCardHand().remove(serverCard);
@@ -464,12 +512,12 @@ public class Player {
 			GameServer.getInstance().sendMessage(port, new PacketDisable());
 			GameServer.getInstance().getGameController().checkReactionModeFinishedAndEnableGuis();
 		}
-		if (trashFlag){
+		if (trashFlag) {
 			trashFlag = false;
 			GameServer.getInstance().getGameController().getGameBoard().getTrashPile().add(serverCard);
 			return null;
 		}
-		
+
 		return serverCard;
 	}
 
@@ -500,7 +548,7 @@ public class Player {
 			if (this.discardOrTrashAction.getSecondEntry() == -1) {
 				System.out.println("Discard and Draw");
 				this.getDeck().getCardHand().remove(card);
-				discardList.add(this.getDeck().removeSaveFromDiscardPile());
+				discardList.add(this.getDeck().removeSaveFromDrawPile());
 				LinkedList<Card> cardHand = this.getDeck().getCardHand();
 				if (cardHand.size() == 0) {
 					endDiscardAndDrawMode();
@@ -523,21 +571,43 @@ public class Player {
 				}
 			}
 			break;
+			
+		case TRASH_AND_GAIN_MORE_THAN:
+			executeTrash(card);
+			break;
+		case TRASH_AND_GAIN:
+			executeTrash(card);
+			
+			break;
+			
 		case TRASH_CARD:
-			LinkedList<Card> cardHand = this.getDeck().getCardHand();
-			if (cardHand.size() == 0) {
-				this.trashMode = false;
-				((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketEndTrashMode());
-			}
-			this.getDeck().getCardHand().remove(card);
-			System.out.println("card added to trashPile" + card);
-			this.discardOrTrashAction.decrementSecondEntry();
-			if (this.discardOrTrashAction.getSecondEntry() == 0) {
-				this.trashMode = false;
-			}
+			executeTrash(card);
 			break;
 		default:
 			break;
+		}
+	}
+
+	private void executeTrash(Card card) throws IOException {
+		LinkedList<Card> cardHand = this.getDeck().getCardHand();
+		if (cardHand.size() == 0) {
+			this.trashMode = false;
+			((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketEndTrashMode());
+		}
+		this.getDeck().getCardHand().remove(card);
+		System.out.println("card added to trashPile" + card);
+		this.discardOrTrashAction.decrementSecondEntry();
+		System.out.println("second entry_: " + this.discardOrTrashAction.getSecondEntry());
+		if (this.discardOrTrashAction.getSecondEntry() == 0) {
+			this.trashMode = false;
+			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_AND_GAIN)){				
+				this.gainMode = true;				
+			}			
+			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_AND_GAIN_MORE_THAN)){
+				this.gainMode = true;
+				this.gainValue += card.getCost();
+				System.out.println("new gainValue: " + this.gainValue);
+			}
 		}
 	}
 }

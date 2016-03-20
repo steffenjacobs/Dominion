@@ -75,7 +75,7 @@ public class GameController {
 	 * 
 	 * @param temporaryTrashPile
 	 */
-	public void updateTrashPile(LinkedList<Card> temporaryTrashPile) {
+	public synchronized void updateTrashPile(LinkedList<Card> temporaryTrashPile) {
 		CollectionsUtil.appendListToList(temporaryTrashPile, this.gameBoard.getTrashPile());
 	}
 
@@ -86,7 +86,7 @@ public class GameController {
 	 * @return
 	 * @throws IOException
 	 */
-	public boolean checkCardExistsAndDiscardOrTrash(Player player, String cardID) throws IOException {
+	public synchronized boolean checkCardExistsAndDiscardOrTrash(Player player, String cardID) throws IOException {
 		Card card = player.getDeck().getCardFromHand(cardID);
 		if (card != null) {
 			player.discardOrTrash(cardID, this.getGameBoard().getTrashPile());
@@ -134,7 +134,7 @@ public class GameController {
 		return false;
 	}
 	
-	public boolean gain(String cardID, Player player) {
+	public synchronized boolean gain(String cardID, Player player) {
 		System.out.println("gain");
 		try{
 		LinkedList<Card> cardList = this.getGameBoard().findCardListFromBoard(cardID);
@@ -179,7 +179,7 @@ public class GameController {
 	 * 
 	 * @param cardId
 	 */
-	public boolean isVictoryCardOnHand(String cardId) {
+	public synchronized boolean isVictoryCardOnHand(String cardId) {
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardId);
 		if (card == null) {
 			return false;
@@ -216,7 +216,7 @@ public class GameController {
 	 * 
 	 * @param value
 	 */
-	public void discardOtherDownto(String value) {
+	public synchronized void discardOtherDownto(String value) {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (!player.equals(activePlayer)) {
@@ -239,6 +239,15 @@ public class GameController {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+		}
+	}
+	
+	public synchronized void drawOthers() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (!player.equals(activePlayer)){
+				player.getDeck().draw();
 			}
 		}
 	}
