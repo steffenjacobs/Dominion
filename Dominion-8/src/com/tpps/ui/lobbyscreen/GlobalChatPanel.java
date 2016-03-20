@@ -5,6 +5,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -50,9 +56,9 @@ public class GlobalChatPanel extends JPanel{
 		this.add(this.createPanelForChatInput(),BorderLayout.PAGE_END);
 		this.add(Box.createVerticalStrut(VERTICAL_STRUT), BorderLayout.PAGE_START);
 		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_START);
-		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_END);
+		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_END);		
 		
-		this.testChatInput();
+	//	this.testChatInput();
 
 		this.revalidate();
 		parent.revalidate();
@@ -107,11 +113,12 @@ public class GlobalChatPanel extends JPanel{
 		sendButton.setContentAreaFilled(false);
 		sendButton.setBorderPainted(true);
 		sendButton.setOpaque(false);
+		sendButton.addActionListener(new ChatMessageListener());
 		return sendButton;
 	}
 	
 	private JTextField initChatInputLine(){
-		JTextField chatInputLine = new JTextField("chat"){
+		chatInputLine = new JTextField("chat"){
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -122,9 +129,11 @@ public class GlobalChatPanel extends JPanel{
 			
 		};
 		chatInputLine.setFont(font);
+		chatInputLine.setCaretColor(Color.WHITE);
 		chatInputLine.setForeground(Color.WHITE);
 		chatInputLine.setBorder(BorderFactory.createEmptyBorder());
 		chatInputLine.setOpaque(false);
+		chatInputLine.addKeyListener(new ChatButtonInputListener());
 		return chatInputLine;
 	}
 	
@@ -137,6 +146,7 @@ public class GlobalChatPanel extends JPanel{
 			e.printStackTrace();
 		}
 		textbox = new JTextArea();
+		textbox.setFocusable(false);
 		textbox.setForeground(Color.WHITE);
 		textbox.setBorder(BorderFactory.createEmptyBorder());
 		textbox.setLineWrap(true);
@@ -156,6 +166,7 @@ public class GlobalChatPanel extends JPanel{
 			};
 		scrollpane.setOpaque(false);		
 		scrollpane.setBorder(BorderFactory.createEmptyBorder());
+		scrollpane.setFocusable(false);
 		scrollpane.setVisible(true);
 		scrollpane.getViewport().setOpaque(false);
 		scrollpane.getVerticalScrollBar().setOpaque(false);
@@ -177,5 +188,37 @@ public class GlobalChatPanel extends JPanel{
 	
 	public LobbyScreen getParentX(){
 		return this.parent;
+	}
+	
+	private class ChatMessageListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			GlobalChatPanel.this.handleChatmessage(GlobalChatPanel.this.chatInputLine.getText());
+		}
+		
+	}
+	
+	private void handleChatmessage(String message){
+	//	System.out.println("send message: " + message);
+		GlobalChatPanel.this.chatInputLine.setText("");
+		this.appendChat(message + "\n");
+	}
+
+	
+	private class ChatButtonInputListener implements KeyListener{
+
+		@Override
+		public void keyPressed(KeyEvent e) {			
+			if(e.getKeyCode() == KeyEvent.VK_ENTER && !GlobalChatPanel.this.chatInputLine.getText().equals("")){
+				GlobalChatPanel.this.handleChatmessage(GlobalChatPanel.this.chatInputLine.getText());
+			}
+		}
+
+		@Override
+		public void keyReleased(KeyEvent arg0) { }
+
+		@Override
+		public void keyTyped(KeyEvent arg0) { }
 	}
 }

@@ -51,7 +51,7 @@ public class SQLStatisticsHandler {
 	 */
 	public static void insertRowForFirstLogin(String nickname){
 		try {
-			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("INSERT INTO statistics (nickname, description, wins, losses, games_played, rank, playtime) VALUES (?, '', 0, 0, 0,'silver', 0)");
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("INSERT INTO statistics (nickname, description, wins, losses, win_loss, games_played, rank, playtime) VALUES (?, '', 0, 0, 0, 0,'silver', 0)");
 			stmt.setString(1, nickname);
 			stmt.executeUpdate();
 			System.out.println("Added nickname Row for statistics");
@@ -215,9 +215,13 @@ public class SQLStatisticsHandler {
 				PreparedStatement setwinloss = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET win_loss = ? WHERE nickname = ?;");
 				setwinloss.setDouble(1, ratio);
 				setwinloss.setString(2, nickname);
-				setwinloss.executeUpdate();						
-				System.out.println("Updated Win/loss successful for " + nickname);
+				setwinloss.executeUpdate();										
+			}else{
+				PreparedStatement setwinloss = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET win_loss = 0 WHERE nickname = ?;");
+				setwinloss.setString(1, nickname);
+				setwinloss.executeUpdate();					
 			}
+			System.out.println("Updated Win/loss successful for " + nickname);
 		} catch (SQLException e) {		
 			e.printStackTrace();
 		}
