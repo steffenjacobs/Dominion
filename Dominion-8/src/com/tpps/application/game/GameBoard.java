@@ -288,7 +288,7 @@ public class GameBoard {
 		
 //		spy 
 		LinkedList<Card> spyList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, CardAction.ADD_ACTION_TO_PLAYER, CardAction.REVEAL_CARD}), 
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, CardAction.ADD_ACTION_TO_PLAYER, CardAction.REVEAL_CARD_ALL}), 
 				CollectionsUtil.linkedList(new String[] {"1", "1", "NIL"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Spy", 0), GameConstant.INIT_PILE_SIZE, spyList);
 		this.tableForActionCards.put("Spy", spyList);
 		Card.resetClassID();

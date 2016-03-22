@@ -14,16 +14,22 @@ import com.tpps.application.network.core.ServerConnectionThread;
 import com.tpps.application.network.core.packet.Packet;
 import com.tpps.application.network.gameSession.packets.PacketBuyCard;
 import com.tpps.application.network.gameSession.packets.PacketClientShouldDisconect;
+import com.tpps.application.network.gameSession.packets.PacketDisable;
+import com.tpps.application.network.gameSession.packets.PacketEnable;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketEndActionPhase;
 import com.tpps.application.network.gameSession.packets.PacketEndReactions;
 import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
+import com.tpps.application.network.gameSession.packets.PacketPutBackCards;
 import com.tpps.application.network.gameSession.packets.PacketReconnect;
+import com.tpps.application.network.gameSession.packets.PacketRemoveExtraTable;
+import com.tpps.application.network.gameSession.packets.PacketSendActiveButtons;
 import com.tpps.application.network.gameSession.packets.PacketSendBoard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
+import com.tpps.application.network.gameSession.packets.PacketTakeCards;
 import com.tpps.application.network.gameSession.packets.PacketUpdateTreasures;
 import com.tpps.application.network.gameSession.packets.PacketUpdateValues;
 import com.tpps.technicalServices.util.CollectionsUtil;
@@ -80,9 +86,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 				if (this.server.getGameController().isVictoryCardOnHand(cardID)
 						&& !player.getDiscardMode()
 						&& !player.getTrashMode() 
-						|| player.isReactionMode() && 
-						
-						!player.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.REACTION)) {
+						|| player.isReactionMode() && 						
+						!player.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.REACTION)
+						|| player.isRevealMode()) {
+					System.out.println("nur returnen");
 					return;					
 				}
 
@@ -99,6 +106,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 					}
 				return;
 				}
+				
 				
 
 				if (this.server.getGameController().validateTurnAndExecute(cardID, player)) {				
@@ -167,6 +175,26 @@ public class ServerGamePacketHandler extends PacketHandler {
 				 this.server.getGameController().getActivePlayer().endTrashMode();
 			
 				break;
+			case TAKE_CARDS:
+				clientID = ((PacketTakeCards)packet).getClientID();
+				player = GameServer.getInstance().getGameController().getClientById(clientID);
+				player.takeRevealedCardsSetRevealModeFalse();
+				GameBoard gameBoard = this.server.getGameController().getGameBoard();
+				this.server.sendMessage(port, new PacketSendBoard(gameBoard.getTreasureCardIDs(), 
+					gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
+				resetGameWindowAfterRevealAction(port, player);
+					
+				canActivePlayerContinue();
+				
+				break;
+			case PUT_BACK:
+				clientID = ((PacketPutBackCards) packet).getClientID();
+				player = GameServer.getInstance().getGameController().getClientById(clientID);
+				player.putBackCards();
+				resetGameWindowAfterRevealAction(port, player);
+				
+				canActivePlayerContinue();
+				break;
 			case END_REACTIONS:
 				Player player1 = this.server.getGameController().getClientById(((PacketEndReactions)packet).getClientID());
 				player1.setReactionCard(false);
@@ -185,6 +213,39 @@ public class ServerGamePacketHandler extends PacketHandler {
 			ie.printStackTrace();
 		}
 
+	}
+
+	/**
+	 * disables gameWindow removes the extra table for the revealed Cards send the active buttons to the 
+	 * game window to set it to the old values
+	 * @param port
+	 * @param player
+	 * @throws IOException
+	 */
+	private void resetGameWindowAfterRevealAction(int port, Player player) throws IOException {
+		this.server.sendMessage(port, new PacketDisable());
+		this.server.sendMessage(port, new PacketRemoveExtraTable());
+		
+		if (player.getActions() > 0){
+			this.server.sendMessage(port, new PacketSendActiveButtons(true, true, false));
+		}else{
+			this.server.sendMessage(port, new PacketSendActiveButtons(true, false, true));
+		}
+	}
+
+	private void canActivePlayerContinue() throws IOException {
+		boolean activePlayerCanContinue = true;
+		for (Iterator<Player> iterator = this.server.getGameController().getPlayers().iterator(); iterator.hasNext();) {
+			Player p = (Player) iterator.next();
+			if (p.isRevealMode()){
+				activePlayerCanContinue = false;
+				break;
+			}
+		}
+		if (activePlayerCanContinue){
+			server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
+					new PacketEnable());
+		}
 	}
 
 	private void buyCardAndUpdateBoards(Packet packet) throws IOException {

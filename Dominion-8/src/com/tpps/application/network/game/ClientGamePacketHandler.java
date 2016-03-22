@@ -10,6 +10,7 @@ import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.application.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.application.network.gameSession.packets.PacketPlayCard;
+import com.tpps.application.network.gameSession.packets.PacketSendActiveButtons;
 import com.tpps.application.network.gameSession.packets.PacketSendBoard;
 import com.tpps.application.network.gameSession.packets.PacketSendClientId;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
@@ -107,8 +108,32 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case START_TRASH_MODE:
 			this.gameWindow.addStopTrashButton();
 			break;
+		case TAKE_CARDS:
+			this.gameWindow.addTakeCardsButton();
+			this.gameWindow.removeEndTurnButton();
+			this.gameWindow.removeEndActionPhaseButton();
+			this.gameWindow.removePlayTreasuresButton();
+			break;
+		case PUT_BACK:
+			this.gameWindow.addPutBackButton();
+			break;
+		case SEND_ACTIVE_BUTTONS:
+			PacketSendActiveButtons p = (PacketSendActiveButtons)packet;
+			if (p.isEndTurn()){
+				this.gameWindow.addEndTurnButton();
+			}
+			if (p.isPlayTreasures()){
+				this.gameWindow.addPlayTreasuresButton();
+			}
+			if (p.isEndActionPhase()){
+				this.gameWindow.addEndActionPhaseButton();
+			}
+			break;
 		case END_TRASH_MODE:
 			this.gameWindow.removeStopTrashButton();
+			break;
+		case REMOVE_EXTRA_TABLE:
+			this.gameWindow.removeTableComponents();
 			break;
 		case SHOW_END_REACTION_MODE:
 			this.gameWindow.addEndReactionModeButton();

@@ -26,7 +26,7 @@ import com.tpps.ui.components.GameBackground;
 
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
-	static GFButton closeButton, endActionPhase, playTreasures, endTurn;
+	static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack;
 	private static GameWindow instance;
 
 	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage, displayImageBuys, displayImageActions,
@@ -88,6 +88,8 @@ public class GameWindow extends JFrame {
 				"Play Treasures");
 		stopDiscard = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Discard");
 		stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Trash");
+		takeCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Take Cards");
+		putBack = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Put Back");
 		discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Discard Deck");
 		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
 		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
@@ -145,6 +147,7 @@ public class GameWindow extends JFrame {
 		this.framework.addComponent(buy);
 
 		this.framework.addComponent(endActionPhase);
+		this.framework.removeComponent(playTreasures);
 
 		for (Iterator<Card> iterator = this.middleCards.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
@@ -498,6 +501,26 @@ public class GameWindow extends JFrame {
 		framework.addComponent(playTreasures);
 		this.repaint();
 	}
+	
+	public void removeEndActionPhaseButton() {
+		framework.removeComponent(endActionPhase);		
+	}
+	
+	public void addEndActionPhaseButton() {
+		framework.addComponent(endActionPhase);
+	}
+ 	
+	public void removePlayTreasuresButton() {
+		framework.removeComponent(playTreasures);
+	}	
+
+	public void addEndTurnButton() {
+		framework.addComponent(endTurn);
+	}
+	
+	public void removeEndTurnButton() {
+		framework.removeComponent(endTurn);
+	}	
 
 	public void addStopDiscardButton() {
 		framework.addComponent(stopDiscard);
@@ -516,6 +539,14 @@ public class GameWindow extends JFrame {
 	public void removeStopTrashButton() {
 		framework.removeComponent(this.stopTrash);
 	}
+	
+	public void addPutBackButton() {
+		framework.addComponent(putBack);
+	}
+	
+	public void addTakeCardsButton() {
+		framework.addComponent(takeCards);
+	}
 
 	public void addEndReactionModeButton() {
 		framework.addComponent(this.endReactions);
@@ -525,11 +556,11 @@ public class GameWindow extends JFrame {
 		framework.addComponent(this.discardDeck);
 	}
 
-	public void playTreasures() {
+	public void addPlayTreasuresButton() {
 		framework.removeComponent(playTreasures);
 	}
 
-	public void endTurn() {
+	public void addActionPhaseButton() {
 		framework.addComponent(endActionPhase);
 	}
 

@@ -9,9 +9,9 @@ import com.tpps.application.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketEnable extends Packet {
+public class PacketRemoveExtraTable extends Packet {
 
-	private static final long serialVersionUID = 2897016123058493933L;
+	private static final long serialVersionUID = 6122808614252399592L;
 
 
 	/**
@@ -20,8 +20,8 @@ public class PacketEnable extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketEnable() {		
-		super(PacketType.ENABLE);
+	public PacketRemoveExtraTable() {		
+		super(PacketType.REMOVE_EXTRA_TABLE);
 	}
 
 

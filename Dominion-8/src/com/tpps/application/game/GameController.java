@@ -14,7 +14,10 @@ import com.tpps.application.network.game.TooMuchPlayerException;
 import com.tpps.application.network.gameSession.packets.PacketEnable;
 import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketEnableOthers;
+import com.tpps.application.network.gameSession.packets.PacketPutBackCards;
+import com.tpps.application.network.gameSession.packets.PacketSendRevealCards;
 import com.tpps.application.network.gameSession.packets.PacketShowEndReactions;
+import com.tpps.application.network.gameSession.packets.PacketTakeCards;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -150,7 +153,7 @@ public class GameController {
 		}
 		return false;
 		
-	}
+	}	
 
 	/**
 	 * 
@@ -268,6 +271,28 @@ public class GameController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public synchronized void revealCardAll() {
+		System.out.println("REVEAL: ");
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			player.setRevealMode();
+			player.getRevealList().add(player.getDeck().removeSaveFromDrawPile());
+			try {
+				GameServer.getInstance().sendMessage(player.getPort(), new PacketTakeCards(player.getClientID()));
+				GameServer.getInstance().sendMessage(player.getPort(), new PacketPutBackCards(player.getClientID()));
+				GameServer.getInstance().sendMessage(player.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(player.getRevealList())));
+				GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
+		
+//		GameServer.getInstance().sendMessage(port, 
+//				new PacketSendHandCards(revealList));
 	}
 
 	/**

@@ -15,7 +15,6 @@ import com.tpps.application.network.gameSession.packets.PacketDisable;
 import com.tpps.application.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
-import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketSendRevealCards;
 import com.tpps.application.network.gameSession.packets.PacketStartDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketStartTrashMode;
@@ -39,9 +38,9 @@ public class Player {
 	private int buys;
 	private int coins;
 	private int gainValue;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice;
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode;
 	private Tuple<CardAction> discardOrTrashAction;
-	private LinkedList<Card> playedCards, discardList;
+	private LinkedList<Card> playedCards, discardList, revealList;
 
 	/**
 	 * @param deck
@@ -55,6 +54,7 @@ public class Player {
 		this.reactionMode = false;
 		this.gainMode = false;
 		this.discardList = new LinkedList<Card>();
+		this.revealList = new LinkedList<Card>();
 		this.deck = deck;
 		this.id = playerID++;
 		this.actions = GameConstant.INIT_ACTIONS;
@@ -123,6 +123,25 @@ public class Player {
 	 */
 	public boolean isReactionMode() {
 		return reactionMode;
+	}
+	
+	
+	/**
+	 * 
+	 * @return if the revealMode is set or not
+	 */
+	public boolean isRevealMode() {
+		return revealMode;
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @return a list of ids of the cards which can be revealed
+	 */
+	public LinkedList<Card> getRevealList() {
+		return revealList;
 	}
 
 	/**
@@ -231,12 +250,32 @@ public class Player {
 	public void setCoins(int coins) {
 		this.coins = coins;
 	}
+	
+	public void setRevealMode() {
+		this.revealMode = true;
+	}
 
 	/**
 	 * 
 	 */
 	public void setReactionMode() {
 		this.reactionMode = true;
+	}
+	
+	public void takeRevealedCardsSetRevealModeFalse() {
+
+
+		CollectionsUtil.appendListToList(revealList, getDeck().getDiscardPile());
+		this.revealMode = false;
+		revealList = new LinkedList<Card>();
+	}
+	
+	public void putBackCards() {
+
+
+		CollectionsUtil.appendListToList(revealList, getDeck().getDrawPile());
+		this.revealMode = false;
+		revealList = new LinkedList<Card>();
 	}
 
 	/**
@@ -478,13 +517,16 @@ public class Player {
 				break;
 			case REVEAL_CARD:
 				System.out.println("REVEAL: " + serverCard.getActions().get(CardAction.REVEAL_CARD));
-				LinkedList<String> revealList = new LinkedList<String>();
 				
-				revealList.add(getDeck().removeSaveFromDrawPile().getId());
-				System.out.println(Arrays.toString(revealList.toArray()));
-				GameServer.getInstance().sendMessage(port, new PacketSendRevealCards(revealList));
+				this.revealMode = true;
+				revealList.add(getDeck().removeSaveFromDrawPile());
+				
+				GameServer.getInstance().sendMessage(port, new PacketSendRevealCards(CollectionsUtil.getCardIDs(revealList)));
 //				GameServer.getInstance().sendMessage(port, 
 //						new PacketSendHandCards(revealList));
+				break;
+			case REVEAL_CARD_ALL:
+				GameServer.getInstance().getGameController().revealCardAll();
 				break;
 			case CHOOSE_CARD_PLAY_TWICE:
 				this.actions++;
