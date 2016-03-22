@@ -55,22 +55,26 @@ public class LoginPacketHandler extends PacketHandler{
 		switch(packet.getType()){
 		case LOGIN_CHECK_REQUEST: //check username, if valid genereate SESSION ID and send to SessionServer
 			PacketLoginCheckRequest pac = (PacketLoginCheckRequest) packet;
-			String salt = SQLOperations.getSaltForLogin(pac.getUsername());
+			System.out.println(pac.getUsername());
+			
+			String nickname = SQLOperations.getNicknameFromEmail(pac.getUsername());		
+			String salt = SQLOperations.getSaltForLogin(nickname);
+			
 
 			//System.out.println("salt aus db: " + salt);
 			try {
 				Password pw = new Password(pac.getHashedPW(), salt);
 				pw.createHashedPassword();
 				String doublehashed = pw.getHashedPassword();
-				waitingForSessionAnswer.put(pac.getUsername(), port);
-				if(SQLOperations.rightDoubleHashedPassword(pac.getUsername(), doublehashed)){
+				waitingForSessionAnswer.put(nickname, port);
+				if(SQLOperations.rightDoubleHashedPassword(nickname, doublehashed)){
 					System.out.println("calculated hash match with hash out of the database");
-					SessionPacketSenderAPI.sendGetRequest(sessionclient, pac.getUsername(), new SuperCallable<PacketSessionGetAnswer>() {						
+					SessionPacketSenderAPI.sendGetRequest(sessionclient, nickname, new SuperCallable<PacketSessionGetAnswer>() {						
 						@Override
 						public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer answer) {							
 							PacketLoginCheckAnswer checkAnswer = new PacketLoginCheckAnswer(pac, true, answer.getLoginSessionID());
 							try {
-								server.sendMessage(waitingForSessionAnswer.remove(pac.getUsername()), checkAnswer);
+								server.sendMessage(waitingForSessionAnswer.remove(nickname), checkAnswer);
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
@@ -116,7 +120,7 @@ public class LoginPacketHandler extends PacketHandler{
 			} catch (IOException e) {			
 				e.printStackTrace();
 			}
-			System.out.println("finished creating an Account");
+			System.out.println("finished a creating account procedure");
 			System.out.println("----------------------------");
 			break;
 		default:break;
