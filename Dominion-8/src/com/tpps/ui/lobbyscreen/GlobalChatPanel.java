@@ -25,12 +25,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.ui.statisticsscreen.StatisticsScreen;
 
 public class GlobalChatPanel extends JPanel{
 	
 	private JTextArea textbox;
 	private JScrollPane scrollpane;
-	private LobbyScreen parent;
+	private LobbyScreen parentLobby;
+	private StatisticsScreen parentStat;
 	private JTextField chatInputLine;
 	private BufferedImage blackBeauty;
 	private Font font;
@@ -45,7 +47,16 @@ public class GlobalChatPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	public GlobalChatPanel(LobbyScreen parent) {
-		this.parent = parent;
+		this.parentLobby = parent;
+		this.createComponents();
+	}
+	
+	public GlobalChatPanel(StatisticsScreen parent){
+		this.parentStat = parent;
+		this.createComponents();
+	}
+	
+	private void createComponents(){
 		this.setVisible(true);
 		this.setOpaque(false);
 		this.setLayout(new BorderLayout());
@@ -60,8 +71,8 @@ public class GlobalChatPanel extends JPanel{
 		
 	//	this.testChatInput();
 
-		this.revalidate();
-		parent.revalidate();
+	//	this.revalidate();
+	//	parentLobby.revalidate();
 	}
 	
 	public void testChatInput(){
@@ -187,7 +198,7 @@ public class GlobalChatPanel extends JPanel{
 	}
 	
 	public LobbyScreen getParentX(){
-		return this.parent;
+		return this.parentLobby;
 	}
 	
 	private class ChatMessageListener implements ActionListener{
