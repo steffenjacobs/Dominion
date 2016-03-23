@@ -9,6 +9,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -26,6 +27,7 @@ public class StatisticsBoard extends JPanel{
 	Object columnNames[] = { "Column One", "Column Two", "Column Three"};
 	
 	public StatisticsBoard() {
+		rowData = this.initRowData();
 		this.setVisible(true);
 		this.setOpaque(false);
 		this.setLayout(new BorderLayout());
@@ -37,9 +39,40 @@ public class StatisticsBoard extends JPanel{
 		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_END);
 	}
 	
-	private JTable createTable(){
+	private String[][] initRowData(){
+		String[][] data = new String[1000][3];
+		for (int i = 0; i < data.length; i++) {
+			for (int j = 0; j < data[i].length; j++) {
+				data[i][j] = "Row_" + i + " Column_" + j ;
+			}
+		}
+		return data;
+	}
+	
+	private JScrollPane createTable(){
 		this.loadImage();
 		JTable table = new JTable(rowData, columnNames){
+			private static final long serialVersionUID = 1L;
+
+//			@Override
+//			public void paint(Graphics g) {
+//				g.drawImage(blackBeauty, 0, 0, null);
+//				super.paint(g);
+//			}
+			
+//			@Override
+//			public TableCellRenderer getCellRenderer(int row, int column) {
+//				return renderer;	//returns custom cell renderererer
+//			}
+		};
+		table.setOpaque(false);
+		((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);
+		table.setForeground(Color.WHITE);
+		table.setFocusable(false);
+		table.setEnabled(false);
+		
+		JScrollPane pane = new JScrollPane(table){
+
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -48,15 +81,21 @@ public class StatisticsBoard extends JPanel{
 				super.paint(g);
 			}
 		};
-		table.setOpaque(false);
-		((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);
-		table.setForeground(Color.WHITE);
-		table.setFocusable(false);
-
-//		JTable in scrollpane, set opaque false ;)		
-//		scrollPane.setOpaque(false);
-//		scrollPane.getViewport().setOpaque(false);
-		return table;
+		pane.setOpaque(false);
+		pane.setVisible(true);
+		pane.getVerticalScrollBar().setOpaque(false);
+		pane.getViewport().setOpaque(false);
+		
+//		JTableHeader header = new JTableHeader(){
+//			@Override
+//			public void paint(Graphics g) {
+//				g.drawImage(blackBeauty, 0, 0, null);
+//				super.paint(g);
+//			}
+//		};
+//		header.setForeground(Color.WHITE);
+		
+		return pane;
 	}
 	
 	private void loadImage(){
@@ -67,4 +106,5 @@ public class StatisticsBoard extends JPanel{
 			e.printStackTrace();
 		}	
 	}
+	
 }
