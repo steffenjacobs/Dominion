@@ -289,7 +289,7 @@ public class Player {
 	}
 	
 	public void resetThief() {
-		this.thief = false;;
+		this.thief = false;
 		this.reactionCard = false;
 		this.reactionMode = false;
 		this.revealMode = false;
