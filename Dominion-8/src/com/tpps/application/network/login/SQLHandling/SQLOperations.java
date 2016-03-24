@@ -80,6 +80,23 @@ public class SQLOperations {
 		}
 	}
 	
+	public static String getNicknameFromEmail(String emailOrNickname){
+		if(emailOrNickname.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")){
+			try {
+				PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT nickname FROM accountdetails WHERE email = ?");
+				stmt.setString(1, emailOrNickname);
+				ResultSet rs = stmt.executeQuery();
+				rs.next();
+				return rs.getString("nickname");
+			} catch (SQLException e) {			
+				e.printStackTrace();
+			}
+		}else{
+			return emailOrNickname;
+		}
+		return emailOrNickname;
+	}
+	
 	/**
 	 * @author jhuhn - Johannes Huhn
 	 *  @param nickname plaintext representation of the claimed username,
@@ -104,7 +121,7 @@ public class SQLOperations {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Nickname already in use, Primary Key vialotion");
-			e.printStackTrace();
+		//	e.printStackTrace();
 			return 2;			
 		}
 		System.out.println("Account " + nickname + " created successful");		
@@ -157,19 +174,12 @@ public class SQLOperations {
 	 * @return a String representation of the requested salt, null for failure
 	 */
 	public static String getSaltForLogin(String nickname){
-		PreparedStatement stmt = null;
-		String column = "";
-		if(nickname.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-						+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")){
-			column = "email";
-		}else{
-			column = "nickname";
-		}		
+		PreparedStatement stmt = null;	
 		try{
-				stmt = SQLHandler.getConnection().prepareStatement("SELECT salt FROM accountdetails WHERE " + column + " = ?");	
-				stmt.setString(1, nickname);
-				ResultSet rs = stmt.executeQuery();
-				rs.next();
+			stmt = SQLHandler.getConnection().prepareStatement("SELECT salt FROM accountdetails WHERE nickname = ?");	
+			stmt.setString(1, nickname);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
 			return rs.getString("salt");
 		}catch (SQLException e){			
 			System.err.println("Error by getting salt for your account verification \n Maybe nickname " + nickname + " doesn't exist \n");

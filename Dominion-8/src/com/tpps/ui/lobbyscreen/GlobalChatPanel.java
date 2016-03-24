@@ -7,8 +7,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
@@ -25,12 +23,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.ui.statisticsscreen.StatisticsScreen;
 
 public class GlobalChatPanel extends JPanel{
 	
 	private JTextArea textbox;
 	private JScrollPane scrollpane;
-	private LobbyScreen parent;
+	private LobbyScreen parentLobby;
+	private StatisticsScreen parentStat;
 	private JTextField chatInputLine;
 	private BufferedImage blackBeauty;
 	private Font font;
@@ -45,7 +45,19 @@ public class GlobalChatPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	public GlobalChatPanel(LobbyScreen parent) {
-		this.parent = parent;
+		this.parentLobby = parent;
+		this.createComponents();
+	}
+	
+	public GlobalChatPanel(StatisticsScreen parent){
+		this.parentStat = parent;
+		this.createComponents();
+	}
+	
+	/**
+	 * this method creates all UI components and put them into a BoderLayout
+	 */
+	private void createComponents(){
 		this.setVisible(true);
 		this.setOpaque(false);
 		this.setLayout(new BorderLayout());
@@ -60,10 +72,13 @@ public class GlobalChatPanel extends JPanel{
 		
 	//	this.testChatInput();
 
-		this.revalidate();
-		parent.revalidate();
+	//	this.revalidate();
+	//	parentLobby.revalidate();
 	}
 	
+	/**
+	 * This method is for testing purposes only. It create 10000 teststrings and put them into the global chat
+	 */
 	public void testChatInput(){
 		new Thread(() -> {
 			for (int i = 0; i < 10000; i++) {
@@ -72,6 +87,11 @@ public class GlobalChatPanel extends JPanel{
 		}).start();	
 	}
 	
+	/**
+	 * This method creates the overall chatinput area. It centers the textfield bar 
+	 * and creates gaps from the chatinputbar to the frame 
+	 * @return a JPanel with a chatbar and a send button
+	 */
 	private JPanel createPanelForChatInput(){
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setOpaque(false);
@@ -86,6 +106,10 @@ public class GlobalChatPanel extends JPanel{
 		return panel;
 	}
 	
+	/**
+	 * this method puts the chatbar and the send button into a panel without margin or gaps
+	 * @return a panel with a chatbar and a sendbutton
+	 */
 	private JPanel createChatInputArea(){	
 		chatInputLine = this.initChatInputLine();
 		sendButton = this.initSendButton();
@@ -99,6 +123,11 @@ public class GlobalChatPanel extends JPanel{
 		return center;
 	}
 	
+	/**
+	 * This method initializes and creates the send button object.
+	 * The button delivers a semitransparent look
+	 * @return a JButton with a white text 'SEND' a semitransparent black background
+	 */
 	private JButton initSendButton(){
 		sendButton = new JButton("SEND"){
 			private static final long serialVersionUID = 1L;
@@ -113,10 +142,14 @@ public class GlobalChatPanel extends JPanel{
 		sendButton.setContentAreaFilled(false);
 		sendButton.setBorderPainted(true);
 		sendButton.setOpaque(false);
-		sendButton.addActionListener(new ChatMessageListener());
+		sendButton.addActionListener(new SendButtonListener());
 		return sendButton;
 	}
 	
+	/**
+	 * This method initializes and create the chatinputbar
+	 * @return a JTextField with semitransparent look and white characters, used to type in chatmessages
+	 */
 	private JTextField initChatInputLine(){
 		chatInputLine = new JTextField("chat"){
 			private static final long serialVersionUID = 1L;
@@ -137,6 +170,10 @@ public class GlobalChatPanel extends JPanel{
 		return chatInputLine;
 	}
 	
+	/**
+	 * This method creates and initizalizes the globalchatarea. The globalchatarea is represented in textbox which is embedded in
+	 * a scrollpane. The globalchatarea is in a semitransparent look with white characters
+	 */
 	private void createScrollingChatArea(){
 		
 		try {
@@ -173,7 +210,8 @@ public class GlobalChatPanel extends JPanel{
 	}
 	
 	/**
-	 * methods uses thread.sleeep() because the scrollpane is not as a fast as Usain Bolt.
+	 * This method appends a chatmessage to the globalchat on the UI.
+	 * The carret will be set to the maximum (last chatmessage)
 	 * @param chatmessage
 	 */
 	public synchronized void appendChat(String chatmessage) {
@@ -187,10 +225,15 @@ public class GlobalChatPanel extends JPanel{
 	}
 	
 	public LobbyScreen getParentX(){
-		return this.parent;
+		return this.parentLobby;
 	}
 	
-	private class ChatMessageListener implements ActionListener{
+	/**
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 *
+	 */
+	private class SendButtonListener implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
