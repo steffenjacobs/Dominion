@@ -24,6 +24,13 @@ import com.tpps.ui.components.DisplayValue;
 import com.tpps.ui.components.GFButton;
 import com.tpps.ui.components.GameBackground;
 
+/**
+ * Main GUI Window where all compenents are merged together and ready for GamePlay
+ * 
+ *  @author Nishit Agrawal - nagrawal, Lukas Adler - ladler
+ *  
+ */
+
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
 	static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack;
@@ -43,6 +50,14 @@ public class GameWindow extends JFrame {
 	public static GameWindow getInstance() {
 		return instance;
 	}
+
+	/**
+	 * 
+	 * a constructor where the windowsize and functionality is set. Every Image
+	 * is loaded here.
+	 * 
+	 * @throws IOException
+	 */
 
 	public GameWindow() throws IOException {
 		instance = this;
@@ -118,6 +133,14 @@ public class GameWindow extends JFrame {
 
 	}
 
+	/**
+	 * a method to load Image
+	 * 
+	 * @param im
+	 * @param resource
+	 * @return
+	 */
+
 	private BufferedImage loadingImage(BufferedImage im, String resource) {
 		try {
 			im = ImageIO.read(getClass().getClassLoader().getResourceAsStream(resource));
@@ -128,6 +151,10 @@ public class GameWindow extends JFrame {
 		return im;
 
 	}
+
+	/**
+	 * resetting method for the value button to its initial values
+	 */
 
 	public void reset() {
 
@@ -158,6 +185,12 @@ public class GameWindow extends JFrame {
 		this.repaint();
 	}
 
+	/**
+	 * action cards which are on the table. The basic limit 10 cards
+	 * 
+	 * @param table
+	 */
+
 	public void tableActionCards(LinkedHashMap<String, SerializedCard> table) {
 		LinkedList<String> actionCardlds = new LinkedList<>(table.keySet());
 		double shift = 0.295;
@@ -181,10 +214,9 @@ public class GameWindow extends JFrame {
 			SerializedCard serializedCard = table.get(actionCardlds.get(i));
 
 			// // Example For nishit
-			 Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
-			 matcher.find();
-			 String number = actionCardlds.get(i).substring(matcher.start(),
-			 matcher.end());
+			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
+			matcher.find();
+			String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
 
 			if (i < 5) {
 				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
@@ -214,10 +246,17 @@ public class GameWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * for special action cards created. Example Spy card... New Table where the
+	 * player/opponent pick cards.
+	 * 
+	 * @param cards
+	 */
+
 	public void extraTable(HashMap<String, SerializedCard> cards) {
 		table = new GameBackground(0.31, 0.01, 0.38, 0.38, 15, tableImage, framework);
 		framework.addComponent(table);
-		
+
 		int k = 16;
 		double sub = cards.size();
 		double shift = ((0.35 - (sub * 0.05))) / sub;
@@ -270,6 +309,13 @@ public class GameWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * 
+	 * creating coin cards on the right hand side with 90 degree rotation.
+	 * 
+	 * @param coins
+	 */
+
 	public void coinCards(HashMap<String, SerializedCard> coins) {
 		LinkedList<String> actionCardlds = new LinkedList<>(coins.keySet());
 		double shift = -0.05;
@@ -289,10 +335,9 @@ public class GameWindow extends JFrame {
 
 		for (int i = 0; i < coins.size(); i++) {
 			System.out.println("id actionCards : " + actionCardlds.get(i));
-			 Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
-			 matcher.find();
-			 String number = actionCardlds.get(i).substring(matcher.start(),
-			 matcher.end());
+			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
+			matcher.find();
+			String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
 
 			SerializedCard serializedCard = coins.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
@@ -309,6 +354,12 @@ public class GameWindow extends JFrame {
 		}
 
 	}
+
+	/**
+	 * played cards by the user. They will appear in the middle of the board
+	 * 
+	 * @param middleCards
+	 */
 
 	public void middleCards(LinkedHashMap<String, SerializedCard> middleCards) {
 		LinkedList<String> actionCardlds = new LinkedList<>(middleCards.keySet());
@@ -363,6 +414,12 @@ public class GameWindow extends JFrame {
 			}
 		}
 	}
+
+	/**
+	 * all hand cards from the player. (coins, victory, actions)
+	 * 
+	 * @param handCards
+	 */
 
 	public void handCards(LinkedHashMap<String, SerializedCard> handCards) {
 		LinkedList<String> actionCardIds = new LinkedList<>(handCards.keySet());
@@ -426,6 +483,13 @@ public class GameWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * all victory cards are created here on the top left corner. 90° Rotation
+	 * as well..
+	 * 
+	 * @param victory
+	 */
+
 	public void victoryCards(HashMap<String, SerializedCard> victory) {
 		LinkedList<String> actionCardlds = new LinkedList<>(victory.keySet());
 		double shift = -0.05;
@@ -448,10 +512,9 @@ public class GameWindow extends JFrame {
 		for (int i = 0; i < victory.size(); i++) {
 
 			// TODO Lukas commented section. Please verify first this class.
-			 Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
-			 matcher.find();
-			 String number = actionCardlds.get(i).substring(matcher.start(),
-			 matcher.end());
+			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
+			matcher.find();
+			String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
 
 			SerializedCard serializedCard = victory.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
@@ -468,6 +531,12 @@ public class GameWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * setting the caption on coin value bar.
+	 * 
+	 * @param caption
+	 */
+
 	public void setCaptionCoins(String caption) {
 		// framework.removeComponent(coin);
 		// coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1,
@@ -477,89 +546,171 @@ public class GameWindow extends JFrame {
 		coin.renewCaption(caption);
 	}
 
+	/**
+	 * setting the caption on action value bar.
+	 * 
+	 * @param caption
+	 */
+
 	public void setCaptionActions(String caption) {
 		action.renewCaption(caption);
 		System.out.println("setActions: " + caption);
 		// action.renewCaption(caption);
 	}
 
+	/**
+	 * setting the caption on buy value bar.
+	 * 
+	 * @param caption
+	 */
+
 	public void setCaptionBuys(String caption) {
 		buy.renewCaption(caption);
 		System.out.println("setBuys: " + caption);
 	}
 	
-	public void removeTableComponents(){
+	/**
+	 *clearing the extra table if needed. 
+	 * 
+	 */
+	
+	public void removeTableComponents() {
 		framework.removeComponent(table);
 		for (int i = 0; i < extraTableCards.size(); i++) {
 			framework.removeComponent(extraTableCards.get(i));
 		}
 		framework.removeComponent(table);
 	}
+	
+	/**
+	 * a simple button handler to end the action phase
+	 * 
+	 */
 
 	public void endActionPhase() {
 		framework.removeComponent(endActionPhase);
 		framework.addComponent(playTreasures);
 		this.repaint();
 	}
+
+	/**
+	 * removing the endActionPhase Button
+	 */
 	
 	public void removeEndActionPhaseButton() {
-		framework.removeComponent(endActionPhase);		
+		framework.removeComponent(endActionPhase);
 	}
 	
+	/**
+	 * adding actionPhase Button
+	 */
+
 	public void addEndActionPhaseButton() {
 		framework.addComponent(endActionPhase);
 	}
- 	
+	
+	/**
+	 * removing the PlayTreasure Button
+	 */
+
 	public void removePlayTreasuresButton() {
 		framework.removeComponent(playTreasures);
-	}	
+	}
+	
+	/**
+	 * adding EndTurn Button
+	 */
 
 	public void addEndTurnButton() {
 		framework.addComponent(endTurn);
 	}
 	
+	/**
+	 * removing EndTurn Button
+	 */
+
 	public void removeEndTurnButton() {
 		framework.removeComponent(endTurn);
-	}	
+	}
+	
+	/**
+	 * adding StopDiscard Button
+	 */
 
 	public void addStopDiscardButton() {
 		framework.addComponent(stopDiscard);
 		this.repaint();
 	}
+	
+	/**
+	 * removing StopDiscard Button
+	 */
 
 	public void removeStopDiscardButton() {
 		framework.removeComponent(stopDiscard);
 		this.repaint();
 	}
 
+	/**
+	 * adding StopTrash Button
+	 */
+	
 	public void addStopTrashButton() {
 		framework.addComponent(this.stopTrash);
 	}
+	
+	/**
+	 * removing StopTrash Button
+	 */
 
 	public void removeStopTrashButton() {
 		framework.removeComponent(this.stopTrash);
 	}
+
+	/**
+	 * adding PutBack Button
+	 */
 	
 	public void addPutBackButton() {
 		framework.addComponent(putBack);
 	}
+
+	/**
+	 * adding TakeCards Button
+	 */
 	
 	public void addTakeCardsButton() {
 		framework.addComponent(takeCards);
 	}
+	
+	/**
+	 * adding EndReactionMode Button
+	 */
 
 	public void addEndReactionModeButton() {
 		framework.addComponent(this.endReactions);
 	}
+	
+	/**
+	 * adding DiscardDeck Button
+	 */
 
 	public void addDiscardDeckButton() {
 		framework.addComponent(this.discardDeck);
 	}
+	
+	/**
+	 * adding PlayTreasures Button
+	 */
 
 	public void addPlayTreasuresButton() {
 		framework.removeComponent(playTreasures);
 	}
 
+	/**
+	 * adding ActionPhase Button
+	 */
+	
 	public void addActionPhaseButton() {
 		framework.addComponent(endActionPhase);
 	}

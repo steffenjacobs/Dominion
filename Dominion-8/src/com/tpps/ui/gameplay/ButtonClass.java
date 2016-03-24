@@ -19,9 +19,33 @@ import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.GFButton;
 
+/**
+ * GameGui Button Class
+ * 
+ * @author Nishit Agrawal - nagrawal
+ *
+ */
+
+
+
 public class ButtonClass extends GFButton {
 	private static final long serialVersionUID = 1520424079770080041L;
 	private Image original;
+	
+	/**
+	 * constructor calling the GraphicFramework and drawing the buttons
+	 * 
+	 * @param relativeX
+	 * @param relativeY
+	 * @param relativeWidth
+	 * @param relativeHeight
+	 * @param absWidth
+	 * @param absHeight
+	 * @param _layer
+	 * @param sourceImage
+	 * @param _parent
+	 * @param caption
+	 */
 
 	public ButtonClass(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
@@ -36,19 +60,30 @@ public class ButtonClass extends GFButton {
 		return null;// return new TestButton(super.get);
 	}
 
-	@Override
+	/**
+	 * setting back the original image.
+	 */
+	
 	public void onMouseEnter() {
 		super.updatedBufferedImage(original);
 
 	}
 
-	@Override
+	/**
+	 * alpha animation added.
+	 */
+	
 	public void onMouseExit() {
 		super.updatedBufferedImage(GraphicsUtil.setAlpha(super.getBufferedImage(), .6f));
 
 	}
 
-	@Override
+
+	/**
+	 * Event handling when button is clicked for the specefic type of button.
+	 * 
+	 */
+	
 	public void onMouseClick() {
 
 		if (this.getCaption().equals("")) {
@@ -150,13 +185,18 @@ public class ButtonClass extends GFButton {
 		
 	}
 
-	@Override
+	/**
+	 * checking
+	 */
 	public void onMouseDrag() {
 		System.out.println("dragged " + this.toString());
 
 	}
 
-	@Override
+	/**
+	 * checking buttons reaction.
+	 */
+	
 	public String toString() {
 		return "@" + System.identityHashCode(this) + " - " + super.getLocation() + " , " + super.getDimension() + " , "
 				+ super.getLayer() + " , " + super.getRenderdImage() + " , " + super.getParent() + " , " + super.getCaption();

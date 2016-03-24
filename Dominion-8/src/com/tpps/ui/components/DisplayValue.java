@@ -12,11 +12,33 @@ import com.tpps.technicalServices.util.Loader;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 
+/**
+ * 
+ * @author Nishit Agrawal - nagrawal
+ *
+ */
+
 public final class DisplayValue extends GameObject {
 
 	private static final long serialVersionUID = 4684563120751528743L;
 	private String caption;
 	private Font customFont;
+	
+	/**
+	 * 
+	 * calling the GraphicFramework and drawing the display value panel.
+	 * 
+	 * @param relativeLocX
+	 * @param relativeLocY
+	 * @param relativeWidth
+	 * @param relativeHeight
+	 * @param absWidth
+	 * @param absHeight
+	 * @param _layer
+	 * @param sourceImage
+	 * @param _parent
+	 * @param caption
+	 */
 
 	public DisplayValue(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
 			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
@@ -48,7 +70,10 @@ public final class DisplayValue extends GameObject {
 	public void onMouseDrag() {
 	}
 
-	@Override
+	/**
+	 * 
+	 * setting a special font for the buttons and the size.
+	 */
 	public void onResize(int absWidth, int absHeight) {
 		try {
 			customFont = Loader.importFont();
@@ -67,6 +92,12 @@ public final class DisplayValue extends GameObject {
 	public String getCaption() {
 		return caption;
 	}
+	
+	/**
+	 * a method to renew the caption on the display value panel 
+	 * 
+	 * @param caption
+	 */
 
 	public void renewCaption(String caption) {
 		this.caption = caption;
