@@ -22,7 +22,7 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
- * @author Nicolas Wipfler
+ * @author Nicolas Wipfler, Lukas Adler
  */
 public class Player {
 
@@ -38,9 +38,9 @@ public class Player {
 	private int buys;
 	private int coins;
 	private int gainValue;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode;
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief;
 	private Tuple<CardAction> discardOrTrashAction;
-	private LinkedList<Card> playedCards, discardList, revealList;
+	private LinkedList<Card> playedCards, discardList, revealList, temporaryTrashPile;
 
 	/**
 	 * @param deck
@@ -53,8 +53,10 @@ public class Player {
 		this.trashMode = false;
 		this.reactionMode = false;
 		this.gainMode = false;
+		this.thief = false;
 		this.discardList = new LinkedList<Card>();
 		this.revealList = new LinkedList<Card>();
+		this.temporaryTrashPile = new LinkedList<Card>();
 		this.deck = deck;
 		this.id = playerID++;
 		this.actions = GameConstant.INIT_ACTIONS;
@@ -93,7 +95,17 @@ public class Player {
 	public void setDiscardMode() {
 		this.discardMode = true;
 	}
+	
+	public boolean isThief() {
+		return thief;
+	}
+	
+	public void setThief() {
+		this.thief = true;
+	}
 
+
+ 
 	public void setDiscardOrTrashAction(CardAction cardAction, int val) {
 		this.discardOrTrashAction = new Tuple<CardAction>(cardAction, val);
 	}
@@ -113,7 +125,7 @@ public class Player {
 	/**
 	 * @return if the discardMode is set or not
 	 */
-	public boolean getDiscardMode() {
+	public boolean isDiscardMode() {
 		return this.discardMode;
 	}
 
@@ -159,7 +171,7 @@ public class Player {
 	/**
 	 * @return if the trashMode is set or not
 	 */
-	public boolean getTrashMode() {
+	public boolean isTrashMode() {
 		return this.trashMode;
 	}
 
@@ -220,6 +232,10 @@ public class Player {
 	public LinkedList<Card> getPlayedCards() {
 		return playedCards;
 	}
+	
+	public LinkedList<Card> getTemporaryTrashPile() {
+		return this.temporaryTrashPile;
+	}
 
 	/**
 	 * new played cardsList
@@ -254,6 +270,8 @@ public class Player {
 	public void setRevealMode() {
 		this.revealMode = true;
 	}
+	
+	
 
 	/**
 	 * 
@@ -262,8 +280,23 @@ public class Player {
 		this.reactionMode = true;
 	}
 	
+	public void setReactionModeFalse() {
+		this.reactionMode = false;		
+	}
+	
+	public void setThiefFalse() {
+		this.thief = false;
+	}
+	
+	public void resetThief() {
+		this.thief = false;;
+		this.reactionCard = false;
+		this.reactionMode = false;
+		this.revealMode = false;
+		this.revealList = new LinkedList<Card>();
+	}
+	
 	public void takeRevealedCardsSetRevealModeFalse() {
-
 
 		CollectionsUtil.appendListToList(revealList, getDeck().getDiscardPile());
 		this.revealMode = false;
@@ -403,7 +436,7 @@ public class Player {
 			cardActions = getRelevantCardActions(cardActions);
 		}
 
-		System.out.println(Arrays.toString(cardActions.toArray()));
+		
 
 		Iterator<CardAction> cardIterator = cardActions.iterator();
 		if (!this.reactionMode && serverCard.getTypes().contains(CardType.ACTION)) {
@@ -464,6 +497,9 @@ public class Player {
 				break;
 			case DISCARD_OTHER_DOWNTO:
 				GameServer.getInstance().getGameController().discardOtherDownto(value);
+				break;
+			case ALL_REVEAL_CARDS_TRASH_COINS_I_CAN_TAKE_DISCARD_OTHERS:
+				GameServer.getInstance().getGameController().revealAndTakeCardsDiscardOthers();
 				break;
 			case TRASH_CARD:
 
@@ -573,12 +609,14 @@ public class Player {
 	/**
 	 * sets all flags set for the reactionMode on false
 	 */
-	private void setModesFalse() {
+	public void setModesFalse() {
 		this.discardMode = false;
 		this.trashMode = false;
 		this.reactionMode = false;
 		this.reactionCard = false;
 		this.gainMode = false;
+		this.revealMode = false;
+		this.thief = false;
 	}
 
 	/**
@@ -654,4 +692,13 @@ public class Player {
 			}
 		}
 	}
+
+	public void resetTemporaryTrashPile() {
+		this.temporaryTrashPile = new LinkedList<Card>();		
+	}
+
+	
+
+	
+	
 }

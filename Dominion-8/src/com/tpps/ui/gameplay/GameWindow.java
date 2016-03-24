@@ -26,7 +26,7 @@ import com.tpps.ui.components.GameBackground;
 
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
-	static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack;
+	static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack, takeThiefCards, putBackThiefCards;
 	private static GameWindow instance;
 
 	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage, displayImageBuys, displayImageActions,
@@ -90,6 +90,9 @@ public class GameWindow extends JFrame {
 		stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Trash");
 		takeCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Take Cards");
 		putBack = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Put Back");
+		takeThiefCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Take Thief Cards");
+		putBackThiefCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Put Back Thief Cards");
+		takeCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Temporary Trash");
 		discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Discard Deck");
 		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
 		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
@@ -562,6 +565,14 @@ public class GameWindow extends JFrame {
 
 	public void addActionPhaseButton() {
 		framework.addComponent(endActionPhase);
+	}
+	
+	public void addTakeThiefCardsButton() {
+		framework.addComponent(takeThiefCards);
+	}
+	
+	public void addPutBackThiefCardsButton() {
+		framework.addComponent(putBackThiefCards);
 	}
 
 }

@@ -12,6 +12,11 @@ import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.gameplay.GameWindow;
 
+/**
+ * 
+ * @author Lukas Adler
+ *
+ */
 public class GameStorageInterface {
 
 	GameWindow gameWindow;

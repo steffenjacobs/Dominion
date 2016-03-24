@@ -114,6 +114,12 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameWindow.removeEndActionPhaseButton();
 			this.gameWindow.removePlayTreasuresButton();
 			break;
+		case TAKE_THIEF_CARDS:
+			this.gameWindow.addTakeThiefCardsButton();
+			break;
+		case PUT_BACK_THIEF_CARDS:
+			this.gameWindow.addPutBackThiefCardsButton();
+			break;
 		case PUT_BACK:
 			this.gameWindow.addPutBackButton();
 			break;

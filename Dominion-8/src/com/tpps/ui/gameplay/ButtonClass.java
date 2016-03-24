@@ -13,7 +13,10 @@ import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.application.network.gameSession.packets.PacketEndTurn;
 import com.tpps.application.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.application.network.gameSession.packets.PacketPutBackCards;
+import com.tpps.application.network.gameSession.packets.PacketPutBackThiefCards;
 import com.tpps.application.network.gameSession.packets.PacketTakeCards;
+import com.tpps.application.network.gameSession.packets.PacketTakeThiefCards;
+import com.tpps.application.network.gameSession.packets.PacketTemporaryTrashCards;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -142,12 +145,29 @@ public class ButtonClass extends GFButton {
 				this.getParent().removeComponent(this);
 				this.getParent().removeComponent(GameWindow.takeCards);				
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
-		
+		if (this.getCaption().equals("Take Thief Cards")) {
+			GameClient gameClient = DominionController.getInstance().getGameClient();
+			try {
+				gameClient.sendMessage(new PacketTakeThiefCards());
+				this.getParent().removeComponent(GameWindow.takeThiefCards);
+				this.getParent().removeComponent(GameWindow.putBackThiefCards);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (this.getCaption().equals("Put Back Thief Cards")) {
+			GameClient gameClient = DominionController.getInstance().getGameClient();
+			try{
+				gameClient.sendMessage(new PacketPutBackThiefCards());
+				this.getParent().removeComponent(GameWindow.putBackThiefCards);
+				this.getParent().removeComponent(GameWindow.takeThiefCards);
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override

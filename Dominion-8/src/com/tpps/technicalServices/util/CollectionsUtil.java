@@ -129,6 +129,23 @@ public final class CollectionsUtil {
 	}
 	
 	/**
+	 * removes one card by the given id
+	 * @param cards
+	 * @param cardId
+	 * @return the card or null if the card was not found
+	 */
+	public static Card removeCardById(LinkedList<Card> cards, String cardId){
+		for (Iterator<Card> iterator = cards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getId().equals(cardId)){
+				cards.remove(card);
+				return card;
+			}
+		}
+		return null;
+	}
+	
+	/**
 	 * 
 	 * */
 	public static LinkedList<String> getCardIDs(LinkedList<Card> cards){

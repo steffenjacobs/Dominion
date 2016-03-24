@@ -224,7 +224,14 @@ public class CheapCardCreator {
 		cards.put("CouncilRoom", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "CouncilRoom", getImg("CouncilRoom")));
 		
-		
+//		thief
+		actions.remove(CardAction.DRAW_CARD);
+		actions.remove(CardAction.ADD_PURCHASE);
+		actions.remove(CardAction.DRAW_CARD_OTHERS);
+		actions.remove(CardAction.ALL_REVEAL_CARDS_TRASH_COINS_I_CAN_TAKE_DISCARD_OTHERS);
+		types.add(CardType.ATTACK);
+		cards.put("Thief", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 4, "Thief", getImg("Thief")));
 		
 		
 		

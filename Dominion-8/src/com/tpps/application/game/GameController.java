@@ -1,9 +1,9 @@
 package com.tpps.application.game;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
@@ -11,8 +11,8 @@ import com.tpps.application.game.card.CardType;
 import com.tpps.application.network.game.GameServer;
 import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.game.TooMuchPlayerException;
+import com.tpps.application.network.gameSession.packets.PacketDisable;
 import com.tpps.application.network.gameSession.packets.PacketEnable;
-import com.tpps.application.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.application.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.application.network.gameSession.packets.PacketPutBackCards;
 import com.tpps.application.network.gameSession.packets.PacketSendRevealCards;
@@ -35,20 +35,34 @@ public class GameController {
 
 	private LinkedList<Player> players;
 
-	private boolean gameNotFinished;
+	private boolean gameNotFinished, cardsEnabled;
 	private Player activePlayer;
 	private GameBoard gameBoard;
 	private String gamePhase;
+	private CopyOnWriteArrayList<Player> thiefList;
 
 	/**
 	 * 
 	 */
 	public GameController() {
+		this.cardsEnabled = true;
 		this.players = new LinkedList<Player>();
-
+		this.thiefList = new CopyOnWriteArrayList<Player>();
 		this.gameBoard = new GameBoard();
 
 		this.gameNotFinished = true;
+	}
+	
+	public void setCardsEnabled() {
+		this.cardsEnabled = true;
+	}
+	
+	public void setCardsDisabled() {
+		this.cardsEnabled = false;
+	}
+	
+	public boolean isCardEnabled() {
+		return this.cardsEnabled;
 	}
 
 	/**
@@ -246,6 +260,112 @@ public class GameController {
 		}
 	}
 	
+	
+	/**
+	 * let every player who hasn't a reaction card reveal two cards which are sent to the activePlayer
+	 */
+	public synchronized void revealAndTakeCardsDiscardOthers() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			player.setThief();
+			if (!player.equals(activePlayer)){
+				
+				if (player.getDeck().cardHandContainsReactionCard()) {
+					try {
+						GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketDisable());
+					} catch (IOException e1) {
+					
+						e1.printStackTrace();
+					}
+					player.setReactionCard(true);
+					player.setReactionMode();
+					player.setRevealMode();
+					try {
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
+					}
+					catch(IOException e){
+						e.printStackTrace();
+					}
+										
+					
+				}
+				else{
+					Card card = player.getDeck().removeSaveFromDrawPile();
+					if (card.getTypes().contains(CardType.TREASURE)){
+						player.getRevealList().add(card);
+					}else{
+						player.getDeck().getDiscardPile().add(card);
+					}
+					if (player.getRevealList().size() > 0){
+						thiefList.add(player);
+					}else{
+						player.setThiefFalse();						
+					}
+					
+					
+				}
+	
+				
+				
+			}
+			
+		}
+		System.out.println("im gamecontrolloer thiefList size: " + thiefList.size());
+		if (thiefList.size() > 0 ){
+		try {
+			
+			GameServer.getInstance().sendMessage(activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
+			
+		} catch (IOException e) {
+		
+			e.printStackTrace();
+		}
+		}
+		else{
+			
+		}
+	}
+	
+	public void react(Player player) {
+//		if (allReactionCardsPlayed()) {
+//			try {
+//				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketEnable());
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		player.getRevealList().add(player.getDeck().removeSaveFromDrawPile());
+		player.getRevealList().add(player.getDeck().removeSaveFromDrawPile());
+		thiefList.add(player);
+		if (thiefList.size() == 1){
+			try {
+				GameServer.getInstance().sendMessage(activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	/**
+	 * 
+	 * @return if all player have played his/ her reactionCards
+	 */
+	private boolean allReactionCardsPlayed() {
+		boolean allReactionCardsPlayedFlag = true;
+		
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.playsReactionCard()){
+				allReactionCardsPlayedFlag = false;
+					break;
+			}
+		}
+		
+		return allReactionCardsPlayedFlag;
+	}
+
 	public synchronized void drawOthers() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -466,6 +586,20 @@ public class GameController {
 	 */
 	public void endGame() {
 
+	}
+
+	
+	
+	/**
+	 * 
+	 * @return the List which shows which player have to play the thief action
+	 */
+	public CopyOnWriteArrayList<Player> getThiefList() {
+		return this.thiefList;
+	}
+	
+	public void resetThiefList() {
+		this.thiefList = new CopyOnWriteArrayList<Player>();
 	}
 
 	/**
