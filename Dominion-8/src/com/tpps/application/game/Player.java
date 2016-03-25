@@ -13,6 +13,7 @@ import com.tpps.application.network.game.GameServer;
 import com.tpps.application.network.game.SynchronisationException;
 import com.tpps.application.network.gameSession.packets.PacketDisable;
 import com.tpps.application.network.gameSession.packets.PacketDiscardDeck;
+import com.tpps.application.network.gameSession.packets.PacketDontShowEndReactions;
 import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.application.network.gameSession.packets.PacketSendRevealCards;
@@ -288,7 +289,7 @@ public class Player {
 		this.thief = false;
 	}
 	
-	public void resetThief() {
+	public void resetThiefMode() {
 		this.thief = false;
 		this.reactionCard = false;
 		this.reactionMode = false;
@@ -318,8 +319,7 @@ public class Player {
 	 * @throws IOException
 	 */
 	public void discardOrTrash(String cardID, LinkedList<Card> trashPile) throws IOException {
-		System.out.println("DiscardMode is set= " + this.discardMode);
-		System.out.println("TrashMode is set ? " + this.trashMode);
+
 		if (this.discardMode) {
 			this.getDeck().getDiscardPile().add(doAction(cardID));
 			return;
@@ -352,7 +352,6 @@ public class Player {
 	 * @throws IOException
 	 */
 	public void playCard(String cardID) throws IOException {
-		System.out.println("kein discard mode oder trash mode");
 		Card card = doAction(cardID);
 		if (card != null) {
 			this.playedCards.addLast(card);
@@ -374,7 +373,6 @@ public class Player {
 		for (Iterator<String> iterator = treasureCards.iterator(); iterator.hasNext();) {
 			String cardId = (String) iterator.next();
 			cards.add(doAction(cardId));
-			System.out.println("Treasures auf der Hand: " + cardId);
 		}
 		// this.activePlayer.getDeck().
 		// // CollectionsUtil.appendListToList(treasureCards,
@@ -425,7 +423,6 @@ public class Player {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("coins: " + coins + "buys: " + buys + "actions: " + actions);
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
 			return serverCard;
@@ -472,7 +469,6 @@ public class Player {
 					e.printStackTrace();
 				}
 
-				System.out.println(value);
 				// maybe neede
 				// switch (value.toUpperCase()) {
 				// case "CURSE":
@@ -509,7 +505,6 @@ public class Player {
 
 				} else {
 
-					System.out.println((GameServer.getInstance()));
 					((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketStartTrashMode());
 
 					this.trashMode = true;
@@ -532,13 +527,11 @@ public class Player {
 				}
 				break;
 			case TRASH_AND_GAIN_MORE_THAN:
-				System.out.println("trash and gain more than");
 				this.trashMode = true;
 				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN_MORE_THAN, Integer.parseInt(value.split("_")[0]));
 				this.gainValue = Integer.parseInt(value.split("_")[1]);				
 				break;
 			case TRASH_AND_GAIN:
-				System.out.println("trash_and_gain");
 				this.trashMode = true;
 				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN, Integer.parseInt(value.split("_")[0]));
 				this.gainValue = Integer.parseInt(value.split("_")[1]);				
@@ -552,7 +545,6 @@ public class Player {
 				this.getDeck().putBack(serverCard);
 				break;
 			case REVEAL_CARD:
-				System.out.println("REVEAL: " + serverCard.getActions().get(CardAction.REVEAL_CARD));
 				
 				this.revealMode = true;
 				revealList.add(getDeck().removeSaveFromDrawPile());
@@ -583,11 +575,10 @@ public class Player {
 		}
 
 		if (!dontRemoveFlag) {
-			System.out.println("card was removed");
 			this.getDeck().getCardHand().remove(serverCard);
 		}
 		if (this.reactionMode) {
-			System.out.println("coins: " + coins + "buys: " + buys + "actions: " + actions);
+			GameServer.getInstance().sendMessage(port, new PacketDontShowEndReactions());
 			setModesFalse();
 			GameServer.getInstance().sendMessage(port, new PacketDisable());
 			GameServer.getInstance().getGameController().checkReactionModeFinishedAndEnableGuis();
@@ -628,7 +619,6 @@ public class Player {
 		switch (this.discardOrTrashAction.getFirstEntry()) {
 		case DISCARD_AND_DRAW:
 			if (this.discardOrTrashAction.getSecondEntry() == -1) {
-				System.out.println("Discard and Draw");
 				this.getDeck().getCardHand().remove(card);
 				discardList.add(this.getDeck().removeSaveFromDrawPile());
 				LinkedList<Card> cardHand = this.getDeck().getCardHand();
@@ -677,9 +667,8 @@ public class Player {
 			((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketEndTrashMode());
 		}
 		this.getDeck().getCardHand().remove(card);
-		System.out.println("card added to trashPile" + card);
+
 		this.discardOrTrashAction.decrementSecondEntry();
-		System.out.println("second entry_: " + this.discardOrTrashAction.getSecondEntry());
 		if (this.discardOrTrashAction.getSecondEntry() == 0) {
 			this.trashMode = false;
 			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_AND_GAIN)){				
@@ -688,7 +677,6 @@ public class Player {
 			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_AND_GAIN_MORE_THAN)){
 				this.gainMode = true;
 				this.gainValue += card.getCost();
-				System.out.println("new gainValue: " + this.gainValue);
 			}
 		}
 	}

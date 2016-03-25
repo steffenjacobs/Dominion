@@ -22,7 +22,7 @@ import com.tpps.technicalServices.logger.MsgType;
  */
 public class Server {
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	private ServerSocket serverSocket;
 	private PacketHandler handler;

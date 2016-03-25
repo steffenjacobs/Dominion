@@ -144,6 +144,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case SHOW_END_REACTION_MODE:
 			this.gameWindow.addEndReactionModeButton();
 			break;
+		case DONT_SHOW_END_REACTION_MODE:
+			this.gameWindow.removeEndReactionModeButton();
+			break;
 		case DISCARD_DECK:
 			this.gameWindow.addDiscardDeckButton();
 			break;

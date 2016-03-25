@@ -144,6 +144,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 				player1.setReactionCard(false);
 				if (this.server.getGameController().getActivePlayer().isThief()) {
 					player1.setReactionModeFalse();
+					this.server.sendMessage(player1.getPort(), new PacketDisable());
+					this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 					this.server.getGameController().react(player1);
 				}
 
@@ -167,7 +169,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 		LinkedList<Player> players = this.server.getGameController().getPlayers();
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
+			System.out.println("discardPile size davor: " + player.getDeck().getDiscardPile().size());
 			CollectionsUtil.appendListToList(player.getTemporaryTrashPile(), player.getDeck().getDiscardPile());
+			System.out.println("discardPile size danach: " + player.getDeck().getDiscardPile().size());
 			player.resetTemporaryTrashPile();
 		}
 		try {
@@ -226,13 +230,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 		if (player.isThief()) {
 			Player reactivePlayer = this.server.getGameController().getThiefList().get(0);
 			System.out.println("size: " + this.server.getGameController().getThiefList().size());
+			
 			if (CollectionsUtil.getCardIDs(reactivePlayer.getRevealList()).contains(cardID)) {
 				reactivePlayer.getTemporaryTrashPile()
 						.add(CollectionsUtil.removeCardById(reactivePlayer.getRevealList(), cardID));
 				CollectionsUtil.appendListToList(reactivePlayer.getRevealList(),
 						reactivePlayer.getDeck().getDiscardPile());
 				this.server.getGameController().getThiefList().remove(reactivePlayer);
-				reactivePlayer.resetThief();
+				reactivePlayer.resetThiefMode();
 				this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketRemoveExtraTable());
 				if (!this.server.getGameController().getThiefList().isEmpty()) {
 					System.out.println("new Reactive player");
@@ -262,7 +267,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 							Player player2 = (Player) iterator.next();
 							CollectionsUtil.appendListToList(player2.getTemporaryTrashPile(), allThiefCards);
 						}
-						System.out.println(Arrays.toString(allThiefCards.toArray()));
 						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
 								new PacketSendRevealCards(CollectionsUtil.getCardIDs(allThiefCards)));
 						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),

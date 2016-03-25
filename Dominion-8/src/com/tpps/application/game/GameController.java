@@ -29,7 +29,7 @@ import com.tpps.technicalServices.util.GameConstant;
  * 
  * 
  * 
- * Methoden nach Logik sortieren und sichtbarkeit anpassen
+ *         Methoden nach Logik sortieren und sichtbarkeit anpassen
  */
 public class GameController {
 
@@ -52,15 +52,15 @@ public class GameController {
 
 		this.gameNotFinished = true;
 	}
-	
+
 	public void setCardsEnabled() {
 		this.cardsEnabled = true;
 	}
-	
+
 	public void setCardsDisabled() {
 		this.cardsEnabled = false;
 	}
-	
+
 	public boolean isCardEnabled() {
 		return this.cardsEnabled;
 	}
@@ -122,16 +122,16 @@ public class GameController {
 	 * @throws SynchronisationException
 	 */
 	public synchronized boolean validateTurnAndExecute(String cardID, Player player) throws IOException {
-		
-		Card card = player.getDeck().getCardFromHand(cardID);		
+
+		Card card = player.getDeck().getCardFromHand(cardID);
 		if (card != null) {
-			if (player.isReactionMode() && card.getTypes().contains(CardType.REACTION)){
+			if (player.isReactionMode() && card.getTypes().contains(CardType.REACTION)) {
 				System.out.println("spielt reaktionskarte");
 				player.playCard(cardID);
 				return true;
 			}
 			if (this.gamePhase.equals("actionPhase")) {
-				
+
 				if (card.getTypes().contains(CardType.ACTION) && this.getActivePlayer().getActions() > 0) {
 					this.getActivePlayer().playCard(cardID);
 					if (this.getActivePlayer().getActions() == 0) {
@@ -142,7 +142,8 @@ public class GameController {
 			}
 			if (this.gamePhase.equals("buyPhase")) {
 				if (card.getTypes().contains(CardType.TREASURE)) {
-//					GameLog.log(MsgType.DEBUG, "the card is a Treasure clicked in the buyphase");
+					// GameLog.log(MsgType.DEBUG, "the card is a Treasure
+					// clicked in the buyphase");
 					this.getActivePlayer().playCard(cardID);
 					return true;
 				}
@@ -150,24 +151,24 @@ public class GameController {
 		}
 		return false;
 	}
-	
+
 	public synchronized boolean gain(String cardID, Player player) {
 		System.out.println("gain");
-		try{
-		LinkedList<Card> cardList = this.getGameBoard().findCardListFromBoard(cardID);
-		Card card = cardList.getLast();
-		if (card.getCost() <= player.getGainValue()){
-			getGameBoard().findAndRemoveCardFromBoard(cardID);
-			player.setGainModeFalse();
-			player.getDeck().getDiscardPile().add(card);		
-			return true;
-		}		
-		}catch(SynchronisationException e){
+		try {
+			LinkedList<Card> cardList = this.getGameBoard().findCardListFromBoard(cardID);
+			Card card = cardList.getLast();
+			if (card.getCost() <= player.getGainValue()) {
+				getGameBoard().findAndRemoveCardFromBoard(cardID);
+				player.setGainModeFalse();
+				player.getDeck().getDiscardPile().add(card);
+				return true;
+			}
+		} catch (SynchronisationException e) {
 			e.printStackTrace();
 		}
 		return false;
-		
-	}	
+
+	}
 
 	/**
 	 * 
@@ -223,8 +224,9 @@ public class GameController {
 	 * 
 	 */
 	public synchronized void organizePilesAndrefreshCardHand() {
-		
-		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
+
+		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(),
+				this.getActivePlayer().getDeck().getDiscardPile());
 		this.getActivePlayer().getDeck().refreshCardHand();
 		this.getActivePlayer().refreshPlayedCardsList();
 	}
@@ -245,156 +247,163 @@ public class GameController {
 						e.printStackTrace();
 					}
 				}
-					player.setDiscardMode();
-					player.setDiscardOrTrashAction(CardAction.DISCARD_CARD,
-							player.getDeck().getCardHand().size() - Integer.parseInt(value));
-				
-				
+				player.setDiscardMode();
+				player.setDiscardOrTrashAction(CardAction.DISCARD_CARD,
+						player.getDeck().getCardHand().size() - Integer.parseInt(value));
+
 				player.setReactionMode();
-				 try {
-					GameServer.getInstance().broadcastMessage(player.getPort(), new PacketEnableOthers(this.activePlayer.getClientID()));
+				try {
+					GameServer.getInstance().broadcastMessage(player.getPort(),
+							new PacketEnableOthers(this.activePlayer.getClientID()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 	}
-	
-	
+
 	/**
-	 * let every player who hasn't a reaction card reveal two cards which are sent to the activePlayer
+	 * let every player who hasn't a reaction card reveal two cards which are
+	 * sent to the activePlayer
 	 */
 	public synchronized void revealAndTakeCardsDiscardOthers() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			player.setThief();
-			if (!player.equals(activePlayer)){
-				
+			if (!player.equals(activePlayer)) {
+
 				if (player.getDeck().cardHandContainsReactionCard()) {
+					player.setThiefFalse();
 					try {
 						GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketDisable());
 					} catch (IOException e1) {
-					
+
 						e1.printStackTrace();
 					}
 					player.setReactionCard(true);
 					player.setReactionMode();
-					player.setRevealMode();
 					try {
 						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
 						GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
-					}
-					catch(IOException e){
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
-										
-					
-				}
-				else{
+
+				} else {
 					Card card = player.getDeck().removeSaveFromDrawPile();
-					if (card.getTypes().contains(CardType.TREASURE)){
+					if (card.getTypes().contains(CardType.TREASURE)) {
 						player.getRevealList().add(card);
-					}else{
+					} else {
 						player.getDeck().getDiscardPile().add(card);
 					}
-					if (player.getRevealList().size() > 0){
+					if (player.getRevealList().size() > 0) {
 						thiefList.add(player);
-					}else{
-						player.setThiefFalse();						
+					} else {
+						player.setThiefFalse();
 					}
-					
-					
+
 				}
-	
-				
-				
+
 			}
-			
+
 		}
 		System.out.println("im gamecontrolloer thiefList size: " + thiefList.size());
-		if (thiefList.size() > 0 ){
-		try {
-			
-			GameServer.getInstance().sendMessage(activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
-			
-		} catch (IOException e) {
-		
-			e.printStackTrace();
-		}
-		}
-		else{
-			
-		}
-	}
-	
-	public void react(Player player) {
-//		if (allReactionCardsPlayed()) {
-//			try {
-//				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketEnable());
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-		player.getRevealList().add(player.getDeck().removeSaveFromDrawPile());
-		player.getRevealList().add(player.getDeck().removeSaveFromDrawPile());
-		thiefList.add(player);
-		if (thiefList.size() == 1){
+		if (thiefList.size() > 0) {
 			try {
-				GameServer.getInstance().sendMessage(activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
+				GameServer.getInstance().sendMessage(activePlayer.getPort(),
+						new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
+
 			} catch (IOException e) {
+
 				e.printStackTrace();
 			}
 		}
 	}
-	
-	
+
+	public void react(Player player) {
+		// if (allReactionCardsPlayed()) {
+		// try {
+		// GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new
+		// PacketEnable());
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
+		// }
+		Card card = player.getDeck().removeSaveFromDrawPile();
+		if (card.getTypes().contains(CardType.TREASURE)) {
+			
+			player.getRevealList().add(card);
+		} else {
+			player.getDeck().getDiscardPile().add(card);
+		}
+		if (player.getRevealList().size() > 0) {
+			player.setThief();
+			thiefList.add(player);
+			if (thiefList.size() == 1) {
+				try {
+					GameServer.getInstance().sendMessage(activePlayer.getPort(),
+							new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			player.setThiefFalse();
+		}
+		System.out.println("react new thieflist size: " + thiefList.size());
+		
+	}
+
 	/**
 	 * 
 	 * @return if all player have played his/ her reactionCards
 	 */
 	private boolean allReactionCardsPlayed() {
 		boolean allReactionCardsPlayedFlag = true;
-		
+
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			if (player.playsReactionCard()){
+			if (player.playsReactionCard()) {
 				allReactionCardsPlayedFlag = false;
-					break;
+				break;
 			}
 		}
-		
+
 		return allReactionCardsPlayedFlag;
 	}
 
 	public synchronized void drawOthers() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			if (!player.equals(activePlayer)){
+			if (!player.equals(activePlayer)) {
 				player.getDeck().draw();
 			}
 		}
 	}
-	
+
 	/**
-	 * enables the gui of the active Playe disables all others if the reaction mode is finished.
-	 * returns otherwise
+	 * enables the gui of the active Playe disables all others if the reaction
+	 * mode is finished. returns otherwise
 	 */
-	public synchronized void checkReactionModeFinishedAndEnableGuis(){
+	public synchronized void checkReactionModeFinishedAndEnableGuis() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			if (player.isReactionMode()){
+			if (player.isReactionMode()) {
 				return;
 			}
 		}
+		if (thiefList.size() == 0){
+			this.getActivePlayer().setThiefFalse();
+		}
+		
 		try {
 			GameServer.getInstance().sendMessage(this.getActivePlayer().getPort(), new PacketEnable());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public synchronized void revealCardAll() {
-		System.out.println("REVEAL: ");
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			player.setRevealMode();
@@ -402,17 +411,16 @@ public class GameController {
 			try {
 				GameServer.getInstance().sendMessage(player.getPort(), new PacketTakeCards(player.getClientID()));
 				GameServer.getInstance().sendMessage(player.getPort(), new PacketPutBackCards(player.getClientID()));
-				GameServer.getInstance().sendMessage(player.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(player.getRevealList())));
+				GameServer.getInstance().sendMessage(player.getPort(),
+						new PacketSendRevealCards(CollectionsUtil.getCardIDs(player.getRevealList())));
 				GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		
-		
-//		GameServer.getInstance().sendMessage(port, 
-//				new PacketSendHandCards(revealList));
+
+		// GameServer.getInstance().sendMessage(port,
+		// new PacketSendHandCards(revealList));
 	}
 
 	/**
@@ -420,7 +428,7 @@ public class GameController {
 	 * ActionPhase
 	 */
 	public synchronized void endTurn() {
-		
+
 		this.getActivePlayer().resetPlayerValues();
 		this.getActivePlayer().refreshPlayedCardsList();
 		this.setNextActivePlayer();
@@ -433,18 +441,18 @@ public class GameController {
 	public LinkedList<Player> getPlayers() {
 		return this.players;
 	}
-	
+
 	/**
 	 * 
 	 * @param clientId
 	 * @return
 	 */
-	public synchronized Player getClientById(int clientId){
+	public synchronized Player getClientById(int clientId) {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			if (player.getClientID() == clientId){
+			if (player.getClientID() == clientId) {
 				return player;
-			}			
+			}
 		}
 		return null;
 	}
@@ -588,8 +596,6 @@ public class GameController {
 
 	}
 
-	
-	
 	/**
 	 * 
 	 * @return the List which shows which player have to play the thief action
@@ -597,7 +603,7 @@ public class GameController {
 	public CopyOnWriteArrayList<Player> getThiefList() {
 		return this.thiefList;
 	}
-	
+
 	public void resetThiefList() {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
 	}

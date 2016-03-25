@@ -107,7 +107,7 @@ public class GameWindow extends JFrame {
 		putBack = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Put Back");
 		takeThiefCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Take Thief Cards");
 		putBackThiefCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Put Back Thief Cards");
-		takeCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Temporary Trash");
+//		takeCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Temporary Trash");
 		discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Discard Deck");
 		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
 		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
@@ -336,8 +336,7 @@ public class GameWindow extends JFrame {
 		this.coinButtons = new LinkedList<GFButton>();
 		this.coinCards = new LinkedList<Card>();
 
-		for (int i = 0; i < coins.size(); i++) {
-			System.out.println("id actionCards : " + actionCardlds.get(i));
+		for (int i = 0; i < coins.size(); i++) {			
 			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 			matcher.find();
 			String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
@@ -692,6 +691,10 @@ public class GameWindow extends JFrame {
 
 	public void addEndReactionModeButton() {
 		framework.addComponent(this.endReactions);
+	}
+	
+	public void removeEndReactionModeButton() {
+		framework.removeComponent(this.endReactions);
 	}
 	
 	/**
