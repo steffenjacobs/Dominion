@@ -1,6 +1,7 @@
 package com.tpps.application.game;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -15,6 +16,7 @@ import com.tpps.application.network.gameSession.packets.PacketDisable;
 import com.tpps.application.network.gameSession.packets.PacketEnable;
 import com.tpps.application.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.application.network.gameSession.packets.PacketPutBackCards;
+import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketSendRevealCards;
 import com.tpps.application.network.gameSession.packets.PacketShowEndReactions;
 import com.tpps.application.network.gameSession.packets.PacketTakeCards;
@@ -160,10 +162,20 @@ public class GameController {
 			if (card.getCost() <= player.getGainValue()) {
 				getGameBoard().findAndRemoveCardFromBoard(cardID);
 				player.setGainModeFalse();
+				if (player.isOnHand()) {
+					player.setOnHandFalse();
+					player.getDeck().getCardHand().add(card);
+					GameServer.getInstance().sendMessage(player.getPort(),
+							new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
+					return true;
+				}
 				player.getDeck().getDiscardPile().add(card);
 				return true;
 			}
 		} catch (SynchronisationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -320,6 +332,57 @@ public class GameController {
 		}
 	}
 
+	public synchronized void gainCurseOthers() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			player.setWitch();
+			if (!player.equals(activePlayer)) {
+
+				if (player.getDeck().cardHandContainsReactionCard()) {
+					player.setWitchFalse();
+					try {
+						GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketDisable());
+					} catch (IOException e1) {
+
+						e1.printStackTrace();
+					}
+					player.setReactionCard(true);
+					player.setReactionMode();
+					try {
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+
+				} else {
+					player.getDeck().getDiscardPile()
+							.add(this.gameBoard.getTableForVictoryCards().get("Curse").getLast());
+					System.out.println(Arrays.toString(player.getDeck().getDiscardPile().toArray()));
+					player.setWitchFalse();
+					
+				}
+			}
+		}
+	}
+	
+
+
+	public void checkWitchFinish() {
+		boolean witchFlag = true;
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isWitch()){
+				witchFlag = false;
+				break;
+			}
+		}
+		if (witchFlag){
+			this.activePlayer.setWitchFalse();
+		}
+		
+	}
+
 	public void react(Player player) {
 		// if (allReactionCardsPlayed()) {
 		// try {
@@ -331,7 +394,7 @@ public class GameController {
 		// }
 		Card card = player.getDeck().removeSaveFromDrawPile();
 		if (card.getTypes().contains(CardType.TREASURE)) {
-			
+
 			player.getRevealList().add(card);
 		} else {
 			player.getDeck().getDiscardPile().add(card);
@@ -351,7 +414,7 @@ public class GameController {
 			player.setThiefFalse();
 		}
 		System.out.println("react new thieflist size: " + thiefList.size());
-		
+
 	}
 
 	/**
@@ -392,10 +455,10 @@ public class GameController {
 				return;
 			}
 		}
-		if (thiefList.size() == 0){
+		if (thiefList.size() == 0) {
 			this.getActivePlayer().setThiefFalse();
 		}
-		
+
 		try {
 			GameServer.getInstance().sendMessage(this.getActivePlayer().getPort(), new PacketEnable());
 		} catch (IOException e) {

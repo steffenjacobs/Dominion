@@ -16,9 +16,12 @@ import com.tpps.application.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.application.network.gameSession.packets.PacketDontShowEndReactions;
 import com.tpps.application.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketEndTrashMode;
+import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketSendRevealCards;
+import com.tpps.application.network.gameSession.packets.PacketSetAsideDrawedCard;
 import com.tpps.application.network.gameSession.packets.PacketStartDiscardMode;
 import com.tpps.application.network.gameSession.packets.PacketStartTrashMode;
+import com.tpps.application.network.gameSession.packets.PacketTakeDrawedCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -38,10 +41,13 @@ public class Player {
 	private int actions;
 	private int buys;
 	private int coins;
-	private int gainValue;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief;
+	private int gainValue, drawUntil;
+	private CardType setAside;
+	private Card drawedCard;
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief , witch,
+	onHand;
 	private Tuple<CardAction> discardOrTrashAction;
-	private LinkedList<Card> playedCards, discardList, revealList, temporaryTrashPile;
+	private LinkedList<Card> playedCards, discardList, revealList, temporaryTrashPile, setAsideCards;
 
 	/**
 	 * @param deck
@@ -58,6 +64,7 @@ public class Player {
 		this.discardList = new LinkedList<Card>();
 		this.revealList = new LinkedList<Card>();
 		this.temporaryTrashPile = new LinkedList<Card>();
+		this.setAsideCards = new LinkedList<Card>();
 		this.deck = deck;
 		this.id = playerID++;
 		this.actions = GameConstant.INIT_ACTIONS;
@@ -96,17 +103,32 @@ public class Player {
 	public void setDiscardMode() {
 		this.discardMode = true;
 	}
-	
+
 	public boolean isThief() {
 		return thief;
 	}
-	
+
 	public void setThief() {
 		this.thief = true;
 	}
+	
 
+	public void setThiefFalse() {
+		this.thief = false;
+	}
+	
+	public boolean isWitch() {
+		return witch;
+	}
+	
+	public void setWitch() {
+		this.witch = true;
+	}
+	
+	public void setWitchFalse() {
+		this.witch = false;
+	}
 
- 
 	public void setDiscardOrTrashAction(CardAction cardAction, int val) {
 		this.discardOrTrashAction = new Tuple<CardAction>(cardAction, val);
 	}
@@ -137,8 +159,7 @@ public class Player {
 	public boolean isReactionMode() {
 		return reactionMode;
 	}
-	
-	
+
 	/**
 	 * 
 	 * @return if the revealMode is set or not
@@ -146,9 +167,7 @@ public class Player {
 	public boolean isRevealMode() {
 		return revealMode;
 	}
-	
-	
-	
+
 	/**
 	 * 
 	 * @return a list of ids of the cards which can be revealed
@@ -233,7 +252,7 @@ public class Player {
 	public LinkedList<Card> getPlayedCards() {
 		return playedCards;
 	}
-	
+
 	public LinkedList<Card> getTemporaryTrashPile() {
 		return this.temporaryTrashPile;
 	}
@@ -259,6 +278,23 @@ public class Player {
 	public int getCoins() {
 		return coins;
 	}
+	
+	public Card getDrawedCard() {
+		return this.drawedCard;
+	}
+	
+	public LinkedList<Card> getSetAsideCards() {
+		return this.setAsideCards;
+	}
+	
+	
+	public boolean isOnHand() {
+		return onHand;
+	}
+	
+	public void setOnHandFalse() {
+		this.onHand = false;
+	}
 
 	/**
 	 * @param coins
@@ -267,12 +303,10 @@ public class Player {
 	public void setCoins(int coins) {
 		this.coins = coins;
 	}
-	
+
 	public void setRevealMode() {
 		this.revealMode = true;
 	}
-	
-	
 
 	/**
 	 * 
@@ -280,15 +314,12 @@ public class Player {
 	public void setReactionMode() {
 		this.reactionMode = true;
 	}
-	
+
 	public void setReactionModeFalse() {
-		this.reactionMode = false;		
+		this.reactionMode = false;
 	}
-	
-	public void setThiefFalse() {
-		this.thief = false;
-	}
-	
+
+
 	public void resetThiefMode() {
 		this.thief = false;
 		this.reactionCard = false;
@@ -296,16 +327,15 @@ public class Player {
 		this.revealMode = false;
 		this.revealList = new LinkedList<Card>();
 	}
-	
+
 	public void takeRevealedCardsSetRevealModeFalse() {
 
 		CollectionsUtil.appendListToList(revealList, getDeck().getDiscardPile());
 		this.revealMode = false;
 		revealList = new LinkedList<Card>();
 	}
-	
-	public void putBackCards() {
 
+	public void putBackCards() {
 
 		CollectionsUtil.appendListToList(revealList, getDeck().getDrawPile());
 		this.revealMode = false;
@@ -325,8 +355,13 @@ public class Player {
 			return;
 		}
 		if (this.trashMode) {
+			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND) && 
+					!this.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.TREASURE)){
+				return;
+			}
 			trashPile.add(doAction(cardID));
 			return;
+			
 		}
 	}
 
@@ -355,7 +390,7 @@ public class Player {
 		Card card = doAction(cardID);
 		if (card != null) {
 			this.playedCards.addLast(card);
-			if (playTwice){
+			if (playTwice) {
 				playTwice = false;
 				doAction(cardID);
 			}
@@ -433,8 +468,6 @@ public class Player {
 			cardActions = getRelevantCardActions(cardActions);
 		}
 
-		
-
 		Iterator<CardAction> cardIterator = cardActions.iterator();
 		if (!this.reactionMode && serverCard.getTypes().contains(CardType.ACTION)) {
 			this.actions--;
@@ -455,6 +488,18 @@ public class Player {
 				break;
 			case DRAW_CARD:
 				this.getDeck().draw(Integer.parseInt(value));
+				break;
+			case DRAW_CARD_UNTIL:
+				String[] values = value.split("_");
+				if (values.length == 2) {
+					this.drawUntil = Integer.parseInt(values[0]);
+					dontRemoveFlag = true;
+					this.getDeck().getCardHand().remove(serverCard);
+					if (values[1].toLowerCase().equals("action")) {
+						this.setAside = CardType.ACTION;
+						drawUntil();
+					}
+				}
 				break;
 			case DRAW_CARD_OTHERS:
 				GameServer.getInstance().getGameController().drawOthers();
@@ -480,6 +525,11 @@ public class Player {
 				// default:
 				// break;
 				// }
+				break;
+			case GAIN_CARD_OTHERS:
+				if (value.toLowerCase().equals("curse")){
+					GameServer.getInstance().getGameController().gainCurseOthers();
+				}
 				break;
 			case DISCARD_CARD:
 				if (value.toLowerCase().equals("deck")) {
@@ -526,39 +576,44 @@ public class Player {
 					}
 				}
 				break;
+			case TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND:
+				this.trashMode = true;
+				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND,
+						Integer.parseInt(value.split("_")[0]));
+				this.gainValue = Integer.parseInt(value.split("_")[1]);
+				break;
 			case TRASH_AND_GAIN_MORE_THAN:
 				this.trashMode = true;
-				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN_MORE_THAN, Integer.parseInt(value.split("_")[0]));
-				this.gainValue = Integer.parseInt(value.split("_")[1]);				
+				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN_MORE_THAN,
+						Integer.parseInt(value.split("_")[0]));
+				this.gainValue = Integer.parseInt(value.split("_")[1]);
 				break;
 			case TRASH_AND_GAIN:
 				this.trashMode = true;
-				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN, Integer.parseInt(value.split("_")[0]));
-				this.gainValue = Integer.parseInt(value.split("_")[1]);				
+				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN,
+						Integer.parseInt(value.split("_")[0]));
+				this.gainValue = Integer.parseInt(value.split("_")[1]);
 				break;
-			
-				
-				
-				
-				
+
 			case PUT_BACK:
 				this.getDeck().putBack(serverCard);
 				break;
 			case REVEAL_CARD:
-				
+
 				this.revealMode = true;
 				revealList.add(getDeck().removeSaveFromDrawPile());
-				
-				GameServer.getInstance().sendMessage(port, new PacketSendRevealCards(CollectionsUtil.getCardIDs(revealList)));
-//				GameServer.getInstance().sendMessage(port, 
-//						new PacketSendHandCards(revealList));
+
+				GameServer.getInstance().sendMessage(port,
+						new PacketSendRevealCards(CollectionsUtil.getCardIDs(revealList)));
+				// GameServer.getInstance().sendMessage(port,
+				// new PacketSendHandCards(revealList));
 				break;
 			case REVEAL_CARD_ALL:
 				GameServer.getInstance().getGameController().revealCardAll();
 				break;
 			case CHOOSE_CARD_PLAY_TWICE:
 				this.actions++;
-				
+
 				break;
 			case IS_TREASURE:
 				this.coins += Integer.parseInt(serverCard.getActions().get(CardAction.IS_TREASURE));
@@ -590,6 +645,37 @@ public class Player {
 		}
 
 		return serverCard;
+	}
+
+	public void drawUntil() {
+		while (this.getDeck().getCardHand().size() < this.drawUntil) {
+			System.out.println("cardHandSize: " + this.getDeck().getCardHand().size());
+			Card card = this.getDeck().removeSaveFromDrawPile();
+			this.drawedCard = card;
+			this.getDeck().getCardHand().add(card);
+			try {
+				GameServer.getInstance().sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.getDeck().getCardHand())));
+			} catch (IOException e1) {				
+				e1.printStackTrace();
+			}
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+			
+			if (card.getTypes().contains(this.setAside)) {
+				GameServer.getInstance().getGameController().setCardsDisabled();
+				try {
+					GameServer.getInstance().sendMessage(port, new PacketSetAsideDrawedCard());
+					GameServer.getInstance().sendMessage(port, new PacketTakeDrawedCard());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return;
+			}
+		}
+		CollectionsUtil.appendListToList(this.setAsideCards, getDeck().getDiscardPile());
 	}
 
 	protected void setGainModeFalse() {
@@ -643,15 +729,17 @@ public class Player {
 				}
 			}
 			break;
-			
+		case TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND:
+			executeTrash(card);
+			break;		
 		case TRASH_AND_GAIN_MORE_THAN:
 			executeTrash(card);
 			break;
 		case TRASH_AND_GAIN:
 			executeTrash(card);
-			
+
 			break;
-			
+
 		case TRASH_CARD:
 			executeTrash(card);
 			break;
@@ -671,22 +759,24 @@ public class Player {
 		this.discardOrTrashAction.decrementSecondEntry();
 		if (this.discardOrTrashAction.getSecondEntry() == 0) {
 			this.trashMode = false;
-			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_AND_GAIN)){				
-				this.gainMode = true;				
-			}			
-			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_AND_GAIN_MORE_THAN)){
+			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_AND_GAIN)) {
+				this.gainMode = true;
+			}
+			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_AND_GAIN_MORE_THAN)
+					|| this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND)) {
 				this.gainMode = true;
 				this.gainValue += card.getCost();
 			}
+			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND)) {
+				this.onHand = true;
+			}
+			
+			
 		}
 	}
 
 	public void resetTemporaryTrashPile() {
-		this.temporaryTrashPile = new LinkedList<Card>();		
+		this.temporaryTrashPile = new LinkedList<Card>();
 	}
 
-	
-
-	
-	
 }

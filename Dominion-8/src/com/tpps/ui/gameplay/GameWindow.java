@@ -33,7 +33,8 @@ import com.tpps.ui.components.GameBackground;
 
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
-	static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack, takeThiefCards, putBackThiefCards;
+	static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack, 
+	takeThiefCards, putBackThiefCards, takeDrawedCard, setAsideDrawedCard;
 	private static GameWindow instance;
 
 	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage, displayImageBuys, displayImageActions,
@@ -107,6 +108,8 @@ public class GameWindow extends JFrame {
 		putBack = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Put Back");
 		takeThiefCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Take Thief Cards");
 		putBackThiefCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Put Back Thief Cards");
+		takeDrawedCard = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Take Drawed Card");
+		setAsideDrawedCard = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Set Aside Drawed Card");
 //		takeCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Temporary Trash");
 		discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Discard Deck");
 		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
@@ -544,7 +547,6 @@ public class GameWindow extends JFrame {
 		// coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1,
 		// displayImageCoins, framework, caption);
 		// framework.addComponent(coin);
-		System.out.println("setCoins: " + caption);
 		coin.renewCaption(caption);
 	}
 
@@ -555,8 +557,7 @@ public class GameWindow extends JFrame {
 	 */
 
 	public void setCaptionActions(String caption) {
-		action.renewCaption(caption);
-		System.out.println("setActions: " + caption);
+		action.renewCaption(caption);		
 		// action.renewCaption(caption);
 	}
 
@@ -568,7 +569,6 @@ public class GameWindow extends JFrame {
 
 	public void setCaptionBuys(String caption) {
 		buy.renewCaption(caption);
-		System.out.println("setBuys: " + caption);
 	}
 	
 	/**
@@ -728,5 +728,14 @@ public class GameWindow extends JFrame {
 	public void addPutBackThiefCardsButton() {
 		framework.addComponent(putBackThiefCards);
 	}
+	
+	public void addTakeDrawedCard() {
+		framework.addComponent(takeDrawedCard);
+	}
+	
+	public void addSetAsideDrawedCard() {
+		framework.addComponent(setAsideDrawedCard);
+	}
+	
 
 }

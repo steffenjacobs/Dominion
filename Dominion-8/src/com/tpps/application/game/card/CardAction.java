@@ -33,6 +33,8 @@ public enum CardAction {
 	/* z.B. "jeder Spieler nimmt sich einen Fluch" */
 	GAIN_CARD,
 	
+	GAIN_CARD_OTHERS,
+	
 	GAIN_CARD_DRAW_PILE,
 	
 	/* z.B. bei Miliz */
@@ -44,7 +46,9 @@ public enum CardAction {
 	TRASH_CARD, 
 	
 	/* z.B. bei Spion */
-	REVEAL_CARD, 
+	REVEAL_CARD,
+	
+	REVEAL_UNTIL_TREASURES, 
 	
 	/* z.B. wenn eine Karte keine Aktion hat und eine Geldkarte ist */
 	IS_TREASURE, 
@@ -63,6 +67,8 @@ public enum CardAction {
 	TRASH_AND_GAIN,
 	
 	TRASH_AND_GAIN_MORE_THAN,
+	
+	TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND,
 	
 	CHOOSE_CARD_PLAY_TWICE,
 	

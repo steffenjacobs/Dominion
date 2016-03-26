@@ -181,6 +181,13 @@ public class GameBoard {
 		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.PROVINCE_VALUE)), CollectionsUtil.linkedList(CardType.VICTORY), "Province", GameConstant.PROVINCE_COST), GameConstant.INIT_PILE_SIZE, provinceList);
 		this.tableForVictoryCards.put("Province", provinceList);
 		Card.resetClassID();		
+		
+		LinkedList<Card> curseList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, 
+				Integer.toString(GameConstant.CURSE_VALUE)), CollectionsUtil.linkedList(CardType.CURSE), 
+				"Curse", GameConstant.CURSE_COST), GameConstant.INIT_PILE_SIZE, curseList);
+		this.tableForVictoryCards.put("Curse", curseList);
+		Card.resetClassID();		
 	}
 
 	/**
@@ -259,18 +266,18 @@ public class GameBoard {
 //		Card.resetClassID();
 		
 //		feast 
-		LinkedList<Card> feastList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.TRASH_CARD, CardAction.GAIN_CARD}), 
-				CollectionsUtil.linkedList(new String[] {"this", "5"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Feast", 0), GameConstant.INIT_PILE_SIZE, feastList);
-		this.tableForActionCards.put("Feast", feastList);
-		Card.resetClassID();
+//		LinkedList<Card> feastList = new LinkedList<Card>();
+//		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.TRASH_CARD, CardAction.GAIN_CARD}), 
+//				CollectionsUtil.linkedList(new String[] {"this", "5"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Feast", 0), GameConstant.INIT_PILE_SIZE, feastList);
+//		this.tableForActionCards.put("Feast", feastList);
+//		Card.resetClassID();
 		
 //		moneyLender
-		LinkedList<Card> moneylenderList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.TRASH_AND_ADD_TEMPORARY_MONEY}), 
-				CollectionsUtil.linkedList(new String[] {"Copper_3"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Moneylender", 0), GameConstant.INIT_PILE_SIZE, moneylenderList);
-		this.tableForActionCards.put("Moneylender", moneylenderList);
-		Card.resetClassID();
+//		LinkedList<Card> moneylenderList = new LinkedList<Card>();
+//		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.TRASH_AND_ADD_TEMPORARY_MONEY}), 
+//				CollectionsUtil.linkedList(new String[] {"Copper_3"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Moneylender", 0), GameConstant.INIT_PILE_SIZE, moneylenderList);
+//		this.tableForActionCards.put("Moneylender", moneylenderList);
+//		Card.resetClassID();
 		
 //		remodel
 		LinkedList<Card> remodelList = new LinkedList<Card>();
@@ -293,6 +300,13 @@ public class GameBoard {
 		this.tableForActionCards.put("Spy", spyList);
 		Card.resetClassID();
 		
+
+		LinkedList<Card> thiefList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.ALL_REVEAL_CARDS_TRASH_COINS_I_CAN_TAKE_DISCARD_OTHERS}), 
+				CollectionsUtil.linkedList(new String[] {"2"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION, CardType.ATTACK}), "Thief", 0), GameConstant.INIT_PILE_SIZE, thiefList);
+		this.tableForActionCards.put("Thief", thiefList);
+		Card.resetClassID();
+		
 //		ThroneRoom
 		
 //		LinkedList<Card> throneRoomList = new LinkedList<Card>();
@@ -309,20 +323,47 @@ public class GameBoard {
 //		this.tableForActionCards.put("CouncilRoom", councilRoomList);
 //		Card.resetClassID();
 		
-//		LinkedList<Card> festival
+		LinkedList<Card> festivalList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.ADD_ACTION_TO_PLAYER, CardAction.ADD_PURCHASE, CardAction.ADD_TEMPORARY_MONEY_FOR_TURN}), 
+				CollectionsUtil.linkedList(new String[] {"2", "1", "2"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Festival", 0), GameConstant.INIT_PILE_SIZE, festivalList);
+		this.tableForActionCards.put("Festival", festivalList);
+		Card.resetClassID();
 		
-//		Thief
-		
-		LinkedList<Card> thiefList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.ALL_REVEAL_CARDS_TRASH_COINS_I_CAN_TAKE_DISCARD_OTHERS}), 
-				CollectionsUtil.linkedList(new String[] {"2"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION, CardType.ATTACK}), "Thief", 0), GameConstant.INIT_PILE_SIZE, thiefList);
-		this.tableForActionCards.put("Thief", thiefList);
+//		Laboratory
+		LinkedList<Card> laboratoryList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, CardAction.ADD_ACTION_TO_PLAYER}), 
+				CollectionsUtil.linkedList(new String[] {"2", "1"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Laboratory", 0), GameConstant.INIT_PILE_SIZE, laboratoryList);
+		this.tableForActionCards.put("Laboratory", laboratoryList);
 		Card.resetClassID();
 
+//		Library
+		LinkedList<Card> libraryList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD_UNTIL}), 
+				CollectionsUtil.linkedList(new String[] {"7_action"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Library", 0), GameConstant.INIT_PILE_SIZE, libraryList);
+		this.tableForActionCards.put("Library", libraryList);
+		Card.resetClassID();
 
-
-
-
+//		Market
+		LinkedList<Card> marketList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, CardAction.ADD_ACTION_TO_PLAYER,
+				CardAction.ADD_PURCHASE, CardAction.ADD_TEMPORARY_MONEY_FOR_TURN}), 
+				CollectionsUtil.linkedList(new String[] {"1", "1", "1", "1"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Market", 0), GameConstant.INIT_PILE_SIZE, marketList);
+		this.tableForActionCards.put("Market", marketList);
+		Card.resetClassID();
+		
+//		Mine
+		LinkedList<Card> mineList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND}), 
+				CollectionsUtil.linkedList(new String[] {"1_3"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Mine", 0), GameConstant.INIT_PILE_SIZE, mineList);
+		this.tableForActionCards.put("Mine", mineList);
+		Card.resetClassID();
+		
+//		Witch
+		LinkedList<Card> witchList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD, CardAction.GAIN_CARD_OTHERS}), 
+				CollectionsUtil.linkedList(new String[] {"2", "curse"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Witch", 0), GameConstant.INIT_PILE_SIZE, witchList);
+		this.tableForActionCards.put("Witch", witchList);
+		Card.resetClassID();
 
 	}
 

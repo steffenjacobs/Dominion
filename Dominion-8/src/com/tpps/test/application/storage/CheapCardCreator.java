@@ -222,7 +222,7 @@ public class CheapCardCreator {
 		actions.put(CardAction.ADD_PURCHASE, "1");
 		actions.put(CardAction.DRAW_CARD_OTHERS, "1");
 		cards.put("CouncilRoom", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
-				(LinkedList<CardType>) types.clone(), 4, "CouncilRoom", getImg("CouncilRoom")));
+				(LinkedList<CardType>) types.clone(), 5, "CouncilRoom", getImg("CouncilRoom")));
 		
 //		thief
 		actions.remove(CardAction.DRAW_CARD);
@@ -233,7 +233,61 @@ public class CheapCardCreator {
 		cards.put("Thief", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "Thief", getImg("Thief")));
 		
+//		Festival
+		actions.remove(CardAction.ALL_REVEAL_CARDS_TRASH_COINS_I_CAN_TAKE_DISCARD_OTHERS);
+		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "2");
+		actions.put(CardAction.ADD_PURCHASE, "1");
+		actions.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, "2");
+		types.remove(CardType.ATTACK);
 		
+		cards.put("Festival", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 5, "Festival", getImg("Festival")));
+		
+//		Laboratory	
+		
+		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
+		actions.remove(CardAction.ADD_PURCHASE);
+		actions.remove(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
+		actions.put(CardAction.DRAW_CARD, "2");
+		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "1");
+		
+		cards.put("Laboratory", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 5, "Laboratory", getImg("Laboratory")));
+		
+//		Library
+		
+		actions.remove(CardAction.DRAW_CARD);
+		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
+		actions.put(CardAction.DRAW_CARD_UNTIL, "7_action");
+		
+		cards.put("Library", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 5, "Library", getImg("Library")));
+		
+//		Market
+		
+		actions.remove(CardAction.DRAW_CARD_UNTIL);
+		actions.put(CardAction.DRAW_CARD, "1");
+		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "1");
+		actions.put(CardAction.ADD_PURCHASE, "1");
+		actions.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, "1");
+		cards.put("Market", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 5, "Market", getImg("Market")));
+		
+//		Mine
+		actions.remove(CardAction.DRAW_CARD);
+		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
+		actions.remove(CardAction.ADD_PURCHASE);
+		actions.remove(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
+		actions.put(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, "1_3");
+		cards.put("Mine", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 5, "Mine", getImg("Mine")));
+		
+//		Witch		
+		actions.remove(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND);
+		actions.put(CardAction.DRAW_CARD, "2");
+		actions.put(CardAction.GAIN_CARD_OTHERS, "curse");
+		cards.put("Witch", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 5, "Witch", getImg("Witch")));
 		
 		// setup Dummy-DominionController
 		DominionController dom = new DominionController(true);

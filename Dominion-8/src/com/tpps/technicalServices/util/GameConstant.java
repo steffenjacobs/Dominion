@@ -36,7 +36,14 @@ public final class GameConstant {
 	public static final int DUCHY_VALUE = 3;
 	public static final int DUCHY_COST = 5;
 	public static final int PROVINCE_VALUE = 6;
-	public static final int PROVINCE_COST = 8;	
+	public static final int PROVINCE_COST = 8;
+	
+	/**
+	 * Curse
+	 * */
+	public static final int CURSE_COST = 0;
+	public static final int CURSE_VALUE = -1;
+	
 	
 	/**
 	 * TREASURE

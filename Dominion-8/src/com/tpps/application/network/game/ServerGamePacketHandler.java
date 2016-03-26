@@ -124,6 +124,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 				putBackThiefCards(port);
 				this.server.getGameController().setCardsEnabled();
 				break;
+			case TAKE_DRAWED_CARD:
+				takeDrawedCardStartDrawing();
+				this.server.getGameController().setCardsEnabled();
+				break;
+			case SET_ASIDE_DRAWED_CARD:
+				setAsideDrawedCardStartDrawing();
+				this.server.getGameController().setCardsEnabled();
+				break;
 			case TEMPORARY_TRASH_CARDS:
 				System.out.println("TemporaryTrashCards");
 				clientID = ((PacketTemporaryTrashCards) packet).getClientID();
@@ -142,12 +150,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 				Player player1 = this.server.getGameController()
 						.getClientById(((PacketEndReactions) packet).getClientID());
 				player1.setReactionCard(false);
-				if (this.server.getGameController().getActivePlayer().isThief()) {
-					player1.setReactionModeFalse();
-					this.server.sendMessage(player1.getPort(), new PacketDisable());
-					this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
-					this.server.getGameController().react(player1);
-				}
+				reactionFinishedTriggeredThroughThief(player1);
+				reactionFinishedTriggeredThroughWitch(player1);
 
 				break;
 			case DISCARD_DECK:
@@ -163,6 +167,39 @@ public class ServerGamePacketHandler extends PacketHandler {
 			ie.printStackTrace();
 		}
 
+	}
+
+	private void reactionFinishedTriggeredThroughThief(Player player1) throws IOException {
+		if (this.server.getGameController().getActivePlayer().isThief()) {
+			player1.setReactionModeFalse();
+			this.server.sendMessage(player1.getPort(), new PacketDisable());
+			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
+			this.server.getGameController().react(player1);
+		}
+	}
+
+	private void reactionFinishedTriggeredThroughWitch(Player player1) throws IOException {
+		if (this.server.getGameController().getActivePlayer().isWitch()) {
+			player1.setReactionModeFalse();
+			this.server.sendMessage(player1.getPort(), new PacketDisable());
+			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
+			player1.getDeck().getDiscardPile().add(this.server.getGameController().getGameBoard().getTableForVictoryCards().get("Curse").getLast());
+			this.server.getGameController().checkWitchFinish();
+			System.out.println(Arrays.toString(player1.getDeck().getDiscardPile().toArray()));
+		}
+	}
+
+	private void setAsideDrawedCardStartDrawing() {
+		Player activePlayer = this.server.getGameController().getActivePlayer();
+		activePlayer.getSetAsideCards().add(activePlayer.getDrawedCard());
+		activePlayer.getDeck().getCardHand().remove(activePlayer.getDrawedCard());
+		activePlayer.drawUntil();		
+	}
+
+	private void takeDrawedCardStartDrawing() {
+		System.out.println("take drawed card server gamePackethandler");
+		Player activePlayer = this.server.getGameController().getActivePlayer();		
+		activePlayer.drawUntil();
 	}
 
 	private void putBackThiefCards(int port) {
@@ -213,9 +250,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			System.out.println("im handler discard mode set");
 			if (this.server.getGameController().checkCardExistsAndDiscardOrTrash(player, cardID)) {
 				server.sendMessage(port,
-						new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
-				return;
+						new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));				
 			}
+			return;
 		}
 
 		if (this.server.getGameController().isVictoryCardOnHand(cardID) && !player.isDiscardMode()
@@ -380,8 +417,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			Player player = this.server.getGameController().getActivePlayer();
 
 			this.server.getGameController().endTurn();
-			System.out.println("server actions: " + player.getActions() + "buys: " + player.getBuys() + "coins: "
-					+ player.getBuys());
+		
 			server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
 			server.broadcastMessage(
 					new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
