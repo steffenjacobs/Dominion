@@ -3,6 +3,7 @@ package com.tpps.application.game;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
@@ -103,6 +104,22 @@ public class Deck {
 	public int getDeckSize() {
 		return this.drawPile.size() + this.discardPile.size() + this.cardHand.size();
 	}
+	
+	
+	public int getTreasureAmountNotOnHand() {		
+		return getTreasureAmountOfList(drawPile) + getTreasureAmountOfList(discardPile);		
+	}
+	
+	public int getTreasureAmountOfList(LinkedList<Card> list) {
+		int treasureCounter = 0;
+		for (Iterator<Card> iterator = drawPile.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(CardType.TREASURE)){
+				treasureCounter++;
+			}			
+		}
+		return treasureCounter;
+	}
 
 	/**
 	 * @param cardID individual id of the card as a String
@@ -116,12 +133,27 @@ public class Deck {
 	/**
 	 * 
 	 * @param name
-	 * @return 
+	 * @return a card which has the given name null otherwise
 	 */
-	public Card getCardByName(String name){
+	public Card getCardByNameFromHand(String name){
 		for (Iterator<Card> iterator = getCardHand().iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
 			if (card.getName().toLowerCase().equals(name.toLowerCase())){
+				return card;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return a card which contains the given type null otherwise
+	 */
+	public Card getCardByTypeFromHand(CardType type){
+		for (Iterator<Card> iterator = getCardHand().iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(type)){
 				return card;
 			}
 		}
@@ -264,7 +296,7 @@ public class Deck {
 	 * if the discardPile contains not enough card the shuffleIfLessThan(1) method is called. 
 	 * @return one Card from the discardPile
 	 */
-	public Card removeSaveFromDrawPile() {
+	public Card removeSaveFromDrawPile() throws NoSuchElementException{
 		this.shuffleIfLessThan(1);		
 		return this.drawPile.removeLast();		
 	}

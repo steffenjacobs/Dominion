@@ -286,8 +286,40 @@ public class CheapCardCreator {
 		actions.remove(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND);
 		actions.put(CardAction.DRAW_CARD, "2");
 		actions.put(CardAction.GAIN_CARD_OTHERS, "curse");
+		types.add(CardType.ATTACK);
 		cards.put("Witch", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 5, "Witch", getImg("Witch")));
+		
+//		Curse
+		
+		actions.remove(CardAction.DRAW_CARD);
+		actions.remove(CardAction.GAIN_CARD_OTHERS);
+		actions.put(CardAction.IS_VICTORY, Integer.toString(GameConstant.CURSE_VALUE));
+		types.remove(CardType.ACTION);
+		types.remove(CardType.ATTACK);
+		types.add(CardType.CURSE);
+		cards.put("Curse", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 0, "Curse", getImg("Curse")));
+		
+//		
+		
+		
+//		Adventurer		
+		actions.remove(CardAction.IS_VICTORY);
+		actions.put(CardAction.REVEAL_UNTIL_TREASURES, "2");
+		types.remove(CardType.CURSE);		
+		types.add(CardType.ACTION);
+		cards.put("Adventurer", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 0, "Adventurer", getImg("Adventurer")));
+		
+//		Bureaucrat
+		
+		actions.remove(CardAction.REVEAL_UNTIL_TREASURES);
+		actions.put(CardAction.GAIN_CARD_DRAW_PILE, "silver");
+		actions.put(CardAction.REVEAL_CARD_OTHERS_PUT_IT_ON_TOP_OF_DECK, "victory");
+		types.add(CardType.ATTACK);
+		cards.put("Bureaucrat", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 0, "Bureaucrat", getImg("Bureaucrat")));
 		
 		// setup Dummy-DominionController
 		DominionController dom = new DominionController(true);

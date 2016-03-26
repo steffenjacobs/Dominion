@@ -126,7 +126,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case SET_ASIDE_DRAWED_CARD:
 			this.gameWindow.addSetAsideDrawedCard();
 			break;
-		case PUT_BACK:
+		case PUT_BACK_CARDS:
 			this.gameWindow.addPutBackButton();
 			break;
 		case SEND_ACTIVE_BUTTONS:

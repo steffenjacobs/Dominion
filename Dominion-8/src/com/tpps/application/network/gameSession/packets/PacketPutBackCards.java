@@ -15,7 +15,7 @@ public class PacketPutBackCards extends Packet {
 	private int clientID;
 
 	public PacketPutBackCards(int clientID) {
-		super(PacketType.PUT_BACK);
+		super(PacketType.PUT_BACK_CARDS);
 		this.clientID = clientID;
 	}
 	

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
@@ -44,8 +45,8 @@ public class Player {
 	private int gainValue, drawUntil;
 	private CardType setAside;
 	private Card drawedCard;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief , witch,
-	onHand;
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy,
+			onHand;
 	private Tuple<CardAction> discardOrTrashAction;
 	private LinkedList<Card> playedCards, discardList, revealList, temporaryTrashPile, setAsideCards;
 
@@ -61,6 +62,9 @@ public class Player {
 		this.reactionMode = false;
 		this.gainMode = false;
 		this.thief = false;
+		this.bureaucrat = false;
+		this.witch = false;
+		this.spy = false;
 		this.discardList = new LinkedList<Card>();
 		this.revealList = new LinkedList<Card>();
 		this.temporaryTrashPile = new LinkedList<Card>();
@@ -111,22 +115,45 @@ public class Player {
 	public void setThief() {
 		this.thief = true;
 	}
-	
 
 	public void setThiefFalse() {
 		this.thief = false;
 	}
-	
+
 	public boolean isWitch() {
 		return witch;
 	}
-	
+
 	public void setWitch() {
 		this.witch = true;
 	}
-	
+
 	public void setWitchFalse() {
 		this.witch = false;
+	}
+	
+	public boolean isBureaucrat() {
+		return this.bureaucrat;
+	}
+	
+	public void setBureaucrat() {
+		this.bureaucrat = true;
+	}
+	
+	public void setBureaucratFalse() {
+		this.bureaucrat = false;
+	}
+	
+	public boolean isSpy() {
+		return this.spy;
+	}
+	
+	public void setSpy() {
+		this.spy = true;
+	}
+	
+	public void setSpyFalse() {
+		this.spy = false;
 	}
 
 	public void setDiscardOrTrashAction(CardAction cardAction, int val) {
@@ -278,20 +305,19 @@ public class Player {
 	public int getCoins() {
 		return coins;
 	}
-	
+
 	public Card getDrawedCard() {
 		return this.drawedCard;
 	}
-	
+
 	public LinkedList<Card> getSetAsideCards() {
 		return this.setAsideCards;
 	}
-	
-	
+
 	public boolean isOnHand() {
 		return onHand;
 	}
-	
+
 	public void setOnHandFalse() {
 		this.onHand = false;
 	}
@@ -319,7 +345,6 @@ public class Player {
 		this.reactionMode = false;
 	}
 
-
 	public void resetThiefMode() {
 		this.thief = false;
 		this.reactionCard = false;
@@ -335,7 +360,7 @@ public class Player {
 		revealList = new LinkedList<Card>();
 	}
 
-	public void putBackCards() {
+	public void putBackRevealedCardsSetRevealModeFalse() {
 
 		CollectionsUtil.appendListToList(revealList, getDeck().getDrawPile());
 		this.revealMode = false;
@@ -355,13 +380,13 @@ public class Player {
 			return;
 		}
 		if (this.trashMode) {
-			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND) && 
-					!this.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.TREASURE)){
+			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND)
+					&& !this.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.TREASURE)) {
 				return;
 			}
 			trashPile.add(doAction(cardID));
 			return;
-			
+
 		}
 	}
 
@@ -527,8 +552,18 @@ public class Player {
 				// }
 				break;
 			case GAIN_CARD_OTHERS:
-				if (value.toLowerCase().equals("curse")){
+				if (value.toLowerCase().equals("curse")) {
 					GameServer.getInstance().getGameController().gainCurseOthers();
+				}
+				break;
+			case GAIN_CARD_DRAW_PILE:
+				try {
+					if (value.toLowerCase().equals("silver")) {
+						getDeck().getDrawPile().addLast(GameServer.getInstance().getGameController().getGameBoard()
+								.getTableForTreasureCards().get("Silver").removeLast());
+					}
+				} catch (NoSuchElementException e) {
+					System.out.println("no more silver card on the board");
 				}
 				break;
 			case DISCARD_CARD:
@@ -546,6 +581,12 @@ public class Player {
 				break;
 			case ALL_REVEAL_CARDS_TRASH_COINS_I_CAN_TAKE_DISCARD_OTHERS:
 				GameServer.getInstance().getGameController().revealAndTakeCardsDiscardOthers();
+				break;
+			case REVEAL_UNTIL_TREASURES:
+				revealUntilTreasures(Integer.parseInt(value));
+				break;
+			case REVEAL_CARD_OTHERS_PUT_IT_ON_TOP_OF_DECK:
+				GameServer.getInstance().getGameController().revealCardOthersPutItOnTopOfDeck();
 				break;
 			case TRASH_CARD:
 
@@ -566,7 +607,7 @@ public class Player {
 
 				if (value.split("_")[0].toLowerCase().equals("copper")) {
 
-					Card card = getDeck().getCardByName("Copper");
+					Card card = getDeck().getCardByNameFromHand("Copper");
 					if (card != null) {
 
 						getDeck().getCardHand().remove(card);
@@ -647,33 +688,68 @@ public class Player {
 		return serverCard;
 	}
 
-	public void drawUntil() {
-		while (this.getDeck().getCardHand().size() < this.drawUntil) {
-			System.out.println("cardHandSize: " + this.getDeck().getCardHand().size());
-			Card card = this.getDeck().removeSaveFromDrawPile();
-			this.drawedCard = card;
-			this.getDeck().getCardHand().add(card);
-			try {
-				GameServer.getInstance().sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.getDeck().getCardHand())));
-			} catch (IOException e1) {				
-				e1.printStackTrace();
-			}
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
-			
-			if (card.getTypes().contains(this.setAside)) {
-				GameServer.getInstance().getGameController().setCardsDisabled();
-				try {
-					GameServer.getInstance().sendMessage(port, new PacketSetAsideDrawedCard());
-					GameServer.getInstance().sendMessage(port, new PacketTakeDrawedCard());
-				} catch (IOException e) {
-					e.printStackTrace();
+	/**
+	 * reveals so much cards until two treasure cards are revealed
+	 * 
+	 * @param value
+	 */
+	private void revealUntilTreasures(int value) {
+		LinkedList<Card> treasureList = new LinkedList<Card>();
+		this.revealList = new LinkedList<Card>();
+
+		// int min = getDeck().getTreasureAmountNotOnHand() < value ?
+		// getDeck().getTreasureAmountNotOnHand() : value;
+		try {
+			while (treasureList.size() < value) {
+				Card card = this.getDeck().removeSaveFromDrawPile();
+				if (card.getTypes().contains(CardType.TREASURE)) {
+					treasureList.add(card);
+				} else {
+					this.revealList.add(card);
 				}
-				return;
 			}
+		} catch (NoSuchElementException e) {
+			System.out.println("not enough treasures are in the deck");
+		}
+		System.out.println("hinzufügen");
+		CollectionsUtil.appendListToList(treasureList, this.getDeck().getCardHand());
+		CollectionsUtil.appendListToList(this.revealList, this.getDeck().getDiscardPile());
+		this.revealList = new LinkedList<Card>();
+
+	}
+
+	public void drawUntil() {
+		try {
+			while (this.getDeck().getCardHand().size() < this.drawUntil) {
+				System.out.println("cardHandSize: " + this.getDeck().getCardHand().size());
+				Card card = this.getDeck().removeSaveFromDrawPile();
+				this.drawedCard = card;
+				this.getDeck().getCardHand().add(card);
+				try {
+					GameServer.getInstance().sendMessage(port,
+							new PacketSendHandCards(CollectionsUtil.getCardIDs(this.getDeck().getCardHand())));
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
+				if (card.getTypes().contains(this.setAside)) {
+					GameServer.getInstance().getGameController().setCardsDisabled();
+					try {
+						GameServer.getInstance().sendMessage(port, new PacketSetAsideDrawedCard());
+						GameServer.getInstance().sendMessage(port, new PacketTakeDrawedCard());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					return;
+				}
+			}
+		} catch (NoSuchElementException e) {
+			e.printStackTrace();
 		}
 		CollectionsUtil.appendListToList(this.setAsideCards, getDeck().getDiscardPile());
 	}
@@ -731,7 +807,7 @@ public class Player {
 			break;
 		case TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND:
 			executeTrash(card);
-			break;		
+			break;
 		case TRASH_AND_GAIN_MORE_THAN:
 			executeTrash(card);
 			break;
@@ -763,15 +839,15 @@ public class Player {
 				this.gainMode = true;
 			}
 			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_AND_GAIN_MORE_THAN)
-					|| this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND)) {
+					|| this.discardOrTrashAction.getFirstEntry()
+							.equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND)) {
 				this.gainMode = true;
 				this.gainValue += card.getCost();
 			}
 			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND)) {
 				this.onHand = true;
 			}
-			
-			
+
 		}
 	}
 

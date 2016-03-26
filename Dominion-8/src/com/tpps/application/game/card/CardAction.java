@@ -48,7 +48,9 @@ public enum CardAction {
 	/* z.B. bei Spion */
 	REVEAL_CARD,
 	
-	REVEAL_UNTIL_TREASURES, 
+	REVEAL_UNTIL_TREASURES,
+	
+	REVEAL_CARD_OTHERS_PUT_IT_ON_TOP_OF_DECK, 
 	
 	/* z.B. wenn eine Karte keine Aktion hat und eine Geldkarte ist */
 	IS_TREASURE, 
