@@ -10,6 +10,28 @@ import javax.imageio.ImageIO;
 
 public class Loader {
 
+	private static Loader instance = new Loader();
+	private Font xenippa;
+	
+	public Loader() {
+		try {
+			xenippa = importFont();
+		} catch (FontFormatException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		};
+	}
+	
+	public static Loader getInstance() {
+		return Loader.instance;
+	}
+	
+	public Font getXenipa(){
+		return this.xenippa;
+	}
+	
+	
 	/**
 	 * importing font from resources
 	 * 
@@ -17,13 +39,14 @@ public class Loader {
 	 * @throws FontFormatException
 	 */
 
-	public static Font importFont() throws FontFormatException, IOException {
-
-		Font customFont = Font.createFont(Font.TRUETYPE_FONT,
-				ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF"));
+	public Font importFont() throws FontFormatException, IOException {
+		System.out.println("im gameWindow"+ ClassLoader.getSystemResource("resources/font/xenippa1.ttf"));
+		
+		Font customFont = Font.createFont(Font.TRUETYPE_FONT, 
+				ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.ttf"));
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		ge.registerFont(Font.createFont(Font.TRUETYPE_FONT,
-				ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.TTF")));
+				ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.ttf")));		
 		return customFont;
 	}
 	

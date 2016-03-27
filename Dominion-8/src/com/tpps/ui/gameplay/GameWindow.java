@@ -19,6 +19,7 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.Loader;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.DisplayValue;
 import com.tpps.ui.components.GFButton;
@@ -611,6 +612,15 @@ public class GameWindow extends JFrame {
 		framework.addComponent(endActionPhase);
 	}
 	
+
+	/**
+	 * adding PlayTreasures Button
+	 */
+
+	public void addPlayTreasuresButton() {
+		framework.addComponent(playTreasures);
+	}
+	
 	/**
 	 * removing the PlayTreasure Button
 	 */
@@ -705,13 +715,6 @@ public class GameWindow extends JFrame {
 		framework.addComponent(this.discardDeck);
 	}
 	
-	/**
-	 * adding PlayTreasures Button
-	 */
-
-	public void addPlayTreasuresButton() {
-		framework.removeComponent(playTreasures);
-	}
 
 	/**
 	 * adding ActionPhase Button
@@ -721,8 +724,10 @@ public class GameWindow extends JFrame {
 		framework.addComponent(endActionPhase);
 	}
 	
-	public void addTakeThiefCardsButton() {
+	public void addTakeThiefCardsButtonRemoveOtherButtons() {
 		framework.addComponent(takeThiefCards);
+		framework.removeComponent(playTreasures);
+		framework.removeComponent(endTurn);
 	}
 	
 	public void addPutBackThiefCardsButton() {

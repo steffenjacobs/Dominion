@@ -65,7 +65,12 @@ public class CreateAccount extends JFrame {
 		loadImage();
 		resizeImage();
 		try {
-			this.customFont = Loader.importFont();
+			if (customFont == null) {
+				customFont = Loader.getInstance().getXenipa();
+				if (customFont == null){
+					customFont = new Loader().importFont();
+				}
+			}
 		} catch (FontFormatException e1) {
 			e1.printStackTrace();
 		} catch (IOException e1) {

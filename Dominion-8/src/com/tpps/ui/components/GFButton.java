@@ -72,8 +72,13 @@ public abstract class GFButton extends GameObject {
 
 	@Override
 	public void onResize(int absWidth, int absHeight) {
-		try {
-			customFont = Loader.importFont();
+		try {			
+			if (customFont == null) {
+				customFont = Loader.getInstance().getXenipa();
+				if (customFont == null){
+					customFont = new Loader().importFont();
+				}
+			}
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

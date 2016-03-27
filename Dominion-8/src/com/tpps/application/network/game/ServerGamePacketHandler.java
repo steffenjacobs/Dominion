@@ -162,10 +162,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case TAKE_THIEF_CARDS:
 				takeThiefCards(port);
 				this.server.getGameController().setCardsEnabled();
+				resetGameWindowAfterRevealAction(port, this.server.getGameController().getActivePlayer());
 				break;
 			case PUT_BACK_THIEF_CARDS:
 				putBackThiefCards(port);
 				this.server.getGameController().setCardsEnabled();
+				resetGameWindowAfterRevealAction(port, this.server.getGameController().getActivePlayer());
 				break;
 			case TAKE_DRAWED_CARD:
 				takeDrawedCardStartDrawing();
@@ -376,15 +378,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 					LinkedList<Player> players = new LinkedList<Player>(this.server.getGameController().getPlayers());
 
 					players.remove(this.server.getGameController().getActivePlayer());
-					boolean thiefFlag = false;
-					for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
-						Player player2 = (Player) iterator.next();
-						if (player2.isThief()) {
-							thiefFlag = true;
-							break;
-						}
-					}
-					if (!thiefFlag) {
+					boolean thiefFlag = this.server.getGameController().checkThiefFinish();
+					
+					if (thiefFlag) {
 						System.out.println("alle karten schicken");
 						this.server.getGameController().setCardsDisabled();
 						this.server.getGameController().getActivePlayer().setThiefFalse();
@@ -426,7 +422,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 					+ player.getCoins());
 
 			server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
-			if (player.getActions() == 0) {
+			if (player.getActions() == 0 && !player.isThief()) {
 				server.sendMessage(port, new PacketEndActionPhase());
 			}
 			server.sendMessage(port,

@@ -115,7 +115,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameWindow.removePlayTreasuresButton();
 			break;
 		case TAKE_THIEF_CARDS:
-			this.gameWindow.addTakeThiefCardsButton();
+			this.gameWindow.addTakeThiefCardsButtonRemoveOtherButtons();
 			break;
 		case PUT_BACK_THIEF_CARDS:
 			this.gameWindow.addPutBackThiefCardsButton();
@@ -133,12 +133,18 @@ public class ClientGamePacketHandler extends PacketHandler {
 			PacketSendActiveButtons p = (PacketSendActiveButtons)packet;
 			if (p.isEndTurn()){
 				this.gameWindow.addEndTurnButton();
+			}else{
+				this.gameWindow.removeEndTurnButton();
 			}
 			if (p.isPlayTreasures()){
 				this.gameWindow.addPlayTreasuresButton();
+			}else{
+				this.gameWindow.removePlayTreasuresButton();
 			}
 			if (p.isEndActionPhase()){
 				this.gameWindow.addEndActionPhaseButton();
+			}else{
+				this.gameWindow.removeEndActionPhaseButton();
 			}
 			break;
 		case END_TRASH_MODE:

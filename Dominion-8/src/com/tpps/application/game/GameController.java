@@ -16,6 +16,7 @@ import com.tpps.application.network.gameSession.packets.PacketDisable;
 import com.tpps.application.network.gameSession.packets.PacketEnable;
 import com.tpps.application.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.application.network.gameSession.packets.PacketPutBackCards;
+import com.tpps.application.network.gameSession.packets.PacketSendActiveButtons;
 import com.tpps.application.network.gameSession.packets.PacketSendBoard;
 import com.tpps.application.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.application.network.gameSession.packets.PacketSendRevealCards;
@@ -281,12 +282,14 @@ public class GameController {
 	 * sent to the activePlayer
 	 */
 	public synchronized void revealAndTakeCardsDiscardOthers() {
+		boolean reactivePlayer = false;
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			player.setThief();
 			if (!player.equals(activePlayer)) {
 
 				if (player.getDeck().cardHandContainsReactionCard()) {
+					reactivePlayer = true;
 					player.setThiefFalse();
 					try {
 						GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketDisable());
@@ -321,11 +324,14 @@ public class GameController {
 		System.out.println("im gamecontrolloer thiefList size: " + thiefList.size());
 		if (thiefList.size() > 0) {
 			try {
+				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketSendActiveButtons(false, false, false));
 				GameServer.getInstance().sendMessage(activePlayer.getPort(),
 						new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}else if(!reactivePlayer){
+			this.activePlayer.setThiefFalse();
 		}
 	}
 	
@@ -408,7 +414,6 @@ public class GameController {
 					player.setWitchFalse();
 
 					System.out.println(Arrays.toString(player.getDeck().getDiscardPile().toArray()));
-
 				}
 			}
 		}
@@ -486,6 +491,8 @@ public class GameController {
 
 	public void checkWitchFinish() {
 		boolean witchFlag = true;
+		LinkedList<Player> players = new LinkedList<Player>(this.players);
+		players.remove(this.activePlayer);
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (player.isWitch()) {
@@ -500,6 +507,8 @@ public class GameController {
 
 	public void checkBureaucratFinish() {
 		boolean bureaucratFlag = true;
+		LinkedList<Player> players = new LinkedList<Player>(this.players);
+		players.remove(this.activePlayer);
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (player.isBureaucrat()) {
@@ -512,8 +521,26 @@ public class GameController {
 		}
 	}
 	
+	public boolean checkThiefFinish() {
+		boolean thiefFlag = true;
+		LinkedList<Player> players = new LinkedList<Player>(this.players);
+
+		players.remove(this.activePlayer);
+		
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player2 = (Player) iterator.next();
+			if (player2.isThief()) {
+				thiefFlag = false;
+				break;
+			}
+		}
+		return thiefFlag;
+	}
+	
 	public boolean checkSpyFinish(){
 		boolean spyFlag = true;
+		LinkedList<Player> players = new LinkedList<Player>(this.players);
+		players.remove(this.activePlayer);
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (player.isSpy()) {
@@ -568,6 +595,8 @@ public class GameController {
 		spyList.add(player);
 		if (spyList.size() == 1) {
 			try {
+				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketTakeCards(this.activePlayer.getClientID()));
+				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketPutBackCards(this.activePlayer.getClientID()));
 				GameServer.getInstance().sendMessage(activePlayer.getPort(),
 						new PacketSendRevealCards(CollectionsUtil.getCardIDs(spyList.get(0).getRevealList())));
 			} catch (IOException e) {
@@ -617,6 +646,11 @@ public class GameController {
 		if (thiefList.size() == 0) {
 			this.getActivePlayer().setThiefFalse();
 		}
+		
+		checkSpyFinish();
+		checkWitchFinish();
+		checkBureaucratFinish();
+		
 
 		try {
 			GameServer.getInstance().sendMessage(this.getActivePlayer().getPort(), new PacketEnable());

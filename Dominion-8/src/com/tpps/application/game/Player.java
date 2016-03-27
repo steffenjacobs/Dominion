@@ -374,7 +374,7 @@ public class Player {
 	 * @throws IOException
 	 */
 	public void discardOrTrash(String cardID, LinkedList<Card> trashPile) throws IOException {
-
+		
 		if (this.discardMode) {
 			this.getDeck().getDiscardPile().add(doAction(cardID));
 			return;
@@ -770,6 +770,7 @@ public class Player {
 		this.gainMode = false;
 		this.revealMode = false;
 		this.thief = false;
+		this.spy = false;
 	}
 
 	/**
@@ -813,9 +814,7 @@ public class Player {
 			break;
 		case TRASH_AND_GAIN:
 			executeTrash(card);
-
 			break;
-
 		case TRASH_CARD:
 			executeTrash(card);
 			break;
