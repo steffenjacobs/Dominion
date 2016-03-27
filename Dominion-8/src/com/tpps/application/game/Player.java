@@ -1,7 +1,6 @@
 package com.tpps.application.game;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -48,7 +47,7 @@ public class Player {
 	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy,
 			onHand;
 	private Tuple<CardAction> discardOrTrashAction;
-	private LinkedList<Card> playedCards, discardList, revealList, temporaryTrashPile, setAsideCards;
+	private LinkedList<Card> playedCards, drawList, revealList, temporaryTrashPile, setAsideCards;
 
 	/**
 	 * @param deck
@@ -65,7 +64,7 @@ public class Player {
 		this.bureaucrat = false;
 		this.witch = false;
 		this.spy = false;
-		this.discardList = new LinkedList<Card>();
+		this.drawList = new LinkedList<Card>();
 		this.revealList = new LinkedList<Card>();
 		this.temporaryTrashPile = new LinkedList<Card>();
 		this.setAsideCards = new LinkedList<Card>();
@@ -89,7 +88,7 @@ public class Player {
 	}
 
 	/**
-	 * 
+	 * sets the player values on the initial values
 	 */
 	public synchronized void resetPlayerValues() {
 		this.coins = 0;
@@ -104,62 +103,115 @@ public class Player {
 		return deck;
 	}
 
+	/**
+	 * sets the discard mode on true
+	 */
 	public void setDiscardMode() {
 		this.discardMode = true;
 	}
 
+	/**
+	 * 
+	 * @return if player is in thief mode or not
+	 */
 	public boolean isThief() {
 		return thief;
 	}
 
+	/**
+	 * sets the thiefMode true
+	 */
 	public void setThief() {
 		this.thief = true;
 	}
 
+	/**
+	 * sets the thiefMode false
+	 */
 	public void setThiefFalse() {
 		this.thief = false;
 	}
 
+	/**
+	 * 
+	 * @return if the player is in the witch mode or not
+	 */
 	public boolean isWitch() {
 		return witch;
 	}
 
+	/**
+	 * sets the witch mode true
+	 */
 	public void setWitch() {
 		this.witch = true;
 	}
 
+	/**
+	 * sets the witch mode false
+	 */
 	public void setWitchFalse() {
 		this.witch = false;
 	}
 	
+	/**
+	 * 
+	 * @return if the player is in the bureaucrat mode or not
+	 */
 	public boolean isBureaucrat() {
 		return this.bureaucrat;
 	}
 	
+	/**
+	 * sets the bureaucrat mode true
+	 */
 	public void setBureaucrat() {
 		this.bureaucrat = true;
 	}
 	
+	/**
+	 * sets the bureaucrat mode false
+	 */
 	public void setBureaucratFalse() {
 		this.bureaucrat = false;
 	}
 	
+	/**
+	 * 
+	 * @return if the player is in the spy mode or not
+	 */
 	public boolean isSpy() {
 		return this.spy;
 	}
 	
+	/**
+	 * sets the spy mode true
+	 */
 	public void setSpy() {
 		this.spy = true;
 	}
 	
+	/**
+	 * sets the spy mode false
+	 */
 	public void setSpyFalse() {
 		this.spy = false;
 	}
 
+	/**
+	 * sets the tuple which contains the chosen discard or trash actions (listed in class CardAction) and the 
+	 * value for the discard or trash action
+	 * @param cardAction
+	 * @param val
+	 */
 	public void setDiscardOrTrashAction(CardAction cardAction, int val) {
 		this.discardOrTrashAction = new Tuple<CardAction>(cardAction, val);
 	}
 
+	/**
+	 * sets the value if the player has a reaction card or not on the value specified through the parameter
+	 * @param reactionCard
+	 */
 	public void setReactionCard(boolean reactionCard) {
 		this.reactionCard = reactionCard;
 	}
@@ -211,6 +263,10 @@ public class Player {
 		return gainMode;
 	}
 
+	/**
+	 * 
+	 * @return the gainValu of the player
+	 */
 	public int getGainValue() {
 		return gainValue;
 	}
@@ -306,18 +362,33 @@ public class Player {
 		return coins;
 	}
 
+	/**
+	 * 
+	 * @return the last drawed card. be carefull is not set by every card
+	 */
 	public Card getDrawedCard() {
 		return this.drawedCard;
 	}
 
+	/**
+	 * 
+	 * @return the cards which should be set aside after the action
+	 */
 	public LinkedList<Card> getSetAsideCards() {
 		return this.setAsideCards;
 	}
 
+	/**
+	 * 
+	 * @return if the gained card should be put on the hand after the action (if on hand = true)
+	 */
 	public boolean isOnHand() {
 		return onHand;
 	}
 
+	/**
+	 * set on hand false if the gained card shall be put on the discard pile and not on the hand
+	 */
 	public void setOnHandFalse() {
 		this.onHand = false;
 	}
@@ -330,21 +401,31 @@ public class Player {
 		this.coins = coins;
 	}
 
+	/**
+	 * set reveal mode true if he has to reveal cards
+	 */
 	public void setRevealMode() {
 		this.revealMode = true;
 	}
 
 	/**
-	 * 
+	 * sets the reaction mode for the player
 	 */
 	public void setReactionMode() {
 		this.reactionMode = true;
 	}
 
+	/**
+	 * sets the reaction mode false
+	 */
 	public void setReactionModeFalse() {
 		this.reactionMode = false;
 	}
 
+	/**
+	 * resets the thief mode triggered through the card thief. thief, revealMode, reactionMode, reactionCard 
+	 * are set on false. a new revealList is created.
+	 */
 	public void resetThiefMode() {
 		this.thief = false;
 		this.reactionCard = false;
@@ -353,22 +434,28 @@ public class Player {
 		this.revealList = new LinkedList<Card>();
 	}
 
+	/**
+	 * takes the revealed card from the revealList append the list to the discard pile. sets the reveal mode false
+	 * and creates a new reveal list
+	 */
 	public void takeRevealedCardsSetRevealModeFalse() {
-
 		CollectionsUtil.appendListToList(revealList, getDeck().getDiscardPile());
 		this.revealMode = false;
 		revealList = new LinkedList<Card>();
 	}
 
+	/**
+	 * appends the revealed cards to the draw pile. sets the reveal mode false. creates a new reveal list
+	 */
 	public void putBackRevealedCardsSetRevealModeFalse() {
-
 		CollectionsUtil.appendListToList(revealList, getDeck().getDrawPile());
 		this.revealMode = false;
 		revealList = new LinkedList<Card>();
 	}
 
 	/**
-	 * 
+	 * called by the game controller if player is in discard or trash mode. decides in which mode the player is
+	 * and appends the cards to the right pile. calls the do action method for the card. 
 	 * @param cardID
 	 * @param trashPile
 	 * @throws IOException
@@ -391,23 +478,24 @@ public class Player {
 	}
 
 	/**
-	 * 
+	 * discard mode is set on false drawList is append to the hand
 	 */
 	public void endDiscardAndDrawMode() {
-		CollectionsUtil.appendListToList(discardList, this.getDeck().getCardHand());
+		CollectionsUtil.appendListToList(drawList, this.getDeck().getCardHand());
 		this.discardMode = false;
-		discardList = new LinkedList<Card>();
+		drawList = new LinkedList<Card>();
 	}
 
 	/**
-	 * 
+	 * sets trash mode on false
 	 */
 	public void endTrashMode() {
 		this.trashMode = false;
 	}
 
 	/**
-	 * 
+	 * called whenever a card is played calls the doAction method appends the played card to the played card list
+	 * sets the play twice flag if a card should be played twice
 	 * @param cardID
 	 * @throws IOException
 	 */
@@ -424,7 +512,7 @@ public class Player {
 	}
 
 	/**
-	 * 
+	 * plays all treasures at once
 	 * @throws IOException
 	 */
 	public void playTreasures() throws IOException {
@@ -468,7 +556,8 @@ public class Player {
 	}
 
 	/**
-	 * calls the static method which executes the actions
+	 * most important method for the card action. every method which executes card actions is called 
+	 * from this method
 	 * 
 	 * @author Lukas Adler
 	 * @throws IOException
@@ -689,8 +778,8 @@ public class Player {
 	}
 
 	/**
-	 * reveals so much cards until two treasure cards are revealed
-	 * 
+	 * reveals so much cards until value treasure cards are revealed
+	 * @throws noSuchElement exceptions if not enough treasure cards are in the deck
 	 * @param value
 	 */
 	private void revealUntilTreasures(int value) {
@@ -718,6 +807,11 @@ public class Player {
 
 	}
 
+	/**
+	 * draws until this.drawUntil if card contains the type which is set in this.setAside the player is asked
+	 * if he wants to take the card or to set it aside
+	 * @throws no such elemnt exception if there are not enough cards to draw
+	 */
 	public void drawUntil() {
 		try {
 			while (this.getDeck().getCardHand().size() < this.drawUntil) {
@@ -754,6 +848,10 @@ public class Player {
 		CollectionsUtil.appendListToList(this.setAsideCards, getDeck().getDiscardPile());
 	}
 
+	/**
+	 * sets the gainMode false sets the gainValue on -1 which shows that there is nothing to gain
+	 * because no card costs -1
+	 */
 	protected void setGainModeFalse() {
 		this.gainMode = false;
 		this.gainValue = -1;
@@ -771,10 +869,13 @@ public class Player {
 		this.revealMode = false;
 		this.thief = false;
 		this.spy = false;
+		this.witch = false;
+		this.bureaucrat = false;
 	}
 
 	/**
-	 * 
+	 * executes the discard or trash action after this flag was set in the doAction method.
+	 * action is specified in the Tuple discardOrTrashAction
 	 * @param card
 	 * @throws IOException
 	 */
@@ -783,7 +884,7 @@ public class Player {
 		case DISCARD_AND_DRAW:
 			if (this.discardOrTrashAction.getSecondEntry() == -1) {
 				this.getDeck().getCardHand().remove(card);
-				discardList.add(this.getDeck().removeSaveFromDrawPile());
+				drawList.add(this.getDeck().removeSaveFromDrawPile());
 				LinkedList<Card> cardHand = this.getDeck().getCardHand();
 				if (cardHand.size() == 0) {
 					endDiscardAndDrawMode();
@@ -823,6 +924,11 @@ public class Player {
 		}
 	}
 
+	/**
+	 * executes the trash Action specified in the Tuple discard or TrashAction
+	 * @param card
+	 * @throws IOException
+	 */
 	private void executeTrash(Card card) throws IOException {
 		LinkedList<Card> cardHand = this.getDeck().getCardHand();
 		if (cardHand.size() == 0) {
@@ -850,6 +956,9 @@ public class Player {
 		}
 	}
 
+	/**
+	 * the temporary trashPile is reset
+	 */
 	public void resetTemporaryTrashPile() {
 		this.temporaryTrashPile = new LinkedList<Card>();
 	}

@@ -1,7 +1,6 @@
 package com.tpps.ui.gameplay;
 
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -19,7 +18,6 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.Loader;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.DisplayValue;
 import com.tpps.ui.components.GFButton;
