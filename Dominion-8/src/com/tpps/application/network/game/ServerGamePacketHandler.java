@@ -527,16 +527,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 */
 	private void addPlayerAndCheckPlayerCount(int port, int clientId) throws IOException {
 		try {
-			server.getGameController().addPlayer(
-					new Player(clientId, port, this.server.getGameController().getGameBoard().getStartSet()));
+			server.getGameController().addPlayer( new Player(clientId, port, this.server.getGameController().getGameBoard().getStartSet()));
 			server.sendMessage(port, new PacketSendClientId(clientId));
 			if (server.getGameController().getPlayers().size() == 4) {
 				server.getGameController().startGame();
 				setUpGui();
 
 			}
-			System.out.println(
-					"registrate one more client to server with id: " + clientId + "listening on port: " + port);
+			System.out.println( "registrate one more client to server with id: " + clientId + "listening on port: " + port);
 		} catch (TooMuchPlayerException tmpe) {
 			server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();
