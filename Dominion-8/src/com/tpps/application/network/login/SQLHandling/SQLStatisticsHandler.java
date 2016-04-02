@@ -268,6 +268,48 @@ public class SQLStatisticsHandler {
 		return 0;
 	}
 	
+	public static String[][] getAllStatistics(){
+		try {
+			Statement stmt = SQLHandler.getConnection().createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM statistics");
+			rs.last();			
+			
+			int size = rs.getRow();
+			rs.beforeFirst();
+		
+			//System.out.println(size);
+			String[][] statz = new String[size][7];
+			
+			int height = 0;
+			int width = 0;
+			while(rs.next()){
+				String nick = rs.getString("nickname");
+				int wins = rs.getInt("wins");
+				int losses = rs.getInt("losses");
+				double ratio = rs.getDouble("win_loss");
+				int games_played = rs.getInt("games_played");
+				String rank = rs.getString("rank");
+				long playtime = rs.getLong("playtime");
+			//	System.out.println(nick);
+				
+				statz[height][width] = nick;
+				statz[height][++width] = "" + wins;
+				statz[height][++width] = "" + losses;
+				statz[height][++width] = "" + ratio;
+				statz[height][++width] = "" + games_played;
+				statz[height][++width] = rank;
+				statz[height][++width] = "" + playtime;
+				height++;
+				width = 0;
+			}
+			return statz;
+			
+		} catch (SQLException e) {		
+			e.printStackTrace();
+			return new String[][] {{"ERROR", "OCCURED", "WHILE", "LOADING", "ALL", "STATISTICS", "SRY"}};
+		}
+	}
+	
 //	public static void main(String[] args) {
 //		String hostname = "localhost";
 //		String port = "3306";
@@ -275,25 +317,15 @@ public class SQLStatisticsHandler {
 //		String user = "jojo";
 //		String password = "password";
 //		
-//		SQLHandler sql = new SQLHandler(hostname, port, user, password, database);
-//		SQLOperations op = new SQLOperations(sql);
-//		SQLStatisticsHandler handler = new SQLStatisticsHandler(sql);
-//		sql.connect();
-//		Statistic one = new Statistic(SQLType.VARCHAR, "40", "description");
-//		Statistic two = new Statistic(SQLType.INT, "wins");
-//		Statistic tree = new Statistic(SQLType.INT, "losses");
-//		Statistic four = new Statistic(SQLType.FLOAT, "4,2", "win_loss");
-//		ArrayList<Statistic> statz = new ArrayList<Statistic>();
-//		statz.add(one);
-//		statz.add(two);
-//		statz.add(tree);
-//		statz.add(four);
-//		handler.createStatisticsTable(statz);
-//		handler.insertRowForFirstLogin("kevinS");
-//		handler.addWinOrLoss("kevinS", true);
-//		handler.addWinOrLoss("kevinS", false);
-//		handler.setDescription("kevinS", "Hacker");
-//		handler.updateWinLoss("kevinS");
-//		sql.closeConnection();
+//		SQLHandler.init(hostname, port, user, password, database);
+//		SQLHandler.connect();
+//		
+//		String[][] statz = SQLStatisticsHandler.getAllStatistics();
+//		for (int i = 0; i < statz.length; i++) {
+//			for (int j = 0; j < statz[i].length; j++) {
+//				System.out.print(statz[i][j] + " ");
+//			}
+//			System.out.println();
+//		}
 //	}
 }
