@@ -309,23 +309,4 @@ public class SQLStatisticsHandler {
 			return new String[][] {{"ERROR", "OCCURED", "WHILE", "LOADING", "ALL", "STATISTICS", "SRY"}};
 		}
 	}
-	
-//	public static void main(String[] args) {
-//		String hostname = "localhost";
-//		String port = "3306";
-//		String database = "accountmanager";
-//		String user = "jojo";
-//		String password = "password";
-//		
-//		SQLHandler.init(hostname, port, user, password, database);
-//		SQLHandler.connect();
-//		
-//		String[][] statz = SQLStatisticsHandler.getAllStatistics();
-//		for (int i = 0; i < statz.length; i++) {
-//			for (int j = 0; j < statz[i].length; j++) {
-//				System.out.print(statz[i][j] + " ");
-//			}
-//			System.out.println();
-//		}
-//	}
 }

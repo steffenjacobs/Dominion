@@ -22,13 +22,22 @@ public class ChatController extends PacketHandler{
 		}
 	}
 	
-	public void createChatroom(ArrayList<String> members){
+	public void createChatRoom(ArrayList<String> members){
 		PacketChatController packet = new PacketChatController("createChatroom", members);
 		try {
 			this.chatclient.sendMessage(packet);
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}
+	}
+	
+	public void createChatRoom(String user1, String user2, String user3, String user4){
+		ArrayList<String> members = new ArrayList<String>();
+		members.add(user1);
+		members.add(user2);
+		members.add(user3);
+		members.add(user4);
+		this.createChatRoom(members);
 	}
 	
 	public void deleteChatroom(String onemember){
@@ -57,7 +66,7 @@ public class ChatController extends PacketHandler{
 				list.add(split[2]);
 				list.add(split[3]);
 				list.add(split[4]);
-				troller.createChatroom(list);
+				troller.createChatRoom(list);
 				System.out.println("create chatroom");
 			}else if(line.startsWith("del")){
 				String[] split = line.split("\\s+");
