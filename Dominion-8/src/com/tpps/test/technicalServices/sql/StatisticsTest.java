@@ -1,4 +1,4 @@
-package com.tpps.test.sql.sqlstatements;
+package com.tpps.test.technicalServices.sql;
 
 import static org.junit.Assert.assertEquals;
 
