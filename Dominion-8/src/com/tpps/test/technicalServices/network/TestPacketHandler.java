@@ -1,4 +1,4 @@
-package com.tpps.test.application.network;
+package com.tpps.test.technicalServices.network;
 
 import java.util.HashMap;
 import java.util.concurrent.CopyOnWriteArrayList;

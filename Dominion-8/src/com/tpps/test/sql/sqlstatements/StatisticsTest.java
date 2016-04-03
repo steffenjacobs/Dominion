@@ -1,14 +1,10 @@
-package com.tpps.test.application.sqlstatements;
+package com.tpps.test.sql.sqlstatements;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.tpps.test.application.ui;
+package com.tpps.test.ui;
 
 import java.awt.Dimension;
 import java.awt.Image;

@@ -1,4 +1,4 @@
-package com.tpps.test.application.network;
+package com.tpps.test.technicalServices.network;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

@@ -1,12 +1,9 @@
 package com.tpps.test.application.game;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.is;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.tpps.test.application.ui;
+package com.tpps.test.ui;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
