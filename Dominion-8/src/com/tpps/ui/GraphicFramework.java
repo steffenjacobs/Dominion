@@ -148,9 +148,11 @@ public class GraphicFramework extends JPanel {
 		Arrays.sort(objects, new CompareByLayer());
 
 		for (GameObject obj : objects) {
-			if (obj.isVisible())
+			if (obj.isVisible()) {
 				g.drawImage(obj.getRenderdImage(), (int) obj.getLocation().getX(), (int) obj.getLocation().getY(),
 						null);
+				System.out.println("redrawn " + obj);
+			}
 		}
 	}
 
@@ -178,7 +180,7 @@ public class GraphicFramework extends JPanel {
 		_parent.getContentPane().addMouseMotionListener(mouseListener);
 		_parent.addComponentListener(new ComponentAdapter() {
 			private ExecutorService threadPool = Executors.newCachedThreadPool();
-			
+
 			long last = 0;
 
 			@Override
