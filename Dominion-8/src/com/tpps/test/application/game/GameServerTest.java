@@ -7,7 +7,7 @@ import static org.hamcrest.CoreMatchers.is;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.tpps.application.network.game.GameServer;
+import com.tpps.technicalServices.network.game.GameServer;
 
 public class GameServerTest {
 

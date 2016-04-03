@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
-import com.tpps.application.network.game.GameServer;
+import com.tpps.technicalServices.network.game.GameServer;
 
 public class ArtificialIntelligence /* implements Runnable */ {
 

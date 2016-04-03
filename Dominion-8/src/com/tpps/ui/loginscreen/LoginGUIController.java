@@ -2,7 +2,7 @@ package com.tpps.ui.loginscreen;
 
 import javax.swing.JOptionPane;
 
-import com.tpps.application.network.login.client.LoginClient;
+import com.tpps.technicalServices.network.login.client.LoginClient;
 import com.tpps.ui.MainMenu;
 
 /**

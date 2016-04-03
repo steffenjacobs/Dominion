@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
-import com.tpps.application.network.game.SynchronisationException;
+import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 

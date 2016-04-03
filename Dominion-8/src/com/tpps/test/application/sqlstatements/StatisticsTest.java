@@ -12,10 +12,10 @@ import java.text.DecimalFormat;
 
 import org.junit.Test;
 
-import com.tpps.application.network.login.SQLHandling.SQLHandler;
-import com.tpps.application.network.login.SQLHandling.SQLOperations;
-import com.tpps.application.network.login.SQLHandling.SQLStatisticsHandler;
-import com.tpps.application.network.login.SQLHandling.Utilties;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLHandler;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLOperations;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
+import com.tpps.technicalServices.network.login.SQLHandling.Utilties;
 
 public class StatisticsTest {
 

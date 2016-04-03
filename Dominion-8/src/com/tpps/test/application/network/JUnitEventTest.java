@@ -8,11 +8,11 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
-import com.tpps.application.network.core.Client;
-import com.tpps.application.network.core.PacketHandler;
-import com.tpps.application.network.core.Server;
-import com.tpps.application.network.core.events.NetworkListener;
-import com.tpps.application.network.core.packet.Packet;
+import com.tpps.technicalServices.network.core.Client;
+import com.tpps.technicalServices.network.core.PacketHandler;
+import com.tpps.technicalServices.network.core.Server;
+import com.tpps.technicalServices.network.core.events.NetworkListener;
+import com.tpps.technicalServices.network.core.packet.Packet;
 
 /***
  * checks whether the event-system with the client and server work correctly

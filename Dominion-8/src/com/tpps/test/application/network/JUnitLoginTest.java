@@ -6,11 +6,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.junit.Test;
 
-import com.tpps.application.network.core.packet.Packet;
-import com.tpps.application.network.core.packet.PacketType;
-import com.tpps.application.network.login.client.LoginClient;
-import com.tpps.application.network.login.packets.PacketLoginCheckAnswer;
-import com.tpps.application.network.login.packets.PacketRegisterAnswer;
+import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.core.packet.PacketType;
+import com.tpps.technicalServices.network.login.client.LoginClient;
+import com.tpps.technicalServices.network.login.packets.PacketLoginCheckAnswer;
+import com.tpps.technicalServices.network.login.packets.PacketRegisterAnswer;
 import com.tpps.ui.loginscreen.LoginGUIController;
 
 /**

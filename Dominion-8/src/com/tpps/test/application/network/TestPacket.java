@@ -2,8 +2,8 @@ package com.tpps.test.application.network;
 
 import java.io.Serializable;
 
-import com.tpps.application.network.core.packet.Packet;
-import com.tpps.application.network.core.packet.PacketType;
+import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.core.packet.PacketType;
 
 /**
  * custom packet for testing of the network-framework

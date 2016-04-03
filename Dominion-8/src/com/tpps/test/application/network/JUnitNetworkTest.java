@@ -11,10 +11,10 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.tpps.application.network.core.Client;
-import com.tpps.application.network.core.Server;
-import com.tpps.application.network.core.ServerConnectionThread;
-import com.tpps.application.network.core.packet.Packet;
+import com.tpps.technicalServices.network.core.Client;
+import com.tpps.technicalServices.network.core.Server;
+import com.tpps.technicalServices.network.core.ServerConnectionThread;
+import com.tpps.technicalServices.network.core.packet.Packet;
 
 /**
  * tests the network-framework as required

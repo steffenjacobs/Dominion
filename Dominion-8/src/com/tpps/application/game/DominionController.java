@@ -5,13 +5,13 @@ import java.net.InetSocketAddress;
 import java.util.UUID;
 
 import com.mysql.fabric.Server;
-import com.tpps.application.network.card.CardClient;
-import com.tpps.application.network.clientSession.client.SessionClient;
-import com.tpps.application.network.game.ClientGamePacketHandler;
-import com.tpps.application.network.game.GameClient;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.card.CardClient;
+import com.tpps.technicalServices.network.clientSession.client.SessionClient;
+import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
+import com.tpps.technicalServices.network.game.GameClient;
 
 /**
  * main controller class containing main entry point for client-application

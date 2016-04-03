@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import javax.swing.JFrame;
 
 import com.tpps.application.game.DominionController;
-import com.tpps.application.network.gameSession.packets.PacketPlayCard;
+import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;

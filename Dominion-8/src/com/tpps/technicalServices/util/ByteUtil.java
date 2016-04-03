@@ -8,7 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
-import com.tpps.application.network.core.packet.Packet;
+import com.tpps.technicalServices.network.core.packet.Packet;
 
 /**
  * de-/serialzes objects

@@ -3,8 +3,8 @@ package com.tpps.test.application.network;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import com.tpps.application.network.game.ClientGamePacketHandler;
-import com.tpps.application.network.game.GameClient;
+import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
+import com.tpps.technicalServices.network.game.GameClient;
 
 
 public class ServerTest {

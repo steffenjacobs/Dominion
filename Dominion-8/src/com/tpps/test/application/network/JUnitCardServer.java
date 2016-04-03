@@ -19,17 +19,17 @@ import org.junit.Test;
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
-import com.tpps.application.network.card.CardClient;
-import com.tpps.application.network.card.CardPacketHandlerClient;
-import com.tpps.application.network.card.CardPacketHandlerServer;
-import com.tpps.application.network.card.CardServer;
-import com.tpps.application.network.clientSession.client.SessionClient;
-import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
-import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
-import com.tpps.application.network.clientSession.server.SessionServer;
-import com.tpps.application.network.core.SuperCallable;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.network.card.CardClient;
+import com.tpps.technicalServices.network.card.CardPacketHandlerClient;
+import com.tpps.technicalServices.network.card.CardPacketHandlerServer;
+import com.tpps.technicalServices.network.card.CardServer;
+import com.tpps.technicalServices.network.clientSession.client.SessionClient;
+import com.tpps.technicalServices.network.clientSession.client.SessionPacketSenderAPI;
+import com.tpps.technicalServices.network.clientSession.packets.PacketSessionGetAnswer;
+import com.tpps.technicalServices.network.clientSession.server.SessionServer;
+import com.tpps.technicalServices.network.core.SuperCallable;
 
 /**
  * test the CardServer: client can send a check-card-name-request to the server,

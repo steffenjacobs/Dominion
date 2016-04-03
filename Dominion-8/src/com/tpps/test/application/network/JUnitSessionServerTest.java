@@ -14,14 +14,14 @@ import java.util.concurrent.Semaphore;
 
 import org.junit.Test;
 
-import com.tpps.application.network.clientSession.client.SessionClient;
-import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
-import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
-import com.tpps.application.network.clientSession.server.SessionManager;
-import com.tpps.application.network.clientSession.server.SessionPacketHandler;
-import com.tpps.application.network.clientSession.server.SessionServer;
-import com.tpps.application.network.core.ServerConnectionThread;
-import com.tpps.application.network.core.SuperCallable;
+import com.tpps.technicalServices.network.clientSession.client.SessionClient;
+import com.tpps.technicalServices.network.clientSession.client.SessionPacketSenderAPI;
+import com.tpps.technicalServices.network.clientSession.packets.PacketSessionGetAnswer;
+import com.tpps.technicalServices.network.clientSession.server.SessionManager;
+import com.tpps.technicalServices.network.clientSession.server.SessionPacketHandler;
+import com.tpps.technicalServices.network.clientSession.server.SessionServer;
+import com.tpps.technicalServices.network.core.ServerConnectionThread;
+import com.tpps.technicalServices.network.core.SuperCallable;
 
 /**
  * tests the Session-Server

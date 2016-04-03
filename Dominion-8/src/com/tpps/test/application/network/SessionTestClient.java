@@ -9,16 +9,16 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
-import com.tpps.application.network.clientSession.client.SessionClient;
-import com.tpps.application.network.clientSession.client.SessionPacketReceiverAPI;
-import com.tpps.application.network.clientSession.client.SessionPacketSenderAPI;
-import com.tpps.application.network.clientSession.packets.PacketSessionCheckAnswer;
-import com.tpps.application.network.clientSession.packets.PacketSessionGetAnswer;
-import com.tpps.application.network.clientSession.server.SessionServer;
-import com.tpps.application.network.core.Client;
-import com.tpps.application.network.core.PacketHandler;
-import com.tpps.application.network.core.SuperCallable;
-import com.tpps.application.network.core.packet.Packet;
+import com.tpps.technicalServices.network.clientSession.client.SessionClient;
+import com.tpps.technicalServices.network.clientSession.client.SessionPacketReceiverAPI;
+import com.tpps.technicalServices.network.clientSession.client.SessionPacketSenderAPI;
+import com.tpps.technicalServices.network.clientSession.packets.PacketSessionCheckAnswer;
+import com.tpps.technicalServices.network.clientSession.packets.PacketSessionGetAnswer;
+import com.tpps.technicalServices.network.clientSession.server.SessionServer;
+import com.tpps.technicalServices.network.core.Client;
+import com.tpps.technicalServices.network.core.PacketHandler;
+import com.tpps.technicalServices.network.core.SuperCallable;
+import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.util.FileParser;
 
 /**
