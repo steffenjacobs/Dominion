@@ -32,7 +32,7 @@ import com.tpps.ui.components.GameBackground;
 
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
-	static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack, 
+	public static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack, 
 	takeThiefCards, putBackThiefCards, takeDrawedCard, setAsideDrawedCard;
 	private static GameWindow instance;
 
