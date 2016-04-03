@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.packets.PacketChatController;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
@@ -16,7 +17,7 @@ public class ChatController extends PacketHandler{
 	
 	public ChatController() {
 		try {
-			chatclient = new Client(new InetSocketAddress("127.0.0.1", 1340), this, false);
+			chatclient = new Client(new InetSocketAddress(Addresses.getLocalHost(), 1340), this, false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.Server;
 import com.tpps.technicalServices.network.core.ServerConnectionThread;
@@ -45,12 +46,12 @@ public class JUnitNetworkTest {
 		Integer testInt = 2;
 
 		// test server startup
-		Server server = new Server(new InetSocketAddress("127.0.0.1", port), serverPacketHandler);
+		Server server = new Server(new InetSocketAddress(Addresses.getLocalHost(), port), serverPacketHandler);
 		serverPacketHandler.setParent(server);
 		assertNotNull(server);
 
 		// test client startup
-		Client client = new Client(new InetSocketAddress("127.0.0.1", port), clientPacketHandler);
+		Client client = new Client(new InetSocketAddress(Addresses.getLocalHost(), port), clientPacketHandler);
 		client.addPacketHandler(clientPacketHandler2);
 		assertNotNull(client);
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Scanner;
 
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Server;
 import com.tpps.technicalServices.network.login.SQLHandling.Password;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLHandler;
@@ -16,7 +17,6 @@ import com.tpps.technicalServices.network.login.SQLHandling.Utilties;
  */
 public class LoginServer extends Server{
 	
-	private static String domain = "0.0.0.0";
 	private static int port = 1338;
 	
 	/**
@@ -30,7 +30,7 @@ public class LoginServer extends Server{
 	 * @throws IOException
 	 */
 	public LoginServer(String sqlhost, String sqlport, String sqlusername, String sqlpassword, String sqldatabase) throws IOException {
-		super(new InetSocketAddress(domain, port), new LoginPacketHandler());
+		super(new InetSocketAddress(Addresses.getAllInterfaces(), port), new LoginPacketHandler());
 		((LoginPacketHandler)super.getHandler()).setServer(this);
 		
 		this.initMySQLServer(sqlhost, sqlport, sqlusername, sqlpassword, sqldatabase);

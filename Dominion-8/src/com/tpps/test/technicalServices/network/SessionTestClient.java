@@ -1,14 +1,13 @@
 package com.tpps.test.technicalServices.network;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionPacketReceiverAPI;
 import com.tpps.technicalServices.network.clientSession.client.SessionPacketSenderAPI;
@@ -19,7 +18,6 @@ import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.SuperCallable;
 import com.tpps.technicalServices.network.core.packet.Packet;
-import com.tpps.technicalServices.util.FileParser;
 
 /**
  * this represents the session-client (only one per application
@@ -27,8 +25,6 @@ import com.tpps.technicalServices.util.FileParser;
  * @author Steffen Jacobs
  */
 public final class SessionTestClient extends PacketHandler {
-
-	public static final String FILE_SERVER_PROPERTIES = "./server.cfg";
 
 	private static final int DELTA_SEND_KEEP_ALIVE_MILLISECONDS = 5000;
 	private static SessionTestClient instance;
@@ -42,7 +38,7 @@ public final class SessionTestClient extends PacketHandler {
 	 * @author Steffen Jacobs
 	 */
 	public static void main(String[] args) {
-		new SessionTestClient("127.0.0.1", 1337);
+		new SessionTestClient(Addresses.getLocalHost(), SessionServer.getStandardPort());
 	}
 
 	/**
@@ -61,7 +57,7 @@ public final class SessionTestClient extends PacketHandler {
 	 */
 	public SessionTestClient(String ipAddress, int port) {
 		instance = this;
-		setup(loadConnectionProperties(FILE_SERVER_PROPERTIES));
+		setup(new InetSocketAddress(ipAddress, port));
 		setupScanner();
 	}
 
@@ -145,25 +141,6 @@ public final class SessionTestClient extends PacketHandler {
 			e.printStackTrace();
 		}
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> onStop()));
-	}
-
-	/**
-	 * loads server-properties (such as ip and port) and connects after that
-	 * 
-	 * @author Steffen Jacobs
-	 */
-	public InetSocketAddress loadConnectionProperties(String path) {
-		ArrayList<String> lines = FileParser.loadLines(path);
-		if (lines.size() < 2) {
-			System.err.println("Bad config file: " + new File(path).getAbsolutePath());
-		} else {
-			try {
-				return new InetSocketAddress(lines.get(0), Integer.parseInt(lines.get(1)));
-			} catch (NumberFormatException ex) {
-
-			}
-		}
-		return new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort());
 	}
 
 	/**

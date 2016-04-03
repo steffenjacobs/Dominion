@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.Server;
@@ -32,7 +33,7 @@ public class JUnitEventTest {
 	public void test() throws IOException, InterruptedException {
 
 		// setup generic server
-		Server server = new Server(new InetSocketAddress("127.0.0.1", 13), new PacketHandler() {
+		Server server = new Server(new InetSocketAddress(Addresses.getLocalHost(), 13), new PacketHandler() {
 
 			@Override
 			public void handleReceivedPacket(int port, Packet packet) {
@@ -73,7 +74,7 @@ public class JUnitEventTest {
 		};
 
 		// setup client
-		Client client = new Client(new InetSocketAddress("127.0.0.1", 13), new PacketHandler() {
+		Client client = new Client(new InetSocketAddress(Addresses.getLocalHost(), 13), new PacketHandler() {
 
 			@Override
 			public void handleReceivedPacket(int port, Packet packet) {

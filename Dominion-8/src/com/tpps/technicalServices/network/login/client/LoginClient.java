@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
+import com.tpps.technicalServices.network.clientSession.server.SessionServer;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
@@ -43,8 +45,8 @@ public class LoginClient extends PacketHandler {
 	public LoginClient(LoginGUIController guicontroller) {
 		try {
 			this.guicontroller = guicontroller;
-			c_login = new Client(new InetSocketAddress("78.31.66.224", 1338), this, false);
-			c_session = new SessionClient(new InetSocketAddress("78.31.66.224", 1337));
+			c_login = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), 1338), this, false);
+			c_session = new SessionClient(new InetSocketAddress(Addresses.getRemoteAddress(), SessionServer.getStandardPort()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

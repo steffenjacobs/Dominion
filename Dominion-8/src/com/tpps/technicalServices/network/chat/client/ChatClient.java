@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Scanner;
 
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.packets.PacketChatHandshake;
 import com.tpps.technicalServices.network.chat.packets.PacketSendAnswer;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatAll;
@@ -31,7 +32,7 @@ public class ChatClient extends PacketHandler{
 	public ChatClient(String username) {
 		this.sender = username;
 		try {
-			chatclient = new Client(new InetSocketAddress("127.0.0.1", 1340), this, false);
+			chatclient = new Client(new InetSocketAddress(Addresses.getLocalHost(), 1340), this, false);
 			PacketChatHandshake handshake = new PacketChatHandshake(sender);
 			chatclient.sendMessage(handshake);
 		} catch (IOException e) {

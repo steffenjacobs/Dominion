@@ -21,6 +21,7 @@ import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.card.CardClient;
 import com.tpps.technicalServices.network.card.CardPacketHandlerClient;
 import com.tpps.technicalServices.network.card.CardPacketHandlerServer;
@@ -93,39 +94,39 @@ public class CheapCardCreator {
 
 		cards.put("Province", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 8, "Province", getImg("Province")));
-		
-//		Cellar		
+
+		// Cellar
 		actions.remove(CardAction.IS_VICTORY);
 		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "1");
 		actions.put(CardAction.DISCARD_AND_DRAW, "-1");
 		types.remove(CardType.VICTORY);
 		types.add(CardType.ACTION);
-		cards.put("Cellar", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(), 
+		cards.put("Cellar", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 2, "Cellar", getImg("Cellar")));
-//		Chapel
+		// Chapel
 		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
 		actions.remove(CardAction.DISCARD_AND_DRAW);
 		actions.put(CardAction.TRASH_CARD, "4");
 		cards.put("Chapel", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 2, "Chapel", getImg("Chapel")));
-		
-//		Chancellor
-		actions.remove(CardAction.TRASH_CARD);		
+
+		// Chancellor
+		actions.remove(CardAction.TRASH_CARD);
 		actions.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, "2");
 		actions.put(CardAction.DISCARD_CARD, "Deck");
 		cards.put("Chancellor", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 3, "Chancellor", getImg("Chancellor")));
-		
-//		Militia		
+
+		// Militia
 		actions.remove(CardAction.DISCARD_CARD);
 		actions.put(CardAction.DISCARD_OTHER_DOWNTO, "3");
 		types.add(CardType.ATTACK);
 		cards.put("Militia", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "Militia", getImg("Militia")));
-//		types Attack and Action
-//		action Add_Temporary_Money discard other downto
-		
-//		Moat
+		// types Attack and Action
+		// action Add_Temporary_Money discard other downto
+
+		// Moat
 		actions.remove(CardAction.DISCARD_OTHER_DOWNTO);
 		actions.remove(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
 		actions.put(CardAction.DRAW_CARD, "2");
@@ -135,10 +136,10 @@ public class CheapCardCreator {
 		types.add(CardType.REACTION);
 		cards.put("Moat", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 2, "Moat", getImg("Moat")));
-//		actions DrawCard Seperator Defend
-//		types action reaction
-		
-//		Village
+		// actions DrawCard Seperator Defend
+		// types action reaction
+
+		// Village
 		actions.remove(CardAction.DRAW_CARD);
 		actions.remove(CardAction.SEPERATOR);
 		actions.remove(CardAction.DEFEND);
@@ -147,82 +148,80 @@ public class CheapCardCreator {
 		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "2");
 		cards.put("Village", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 3, "Village", getImg("Village")));
-		
-		
-//		woodcutter		
+
+		// woodcutter
 		actions.remove(CardAction.DRAW_CARD);
 		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
 		actions.put(CardAction.ADD_PURCHASE, "1");
 		actions.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, "2");
 		cards.put("Woodcutter", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 3, "Woodcutter", getImg("Woodcutter")));
-		
-		
-//		workshop		
+
+		// workshop
 		actions.remove(CardAction.ADD_PURCHASE);
 		actions.remove(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
 		actions.put(CardAction.GAIN_CARD, "4");
 		cards.put("Workshop", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 3, "Workshop", getImg("Workshop")));
-		
-//		feast
+
+		// feast
 		actions.remove(CardAction.GAIN_CARD);
 		actions.put(CardAction.TRASH_CARD, "this");
 		actions.put(CardAction.GAIN_CARD, "5");
 		cards.put("Feast", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "Feast", getImg("Feast")));
-		
-//		moneylender		
+
+		// moneylender
 		actions.remove(CardAction.TRASH_CARD);
 		actions.remove(CardAction.GAIN_CARD);
 		actions.put(CardAction.TRASH_AND_ADD_TEMPORARY_MONEY, "Copper");
 		cards.put("Moneylender", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "Moneylender", getImg("Moneylender")));
-		
-//		remodel
-		
+
+		// remodel
+
 		actions.remove(CardAction.TRASH_AND_ADD_TEMPORARY_MONEY);
 		actions.put(CardAction.TRASH_AND_GAIN_MORE_THAN, "1_2");
 		cards.put("Remodel", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "Remodel", getImg("Remodel")));
-		
-//		smithy
-		
+
+		// smithy
+
 		actions.remove(CardAction.TRASH_AND_GAIN_MORE_THAN);
 		actions.put(CardAction.DRAW_CARD, "3");
 		cards.put("Smithy", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "Smithy", getImg("Smithy")));
-		
-//		spy		
-		
+
+		// spy
+
 		actions.remove(CardAction.DRAW_CARD);
 		actions.put(CardAction.DRAW_CARD, "1");
 		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "1");
 		actions.put(CardAction.REVEAL_CARD, "NIL");
 		cards.put("Spy", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "Spy", getImg("Spy")));
-		
-//		actions Draw_card add_action_to_player reveal_card
-		
-//		throneRoom
-		
+
+		// actions Draw_card add_action_to_player reveal_card
+
+		// throneRoom
+
 		actions.remove(CardAction.DRAW_CARD);
 		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
 		actions.remove(CardAction.REVEAL_CARD);
 		actions.put(CardAction.CHOOSE_CARD_PLAY_TWICE, "NIL");
 		cards.put("ThroneRoom", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "ThroneRoom", getImg("ThroneRoom")));
-		
-//		councilRoom	
-		
+
+		// councilRoom
+
 		actions.remove(CardAction.CHOOSE_CARD_PLAY_TWICE);
 		actions.put(CardAction.DRAW_CARD, "4");
 		actions.put(CardAction.ADD_PURCHASE, "1");
 		actions.put(CardAction.DRAW_CARD_OTHERS, "1");
 		cards.put("CouncilRoom", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 5, "CouncilRoom", getImg("CouncilRoom")));
-		
-//		thief
+
+		// thief
 		actions.remove(CardAction.DRAW_CARD);
 		actions.remove(CardAction.ADD_PURCHASE);
 		actions.remove(CardAction.DRAW_CARD_OTHERS);
@@ -230,39 +229,39 @@ public class CheapCardCreator {
 		types.add(CardType.ATTACK);
 		cards.put("Thief", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 4, "Thief", getImg("Thief")));
-		
-//		Festival
+
+		// Festival
 		actions.remove(CardAction.ALL_REVEAL_CARDS_TRASH_COINS_I_CAN_TAKE_DISCARD_OTHERS);
 		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "2");
 		actions.put(CardAction.ADD_PURCHASE, "1");
 		actions.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, "2");
 		types.remove(CardType.ATTACK);
-		
+
 		cards.put("Festival", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 5, "Festival", getImg("Festival")));
-		
-//		Laboratory	
-		
+
+		// Laboratory
+
 		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
 		actions.remove(CardAction.ADD_PURCHASE);
 		actions.remove(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN);
 		actions.put(CardAction.DRAW_CARD, "2");
 		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "1");
-		
+
 		cards.put("Laboratory", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 5, "Laboratory", getImg("Laboratory")));
-		
-//		Library
-		
+
+		// Library
+
 		actions.remove(CardAction.DRAW_CARD);
 		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
 		actions.put(CardAction.DRAW_CARD_UNTIL, "7_action");
-		
+
 		cards.put("Library", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 5, "Library", getImg("Library")));
-		
-//		Market
-		
+
+		// Market
+
 		actions.remove(CardAction.DRAW_CARD_UNTIL);
 		actions.put(CardAction.DRAW_CARD, "1");
 		actions.put(CardAction.ADD_ACTION_TO_PLAYER, "1");
@@ -270,8 +269,8 @@ public class CheapCardCreator {
 		actions.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, "1");
 		cards.put("Market", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 5, "Market", getImg("Market")));
-		
-//		Mine
+
+		// Mine
 		actions.remove(CardAction.DRAW_CARD);
 		actions.remove(CardAction.ADD_ACTION_TO_PLAYER);
 		actions.remove(CardAction.ADD_PURCHASE);
@@ -279,17 +278,17 @@ public class CheapCardCreator {
 		actions.put(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, "1_3");
 		cards.put("Mine", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 5, "Mine", getImg("Mine")));
-		
-//		Witch		
+
+		// Witch
 		actions.remove(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND);
 		actions.put(CardAction.DRAW_CARD, "2");
 		actions.put(CardAction.GAIN_CARD_OTHERS, "curse");
 		types.add(CardType.ATTACK);
 		cards.put("Witch", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 5, "Witch", getImg("Witch")));
-		
-//		Curse
-		
+
+		// Curse
+
 		actions.remove(CardAction.DRAW_CARD);
 		actions.remove(CardAction.GAIN_CARD_OTHERS);
 		actions.put(CardAction.IS_VICTORY, Integer.toString(GameConstant.CURSE_VALUE));
@@ -298,27 +297,26 @@ public class CheapCardCreator {
 		types.add(CardType.CURSE);
 		cards.put("Curse", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 0, "Curse", getImg("Curse")));
-		
-//		
-		
-		
-//		Adventurer		
+
+		//
+
+		// Adventurer
 		actions.remove(CardAction.IS_VICTORY);
 		actions.put(CardAction.REVEAL_UNTIL_TREASURES, "2");
-		types.remove(CardType.CURSE);		
+		types.remove(CardType.CURSE);
 		types.add(CardType.ACTION);
 		cards.put("Adventurer", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 0, "Adventurer", getImg("Adventurer")));
-		
-//		Bureaucrat
-		
+
+		// Bureaucrat
+
 		actions.remove(CardAction.REVEAL_UNTIL_TREASURES);
 		actions.put(CardAction.GAIN_CARD_DRAW_PILE, "silver");
 		actions.put(CardAction.REVEAL_CARD_OTHERS_PUT_IT_ON_TOP_OF_DECK, "victory");
 		types.add(CardType.ATTACK);
 		cards.put("Bureaucrat", new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 0, "Bureaucrat", getImg("Bureaucrat")));
-		
+
 		// setup Dummy-DominionController
 		DominionController dom = new DominionController(true);
 		dom.setCredentials("testname", "test@test.test");
@@ -329,9 +327,10 @@ public class CheapCardCreator {
 		SessionClient sess;
 
 		if (REMOTE)
-			sess = new SessionClient(new InetSocketAddress("78.31.66.224", 1337));
+			sess = new SessionClient(
+					new InetSocketAddress(Addresses.getRemoteAddress(), SessionServer.getStandardPort()));
 		else
-			sess = new SessionClient(new InetSocketAddress("127.0.0.1", 1337));
+			sess = new SessionClient(new InetSocketAddress(Addresses.getLocalHost(), SessionServer.getStandardPort()));
 
 		if (DEBUG)
 			System.out.println("connected to session-servers");
@@ -370,8 +369,8 @@ public class CheapCardCreator {
 			Thread.sleep(100);
 
 			// start server
-			new CardServer(new InetSocketAddress("127.0.0.1", 1336), new CardPacketHandlerServer(serverStorage, sess),
-					serverStorage);
+			new CardServer(new InetSocketAddress(Addresses.getLocalHost(), 1336),
+					new CardPacketHandlerServer(serverStorage, sess), serverStorage);
 		}
 
 		// start client
@@ -379,9 +378,11 @@ public class CheapCardCreator {
 		CardClient client;
 
 		if (REMOTE)
-			client = new CardClient(new InetSocketAddress("78.31.66.224", 1336), cHandler, false, dom);
+			client = new CardClient(new InetSocketAddress(Addresses.getRemoteAddress(), CardServer.getStandardPort()),
+					cHandler, false, dom);
 		else
-			client = new CardClient(new InetSocketAddress("127.0.0.1", 1336), cHandler, false, dom);
+			client = new CardClient(new InetSocketAddress(Addresses.getLocalHost(), CardServer.getStandardPort()),
+					cHandler, false, dom);
 
 		cHandler.setCardClient(client);
 
@@ -456,8 +457,8 @@ public class CheapCardCreator {
 
 		if (DEBUG)
 			System.out.println("finished.");
-		
-		//Save Storage
+
+		// Save Storage
 		dom.getCardRegistry().saveCards();
 
 	}

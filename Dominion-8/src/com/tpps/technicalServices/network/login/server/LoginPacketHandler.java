@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionPacketSenderAPI;
 import com.tpps.technicalServices.network.clientSession.packets.PacketSessionGetAnswer;
@@ -36,7 +37,7 @@ public class LoginPacketHandler extends PacketHandler{
 	public LoginPacketHandler() {
 		try {
 			waitingForSessionAnswer = new ConcurrentHashMap<>();
-			sessionclient = new SessionClient(new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort()));
+			sessionclient = new SessionClient(new InetSocketAddress(Addresses.getRemoteAddress(), SessionServer.getStandardPort()));
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}

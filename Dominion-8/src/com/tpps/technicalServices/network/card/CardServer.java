@@ -1,17 +1,22 @@
 package com.tpps.technicalServices.network.card;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Properties;
 import java.util.Scanner;
 
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
+import com.tpps.technicalServices.network.clientSession.server.SessionServer;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.Server;
 import com.tpps.technicalServices.network.core.ServerConnectionThread;
+import com.tpps.technicalServices.util.AutoCreatingProperties;
 
 /**
  * represents a card-server which handles all the storing of the cards, adding
@@ -20,10 +25,27 @@ import com.tpps.technicalServices.network.core.ServerConnectionThread;
  * @author Steffen Jacobs
  */
 public class CardServer extends Server {
-	private static final String SERVER_INTERFACE = "0.0.0.0";
-	private static final int PORT = 1336;
+	private static AutoCreatingProperties config;
+	private static final String KEY_PORT = "CARD_PORT", DEFAULT_PORT = "1336";
+
+	private static final String CONFIG_FILE = "cards.cfg";
 
 	private CardStorageController serverStorage;
+
+	// init config
+	static {
+		config = new AutoCreatingProperties();
+		config.load(new File(CONFIG_FILE));
+	}
+
+	public static int getStandardPort() {
+		return Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT));
+	}
+
+	/** getter for the Card-Server-Properties */
+	public Properties getCardServerProperties() {
+		return config;
+	}
 
 	/**
 	 * constructor for the CardServer, taking an address (where the server will
@@ -41,8 +63,12 @@ public class CardServer extends Server {
 	/** main entry-point for the CardServer */
 	public static void main(String[] input) throws IOException {
 		CardStorageController tmpStorage = new CardStorageController("serverCards.bin");
-		new CardServer(new InetSocketAddress(SERVER_INTERFACE, PORT),
-				new CardPacketHandlerServer(tmpStorage, new SessionClient(new InetSocketAddress("127.0.0.1", 1337))),
+		new CardServer(
+				new InetSocketAddress(Addresses.getAllInterfaces(),
+						Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))),
+				new CardPacketHandlerServer(tmpStorage,
+						new SessionClient(
+								new InetSocketAddress(Addresses.getRemoteAddress(), SessionServer.getStandardPort()))),
 				tmpStorage);
 	}
 

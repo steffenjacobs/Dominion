@@ -1,5 +1,6 @@
 package com.tpps.technicalServices.network.clientSession.server;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -9,13 +10,24 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Server;
 import com.tpps.technicalServices.network.core.ServerConnectionThread;
+import com.tpps.technicalServices.util.AutoCreatingProperties;
 
 /** @author Steffen Jacobs */
 public class SessionServer extends Server {
 
-	private final static int standardPort = 1337;
+	private static final AutoCreatingProperties config;
+	private static final String KEY_PORT = "SESSION_PORT", DEFAULT_PORT = "1337";
+	private static final String KEY_LOG = "SESSION_LOG", DEFAULT_LOG = "session.log";
+
+	private static final String CONFIG_FILE = "sessions.cfg";
+
+	static {
+		config = new AutoCreatingProperties();
+		config.load(new File(CONFIG_FILE));
+	}
 
 	/**
 	 * normal constructor
@@ -23,7 +35,8 @@ public class SessionServer extends Server {
 	 * @author Steffen Jacobs
 	 */
 	public SessionServer() throws IOException {
-		super(new InetSocketAddress("0.0.0.0", standardPort), new SessionPacketHandler());
+		super(new InetSocketAddress(Addresses.getAllInterfaces(),
+				Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))), new SessionPacketHandler());
 		setConsoleInput();
 	}
 
@@ -33,7 +46,8 @@ public class SessionServer extends Server {
 	 * @author Steffen Jacobs
 	 */
 	public SessionServer(SessionPacketHandler handler) throws IOException {
-		super(new InetSocketAddress("0.0.0.0", standardPort), handler);
+		super(new InetSocketAddress(Addresses.getAllInterfaces(),
+				Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))), handler);
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -43,8 +57,8 @@ public class SessionServer extends Server {
 			e.printStackTrace();
 		}
 		// setup logging
-		Files.createFile(Paths.get("session.log"));
-		System.setOut(new PrintStream(new FileOutputStream("session.log")));
+		Files.createFile(Paths.get(config.getProperty(KEY_LOG, DEFAULT_LOG)));
+		System.setOut(new PrintStream(new FileOutputStream(config.getProperty(KEY_LOG, DEFAULT_LOG))));
 	}
 
 	/**
@@ -112,7 +126,7 @@ public class SessionServer extends Server {
 	 * session-server @author Steffen Jacobs
 	 */
 	public static int getStandardPort() {
-		return standardPort;
+		return Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT));
 	}
 
 	// TODO: remove both

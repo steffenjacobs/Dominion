@@ -14,6 +14,7 @@ import java.util.concurrent.Semaphore;
 
 import org.junit.Test;
 
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionPacketSenderAPI;
 import com.tpps.technicalServices.network.clientSession.packets.PacketSessionGetAnswer;
@@ -69,9 +70,9 @@ public class JUnitSessionServerTest {
 		// test client startup
 		SessionClient sessionClient;
 		if (REMOTE)
-			sessionClient = new SessionClient(new InetSocketAddress("78.31.66.224", SessionServer.getStandardPort()));
+			sessionClient = new SessionClient(new InetSocketAddress(Addresses.getRemoteAddress(), SessionServer.getStandardPort()));
 		else
-			sessionClient = new SessionClient(new InetSocketAddress("127.0.0.1", SessionServer.getStandardPort()));
+			sessionClient = new SessionClient(new InetSocketAddress(Addresses.getLocalHost(), SessionServer.getStandardPort()));
 		assertNotNull(sessionClient);
 
 		// wait to connect.
@@ -117,7 +118,7 @@ public class JUnitSessionServerTest {
 		assertTrue(sessionClient.checkSessionSync(TEST_USER, receivedUUID));
 
 		// bulk-test
-		final int PACKET_COUNT = 10000;
+		final int PACKET_COUNT = 1000;
 		Semaphore bulk = new Semaphore(PACKET_COUNT);
 
 		sessionClient.getConnectionThread().resetsMetrics();
