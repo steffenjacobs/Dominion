@@ -70,10 +70,10 @@ public final class DominionController {
 	private void init() {
 		// TODO Auto-generated method stub
 		storageController = new CardStorageController();
-		// new LoginGUIController();
-//		mainFrame = new MainFrame();
-//		loginGuiController = new LoginGUIController();
-//		this.loadPanels();
+		 new LoginGUIController();
+		mainFrame = new MainFrame();
+		loginGuiController = new LoginGUIController();
+		this.loadPanels();
 			
 		try {
 			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), 1339), new ClientGamePacketHandler());
