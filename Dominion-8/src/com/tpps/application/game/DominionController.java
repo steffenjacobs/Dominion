@@ -1,6 +1,8 @@
 package com.tpps.application.game;
 
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
@@ -48,6 +50,8 @@ public final class DominionController {
 	private GlobalChatPanel globalChatPanel;
 	private PlayerSettingsPanel playerSettingsPanel;
 	private StatisticsBoard statisticsBoardPanel;
+
+	private BufferedImage originalBackground;
 	
 	/** main entry point for client application */
 	public static void main(String[] stuff) {
@@ -84,6 +88,12 @@ public final class DominionController {
 		playerSettingsPanel = new PlayerSettingsPanel();
 		statisticsBoardPanel = new StatisticsBoard();
 		
+		try {
+			this.originalBackground = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public void endLogin(){
@@ -111,7 +121,15 @@ public final class DominionController {
 	 * opens the LobbyGui 
 	 */
 	public void joinLobbyGui() {
-		JPanel panel = new JPanel();
+		JPanel panel = new JPanel(){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(originalBackground, 0, 0, null);
+				super.paint(g);
+			}
+		};
 		panel.setLayout(new GridLayout(1, 2));
 		panel.setVisible(true);
 		panel.setOpaque(false);
@@ -198,7 +216,15 @@ public final class DominionController {
 
 
 	public void openStatisticsGui() {
-		JPanel panel = new JPanel();
+		JPanel panel = new JPanel(){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(originalBackground, 0, 0, null);
+				super.paint(g);
+			}
+		};
 		panel.setLayout(new GridLayout(1, 2));
 		panel.setVisible(true);
 		panel.setOpaque(false);
