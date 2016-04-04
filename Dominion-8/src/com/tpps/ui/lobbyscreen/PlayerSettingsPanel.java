@@ -102,7 +102,7 @@ public class PlayerSettingsPanel extends JPanel{
 	private JPanel middleAreaPanel(){
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setOpaque(false);		
-		panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
+	//	panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
 		
 /*		JPanel optionPanel = new JPanel(new GridLayout(3,3,H_GAP_OPTIONS,V_GAP_OPTIONS));
 		

@@ -3,6 +3,7 @@ package com.tpps.ui.lobbyscreen;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -16,6 +17,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -63,8 +65,8 @@ public class GlobalChatPanel extends JPanel{
 		this.createScrollingChatArea();
 		
 		this.add(scrollpane, BorderLayout.CENTER);
-		this.add(this.createPanelForChatInput(),BorderLayout.PAGE_END);
-		this.add(Box.createVerticalStrut(VERTICAL_STRUT), BorderLayout.PAGE_START);
+		this.add(this.createPanelForChatInput(),BorderLayout.PAGE_END);		
+		this.add(this.createArrowButtonPanel(), BorderLayout.PAGE_START);
 		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_START);
 		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_END);		
 		
@@ -73,6 +75,18 @@ public class GlobalChatPanel extends JPanel{
 	//	this.revalidate();
 	//	parentLobby.revalidate();
 	}
+	
+	private JPanel createArrowButtonPanel(){
+		JPanel panel = new JPanel();
+		panel.setOpaque(false);
+		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+
+
+		  
+		panel.add(new Button());
+		return panel;			  
+	}
+	
 	
 	/**
 	 * This method is for testing purposes only. It create 10000 teststrings and put them into the global chat

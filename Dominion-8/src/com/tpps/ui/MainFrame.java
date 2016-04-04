@@ -28,8 +28,14 @@ public class MainFrame extends JFrame {
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		this.setMinimumSize(new Dimension(1280, 720));
+	//	this.fullscreenmode();
 		
+		this.setMinimumSize(new Dimension(1280, 720));		
+	}
+	
+	private void fullscreenmode(){
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+		this.setUndecorated(true);
 	}
 	
 	public void setPanel(JPanel panel){
