@@ -38,8 +38,8 @@ public class LobbyScreen extends JFrame{
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	
-		right = new PlayerSettingsPanel(this);
-		c.add(new GlobalChatPanel(this));
+	//	right = new PlayerSettingsPanel(this);
+	//	c.add(new GlobalChatPanel(this));
 		c.add(right);
 		
 		right.insertPlayer("kevinS");
