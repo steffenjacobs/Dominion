@@ -64,9 +64,16 @@ public class GameBoardTest {
 		
 		for (int i = 0; i < duchyList.size(); i++){
 			assertTrue(duchyList.get(i).getId().equals("Duchy" + i));
-		}
+		}		
+	}
+	
+	@Test
+	public void checkThreePilesEmptyTest() {
 		
-		
+	}
+	
+	@Test
+	public void amoutOfPilesEmptyTest() {
 		
 	}
 	

@@ -151,7 +151,7 @@ public class GraphicFramework extends JPanel {
 			if (obj.isVisible()) {
 				g.drawImage(obj.getRenderdImage(), (int) obj.getLocation().getX(), (int) obj.getLocation().getY(),
 						null);
-				System.out.println("redrawn " + obj);
+				
 			}
 		}
 	}

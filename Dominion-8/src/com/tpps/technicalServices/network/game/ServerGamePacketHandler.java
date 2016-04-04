@@ -116,13 +116,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 				System.out.println("spyList size take cards: " + this.server.getGameController().getSpyList().size());
 				this.server.sendMessage(port, new PacketRemoveExtraTable());
 				if(!this.server.getGameController().getSpyList().isEmpty()){
-					try {
+					try {						
+						GameServer.getInstance().sendMessage(this.server.getGameController().getActivePlayer().getPort(),
+								new PacketSendRevealCards(CollectionsUtil.getCardIDs(this.server.getGameController().getSpyList().get(0).getRevealList())));
 						GameServer.getInstance().sendMessage(this.server.getGameController().getActivePlayer().getPort(), 
 								new PacketTakeCards(this.server.getGameController().getActivePlayer().getClientID()));
 						GameServer.getInstance().sendMessage(this.server.getGameController().getActivePlayer().getPort(), 
 								new PacketPutBackCards(this.server.getGameController().getActivePlayer().getClientID()));
-						GameServer.getInstance().sendMessage(this.server.getGameController().getActivePlayer().getPort(),
-								new PacketSendRevealCards(CollectionsUtil.getCardIDs(this.server.getGameController().getSpyList().get(0).getRevealList())));				
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -192,8 +192,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 				reactionFinishedTriggerdThroughSpy(player1);
 				reactionFinishedTriggeredThroughWitch(player1);
 				reactionFinishedTriggeredThroughBureaucrat(player1);
-				
-
 				break;
 			case DISCARD_DECK:
 				this.server.getGameController().getActivePlayer().getDeck().discardDrawPile();
@@ -216,8 +214,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 		if (this.server.getGameController().getActivePlayer().isThief()) {
 			player1.setReactionModeFalse();
 			this.server.sendMessage(player1.getPort(), new PacketDisable());
-			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
+			
 			this.server.getGameController().reactOnThief(player1);
+			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 		}
 	}
 	
@@ -225,8 +224,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 		if (this.server.getGameController().getActivePlayer().isSpy()) {
 			player1.setReactionModeFalse();
 			this.server.sendMessage(player1.getPort(), new PacketDisable());
-			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
+			
 			this.server.getGameController().reactOnSpy(player1);
+			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 		}
 		
 	}
@@ -235,16 +235,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 		if (this.server.getGameController().getActivePlayer().isWitch()) {
 			player1.setReactionModeFalse();
 			this.server.sendMessage(player1.getPort(), new PacketDisable());
-			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
+			
 			player1.getDeck().getDiscardPile().add(
 					this.server.getGameController().getGameBoard().getTableForVictoryCards().get("Curse").removeLast());
-			this.server.getGameController().checkWitchFinish();
+			
 			GameServer.getInstance().broadcastMessage(
 					new PacketSendBoard(this.server.getGameController().getGameBoard().getTreasureCardIDs(),
 							this.server.getGameController().getGameBoard().getVictoryCardIDs(),
 							this.server.getGameController().getGameBoard().getActionCardIDs()));
 			
-			System.out.println(Arrays.toString(player1.getDeck().getDiscardPile().toArray()));
+			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
+			
+			
 		}
 	}
 
@@ -252,7 +254,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		if (this.server.getGameController().getActivePlayer().isBureaucrat()) {
 			player.setReactionModeFalse();
 			this.server.sendMessage(player.getPort(), new PacketDisable());
-			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
+			
 			Card card = player.getDeck().getCardByTypeFromHand(CardType.VICTORY);
 			if (card != null) {
 				player.getDeck().getCardHand().remove(card);
@@ -265,15 +267,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 				}
 			} else {
 				System.err.println("no victory card on hand");
-			}
-
-			this.server.getGameController().checkBureaucratFinish();
+			}			
 			GameServer.getInstance().broadcastMessage(
 					new PacketSendBoard(this.server.getGameController().getGameBoard().getTreasureCardIDs(),
 							this.server.getGameController().getGameBoard().getVictoryCardIDs(),
 							this.server.getGameController().getGameBoard().getActionCardIDs()));
-			System.out.println(Arrays.toString(player.getDeck().getDrawPile().toArray()));
-			System.out.println();
+			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 		}
 	}
 

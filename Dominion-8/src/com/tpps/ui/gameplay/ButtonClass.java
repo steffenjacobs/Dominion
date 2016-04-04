@@ -158,6 +158,8 @@ public class ButtonClass extends GFButton {
 			try {
 				gameClient.sendMessage(new PacketEndReactions(gameClient.getClientId()));
 				this.getParent().removeComponent(this);
+				this.getParent().addComponent(GameWindow.endActionPhase);
+				this.getParent().addComponent(GameWindow.endTurn);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

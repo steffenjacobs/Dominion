@@ -22,7 +22,6 @@ public class GameClient extends Client {
 		_handler.setGameClient(this);
 		this.clientId = -1;
 		GameWindow gameWindow = new GameWindow();
-		gameWindow.setVisible(false);
 		_handler.setGameWindow(gameWindow);
 		_handler.setGameStorageInterface(new GameStorageInterface(gameWindow));
 		registrateByServer();

@@ -155,6 +155,8 @@ public class ClientGamePacketHandler extends PacketHandler {
 			break;
 		case SHOW_END_REACTION_MODE:
 			this.gameWindow.addEndReactionModeButton();
+			this.gameWindow.removeEndActionPhaseButton();
+			this.gameWindow.removeEndTurnButton();
 			break;
 		case DONT_SHOW_END_REACTION_MODE:
 			this.gameWindow.removeEndReactionModeButton();

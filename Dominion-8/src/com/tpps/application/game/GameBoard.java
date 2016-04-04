@@ -127,7 +127,8 @@ public class GameBoard {
 			if (cardList.size() > 0){
 				cardIds.add(cardList.get(cardList.size() - 1).getId());
 			} else {
-				cardIds.add("NIL");
+				System.out.println("nil added");
+				cardIds.add(GameConstant.NIL);
 			}
 		}
 		return cardIds;
@@ -437,9 +438,49 @@ public class GameBoard {
 			return cardList;
 		}else{
 			throw new SynchronisationException();
+		}		
+	}
+	
+	/**
+	 * 
+	 * @return true if three piles are empty
+	 */
+	public boolean checkThreePilesEmpty() {
+		int counter = 0;
+				
+		counter += amountOfPilesEmpty(this.tableForActionCards);
+		if (counter == GameConstant.EMPTY_PILES){
+			return true;
 		}
-		
-		
-		
+		counter += amountOfPilesEmpty(this.tableForTreasureCards);
+		if (counter == GameConstant.EMPTY_PILES){
+			return true;
+		}
+		counter += amountOfPilesEmpty(this.tableForVictoryCards);
+		if (counter == GameConstant.EMPTY_PILES){
+			return true;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * 
+	 * @param table
+	 * @return the number of empty lists in a hashMap
+	 */
+	public int amountOfPilesEmpty(LinkedHashMap<String, LinkedList<Card>> table) {
+		int counter = 0;
+		LinkedList<String> keys = new LinkedList<>(table.keySet());
+		for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			if(this.tableForActionCards.get(key).isEmpty()){
+				counter++;
+				if (counter == GameConstant.EMPTY_PILES){
+					return counter;
+				}
+			}
+		}
+		return counter;
 	}
 }

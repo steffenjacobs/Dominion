@@ -65,6 +65,11 @@ public final class GameConstant {
 	public static final String COPPER = "Copper";
 	
 	
+	public static final String NIL = "NIL";
+	
+	public static final int EMPTY_PILES = 3;
+	
+	
 	
 	
 }
