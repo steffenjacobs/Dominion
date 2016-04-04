@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.components.MainMenuButton;
@@ -155,15 +156,16 @@ public class MainMenuPanel extends JPanel {
 			if (buttons[0].isOn(e.getX(), e.getY())) {
 				MainMenuPanel.this.parent.dispose();
 			}
-			if (buttons[1].isOn(e.getX(), e.getY())) {
-				MainMenuPanel.this.parent.dispose();
-				try {
-					new GameWindow();
-				} catch (IOException e1) {				
-					e1.printStackTrace();
-				}				
+			if (buttons[1].isOn(e.getX(), e.getY())) {				
+				DominionController.getInstance().joinLobbyGui();
+			}
+			if (buttons[2].isOn(e.getX(), e.getY())) {				
+			}
+			if (buttons[3].isOn(e.getX(), e.getY())) {				
+				DominionController.getInstance().openStatisticsGui();
 			}
 		}
+		
 
 		/**
 		 * reacts on mouseMoved event

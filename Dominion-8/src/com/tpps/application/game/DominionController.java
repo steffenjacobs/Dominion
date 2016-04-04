@@ -1,8 +1,14 @@
 package com.tpps.application.game;
 
+import java.awt.GridLayout;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import com.mysql.fabric.Server;
 import com.tpps.application.storage.CardStorageController;
@@ -82,6 +88,7 @@ public final class DominionController {
 	
 	public void endLogin(){
 		mainFrame.setPanel(mainMenuPanel);
+		mainFrame.setVisible(true);
 	}
 
 	/**
@@ -99,6 +106,21 @@ public final class DominionController {
 	public CardStorageController getCardRegistry() {
 		return storageController;
 	}
+	
+	/**
+	 * opens the LobbyGui 
+	 */
+	public void joinLobbyGui() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(1, 2));
+		panel.setVisible(true);
+		panel.setOpaque(false);
+		panel.add(this.globalChatPanel);
+		panel.add(this.playerSettingsPanel);
+		this.mainFrame.setPanel(panel);
+	}
+
+
 
 	/**
 	 * 
@@ -171,5 +193,17 @@ public final class DominionController {
 	public void setCredentials(String username, String mailAddress) {
 		this.username = username;
 		this.email = mailAddress;
+	}
+
+
+
+	public void openStatisticsGui() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(1, 2));
+		panel.setVisible(true);
+		panel.setOpaque(false);
+		panel.add(this.globalChatPanel);
+		panel.add(this.statisticsBoardPanel);
+		this.mainFrame.setPanel(panel);		
 	}
 }

@@ -33,11 +33,11 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void setPanel(JPanel panel){
-		if(panel != null){		
-			c.remove(panel);
+		if(this.panel != null){		
+			c.remove(this.panel);
 		}
 			this.panel = panel;
-			c.add(panel);
+			c.add(this.panel);
 			this.revalidate();
 			this.repaint();	
 	}
