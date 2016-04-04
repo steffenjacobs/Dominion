@@ -32,14 +32,14 @@ public class MainMenuPanel extends JPanel {
 	
 	private float[] alpha;
 	private MainMenuButton[] buttons;	
-	private final MainMenu parent;
+	private final MainFrame parent;
 	private final int gapFactor, topGap;
 
 	/**
 	 * Constructor for the MainMenuPanell
 	 * @param the MainMenu which holds this panel
 	 */
-	public MainMenuPanel(MainMenu parent) {
+	public MainMenuPanel(MainFrame parent) {
 		this.gapFactor = 7;
 		this.parent = parent;
 		this.topGap = Toolkit.getDefaultToolkit().getScreenSize().height / 6;
@@ -57,7 +57,7 @@ public class MainMenuPanel extends JPanel {
 	 * creates the Button on the Jpanel
 	 * @param parent
 	 */
-	private void createButtons(MainMenu parent) {
+	private void createButtons(MainFrame parent) {
 	
 			buttons = new MainMenuButton[4];
 			String[] names = new String[]{"Single Player", "Multi Player", "Settings", "Community"};

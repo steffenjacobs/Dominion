@@ -4,34 +4,44 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 /**
  * 
  * @author ladler - Lukas Adler
  *
  */
-public class MainMenu extends JFrame {
+public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private final Container c;
-	private final MainMenuPanel panel;
+//	private  MainMenuPanel panel;
+	private JPanel panel;
 
 	/**
 	 * Contructor for the mainMenu
 	 */
-	public MainMenu() {
+	public MainFrame() {
 		this.c = this.getContentPane();
 		int width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.panel = new MainMenuPanel(this);
+		
 		this.setMinimumSize(new Dimension(1280, 720));
+		
+	}
+	
+	public void setPanel(JPanel panel){
+		c.remove(panel);
+		this.panel = panel;
 		c.add(panel);
+		this.revalidate();
+		this.repaint();
 	}
 
 	public static void main(String[] args) {
-		MainMenu menu = new MainMenu();
+		MainFrame menu = new MainFrame();
 		menu.setVisible(true);
 	}
 }

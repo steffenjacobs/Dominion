@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import javax.swing.JFrame;
 
-import com.tpps.ui.MainMenu;
+import com.tpps.ui.MainFrame;
 
 /**
  * @author ladler - Lukas
@@ -29,7 +29,7 @@ public class MainMenuTest {
 	@Test
 	public void test() {
 
-		MainMenu m = new MainMenu();
+		MainFrame m = new MainFrame();
 		assertThat(m, is(notNullValue()));
 
 		m.setVisible(true);

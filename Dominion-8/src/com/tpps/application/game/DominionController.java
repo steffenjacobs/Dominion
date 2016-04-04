@@ -13,6 +13,9 @@ import com.tpps.technicalServices.network.card.CardClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
 import com.tpps.technicalServices.network.game.GameClient;
+import com.tpps.ui.MainFrame;
+import com.tpps.ui.MainMenuPanel;
+import com.tpps.ui.loginscreen.LoginGUIController;
 
 /**
  * main controller class containing main entry point for client-application
@@ -39,6 +42,11 @@ public final class DominionController {
 	public DominionController() {
 		storageController = new CardStorageController();
 		// new LoginGUIController();
+		MainFrame mainFrame = new MainFrame();
+		LoginGUIController loginGuiController = new LoginGUIController();
+		
+		
+		
 		try {
 			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), 1339), new ClientGamePacketHandler());
 		} catch (IOException e) {
