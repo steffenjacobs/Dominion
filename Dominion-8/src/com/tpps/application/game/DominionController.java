@@ -8,6 +8,7 @@ import com.mysql.fabric.Server;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.card.CardClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
@@ -39,7 +40,7 @@ public final class DominionController {
 		storageController = new CardStorageController();
 		// new LoginGUIController();
 		try {
-			gameClient = new GameClient(new InetSocketAddress("localhost", 1339), new ClientGamePacketHandler());
+			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), 1339), new ClientGamePacketHandler());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
