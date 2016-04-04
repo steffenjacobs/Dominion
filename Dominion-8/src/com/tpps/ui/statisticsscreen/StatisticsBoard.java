@@ -98,6 +98,7 @@ public class StatisticsBoard extends JPanel{
 		
 		JTableHeader header = table.getTableHeader();
 		header.setBackground(Color.BLACK);
+		header.setOpaque(false);
 		header.setForeground(Color.WHITE);
 		header.setEnabled(true);
 		header.setFont(headFont);
