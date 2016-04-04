@@ -100,6 +100,10 @@ public final class DominionController {
 		mainFrame.setPanel(mainMenuPanel);
 		mainFrame.setVisible(true);
 	}
+	
+	public void joinMainMenu(){
+		mainFrame.setPanel(mainMenuPanel);
+	}
 
 	/**
 	 * 
