@@ -1,6 +1,7 @@
 package com.tpps.application.game;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -75,13 +76,18 @@ public class GameStorageInterface {
 		for (Iterator<String> iterator = handCardIds.iterator(); iterator.hasNext();) {
 			String handCardId = (String) iterator.next();
 			Matcher matcher = Pattern.compile("\\d+").matcher(handCardId);
-			matcher.find();
-			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, matcher.start()));
+			if (matcher.find()){		
+			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, matcher.start()));			
 			if (serializedCard != null) {
 				serializedCard = new SerializedCard(serializedCard.getActions(), serializedCard.getTypes(),
 						serializedCard.getCost(), serializedCard.getName(), serializedCard.getImage());
+				serializedCardWithId.put(handCardId, serializedCard);
+				}
+			}else{
+				serializedCardWithId.put(handCardId, null);
 			}
-			serializedCardWithId.put(handCardId, serializedCard);
+			
+			
 		}
 		return serializedCardWithId;
 	}
@@ -93,6 +99,8 @@ public class GameStorageInterface {
 	public void loadActionCardsAndPassToGameWindow(LinkedList<String> actionCardIds) {
 		
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(actionCardIds);
+		System.out.println(Arrays.toString(actionCardIds.toArray()));
+		System.out.println(Arrays.toString(serializedCardWithId.keySet().toArray()));
 		this.gameWindow.tableActionCards(serializedCardWithId);
 	}
 

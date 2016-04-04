@@ -81,7 +81,7 @@ public class GameWindow extends JFrame {
 		buys = "Buys: ";
 		actions = "Actions: ";
 		this.setMinimumSize(new Dimension(1280, 720));
-		this.setVisible(true);
+//		this.setVisible(true);
 		framework = new GraphicFramework(this);
 		this.add(framework);
 
@@ -216,6 +216,16 @@ public class GameWindow extends JFrame {
 		this.tableCards = new LinkedList<Card>();
 
 		for (int i = 0; i < table.size(); i++) {
+		if (actionCardlds.get(i).equals(GameConstant.NIL)) {
+			System.out.println("nil");
+			if (i < 5) {
+				shift += 0.06;
+				shiftCard += 0.06;
+			}else{
+				shiftBottom += 0.06;
+				shiftCardBottom += 0.06;
+			}
+		}else{
 			SerializedCard serializedCard = table.get(actionCardlds.get(i));
 
 			// // Example For nishit
@@ -247,7 +257,7 @@ public class GameWindow extends JFrame {
 				this.tableCards.add(card);
 				this.tableButtons.add(button);
 			}
-
+		}
 		}
 	}
 

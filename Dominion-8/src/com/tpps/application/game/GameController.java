@@ -133,6 +133,7 @@ public class GameController {
 			if (player.isReactionMode() && card.getTypes().contains(CardType.REACTION)) {
 				System.out.println("spielt reaktionskarte");
 				player.playCard(cardID);
+				GameServer.getInstance().sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
 				return true;
 			}
 			if (this.gamePhase.equals("actionPhase")) {
@@ -331,6 +332,7 @@ public class GameController {
 				e.printStackTrace();
 			}
 		}else if(!reactivePlayer){
+			System.out.println("thief false");
 			this.activePlayer.setThiefFalse();
 		}
 	}
@@ -412,16 +414,15 @@ public class GameController {
 					player.getDeck().getDiscardPile()
 							.add(this.gameBoard.getTableForVictoryCards().get("Curse").removeLast());
 					player.setWitchFalse();
-
 					System.out.println(Arrays.toString(player.getDeck().getDiscardPile().toArray()));
 				}
 			}
 		}
+		checkReactionModeFinishedAndEnableGuis();
 		try {
 			GameServer.getInstance().broadcastMessage(new PacketSendBoard(this.getGameBoard().getTreasureCardIDs(),
 					getGameBoard().getVictoryCardIDs(), getGameBoard().getActionCardIDs()));
 		} catch (IOException e) {
-
 			e.printStackTrace();
 		}
 	}
@@ -476,7 +477,6 @@ public class GameController {
 					player.setBureaucratFalse();
 					System.out.println(Arrays.toString(player.getDeck().getDrawPile().toArray()));
 					System.out.println();
-
 				}
 			}
 		}
@@ -487,6 +487,7 @@ public class GameController {
 
 			e.printStackTrace();
 		}
+		checkReactionModeFinishedAndEnableGuis();
 	}
 
 	public void checkWitchFinish() {
@@ -501,6 +502,7 @@ public class GameController {
 			}
 		}
 		if (witchFlag) {
+			System.out.println("witch false");
 			this.activePlayer.setWitchFalse();
 		}
 	}
@@ -517,6 +519,7 @@ public class GameController {
 			}
 		}
 		if (bureaucratFlag) {
+			System.out.println("bureaucrat false");
 			this.activePlayer.setBureaucratFalse();
 		}
 	}
@@ -534,6 +537,7 @@ public class GameController {
 				break;
 			}
 		}
+		System.out.println("kein thief" + thiefFlag);
 		return thiefFlag;
 	}
 	
@@ -550,6 +554,7 @@ public class GameController {
 		}
 		if (spyFlag) {
 			this.activePlayer.setSpyFalse();
+			System.out.println("spy false");
 			return spyFlag;
 		}
 		return spyFlag;
@@ -576,6 +581,7 @@ public class GameController {
 			thiefList.add(player);
 			if (thiefList.size() == 1) {
 				try {
+					GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketSendActiveButtons(false, false, false));
 					GameServer.getInstance().sendMessage(activePlayer.getPort(),
 							new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
 				} catch (IOException e) {
@@ -821,17 +827,34 @@ public class GameController {
 	}
 
 	/**
-	 * 
+	 * sets the gamePhase on actionPhase
 	 */
 	public void startGame() {
 		this.gamePhase = "actionPhase";
+	}
+	
+	public void isGameFinished() {
+		if (this.gameBoard.getTableForVictoryCards().get("Province").isEmpty()){
+			endGame();
+		}
+		
+		
+		
 	}
 
 	/**
 	 * 
 	 */
 	public void endGame() {
-
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			try {
+				GameServer.getInstance().sendMessage(player.getPort(), new PacketDisable());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
