@@ -46,10 +46,19 @@ public final class DominionController {
 	/** main entry point for client application */
 	public static void main(String[] stuff) {
 		instance = new DominionController();
+		DominionController.instance.init();
 	}
+
+	
 
 	/* constructor */
 	public DominionController() {
+		
+	}
+	
+	
+	private void init() {
+		// TODO Auto-generated method stub
 		storageController = new CardStorageController();
 		// new LoginGUIController();
 		mainFrame = new MainFrame();
