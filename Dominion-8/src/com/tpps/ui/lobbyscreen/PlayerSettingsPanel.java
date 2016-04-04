@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.ui.statisticsscreen.StatisticsBoard;
 
 public class PlayerSettingsPanel extends JPanel{
 
@@ -103,8 +104,9 @@ public class PlayerSettingsPanel extends JPanel{
 	private JPanel middleAreaPanel(){
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setOpaque(false);		
+		panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
 		
-		JPanel optionPanel = new JPanel(new GridLayout(3,3,H_GAP_OPTIONS,V_GAP_OPTIONS));
+/*		JPanel optionPanel = new JPanel(new GridLayout(3,3,H_GAP_OPTIONS,V_GAP_OPTIONS));
 		
 		optionPanel.setBorder(BorderFactory.createEmptyBorder(EMPTYBORDER_UP_BOTTOM, EMPTYBORDER_LEFT_RIGHT, EMPTYBORDER_UP_BOTTOM, EMPTYBORDER_LEFT_RIGHT));
 		optionPanel.setOpaque(false);
@@ -133,14 +135,14 @@ public class PlayerSettingsPanel extends JPanel{
 			this.options[i].setHorizontalAlignment(JCheckBox.CENTER);
 			
 			optionPanel.add(options[i]);
-		}
+		} */
 		
-		JTextField header = this.createHeader("Options: ");
+		JTextField header = this.createHeader("Statistics: ");
 		
 		panel.add(header, BorderLayout.PAGE_START);
-		panel.add(optionPanel, BorderLayout.CENTER);
-		panel.add(Box.createHorizontalStrut(30), BorderLayout.LINE_START);
-		panel.add(Box.createHorizontalStrut(30), BorderLayout.LINE_END);
+		panel.add(new StatisticsBoard(), BorderLayout.CENTER);
+		panel.add(Box.createHorizontalStrut(10), BorderLayout.LINE_START);
+		panel.add(Box.createHorizontalStrut(10), BorderLayout.LINE_END);
 		return panel;
 	}
 
