@@ -27,7 +27,6 @@ import com.tpps.ui.statisticsscreen.StatisticsBoard;
 public class PlayerSettingsPanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
-	private LobbyScreen parent;
  //	private final Font font = new Font("Calibri", Font.PLAIN, 20);
 	private final Font head = new Font("Arial Black", Font.BOLD, 20);
 	private final Font optionsFont = new Font("Calibri", Font.BOLD, 21);
@@ -56,8 +55,7 @@ public class PlayerSettingsPanel extends JPanel{
 	private static int IMG_TO_BOTTOM = 15;
 	private static final int IMG_TO_EDGE = 30;
 	
-	public PlayerSettingsPanel(LobbyScreen parent) {
-		this.parent = parent;
+	public PlayerSettingsPanel() {
 		this.setOpaque(false);
 		this.setLayout(new GridLayout(3,1, 0, SPACE_PANEL_TO_PANEL));
 

@@ -15,7 +15,10 @@ import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
 import com.tpps.technicalServices.network.game.GameClient;
 import com.tpps.ui.MainFrame;
 import com.tpps.ui.MainMenuPanel;
+import com.tpps.ui.lobbyscreen.GlobalChatPanel;
+import com.tpps.ui.lobbyscreen.PlayerSettingsPanel;
 import com.tpps.ui.loginscreen.LoginGUIController;
+import com.tpps.ui.statisticsscreen.StatisticsBoard;
 
 /**
  * main controller class containing main entry point for client-application
@@ -32,7 +35,14 @@ public final class DominionController {
 	private GameClient gameClient;
 	private CardClient cardClient;
 	private CardStorageController storageController;
-
+	private MainFrame mainFrame;
+	private LoginGUIController loginGuiController;
+	
+	private MainMenuPanel mainMenuPanel;
+	private GlobalChatPanel globalChatPanel;
+	private PlayerSettingsPanel playerSettingsPanel;
+	private StatisticsBoard statisticsBoardPanel;
+	
 	/** main entry point for client application */
 	public static void main(String[] stuff) {
 		instance = new DominionController();
@@ -42,16 +52,27 @@ public final class DominionController {
 	public DominionController() {
 		storageController = new CardStorageController();
 		// new LoginGUIController();
-		MainFrame mainFrame = new MainFrame();
-		LoginGUIController loginGuiController = new LoginGUIController();
-		
-		
-		
+		mainFrame = new MainFrame();
+		loginGuiController = new LoginGUIController();
+		this.loadPanels();
+			
 		try {
 			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), 1339), new ClientGamePacketHandler());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void loadPanels(){
+		mainMenuPanel = new MainMenuPanel(this.mainFrame);
+		globalChatPanel = new GlobalChatPanel();
+		playerSettingsPanel = new PlayerSettingsPanel();
+		statisticsBoardPanel = new StatisticsBoard();
+		
+	}
+	
+	public void endLogin(){
+		mainFrame.setPanel(mainMenuPanel);
 	}
 
 	/**

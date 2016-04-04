@@ -29,7 +29,6 @@ public class GlobalChatPanel extends JPanel{
 	
 	private JTextArea textbox;
 	private JScrollPane scrollpane;
-	private LobbyScreen parentLobby;
 	private StatisticsScreen parentStat;
 	private JTextField chatInputLine;
 	private BufferedImage blackBeauty;
@@ -44,8 +43,7 @@ public class GlobalChatPanel extends JPanel{
 	
 	private static final long serialVersionUID = 1L;
 	
-	public GlobalChatPanel(LobbyScreen parent) {
-		this.parentLobby = parent;
+	public GlobalChatPanel() {
 		this.createComponents();
 	}
 	
@@ -224,9 +222,6 @@ public class GlobalChatPanel extends JPanel{
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	
-	public LobbyScreen getParentX(){
-		return this.parentLobby;
-	}
 	
 	/**
 	 * 

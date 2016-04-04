@@ -2,6 +2,7 @@ package com.tpps.ui.loginscreen;
 
 import javax.swing.JOptionPane;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.network.login.client.LoginClient;
 import com.tpps.ui.MainFrame;
 
@@ -14,6 +15,7 @@ public class LoginGUIController{
 	private LogInGUI logingui;
 	private CreateAccount createaccount;
 	private LoginClient loginclient;
+	DominionController domCon;
 	
 	/**
 	 * Initializes this object
@@ -81,8 +83,9 @@ public class LoginGUIController{
 	public void getStateOfLoginRequest(boolean state){
 		if (state) { // logged in successfully
 			JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.INFORMATION_MESSAGE);
-			new MainFrame().setVisible(true);
 			this.logingui.dispose();
+			this.domCon = DominionController.getInstance();
+			this.domCon.endLogin();
 		} else {	//login request failed 
 			JOptionPane.showMessageDialog(null, "Wrong Password or nickname", "Login", JOptionPane.ERROR_MESSAGE);
 		}
