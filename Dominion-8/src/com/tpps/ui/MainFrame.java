@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-	//	this.fullscreenmode();
+		//this.fullscreenmode();
 		
 		this.setMinimumSize(new Dimension(1280, 720));		
 	}
