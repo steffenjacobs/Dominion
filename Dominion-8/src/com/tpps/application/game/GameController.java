@@ -837,6 +837,9 @@ public class GameController {
 		if (this.gameBoard.getTableForVictoryCards().get("Province").isEmpty()){
 			endGame();
 		}
+		if (this.gameBoard.checkThreePilesEmpty()) {
+			endGame();
+		}
 		
 		
 		

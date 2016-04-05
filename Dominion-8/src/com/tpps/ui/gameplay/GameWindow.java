@@ -217,7 +217,6 @@ public class GameWindow extends JFrame {
 
 		for (int i = 0; i < table.size(); i++) {
 		if (actionCardlds.get(i).equals(GameConstant.NIL)) {
-			System.out.println("nil");
 			if (i < 5) {
 				shift += 0.06;
 				shiftCard += 0.06;

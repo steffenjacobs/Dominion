@@ -289,11 +289,11 @@ public class GameBoard {
 		Card.resetClassID();
 		
 //		smithy
-		LinkedList<Card> smithyList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD}), 
-				CollectionsUtil.linkedList(new String[] {"3"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Smithy", 0), GameConstant.INIT_PILE_SIZE, smithyList);
-		this.tableForActionCards.put("Smithy", smithyList);
-		Card.resetClassID();
+//		LinkedList<Card> smithyList = new LinkedList<Card>();
+//		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.DRAW_CARD}), 
+//				CollectionsUtil.linkedList(new String[] {"3"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION}), "Smithy", 0), GameConstant.INIT_PILE_SIZE, smithyList);
+//		this.tableForActionCards.put("Smithy", smithyList);
+//		Card.resetClassID();
 		
 //		spy 
 		LinkedList<Card> spyList = new LinkedList<Card>();
