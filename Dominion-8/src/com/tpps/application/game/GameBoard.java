@@ -474,7 +474,7 @@ public class GameBoard {
 		LinkedList<String> keys = new LinkedList<>(table.keySet());
 		for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
-			if(this.tableForActionCards.get(key).isEmpty()){
+			if(table.get(key).isEmpty()){
 				counter++;
 				if (counter == GameConstant.EMPTY_PILES){
 					return counter;
