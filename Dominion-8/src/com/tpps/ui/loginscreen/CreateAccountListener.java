@@ -65,8 +65,12 @@ public class CreateAccountListener implements MouseListener {
 		// return;
 		// }
 
-		if (ca.getUsername().getText().equals("cmd") || ca.getUsername().getText().equals("command")
-				|| ca.getUsername().getText().equals("help") || CharMatcher.WHITESPACE.matchesAnyOf(ca.getUsername().getText())) {
+		if (CharMatcher.WHITESPACE.matchesAnyOf(ca.getUsername().getText())) {
+			JOptionPane.showMessageDialog(null, "Username not allowed");
+			return;
+		}
+		
+		if(!(ca.getUsername().getText().matches("^[_a-zA-Z0-9]+$"))){
 			JOptionPane.showMessageDialog(null, "Username not allowed");
 			return;
 		}
