@@ -23,9 +23,9 @@ public class MainFrame extends JFrame {
 	 */
 	public MainFrame() {
 		this.c = this.getContentPane();
-//		int width = Toolkit.getDefaultToolkit().getScreenSize().width;
-//		int height = Toolkit.getDefaultToolkit().getScreenSize().height;
-//		this.setSize(width, height);
+		int width = Toolkit.getDefaultToolkit().getScreenSize().width;
+		int height = Toolkit.getDefaultToolkit().getScreenSize().height;
+		this.setSize(width, height);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		//this.fullscreenmode();
