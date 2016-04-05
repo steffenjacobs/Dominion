@@ -1,7 +1,9 @@
 package com.tpps.application.game;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -127,9 +129,12 @@ public final class DominionController {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void paint(Graphics g) {
-				g.drawImage(originalBackground, 0, 0, null);
-				super.paint(g);
+			public void paint(Graphics g) {				
+				Graphics2D h = (Graphics2D) g;
+				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+				
+				h.drawImage(originalBackground, 0, 0,this.getWidth(), this.getHeight(), null);
+				super.paint(h);
 			}
 		};
 		panel.setLayout(new GridLayout(1, 2));
@@ -223,8 +228,11 @@ public final class DominionController {
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(originalBackground, 0, 0, null);
-				super.paint(g);
+				Graphics2D h = (Graphics2D) g;
+				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+				
+				h.drawImage(originalBackground, 0, 0,this.getWidth(), this.getHeight(), null);
+				super.paint(h);
 			}
 		};
 		panel.setLayout(new GridLayout(1, 2));
