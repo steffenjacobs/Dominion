@@ -93,8 +93,8 @@ public class ButtonClass extends GFButton {
 			if (this.getCaption().equals("End ActionPhase")) {
 				try {
 					System.out.println("EndActionPhase");
-					this.getParent().removeComponent(this);
-					this.getParent().addComponent(GameWindow.playTreasures);
+					this.getFramework().removeComponent(this);
+					this.getFramework().addComponent(GameWindow.playTreasures);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndActionPhase());
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -104,7 +104,7 @@ public class ButtonClass extends GFButton {
 			if (this.getCaption().equals("Play Treasures")) {
 				try {
 					System.out.println("PacketPlayTreasures");
-					this.getParent().removeComponent(this);
+					this.getFramework().removeComponent(this);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -114,7 +114,7 @@ public class ButtonClass extends GFButton {
 			System.out.println("Caption: " + this.getCaption());
 			if (this.getCaption().equals("End Turn")) {
 				try {
-					this.getParent().addComponent(GameWindow.endActionPhase);
+					this.getFramework().addComponent(GameWindow.endActionPhase);
 					System.out.println("Packet EndTurn");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndTurn());
 				} catch (IOException ioe) {
@@ -125,7 +125,7 @@ public class ButtonClass extends GFButton {
 				try {
 					System.out.println("packet send end discard mode");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndDiscardMode());
-					this.getParent().removeComponent(this);
+					this.getFramework().removeComponent(this);
 				} catch (IOException e) {
 
 					e.printStackTrace();
@@ -134,7 +134,7 @@ public class ButtonClass extends GFButton {
 			if (this.getCaption().equals("Stop Trash")) {
 				try {
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndTrashMode());
-					this.getParent().removeComponent(this);
+					this.getFramework().removeComponent(this);
 				} catch (IOException e) {
 
 					e.printStackTrace();
@@ -144,7 +144,7 @@ public class ButtonClass extends GFButton {
 				try {
 					System.out.println("PacketDiscardDeck");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketDiscardDeck());
-					this.getParent().removeComponent(this);
+					this.getFramework().removeComponent(this);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -153,9 +153,9 @@ public class ButtonClass extends GFButton {
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
 					gameClient.sendMessage(new PacketEndReactions(gameClient.getClientId()));
-					this.getParent().removeComponent(this);
-					this.getParent().addComponent(GameWindow.endActionPhase);
-					this.getParent().addComponent(GameWindow.endTurn);
+					this.getFramework().removeComponent(this);
+					this.getFramework().addComponent(GameWindow.endActionPhase);
+					this.getFramework().addComponent(GameWindow.endTurn);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -165,8 +165,8 @@ public class ButtonClass extends GFButton {
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
 					gameClient.sendMessage(new PacketTakeCards(gameClient.getClientId()));
-					this.getParent().removeComponent(this);
-					this.getParent().removeComponent(GameWindow.putBack);
+					this.getFramework().removeComponent(this);
+					this.getFramework().removeComponent(GameWindow.putBack);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -177,8 +177,8 @@ public class ButtonClass extends GFButton {
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
 					gameClient.sendMessage(new PacketPutBackCards(gameClient.getClientId()));
-					this.getParent().removeComponent(this);
-					this.getParent().removeComponent(GameWindow.takeCards);
+					this.getFramework().removeComponent(this);
+					this.getFramework().removeComponent(GameWindow.takeCards);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -187,8 +187,8 @@ public class ButtonClass extends GFButton {
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
 					gameClient.sendMessage(new PacketTakeThiefCards());
-					this.getParent().removeComponent(GameWindow.takeThiefCards);
-					this.getParent().removeComponent(GameWindow.putBackThiefCards);
+					this.getFramework().removeComponent(GameWindow.takeThiefCards);
+					this.getFramework().removeComponent(GameWindow.putBackThiefCards);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -197,8 +197,8 @@ public class ButtonClass extends GFButton {
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
 					gameClient.sendMessage(new PacketPutBackThiefCards());
-					this.getParent().removeComponent(GameWindow.putBackThiefCards);
-					this.getParent().removeComponent(GameWindow.takeThiefCards);
+					this.getFramework().removeComponent(GameWindow.putBackThiefCards);
+					this.getFramework().removeComponent(GameWindow.takeThiefCards);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -208,8 +208,8 @@ public class ButtonClass extends GFButton {
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
 					gameClient.sendMessage(new PacketTakeDrawedCard());
-					this.getParent().removeComponent(GameWindow.takeDrawedCard);
-					this.getParent().removeComponent(GameWindow.setAsideDrawedCard);
+					this.getFramework().removeComponent(GameWindow.takeDrawedCard);
+					this.getFramework().removeComponent(GameWindow.setAsideDrawedCard);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -219,8 +219,8 @@ public class ButtonClass extends GFButton {
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
 					gameClient.sendMessage(new PacketSetAsideDrawedCard());
-					this.getParent().removeComponent(GameWindow.takeDrawedCard);
-					this.getParent().removeComponent(GameWindow.setAsideDrawedCard);
+					this.getFramework().removeComponent(GameWindow.takeDrawedCard);
+					this.getFramework().removeComponent(GameWindow.setAsideDrawedCard);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -242,7 +242,7 @@ public class ButtonClass extends GFButton {
 
 	public String toString() {
 		return "@" + System.identityHashCode(this) + " - " + super.getLocation() + " , " + super.getDimension() + " , "
-				+ super.getLayer() + " , " + super.getRenderdImage() + " , " + super.getParent() + " , "
+				+ super.getLayer() + " , " + super.getRenderdImage() + " , " + super.getFramework() + " , "
 				+ super.getCaption();
 	}
 
