@@ -54,6 +54,7 @@ public final class DominionController {
 	private StatisticsBoard statisticsBoardPanel;
 
 	private BufferedImage originalBackground;
+	private boolean turnFlag;
 	
 	/** main entry point for client application */
 	public static void main(String[] stuff) {
@@ -77,13 +78,14 @@ public final class DominionController {
 //		this.loadPanels();
 //
 //			
+		this.turnFlag = false;
 		try {
 			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), 1339), new ClientGamePacketHandler());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private void loadPanels(){
 		mainMenuPanel = new MainMenuPanel(this.mainFrame);
 		globalChatPanel = new GlobalChatPanel();
@@ -105,6 +107,14 @@ public final class DominionController {
 	
 	public void joinMainMenu(){
 		mainFrame.setPanel(mainMenuPanel);
+	}
+	
+	public boolean isTurnFlag() {
+		return turnFlag;
+	}
+
+	public void setTurnFlag(boolean turnFlag) {
+		this.turnFlag = turnFlag;
 	}
 
 	/**
