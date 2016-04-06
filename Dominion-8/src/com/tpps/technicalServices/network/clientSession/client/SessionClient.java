@@ -10,6 +10,12 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.Client;
 
+/**
+ * SessionClient - used for communicating with the SessionServer by users &
+ * servers
+ * 
+ * @author Steffen Jacobs
+ */
 public class SessionClient extends Client {
 
 	private static final boolean DEBUG = false;
