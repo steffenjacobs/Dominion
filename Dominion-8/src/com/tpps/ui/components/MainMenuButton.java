@@ -24,6 +24,7 @@ public class MainMenuButton {
 	private BufferedImage actualImage;
 	private final String name;
 	private int letterSize;
+	private Font customFont;
 
 	/**
 	 * Concstructor for the MainMenu buttons 
@@ -53,8 +54,15 @@ public class MainMenuButton {
 		Graphics2D g = this.originalImage.createGraphics();
 
 //		g.setFont(Loader.importFont(), Font.PLAIN, letterSize);
-		try {
-			g.setFont(Loader.importFont().deriveFont(Font.PLAIN, this.letterSize));
+		try {			
+			if (customFont == null) {
+				customFont = Loader.getInstance().getXenipa();
+				if (customFont == null){
+					customFont = new Loader().importFont();
+				}
+			}
+			
+			g.setFont(customFont.deriveFont(Font.PLAIN, this.letterSize));
 			g.setColor(Color.BLACK);
 			g.drawString(this.name, (originalImage.getWidth() / 2) - this.name.length() * 22,
 					(int) (originalImage.getHeight() / 1.5));

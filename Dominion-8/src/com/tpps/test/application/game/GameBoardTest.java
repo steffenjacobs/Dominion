@@ -1,12 +1,13 @@
 package com.tpps.test.application.game;
 
+
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.is;
+
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
-
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.is;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +33,6 @@ public class GameBoardTest {
 		assertTrue(startSet.size() == 8);
 		
 		for (int i = 0; i < GameConstant.INIT_COPPER_CARDS; i++){
-			System.out.println(startSet.get(i).getId());
 			
 			assertTrue(startSet.get(i).getTypes().contains(CardType.TREASURE));
 			assertTrue(startSet.get(i).getCost() == GameConstant.COPPER_COST);
@@ -67,9 +67,31 @@ public class GameBoardTest {
 		
 		for (int i = 0; i < duchyList.size(); i++){
 			assertTrue(duchyList.get(i).getId().equals("Duchy" + i));
-		}
+		}		
+	}
+	
+	
+	@Test
+	public void amoutOfPilesEmptyTest() {
+		this.gameBoard.getTableForVictoryCards().remove("Province");
+		this.gameBoard.getTableForVictoryCards().put("Province", new LinkedList<Card>());
+		assertThat(this.gameBoard.amountOfPilesEmpty(this.gameBoard.getTableForVictoryCards()), is(1));
 		
+		this.gameBoard.getTableForTreasureCards().remove("Silver");
+		this.gameBoard.getTableForTreasureCards().put("Silver", new LinkedList<>());
+		assertThat(this.gameBoard.amountOfPilesEmpty(this.gameBoard.getTableForTreasureCards()), is(1));
 		
+		assertThat(this.gameBoard.amountOfPilesEmpty(this.gameBoard.getTableForActionCards()), is(0));		
+		
+		assertTrue(!this.gameBoard.checkThreePilesEmpty());
+		
+		this.gameBoard.getTableForActionCards().remove("Moat");
+		this.gameBoard.getTableForActionCards().put("Moat", new LinkedList<Card>());
+		assertTrue(this.gameBoard.checkThreePilesEmpty());
+		
+		this.gameBoard.getTableForTreasureCards().remove("Copper");
+		this.gameBoard.getTableForActionCards().put("Copper", new LinkedList<Card>());
+		assertTrue(this.gameBoard.checkThreePilesEmpty());
 		
 	}
 	

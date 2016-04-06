@@ -26,7 +26,7 @@ public class LogUI {
 	private JFrame frame;
 
 	/**
-	 * 
+	 * constructor for the LogUI, initializes all required settings
 	 */
 	public LogUI() {
 		try {
@@ -38,26 +38,27 @@ public class LogUI {
 			this.frame.setLayout(new BorderLayout());
 			this.frame.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 			this.frame.getContentPane().add(this.dis);
-			this.frame.setSize(900, 800);
+			this.frame.setSize(900, 400);
 			this.frame.setLocationRelativeTo(null);
 			this.frame.setVisible(true);
 		} catch (Exception e) {
-			// TODO
+			GameLog.log(MsgType.EXCEPTION, e.getMessage());
 		}
 	}
 
 	/**
 	 * 
-	 * @param line
-	 * @param isLog
+	 * @param line the line update
+	 * @param textColor the color of the line
+	 * @param timestamp determines whether a timestamp is written in front of the text line
 	 */
-	public void updateLogger(final String line, boolean isLog) {
-		if (isLog) {
+	public void updateLogger(final String line, Color textColor, boolean timestamp) {
+		if (timestamp) {
 			this.dis.updateTextArea(line.split("]")[0] + "]", GameLog.getTimestampColor());
-			this.dis.updateTextArea(line.split("]")[1] + "]", GameLog.getMsgtypeColor());
+			this.dis.updateTextArea(line.split("]")[1] + "]", textColor);
 			this.dis.updateTextArea(line.split("]")[2] + "\n", GameLog.getMsgColor());
 		} else {
-			this.dis.updateTextArea(line, GameLog.getTimestampColor());
+			this.dis.updateTextArea(line, textColor);
 		}
 	}
 
@@ -73,14 +74,14 @@ public class LogUI {
 
 		/**
 		 * 
-		 * @return
+		 * @return the textPane
 		 */
 		public JTextPane getTextPane() {
 			return this.textPane;
 		}
 
 		/**
-		 * 
+		 * constructor for Display JPanel
 		 */
 		public Display() {
 			this.textPane = new JTextPane();
@@ -93,16 +94,16 @@ public class LogUI {
 
 		/**
 		 * 
-		 * @param text
-		 * @param font
+		 * @param text the text to update on the JTextPane
+		 * @param fontColor the fontColor of the text
 		 */
-		public void updateTextArea(final String text, Color font) {
+		public void updateTextArea(final String text, Color fontColor) {
 			SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					try {
 						Style style = textPane.addStyle("Style", null);
 						StyleConstants.setBackground(style, GameLog.getBackgroundColor());
-						StyleConstants.setForeground(style, font);
+						StyleConstants.setForeground(style, fontColor);
 						StyledDocument doc = textPane.getStyledDocument();
 						doc.insertString(doc.getLength(), text, style);
 					} catch (BadLocationException e) {

@@ -1,9 +1,7 @@
 package com.tpps.application.game;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -15,8 +13,13 @@ import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.ui.gameplay.GameWindow;
 
+/**
+ * 
+ * @author Lukas Adler
+ *
+ */
 public class GameStorageInterface {
-	
+
 	GameWindow gameWindow;
 
 	/**
@@ -26,39 +29,39 @@ public class GameStorageInterface {
 	public GameStorageInterface(GameWindow gameWindow) {
 		this.gameWindow = gameWindow;
 	}
-	
+
 	/**
 	 * 
 	 * @param handCardIds
 	 */
-	public void loadHandCardsAndPassToGameWindow(LinkedList<String> handCardIds) {
-		for (Iterator<String> iterator = handCardIds.iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
-			System.out.println("HandCards: " + string);			
-		}
+	public void loadHandCardsAndPassToGameWindow(LinkedList<String> handCardIds) {		
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(handCardIds);
-		
 		this.gameWindow.handCards(serializedCardWithId);
 	}
-	
+
 	/**
 	 * 
 	 * @param victoryCardIds
 	 */
-	public void loadVictoryCardsAndPassToGameWindow(LinkedList<String> victoryCardIds){
-	
+	public void loadVictoryCardsAndPassToGameWindow(LinkedList<String> victoryCardIds) {
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(victoryCardIds);
 		this.gameWindow.victoryCards(serializedCardWithId);
 	}
-	
+
 	/**
 	 * 
 	 * @param coinCardIds
 	 */
-	public void loadCoinCardsAndPassToGameWindow(LinkedList<String> coinCardIds){
-	
+	public void loadCoinCardsAndPassToGameWindow(LinkedList<String> coinCardIds) {
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(coinCardIds);
 		this.gameWindow.coinCards(serializedCardWithId);
+	}
+	
+	public void loadRevealCardsAndPassToGameWindow(LinkedList<String> revealCardIds) {
+		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(revealCardIds);
+		this.gameWindow.extraTable(serializedCardWithId);
+		
+		
 	}
 
 	/**
@@ -72,17 +75,19 @@ public class GameStorageInterface {
 		cs.loadCards();
 		for (Iterator<String> iterator = handCardIds.iterator(); iterator.hasNext();) {
 			String handCardId = (String) iterator.next();
-			
-			
 			Matcher matcher = Pattern.compile("\\d+").matcher(handCardId);
-			matcher.find();		
-			
-			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, matcher.start()));
-			if (serializedCard != null) {				
+			if (matcher.find()){		
+			SerializedCard serializedCard = cs.getCard(handCardId.substring(0, matcher.start()));			
+			if (serializedCard != null) {
 				serializedCard = new SerializedCard(serializedCard.getActions(), serializedCard.getTypes(),
 						serializedCard.getCost(), serializedCard.getName(), serializedCard.getImage());
+				serializedCardWithId.put(handCardId, serializedCard);
+				}
+			}else{
+				serializedCardWithId.put(handCardId, null);
 			}
-			serializedCardWithId.put(handCardId, serializedCard);
+			
+			
 		}
 		return serializedCardWithId;
 	}
@@ -92,14 +97,17 @@ public class GameStorageInterface {
 	 * @param actionCardIds
 	 */
 	public void loadActionCardsAndPassToGameWindow(LinkedList<String> actionCardIds) {
-		for (Iterator<String> iterator = actionCardIds.iterator(); iterator.hasNext();) {
-			String string = (String) iterator.next();
-			System.out.println("ActionCards: " + string);			
-		}
+		
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(actionCardIds);
+		System.out.println(Arrays.toString(actionCardIds.toArray()));
+		System.out.println(Arrays.toString(serializedCardWithId.keySet().toArray()));
 		this.gameWindow.tableActionCards(serializedCardWithId);
 	}
-	
+
+	/**
+	 * 
+	 * @param playedCardIds
+	 */
 	public void loadPlayedCardsAndPassToGameWindow(LinkedList<String> playedCardIds) {
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(playedCardIds);
 		this.gameWindow.middleCards(serializedCardWithId);
@@ -115,16 +123,16 @@ public class GameStorageInterface {
 			gameWindow.setVisible(true);
 			gameWindow.addStopDiscardButton();
 			new GameStorageInterface(gameWindow)
-					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));			
+					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//		Matcher matcher = Pattern.compile("\\d+").matcher("TESt243");
-//		matcher.find();		
-//		System.out.println("Start: " + matcher.start() + "Ende: " + matcher.end());
-//		System.out.println("TESt243".substring(matcher.start(), matcher.end()));
-		
-
+		// Matcher matcher = Pattern.compile("\\d+").matcher("TESt243");
+		// matcher.find();
+		// System.out.println("Start: " + matcher.start() + "Ende: " +
+		// matcher.end());
+		// System.out.println("TESt243".substring(matcher.start(),
+		// matcher.end()));
 	}
 }

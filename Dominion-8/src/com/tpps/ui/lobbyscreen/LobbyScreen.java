@@ -2,28 +2,50 @@ package com.tpps.ui.lobbyscreen;
 
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.GridLayout;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 public class LobbyScreen extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private final Container c;
-	private LobbyScreenPanel lobbyPanel;
-	private int width;
-	private int height;
-
-	public LobbyScreen() {
+	private int width = 1280;
+	private int height = 720;
+	private Container c;
+	private BufferedImage originalBackground;
+	
+	private PlayerSettingsPanel right;
+	
+	LobbyScreen(){
+		try {
+			this.originalBackground = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		this.setVisible(true);
-		this.c = this.getContentPane();
-		width = Toolkit.getDefaultToolkit().getScreenSize().width;
-		height = Toolkit.getDefaultToolkit().getScreenSize().height;
+		this.c = new JLabel(new ImageIcon(originalBackground));
+		this.setContentPane(c);
+		c.setLayout(new GridLayout(1,2));
+		
+		
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.lobbyPanel = new LobbyScreenPanel(this);
-		this.c.add(lobbyPanel);
+	
+		right = new PlayerSettingsPanel();
+		c.add(new GlobalChatPanel());
+		c.add(right);
+		
+		right.insertPlayer("kevinS");
+		right.insertPlayer("Gamingfish");
+		right.insertPlayer("nishit");		
+		
 		this.revalidate();
 		this.repaint();
 	}
@@ -31,4 +53,5 @@ public class LobbyScreen extends JFrame{
 	public static void main(String[] args) {
 		new LobbyScreen();
 	}
+
 }

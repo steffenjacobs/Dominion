@@ -9,6 +9,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -146,30 +148,12 @@ public class GraphicFramework extends JPanel {
 		Arrays.sort(objects, new CompareByLayer());
 
 		for (GameObject obj : objects) {
-			if (obj.isVisible())
-				g.drawImage(obj.getImage(), (int) obj.getLocation().getX(), (int) obj.getLocation().getY(), null);
+			if (obj.isVisible()) {
+				g.drawImage(obj.getRenderdImage(), (int) obj.getLocation().getX(), (int) obj.getLocation().getY(),
+						null);
+				
+			}
 		}
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		
-		// g.drawString(GameWindow.coins, 10, 10);
-		// g.drawString(GameWindow.buys, 10, 20);
-		// g.drawString(GameWindow.actions, 10, 30);
-
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
-		//TODO: NISHIT! YOU WILL DIE FOR THIS!
 	}
 
 	/**
@@ -195,10 +179,27 @@ public class GraphicFramework extends JPanel {
 		_parent.getContentPane().addMouseListener(mouseListener);
 		_parent.getContentPane().addMouseMotionListener(mouseListener);
 		_parent.addComponentListener(new ComponentAdapter() {
+			private ExecutorService threadPool = Executors.newCachedThreadPool();
+
+			long last = 0;
 
 			@Override
 			public void componentResized(ComponentEvent e) {
-				onWindowResize();
+				last = System.currentTimeMillis();
+
+				threadPool.submit(() -> {
+					try {
+						final long l = last;
+						Thread.sleep(300);
+
+						if (l == last) {
+							last = System.currentTimeMillis();
+							onWindowResize();
+						}
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				});
 			}
 		});
 	}
@@ -208,6 +209,7 @@ public class GraphicFramework extends JPanel {
 		for (GameObject go : gameObjects.values()) {
 			go.resizeObject(parent.getWidth(), parent.getHeight());
 		}
+		repaint();
 	}
 
 	/**
@@ -218,7 +220,7 @@ public class GraphicFramework extends JPanel {
 	public void addComponent(GameObject obj) {
 		gameObjects.put(obj.getID(), obj);
 		this.redrawWithoutRaytrace(obj);
-//		this.repaint(obj.getHitbox());
+		// this.repaint(obj.getHitbox());
 	}
 
 	/**

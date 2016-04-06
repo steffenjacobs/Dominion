@@ -33,9 +33,9 @@ public class FadeOutAnimation extends Animation {
 			@Override
 			public void run() {
 				// backup of the basis-image
-				this.baseImage = new BufferedImage(gameObject.getImage().getWidth(null),
-						gameObject.getImage().getHeight(null), BufferedImage.TYPE_INT_ARGB);
-				baseImage.getGraphics().drawImage(gameObject.getImage(), 0, 0, null);
+				this.baseImage = new BufferedImage(gameObject.getRenderdImage().getWidth(null),
+						gameObject.getRenderdImage().getHeight(null), BufferedImage.TYPE_INT_ARGB);
+				baseImage.getGraphics().drawImage(gameObject.getRenderdImage(), 0, 0, null);
 
 				while (!isPaused && isRunning && !playAnimationThread.isInterrupted()) {
 					frameCounter++;
@@ -44,7 +44,7 @@ public class FadeOutAnimation extends Animation {
 					if (frameCounter >= maxFrames || transparency < FADE_LOWER_BOUND || skip) {
 						System.out.println(frameCounter + "/" + maxFrames);
 						gameObject.setVisible(false);
-						gameObject.updateImage(this.baseImage);
+						gameObject.updatedBufferedImage(this.baseImage);
 						System.out.println("fade-animation finished.");
 
 						try {
@@ -56,13 +56,13 @@ public class FadeOutAnimation extends Animation {
 					}
 					// check reset-flag
 					if (reset) {
-						gameObject.updateImage(this.baseImage);
+						gameObject.updatedBufferedImage(this.baseImage);
 						return;
 					}
 
 					// update image
 					transparency -= fadePerStep;
-					gameObject.updateImage(GraphicsUtil.setAlpha(baseImage, transparency));
+					gameObject.updatedBufferedImage(GraphicsUtil.setAlpha(baseImage, transparency));
 					try {
 						Thread.sleep(DELAY_MILLIS);
 					} catch (InterruptedException e) {

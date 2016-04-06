@@ -10,6 +10,8 @@ import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.game.card.Card;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.ByteUtil;
 
 /**
@@ -20,11 +22,12 @@ import com.tpps.technicalServices.util.ByteUtil;
 public class CardStorageController {
 
 	private ConcurrentHashMap<String, SerializedCard> storedCards = new ConcurrentHashMap<String, SerializedCard>();
-	private static final String STORAGE_FILE = "cards.bin";
+	private static final String DEFAULT_STORAGE_FILE = "cards.bin";
 	private String storageFile;
+	private static final boolean DEBUG = false;
 
 	public CardStorageController() {
-		this.storageFile = STORAGE_FILE;
+		this.storageFile = DEFAULT_STORAGE_FILE;
 	}
 
 	public CardStorageController(String filename) {
@@ -38,28 +41,28 @@ public class CardStorageController {
 		try {
 			if (!Files.exists(Paths.get(storageFile)))
 				Files.createFile(Paths.get(storageFile));
-			System.out.println(Paths.get(storageFile));
+			if (DEBUG)
+				GameLog.log(MsgType.INIT, "Loading storage from: " + Paths.get(storageFile));
 			byte[] bytes = Files.readAllBytes(Paths.get(storageFile));
 			if (bytes.length == 0) {
-				System.err.println("ERROR: Storage-Container is empty!");
+				GameLog.log(MsgType.ERROR, "ERROR: Storage-Container is empty!");
 				Files.copy(Paths.get(storageFile), Paths.get(storageFile + "_old_" + System.currentTimeMillis()));
 				return;
 			}
-			System.out.println("File length: " + bytes.length);
+			if (DEBUG)
+				GameLog.log(MsgType.DEBUG, "File length: " + bytes.length + " Bytes");
 			ByteBuffer buff = ByteBuffer.wrap(bytes);
 			int count = buff.getInt();
-			int length;
 			SerializedCard card;
 			byte[] arr;
 			for (int i = 0; i < count; i++) {
-				length = buff.getInt();
-				arr = new byte[length];
+				arr = new byte[buff.getInt()];
 				buff.get(arr);
 				card = new SerializedCard(arr);
 				storedCards.put(card.getName(), card);
 			}
 		} catch (BufferUnderflowException | IOException e) {
-			System.err.println("ERROR: Storage-Container is broken!");
+			GameLog.log(MsgType.ERROR, "Storage-Container is broken!");
 			e.printStackTrace();
 		}
 	}
@@ -110,7 +113,7 @@ public class CardStorageController {
 	 */
 	public void addCard(Card card) {
 		storedCards.putIfAbsent(card.getName(), new SerializedCard(card.getActions(), card.getTypes(), card.getCost(),
-				card.getName(), (BufferedImage) card.getImage()));
+				card.getName(), (BufferedImage) card.getRenderdImage()));
 	}
 
 	/**
@@ -169,11 +172,11 @@ public class CardStorageController {
 
 	/** lists all stored cards in the console */
 	public void listCards() {
-		System.out.println("--- Cards in storage (" + storedCards.size() + "): ---");
+		GameLog.log(MsgType.INFO, "--- Cards in storage (" + getCardCount() + "): ---");
 		for (SerializedCard card : storedCards.values()) {
-			System.out.println(card.toString());
+			GameLog.log(MsgType.INFO, card.toString());
 		}
-		System.out.println("---       (" + storedCards.size() + ")         ---");
+		GameLog.log(MsgType.INFO, "---       (" + getCardCount() + ")         ---");
 	}
 
 	/**

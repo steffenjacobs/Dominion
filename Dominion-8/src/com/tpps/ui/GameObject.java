@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.MathUtil;
 import com.tpps.technicalServices.util.PhysicsUtil;
 
@@ -23,9 +22,9 @@ public abstract class GameObject implements Cloneable, Serializable {
 	private static int objectCounter = 0;
 
 	private int id;
-	private Image image, originalImage;
+	private Image bufferedImage, renderedImage;
 	private RelativeGeom2D location;
-	private RelativeGeom2D dimension;
+	protected RelativeGeom2D dimension;
 	private int x, y, height, width;
 	private GraphicFramework parent;
 	private int layer;
@@ -49,7 +48,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
 		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
 		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
-		this.originalImage = sourceImage;
+		this.bufferedImage = sourceImage;
 		this.parent = _parent;
 		this.layer = _layer;
 		this.id = _id;
@@ -66,7 +65,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 			Image sourceImage, GraphicFramework _parent) {
 		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
 		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
-		this.originalImage = sourceImage;
+		this.bufferedImage = sourceImage;
 		this.parent = _parent;
 		this.layer = _layer;
 		this.id = GameObject.objectCounter++;
@@ -82,7 +81,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent) {
 		this.location = new RelativeGeom2D(relativeLocX, relativeLocY);
 		this.dimension = new RelativeGeom2D(relativeWidth, relativeHeight);
-		this.originalImage = sourceImage;
+		this.bufferedImage = sourceImage;
 		this.parent = _parent;
 		this.layer = _layer;
 		this.id = GameObject.objectCounter++;
@@ -100,7 +99,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.parent = _parent;
 		this.id = GameObject.objectCounter++;
 		this.resizeObject(_parent.getWidth(), _parent.getHeight());
-		this.originalImage = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
+		this.bufferedImage = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_ARGB);
 		this.visible = false;
 	}
 
@@ -233,16 +232,16 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @return the original image of the game object
 	 * @author Steffen Jacobs
 	 */
-	public Image getOriginalImage() {
-		return this.originalImage;
+	public Image getBufferedImage() {
+		return this.bufferedImage;
 	}
 
 	/**
 	 * @return the current image of the game object
 	 * @author Steffen Jacobs
 	 */
-	public Image getImage() {
-		return this.image;
+	public Image getRenderdImage() {
+		return this.renderedImage;
 	}
 
 	/**
@@ -274,7 +273,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.y = this.location.getAbsoluteY(absHeight);
 		this.width = this.dimension.getAbsoluteX(absWidth);
 		this.height = this.dimension.getAbsoluteY(absHeight);
-		this.image = GraphicsUtil.resize((BufferedImage) this.originalImage, this.width, this.height);
 		this.onResize(absWidth, absHeight);
 	}
 
@@ -291,8 +289,8 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	private void updateImage(Image newImage, int absWidth, int absHeight) {
-		this.originalImage = newImage;
+	private void updateBufferedImage(Image newImage, int absWidth, int absHeight) {
+		this.bufferedImage = newImage;
 		if (this.isVisible())
 			parent.repaintSpecificArea(this.getHitbox());
 	}
@@ -306,18 +304,18 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public void updateImage(Image newImage) {
-		updateImage(newImage, parent.getWidth(), parent.getHeight());
+	public void updatedBufferedImage(Image newImage) {
+		updateBufferedImage(newImage, parent.getWidth(), parent.getHeight());
 	}
 
 	/**
-	 * replaces the image with the newImage and udpates the framework without
-	 * recalculating the size
+	 * replaces the image which is actually drawn on the screen with the
+	 * newImage and udpates the framework without recalculating the size
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public void forceSetImage(Image newImage) {
-		this.image = newImage;
+	public void setRenderedImage(Image newImage) {
+		this.renderedImage = newImage;
 	}
 
 	/**

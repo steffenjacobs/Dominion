@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -33,7 +34,7 @@ public abstract class GFButton extends GameObject {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,
 				_id);
 		this.caption = caption;
-		this.onResize(absWidth, absHeight);
+		this.resizeObject(absWidth, absHeight);
 	}
 
 	/**
@@ -45,9 +46,9 @@ public abstract class GFButton extends GameObject {
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent);
 		this.caption = caption;
-		this.onResize(absWidth, absHeight);
+		this.resizeObject(absWidth, absHeight);
 	}
-	
+
 	/**
 	 * different constructor
 	 * 
@@ -71,17 +72,26 @@ public abstract class GFButton extends GameObject {
 
 	@Override
 	public void onResize(int absWidth, int absHeight) {
-		try {
-			customFont = Loader.importFont();
+		try {			
+			if (customFont == null) {
+				customFont = Loader.getInstance().getXenipa();
+				if (customFont == null){
+					customFont = new Loader().importFont();
+				}
+			}
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		if (this.caption != null)
-			super.forceSetImage(GraphicsUtil.drawStringCentered(super.getImage(), this.caption,
-					customFont.deriveFont(Font.PLAIN, 22), Color.BLACK));
+		if (this.caption != null) {
+			super.setRenderedImage(GraphicsUtil.drawStringCentered(
+					GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
+							super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)),
+					this.caption, customFont.deriveFont(Font.PLAIN, 22), Color.BLACK));
+		}
 	}
+
 	/**
 	 * @author Steffen Jacobs
 	 * @return the object-caption

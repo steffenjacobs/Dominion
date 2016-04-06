@@ -20,7 +20,9 @@ public enum CardAction {
 	ADD_PURCHASE, 
 	
 	/* +1 Karte */
-	DRAW_CARD, 
+	DRAW_CARD,
+	
+	DRAW_CARD_OTHERS,
 	
 	/* z.B. für Abenteurer: ziehe Karten solange, bis... */
 	DRAW_CARD_UNTIL, 
@@ -31,6 +33,10 @@ public enum CardAction {
 	/* z.B. "jeder Spieler nimmt sich einen Fluch" */
 	GAIN_CARD,
 	
+	GAIN_CARD_OTHERS,
+	
+	GAIN_CARD_DRAW_PILE,
+	
 	/* z.B. bei Miliz */
 	DISCARD_CARD, 
 	
@@ -40,7 +46,11 @@ public enum CardAction {
 	TRASH_CARD, 
 	
 	/* z.B. bei Spion */
-	REVEAL_CARD, 
+	REVEAL_CARD,
+	
+	REVEAL_UNTIL_TREASURES,
+	
+	REVEAL_CARD_OTHERS_PUT_IT_ON_TOP_OF_DECK, 
 	
 	/* z.B. wenn eine Karte keine Aktion hat und eine Geldkarte ist */
 	IS_TREASURE, 
@@ -48,6 +58,24 @@ public enum CardAction {
 	/* z.B. wenn eine Karte keine Aktion hat und eine Punktekarte ist */
 	IS_VICTORY,
 	
-	DISCARD_OTHER_DOWNTO;
+	DISCARD_OTHER_DOWNTO,
+	
+	DEFEND,
+	
+	SEPERATOR,
+	
+	TRASH_AND_ADD_TEMPORARY_MONEY,
+	
+	TRASH_AND_GAIN,
+	
+	TRASH_AND_GAIN_MORE_THAN,
+	
+	TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND,
+	
+	CHOOSE_CARD_PLAY_TWICE,
+	
+	REVEAL_CARD_ALL,
+	
+	ALL_REVEAL_CARDS_TRASH_COINS_I_CAN_TAKE_DISCARD_OTHERS;
 	
 }

@@ -3,9 +3,12 @@ package com.tpps.application.game;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -101,6 +104,22 @@ public class Deck {
 	public int getDeckSize() {
 		return this.drawPile.size() + this.discardPile.size() + this.cardHand.size();
 	}
+	
+	
+	public int getTreasureAmountNotOnHand() {		
+		return getTreasureAmountOfList(drawPile) + getTreasureAmountOfList(discardPile);		
+	}
+	
+	public int getTreasureAmountOfList(LinkedList<Card> list) {
+		int treasureCounter = 0;
+		for (Iterator<Card> iterator = drawPile.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(CardType.TREASURE)){
+				treasureCounter++;
+			}			
+		}
+		return treasureCounter;
+	}
 
 	/**
 	 * @param cardID individual id of the card as a String
@@ -109,6 +128,36 @@ public class Deck {
 	 */
 	public Card getCardFromHand(String cardID) {
 		return getCardFromPile(cardID, this.cardHand);
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 * @return a card which has the given name null otherwise
+	 */
+	public Card getCardByNameFromHand(String name){
+		for (Iterator<Card> iterator = getCardHand().iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getName().toLowerCase().equals(name.toLowerCase())){
+				return card;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return a card which contains the given type null otherwise
+	 */
+	public Card getCardByTypeFromHand(CardType type){
+		for (Iterator<Card> iterator = getCardHand().iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(type)){
+				return card;
+			}
+		}
+		return null;
 	}
 	
 	/**
@@ -124,7 +173,6 @@ public class Deck {
 			}		
 		}
 		return CollectionsUtil.getCardIDs(treasureCards);
-		
 	}
 	
 	/**
@@ -248,7 +296,7 @@ public class Deck {
 	 * if the discardPile contains not enough card the shuffleIfLessThan(1) method is called. 
 	 * @return one Card from the discardPile
 	 */
-	public Card removeSaveFromDiscardPile() {
+	public Card removeSaveFromDrawPile() throws NoSuchElementException{
 		this.shuffleIfLessThan(1);		
 		return this.drawPile.removeLast();		
 	}
@@ -337,5 +385,9 @@ public class Deck {
 			}
 		}
 		return sBuf.append(">").toString();
+	}
+	
+	public static void main(String[] args) {
+		GameLog.log(MsgType.DEBUG, "Test, funzt?");
 	}
 }

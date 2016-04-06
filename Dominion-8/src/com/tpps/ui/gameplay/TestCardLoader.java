@@ -7,8 +7,22 @@ import java.util.LinkedHashMap;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
 
+/**
+ * GUI Testing class. All components are working
+ * 
+ * @author Nishit Agrawal - nagrawal
+ *
+ *
+ */
+
 public class TestCardLoader {
 	String s="asdf";
+	
+	/**
+	 * loading every variety of cards
+	 * 
+	 * @throws IOException
+	 */
 
 	public void loading() throws IOException{
 		 CardStorageController cs =  new CardStorageController();
@@ -27,11 +41,11 @@ public class TestCardLoader {
 			table.put(s+="s",cs.getCard("Province"));
 		}
 
-		 for (int i = 0; i < 9; i++) {
+		 for (int i = 0; i < 13; i++) {
 			hand.put(s+="s",cs.getCard("Gold"));
 		}
 		 
-		 for (int i = 0; i < 8; i++) {
+		 for (int i = 0; i < 15; i++) {
 			middle.put(s+="s",cs.getCard("Gold"));
 		}
 		 
@@ -41,6 +55,8 @@ public class TestCardLoader {
 		 gw.coinCards(coins);
 		 gw.victoryCards(estate);
 		 gw.middleCards(middle);
+		 gw.extraTable(middle);
+		 gw.removeTableComponents();
 	}
 	
 	public static void main(String[] args) throws IOException {

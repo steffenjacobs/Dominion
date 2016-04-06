@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -22,7 +23,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.basic.BasicBorders.MarginBorder;
 
+import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.Loader;
 
 //TODO: underline Header, set Background, set transparent, map 'RETURN' key to Login
@@ -50,6 +53,8 @@ public class LogInGUI extends JFrame {
 	private JPanel[] panels;
 	private Font smallfont, customFont;
 	LoginGUIController guicontroller;
+	private BufferedImage blackBeauty;
+	private BufferedImage walterWhite;
 
 	/**
 	 * constructor first call
@@ -94,7 +99,12 @@ public class LogInGUI extends JFrame {
 		loadImage();
 		resizeImage();
 		try {
-			this.customFont = Loader.importFont();
+			if (customFont == null) {
+				customFont = Loader.getInstance().getXenipa();
+				if (customFont == null){
+					customFont = new Loader().importFont();
+				}
+			}
 		} catch (FontFormatException e1) {
 			e1.printStackTrace();
 		} catch (IOException e1) {
@@ -161,6 +171,19 @@ public class LogInGUI extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		try {
+			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
+			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			this.walterWhite = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/walterWhite.jpg"));
+			walterWhite = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
@@ -200,8 +223,16 @@ public class LogInGUI extends JFrame {
 		description[0] = new JLabel("Accountname: ");
 		description[0].setFont(smallfont);
 		description[0].setHorizontalAlignment(JLabel.CENTER);
-		userinfo = new JTextField();
+		userinfo = new JTextField(){			
+			private static final long serialVersionUID = 1L;
 
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(walterWhite, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		userinfo.setForeground(Color.WHITE);
 		userinfo.setOpaque(false);
 		userinfo.setFont(smallfont);
 		panels[1].add(description[0]);
@@ -222,7 +253,16 @@ public class LogInGUI extends JFrame {
 		description[1] = new JLabel("Password: ");
 		description[1].setFont(smallfont);
 		description[1].setHorizontalAlignment(JLabel.CENTER);
-		passwordbox = new JPasswordField();
+		passwordbox = new JPasswordField(){			
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(walterWhite, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		passwordbox.setForeground(Color.WHITE);
 		passwordbox.setOpaque(false);
 		panels[2].add(description[1]);
 		panels[2].add(passwordbox);
@@ -240,13 +280,52 @@ public class LogInGUI extends JFrame {
 		panels[3].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
 		// panels[3].setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 
-		execute = new JButton("Login");
+		execute = new JButton("Login"){
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(blackBeauty, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		execute.setOpaque(false);
+		execute.setForeground(Color.WHITE);
+		execute.setBorderPainted(true);
+		execute.setContentAreaFilled(false);
 		execute.setFont(customFont.deriveFont(15f));
 
-		cancel = new JButton("Cancel");
+		cancel = new JButton("Cancel"){
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(blackBeauty, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		cancel.setOpaque(false);
+		cancel.setForeground(Color.WHITE);
+		cancel.setBorderPainted(true);
+		cancel.setContentAreaFilled(false);
 		cancel.setFont(customFont.deriveFont(15f));
 
-		createAccount = new JButton("New Account");
+		createAccount = new JButton("New Account"){
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(blackBeauty, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		createAccount.setOpaque(false);
+		createAccount.setForeground(Color.WHITE);
+		createAccount.setBorderPainted(true);
+		createAccount.setContentAreaFilled(false);
 		createAccount.setFont(customFont.deriveFont(10f));
 
 		cancel.setPreferredSize(new Dimension(120, 30));
@@ -261,9 +340,9 @@ public class LogInGUI extends JFrame {
 		c.add(all);
 		panels[3].revalidate();
 
-		createAccount.addActionListener(new LoginListener(createAccount, this, userinfo, passwordbox, guicontroller));
-		cancel.addActionListener(new LoginListener(cancel, this, userinfo, passwordbox, guicontroller));
-		execute.addActionListener(new LoginListener(execute, this, userinfo, passwordbox, guicontroller));
+		createAccount.addMouseListener(new LoginListener(createAccount, this, userinfo, passwordbox, guicontroller));
+		cancel.addMouseListener(new LoginListener(cancel, this, userinfo, passwordbox, guicontroller));
+		execute.addMouseListener(new LoginListener(execute, this, userinfo, passwordbox, guicontroller));
 	}
 
 	/**

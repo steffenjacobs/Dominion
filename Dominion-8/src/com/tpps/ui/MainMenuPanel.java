@@ -14,6 +14,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.components.MainMenuButton;
@@ -32,14 +33,14 @@ public class MainMenuPanel extends JPanel {
 	
 	private float[] alpha;
 	private MainMenuButton[] buttons;	
-	private final MainMenu parent;
+	private final MainFrame parent;
 	private final int gapFactor, topGap;
 
 	/**
 	 * Constructor for the MainMenuPanell
 	 * @param the MainMenu which holds this panel
 	 */
-	public MainMenuPanel(MainMenu parent) {
+	public MainMenuPanel(MainFrame parent) {
 		this.gapFactor = 7;
 		this.parent = parent;
 		this.topGap = Toolkit.getDefaultToolkit().getScreenSize().height / 6;
@@ -57,7 +58,7 @@ public class MainMenuPanel extends JPanel {
 	 * creates the Button on the Jpanel
 	 * @param parent
 	 */
-	private void createButtons(MainMenu parent) {
+	private void createButtons(MainFrame parent) {
 	
 			buttons = new MainMenuButton[4];
 			String[] names = new String[]{"Single Player", "Multi Player", "Settings", "Community"};
@@ -155,15 +156,16 @@ public class MainMenuPanel extends JPanel {
 			if (buttons[0].isOn(e.getX(), e.getY())) {
 				MainMenuPanel.this.parent.dispose();
 			}
-			if (buttons[1].isOn(e.getX(), e.getY())) {
-				MainMenuPanel.this.parent.dispose();
-				try {
-					new GameWindow();
-				} catch (IOException e1) {				
-					e1.printStackTrace();
-				}				
+			if (buttons[1].isOn(e.getX(), e.getY())) {				
+				DominionController.getInstance().joinLobbyGui();
+			}
+			if (buttons[2].isOn(e.getX(), e.getY())) {				
+			}
+			if (buttons[3].isOn(e.getX(), e.getY())) {				
+				DominionController.getInstance().openStatisticsGui();
 			}
 		}
+		
 
 		/**
 		 * reacts on mouseMoved event
