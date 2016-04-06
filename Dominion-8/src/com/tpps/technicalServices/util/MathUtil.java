@@ -5,7 +5,6 @@ public final class MathUtil {
 	/**
 	 * @return the signum
 	 * @author Steffen Jacobs
->>>>>>> refs/remotes/origin/develop
 	 */
 	public static int signumOfInteger(int x) {
 		if (x < 0)
