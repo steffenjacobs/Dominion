@@ -12,7 +12,7 @@ import com.tpps.technicalServices.network.core.packet.Packet;
  */
 public class CardPacketHandlerClient extends PacketHandler {
 
-	CardClient cardClient;
+	private CardClient cardClient;
 
 	/**
 	 * setter setting the parent card-client to manage the callables

@@ -71,7 +71,7 @@ public class CardClient extends Client {
 	 *            the requested name
 	 * @return the callable for the name
 	 */
-	public SuperCallable<SerializedCard> getGetCallable(String name) {
+	SuperCallable<SerializedCard> getGetCallable(String name) {
 		return getRequests.get(name);
 	}
 
@@ -82,7 +82,7 @@ public class CardClient extends Client {
 	 *            the requested name
 	 * @return the callable for the name
 	 */
-	public SuperCallable<Boolean> getAddCallable(String name) {
+	SuperCallable<Boolean> getAddCallable(String name) {
 		return addRequests.remove(name);
 	}
 
