@@ -8,28 +8,29 @@ import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Server;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLHandler;
 
-public class StatisticServer extends Server{
-	
+public class StatisticServer extends Server {
+
 	private static int serverPort = 1345;
 
-	public StatisticServer(String host, String port, String username, String password, String database) throws IOException {
+	public StatisticServer(String host, String port, String username, String password, String database)
+			throws IOException {
 		super(new InetSocketAddress(Addresses.getLocalHost(), serverPort), new StatisticServerPacketHandler());
-		((StatisticServerPacketHandler)super.getHandler()).setServer(this);
-		
+		((StatisticServerPacketHandler) super.getHandler()).setServer(this);
+
 		this.initMySQLServer(host, port, username, password, database);
 		this.setConsoleOutput();
 	}
-	
-	private void setConsoleOutput(){
-		System.out.println("            * * * * * * * * * * * * * *      ");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("* * * * * Dominion Statistic Server - Team ++; * * * * *");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("            * * * * * * * * * * * * * *      ");
+
+	private void setConsoleOutput() {
+		System.out.println("            * * * * * * * * * * * * * * * * *     ");
+		System.out.println("      * * * * * * * * * * * * * * * * * * * * * * *");
+		System.out.println("* * * * * Dominion Statistic Server - Team ++;  * * * * *");
+		System.out.println("      * * * * * * * * * * * * * * * * * * * * * * *");
+		System.out.println("            * * * * * * * * * * * * * * * * *     ");
 		System.out.println();
 		System.out.println("Enter 'help' to see all available commands.");
 		System.out.println();
-		
+
 		String line = null;
 		Scanner scanInput = new Scanner(System.in);
 		while (true) {
@@ -40,33 +41,45 @@ public class StatisticServer extends Server{
 					System.out.println("help");
 					System.out.println("check sql con");
 					System.out.println("------------------------------------");
-				}else if(line.startsWith("check sql con")){
+				} else if (line.startsWith("check sql con")) {
 					System.out.println(SQLHandler.getConnection());
-				}else{
+				} else if (line.startsWith("exit") || line.startsWith("stop")) {
+					scanInput.close();
+					super.stopListening();
+					break;
+				} else {
 					System.out.println("Bad Command: " + line);
 				}
-			} catch (Exception e) {				
+			} catch (Exception e) {
 				System.err.println("Bad syntax.");
 			}
 		}
-//		scanInput.close();
 	}
-	
+
 	/**
-	 * This method initializes the SQLHandler with host, port etc. and connects to the MySQL databse
+	 * This method initializes the SQLHandler with host, port etc. and connects
+	 * to the MySQL databse
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param host a String representation of the hostname
-	 * @param port a String representation of the used MySQL server port
-	 * @param username a String representation of the used username of the MySQL database
-	 * @param password a String representation in plaintext of the MySQL server root password 
-	 * @param database a String representation of the database(MySQL) to use
+	 * @param host
+	 *            a String representation of the hostname
+	 * @param port
+	 *            a String representation of the used MySQL server port
+	 * @param username
+	 *            a String representation of the used username of the MySQL
+	 *            database
+	 * @param password
+	 *            a String representation in plaintext of the MySQL server root
+	 *            password
+	 * @param database
+	 *            a String representation of the database(MySQL) to use
 	 */
-	private void initMySQLServer(String host, String port, String username, String password, String database){
-		System.out.println(host + " " + port + " " + username + " " + password + " " + database );
+	private void initMySQLServer(String host, String port, String username, String password, String database) {
+		System.out.println(host + " " + port + " " + username + " " + password + " " + database);
 		SQLHandler.init(host, port, username, password, database);
 		SQLHandler.connect();
 	}
-	
+
 	public static void main(String[] args) {
 		try {
 			String hostname = "localhost";
