@@ -65,23 +65,22 @@ public class ArtificialIntelligence {
 		this.player = player;
 	}
 
+	/**
+	 * @return the player
+	 */
 	public Player getPlayer() {
 		return this.player;
 	}
 
 	public void executeTurn() {
 		myTurn();
-
 		// LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
-
 		playTreasures();
-
 		endTurn();
 	}
 
 	private boolean myTurn() {
-		return GameServer.getInstance().getGameController().getActivePlayer()
-				.equals(this.player);
+		return GameServer.getInstance().getGameController().getActivePlayer().equals(this.player);
 	}
 
 	private void endTurn() {
