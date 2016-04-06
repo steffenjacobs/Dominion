@@ -27,15 +27,6 @@ public abstract class PacketHandler {
 		GameLog.log(MsgType.NETWORK_INFO, sdf.format(new Date()) + ": " + str);
 	}
 
-	/**
-	 * constructor with parent server-instance
-	 * 
-	 * @author Steffen Jacobs
-	 */
-	public PacketHandler(Server _parent) {
-		this.parent = _parent;
-	}
-
 	public PacketHandler() {
 
 	}

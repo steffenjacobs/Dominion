@@ -45,7 +45,7 @@ public class ServerConnectionThread extends Thread {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public void closeSockets() throws IOException {
+	void closeSockets() throws IOException {
 		clientSocket.close();
 		inStream.close();
 		outStream.close();
@@ -114,7 +114,7 @@ public class ServerConnectionThread extends Thread {
 	 * @author Steffen Jacobs
 	 * @throws InterruptedException
 	 */
-	public void sendMessage(byte[] data) throws IOException, InterruptedException {
+	private void sendMessage(byte[] data) throws IOException, InterruptedException {
 		holySemaphore.acquire();
 		outStream.writeInt(data.length);
 		outStream.write(data);

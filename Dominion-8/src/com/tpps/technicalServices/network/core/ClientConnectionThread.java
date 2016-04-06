@@ -37,7 +37,7 @@ public class ClientConnectionThread extends Thread {
 	private ExecutorService threadPool = Executors.newCachedThreadPool();
 
 	/** disconnects from the server */
-	public void disconnect() throws IOException {
+	void disconnect() throws IOException {
 		clientSocket.close();
 	}
 

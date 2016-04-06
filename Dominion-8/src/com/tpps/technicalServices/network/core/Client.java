@@ -213,7 +213,7 @@ public class Client {
 	 *
 	 * @author Steffen Jacobs
 	 */
-	public void setDisconnected() {
+	void setDisconnected() {
 		this.connected = false;
 	}
 
