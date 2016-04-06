@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 import javax.net.SocketFactory;
@@ -71,10 +72,10 @@ public class Client {
 	 * @author Steffen Jacobs
 	 */
 	private void connectAndLoopLogic() {
-		int CONNECTION_TIMEOUT = 5000;
+		int CONNECTION_TIMEOUT = 1500;
 		Socket clientSocket = null;
 		while (!Thread.interrupted()) {
-			GameLog.log(MsgType.NETWORK_INFO, "Trying again.");
+			GameLog.log(MsgType.NETWORK_INFO, "Trying to connect...");
 			this.connected = false;
 			try {
 				try {
@@ -91,6 +92,9 @@ public class Client {
 						connectionThread.interrupt();
 					}
 					GameLog.log(MsgType.NETWORK_ERROR, "Connection refused. Reconnecting...");
+				}
+				catch(SocketTimeoutException ste){
+					GameLog.log(MsgType.NETWORK_ERROR, ste.getMessage());
 				}
 				Thread.sleep(50);
 				if (this.connected) {
@@ -154,16 +158,19 @@ public class Client {
 	 */
 	public void disconnect() {
 		this.connected = false;
-		try {
-			this.connectionThread.disconnect();
-		} catch (IOException e) {
-			e.printStackTrace();
+		
+		if (this.connectionThread != null) {
+			try {
+				this.connectionThread.disconnect();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			this.connectionThread.interrupt();
 		}
-		this.connectionThread.interrupt();
 
 		if (this.connecting) {
 			this.tryToConnectThread.interrupt();
-			GameLog.log(MsgType.NETWORK_INFO, "stoppped reconnect-attempt");
+			GameLog.log(MsgType.NETWORK_INFO, "stopped reconnect-attempt");
 		}
 	}
 

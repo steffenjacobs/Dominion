@@ -26,7 +26,7 @@ public class Server {
 
 	private ServerSocket serverSocket;
 	private PacketHandler handler;
-	private Thread acceptor;
+	private Thread acceptor, shutdownHook = new Thread(() -> onApplicationExit());
 
 	private NetworkListenerManager listenerManager = new NetworkListenerManager();
 
@@ -71,7 +71,7 @@ public class Server {
 		acceptor.start();
 
 		// add shutdown-hook
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> onApplicationExit()));
+		Runtime.getRuntime().addShutdownHook(shutdownHook);
 	}
 
 	/**
@@ -79,6 +79,8 @@ public class Server {
 	 * 
 	 */
 	protected void stopListening() {
+		acceptor.interrupt();
+
 		try {
 			serverSocket.close();
 		} catch (IOException e1) {
@@ -88,6 +90,7 @@ public class Server {
 			try {
 				this.getListenerManager().fireDisconnectEvent(client.getPort());
 				client.closeSockets();
+				client.interrupt();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -171,14 +174,19 @@ public class Server {
 		}
 	}
 
+	/** is called to stop the server */
+	private void stopServer() {
+		GameLog.log(MsgType.NETWORK_INFO, "Stopping server...");
+		stopListening();
+		GameLog.log(MsgType.NETWORK_INFO, "Server was stopped!");
+	}
+
 	/**
 	 * is called when the server stops
 	 * 
 	 */
 	private void onApplicationExit() {
-		GameLog.log(MsgType.NETWORK_INFO, "Stopping server...");
-		stopListening();
-		GameLog.log(MsgType.NETWORK_INFO, "Server was stopped!");
+		stopServer();
 	}
 
 	/**
@@ -215,5 +223,19 @@ public class Server {
 	 */
 	public NetworkListenerManager getListenerManager() {
 		return listenerManager;
+	}
+
+	/**
+	 * is called to disconnect all clients
+	 */
+	public void disconnectAll() {
+
+		GameLog.log(MsgType.NETWORK_INFO, "Disconnecting All Clients...");
+		for (ServerConnectionThread client : this.clients.values()) {
+			this.listenerManager.fireDisconnectEvent(client.getPort());
+			client.interrupt();
+		}
+		this.clients.clear();
+
 	}
 }
