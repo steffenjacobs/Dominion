@@ -2,14 +2,10 @@ package com.tpps.technicalServices.network.game;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Scanner;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.game.GameController;
 import com.tpps.technicalServices.network.core.Server;
-import com.tpps.technicalServices.network.core.ServerConnectionThread;
 
 /** @author ladler - Lukas Adler */
 public class GameServer extends Server{
@@ -41,10 +37,9 @@ public class GameServer extends Server{
 	
 	public void newGame() {
 		this.flag = false;
-		this.stopListening();		
+		this.disconnectAll();
 		this.gameController = new GameController();
 		this.flag = true;
-		this.startListening();
 		setConsoleInput();
 	}
 
