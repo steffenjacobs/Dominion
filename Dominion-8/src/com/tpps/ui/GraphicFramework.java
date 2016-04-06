@@ -84,7 +84,7 @@ public class GraphicFramework extends JPanel {
 	 * @return all game-objects which collide with the given area
 	 * @author Steffen Jacobs
 	 */
-	public ArrayList<GameObject> getAllCollisions(Rectangle area) {
+	private ArrayList<GameObject> getAllCollisions(Rectangle area) {
 		ArrayList<GameObject> objects = new ArrayList<>();
 		for (GameObject go : gameObjects.values()) {
 			if (go.isVisible() && go.overlap(area)) {
