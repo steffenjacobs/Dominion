@@ -22,7 +22,7 @@ public class Utilties {
 	
 	
 	public static ArrayList<Statistic> createStatisticsList(){
-		Statistic one = new Statistic(SQLType.VARCHAR, "40", "description");
+	//	Statistic one = new Statistic(SQLType.VARCHAR, "40", "description");
 		Statistic two = new Statistic(SQLType.INT, "wins");
 		Statistic tree = new Statistic(SQLType.INT, "losses");
 		Statistic four = new Statistic(SQLType.FLOAT, "4,2", "win_loss");
@@ -30,7 +30,7 @@ public class Utilties {
 		Statistic six = new Statistic(SQLType.TEXT, "rank");
 		Statistic seven = new Statistic(SQLType.BIGINT, "playtime");
 		ArrayList<Statistic> statistics = new ArrayList<Statistic>();
-		statistics.add(one);
+	//	statistics.add(one);
 		statistics.add(two);
 		statistics.add(tree);
 		statistics.add(four);
