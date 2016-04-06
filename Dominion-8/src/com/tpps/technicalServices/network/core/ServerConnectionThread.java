@@ -45,7 +45,7 @@ public class ServerConnectionThread extends Thread {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	void closeSockets() throws IOException {
+	public void closeSockets() throws IOException {
 		clientSocket.close();
 		inStream.close();
 		outStream.close();
