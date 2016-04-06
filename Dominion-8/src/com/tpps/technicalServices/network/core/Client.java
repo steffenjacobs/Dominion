@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import javax.net.SocketFactory;
 
-import com.tpps.technicalServices.logger.Log;
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.events.NetworkListenerManager;
 import com.tpps.technicalServices.network.core.packet.Packet;
@@ -75,13 +75,13 @@ public class Client {
 		int CONNECTION_TIMEOUT = 1500;
 		Socket clientSocket = null;
 		while (!Thread.interrupted()) {
-			Log.log(MsgType.NETWORK_INFO, "Trying to connect...");
+			GameLog.log(MsgType.NETWORK_INFO, "Trying to connect...");
 			this.connected = false;
 			try {
 				try {
 					clientSocket = SocketFactory.getDefault().createSocket();
 					clientSocket.connect(address, CONNECTION_TIMEOUT);
-					Log.log(MsgType.NETWORK_INFO, "Connected to Server.");
+					GameLog.log(MsgType.NETWORK_INFO, "Connected to Server.");
 					this.connected = true;
 					connectionThread = new ClientConnectionThread(clientSocket, handlers, this);
 					connectionThread.start();
@@ -91,10 +91,10 @@ public class Client {
 					if (connectionThread != null && !connectionThread.isInterrupted()) {
 						connectionThread.interrupt();
 					}
-					Log.log(MsgType.NETWORK_ERROR, "Connection refused. Reconnecting...");
+					GameLog.log(MsgType.NETWORK_ERROR, "Connection refused. Reconnecting...");
 				}
 				catch(SocketTimeoutException ste){
-					Log.log(MsgType.NETWORK_ERROR, ste.getMessage());
+					GameLog.log(MsgType.NETWORK_ERROR, ste.getMessage());
 				}
 				Thread.sleep(50);
 				if (this.connected) {
@@ -107,7 +107,7 @@ public class Client {
 			} catch (InterruptedException e) {
 				// do nothing: this exception is normal when the program
 				// exits.
-				Log.log(MsgType.EXCEPTION, "Exit Program. (nothing to worry about)");
+				GameLog.log(MsgType.EXCEPTION, "Exit Program. (nothing to worry about)");
 			}
 		}
 		connecting = false;
@@ -170,7 +170,7 @@ public class Client {
 
 		if (this.connecting) {
 			this.tryToConnectThread.interrupt();
-			Log.log(MsgType.NETWORK_INFO, "stopped reconnect-attempt");
+			GameLog.log(MsgType.NETWORK_INFO, "stopped reconnect-attempt");
 		}
 	}
 
@@ -195,7 +195,7 @@ public class Client {
 			}).start();
 
 		} else {
-			Log.log(MsgType.NETWORK_ERROR, "Could not send packet: No Connection.");
+			GameLog.log(MsgType.NETWORK_ERROR, "Could not send packet: No Connection.");
 			this.connectAndLoop(true);
 		}
 	}

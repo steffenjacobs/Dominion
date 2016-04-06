@@ -19,7 +19,7 @@ import javax.swing.text.StyledDocument;
  * 
  */
 @SuppressWarnings("serial")
-public class LogTextPane extends JPanel {
+public class GameLogTextPane extends JPanel {
 
 	private JTextPane textPane;
 
@@ -34,11 +34,12 @@ public class LogTextPane extends JPanel {
 	/**
 	 * constructor for Display JPanel
 	 */
-	public LogTextPane() {
+	public GameLogTextPane() {
+		MsgType.setGameMode();
 		this.textPane = new JTextPane();
 		this.textPane.setEditable(false);
 		this.textPane.setFont(new Font("Courier New", Font.PLAIN, 13));
-		this.textPane.setBackground(Log.getBackgroundColor());
+		this.textPane.setBackground(GameLog.getBackgroundColor());
 		this.setLayout(new BorderLayout());
 		this.add(new JScrollPane(this.textPane));
 	}
@@ -53,8 +54,7 @@ public class LogTextPane extends JPanel {
 			public void run() {
 				try {
 					Style style = textPane.addStyle("Style", null);
-					StyleConstants.setBackground(style,
-							Log.getBackgroundColor());
+					StyleConstants.setBackground(style, GameLog.getBackgroundColor());
 					StyleConstants.setForeground(style, fontColor);
 					StyledDocument doc = textPane.getStyledDocument();
 					doc.insertString(doc.getLength(), text, style);
@@ -73,9 +73,9 @@ public class LogTextPane extends JPanel {
 	 */
 	public void updateLogger(final String line, Color textColor, boolean timestamp) {
 		if (timestamp) {
-			this.updateTextArea(line.split("]")[0] + "]", Log.getTimestampColor());
+			this.updateTextArea(line.split("]")[0] + "]", GameLog.getTimestampColor());
 			this.updateTextArea(line.split("]")[1] + "]", textColor);
-			this.updateTextArea(line.split("]")[2] + "\n", Log.getMsgColor());
+			this.updateTextArea(line.split("]")[2] + "\n", GameLog.getMsgColor());
 		} else {
 			this.updateTextArea(line, textColor);
 		}

@@ -3,7 +3,7 @@ package com.tpps.technicalServices.network.core;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.tpps.technicalServices.logger.Log;
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.packet.Packet;
 
@@ -24,7 +24,7 @@ public abstract class PacketHandler {
 	 */
 	// TODO: save log
 	public void output(String str) {
-		Log.log(MsgType.NETWORK_INFO, sdf.format(new Date()) + ": " + str);
+		GameLog.log(MsgType.NETWORK_INFO, sdf.format(new Date()) + ": " + str);
 	}
 
 	public PacketHandler() {

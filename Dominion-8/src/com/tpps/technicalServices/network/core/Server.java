@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.net.ServerSocketFactory;
 
-import com.tpps.technicalServices.logger.Log;
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.events.NetworkListenerManager;
 import com.tpps.technicalServices.network.core.packet.Packet;
@@ -176,9 +176,9 @@ public class Server {
 
 	/** is called to stop the server */
 	private void stopServer() {
-		Log.log(MsgType.NETWORK_INFO, "Stopping server...");
+		GameLog.log(MsgType.NETWORK_INFO, "Stopping server...");
 		stopListening();
-		Log.log(MsgType.NETWORK_INFO, "Server was stopped!");
+		GameLog.log(MsgType.NETWORK_INFO, "Server was stopped!");
 	}
 
 	/**
@@ -230,7 +230,7 @@ public class Server {
 	 */
 	public void disconnectAll() {
 
-		Log.log(MsgType.NETWORK_INFO, "Disconnecting All Clients...");
+		GameLog.log(MsgType.NETWORK_INFO, "Disconnecting All Clients...");
 		for (ServerConnectionThread client : this.clients.values()) {
 			this.listenerManager.fireDisconnectEvent(client.getPort());
 			client.interrupt();

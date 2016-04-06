@@ -10,7 +10,7 @@ import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.game.card.Card;
-import com.tpps.technicalServices.logger.Log;
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.ByteUtil;
 
@@ -42,15 +42,15 @@ public class CardStorageController {
 			if (!Files.exists(Paths.get(storageFile)))
 				Files.createFile(Paths.get(storageFile));
 			if (DEBUG)
-				Log.log(MsgType.INIT, "Loading storage from: " + Paths.get(storageFile));
+				GameLog.log(MsgType.INIT, "Loading storage from: " + Paths.get(storageFile));
 			byte[] bytes = Files.readAllBytes(Paths.get(storageFile));
 			if (bytes.length == 0) {
-				Log.log(MsgType.ERROR, "ERROR: Storage-Container is empty!");
+				GameLog.log(MsgType.ERROR, "ERROR: Storage-Container is empty!");
 				Files.copy(Paths.get(storageFile), Paths.get(storageFile + "_old_" + System.currentTimeMillis()));
 				return;
 			}
 			if (DEBUG)
-				Log.log(MsgType.DEBUG, "File length: " + bytes.length + " Bytes");
+				GameLog.log(MsgType.DEBUG, "File length: " + bytes.length + " Bytes");
 			ByteBuffer buff = ByteBuffer.wrap(bytes);
 			int count = buff.getInt();
 			SerializedCard card;
@@ -62,7 +62,7 @@ public class CardStorageController {
 				storedCards.put(card.getName(), card);
 			}
 		} catch (BufferUnderflowException | IOException e) {
-			Log.log(MsgType.ERROR, "Storage-Container is broken!");
+			GameLog.log(MsgType.ERROR, "Storage-Container is broken!");
 			e.printStackTrace();
 		}
 	}
@@ -172,11 +172,11 @@ public class CardStorageController {
 
 	/** lists all stored cards in the console */
 	public void listCards() {
-		Log.log(MsgType.INFO, "--- Cards in storage (" + getCardCount() + "): ---");
+		GameLog.log(MsgType.INFO, "--- Cards in storage (" + getCardCount() + "): ---");
 		for (SerializedCard card : storedCards.values()) {
-			Log.log(MsgType.INFO, card.toString());
+			GameLog.log(MsgType.INFO, card.toString());
 		}
-		Log.log(MsgType.INFO, "---       (" + getCardCount() + ")         ---");
+		GameLog.log(MsgType.INFO, "---       (" + getCardCount() + ")         ---");
 	}
 
 	/**

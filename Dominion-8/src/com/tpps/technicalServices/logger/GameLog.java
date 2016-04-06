@@ -1,7 +1,6 @@
 package com.tpps.technicalServices.logger;
 
 import java.awt.Color;
-import java.awt.GraphicsEnvironment;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,9 +8,21 @@ import java.util.Calendar;
 import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.ColorUtil;
 
-public class Log {
+public class GameLog {
 
-	private static LogUI logUI;
+	/**
+	 * How-To:
+	 * 
+	 * call GameLog.init()
+	 * get the TextPane with GameLog.getTextPane();
+	 * add this textPane to GameWindow
+	 * add GameLog.log(MsgType.GAME, "XYZ"); to every Game relevant action
+	 * 
+	 * update comments in the following 4 classes: GameLog, GameLogUI, GameLogTextPane, MsgType
+	 * 
+	 * */
+	
+	private static GameLogTextPane textPane;
 
 	/**
 	 * Colors that can easily be changed for the UI Window
@@ -41,14 +52,14 @@ public class Log {
 	 * guiPossible: is the device is able to display a gui?
 	 * iWantAJFrame: do I want to have an extra JFrame for this? 
 	 */
-	private static boolean guiPossible = !GraphicsEnvironment.isHeadless();
-	private static boolean iWantAJFrame = false;
+	// private static boolean guiPossible = !GraphicsEnvironment.isHeadless();
+	// private static boolean iWantAJFrame = false;
 
+	/**
+	 * determines wheter the textPane is already initialized so there won't be a Null-Pointer
+	 * */
+	private static boolean isInitialized = false;
 
-	public Log() {
-		init(guiPossible && iWantAJFrame);
-	}
-	
 	/**
 	 * initialization method which is called in the beginning
 	 * writes the team name first:
@@ -56,17 +67,19 @@ public class Log {
 	 * 
 	 * and after that an INIT message with "GameLogger initialized"
 	 */
-	private static void init(boolean displayUIWindow) {
+	public static void init() {
 		String team = "GameLogger4Team++;\n\n";
-		if (displayUIWindow) {
-			Log.logUI = new LogUI();
-			write(team, timestampColor, false);
-		}
-// 		if (ansiFlag)
-//			writeToConsole(ANSIUtil.getCyanText(team));
-//		else
-//			writeToConsole(team);
-		Log.log(MsgType.INIT, "GameLogger initialized");
+		/*if (displayUIWindow) {
+			 create UI if desired 
+		}*/
+		GameLog.textPane = new GameLogTextPane();
+		write(team, timestampColor, false);
+ 		if (ansiFlag)
+			writeToConsole(ANSIUtil.getCyanText(team));
+		else
+			writeToConsole(team);
+		GameLog.log(MsgType.INIT, "GameLogger initialized");
+		GameLog.isInitialized = true;
 	}
 
 	/**
@@ -80,7 +93,7 @@ public class Log {
 	 * @param backgroundColor the backgroundColor to set
 	 */
 	public static void setBackgroundColor(Color backgroundColor) {
-		Log.backgroundColor = backgroundColor;
+		GameLog.backgroundColor = backgroundColor;
 	}
 
 	/**
@@ -94,7 +107,7 @@ public class Log {
 	 * @param timestampColor the timestampColor to set
 	 */
 	public static void setTimestampColor(Color timestampColor) {
-		Log.timestampColor = timestampColor;
+		GameLog.timestampColor = timestampColor;
 	}
 
 	/**
@@ -108,7 +121,7 @@ public class Log {
 	 * @param msgtypeColor the msgtypeColor to set
 	 */
 	public static void setMsgtypeColor(Color msgtypeColor) {
-		Log.msgtypeColor = msgtypeColor;
+		GameLog.msgtypeColor = msgtypeColor;
 	}
 
 	/**
@@ -122,9 +135,23 @@ public class Log {
 	 * @param msgColor the msgColor to set
 	 */
 	public static void setMsgColor(Color msgColor) {
-		Log.msgColor = msgColor;
+		GameLog.msgColor = msgColor;
 	}
 
+	/**
+	 * @return the textPane
+	 */
+	public static GameLogTextPane getTextPane() {
+		return textPane;
+	}
+
+	/**
+	 * @param textPane the textPane to set
+	 */
+	public static void setTextPane(GameLogTextPane textPane) {
+		GameLog.textPane = textPane;
+	}
+	
 	/**
 	 * 
 	 * @param type the messageType of the log message
@@ -144,7 +171,7 @@ public class Log {
 			else
 				line.append(timestamp + " " + msgtype + " > ");
 		} catch (UnknownHostException e) {
-			Log.log(MsgType.EXCEPTION, e.getMessage());
+			GameLog.log(MsgType.EXCEPTION, e.getMessage());
 		}
 		return line.toString();
 	}
@@ -156,11 +183,15 @@ public class Log {
 	 * @param line the line to log
 	 */
 	public static void log(MsgType type, String line) {
-		if (type.getDisplay()) {
-			if (guiPossible) {
-				write(computeLine(type, false) + line, type.getColor(), true);
+		if (isInitialized) {
+			if (type.getDisplay()) {
+				writeToConsole(computeLine(type, true) + line);
+				// if (guiPossible) {
+				write(computeLine(type, false) + line, type.getColor(), type.getTimeStamp());
+				// }
 			}
-			// writeToConsole(computeLine(type, true) + line);
+		} else { // prevent Null Pointers
+			init();
 		}
 	}
 	
@@ -175,16 +206,15 @@ public class Log {
 	 * @param timestamp determines whether the timestamp is written in front of the line
 	 */
 	private static void write(String line, Color textColor, boolean timestamp) {
-		Log.logUI.getDis().updateLogger(line, textColor, timestamp);
-		System.out.println(line);
+		GameLog.textPane.updateLogger(line, textColor, timestamp);
 	}
 
-//	/**
-//	 * write to the console
-//	 * 
-//	 * @param line the line to write to the console
-//	 */
-//	private static void writeToConsole(String line) {
-//		System.out.println(line);
-//	}
+	/**
+	 * write to the console
+	 * 
+	 * @param line the line to write to the console
+	 */
+	private static void writeToConsole(String line) {
+		System.out.println(line);
+	}
 }

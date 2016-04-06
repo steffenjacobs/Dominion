@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
-import com.tpps.technicalServices.logger.Log;
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
@@ -388,6 +388,6 @@ public class Deck {
 	}
 	
 	public static void main(String[] args) {
-		Log.log(MsgType.DEBUG, "Test, funzt?");
+		GameLog.log(MsgType.DEBUG, "Test, funzt?");
 	}
 }

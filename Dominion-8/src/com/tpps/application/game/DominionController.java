@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 
 import com.mysql.fabric.Server;
 import com.tpps.application.storage.CardStorageController;
-import com.tpps.technicalServices.logger.Log;
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.card.CardClient;
@@ -61,23 +61,17 @@ public final class DominionController {
 		instance = new DominionController();
 		DominionController.instance.init();
 	}
-
 	
-
-	/* constructor */
-	public DominionController() {
+	DominionController() {
 		
 	}
-	
-	
-	private void init() {
 
+	private void init() {
 //		storageController = new CardStorageController();
 //		mainFrame = new MainFrame();
 //		loginGuiController = new LoginGUIController();
 //		this.loadPanels();
-//
-//			
+		
 		this.turnFlag = false;
 		try {
 			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), 1339), new ClientGamePacketHandler());
@@ -91,13 +85,11 @@ public final class DominionController {
 		globalChatPanel = new GlobalChatPanel();
 		playerSettingsPanel = new PlayerSettingsPanel();
 		statisticsBoardPanel = new StatisticsBoard();
-		
 		try {
 			this.originalBackground = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		
+		}	
 	}
 	
 	public void endLogin(){
@@ -156,8 +148,6 @@ public final class DominionController {
 		panel.add(this.playerSettingsPanel);
 		this.mainFrame.setPanel(panel);
 	}
-
-
 
 	/**
 	 * 
@@ -231,8 +221,6 @@ public final class DominionController {
 		this.username = username;
 		this.email = mailAddress;
 	}
-
-
 
 	public void openStatisticsGui() {
 		JPanel panel = new JPanel(){
