@@ -416,7 +416,7 @@ public class GameController {
 						player.getDeck().getDiscardPile()
 							.add(this.gameBoard.getTableForVictoryCards().get("Curse").removeLast());
 					}catch(NoSuchElementException e){
-						
+						System.err.println("not enough curses on the board");
 					}
 					player.setWitchFalse();					
 				}

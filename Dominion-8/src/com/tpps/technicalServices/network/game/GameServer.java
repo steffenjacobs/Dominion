@@ -40,10 +40,11 @@ public class GameServer extends Server{
 	}
 	
 	public void newGame() {
-		this.flag = false;		
-		this.clients = new ConcurrentHashMap<>();
+		this.flag = false;
+		this.stopListening();		
 		this.gameController = new GameController();
 		this.flag = true;
+		this.startListening();
 		setConsoleInput();
 	}
 
