@@ -49,6 +49,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 		this.server = server;
 	}
 
+	/**
+	 * checks which packet was sent and reacts on the packet
+	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {
 		ServerConnectionThread requester = parent.getClientThread(port);
