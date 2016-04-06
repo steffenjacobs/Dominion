@@ -12,7 +12,7 @@ public class GameLog {
 	private static LogUI logUI;
 	
 	public static boolean useAsciiOnConsole = true;
-
+//test
 	/**
 	 * Colors that can easily be changed for the UI Window
 	 */
