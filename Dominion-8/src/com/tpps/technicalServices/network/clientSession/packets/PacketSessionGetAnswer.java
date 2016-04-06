@@ -8,15 +8,17 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
 /**
  * This packet is sent from the Session-Server back to the Login-Server after
  * the Login-Server requested a valid GameSession for a user
+ * 
+ * @author Steffen Jacobs
  */
 public class PacketSessionGetAnswer extends Packet {
 	private static final long serialVersionUID = 5656427406840798077L;
 	private final UUID sessionID;
 	private final PacketSessionGetRequest req;
+	private final int answerCode;
 
 	/**
 	 * @return the Get-Request
-	 * @author Steffen Jacobs
 	 */
 	public PacketSessionGetRequest getRequest() {
 		return req;
@@ -24,27 +26,33 @@ public class PacketSessionGetAnswer extends Packet {
 
 	/**
 	 * @return the generated Game-Session
-	 * @author Steffen Jacobs
 	 */
 	public UUID getLoginSessionID() {
 		return this.sessionID;
 	}
 
 	/**
+	 * returns: 0: Success, 1: already logged in
+	 * 
+	 * @return the answer-code for the session-get request
+	 */
+	public int getAnswerCode() {
+		return this.answerCode;
+	}
+
+	/**
 	 * initializes the Packet with the request and a newly generated
 	 * Game-Session
-	 * 
-	 * @author Steffen Jacobs
 	 */
-	public PacketSessionGetAnswer(PacketSessionGetRequest request, UUID sID) {
+	public PacketSessionGetAnswer(PacketSessionGetRequest request, UUID sID, int _answerCode) {
 		super(PacketType.SESSION_GET_ANSWER);
 		this.sessionID = sID;
-		req = request;
+		this.req = request;
+		this.answerCode = _answerCode;
 	}
 
 	/**
 	 * @return a readable representation of the packet
-	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {

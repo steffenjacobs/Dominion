@@ -24,8 +24,6 @@ public class SessionManager {
 
 	/**
 	 * static constructor, is called when class is created
-	 * 
-	 * @author Steffen Jacobs
 	 */
 	static {
 		validSessions = CacheBuilder.newBuilder().concurrencyLevel(MAX_CONCURRENT_USERS).maximumSize(MAX_CACHE_SIZE)
@@ -43,10 +41,19 @@ public class SessionManager {
 	 * 
 	 * @param username
 	 *            name of the user whos timestamp should be updated
-	 * @author Steffen Jacobs
 	 */
 	public static void revalidate(String username) {
 		validSessions.getIfPresent(username);
+	}
+
+	/**
+	 * checks if the username is already associated with a session
+	 * 
+	 * @param username
+	 *            name of the user who's session should be checked
+	 */
+	public static boolean hasSession(String username) {
+		return validSessions.getIfPresent(username) != null;
 	}
 
 	/**
@@ -54,20 +61,17 @@ public class SessionManager {
 	 * 
 	 * @param username
 	 *            name of user who will be removed
-	 * @author Steffen Jacobs
 	 */
 	private static void invalidate(String username) {
 		validSessions.invalidate(username);
 	}
 
 	/**
-	 * @author Steffen Jacobs
 	 * @param uuid
 	 *            unique-ID linked with username
 	 * @param username:
 	 *            name of the user
 	 * @return wheter the uuid with the given username is valid
-	 * @author Steffen Jacobs
 	 */
 	public static boolean isValid(String username, UUID uuid) {
 		if (uuid == null)
@@ -83,7 +87,6 @@ public class SessionManager {
 	 * @return the SessionID from the username
 	 * @param username
 	 *            Name of the user whos sessionID is needed
-	 * @author Steffen Jacobs
 	 */
 	public static UUID getValidSession(String username) {
 		UUID sessionID = validSessions.getIfPresent(username);
@@ -99,7 +102,6 @@ public class SessionManager {
 	 * generates a sessionID
 	 * 
 	 * @return a new randomly generated sessionID
-	 * @author Steffen Jacobs
 	 */
 	private static UUID generateUUID() {
 		return UUID.randomUUID();
@@ -110,7 +112,6 @@ public class SessionManager {
 	 * 
 	 * @param stream
 	 *            Stream to write all the users with their sessions in.
-	 * @author Steffen Jacobs
 	 */
 	static void outputAll(PrintStream stream) {
 
@@ -127,7 +128,6 @@ public class SessionManager {
 	 * getter for EXPIRATION_TIME_SECONDS
 	 * 
 	 * @return expiration time in seconds
-	 * @author Steffen Jacobs
 	 */
 	public static int getExpiration() {
 		return EXPIRATION_TIME_SECONDS;

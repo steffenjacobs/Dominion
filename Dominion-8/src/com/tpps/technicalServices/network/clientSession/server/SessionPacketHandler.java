@@ -38,8 +38,14 @@ public class SessionPacketHandler extends PacketHandler {
 		case SESSION_GET_REQUEST:
 			PacketSessionGetRequest pack = (PacketSessionGetRequest) packet;
 			super.output("-> Session-Get-Request for " + pack.getUsername());
+			if (SessionManager.hasSession(pack.getUsername())) {
+				requester.addPacketToQueue(
+						new PacketSessionGetAnswer(pack, SessionManager.getValidSession(pack.getUsername()), 1));
+				super.output("<- Already logged in: " + pack.getUsername());
+				break;
+			}
 			UUID uid = SessionManager.getValidSession(pack.getUsername());
-			requester.addPacketToQueue(new PacketSessionGetAnswer(pack, uid));
+			requester.addPacketToQueue(new PacketSessionGetAnswer(pack, uid, 0));
 			super.output("<- Created Session: " + pack.getUsername() + " - " + uid.toString());
 			break;
 		case SESSION_CHECK_REQUEST:
