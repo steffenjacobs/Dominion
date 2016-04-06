@@ -86,7 +86,7 @@ public class SessionClient extends Client {
 	 * 
 	 * @author Steffen Jacobs
 	 */
-	public void onStop() {
+	private void onStop() {
 		super.disconnect();
 		if (scheduler != null) {
 			scheduler.cancel();

@@ -28,7 +28,7 @@ public class SessionFuture {
 	 * @param uuid
 	 *            the sessionID of the user who should be checked
 	 */
-	public void sendRequest(SessionClient client, String username, UUID uuid) throws InterruptedException {
+	void sendRequest(SessionClient client, String username, UUID uuid) throws InterruptedException {
 		sem.acquire();
 		SessionPacketSenderAPI.sendCheckRequest(client, username, uuid, new SuperCallable<PacketSessionCheckAnswer>() {
 			@Override
