@@ -10,15 +10,19 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 
 /**
  * 
- * @author Nishit Agrawal -nagrawal
+ * @author Nishit Agrawal -nagrawal, Maximilian Hauk -mhauk
  *
  */
 
@@ -27,8 +31,13 @@ public class CardEditor extends JFrame {
 	private BufferedImage blackBeauty;
 	private BufferedImage walterWhite;
 	private BufferedImage background;
+	private JButton uploadImage;
+	private ButtonGroup actionSelect = new ButtonGroup();
+	private JRadioButton addAction, addMoney, addPurchase, drawCard, drawCardUntil, putBack, gainCard,
+	                     discardCard, trashCard, revealCard, isTreasure, isVictory;
 	private Container c;
-	private JLabel all;
+	private JLabel all, enterName, price;
+	private JComboBox selectCardType;
 	private ImageIcon loading;
 	private int width;
 	private int height;
