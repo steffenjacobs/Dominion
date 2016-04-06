@@ -1,4 +1,6 @@
 /bin/
-/server.cfg
-/.classpath
-/nagrawal_TestPush.txt
+/.project
+/cards.bin
+/serverCards.bin
+/target/
+/cards.cfg
