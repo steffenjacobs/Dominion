@@ -38,15 +38,6 @@ public class CardServer extends Server {
 		config.load(new File(CONFIG_FILE));
 	}
 
-	public static int getStandardPort() {
-		return Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT));
-	}
-
-	/** getter for the Card-Server-Properties */
-	public Properties getCardServerProperties() {
-		return config;
-	}
-
 	/**
 	 * constructor for the CardServer, taking an address (where the server will
 	 * listen), a packet-handler, and a card-storage
@@ -134,5 +125,15 @@ public class CardServer extends Server {
 			}
 		}
 		scanInput.close();
+	}
+
+	/**@return the standard Port for the CardServer*/
+	public static int getStandardPort() {
+		return Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT));
+	}
+
+	/** getter for the Card-Server-Properties */
+	public Properties getCardServerProperties() {
+		return config;
 	}
 }
