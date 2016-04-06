@@ -206,13 +206,15 @@ public class Card extends GameObject {
 	 */
 	@Override
 	public void onMouseClick() {
-		System.out.println("MouseClick on Card");
-		try {
-			DominionController.getInstance().getGameClient().sendMessage(
-					new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
-		} catch (IOException e) {
+		if (DominionController.getInstance().isTurnFlag()) {
+			System.out.println("MouseClick on Card");
+			try {
+				DominionController.getInstance().getGameClient().sendMessage(
+						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
+			} catch (IOException e) {
 
-			e.printStackTrace();
+				e.printStackTrace();
+			}
 		}
 	}
 
