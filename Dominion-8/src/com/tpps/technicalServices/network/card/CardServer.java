@@ -26,7 +26,7 @@ import com.tpps.technicalServices.util.AutoCreatingProperties;
  */
 public class CardServer extends Server {
 	private static AutoCreatingProperties config;
-	private static final String KEY_PORT = "CARD_PORT", DEFAULT_PORT = "1336";
+	private static final String KEY_PORT = "CARD_PORT", DEFAULT_PORT = "1336", CARD_FILE = "CARD_FILE";
 
 	private static final String CONFIG_FILE = "cards.cfg";
 
@@ -53,7 +53,7 @@ public class CardServer extends Server {
 
 	/** main entry-point for the CardServer */
 	public static void main(String[] input) throws IOException {
-		CardStorageController tmpStorage = new CardStorageController("serverCards.bin");
+		CardStorageController tmpStorage = new CardStorageController(config.getProperty(CARD_FILE, "serverCards.bin"));
 		new CardServer(
 				new InetSocketAddress(Addresses.getAllInterfaces(),
 						Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))),
@@ -127,7 +127,7 @@ public class CardServer extends Server {
 		scanInput.close();
 	}
 
-	/**@return the standard Port for the CardServer*/
+	/** @return the standard Port for the CardServer */
 	public static int getStandardPort() {
 		return Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT));
 	}

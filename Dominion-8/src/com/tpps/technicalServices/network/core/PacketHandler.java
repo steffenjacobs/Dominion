@@ -7,6 +7,12 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.packet.Packet;
 
+/**
+ * This PacketHandler can be used by a client or a server for computing every
+ * received packet
+ * 
+ * @author Steffen Jacobs
+ */
 public abstract class PacketHandler {
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -15,6 +21,7 @@ public abstract class PacketHandler {
 	// PacketHandler-instance
 	protected Server parent;
 
+	/** is called when a packet was received */
 	public abstract void handleReceivedPacket(int port, Packet packet);
 
 	/**

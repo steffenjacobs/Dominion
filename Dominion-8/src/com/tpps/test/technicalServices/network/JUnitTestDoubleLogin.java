@@ -32,7 +32,7 @@ public class JUnitTestDoubleLogin {
 		Thread.sleep(1000);
 		SessionClient client = new SessionClient(new InetSocketAddress(Addresses.getLocalHost(), 1337));
 		String nickname = "TEST";
-
+		
 		SessionPacketSenderAPI.sendGetRequest(client, nickname, new SuperCallable<PacketSessionGetAnswer>() {
 			@Override
 			public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer answer) {
