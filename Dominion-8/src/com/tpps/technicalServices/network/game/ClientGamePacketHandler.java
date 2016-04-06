@@ -55,17 +55,21 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameWindow.reset();	
 			break;
 		case ENABLE:
-			this.gameWindow.setEnabled(true);
+//			this.gameWindow.setEnabled(true);
+			this.gameWindow.getGraphicFramework().setEnabled(true);
 			break;
 		case ENABLE_OTHERS:
 			if (((PacketEnableOthers)packet).getClientID() == this.gameClient.getClientId()){
-				this.gameWindow.setEnabled(false);
+//				this.gameWindow.setEnabled(false);
+				this.gameWindow.getGraphicFramework().setEnabled(false);
 			}else{
-				this.gameWindow.setEnabled(true);
+//				this.gameWindow.setEnabled(true);
+				this.gameWindow.getGraphicFramework().setEnabled(true);
 			}
 			break;
 		case DISABLE:
-			this.gameWindow.setEnabled(false);
+//			this.gameWindow.setEnabled(false);
+			this.gameWindow.getGraphicFramework().setEnabled(false);
 			break;
 		case SEND_BOARD:
 			PacketSendBoard packetSendBoard = (PacketSendBoard)packet;
@@ -187,10 +191,12 @@ public class ClientGamePacketHandler extends PacketHandler {
 //			System.out.println();
 //		}
 		if (((PacketEnableDisable) packet).getClientId() == this.gameClient.getClientId()) {
-			this.gameWindow.setEnabled(true);
+//			this.gameWindow.setEnabled(true);
+			this.gameWindow.getGraphicFramework().setEnabled(true);
 			System.out.println("my gameWindow is enabled");
 		} else {
-			this.gameWindow.setEnabled(false);
+//			this.gameWindow.setEnabled(false);
+			this.gameWindow.getGraphicFramework().setEnabled(false);
 			System.out.println("my gameWindo is disabled");
 		}
 	}
@@ -211,10 +217,12 @@ public class ClientGamePacketHandler extends PacketHandler {
 			}
 		
 			if (((PacketOpenGuiAndEnableOne) packet).getClientId() == this.gameClient.getClientId()) {
-				this.gameWindow.setEnabled(true);
+//				this.gameWindow.setEnabled(true);
+				this.gameWindow.getGraphicFramework().setEnabled(true);
 				System.out.println("my gameWindow is enabled");
 			} else {
-				this.gameWindow.setEnabled(false);
+//				this.gameWindow.setEnabled(false);
+				this.gameWindow.getGraphicFramework().setEnabled(false);
 				System.out.println("my gameWindo is disabled");
 			}
 			this.gameWindow.setVisible(true);

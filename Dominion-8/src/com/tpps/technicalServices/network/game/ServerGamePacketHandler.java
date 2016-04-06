@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
@@ -236,7 +237,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		if (this.server.getGameController().getActivePlayer().isWitch()) {
 			player1.setReactionModeFalse();
 			this.server.sendMessage(player1.getPort(), new PacketDisable());
-			
+			try{
 			player1.getDeck().getDiscardPile().add(
 					this.server.getGameController().getGameBoard().getTableForVictoryCards().get("Curse").removeLast());
 			
@@ -244,10 +245,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 					new PacketSendBoard(this.server.getGameController().getGameBoard().getTreasureCardIDs(),
 							this.server.getGameController().getGameBoard().getVictoryCardIDs(),
 							this.server.getGameController().getGameBoard().getActionCardIDs()));
-			
-			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
-			
-			
+			}catch(NoSuchElementException e){
+				
+			}
+			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();			
 		}
 	}
 

@@ -50,6 +50,10 @@ public class GameWindow extends JFrame {
 	public static GameWindow getInstance() {
 		return instance;
 	}
+	
+	public GraphicFramework getGraphicFramework() {
+		return this.framework;
+	}
 
 	/**
 	 * 
