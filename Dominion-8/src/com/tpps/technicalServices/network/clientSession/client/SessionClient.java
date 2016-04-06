@@ -76,7 +76,7 @@ public class SessionClient extends Client {
 			if (scheduler != null) {
 				scheduler.cancel();
 				scheduler.purge();
-				GameLog.log(MsgType.NETWORK_INFO, "Keep-Alive stoppped for " + username);
+				GameLog.log(MsgType.NETWORK_INFO, "Keep-Alive stopped for " + username);
 			}
 		}
 	}

@@ -15,11 +15,13 @@ public class GameServer extends Server{
 
 	private GameController gameController;
 	private static GameServer instance;
+	private boolean flag;
 	
 	public GameServer() throws IOException{
 		super(new InetSocketAddress("0.0.0.0", 1339), new ServerGamePacketHandler());
 		((ServerGamePacketHandler)super.getHandler()).setServer(this);
 		this.gameController = new GameController();
+		this.flag = true;
 		instance = this;
 		setConsoleInput();		
 	}
@@ -31,6 +33,14 @@ public class GameServer extends Server{
 	 */
 	public static GameServer getInstance() {
 		return instance;
+	}
+	
+	public void newGame() {
+		this.flag = false;
+		this.disconnectAll();
+		this.gameController = new GameController();
+		this.flag = true;
+		setConsoleInput();
 	}
 
 
@@ -68,7 +78,7 @@ public class GameServer extends Server{
 		
 		String line = null;
 		Scanner scanInput = new Scanner(System.in);
-		while (true) {			
+		while (flag) {			
 			line = scanInput.nextLine();
 			try {
 				if (line.equals("exit")) {
@@ -79,8 +89,15 @@ public class GameServer extends Server{
 //					
 					System.out.println("help");
 					System.out.println("exit");
+					System.out.println("newGame");
 					System.out.println("------------------------------------");
-				} else {
+				} else if (line.startsWith("newGame")){
+					System.out.println("Starting a new game please connect again to the server.");
+					
+					newGame();
+					
+					
+				}else {
 					System.out.println("Bad command: " + line);
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {

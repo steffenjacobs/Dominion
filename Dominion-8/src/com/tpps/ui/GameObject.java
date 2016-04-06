@@ -248,7 +248,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @return parent framework
 	 * @author Steffen Jacobs
 	 */
-	protected GraphicFramework getParent() {
+	protected GraphicFramework getFramework() {
 		return this.parent;
 	}
 
@@ -259,7 +259,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	@Override
 	public String toString() {
 		return this.location.toString() + " - " + this.dimension.toString() + " - Layer: " + this.getLayer() + " - "
-				+ this.getParent() + " - " + this.isVisible();
+				+ this.getFramework() + " - " + this.isVisible();
 	}
 
 	/**

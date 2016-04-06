@@ -1,7 +1,6 @@
 package com.tpps.technicalServices.logger;
 
 import java.awt.Color;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -11,6 +10,8 @@ import com.tpps.technicalServices.util.ColorUtil;
 public class GameLog {
 
 	private static LogUI logUI;
+	
+	public static boolean useAsciiOnConsole = true;
 
 	/**
 	 * Colors that can easily be changed for the UI Window
@@ -47,9 +48,8 @@ public class GameLog {
 	}
 
 	/**
-	 * initialization method which is called in the beginning
-	 * writes the team name first:
-	 * GameLogger4Team++;
+	 * initialization method which is called in the beginning writes the team
+	 * name first: GameLogger4Team++;
 	 * 
 	 * and after that an INIT message with "GameLogger initialized"
 	 */
@@ -74,7 +74,8 @@ public class GameLog {
 	}
 
 	/**
-	 * @param backgroundColor the backgroundColor to set
+	 * @param backgroundColor
+	 *            the backgroundColor to set
 	 */
 	public static void setBackgroundColor(Color backgroundColor) {
 		GameLog.backgroundColor = backgroundColor;
@@ -88,7 +89,8 @@ public class GameLog {
 	}
 
 	/**
-	 * @param timestampColor the timestampColor to set
+	 * @param timestampColor
+	 *            the timestampColor to set
 	 */
 	public static void setTimestampColor(Color timestampColor) {
 		GameLog.timestampColor = timestampColor;
@@ -102,7 +104,8 @@ public class GameLog {
 	}
 
 	/**
-	 * @param msgtypeColor the msgtypeColor to set
+	 * @param msgtypeColor
+	 *            the msgtypeColor to set
 	 */
 	public static void setMsgtypeColor(Color msgtypeColor) {
 		GameLog.msgtypeColor = msgtypeColor;
@@ -116,7 +119,8 @@ public class GameLog {
 	}
 
 	/**
-	 * @param msgColor the msgColor to set
+	 * @param msgColor
+	 *            the msgColor to set
 	 */
 	public static void setMsgColor(Color msgColor) {
 		GameLog.msgColor = msgColor;
@@ -124,52 +128,55 @@ public class GameLog {
 
 	/**
 	 * 
-	 * @param type the messageType of the log message
-	 * @param ansi determines whether the line shall have ANSI codes or not
-	 * @return the computed line with hostname, username, timestamp, messagetype and the actual 
-	 * message with(out) ANSI codes;
+	 * @param type
+	 *            the messageType of the log message
+	 * @param ansi
+	 *            determines whether the line shall have ANSI codes or not
+	 * @return the computed line with hostname, username, timestamp, messagetype
+	 *         and the actual message with(out) ANSI codes;
 	 */
 	private static String computeLine(MsgType type, boolean ansi) {
 		StringBuffer line = new StringBuffer();
-		try {
-			String timestamp = java.net.InetAddress.getLocalHost().getHostName() + ":~@"
-					+ System.getProperty("user.name") + " " + "["
-					+ new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()) + "]";
-			String msgtype = type.getSlang();
-			if (ansiFlag && ansi)
-				line.append(ANSIUtil.getCyanText(timestamp) + " " + ANSIUtil.getRedText(msgtype) + " > ");
-			else
-				line.append(timestamp + " " + msgtype + " > ");
-		} catch (UnknownHostException e) {
-			GameLog.log(MsgType.EXCEPTION, e.getMessage());
-		}
+		String timestamp = "[" + new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()) + "]";
+		String msgtype = type.getSlang();
+		if (ansiFlag && ansi)
+			line.append(ANSIUtil.getCyanText(timestamp) + " " + ANSIUtil.getRedText(msgtype) + " > ");
+		else
+			line.append(timestamp + " " + msgtype + " > ");
 		return line.toString();
 	}
-	
+
 	/**
-	 * log the message with message type to the ui and console (if GameLog.uiFlag is true)
+	 * log the message with message type to the ui and console (if
+	 * GameLog.uiFlag is true)
 	 * 
-	 * @param type the message type of the message to log
-	 * @param line the line to log
+	 * @param type
+	 *            the message type of the message to log
+	 * @param line
+	 *            the line to log
 	 */
 	public static void log(MsgType type, String line) {
 		if (type.getDisplay()) {
 			if (uiFlag) {
 				writeToUI(computeLine(type, false) + line, type.getColor(), true);
 			}
-			writeToConsole(computeLine(type, true) + line);
+			writeToConsole(computeLine(type, useAsciiOnConsole) + line);
 		}
 	}
-	
+
 	/**
 	 * write to a JPanel of LogUI
 	 * 
-	 * writeUI with argument false is only intern for GameLogger class
-	 * to write sth into the log without timestamp and user details	
+	 * writeUI with argument false is only intern for GameLogger class to write
+	 * sth into the log without timestamp and user details
 	 * 
-	 * @param line the line to write on the JPanel
-	 * @param textColor the color of the text
-	 * @param timestamp determines whether the timestamp is written in front of the line
+	 * @param line
+	 *            the line to write on the JPanel
+	 * @param textColor
+	 *            the color of the text
+	 * @param timestamp
+	 *            determines whether the timestamp is written in front of the
+	 *            line
 	 */
 	private static void writeToUI(String line, Color textColor, boolean timestamp) {
 		GameLog.logUI.updateLogger(line, textColor, timestamp);
@@ -178,7 +185,8 @@ public class GameLog {
 	/**
 	 * write to the console
 	 * 
-	 * @param line the line to write to the console
+	 * @param line
+	 *            the line to write to the console
 	 */
 	private static void writeToConsole(String line) {
 		System.out.println(line);

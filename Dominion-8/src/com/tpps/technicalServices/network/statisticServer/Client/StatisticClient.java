@@ -2,10 +2,8 @@ package com.tpps.technicalServices.network.statisticServer.Client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Scanner;
 
 import com.tpps.technicalServices.network.Addresses;
-import com.tpps.technicalServices.network.chat.client.ChatClient;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
@@ -29,13 +27,13 @@ public class StatisticClient extends PacketHandler{
 		System.out.println("Server received a packet");
 		switch(packet.getType()){
 		case GET_ALL_STATISTICS:
-			this.hanleAllStatistics((PacketGetAllStatistics) packet);
+			this.handleAllStatistics((PacketGetAllStatistics) packet);
 			break;
 		default: System.out.println("sth went wrong with received packet");break;
 		}		
 	}
 	
-	private void hanleAllStatistics(PacketGetAllStatistics packet){
+	private void handleAllStatistics(PacketGetAllStatistics packet){
 		String[][] allStatistics = packet.getAllStatistics();
 		System.out.println("received all statistics");
 	}

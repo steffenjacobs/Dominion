@@ -3,6 +3,7 @@ package com.tpps.technicalServices.network.game;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.application.game.GameStorageInterface;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
@@ -55,17 +56,21 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameWindow.reset();	
 			break;
 		case ENABLE:
-			this.gameWindow.setEnabled(true);
+//			this.gameWindow.setEnabled(true);
+			DominionController.getInstance().setTurnFlag(true);
 			break;
 		case ENABLE_OTHERS:
 			if (((PacketEnableOthers)packet).getClientID() == this.gameClient.getClientId()){
-				this.gameWindow.setEnabled(false);
+//				this.gameWindow.setEnabled(false);
+				DominionController.getInstance().setTurnFlag(false);
 			}else{
-				this.gameWindow.setEnabled(true);
+//				this.gameWindow.setEnabled(true);
+				DominionController.getInstance().setTurnFlag(true);
 			}
 			break;
 		case DISABLE:
-			this.gameWindow.setEnabled(false);
+//			this.gameWindow.setEnabled(false);
+			DominionController.getInstance().setTurnFlag(false);
 			break;
 		case SEND_BOARD:
 			PacketSendBoard packetSendBoard = (PacketSendBoard)packet;
@@ -187,10 +192,12 @@ public class ClientGamePacketHandler extends PacketHandler {
 //			System.out.println();
 //		}
 		if (((PacketEnableDisable) packet).getClientId() == this.gameClient.getClientId()) {
-			this.gameWindow.setEnabled(true);
+//			this.gameWindow.setEnabled(true);
+			DominionController.getInstance().setTurnFlag(true);
 			System.out.println("my gameWindow is enabled");
 		} else {
-			this.gameWindow.setEnabled(false);
+//			this.gameWindow.setEnabled(false);
+			DominionController.getInstance().setTurnFlag(false);
 			System.out.println("my gameWindo is disabled");
 		}
 	}
@@ -211,10 +218,12 @@ public class ClientGamePacketHandler extends PacketHandler {
 			}
 		
 			if (((PacketOpenGuiAndEnableOne) packet).getClientId() == this.gameClient.getClientId()) {
-				this.gameWindow.setEnabled(true);
+//				this.gameWindow.setEnabled(true);
+				DominionController.getInstance().setTurnFlag(true);
 				System.out.println("my gameWindow is enabled");
 			} else {
-				this.gameWindow.setEnabled(false);
+//				this.gameWindow.setEnabled(false);
+				DominionController.getInstance().setTurnFlag(false);
 				System.out.println("my gameWindo is disabled");
 			}
 			this.gameWindow.setVisible(true);

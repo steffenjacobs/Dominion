@@ -50,6 +50,10 @@ public class GameWindow extends JFrame {
 	public static GameWindow getInstance() {
 		return instance;
 	}
+	
+	public GraphicFramework getGraphicFramework() {
+		return this.framework;
+	}
 
 	/**
 	 * 
@@ -115,11 +119,11 @@ public class GameWindow extends JFrame {
 		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
 				"End Reactions");
 
-		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework,
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 20, displayImageActions, framework,
 				String.valueOf(GameConstant.INIT_ACTIONS));
-		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework,
+		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 20, displayImageCoins, framework,
 				String.valueOf(GameConstant.INIT_TREASURES));
-		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework,
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 20, displayImageBuys, framework,
 				String.valueOf(GameConstant.INIT_PURCHASES));
 
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
@@ -216,7 +220,7 @@ public class GameWindow extends JFrame {
 		this.tableCards = new LinkedList<Card>();
 
 		for (int i = 0; i < table.size(); i++) {
-		if (actionCardlds.get(i).equals(GameConstant.NIL)) {
+		if (actionCardlds.get(i).matches("[A-Z][a-z]+#")) {
 			if (i < 5) {
 				shift += 0.06;
 				shiftCard += 0.06;

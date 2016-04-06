@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.tpps.application.game.card.Card;
@@ -411,10 +412,13 @@ public class GameController {
 					}
 
 				} else {
-					player.getDeck().getDiscardPile()
+					try{
+						player.getDeck().getDiscardPile()
 							.add(this.gameBoard.getTableForVictoryCards().get("Curse").removeLast());
-					player.setWitchFalse();
-					System.out.println(Arrays.toString(player.getDeck().getDiscardPile().toArray()));
+					}catch(NoSuchElementException e){
+						System.err.println("not enough curses on the board");
+					}
+					player.setWitchFalse();					
 				}
 			}
 		}
@@ -852,12 +856,13 @@ public class GameController {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			try {
-				GameServer.getInstance().sendMessage(player.getPort(), new PacketDisable());
+				GameServer.getInstance().sendMessage(player.getPort(), new PacketDisable());				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		GameServer.getInstance().newGame();
 	}
 
 	/**

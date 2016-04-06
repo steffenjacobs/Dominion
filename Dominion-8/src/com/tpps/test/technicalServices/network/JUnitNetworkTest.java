@@ -112,20 +112,23 @@ public class JUnitNetworkTest {
 		TestPacket receivedTestPacket2 = (TestPacket) receivedPacket2;
 		assertEquals(receivedTestPacket2.getData(), toSend);
 
-		//prepare for bulk-test
+		// prepare for bulk-test
 		final int PACKET_COUNT = 10000;
 		clientPacketHandler.clearPackets();
 		clientPacketHandler2.clearPackets();
-		
+
 		// bulk-test
 		for (int i = 0; i < PACKET_COUNT; i++) {
 			server.sendMessage(localPort, sentTestPacket);
-//			Thread.sleep(10);
+			// Thread.sleep(10);
 		}
 		Thread.sleep(3000);
-		
+
 		assertEquals(PACKET_COUNT, ((TestPacketHandler) client.getHandlers().get(0)).countPackets());
 		assertEquals(PACKET_COUNT, ((TestPacketHandler) client.getHandlers().get(1)).countPackets());
+		
+		System.out.println("[SUCCESS] " + ((TestPacketHandler) client.getHandlers().get(1)).countPackets() + "/" + PACKET_COUNT
+				+ " packets sent & received!");
 
 	}
 }
