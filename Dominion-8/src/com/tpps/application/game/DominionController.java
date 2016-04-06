@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 
 import com.mysql.fabric.Server;
 import com.tpps.application.storage.CardStorageController;
-import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.Log;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.card.CardClient;

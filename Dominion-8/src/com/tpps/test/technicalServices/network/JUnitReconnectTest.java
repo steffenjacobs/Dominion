@@ -5,10 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.Server;
@@ -22,12 +20,6 @@ import com.tpps.technicalServices.network.core.Server;
 public class JUnitReconnectTest {
 
 	private static final int TEST_PORT = 1234;
-
-	@Before
-	public void before() {
-		// disable that stuff.
-		GameLog.useAsciiOnConsole = false;
-	}
 
 	@Test
 	public void test() throws IOException, InterruptedException {

@@ -3,7 +3,7 @@ package com.tpps.technicalServices.network.clientSession.client;
 import java.io.IOException;
 import java.util.UUID;
 
-import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.Log;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.clientSession.packets.PacketSessionCheckAnswer;
 import com.tpps.technicalServices.network.clientSession.packets.PacketSessionCheckRequest;
@@ -35,7 +35,7 @@ public final class SessionPacketSenderAPI {
 		if (c.isConnected()) {
 			try {
 				if (SessionClient.debug()) {
-					GameLog.log(MsgType.NETWORK_INFO, packet.toString());
+					Log.log(MsgType.NETWORK_INFO, packet.toString());
 				}
 				c.sendMessage(packet);
 			} catch (IOException e) {

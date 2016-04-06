@@ -1,6 +1,6 @@
 package com.tpps.technicalServices.network.clientSession.client;
 
-import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.Log;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.clientSession.packets.PacketSessionCheckAnswer;
 import com.tpps.technicalServices.network.clientSession.packets.PacketSessionGetAnswer;
@@ -17,10 +17,10 @@ public class SessionPacketReceiver extends PacketHandler {
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {
 		if (packet == null) {
-			GameLog.log(MsgType.NETWORK_ERROR, "Bad packet.");
+			Log.log(MsgType.NETWORK_ERROR, "Bad packet.");
 		} else {
 			if (SessionClient.debug())
-				GameLog.log(MsgType.NETWORK_INFO, packet.toString());
+				Log.log(MsgType.NETWORK_INFO, packet.toString());
 			switch (packet.getType()) {
 			case SESSION_CHECK_ANSWER:
 				SessionPacketReceiverAPI.onPacketSessionCheckAnswer((PacketSessionCheckAnswer) packet);
