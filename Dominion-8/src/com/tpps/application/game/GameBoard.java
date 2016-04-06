@@ -128,7 +128,7 @@ public class GameBoard {
 				cardIds.add(cardList.get(cardList.size() - 1).getId());
 			} else {
 				System.out.println("nil added");
-				cardIds.add(GameConstant.NIL);
+				cardIds.add(string + "#");
 			}
 		}
 		return cardIds;
@@ -447,17 +447,17 @@ public class GameBoard {
 	 */
 	public boolean checkThreePilesEmpty() {
 		int counter = 0;
-				
+				System.out.println(counter);
 		counter += amountOfPilesEmpty(this.tableForActionCards);
-		if (counter == GameConstant.EMPTY_PILES){
+		if (counter >= GameConstant.EMPTY_PILES){
 			return true;
 		}
 		counter += amountOfPilesEmpty(this.tableForTreasureCards);
-		if (counter == GameConstant.EMPTY_PILES){
+		if (counter >= GameConstant.EMPTY_PILES){
 			return true;
 		}
 		counter += amountOfPilesEmpty(this.tableForVictoryCards);
-		if (counter == GameConstant.EMPTY_PILES){
+		if (counter >= GameConstant.EMPTY_PILES){
 			return true;
 		}
 		return false;

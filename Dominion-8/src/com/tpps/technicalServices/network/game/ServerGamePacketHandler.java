@@ -192,6 +192,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				reactionFinishedTriggerdThroughSpy(player1);
 				reactionFinishedTriggeredThroughWitch(player1);
 				reactionFinishedTriggeredThroughBureaucrat(player1);
+				this.server.getGameController().isGameFinished();
 				break;
 			case DISCARD_DECK:
 				this.server.getGameController().getActivePlayer().getDeck().discardDrawPile();
@@ -411,7 +412,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 								this.server.getGameController().getGameBoard().getVictoryCardIDs(),
 
 								this.server.getGameController().getGameBoard().getActionCardIDs()));
-
+				this.server.getGameController().isGameFinished();
 			}
 			return;
 		}
@@ -428,7 +429,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 					new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
 			server.broadcastMessage(
 					new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(player.getPlayedCards())));
-
+			this.server.getGameController().isGameFinished();
 		} else {
 			try {
 				if (this.server.getGameController().checkBoardCardExistsAppendToDiscardPile(cardID)) {
@@ -444,8 +445,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			} catch (SynchronisationException e) {
 				e.printStackTrace();
 			}
+			this.server.getGameController().isGameFinished();
 			return;
-		}
+		}		
 	}
 
 	/**

@@ -852,12 +852,13 @@ public class GameController {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			try {
-				GameServer.getInstance().sendMessage(player.getPort(), new PacketDisable());
+				GameServer.getInstance().sendMessage(player.getPort(), new PacketDisable());				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		GameServer.getInstance().newGame();
 	}
 
 	/**

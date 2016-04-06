@@ -216,7 +216,7 @@ public class GameWindow extends JFrame {
 		this.tableCards = new LinkedList<Card>();
 
 		for (int i = 0; i < table.size(); i++) {
-		if (actionCardlds.get(i).equals(GameConstant.NIL)) {
+		if (actionCardlds.get(i).matches("[A-Z][a-z]+#")) {
 			if (i < 5) {
 				shift += 0.06;
 				shiftCard += 0.06;

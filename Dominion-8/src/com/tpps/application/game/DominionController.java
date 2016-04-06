@@ -71,12 +71,12 @@ public final class DominionController {
 	
 	private void init() {
 
-		storageController = new CardStorageController();
-		mainFrame = new MainFrame();
-		loginGuiController = new LoginGUIController();
-		this.loadPanels();
-
-			
+//		storageController = new CardStorageController();
+//		mainFrame = new MainFrame();
+//		loginGuiController = new LoginGUIController();
+//		this.loadPanels();
+//
+//			
 		try {
 			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), 1339), new ClientGamePacketHandler());
 		} catch (IOException e) {
