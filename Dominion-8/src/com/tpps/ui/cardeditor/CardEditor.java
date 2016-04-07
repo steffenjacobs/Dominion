@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 
@@ -31,12 +32,13 @@ public class CardEditor extends JFrame {
 	private BufferedImage blackBeauty;
 	private BufferedImage walterWhite;
 	private BufferedImage background;
-	private JButton uploadImage;
+	private JButton uploadImage,increasePrice,decreasePrice,standartPrice,createCard,cancel;
 	private ButtonGroup actionSelect = new ButtonGroup();
 	private JRadioButton addAction, addMoney, addPurchase, drawCard, drawCardUntil, putBack, gainCard,
 	                     discardCard, trashCard, revealCard, isTreasure, isVictory;
 	private Container c;
-	private JLabel all, enterName, price;
+	private JLabel all, enterName, price, cardType, testImage;
+	private JTextField nameField;
 	private JComboBox selectCardType;
 	private ImageIcon loading;
 	private int width;
@@ -104,6 +106,41 @@ public class CardEditor extends JFrame {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	private void createPanels(){
+		
+	}
+	
+	//TODO set Positions etc
+	private void createLabels(){
+		enterName	= new JLabel("Geben Sie den Kartennamen ein");
+//		enterName.setBounds(x, y, width, height);
+		price		= new JLabel("");
+//		price.setBounds(x, y, width, height);
+		cardType	= new JLabel("Cardtype");
+//		cardType.setBounds(x, y, width, height);
+		testImage	= new JLabel("");
+//		testImage.setBounds(x,y,width,height);
+	}
+	
+	
+	private void createButtons(){
+		uploadImage = new JButton("uploadImage");
+		increasePrice = new JButton("increasePrice");
+		decreasePrice = new JButton("decreasePrice");
+		standartPrice = new JButton("standardPrice");
+		createCard= new JButton("createCard");
+		cancel= new JButton("cancel");
+	}
+	
+	
+	private void createTextfield(){
+		nameField = new JTextField("");
+	}
+	
+	private void createCombobox(){
+		selectCardType = new JComboBox();
 	}
 	
 	
