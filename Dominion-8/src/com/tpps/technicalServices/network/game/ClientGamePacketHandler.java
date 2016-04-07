@@ -58,19 +58,23 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case ENABLE:
 //			this.gameWindow.setEnabled(true);
 			DominionController.getInstance().setTurnFlag(true);
+			this.gameWindow.setCaptionTurn("E");
 			break;
 		case ENABLE_OTHERS:
 			if (((PacketEnableOthers)packet).getClientID() == this.gameClient.getClientId()){
 //				this.gameWindow.setEnabled(false);
 				DominionController.getInstance().setTurnFlag(false);
+				this.gameWindow.setCaptionTurn("D");
 			}else{
 //				this.gameWindow.setEnabled(true);
 				DominionController.getInstance().setTurnFlag(true);
+				this.gameWindow.setCaptionTurn("E");
 			}
 			break;
 		case DISABLE:
 //			this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
+			this.gameWindow.setCaptionTurn("D");
 			break;
 		case SEND_BOARD:
 			PacketSendBoard packetSendBoard = (PacketSendBoard)packet;
@@ -194,10 +198,12 @@ public class ClientGamePacketHandler extends PacketHandler {
 		if (((PacketEnableDisable) packet).getClientId() == this.gameClient.getClientId()) {
 //			this.gameWindow.setEnabled(true);
 			DominionController.getInstance().setTurnFlag(true);
+			this.gameWindow.setCaptionTurn("E");
 			System.out.println("my gameWindow is enabled");
 		} else {
 //			this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
+			this.gameWindow.setCaptionTurn("D");
 			System.out.println("my gameWindo is disabled");
 		}
 	}
@@ -220,10 +226,12 @@ public class ClientGamePacketHandler extends PacketHandler {
 			if (((PacketOpenGuiAndEnableOne) packet).getClientId() == this.gameClient.getClientId()) {
 //				this.gameWindow.setEnabled(true);
 				DominionController.getInstance().setTurnFlag(true);
+				this.gameWindow.setCaptionTurn("E");
 				System.out.println("my gameWindow is enabled");
 			} else {
 //				this.gameWindow.setEnabled(false);
 				DominionController.getInstance().setTurnFlag(false);
+				this.gameWindow.setCaptionTurn("D");
 				System.out.println("my gameWindo is disabled");
 			}
 			this.gameWindow.setVisible(true);
