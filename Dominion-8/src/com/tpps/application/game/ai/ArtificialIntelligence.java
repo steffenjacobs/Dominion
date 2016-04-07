@@ -84,6 +84,10 @@ public class ArtificialIntelligence {
 		return GameServer.getInstance().getGameController().getActivePlayer().equals(this.player);
 	}
 
+	private boolean gameNotFinished() {
+		return GameServer.getInstance().getGameController().isGameNotFinished();
+	}
+	
 	private void endTurn() {
 		GameWindow.endTurn.onMouseClick();
 	}
@@ -95,7 +99,7 @@ public class ArtificialIntelligence {
 	public void start() {
 		new Thread(new Runnable() { 
 			public void run() {
-				while (true/*gameNotFinished()*/) {
+				while (!gameNotFinished()) {
 					while (myTurn()) {
 					
 					}	
@@ -103,6 +107,7 @@ public class ArtificialIntelligence {
 			}
 		}).start();
 	}
+	
 	
 	public static void main(String[] args) {
 		ListMultimap<String, Integer> map = LinkedListMultimap.create();
