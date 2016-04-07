@@ -25,7 +25,7 @@ public class ArtificialIntelligence {
 	public ArtificialIntelligence() {
 		int CLIENT_ID = GameServer.getCLIENT_ID();
 		LinkedList<Card> startSet = GameServer.getInstance().getGameController().getGameBoard().getStartSet();
-		this.player = new Player(CLIENT_ID, 1337, startSet);
+		this.player = new Player(CLIENT_ID, 1995, startSet);
 		this.blacklist = this.getCardsFromStorage("Curse");
 		this.aiActions = LinkedListMultimap.create();
 		this.cardStore = new CardStorageController("cards.bin");
@@ -124,8 +124,17 @@ public class ArtificialIntelligence {
 		new Thread(new Runnable() { 
 			public void run() {
 				while (gameNotFinished()) {
-					while (myTurn()) {
-					
+					try {
+						Thread.sleep(500);
+						if (myTurn()) {
+							executeTurn();
+						} else {
+//							if (!computing) {
+//								computeNextTurn();
+//							}
+						}
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}	
 				}
 			}
