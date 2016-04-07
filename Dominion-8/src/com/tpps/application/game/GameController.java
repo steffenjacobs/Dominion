@@ -10,6 +10,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.game.TooMuchPlayerException;
@@ -416,7 +418,7 @@ public class GameController {
 						player.getDeck().getDiscardPile()
 							.add(this.gameBoard.getTableForVictoryCards().get("Curse").removeLast());
 					}catch(NoSuchElementException e){
-						System.err.println("not enough curses on the board");
+						GameLog.log(MsgType.GAME, "Not enough curses.\n");
 					}
 					player.setWitchFalse();					
 				}

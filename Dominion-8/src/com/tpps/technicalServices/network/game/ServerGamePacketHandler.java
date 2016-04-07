@@ -9,8 +9,9 @@ import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.PacketHandler;
-import com.tpps.technicalServices.network.core.ServerConnectionThread;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBuyCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketClientShouldDisconect;
@@ -54,7 +55,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {
-		ServerConnectionThread requester = parent.getClientThread(port);
+//		ServerConnectionThread requester = parent.getClientThread(port);
 		if (packet == null) {
 			super.output("<- Empty Packet from (" + port + ")");
 			return;
@@ -248,7 +249,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 							this.server.getGameController().getGameBoard().getVictoryCardIDs(),
 							this.server.getGameController().getGameBoard().getActionCardIDs()));
 			}catch(NoSuchElementException e){
-				
+				GameLog.log(MsgType.GAME, "Not enough curses.\n");
 			}
 			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();			
 		}

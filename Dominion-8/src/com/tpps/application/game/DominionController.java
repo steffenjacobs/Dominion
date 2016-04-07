@@ -10,14 +10,9 @@ import java.net.InetSocketAddress;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import com.mysql.fabric.Server;
 import com.tpps.application.storage.CardStorageController;
-import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.card.CardClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
