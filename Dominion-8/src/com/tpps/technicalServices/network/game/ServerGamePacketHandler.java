@@ -70,12 +70,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 				updatePortOfPlayer(port, packet);
 				break;
 			case CARD_PLAYED:
-				if (this.server.getGameController().isCardEnabled()) {
+				if (this.server.getGameController().isCardsEnabled()) {
 					cardPlayed(port, packet);
 				} else {
 					System.out.println("no cards enabled");
 				}
-
 				break;
 			case BUY_CARD:
 				buyCardAndUpdateBoards(packet);

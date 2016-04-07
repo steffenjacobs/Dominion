@@ -32,12 +32,10 @@ import com.tpps.technicalServices.util.GameConstant;
  * @author Lukas Adler
  * @author Nicolas Wipfler
  * 
- * 
- * 
- * 
- * 
- *         Methoden nach Logik sortieren und sichtbarkeit anpassen
  */
+
+/* --------Methoden nach Logik sortieren und sichtbarkeit anpassen-------- */
+
 public class GameController {
 
 	private LinkedList<Player> players;
@@ -57,10 +55,19 @@ public class GameController {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
 		this.spyList = new CopyOnWriteArrayList<Player>();
 		this.gameBoard = new GameBoard();
-
 		this.gameNotFinished = true;
 	}
 
+	/**
+	 * @return the cardsEnabled
+	 */
+	public boolean isCardsEnabled() {
+		return cardsEnabled;
+	}
+
+	/**
+	 * 
+	 */
 	public void setCardsEnabled() {
 		this.cardsEnabled = true;
 	}
@@ -69,8 +76,36 @@ public class GameController {
 		this.cardsEnabled = false;
 	}
 
-	public boolean isCardEnabled() {
-		return this.cardsEnabled;
+	/**
+	 * @param gameBoard
+	 *            the gameBoard to set
+	 */
+	public void setGameBoard(GameBoard gameBoard) {
+		this.gameBoard = gameBoard;
+	}
+
+	/**
+	 * @param gamePhase
+	 *            the gamePhase to set
+	 */
+	public void setGamePhase(String gamePhase) {
+		this.gamePhase = gamePhase;
+	}
+
+	/**
+	 * @param thiefList
+	 *            the thiefList to set
+	 */
+	public void setThiefList(CopyOnWriteArrayList<Player> thiefList) {
+		this.thiefList = thiefList;
+	}
+
+	/**
+	 * @param spyList
+	 *            the spyList to set
+	 */
+	public void setSpyList(CopyOnWriteArrayList<Player> spyList) {
+		this.spyList = spyList;
 	}
 
 	/**
@@ -82,19 +117,10 @@ public class GameController {
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
 			Player player = players.get(i);
 			if (player.equals(activePlayer)) {
-				this.setActivePlayer(players
-						.get(i < GameConstant.HUMAN_PLAYERS - 1 ? i + 1 : 0));
+				this.setActivePlayer(players.get(i < GameConstant.HUMAN_PLAYERS - 1 ? i + 1 : 0));
 				break;
 			}
 		}
-
-	}
-
-	/**
-	 * 
-	 */
-	public void checkForVictoryCard() {
-
 	}
 
 	/**
@@ -102,8 +128,7 @@ public class GameController {
 	 * @param temporaryTrashPile
 	 */
 	public synchronized void updateTrashPile(LinkedList<Card> temporaryTrashPile) {
-		CollectionsUtil.appendListToList(temporaryTrashPile,
-				this.gameBoard.getTrashPile());
+		CollectionsUtil.appendListToList(temporaryTrashPile, this.gameBoard.getTrashPile());
 	}
 
 	/**
@@ -113,8 +138,7 @@ public class GameController {
 	 * @return
 	 * @throws IOException
 	 */
-	public synchronized boolean checkCardExistsAndDiscardOrTrash(Player player,
-			String cardID) throws IOException {
+	public synchronized boolean checkCardExistsAndDiscardOrTrash(Player player, String cardID) throws IOException {
 		Card card = player.getDeck().getCardFromHand(cardID);
 		if (card != null) {
 			player.discardOrTrash(cardID, this.getGameBoard().getTrashPile());
@@ -132,23 +156,19 @@ public class GameController {
 	 * @throws IOException
 	 * @throws SynchronisationException
 	 */
-	public synchronized boolean validateTurnAndExecute(String cardID,
-			Player player) throws IOException {
+	public synchronized boolean validateTurnAndExecute(String cardID, Player player) throws IOException {
 
 		Card card = player.getDeck().getCardFromHand(cardID);
 		if (card != null) {
-			if (player.isReactionMode()
-					&& card.getTypes().contains(CardType.REACTION)) {
+			if (player.isReactionMode() && card.getTypes().contains(CardType.REACTION)) {
 				System.out.println("spielt reaktionskarte");
 				player.playCard(cardID);
-				GameServer.getInstance().sendMessage(player.getPort(),
-						new PacketSendActiveButtons(true, true, false));
+				GameServer.getInstance().sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
 				return true;
 			}
 			if (this.gamePhase.equals("actionPhase")) {
 
-				if (card.getTypes().contains(CardType.ACTION)
-						&& this.getActivePlayer().getActions() > 0) {
+				if (card.getTypes().contains(CardType.ACTION) && this.getActivePlayer().getActions() > 0) {
 					this.getActivePlayer().playCard(cardID);
 					if (this.getActivePlayer().getActions() == 0) {
 						this.setBuyPhase();
@@ -171,8 +191,7 @@ public class GameController {
 	public synchronized boolean gain(String cardID, Player player) {
 		System.out.println("gain");
 		try {
-			LinkedList<Card> cardList = this.getGameBoard()
-					.findCardListFromBoard(cardID);
+			LinkedList<Card> cardList = this.getGameBoard().findCardListFromBoard(cardID);
 			Card card = cardList.getLast();
 			if (card.getCost() <= player.getGainValue()) {
 				getGameBoard().findAndRemoveCardFromBoard(cardID);
@@ -180,12 +199,7 @@ public class GameController {
 				if (player.isOnHand()) {
 					player.setOnHandFalse();
 					player.getDeck().getCardHand().add(card);
-					GameServer.getInstance()
-							.sendMessage(
-									player.getPort(),
-									new PacketSendHandCards(CollectionsUtil
-											.getCardIDs(player.getDeck()
-													.getCardHand())));
+					GameServer.getInstance().sendMessage(player.getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
 					return true;
 				}
 				player.getDeck().getDiscardPile().add(card);
@@ -207,20 +221,16 @@ public class GameController {
 	 * @return
 	 * @throws SynchronisationException
 	 */
-	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(
-			String cardID) throws SynchronisationException {
+	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException {
 		System.out.println("checkBoardCardExists");
-		LinkedList<Card> cards = this.getGameBoard().findCardListFromBoard(
-				cardID);
+		LinkedList<Card> cards = this.getGameBoard().findCardListFromBoard(cardID);
 		Card card = cards.get(cards.size() - 1);
 		Player player = this.getActivePlayer();
-		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0
-				&& player.getCoins() >= card.getCost()) {
+		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0 && player.getCoins() >= card.getCost()) {
 			player.setBuys(player.getBuys() - 1);
 			player.setCoins(player.getCoins() - card.getCost());
 			cards.removeLast();
-			CollectionsUtil.addCardToList(card, player.getDeck()
-					.getDiscardPile());
+			CollectionsUtil.addCardToList(card, player.getDeck().getDiscardPile());
 			return true;
 		}
 		return false;
@@ -260,9 +270,7 @@ public class GameController {
 	 */
 	public synchronized void organizePilesAndrefreshCardHand() {
 
-		CollectionsUtil.appendListToList(this.getActivePlayer()
-				.getPlayedCards(), this.getActivePlayer().getDeck()
-				.getDiscardPile());
+		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
 		this.getActivePlayer().getDeck().refreshCardHand();
 		this.getActivePlayer().refreshPlayedCardsList();
 	}
@@ -278,23 +286,17 @@ public class GameController {
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setReactionCard(true);
 					try {
-						GameServer.getInstance().sendMessage(player.getPort(),
-								new PacketShowEndReactions());
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
 				player.setDiscardMode();
-				player.setDiscardOrTrashAction(CardAction.DISCARD_CARD, player
-						.getDeck().getCardHand().size()
-						- Integer.parseInt(value));
+				player.setDiscardOrTrashAction(CardAction.DISCARD_CARD, player.getDeck().getCardHand().size() - Integer.parseInt(value));
 
 				player.setReactionMode();
 				try {
-					GameServer.getInstance().broadcastMessage(
-							player.getPort(),
-							new PacketEnableOthers(this.activePlayer
-									.getClientID()));
+					GameServer.getInstance().broadcastMessage(player.getPort(), new PacketEnableOthers(this.activePlayer.getClientID()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -316,9 +318,7 @@ public class GameController {
 					reactivePlayer = true;
 					player.setThiefFalse();
 					try {
-						GameServer.getInstance().sendMessage(
-								this.activePlayer.getPort(),
-								new PacketDisable());
+						GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketDisable());
 					} catch (IOException e1) {
 
 						e1.printStackTrace();
@@ -326,10 +326,8 @@ public class GameController {
 					player.setReactionCard(true);
 					player.setReactionMode();
 					try {
-						GameServer.getInstance().sendMessage(player.getPort(),
-								new PacketShowEndReactions());
-						GameServer.getInstance().sendMessage(player.getPort(),
-								new PacketEnable());
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -348,14 +346,11 @@ public class GameController {
 				}
 			}
 		}
-		System.out.println("im gamecontrolloer thiefList size: "
-				+ thiefList.size());
+		System.out.println("im gamecontrolloer thiefList size: " + thiefList.size());
 		if (thiefList.size() > 0) {
 			try {
-				GameServer.getInstance().sendMessage(this.activePlayer.getPort(),
-						new PacketSendActiveButtons(false, false, false));
-				GameServer.getInstance().sendMessage(this.activePlayer.getPort(),
-						new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
+				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketSendActiveButtons(false, false, false));
+				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -402,10 +397,7 @@ public class GameController {
 			try {
 				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketTakeCards(this.activePlayer.getClientID()));
 				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketPutBackCards(this.activePlayer.getClientID()));
-				GameServer.getInstance().sendMessage(
-						this.getActivePlayer().getPort(),
-						new PacketSendRevealCards(CollectionsUtil
-								.getCardIDs(spyList.get(0).getRevealList())));
+				GameServer.getInstance().sendMessage(this.getActivePlayer().getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(spyList.get(0).getRevealList())));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -421,9 +413,7 @@ public class GameController {
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setWitchFalse();
 					try {
-						GameServer.getInstance().sendMessage(
-								this.activePlayer.getPort(),
-								new PacketDisable());
+						GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketDisable());
 					} catch (IOException e1) {
 
 						e1.printStackTrace();
@@ -431,20 +421,15 @@ public class GameController {
 					player.setReactionCard(true);
 					player.setReactionMode();
 					try {
-						GameServer.getInstance().sendMessage(player.getPort(),
-								new PacketShowEndReactions());
-						GameServer.getInstance().sendMessage(player.getPort(),
-								new PacketEnable());
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 
 				} else {
 					try {
-						player.getDeck()
-								.getDiscardPile()
-								.add(this.gameBoard.getTableForVictoryCards()
-										.get("Curse").removeLast());
+						player.getDeck().getDiscardPile().add(this.gameBoard.getTableForVictoryCards().get("Curse").removeLast());
 					} catch (NoSuchElementException e) {
 						GameLog.log(MsgType.GAME, "Not enough curses.\n");
 					}
@@ -454,11 +439,7 @@ public class GameController {
 		}
 		checkReactionModeFinishedAndEnableGuis();
 		try {
-			GameServer.getInstance().broadcastMessage(
-					new PacketSendBoard(this.getGameBoard()
-							.getTreasureCardIDs(), getGameBoard()
-							.getVictoryCardIDs(), getGameBoard()
-							.getActionCardIDs()));
+			GameServer.getInstance().broadcastMessage(new PacketSendBoard(this.getGameBoard().getTreasureCardIDs(), getGameBoard().getVictoryCardIDs(), getGameBoard().getActionCardIDs()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -482,9 +463,7 @@ public class GameController {
 					if (sendPacketDisable) {
 						sendPacketDisable = false;
 						try {
-							GameServer.getInstance().sendMessage(
-									this.activePlayer.getPort(),
-									new PacketDisable());
+							GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketDisable());
 						} catch (IOException e1) {
 
 							e1.printStackTrace();
@@ -493,26 +472,19 @@ public class GameController {
 					player.setReactionCard(true);
 					player.setReactionMode();
 					try {
-						GameServer.getInstance().sendMessage(player.getPort(),
-								new PacketShowEndReactions());
-						GameServer.getInstance().sendMessage(player.getPort(),
-								new PacketEnable());
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
+						GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				} else {
-					Card card = player.getDeck().getCardByTypeFromHand(
-							CardType.VICTORY);
+					Card card = player.getDeck().getCardByTypeFromHand(CardType.VICTORY);
 
 					if (card != null) {
 						player.getDeck().getCardHand().remove(card);
 						player.getDeck().getDrawPile().addLast(card);
 						try {
-							GameServer.getInstance().sendMessage(
-									player.getPort(),
-									new PacketSendHandCards(CollectionsUtil
-											.getCardIDs(player.getDeck()
-													.getCardHand())));
+							GameServer.getInstance().sendMessage(player.getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -520,18 +492,13 @@ public class GameController {
 						System.err.println("no victory card on hand");
 					}
 					player.setBureaucratFalse();
-					System.out.println(Arrays.toString(player.getDeck()
-							.getDrawPile().toArray()));
+					System.out.println(Arrays.toString(player.getDeck().getDrawPile().toArray()));
 					System.out.println();
 				}
 			}
 		}
 		try {
-			GameServer.getInstance().broadcastMessage(
-					new PacketSendBoard(this.getGameBoard()
-							.getTreasureCardIDs(), getGameBoard()
-							.getVictoryCardIDs(), getGameBoard()
-							.getActionCardIDs()));
+			GameServer.getInstance().broadcastMessage(new PacketSendBoard(this.getGameBoard().getTreasureCardIDs(), getGameBoard().getVictoryCardIDs(), getGameBoard().getActionCardIDs()));
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -630,14 +597,8 @@ public class GameController {
 			thiefList.add(player);
 			if (thiefList.size() == 1) {
 				try {
-					GameServer.getInstance().sendMessage(
-							this.activePlayer.getPort(),
-							new PacketSendActiveButtons(false, false, false));
-					GameServer.getInstance().sendMessage(
-							activePlayer.getPort(),
-							new PacketSendRevealCards(CollectionsUtil
-									.getCardIDs(thiefList.get(0)
-											.getRevealList())));
+					GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketSendActiveButtons(false, false, false));
+					GameServer.getInstance().sendMessage(activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -654,18 +615,9 @@ public class GameController {
 		spyList.add(player);
 		if (spyList.size() == 1) {
 			try {
-				GameServer.getInstance().sendMessage(
-						this.activePlayer.getPort(),
-						new PacketTakeCards(this.activePlayer.getClientID()));
-				GameServer.getInstance()
-						.sendMessage(
-								this.activePlayer.getPort(),
-								new PacketPutBackCards(this.activePlayer
-										.getClientID()));
-				GameServer.getInstance().sendMessage(
-						activePlayer.getPort(),
-						new PacketSendRevealCards(CollectionsUtil
-								.getCardIDs(spyList.get(0).getRevealList())));
+				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketTakeCards(this.activePlayer.getClientID()));
+				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketPutBackCards(this.activePlayer.getClientID()));
+				GameServer.getInstance().sendMessage(activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(spyList.get(0).getRevealList())));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -719,8 +671,7 @@ public class GameController {
 		checkBureaucratFinish();
 
 		try {
-			GameServer.getInstance().sendMessage(
-					this.getActivePlayer().getPort(), new PacketEnable());
+			GameServer.getInstance().sendMessage(this.getActivePlayer().getPort(), new PacketEnable());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -846,16 +797,6 @@ public class GameController {
 	/**
 	 * 
 	 */
-	// private boolean gameFinished() {
-	// /* Checkt die Stapel durch, ob 3 Stapel leer sind bzw. Provinzen leer */
-	// /* Wenn ja: */
-	// setGameNotFinished(false);
-	// return false; // überarbeiten
-	// }
-
-	/**
-	 * 
-	 */
 	public void setDiscardPhase() {
 		System.out.println("DiscardPhaseWasSet");
 		this.gamePhase = "discardPhase";
@@ -908,8 +849,7 @@ public class GameController {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			try {
-				GameServer.getInstance().sendMessage(player.getPort(),
-						new PacketDisable());
+				GameServer.getInstance().sendMessage(player.getPort(), new PacketDisable());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
