@@ -97,7 +97,7 @@ public class ArtificialIntelligence {
 		map.put("b", 3);
 		map.put("a", 3);
 		map.put("c", 2);
-		for (Integer b : map.values()) {
+		for (String b : map.keys()) {
 			System.out.println(b);
 		}
 	}

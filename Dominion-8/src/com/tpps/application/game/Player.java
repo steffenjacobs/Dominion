@@ -44,8 +44,7 @@ public class Player {
 	private int gainValue, drawUntil;
 	private CardType setAside;
 	private Card drawedCard;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy,
-			onHand;
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand;
 	private Tuple<CardAction> discardOrTrashAction;
 	private LinkedList<Card> playedCards, drawList, revealList, temporaryTrashPile, setAsideCards;
 
@@ -680,7 +679,7 @@ public class Player {
 			case TRASH_CARD:
 
 				if (value.equals("this")) {
-					// trashFlag gesetzt karte trashen null zurückgeben
+					// trashFlag gesetzt karte trashen null zurï¿½ckgeben
 					trashFlag = true;
 
 				} else {
@@ -800,7 +799,7 @@ public class Player {
 		} catch (NoSuchElementException e) {
 			System.out.println("not enough treasures are in the deck");
 		}
-		System.out.println("hinzufügen");
+		System.out.println("hinzufï¿½gen");
 		CollectionsUtil.appendListToList(treasureList, this.getDeck().getCardHand());
 		CollectionsUtil.appendListToList(this.revealList, this.getDeck().getDiscardPile());
 		this.revealList = new LinkedList<Card>();

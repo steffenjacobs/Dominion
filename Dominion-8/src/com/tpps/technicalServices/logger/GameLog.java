@@ -68,6 +68,7 @@ public class GameLog {
 	 * and after that an INIT message with "GameLogger initialized"
 	 */
 	public static void init() {
+		GameLog.isInitialized = true;
 		String team = "GameLogger4Team++;\n\n";
 		/*if (displayUIWindow) {
 			 create UI if desired 
@@ -79,7 +80,6 @@ public class GameLog {
 		else
 			writeToConsole(team);
 		GameLog.log(MsgType.INIT, "GameLogger initialized");
-		GameLog.isInitialized = true;
 	}
 
 	/**
