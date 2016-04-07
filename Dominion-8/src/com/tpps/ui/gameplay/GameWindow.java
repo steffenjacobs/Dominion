@@ -560,11 +560,11 @@ public class GameWindow extends JFrame {
 	 */
 
 	public void setCaptionCoins(String caption) {
-		// framework.removeComponent(coin);
-		// coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1,
-		// displayImageCoins, framework, caption);
-		// framework.addComponent(coin);
-		coin.renewCaption(caption);
+		 framework.removeComponent(coin);
+		 coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1,
+		 displayImageCoins, framework, caption);
+		 framework.addComponent(coin);
+//		coin.renewCaption(caption);
 	}
 
 	/**
@@ -574,7 +574,11 @@ public class GameWindow extends JFrame {
 	 */
 
 	public void setCaptionActions(String caption) {
-		action.renewCaption(caption);		
+//		action.renewCaption(caption);		
+		 framework.removeComponent(action);
+		 action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1,
+		 displayImageActions, framework, caption);
+		 framework.addComponent(action);
 		// action.renewCaption(caption);
 	}
 	
@@ -589,7 +593,11 @@ public class GameWindow extends JFrame {
 	 */
 
 	public void setCaptionBuys(String caption) {
-		buy.renewCaption(caption);
+		 framework.removeComponent(buy);
+		 buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1,
+		 displayImageBuys, framework, caption);
+		 framework.addComponent(buy);
+//		buy.renewCaption(caption);
 	}
 	
 	/**
