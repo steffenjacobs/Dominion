@@ -123,7 +123,7 @@ public class ArtificialIntelligence {
 	public void start() {
 		new Thread(new Runnable() { 
 			public void run() {
-				while (!gameNotFinished()) {
+				while (gameNotFinished()) {
 					while (myTurn()) {
 					
 					}	
