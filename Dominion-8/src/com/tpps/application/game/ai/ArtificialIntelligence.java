@@ -20,9 +20,10 @@ public class ArtificialIntelligence {
 	// spielen
 	// LinkedListMultimap mit "buy" oder "play" und karte als Spielplan aufbauen
 
-	public ArtificialIntelligence(int clientID, int port,
-			LinkedList<Card> initCards) {
-		this.player = new Player(clientID, port, initCards);
+	public ArtificialIntelligence() {
+		int CLIENT_ID = GameServer.getCLIENT_ID();
+		LinkedList<Card> startSet = GameServer.getInstance().getGameController().getGameBoard().getStartSet();
+		this.player = new Player(CLIENT_ID, 1337, startSet);
 		this.blacklist = new LinkedList<Card>();
 		this.aiActions = LinkedListMultimap.create();
 	}
@@ -91,6 +92,18 @@ public class ArtificialIntelligence {
 		GameWindow.playTreasures.onMouseClick();
 	}
 
+	public void start() {
+		new Thread(new Runnable() { 
+			public void run() {
+				while (true/*gameNotFinished()*/) {
+					while (myTurn()) {
+					
+					}	
+				}
+			}
+		}).start();
+	}
+	
 	public static void main(String[] args) {
 		ListMultimap<String, Integer> map = LinkedListMultimap.create();
 		map.put("a", 2);
