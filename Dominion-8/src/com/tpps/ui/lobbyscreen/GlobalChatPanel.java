@@ -80,9 +80,7 @@ public class GlobalChatPanel extends JPanel{
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
-
-
-		  
+ 
 		panel.add(new Button());
 		return panel;			  
 	}
@@ -163,7 +161,7 @@ public class GlobalChatPanel extends JPanel{
 	 * @return a JTextField with semitransparent look and white characters, used to type in chatmessages
 	 */
 	private JTextField initChatInputLine(){
-		chatInputLine = new JTextField("chat"){
+		chatInputLine = new JTextField("Type in your chatmessage"){
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -200,7 +198,7 @@ public class GlobalChatPanel extends JPanel{
 		textbox.setBorder(BorderFactory.createEmptyBorder());
 		textbox.setLineWrap(true);
 		textbox.setOpaque(false);
-		textbox.setText("TeSt");		
+		textbox.setText("Welcome to our chatserver \n");		
 		font = new Font("Calibri", Font.PLAIN, 20);
 		textbox.setFont(font);
 		scrollpane =  new JScrollPane(textbox){
@@ -246,7 +244,10 @@ public class GlobalChatPanel extends JPanel{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			GlobalChatPanel.this.handleChatmessage(GlobalChatPanel.this.chatInputLine.getText());
+			if(!GlobalChatPanel.this.chatInputLine.getText().equals("")){
+				GlobalChatPanel.this.handleChatmessage(GlobalChatPanel.this.chatInputLine.getText());				
+			}
+			GlobalChatPanel.this.chatInputLine.requestFocus();
 		}
 		
 	}

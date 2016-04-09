@@ -45,15 +45,17 @@ public class PlayerSettingsPanel extends JPanel{
 	private static final int SPACE_PLAYER_TO_PLAYER = 5;
 	private static final int SPACE_FIRSTPANEL_TO_SECONDPANEL = 10;
 	private static int H_SPACE_EDGE_TO_FIRSTPANEL = 170;
-	private static int H_GAP_OPTIONS = 100;
-	private static int V_GAP_OPTIONS = 20;
-	private static int EMPTYBORDER_LEFT_RIGHT = 100;
-	private static int EMPTYBORDER_UP_BOTTOM = 25;
-	private static float OPTIONS_TRANSPARENCY = 0.6F;
+//	private static int H_GAP_OPTIONS = 100;
+//	private static int V_GAP_OPTIONS = 20;
+//	private static int EMPTYBORDER_LEFT_RIGHT = 100;
+//	private static int EMPTYBORDER_UP_BOTTOM = 25;
+//	private static float OPTIONS_TRANSPARENCY = 0.6F;
 	private static final int IMG_GRID_GAP = 20;
 	private static int HEADER_TO_IMG_MARGIN = 15;
 	private static int IMG_TO_BOTTOM = 15;
 	private static final int IMG_TO_EDGE = 30;
+	
+	JPanel panel;
 	
 	public PlayerSettingsPanel() {
 		this.setOpaque(false);
@@ -65,7 +67,7 @@ public class PlayerSettingsPanel extends JPanel{
 	}
 	
 	private JPanel upperAreaPanel(){
-		JPanel panel = new JPanel(new BorderLayout());
+		this.panel = new JPanel(new BorderLayout());
 		panel.setOpaque(false);
 		
 		connectedPlayers = new SearchingField[4];
@@ -248,6 +250,7 @@ public class PlayerSettingsPanel extends JPanel{
 	}
 	
 	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public JTextField createHeader(String text){
 		JTextField header = new JTextField(text);
 		Map attributes = head.getAttributes();
@@ -270,6 +273,16 @@ public class PlayerSettingsPanel extends JPanel{
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if(!connectedPlayers[i].isPlayerFlag()){
 				this.connectedPlayers[i].setPlayer(player);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean removePlayer(String player){
+		for (int i = 0; i < connectedPlayers.length; i++) {
+			if(connectedPlayers[i].getText().equals(player)){
+				connectedPlayers[i].resetSearchingField();
 				return true;
 			}
 		}

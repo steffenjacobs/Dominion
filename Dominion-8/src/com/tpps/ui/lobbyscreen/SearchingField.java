@@ -58,7 +58,7 @@ public class SearchingField extends JTextField implements Runnable{
 	}
 
 	/**
-	 * executes the searching procedure. possible states:
+	 * executes the searching procedure on the GUI. possible states:
 	 * 	-> Loading .
 	 *  -> Loading ..
 	 *  -> Loading ...
@@ -101,5 +101,10 @@ public class SearchingField extends JTextField implements Runnable{
 	public void setPlayer(String playername) {
 		this.playerFlag = true;
 		this.setText(playername);
+	}
+	
+	public void resetSearchingField(){
+		this.playerFlag = false;
+		this.start();
 	}
 }
