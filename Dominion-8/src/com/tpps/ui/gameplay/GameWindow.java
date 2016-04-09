@@ -1,6 +1,10 @@
 package com.tpps.ui.gameplay;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Frame;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -12,10 +16,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.GameLogTextPane;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GraphicFramework;
@@ -24,33 +32,37 @@ import com.tpps.ui.components.GFButton;
 import com.tpps.ui.components.GameBackground;
 
 /**
- * Main GUI Window where all compenents are merged together and ready for GamePlay
+ * Main GUI Window where all compenents are merged together and ready for
+ * GamePlay
  * 
- *  @author Nishit Agrawal - nagrawal, Lukas Adler - ladler
- *  
+ * @author Nishit Agrawal - nagrawal, Lukas Adler - ladler
+ * 
  */
 
 public class GameWindow extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
-	public static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack, 
-	takeThiefCards, putBackThiefCards, takeDrawedCard, setAsideDrawedCard;
+	public static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack, takeThiefCards,
+			putBackThiefCards, takeDrawedCard, setAsideDrawedCard;
 	private static GameWindow instance;
 
-	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage, displayImageBuys, displayImageActions, displayImageTurn,
-			displayImageCoins, buttonGameImage;
+	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage, displayImageBuys, displayImageActions,
+			displayImageTurn, displayImageCoins, buttonGameImage;
 	private GameBackground table;
 	private GraphicFramework framework;
 	private DisplayValue buy, coin, action, turn;
 	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards, middleCards, extraTableCards;
 	private LinkedList<GFButton> victoryButtons, coinButtons, tableButtons;
 	private ButtonClass stopDiscard, stopTrash, discardDeck, endReactions;
+	private int heightRelative;
+	private int widthRelative;
+	private GameLogTextPane loggerPane;
 	public static String coins, buys, actions;
 	private static final double CORRECTION_16TO9 = 16 / (double) 9;
 
 	public static GameWindow getInstance() {
 		return instance;
 	}
-	
+
 	public GraphicFramework getGraphicFramework() {
 		return this.framework;
 	}
@@ -67,6 +79,12 @@ public class GameWindow extends JFrame {
 		instance = this;
 		final int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
 		final int HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
+
+		System.out.println(WIDTH+"knlsd");
+		System.out.println(HEIGHT+"sdopj");
+
+		this.loggerPane= GameLog.getTextPane();
+
 		this.handCards = new LinkedList<Card>();
 		this.tableCards = new LinkedList<Card>();
 		this.victoryCards = new LinkedList<Card>();
@@ -85,8 +103,11 @@ public class GameWindow extends JFrame {
 		buys = "Buys: ";
 		actions = "Actions: ";
 		this.setMinimumSize(new Dimension(1280, 720));
-//		this.setVisible(true);
+		// this.setVisible(true);
 		framework = new GraphicFramework(this);
+		framework.setLayout(null);
+		
+		
 		this.add(framework);
 
 		backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
@@ -110,17 +131,21 @@ public class GameWindow extends JFrame {
 		stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Trash");
 		takeCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Take Cards");
 		putBack = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Put Back");
-		takeThiefCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Take Thief Cards");
-		putBackThiefCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Put Back Thief Cards");
-		takeDrawedCard = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Take Drawed Card");
-		setAsideDrawedCard = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Set Aside Drawed Card");
-//		takeCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Temporary Trash");
+		takeThiefCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
+				"Take Thief Cards");
+		putBackThiefCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
+				"Put Back Thief Cards");
+		takeDrawedCard = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
+				"Take Drawed Card");
+		setAsideDrawedCard = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
+				"Set Aside Drawed Card");
+		// takeCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1,
+		// buttonImage, framework, "Temporary Trash");
 		discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Discard Deck");
 		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
 		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
 				"End Reactions");
 
-		
 		turn = new DisplayValue(0.1, 0.2, 0.12, 0.12, 1, 1, 20, displayImageTurn, framework, "#");
 		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 20, displayImageActions, framework,
 				String.valueOf(GameConstant.INIT_ACTIONS));
@@ -129,7 +154,8 @@ public class GameWindow extends JFrame {
 		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 20, displayImageBuys, framework,
 				String.valueOf(GameConstant.INIT_PURCHASES));
 		
-		
+		loggerAdding(WIDTH,HEIGHT);
+
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 		framework.addComponent(closeButton);
@@ -141,7 +167,7 @@ public class GameWindow extends JFrame {
 		framework.addComponent(coin);
 		framework.addComponent(buy);
 		framework.addComponent(turn);
-		
+
 		this.revalidate();
 		this.repaint();
 
@@ -164,6 +190,14 @@ public class GameWindow extends JFrame {
 		}
 		return im;
 
+	}
+
+	private void loggerAdding(int width, int height) {
+		 GameLog.init();
+		 loggerPane.setBounds((int) (width*0.5), (int) (height*0.35), 200, 100);
+		 framework.add(loggerPane);
+		 GameLog.log(MsgType.GAME, "XYZ");
+		 
 	}
 
 	/**
@@ -225,47 +259,47 @@ public class GameWindow extends JFrame {
 		this.tableCards = new LinkedList<Card>();
 
 		for (int i = 0; i < table.size(); i++) {
-		if (actionCardlds.get(i).matches("[A-Z][a-z]+#")) {
-			if (i < 5) {
-				shift += 0.06;
-				shiftCard += 0.06;
-			}else{
-				shiftBottom += 0.06;
-				shiftCardBottom += 0.06;
-			}
-		}else{
-			SerializedCard serializedCard = table.get(actionCardlds.get(i));
-
-			// // Example For nishit
-			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
-			matcher.find();
-			String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
-
-			if (i < 5) {
-				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
-						serializedCard.getCost(), actionCardlds.get(i), shift += 0.06, 0.02, 0.05, 0.15, k++,
-						serializedCard.getImage(), framework);
-
-				GFButton button = new ButtonClass(shiftCard += 0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9, WIDTH,
-						HEIGHT, l++, buttonGameImage, framework, number);
-
-				framework.addComponent(button);
-				framework.addComponent(card);
-				this.tableCards.add(card);
-				this.tableButtons.add(button);
+			if (actionCardlds.get(i).matches("[A-Z][a-z]+#")) {
+				if (i < 5) {
+					shift += 0.06;
+					shiftCard += 0.06;
+				} else {
+					shiftBottom += 0.06;
+					shiftCardBottom += 0.06;
+				}
 			} else {
-				Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
-						serializedCard.getCost(), actionCardlds.get(i), shiftBottom += 0.06, 0.2, 0.05, 0.15, k++,
-						serializedCard.getImage(), framework);
-				GFButton button = new ButtonClass(shiftCardBottom += 0.06, 0.2, 0.015, 0.015 * CORRECTION_16TO9, WIDTH,
-						HEIGHT, l++, buttonGameImage, framework, number);
+				SerializedCard serializedCard = table.get(actionCardlds.get(i));
 
-				framework.addComponent(button);
-				framework.addComponent(card);
-				this.tableCards.add(card);
-				this.tableButtons.add(button);
+				// // Example For nishit
+				Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
+				matcher.find();
+				String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
+
+				if (i < 5) {
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.06,
+							0.02, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+
+					GFButton button = new ButtonClass(shiftCard += 0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9, WIDTH,
+							HEIGHT, l++, buttonGameImage, framework, number);
+
+					framework.addComponent(button);
+					framework.addComponent(card);
+					this.tableCards.add(card);
+					this.tableButtons.add(button);
+				} else {
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
+							shiftBottom += 0.06, 0.2, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+					GFButton button = new ButtonClass(shiftCardBottom += 0.06, 0.2, 0.015, 0.015 * CORRECTION_16TO9,
+							WIDTH, HEIGHT, l++, buttonGameImage, framework, number);
+
+					framework.addComponent(button);
+					framework.addComponent(card);
+					this.tableCards.add(card);
+					this.tableButtons.add(button);
+				}
 			}
-		}
 		}
 	}
 
@@ -356,7 +390,7 @@ public class GameWindow extends JFrame {
 		this.coinButtons = new LinkedList<GFButton>();
 		this.coinCards = new LinkedList<Card>();
 
-		for (int i = 0; i < coins.size(); i++) {			
+		for (int i = 0; i < coins.size(); i++) {
 			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 			matcher.find();
 			String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
@@ -560,11 +594,10 @@ public class GameWindow extends JFrame {
 	 */
 
 	public void setCaptionCoins(String caption) {
-		 framework.removeComponent(coin);
-		 coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1,
-		 displayImageCoins, framework, caption);
-		 framework.addComponent(coin);
-//		coin.renewCaption(caption);
+		framework.removeComponent(coin);
+		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework, caption);
+		framework.addComponent(coin);
+		// coin.renewCaption(caption);
 	}
 
 	/**
@@ -574,14 +607,13 @@ public class GameWindow extends JFrame {
 	 */
 
 	public void setCaptionActions(String caption) {
-//		action.renewCaption(caption);		
-		 framework.removeComponent(action);
-		 action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1,
-		 displayImageActions, framework, caption);
-		 framework.addComponent(action);
+		// action.renewCaption(caption);
+		framework.removeComponent(action);
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework, caption);
+		framework.addComponent(action);
 		// action.renewCaption(caption);
 	}
-	
+
 	public void setCaptionTurn(String caption) {
 		turn.renewCaption(caption);
 	}
@@ -593,18 +625,17 @@ public class GameWindow extends JFrame {
 	 */
 
 	public void setCaptionBuys(String caption) {
-		 framework.removeComponent(buy);
-		 buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1,
-		 displayImageBuys, framework, caption);
-		 framework.addComponent(buy);
-//		buy.renewCaption(caption);
+		framework.removeComponent(buy);
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework, caption);
+		framework.addComponent(buy);
+		// buy.renewCaption(caption);
 	}
-	
+
 	/**
-	 *clearing the extra table if needed. 
+	 * clearing the extra table if needed.
 	 * 
 	 */
-	
+
 	public void removeTableComponents() {
 		framework.removeComponent(table);
 		for (int i = 0; i < extraTableCards.size(); i++) {
@@ -612,7 +643,7 @@ public class GameWindow extends JFrame {
 		}
 		framework.removeComponent(table);
 	}
-	
+
 	/**
 	 * a simple button handler to end the action phase
 	 * 
@@ -627,11 +658,11 @@ public class GameWindow extends JFrame {
 	/**
 	 * removing the endActionPhase Button
 	 */
-	
+
 	public void removeEndActionPhaseButton() {
 		framework.removeComponent(endActionPhase);
 	}
-	
+
 	/**
 	 * adding actionPhase Button
 	 */
@@ -639,7 +670,6 @@ public class GameWindow extends JFrame {
 	public void addEndActionPhaseButton() {
 		framework.addComponent(endActionPhase);
 	}
-	
 
 	/**
 	 * adding PlayTreasures Button
@@ -648,7 +678,7 @@ public class GameWindow extends JFrame {
 	public void addPlayTreasuresButton() {
 		framework.addComponent(playTreasures);
 	}
-	
+
 	/**
 	 * removing the PlayTreasure Button
 	 */
@@ -656,7 +686,7 @@ public class GameWindow extends JFrame {
 	public void removePlayTreasuresButton() {
 		framework.removeComponent(playTreasures);
 	}
-	
+
 	/**
 	 * adding EndTurn Button
 	 */
@@ -664,7 +694,7 @@ public class GameWindow extends JFrame {
 	public void addEndTurnButton() {
 		framework.addComponent(endTurn);
 	}
-	
+
 	/**
 	 * removing EndTurn Button
 	 */
@@ -672,7 +702,7 @@ public class GameWindow extends JFrame {
 	public void removeEndTurnButton() {
 		framework.removeComponent(endTurn);
 	}
-	
+
 	/**
 	 * adding StopDiscard Button
 	 */
@@ -681,7 +711,7 @@ public class GameWindow extends JFrame {
 		framework.addComponent(stopDiscard);
 		this.repaint();
 	}
-	
+
 	/**
 	 * removing StopDiscard Button
 	 */
@@ -694,11 +724,11 @@ public class GameWindow extends JFrame {
 	/**
 	 * adding StopTrash Button
 	 */
-	
+
 	public void addStopTrashButton() {
 		framework.addComponent(this.stopTrash);
 	}
-	
+
 	/**
 	 * removing StopTrash Button
 	 */
@@ -710,7 +740,7 @@ public class GameWindow extends JFrame {
 	/**
 	 * adding PutBack Button
 	 */
-	
+
 	public void addPutBackButton() {
 		framework.addComponent(putBack);
 	}
@@ -718,11 +748,11 @@ public class GameWindow extends JFrame {
 	/**
 	 * adding TakeCards Button
 	 */
-	
+
 	public void addTakeCardsButton() {
 		framework.addComponent(takeCards);
 	}
-	
+
 	/**
 	 * adding EndReactionMode Button
 	 */
@@ -730,11 +760,11 @@ public class GameWindow extends JFrame {
 	public void addEndReactionModeButton() {
 		framework.addComponent(this.endReactions);
 	}
-	
+
 	public void removeEndReactionModeButton() {
 		framework.removeComponent(this.endReactions);
 	}
-	
+
 	/**
 	 * adding DiscardDeck Button
 	 */
@@ -742,33 +772,31 @@ public class GameWindow extends JFrame {
 	public void addDiscardDeckButton() {
 		framework.addComponent(this.discardDeck);
 	}
-	
 
 	/**
 	 * adding ActionPhase Button
 	 */
-	
+
 	public void addActionPhaseButton() {
 		framework.addComponent(endActionPhase);
 	}
-	
+
 	public void addTakeThiefCardsButtonRemoveOtherButtons() {
 		framework.addComponent(takeThiefCards);
 		framework.removeComponent(playTreasures);
 		framework.removeComponent(endTurn);
 	}
-	
+
 	public void addPutBackThiefCardsButton() {
 		framework.addComponent(putBackThiefCards);
 	}
-	
+
 	public void addTakeDrawedCard() {
 		framework.addComponent(takeDrawedCard);
 	}
-	
+
 	public void addSetAsideDrawedCard() {
 		framework.addComponent(setAsideDrawedCard);
 	}
-	
 
 }
