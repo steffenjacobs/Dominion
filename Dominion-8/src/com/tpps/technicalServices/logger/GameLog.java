@@ -14,8 +14,8 @@ public class GameLog {
 	 * How-To:
 	 * 
 	 * call GameLog.init()
-	 * get the TextPane with GameLog.getTextPane();
-	 * add this textPane to GameWindow
+	 * get the JPanel with a JTextPane with GameLog.getTextPane();
+	 * add this panel to GameWindow
 	 * add GameLog.log(MsgType.GAME, "XYZ"); to every Game relevant action
 	 * 
 	 * update comments in the following 4 classes: GameLog, GameLogUI, GameLogTextPane, MsgType

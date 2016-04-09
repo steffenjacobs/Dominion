@@ -39,7 +39,8 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param blacklist the blacklist to set
+	 * @param blacklist
+	 *            the blacklist to set
 	 */
 	public void setBlacklist(LinkedList<String> blacklist) {
 		this.blacklist = blacklist;
@@ -53,7 +54,8 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param cardStore the cardStore to set
+	 * @param cardStore
+	 *            the cardStore to set
 	 */
 	public void setCardStore(CardStorageController cardStore) {
 		this.cardStore = cardStore;
@@ -95,7 +97,7 @@ public class ArtificialIntelligence {
 		playTreasures();
 		endTurn();
 	}
-	
+
 	private LinkedList<String> getCardsFromStorage(String... names) {
 		LinkedList<String> list = new LinkedList<String>();
 		for (String cardname : names) {
@@ -111,7 +113,7 @@ public class ArtificialIntelligence {
 	private boolean gameNotFinished() {
 		return GameServer.getInstance().getGameController().isGameNotFinished();
 	}
-	
+
 	private void endTurn() {
 		GameWindow.endTurn.onMouseClick();
 	}
@@ -121,7 +123,7 @@ public class ArtificialIntelligence {
 	}
 
 	public void start() {
-		new Thread(new Runnable() { 
+		new Thread(new Runnable() {
 			public void run() {
 				while (gameNotFinished()) {
 					try {
@@ -129,26 +131,35 @@ public class ArtificialIntelligence {
 						if (myTurn()) {
 							executeTurn();
 						} else {
-//							if (!computing) {
-//								computeNextTurn();
-//							}
+							// if (!computing) {
+							// computeNextTurn();
+							// }
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
-					}	
+					}
 				}
 			}
 		}).start();
 	}
-	
+
 	public static void main(String[] args) {
 		ListMultimap<String, Integer> map = LinkedListMultimap.create();
 		map.put("a", 2);
 		map.put("b", 3);
 		map.put("a", 3);
 		map.put("c", 2);
+		System.out.println("Keys:");
 		for (String b : map.keys()) {
 			System.out.println(b);
+		}
+		System.out.println("\nKeySet:");
+		for (String b : map.keySet()) {
+			System.out.println(b);
+		}
+		System.out.println("\nValues:");
+		for (Integer i : map.values()) {
+			System.out.println(i);
 		}
 	}
 }
