@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Scanner;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.packets.PacketChatHandshake;
 import com.tpps.technicalServices.network.chat.packets.PacketSendAnswer;
@@ -50,7 +51,8 @@ public class ChatClient extends PacketHandler{
 		switch(packet.getType()){
 		case SEND_CHAT_ANSWER:
 			PacketSendAnswer answer = (PacketSendAnswer) packet;
-			System.out.println(answer.getAnswer());
+		//	System.out.println(answer.getAnswer());
+			DominionController.getInstance().reveiveChatMessageFromChatServer(answer.getAnswer());
 			break;
 		default:System.out.println("sth with answer packet is wrong"); break;
 		}	

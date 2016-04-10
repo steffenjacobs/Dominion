@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.card.CardClient;
+import com.tpps.technicalServices.network.chat.client.ChatClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
 import com.tpps.technicalServices.network.game.GameClient;
@@ -51,6 +52,8 @@ public final class DominionController {
 	private BufferedImage originalBackground;
 	private boolean turnFlag;
 	
+	private ChatClient chatClient;
+	
 	/** main entry point for client application */
 	public static void main(String[] stuff) {
 		instance = new DominionController();
@@ -62,12 +65,11 @@ public final class DominionController {
 	}
 
 	private void init() {
-		boolean login = false;
+		boolean login = true;
 		if(login){
 			storageController = new CardStorageController();
 			mainFrame = new MainFrame();
 			loginGuiController = new LoginGUIController();
-			this.loadPanels();
 		}else{
 			this.turnFlag = false;
 			try {
@@ -90,7 +92,23 @@ public final class DominionController {
 		}	
 	}
 	
+	private void initClients(){
+		this.chatClient = new ChatClient(this.username);
+		System.out.println(this.username);
+	}
+	
+	public void sendChatToGlobalChat(String message){
+		this.chatClient.sendMessage(message);
+	}
+	
+	public void reveiveChatMessageFromChatServer(String message){
+		this.globalChatPanel.appendChatFromServer(message);
+	}
+	
 	public void endLogin(){
+		this.loadPanels();
+		this.initClients();
+		
 		mainFrame.setPanel(mainMenuPanel);
 		mainFrame.setVisible(true);
 	}
@@ -105,6 +123,10 @@ public final class DominionController {
 
 	public void setTurnFlag(boolean turnFlag) {
 		this.turnFlag = turnFlag;
+	}
+	
+	public void setUsername(String name){
+		this.username = name;
 	}
 
 	/**
