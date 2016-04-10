@@ -32,7 +32,7 @@ public class ChatClient extends PacketHandler{
 	public ChatClient(String username) {
 		this.sender = username;
 		try {
-			chatclient = new Client(new InetSocketAddress(Addresses.getLocalHost(), 1340), this, false);
+			chatclient = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), 1340), this, false);
 			PacketChatHandshake handshake = new PacketChatHandshake(sender);
 			chatclient.sendMessage(handshake);
 		} catch (IOException e) {
@@ -123,7 +123,7 @@ public class ChatClient extends PacketHandler{
 	}
 	
 	public static void main(String[] args) {
-		ChatClient c = new ChatClient("tai");
+		ChatClient c = new ChatClient("kevin");
 		System.out.println("I am: " + c.sender);
 		Scanner scanInput = new Scanner(System.in);
 		String line = null;

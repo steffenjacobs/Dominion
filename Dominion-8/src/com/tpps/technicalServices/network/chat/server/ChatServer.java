@@ -28,7 +28,7 @@ public class ChatServer extends Server {
 	 * @author jhuhn - Johannes Huhn
 	 */
 	public ChatServer() throws IOException {
-		super(new InetSocketAddress(Addresses.getLocalHost(), port), new ChatPacketHandler());
+		super(new InetSocketAddress(Addresses.getAllInterfaces(), port), new ChatPacketHandler());
 		this.chatpackethandler = (ChatPacketHandler) super.getHandler();
 		this.chatpackethandler.setParent(this);
 		this.chatpackethandler.init(this);
