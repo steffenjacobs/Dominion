@@ -33,6 +33,8 @@ public class Player {
 	private Deck deck;
 
 	private final int id;
+	private String name; // oder sollen wir hier ein Tupel machen mit id und zugehörigem namen?
+	// getter hinzufügen
 	private static int playerID = 0;
 
 	private final int CLIENT_ID;

@@ -38,6 +38,10 @@ import com.tpps.technicalServices.util.GameConstant;
 
 public class GameController {
 
+	public String getActivePlayerName() {
+		return null /* this.activePlayer.getName() */;
+	}
+	
 	private LinkedList<Player> players;
 
 	private boolean gameNotFinished, cardsEnabled;
@@ -72,6 +76,9 @@ public class GameController {
 		this.cardsEnabled = true;
 	}
 
+	/**
+	 * 
+	 */
 	public void setCardsDisabled() {
 		this.cardsEnabled = false;
 	}
@@ -188,6 +195,12 @@ public class GameController {
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param cardID
+	 * @param player
+	 * @return
+	 */
 	public synchronized boolean gain(String cardID, Player player) {
 		System.out.println("gain");
 		try {
@@ -360,6 +373,9 @@ public class GameController {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public synchronized void revealCardAll() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -404,6 +420,9 @@ public class GameController {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public synchronized void gainCurseOthers() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -506,6 +525,9 @@ public class GameController {
 		checkReactionModeFinishedAndEnableGuis();
 	}
 
+	/**
+	 * 
+	 */
 	public void checkWitchFinish() {
 		boolean witchFlag = true;
 		LinkedList<Player> players = new LinkedList<Player>(this.players);
@@ -523,6 +545,9 @@ public class GameController {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public void checkBureaucratFinish() {
 		boolean bureaucratFlag = true;
 		LinkedList<Player> players = new LinkedList<Player>(this.players);
@@ -540,6 +565,10 @@ public class GameController {
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean checkThiefFinish() {
 		boolean thiefFlag = true;
 		LinkedList<Player> players = new LinkedList<Player>(this.players);
@@ -557,6 +586,10 @@ public class GameController {
 		return thiefFlag;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean checkSpyFinish() {
 		boolean spyFlag = true;
 		LinkedList<Player> players = new LinkedList<Player>(this.players);
@@ -576,6 +609,10 @@ public class GameController {
 		return spyFlag;
 	}
 
+	/**
+	 * 
+	 * @param player
+	 */
 	public void reactOnThief(Player player) {
 		// if (allReactionCardsPlayed()) {
 		// try {
@@ -609,6 +646,10 @@ public class GameController {
 		System.out.println("react new thieflist size: " + thiefList.size());
 	}
 
+	/**
+	 * 
+	 * @param player
+	 */
 	public void reactOnSpy(Player player) {
 		player.setRevealMode();
 		player.getRevealList().add(player.getDeck().removeSaveFromDrawPile());
@@ -638,10 +679,12 @@ public class GameController {
 				break;
 			}
 		}
-
 		return allReactionCardsPlayedFlag;
 	}
 
+	/**
+	 * 
+	 */
 	public synchronized void drawOthers() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -833,6 +876,9 @@ public class GameController {
 		this.gamePhase = "actionPhase";
 	}
 
+	/**
+	 * 
+	 */
 	public void isGameFinished() {
 		if (this.gameBoard.getTableForVictoryCards().get("Province").isEmpty()) {
 			endGame();
@@ -865,10 +911,17 @@ public class GameController {
 		return this.thiefList;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public CopyOnWriteArrayList<Player> getSpyList() {
 		return this.spyList;
 	}
 
+	/**
+	 * 
+	 */
 	public void resetThiefList() {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
 	}

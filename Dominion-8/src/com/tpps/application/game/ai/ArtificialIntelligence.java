@@ -79,8 +79,7 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param player
-	 *            the player to set
+	 * @param player the player to set
 	 */
 	public void setPlayer(Player player) {
 		this.player = player;
