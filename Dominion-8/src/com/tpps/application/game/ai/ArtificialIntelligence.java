@@ -21,11 +21,15 @@ public class ArtificialIntelligence {
 	// wenn es nix bringt, mehr karten zu ziehen, ggf. aktionskarten nicht
 	// spielen
 	// LinkedListMultimap mit "buy" oder "play" und karte als Spielplan aufbauen
+	// Player Konstruktor ohne port?
 
+	/**
+	 *  
+	 */
 	public ArtificialIntelligence() {
 		int CLIENT_ID = GameServer.getCLIENT_ID();
 		LinkedList<Card> startSet = GameServer.getInstance().getGameController().getGameBoard().getStartSet();
-		this.player = new Player(CLIENT_ID, 1995, startSet);
+		this.player = new Player(CLIENT_ID, /* random default port */ 1995, startSet);
 		this.blacklist = this.getCardsFromStorage("Curse");
 		this.aiActions = LinkedListMultimap.create();
 		this.cardStore = new CardStorageController("cards.bin");
@@ -39,8 +43,7 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param blacklist
-	 *            the blacklist to set
+	 * @param blacklist the blacklist to set
 	 */
 	public void setBlacklist(LinkedList<String> blacklist) {
 		this.blacklist = blacklist;
@@ -54,8 +57,7 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param cardStore
-	 *            the cardStore to set
+	 * @param cardStore the cardStore to set
 	 */
 	public void setCardStore(CardStorageController cardStore) {
 		this.cardStore = cardStore;
@@ -91,13 +93,20 @@ public class ArtificialIntelligence {
 		return this.player;
 	}
 
+	/**
+	 * 
+	 */
 	public void executeTurn() {
-		myTurn();
 		// LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
 		playTreasures();
 		endTurn();
 	}
 
+	/**
+	 * 
+	 * @param names
+	 * @return
+	 */
 	private LinkedList<String> getCardsFromStorage(String... names) {
 		LinkedList<String> list = new LinkedList<String>();
 		for (String cardname : names) {
@@ -106,24 +115,42 @@ public class ArtificialIntelligence {
 		return list;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private boolean myTurn() {
 		return GameServer.getInstance().getGameController().getActivePlayer().equals(this.player);
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	private boolean gameNotFinished() {
 		return GameServer.getInstance().getGameController().isGameNotFinished();
 	}
 
+	/**
+	 * 
+	 */
 	private void endTurn() {
 		GameWindow.endTurn.onMouseClick();
 	}
 
+	/**
+	 * 
+	 */
 	private void playTreasures() {
 		GameWindow.playTreasures.onMouseClick();
 	}
 
+	/**
+	 * 
+	 */
 	public void start() {
 		new Thread(new Runnable() {
+			
 			public void run() {
 				while (gameNotFinished()) {
 					try {
@@ -140,6 +167,7 @@ public class ArtificialIntelligence {
 					}
 				}
 			}
+			
 		}).start();
 	}
 
