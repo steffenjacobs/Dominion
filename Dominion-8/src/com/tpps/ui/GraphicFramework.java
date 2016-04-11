@@ -178,6 +178,7 @@ public class GraphicFramework extends JPanel {
 		this.mouseListener = new Mouse(this);
 		_parent.getContentPane().addMouseListener(mouseListener);
 		_parent.getContentPane().addMouseMotionListener(mouseListener);
+//		TODO fuer GameWindow an Nishit
 		_parent.addComponentListener(new ComponentAdapter() {
 			private ExecutorService threadPool = Executors.newCachedThreadPool();
 
