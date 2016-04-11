@@ -98,11 +98,12 @@ public class MainMenuButton {
 	 * @param sizeFactorHeight resize factor
 	 */
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight) {
-		this.x = x;
-		this.y = y;		
+		
 		this.actualImage = GraphicsUtil.resize((BufferedImage) this.originalImage,
 				(int) (this.originalImage.getWidth() * sizeFactorWidth),
 				(int) (this.originalImage.getHeight() * sizeFactorHeight));
+		this.x = x - (this.actualImage.getWidth() / 2);
+		this.y = y;		
 	}
 
 	/**

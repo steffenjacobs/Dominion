@@ -133,9 +133,9 @@ public class MainMenuPanel extends JPanel {
 	protected void onResize(double sizeFactorWidth, double sizeFactorHeight){
 		this.actualBackground = GraphicsUtil.resize((BufferedImage) this.originalBackground,
 				this.parent.getWidth(), this.parent.getHeight());
-		for (int i = 0; i < buttons.length; i++) {
+		for (int i = 0; i < buttons.length; i++) {			
 			buttons[i].onResize((parent.getWidth() / 2)
-					- (buttons[i].getActualImage().getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1) + topGap,
+					, (parent.getHeight() / gapFactor) * (i + 1) + topGap,
 					sizeFactorWidth, sizeFactorHeight);
 		}				
 	}
