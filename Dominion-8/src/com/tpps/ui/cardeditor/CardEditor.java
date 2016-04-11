@@ -2,9 +2,11 @@ package com.tpps.ui.cardeditor;
 
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -44,6 +46,8 @@ public class CardEditor extends JFrame {
 	private int width;
 	private int height;
 	private Font smallfont;
+	private GridBagLayout gbl;
+	private GridBagConstraints gbc;
 
 	
 	
@@ -52,10 +56,12 @@ public class CardEditor extends JFrame {
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		loadImage();
 		resizeImage();
+//		iniateLayout();
+		//createButtons();
 		c = this.getContentPane();
 		all = new JLabel(loading);
 //		all.setLayout(new GridLayout(4, 1, 0, 30));
-		all.setLayout(new GridBagLayout());
+//		all.setLayout(new GridBagLayout());
 		this.setSize(width / 5, height / 2);
 		this.setLocationRelativeTo(null);
 		this.setTitle("Card Editor !");
@@ -127,6 +133,7 @@ public class CardEditor extends JFrame {
 	
 	private void createButtons(){
 		uploadImage = new JButton("uploadImage");
+//      add(uploadImage,gbc);
 		increasePrice = new JButton("increasePrice");
 		decreasePrice = new JButton("decreasePrice");
 		standartPrice = new JButton("standardPrice");
@@ -134,6 +141,23 @@ public class CardEditor extends JFrame {
 		cancel= new JButton("cancel");
 	}
 	
+/*	private void iniateLayout() {
+	    GridBagLayout gbl = new GridBagLayout();
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    setLayout(gbl);
+	    gbc.gridwidth = GridBagConstraints.REMAINDER;
+	    gbc.gridheight = GridBagConstraints.REMAINDER;
+	    gbc.gridy = height; 
+	    gbc.gridx = width;
+	    gbc.weightx = 2;
+	    gbc.weighty = 2;
+//	    gbc.fill = GridBagConstraints.BOTH;
+	    gbc.anchor = GridBagConstraints.EAST;
+//	    gbc.insets = new Insets(0, 5, 0, 5);
+	    createButtons();
+		
+	}
+*/
 	
 	private void createTextfield(){
 		nameField = new JTextField("");
