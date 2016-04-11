@@ -16,13 +16,15 @@ public class ArtificialIntelligence {
 	private LinkedList<String> blacklist;
 	private ListMultimap<String, Card> aiActions;
 	private CardStorageController cardStore;
+	private boolean computing;
 
 	// board anschauen, wenn angriffskarten gekauft werden dann defensiv kaufen
 	// wenn es nix bringt, mehr karten zu ziehen, ggf. aktionskarten nicht
 	// spielen
 	// LinkedListMultimap mit "buy" oder "play" und karte als Spielplan aufbauen
 	// Player Konstruktor ohne port?
-
+	// wenn es der potentiell letzte Zug ist, soll die Blacklist ignoriert werden und evtl ein Anwesen gekauft werden
+	
 	/**
 	 *  
 	 */
@@ -30,9 +32,10 @@ public class ArtificialIntelligence {
 		int CLIENT_ID = GameServer.getCLIENT_ID();
 		LinkedList<Card> startSet = GameServer.getInstance().getGameController().getGameBoard().getStartSet();
 		this.player = new Player(CLIENT_ID, /* random default port */ 1995, startSet);
-		this.blacklist = this.getCardsFromStorage("Curse");
+		this.blacklist = this.getCardsFromStorage("Curse", "Copper", "Estate");
 		this.aiActions = LinkedListMultimap.create();
 		this.cardStore = new CardStorageController("cards.bin");
+		this.computing = false;
 	}
 
 	/**
@@ -91,16 +94,7 @@ public class ArtificialIntelligence {
 	public Player getPlayer() {
 		return this.player;
 	}
-
-	/**
-	 * 
-	 */
-	public void executeTurn() {
-		// LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
-		playTreasures();
-		endTurn();
-	}
-
+	
 	/**
 	 * 
 	 * @param names
@@ -113,7 +107,7 @@ public class ArtificialIntelligence {
 		}
 		return list;
 	}
-
+	
 	/**
 	 * 
 	 * @return
@@ -157,9 +151,9 @@ public class ArtificialIntelligence {
 						if (myTurn()) {
 							executeTurn();
 						} else {
-							// if (!computing) {
-							// computeNextTurn();
-							// }
+							 if (!computing) {
+								 computeNextTurn();
+							 }
 						}
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -170,6 +164,22 @@ public class ArtificialIntelligence {
 		}).start();
 	}
 
+	/**
+	 * 
+	 */
+	public void executeTurn() {
+		// LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
+		playTreasures();
+		endTurn();
+	}
+	
+	/**
+	 * 
+	 */
+	private void computeNextTurn() {
+		
+	}
+	
 	public static void main(String[] args) {
 		ListMultimap<String, Integer> map = LinkedListMultimap.create();
 		map.put("a", 2);
