@@ -119,7 +119,7 @@ public class GameWindow extends JFrame {
 		displayImageBuys = this.loadingImage(displayImageBuys, "resources/img/gameObjects/Buys.png");
 		displayImageCoins = this.loadingImage(displayImageCoins, "resources/img/gameObjects/Coins.png");
 		displayImageActions = this.loadingImage(displayImageActions, "resources/img/gameObjects/Actions.png");
-		displayImageTurn = this.loadingImage(displayImageTurn, "resources/img/gameObjects/Actions.png");
+		displayImageTurn = this.loadingImage(displayImageTurn, "resources/img/gameObjects/TurnButton.png");
 		buttonGameImage = this.loadingImage(buttonGameImage, "resources/img/gameObjects/ButtonsGame.png");
 
 		closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, WIDTH, 1, closeImage,
@@ -148,13 +148,13 @@ public class GameWindow extends JFrame {
 		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
 				"End Reactions");
 
-		turn = new DisplayValue(0.1, 0.6, 0.12, 0.12, 1, 1, 20, displayImageTurn, framework, "#");
 		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 20, displayImageActions, framework,
 				String.valueOf(GameConstant.INIT_ACTIONS));
 		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 20, displayImageCoins, framework,
 				String.valueOf(GameConstant.INIT_TREASURES));
 		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 20, displayImageBuys, framework,
 				String.valueOf(GameConstant.INIT_PURCHASES));
+		turn = new DisplayValue(-0.06, 0.6, 0.20, 0.18, 1, 1, 20, displayImageTurn, framework, "#");
 
 		loggerAdding(WIDTH, HEIGHT);
 		chatWindowAdding(WIDTH, HEIGHT);
@@ -407,10 +407,10 @@ public class GameWindow extends JFrame {
 
 			SerializedCard serializedCard = coins.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
-					serializedCard.getCost(), actionCardlds.get(i), 0.95, shift += 0.12, 0.1, 0.1, k++,
+					serializedCard.getCost(), actionCardlds.get(i), 0.94, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 270), framework);
 
-			GFButton button = new ButtonClass(0.945, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, HEIGHT,
+			GFButton button = new ButtonClass(0.935, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, HEIGHT,
 					l++, buttonGameImage, framework, number);
 			framework.addComponent(button);
 			framework.addComponent(card);
@@ -626,7 +626,10 @@ public class GameWindow extends JFrame {
 	}
 
 	public void setCaptionTurn(String caption) {
-		turn.renewCaption(caption);
+//		turn.renewCaption(caption);
+		framework.removeComponent(turn);
+		turn = new DisplayValue(-0.06, 0.6, 0.20, 0.18, 1, 1, 20, displayImageTurn, framework, caption);
+		framework.addComponent(turn);
 	}
 
 	/**

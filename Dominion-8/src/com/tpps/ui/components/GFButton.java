@@ -85,10 +85,18 @@ public abstract class GFButton extends GameObject {
 			e.printStackTrace();
 		}
 		if (this.caption != null) {
+			if(this.caption.matches("\\d*")){
+				super.setRenderedImage(GraphicsUtil.drawStringCentered(
+						GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
+								super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)),
+						this.caption, customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
+			}
+			else{
 			super.setRenderedImage(GraphicsUtil.drawStringCentered(
 					GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
 							super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)),
 					this.caption, customFont.deriveFont(Font.PLAIN, 22), Color.BLACK));
+			}
 		}
 	}
 
