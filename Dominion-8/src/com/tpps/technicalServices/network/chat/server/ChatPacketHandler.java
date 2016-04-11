@@ -12,6 +12,8 @@ import com.tpps.technicalServices.network.chat.packets.PacketSendChatAll;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatCommand;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatToClient;
 import com.tpps.technicalServices.network.core.PacketHandler;
+import com.tpps.technicalServices.network.core.ServerConnectionThread;
+import com.tpps.technicalServices.network.core.events.NetworkListener;
 import com.tpps.technicalServices.network.core.packet.Packet;
 
 /**
@@ -245,6 +247,8 @@ public class ChatPacketHandler extends PacketHandler{
 	public void init(ChatServer server) {
 		this.server = server;
 		this.global = new GlobalChat(server, this);
+		System.out.println(ChatPacketHandler.this.global);
+		this.server.getListenerManager().registerListener(new Listener());
 	}
 	
 	/**
@@ -268,6 +272,46 @@ public class ChatPacketHandler extends PacketHandler{
 		this.global.getClientsByUsername().put(usertogetkicked, port);
 	}
 	
-	
+	private class Listener implements NetworkListener{
+
+		@Override
+		public void onClientConnect(int port) { }
+
+		@Override
+		public void onClientDisconnect(int port) {
+			System.out.println(ChatPacketHandler.this.global);
+			if(!this.kickUserFromGlobalChat(port)){
+				this.kickUserFromChatRoom(port);
+			}
+		}
+		
+		private boolean kickUserFromChatRoom(int port){
+			Iterator<ChatRoom> chatIter = ChatPacketHandler.this.chatrooms.iterator();
+			while(chatIter.hasNext()){
+				ChatRoom temp = chatIter.next();
+				ConcurrentHashMap<String, Integer> clientsByUsername = temp.getClientsByUsername();
+				for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
+					if(port == entry.getValue()){
+						temp.getClientsByUsername().remove(port);
+						System.out.println("kicked " + entry.getKey() + " from chatroom");
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		
+		private boolean kickUserFromGlobalChat(int port){
+		//	ConcurrentHashMap<String, Integer> clientsByUsername = ChatPacketHandler.this.global.getClientsByUsername();
+			for (Entry<String, Integer> entry : ChatPacketHandler.this.global.getClientsByUsername().entrySet()) {
+				if(entry.getValue() == port){
+					ChatPacketHandler.this.global.removeUser(entry.getKey());
+					System.out.println("kicked " + entry.getKey() + " from globalchat");
+					return true;
+				}
+			}
+			return false;
+		}
+	}
 	
 }
