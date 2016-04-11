@@ -28,7 +28,7 @@ public class GlobalChat {
 	}
 	
 	public void sendChatToAll(PacketSendChatAll packet){
-		PacketSendAnswer answer = new PacketSendAnswer(packet.getChatmessage());
+		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + packet.getUsername() + ":" + packet.getChatmessage());
 		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 		    String nickname = entry.getKey();
 		    if(nickname.equals(packet.getUsername())){

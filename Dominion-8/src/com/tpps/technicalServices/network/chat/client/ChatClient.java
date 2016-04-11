@@ -2,7 +2,6 @@ package com.tpps.technicalServices.network.chat.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Scanner;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.network.Addresses;
@@ -124,14 +123,14 @@ public class ChatClient extends PacketHandler{
 		}
 	}
 	
-	public static void main(String[] args) {
-		ChatClient c = new ChatClient("kevin");
-		System.out.println("I am: " + c.sender);
-		Scanner scanInput = new Scanner(System.in);
-		String line = null;
-		while(true){
-			line = scanInput.nextLine();
-			c.sendMessage(line);
-		}
-	}
+//	public static void main(String[] args) {
+//		ChatClient c = new ChatClient("kevin");
+//		System.out.println("I am: " + c.sender);
+//		Scanner scanInput = new Scanner(System.in);
+//		String line = null;
+//		while(true){
+//			line = scanInput.nextLine();
+//			c.sendMessage(line);
+//		}
+//	}
 }

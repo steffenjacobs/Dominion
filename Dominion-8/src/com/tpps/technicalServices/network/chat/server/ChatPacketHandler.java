@@ -12,7 +12,6 @@ import com.tpps.technicalServices.network.chat.packets.PacketSendChatAll;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatCommand;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatToClient;
 import com.tpps.technicalServices.network.core.PacketHandler;
-import com.tpps.technicalServices.network.core.ServerConnectionThread;
 import com.tpps.technicalServices.network.core.events.NetworkListener;
 import com.tpps.technicalServices.network.core.packet.Packet;
 
