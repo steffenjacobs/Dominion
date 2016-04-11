@@ -27,11 +27,11 @@ public class LoginClient extends PacketHandler {
 
 	private Client c_login;
 	private UUID sessionid;
-	private String usernamelogin;
+	private String username;
 	private SessionClient c_session;
 	private LoginGUIController guicontroller;
 
-	private String usernamenewacc;
+//	private String usernamenewacc;
 	private String plaintext;
 
 	/**
@@ -62,7 +62,7 @@ public class LoginClient extends PacketHandler {
 	 *            a String representation of the password in plaintext
 	 */
 	public void handlelogin(String nickname, String plaintext) {
-		this.usernamelogin = nickname;
+		this.username = nickname;
 		Password pw = new Password(plaintext, new String("defsalt")); // defsalt
 																		// is a
 																		// standardsalt
@@ -95,12 +95,12 @@ public class LoginClient extends PacketHandler {
 				guicontroller.getStateOfLoginRequest(check.getState());
 				if (check.getState()) { // Anmeldung erfolgreich, pw richtig
 					this.setSessionid(check.getSessionID());
-					c_session.keepAlive(usernamelogin, true);
+					c_session.keepAlive(username, true);
 				}
 				break;
 			case LOGIN_REGISTER_ANSWER:
 				PacketRegisterAnswer check2 = (PacketRegisterAnswer) answer;
-				guicontroller.getStateOfAccountCreation(check2.getState(), this.usernamenewacc, this.plaintext);
+				guicontroller.getStateOfAccountCreation(check2.getState(), this.username, this.plaintext);
 			default:
 				break;
 			}
@@ -120,7 +120,7 @@ public class LoginClient extends PacketHandler {
 	 *            a String representation of the desired email adress
 	 */
 	public void handleAccountCreation(String username, String plaintext, String email) {
-		this.usernamenewacc = username;
+		this.username = username;
 		this.plaintext = plaintext;
 		Password pw = new Password(plaintext, new String("defsalt"));
 		PacketRegisterRequest packet = new PacketRegisterRequest(username, pw.getHashedPassword(), email);
@@ -156,5 +156,9 @@ public class LoginClient extends PacketHandler {
 	 */
 	public Client getClient() {
 		return c_login;
+	}
+	
+	public String getUsername() {
+		return username;
 	}
 }

@@ -24,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.statisticsscreen.StatisticsScreen;
 
@@ -225,6 +226,17 @@ public class GlobalChatPanel extends JPanel{
 	 * @param chatmessage
 	 */
 	public synchronized void appendChat(String chatmessage) {
+		this.textbox.append(chatmessage);
+		DominionController.getInstance().sendChatToGlobalChat(chatmessage);
+		try {
+			Thread.sleep(1);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
+	}
+	
+	public synchronized void appendChatFromServer(String chatmessage){
 		this.textbox.append(chatmessage);
 		try {
 			Thread.sleep(1);

@@ -84,8 +84,8 @@ public class LoginGUIController{
 		if (state) { // logged in successfully
 			JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.INFORMATION_MESSAGE);
 			this.logingui.dispose();
-			this.domCon = DominionController.getInstance();
-			this.domCon.endLogin();
+			DominionController.getInstance().setUsername(this.loginclient.getUsername());
+			DominionController.getInstance().endLogin();			
 		} else {	//login request failed 
 			JOptionPane.showMessageDialog(null, "Wrong Password or nickname", "Login", JOptionPane.ERROR_MESSAGE);
 		}

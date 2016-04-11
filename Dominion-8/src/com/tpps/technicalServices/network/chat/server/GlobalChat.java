@@ -28,27 +28,27 @@ public class GlobalChat {
 	}
 	
 	public void sendChatToAll(PacketSendChatAll packet){
-		PacketSendAnswer answer = new PacketSendAnswer(packet.getChatmessage());
+		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + packet.getUsername() + ":" + packet.getChatmessage());
 		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 		    String nickname = entry.getKey();
 		    if(nickname.equals(packet.getUsername())){
 		    	continue;
 		    }				    
-		    if(!chathandler.isUserInChatRoom(nickname)){
+		    if(!chathandler.isUserInChatRoom(nickname)){ //nötig ?, copy paste fehler^^
 		    	try {
 					this.server.sendMessage(entry.getValue(), answer);
 				} catch (IOException e) {						
 					e.printStackTrace();
 					continue;
 				}
-		    }
+		   }
 		}
 	}
 	
 	public void sendChatToClient(PacketSendChatToClient packet){
 		String receiver = packet.getReceiver().trim();
 		if(!this.clientsByUsername.containsKey(receiver)){
-			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "The User '" + receiver + "' doesn't exist in global chat");
+			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "The User '" + receiver + "' doesn't exist in global chat \n");
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
 			} catch (IOException e) {			
@@ -64,7 +64,7 @@ public class GlobalChat {
 		System.out.println("Chat Command: " + packet);
 		
 		if(!this.evaluateCommands(packet.getChatmessage(), packet.getSender(), port)){
-			PacketSendAnswer answer2 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "unknown command: " + msg);
+			PacketSendAnswer answer2 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "unknown command: " + msg + "\n");
 			try {
 				server.sendMessage(port, answer2);
 			} catch (IOException e) {				
@@ -76,7 +76,7 @@ public class GlobalChat {
 	
 	
 	private void sendMessageToClient(String sender, String receiver, String msg, int port){
-		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "PM from " + sender + ": " + msg);
+		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "PM from " + sender + ": " + msg + "\n");
 		try {
 			server.sendMessage(port, answer);
 		} catch (IOException e) {
@@ -89,7 +89,7 @@ public class GlobalChat {
 		switch(command.trim()){
 		case servercommand1: //send answer packet back to user, with all comands servercommand1 == /help
 			String allcomands = "Commands: \n/" + servercommand1 + "\n/" + servercommand2 + "\n/"
-			+ servercommand3 + "\n/" + servercommand4;
+			+ servercommand3 + "\n/" + servercommand4 + "\n";
 			PacketSendAnswer answer = new PacketSendAnswer(allcomands);
 			try {
 				server.sendMessage(port, answer);
@@ -157,6 +157,10 @@ public class GlobalChat {
 	}
 	
 	public ConcurrentHashMap<String, Integer> getClientsByUsername() {
-		return clientsByUsername;
+		return this.clientsByUsername;
+	}
+	
+	public void removeUser(String user){
+		this.clientsByUsername.remove(user);		
 	}
 }

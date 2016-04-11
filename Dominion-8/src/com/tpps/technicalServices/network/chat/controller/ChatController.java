@@ -3,7 +3,6 @@ package com.tpps.technicalServices.network.chat.controller;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.packets.PacketChatController;
@@ -53,29 +52,29 @@ public class ChatController extends PacketHandler{
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) { }
 	
-	public static void main(String[] args) {
-		ChatController troller = new ChatController();
-		System.out.println("I am: the chatcontroller");
-		Scanner scanInput = new Scanner(System.in);
-		String line = null;
-		while(true){
-			line = scanInput.nextLine();
-			if(line.startsWith("create")){
-				String[] split = line.split("\\s+");
-				ArrayList<String> list = new ArrayList<String>();
-				list.add(split[1]);
-				list.add(split[2]);
-				list.add(split[3]);
-				list.add(split[4]);
-				troller.createChatRoom(list);
-				System.out.println("create chatroom");
-			}else if(line.startsWith("del")){
-				String[] split = line.split("\\s+");
-				troller.deleteChatroom(split[1]);
-				System.out.println("delete chatroom");
-			}else{
-				System.out.println("bad command");
-			}
-		}
-	}
+//	public static void main(String[] args) {
+//		ChatController troller = new ChatController();
+//		System.out.println("I am: the chatcontroller");
+//		Scanner scanInput = new Scanner(System.in);
+//		String line = null;
+//		while(true){
+//			line = scanInput.nextLine();
+//			if(line.startsWith("create")){
+//				String[] split = line.split("\\s+");
+//				ArrayList<String> list = new ArrayList<String>();
+//				list.add(split[1]);
+//				list.add(split[2]);
+//				list.add(split[3]);
+//				list.add(split[4]);
+//				troller.createChatRoom(list);
+//				System.out.println("create chatroom");
+//			}else if(line.startsWith("del")){
+//				String[] split = line.split("\\s+");
+//				troller.deleteChatroom(split[1]);
+//				System.out.println("delete chatroom");
+//			}else{
+//				System.out.println("bad command");
+//			}
+//		}
+//	}
 }

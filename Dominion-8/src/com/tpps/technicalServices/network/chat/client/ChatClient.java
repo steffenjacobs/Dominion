@@ -2,8 +2,8 @@ package com.tpps.technicalServices.network.chat.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.util.Scanner;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.packets.PacketChatHandshake;
 import com.tpps.technicalServices.network.chat.packets.PacketSendAnswer;
@@ -32,7 +32,7 @@ public class ChatClient extends PacketHandler{
 	public ChatClient(String username) {
 		this.sender = username;
 		try {
-			chatclient = new Client(new InetSocketAddress(Addresses.getLocalHost(), 1340), this, false);
+			chatclient = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), 1340), this, false);
 			PacketChatHandshake handshake = new PacketChatHandshake(sender);
 			chatclient.sendMessage(handshake);
 		} catch (IOException e) {
@@ -50,7 +50,8 @@ public class ChatClient extends PacketHandler{
 		switch(packet.getType()){
 		case SEND_CHAT_ANSWER:
 			PacketSendAnswer answer = (PacketSendAnswer) packet;
-			System.out.println(answer.getAnswer());
+		//	System.out.println(answer.getAnswer());
+			DominionController.getInstance().reveiveChatMessageFromChatServer(answer.getAnswer());
 			break;
 		default:System.out.println("sth with answer packet is wrong"); break;
 		}	
@@ -122,14 +123,14 @@ public class ChatClient extends PacketHandler{
 		}
 	}
 	
-	public static void main(String[] args) {
-		ChatClient c = new ChatClient("tai");
-		System.out.println("I am: " + c.sender);
-		Scanner scanInput = new Scanner(System.in);
-		String line = null;
-		while(true){
-			line = scanInput.nextLine();
-			c.sendMessage(line);
-		}
-	}
+//	public static void main(String[] args) {
+//		ChatClient c = new ChatClient("kevin");
+//		System.out.println("I am: " + c.sender);
+//		Scanner scanInput = new Scanner(System.in);
+//		String line = null;
+//		while(true){
+//			line = scanInput.nextLine();
+//			c.sendMessage(line);
+//		}
+//	}
 }
