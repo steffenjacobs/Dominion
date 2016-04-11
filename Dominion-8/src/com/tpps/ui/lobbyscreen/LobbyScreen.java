@@ -11,6 +11,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import com.tpps.ui.statisticsscreen.StatisticsBoard;
+
 public class LobbyScreen extends JFrame{
 
 	private static final long serialVersionUID = 1L;
@@ -38,7 +40,7 @@ public class LobbyScreen extends JFrame{
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	
-		right = new PlayerSettingsPanel();
+		right = new PlayerSettingsPanel(new StatisticsBoard());
 		c.add(new GlobalChatPanel());
 		c.add(right);
 		

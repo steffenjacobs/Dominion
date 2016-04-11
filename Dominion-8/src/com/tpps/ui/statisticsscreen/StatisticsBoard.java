@@ -17,6 +17,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 
@@ -31,11 +32,13 @@ public class StatisticsBoard extends JPanel{
 	private final Font font = new Font("Calibri", Font.PLAIN, 15);
 	private final Font headFont = new Font("Arial Black", Font.BOLD, 14);
 	private JTable table;
+	private DefaultTableModel model; 
 	
 	Object rowData[][] = { { "Row1-Column1", "Row1-Column2", "Row1-Column3"}, { "Row2-Column1", "Row2-Column2", "Row2-Column3"} };
 	Object columnNames[] = { "nickname", "wins", "losses", "w/l ratio", "total matches" , "rank", "playtime"};
 	
 	public StatisticsBoard() {
+		model = new DefaultTableModel();
 		rowData = this.initRowData();
 		this.setVisible(true);
 		this.setOpaque(false);
@@ -59,15 +62,27 @@ public class StatisticsBoard extends JPanel{
 	}
 	
 	public void setTableData(String[][] statistics){
-		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
+		this.clearTable();			
 		for (int i = 0; i < statistics.length; i++) {
-			model.addRow(statistics);
+			this.model.addRow(statistics[i]);
+		}
+	}
+	
+	private void clearTable(){
+		this.model = (DefaultTableModel)table.getModel();
+		this.model.getDataVector().removeAllElements();
+		this.model.fireTableDataChanged();
+	}
+	
+	private void initColumnData(){
+		for (int i = 0; i < columnNames.length; i++) {
+			this.model.addColumn(columnNames[i]);
 		}
 	}
 	
 	private JScrollPane createTable(){
 		this.loadImage();
-		this.table = new JTable(rowData, columnNames){
+		this.table = new JTable(model){
 			private static final long serialVersionUID = 1L;
 
 //			@Override
@@ -81,6 +96,7 @@ public class StatisticsBoard extends JPanel{
 //				return renderer;	//returns custom cell renderererer
 //			}
 		};
+		this.initColumnData();
 		table.setOpaque(false);
 		((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);
 		table.setForeground(Color.WHITE);		

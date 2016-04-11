@@ -55,9 +55,12 @@ public class PlayerSettingsPanel extends JPanel{
 	private static int IMG_TO_BOTTOM = 15;
 	private static final int IMG_TO_EDGE = 30;
 	
+	private StatisticsBoard statisticsBoardPanel;
+	
 	JPanel panel;
 	
-	public PlayerSettingsPanel() {
+	public PlayerSettingsPanel(StatisticsBoard statisticsBoardPanel) {
+		this.statisticsBoardPanel = statisticsBoardPanel;
 		this.setOpaque(false);
 		this.setLayout(new GridLayout(3,1, 0, SPACE_PANEL_TO_PANEL));
 
@@ -140,7 +143,7 @@ public class PlayerSettingsPanel extends JPanel{
 		JTextField header = this.createHeader("Statistics: ");
 		
 		panel.add(header, BorderLayout.PAGE_START);
-		panel.add(new StatisticsBoard(), BorderLayout.CENTER);
+		panel.add(this.statisticsBoardPanel, BorderLayout.CENTER);
 		panel.add(Box.createHorizontalStrut(10), BorderLayout.LINE_START);
 		panel.add(Box.createHorizontalStrut(10), BorderLayout.LINE_END);
 		return panel;
