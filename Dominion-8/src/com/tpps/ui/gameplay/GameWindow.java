@@ -30,6 +30,7 @@ import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.DisplayValue;
 import com.tpps.ui.components.GFButton;
 import com.tpps.ui.components.GameBackground;
+import com.tpps.ui.lobbyscreen.ChatWindowForInGame;
 
 /**
  * Main GUI Window where all compenents are merged together and ready for
@@ -53,6 +54,7 @@ public class GameWindow extends JFrame {
 	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards, middleCards, extraTableCards;
 	private LinkedList<GFButton> victoryButtons, coinButtons, tableButtons;
 	private ButtonClass stopDiscard, stopTrash, discardDeck, endReactions;
+	private ChatWindowForInGame chatWindow;
 	private int heightRelative;
 	private int widthRelative;
 	private GameLogTextPane loggerPane;
@@ -80,10 +82,11 @@ public class GameWindow extends JFrame {
 		final int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
 		final int HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-		System.out.println(WIDTH+"knlsd");
-		System.out.println(HEIGHT+"sdopj");
+		System.out.println(WIDTH + "knlsd");
+		System.out.println(HEIGHT + "sdopj");
 
-		this.loggerPane= GameLog.getTextPane();
+		this.loggerPane = GameLog.getTextPane();
+		this.chatWindow = new ChatWindowForInGame();
 
 		this.handCards = new LinkedList<Card>();
 		this.tableCards = new LinkedList<Card>();
@@ -106,8 +109,7 @@ public class GameWindow extends JFrame {
 		// this.setVisible(true);
 		framework = new GraphicFramework(this);
 		framework.setLayout(null);
-		
-		
+
 		this.add(framework);
 
 		backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
@@ -146,15 +148,16 @@ public class GameWindow extends JFrame {
 		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
 				"End Reactions");
 
-		turn = new DisplayValue(0.1, 0.2, 0.12, 0.12, 1, 1, 20, displayImageTurn, framework, "#");
+		turn = new DisplayValue(0.1, 0.6, 0.12, 0.12, 1, 1, 20, displayImageTurn, framework, "#");
 		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 20, displayImageActions, framework,
 				String.valueOf(GameConstant.INIT_ACTIONS));
 		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 20, displayImageCoins, framework,
 				String.valueOf(GameConstant.INIT_TREASURES));
 		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 20, displayImageBuys, framework,
 				String.valueOf(GameConstant.INIT_PURCHASES));
-		
-		loggerAdding(WIDTH,HEIGHT);
+
+		loggerAdding(WIDTH, HEIGHT);
+		chatWindowAdding(WIDTH, HEIGHT);
 
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
@@ -193,11 +196,16 @@ public class GameWindow extends JFrame {
 	}
 
 	private void loggerAdding(int width, int height) {
-		 GameLog.init();
-		 loggerPane.setBounds((int) (width*0.5), (int) (height*0.35), 200, 100);
-		 framework.add(loggerPane);
-		 GameLog.log(MsgType.GAME, "XYZ");
-		 
+		GameLog.init();
+		loggerPane.setBounds((int) (width * 0.5), (int) (height * 0.35), 200, 100);
+		framework.add(loggerPane);
+		GameLog.log(MsgType.GAME, "XYZ");
+
+	}
+
+	private void chatWindowAdding(int width, int height) {
+		chatWindow.setBounds((int) (width * 0.045), (int) (height * 0.03), 300, 150);
+		framework.add(chatWindow);
 	}
 
 	/**
@@ -274,6 +282,7 @@ public class GameWindow extends JFrame {
 				Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 				matcher.find();
 				String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
+				number = String.valueOf((Integer.parseInt(number)+1));
 
 				if (i < 5) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
@@ -394,6 +403,7 @@ public class GameWindow extends JFrame {
 			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 			matcher.find();
 			String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
+			number = String.valueOf((Integer.parseInt(number)+1));
 
 			SerializedCard serializedCard = coins.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
@@ -511,13 +521,13 @@ public class GameWindow extends JFrame {
 				if (i == 0) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), start += shift,
-							0.70, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				} else {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							start += (shift + 0.1), 0.70, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							start += (shift + 0.1), 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				}
@@ -525,13 +535,13 @@ public class GameWindow extends JFrame {
 				if (i == 0) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							startsmall += shift, 0.70, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							startsmall += shift, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				} else {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							startsmall += shiftsmall + 0.1, 0.70, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							startsmall += shiftsmall + 0.1, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				}
@@ -571,6 +581,7 @@ public class GameWindow extends JFrame {
 			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 			matcher.find();
 			String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
+			number = String.valueOf((Integer.parseInt(number)+1));
 
 			SerializedCard serializedCard = victory.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
