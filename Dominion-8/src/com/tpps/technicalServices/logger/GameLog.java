@@ -5,6 +5,8 @@ import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.ColorUtil;
 
@@ -165,7 +167,7 @@ public class GameLog {
 			String timestamp = java.net.InetAddress.getLocalHost().getHostName() + ":~@"
 					+ System.getProperty("user.name") + " " + "["
 					+ new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()) + "]";
-			String msgtype = type.getSlang();
+			String msgtype = type.getMessage();
 			if (ansiFlag && ansi)
 				line.append(ANSIUtil.getCyanText(timestamp) + " " + ANSIUtil.getRedText(msgtype) + " > ");
 			else
@@ -177,7 +179,7 @@ public class GameLog {
 	}
 	
 	/**
-	 * log the message with message type to the ui and console (if GameLog.uiFlag is true)
+	 * log the message with message type to the ui (if GameLog.guiPossible is true) and console
 	 * 
 	 * @param type the message type of the message to log
 	 * @param line the line to log
@@ -185,10 +187,16 @@ public class GameLog {
 	public static void log(MsgType type, String line) {
 		if (isInitialized) {
 			if (type.getDisplay()) {
-				writeToConsole(computeLine(type, true) + line);
-				// if (guiPossible) {
-				write(computeLine(type, false) + line, type.getColor(), type.getTimeStamp());
-				// }
+			//  die folgende Zeile würde vor jeden GameLog.log(MsgType.GAME, ""); den Namen des aktuellen Spielers setzen
+			//  da man aber evtl schreiben will "--- Nico's Turn ---" und nicht Nico: --- Nico's Turn --- denke ich es ist besser
+			//  das immer von Hand davor zu schreiben
+			//	String msg = type.equals(MsgType.GAME) ? GameServer.getInstance().getGameController().getActivePlayerName() + ": " : "";
+				String msg = "";
+				msg += computeLine(type, true) + line;
+				writeToConsole(msg);
+			//  if (guiPossible) {
+					write(msg, type.getColor(), type.getTimeStamp());
+			//  }
 			}
 		} else { // prevent Null Pointers
 			init();
