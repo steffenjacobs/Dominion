@@ -19,6 +19,7 @@ import com.tpps.technicalServices.network.login.packets.PacketLoginCheckAnswer;
 import com.tpps.technicalServices.network.login.packets.PacketLoginCheckRequest;
 import com.tpps.technicalServices.network.login.packets.PacketRegisterAnswer;
 import com.tpps.technicalServices.network.login.packets.PacketRegisterRequest;
+import com.tpps.technicalServices.network.statisticServer.Packet.PacketGetAllStatistics;
 
 /**
  * This class delivers all functionalities that are used by the LoginServer
@@ -124,6 +125,15 @@ public class LoginPacketHandler extends PacketHandler{
 			System.out.println("finished a creating account procedure");
 			System.out.println("----------------------------");
 			break;
+		case GET_ALL_STATISTICS:
+			PacketGetAllStatistics pacman = (PacketGetAllStatistics) packet;
+			pacman.setAllStatistics(SQLStatisticsHandler.getAllStatistics());
+			try {
+				server.sendMessage(port, pacman);
+			} catch (IOException e) {			
+				e.printStackTrace();
+			}
+			System.out.println("Server sent a packet with all statistics");
 		default:break;
 		}
 	}

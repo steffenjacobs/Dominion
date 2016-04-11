@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -29,6 +30,7 @@ public class StatisticsBoard extends JPanel{
 	private BufferedImage blackBeauty;
 	private final Font font = new Font("Calibri", Font.PLAIN, 15);
 	private final Font headFont = new Font("Arial Black", Font.BOLD, 14);
+	private JTable table;
 	
 	Object rowData[][] = { { "Row1-Column1", "Row1-Column2", "Row1-Column3"}, { "Row2-Column1", "Row2-Column2", "Row2-Column3"} };
 	Object columnNames[] = { "nickname", "wins", "losses", "w/l ratio", "total matches" , "rank", "playtime"};
@@ -56,9 +58,16 @@ public class StatisticsBoard extends JPanel{
 		return data;
 	}
 	
+	public void setTableData(String[][] statistics){
+		DefaultTableModel model = (DefaultTableModel) this.table.getModel();
+		for (int i = 0; i < statistics.length; i++) {
+			model.addRow(statistics);
+		}
+	}
+	
 	private JScrollPane createTable(){
 		this.loadImage();
-		JTable table = new JTable(rowData, columnNames){
+		this.table = new JTable(rowData, columnNames){
 			private static final long serialVersionUID = 1L;
 
 //			@Override

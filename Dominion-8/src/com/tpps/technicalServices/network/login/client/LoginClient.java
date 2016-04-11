@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.clientSession.server.SessionServer;
@@ -15,6 +16,7 @@ import com.tpps.technicalServices.network.login.packets.PacketLoginCheckAnswer;
 import com.tpps.technicalServices.network.login.packets.PacketLoginCheckRequest;
 import com.tpps.technicalServices.network.login.packets.PacketRegisterAnswer;
 import com.tpps.technicalServices.network.login.packets.PacketRegisterRequest;
+import com.tpps.technicalServices.network.statisticServer.Packet.PacketGetAllStatistics;
 import com.tpps.ui.loginscreen.LoginGUIController;
 
 /**
@@ -101,10 +103,20 @@ public class LoginClient extends PacketHandler {
 			case LOGIN_REGISTER_ANSWER:
 				PacketRegisterAnswer check2 = (PacketRegisterAnswer) answer;
 				guicontroller.getStateOfAccountCreation(check2.getState(), this.username, this.plaintext);
+				break;
+			case GET_ALL_STATISTICS:
+				this.handleAllStatistics((PacketGetAllStatistics) answer);
+				break;
 			default:
 				break;
 			}
 		}).start();
+	}
+	
+	private void handleAllStatistics(PacketGetAllStatistics packet){
+		String[][] allStatistics = packet.getAllStatistics();
+		System.out.println("received all statistics");
+		DominionController.getInstance().loadStatisticsToGui(allStatistics);
 	}
 
 	/**
@@ -130,6 +142,14 @@ public class LoginClient extends PacketHandler {
 			e.printStackTrace();
 		}
 		System.out.println("client sent accountinformaion to server to create a new account");
+	}
+	
+	public void sendPacketForAllStatistics(){
+		try {
+			this.c_login.sendMessage(new PacketGetAllStatistics());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

@@ -92,6 +92,14 @@ public final class DominionController {
 		}	
 	}
 	
+	public void loadStatisticsToGui(String[][] statistics){
+		this.statisticsBoardPanel.setTableData(statistics);
+	}
+	
+	public void sendPacketToGetStatistics(){
+		this.loginGuiController.getLoginclient().sendPacketForAllStatistics();
+	}
+	
 	private void initClients(){
 		this.chatClient = new ChatClient(this.username);
 		System.out.println(this.username);

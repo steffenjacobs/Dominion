@@ -155,6 +155,7 @@ public class MainMenuPanel extends JPanel {
 			MyAudioPlayer.doClick();
 			if (buttons[0].isOn(e.getX(), e.getY())) {
 				MainMenuPanel.this.parent.dispose();
+				DominionController.getInstance().sendPacketToGetStatistics();
 			}
 			if (buttons[1].isOn(e.getX(), e.getY())) {				
 				DominionController.getInstance().joinLobbyGui();

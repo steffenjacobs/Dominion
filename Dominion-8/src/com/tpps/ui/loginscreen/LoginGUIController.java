@@ -94,4 +94,8 @@ public class LoginGUIController{
 	public static void main(String[] args) {
 		new LoginGUIController();
 	}
+	
+	public LoginClient getLoginclient() {
+		return loginclient;
+	}
 }
