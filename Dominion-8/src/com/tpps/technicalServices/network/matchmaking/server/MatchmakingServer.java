@@ -7,6 +7,7 @@ import java.net.SocketAddress;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.Server;
+import com.tpps.technicalServices.network.core.events.NetworkListener;
 
 public class MatchmakingServer extends Server {
 
@@ -21,6 +22,18 @@ public class MatchmakingServer extends Server {
 		super(address, _handler);
 		super.getListenerManager().registerListener(new MatchmakingListener());
 		// TODO Auto-generated constructor stub
+	}
+	
+	private static class MatchmakingListener implements NetworkListener {
+
+		@Override
+		public void onClientConnect(int port) {
+		}
+
+		@Override
+		public void onClientDisconnect(int port) {
+			MatchmakingController.onPlayerDisconnect(port);
+		}
 	}
 
 }
