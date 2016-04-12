@@ -5,13 +5,15 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
 
 public class PacketMatchmakingAnswer extends Packet {
 	private static final long serialVersionUID = 4633962878878433551L;
-	
-	private final PacketMatchmakingRequest request;
-	private final int answerCode;
-	
-	
 
-	protected PacketMatchmakingAnswer(PacketMatchmakingRequest req, int answerCode) {
+	private final PacketMatchmakingRequest request;
+
+	/*
+	 * answerCode = 0: Error: Bad Session 1: Success
+	 */
+	private final int answerCode;
+
+	public PacketMatchmakingAnswer(PacketMatchmakingRequest req, int answerCode) {
 		super(PacketType.MATCHMAKING_ANSWER);
 		this.answerCode = answerCode;
 		this.request = req;
