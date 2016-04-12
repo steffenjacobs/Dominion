@@ -94,40 +94,40 @@ public class StatisticsTest {
 	//	System.out.println("RATIO SQL: " + ratioSQL2 + " --- RATIO JAVA: " + ratioJ2);
 	}
 	
-	@Test
-	public void testDescription(){
-		String description = "testdescription";
-		SQLStatisticsHandler.setDescription(testnickname, description);
-		String descriptionSQL = SQLStatisticsHandler.getDescription(testnickname);
-	//	assertEquals(description, descriptionSQL);
-		System.out.println("desc-test: " + description.equals(descriptionSQL));
-	}
-	
-	@Test
-	public void testRank(){
-		String rank = "gold";
-		SQLStatisticsHandler.setRank(testnickname, rank);
-		String rankSQL = SQLStatisticsHandler.getRank(testnickname);
-	//	assertEquals(description, descriptionSQL);
-		System.out.println("desc-test: " + rank.equals(rankSQL));
-	}
-	
-	@Test
-	public void testGamesPlayed(){
-		int gamesplayed = SQLStatisticsHandler.getGamesPlayed(testnickname);
-		SQLStatisticsHandler.addWinOrLoss(testnickname, true);
-		int gamesplayedSQL = SQLStatisticsHandler.getGamesPlayed(testnickname);
-		assertEquals(++gamesplayed, gamesplayedSQL);
-	}
-	
-	@Test
-	public void testPlaytime(){
-		long playtime = SQLStatisticsHandler.getPlaytime(testnickname);
-		long timeToAdd = 20000;
-		SQLStatisticsHandler.addPlaytime(testnickname, timeToAdd);
-
-		assertEquals(SQLStatisticsHandler.getPlaytime(testnickname), playtime + timeToAdd);
-	}
+//	@Test
+//	public void testDescription(){
+//		String description = "testdescription";
+//		SQLStatisticsHandler.setDescription(testnickname, description);
+//		String descriptionSQL = SQLStatisticsHandler.getDescription(testnickname);
+//	//	assertEquals(description, descriptionSQL);
+//		System.out.println("desc-test: " + description.equals(descriptionSQL));
+//	}
+//	
+//	@Test
+//	public void testRank(){
+//		String rank = "gold";
+//		SQLStatisticsHandler.setRank(testnickname, rank);
+//		String rankSQL = SQLStatisticsHandler.getRank(testnickname);
+//	//	assertEquals(description, descriptionSQL);
+//		System.out.println("desc-test: " + rank.equals(rankSQL));
+//	}
+//	
+//	@Test
+//	public void testGamesPlayed(){
+//		int gamesplayed = SQLStatisticsHandler.getGamesPlayed(testnickname);
+//		SQLStatisticsHandler.addWinOrLoss(testnickname, true);
+//		int gamesplayedSQL = SQLStatisticsHandler.getGamesPlayed(testnickname);
+//		assertEquals(++gamesplayed, gamesplayedSQL);
+//	}
+//	
+//	@Test
+//	public void testPlaytime(){
+//		long playtime = SQLStatisticsHandler.getPlaytime(testnickname);
+//		long timeToAdd = 20000;
+//		SQLStatisticsHandler.addPlaytime(testnickname, timeToAdd);
+//
+//		assertEquals(SQLStatisticsHandler.getPlaytime(testnickname), playtime + timeToAdd);
+//	}
 	
 	public static void main(String[] args) {
 		StatisticsTest t = new StatisticsTest();
