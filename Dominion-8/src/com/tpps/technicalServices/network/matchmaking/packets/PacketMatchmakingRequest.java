@@ -5,7 +5,7 @@ import java.util.UUID;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
-public class MatchmakingRequest extends Packet {
+public class PacketMatchmakingRequest extends Packet {
 	private static final long serialVersionUID = 1569507891993590996L;
 	
 	private final String playerName;
@@ -19,7 +19,7 @@ public class MatchmakingRequest extends Packet {
 		return playerID;
 	}
 
-	public MatchmakingRequest(String name, UUID uid) {
+	public PacketMatchmakingRequest(String name, UUID uid) {
 		super(PacketType.MATCHMAKING_REQUEST);
 		this.playerID = uid;
 		this.playerName = name;
