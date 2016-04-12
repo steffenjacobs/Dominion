@@ -9,6 +9,12 @@ public class GameLobby {
 	private int lobbyScore = 0;
 
 	private CopyOnWriteArrayList<MPlayer> players = new CopyOnWriteArrayList<>();
+	private long startTime=0;
+	
+
+	public long getStartTime() {
+		return startTime;
+	}
 
 	public void joinPlayer(MPlayer player) {
 		this.updateLobbyScore();
@@ -32,6 +38,7 @@ public class GameLobby {
 		}
 		if (this.players.size() >= MAX_LOBBY_SIZE) {
 			MatchmakingController.startGame(this);
+			this.startTime = System.currentTimeMillis();
 		}
 	}
 

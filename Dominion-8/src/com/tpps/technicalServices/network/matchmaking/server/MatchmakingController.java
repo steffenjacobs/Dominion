@@ -4,16 +4,19 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
+
 public final class MatchmakingController {
 
 	static {
-		connectedPlayersByPort = new ConcurrentHashMap<Integer, MPlayer>();
+		playersByPort = new ConcurrentHashMap<Integer, MPlayer>();
 		lobbies = new CopyOnWriteArrayList<>();
 		lobbiesByPlayer = new ConcurrentHashMap<>();
 	}
 
-	private static ConcurrentHashMap<Integer, MPlayer> connectedPlayersByPort;
+	private static ConcurrentHashMap<Integer, MPlayer> playersByPort;
 	private static ConcurrentHashMap<MPlayer, Integer> connectedPortsByPlayer;
+	private static ConcurrentHashMap<String, MPlayer> playersByName;
 	private static ConcurrentHashMap<MPlayer, GameLobby> lobbiesByPlayer;
 
 	private static CopyOnWriteArrayList<GameLobby> lobbies;
@@ -53,7 +56,7 @@ public final class MatchmakingController {
 			lobbies.add(lobby);
 			joinLobby(player, lobby);
 		} else if (lobbies.size() == 1) {
-			GameLobby lobby = lobbies.get(connectedPlayersByPort.keys().nextElement());
+			GameLobby lobby = lobbies.get(playersByPort.keys().nextElement());
 			joinLobby(player, lobby);
 		} else {
 			Iterator<GameLobby> it = lobbies.iterator();
@@ -73,14 +76,16 @@ public final class MatchmakingController {
 	}
 
 	public static void addPlayer(MPlayer player) {
-		connectedPlayersByPort.put(player.getConnectionPort(), player);
+		playersByPort.put(player.getConnectionPort(), player);
 		connectedPortsByPlayer.put(player, player.getConnectionPort());
+		playersByName.put(player.getPlayerName(), player);
 		findLobbyForPlayer(player);
 	}
 
 	private static void removePlayer(MPlayer player) {
-		connectedPlayersByPort.remove(player.getConnectionPort());
+		playersByPort.remove(player.getConnectionPort());
 		connectedPortsByPlayer.remove(player);
+		playersByName.remove(player.getPlayerName());
 		GameLobby lobby = lobbiesByPlayer.remove(player);
 		if (lobby != null) {
 			lobby.quitPlayer(player);
@@ -91,6 +96,21 @@ public final class MatchmakingController {
 	}
 
 	public static void onPlayerDisconnect(int port) {
-		removePlayer(connectedPlayersByPort.get(port));
+		removePlayer(playersByPort.get(port));
+	}
+
+	public static void onGameEnd(String winner, String[] players) {
+		GameLobby lobby = lobbiesByPlayer.get(winner);
+		for (String p : players) {
+			SQLStatisticsHandler.addOverallPlaytime(p, System.currentTimeMillis() - lobby.getStartTime());
+			if (!p.equals(winner)) {
+				SQLStatisticsHandler.addWinOrLoss(p, false);
+
+			}
+
+			removePlayer(playersByName.get(p));
+		}
+		SQLStatisticsHandler.addWinOrLoss(winner, true);
+
 	}
 }

@@ -11,6 +11,7 @@ import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketGameEnd;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingAnswer;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingRequest;
 
@@ -33,6 +34,11 @@ public class MatchmakingPacketHandler extends PacketHandler {
 		case MATCHMAKING_ABORT:
 			// TODO: stop running validation-service if necessary
 			MatchmakingController.onPlayerDisconnect(port);
+			break;
+		case GAME_END:
+			PacketGameEnd endPacket = (PacketGameEnd) packet;
+			MatchmakingController.onGameEnd(endPacket.getWinner(), endPacket.getPlayers());
+			//called when the game ends
 			break;
 		default:
 			GameLog.log(MsgType.NETWORK_ERROR, "Bad packet received: " + packet);
