@@ -445,8 +445,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 						nextActivePlayer(port);
 					}
 				}
-			} catch (SynchronisationException e) {
-				e.printStackTrace();
+			} catch (SynchronisationException|NoSuchElementException e) {
+				GameLog.log(MsgType.GAME, "The card you wanted to buy is not on the board.");
 			}
 			this.server.getGameController().isGameFinished();
 			return;
@@ -493,7 +493,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(),
 					gameBoard.getActionCardIDs()));
 		} catch (SynchronisationException e) {
-			e.printStackTrace();
+			GameLog.log(MsgType.GAME, "The card you wanted to buy is not on the board.");
 		}
 	}
 

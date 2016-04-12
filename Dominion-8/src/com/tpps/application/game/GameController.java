@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.sun.xml.internal.ws.api.pipe.ThrowableContainerPropertySet;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
@@ -219,7 +220,7 @@ public class GameController {
 				return true;
 			}
 		} catch (SynchronisationException e) {
-			e.printStackTrace();
+			GameLog.log(MsgType.GAME, "Card is not on the board please click on an another card.");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -234,10 +235,10 @@ public class GameController {
 	 * @return
 	 * @throws SynchronisationException
 	 */
-	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException {
+	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException, NoSuchElementException {
 		System.out.println("checkBoardCardExists");
 		LinkedList<Card> cards = this.getGameBoard().findCardListFromBoard(cardID);
-		Card card = cards.get(cards.size() - 1);
+		Card card = cards.getLast();
 		Player player = this.getActivePlayer();
 		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0 && player.getCoins() >= card.getCost()) {
 			player.setBuys(player.getBuys() - 1);

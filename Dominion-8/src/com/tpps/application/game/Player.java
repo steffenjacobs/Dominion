@@ -9,6 +9,8 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.game.card.Tuple;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
@@ -570,7 +572,7 @@ public class Player {
 			try {
 				throw new SynchronisationException();
 			} catch (SynchronisationException e) {
-				e.printStackTrace();
+				GameLog.log(MsgType.GAME, "Card was not found on hand.");
 			}
 		}
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
@@ -653,7 +655,7 @@ public class Player {
 								.getTableForTreasureCards().get("Silver").removeLast());
 					}
 				} catch (NoSuchElementException e) {
-					System.out.println("no more silver card on the board");
+					GameLog.log(MsgType.GAME, "couldn't gain the card because ther are no more silver card on the board");
 				}
 				break;
 			case DISCARD_CARD:

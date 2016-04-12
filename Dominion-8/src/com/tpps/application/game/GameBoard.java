@@ -3,10 +3,12 @@ package com.tpps.application.game;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.sun.xml.internal.ws.api.pipe.ThrowableContainerPropertySet;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
@@ -416,7 +418,7 @@ public class GameBoard {
 	 * @throws SynchronisationException
 	 */
 	/*------- schoener machen? -----------*/
-	public LinkedList<Card> findCardListFromBoard(String cardId) throws SynchronisationException {
+	public LinkedList<Card> findCardListFromBoard(String cardId) throws SynchronisationException, NoSuchElementException {
 		Matcher matcher = Pattern.compile("\\d+").matcher(cardId);
 		matcher.find();	
 		
