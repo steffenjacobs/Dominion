@@ -25,7 +25,7 @@ public class GameLobby {
 	private void updateLobbyScore() {
 		this.lobbyScore = 0;
 		for (MPlayer player : this.players) {
-			this.lobbyScore = getLobbyScore() + player.calculateMatchmakingScore();
+			this.lobbyScore = getLobbyScore() + player.getScore();
 		}
 		if (this.players.size() > 0) {
 			this.lobbyScore = this.getLobbyScore() / this.players.size();

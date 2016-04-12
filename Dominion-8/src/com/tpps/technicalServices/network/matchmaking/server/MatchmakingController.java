@@ -46,7 +46,7 @@ public final class MatchmakingController {
 	}
 
 	private static void findLobbyForPlayer(MPlayer player) {
-		int score = player.calculateMatchmakingScore();
+		int score = player.getScore();
 
 		if (lobbies.isEmpty()) {
 			GameLobby lobby = new GameLobby();

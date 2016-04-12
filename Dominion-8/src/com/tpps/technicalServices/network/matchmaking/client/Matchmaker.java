@@ -43,14 +43,17 @@ public final class Matchmaker {
 
 			switch (packet.getType()) {
 			case MATCHMAKING_ANSWER:
+				//is called when the player is put into a matchmaking-lobby
 				// TODO: show LobbyScreen
 				break;
 			case MATCHMAKING_PLAYER_INFO:
+				//is called when a player joined or quitted the lobby
 				// TODO: add player and remove one instance of "Waiting for
 				// player..." @LobbyScreen
 
 				break;
 			case MATCHMAKING_SUCCESSFUL:
+				//is called, when the lobby is full and the game starts
 				// TODO: connect to the gameServer & start the round
 				break;
 			default:
