@@ -212,10 +212,13 @@ public class Card extends GameObject {
 	 */
 	@Override
 	public void onMouseEnter() {
-//		TODO card specific hover. 
-		gameBackground = new GameBackground(relativeX+0.1 , relativeY , relativeWidth+ 0.07, relativeHeight+ 0.21, 30,
-				sourceImage, parent);
-		parent.addComponent(gameBackground);
+		// TODO card specific hover.
+		if (!(name.equals("Copper") || name.equals("Silver") || name.equals("Gold") || name.equals("Curse")
+				|| name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
+			gameBackground = new GameBackground(relativeX + 0.1, relativeY, relativeWidth + 0.07, relativeHeight + 0.21,
+					30, sourceImage, parent);
+			parent.addComponent(gameBackground);
+		}
 	}
 
 	/**
@@ -223,7 +226,10 @@ public class Card extends GameObject {
 	 */
 	@Override
 	public void onMouseExit() {
-		parent.removeComponent(gameBackground);
+		if (!(name.equals("Copper") || name.equals("Silver") || name.equals("Gold") || name.equals("Curse")
+				|| name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
+			parent.removeComponent(gameBackground);
+		}
 	}
 
 	/**
