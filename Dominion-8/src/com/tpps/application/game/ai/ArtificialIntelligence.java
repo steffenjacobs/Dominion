@@ -14,7 +14,7 @@ public class ArtificialIntelligence {
 
 	private Player player;
 	private LinkedList<String> blacklist;
-	private ListMultimap<String, Card> aiActions;
+	private ListMultimap<String, Card> nextTurn;
 	private CardStorageController cardStore;
 	private boolean computing;
 
@@ -24,16 +24,23 @@ public class ArtificialIntelligence {
 	// LinkedListMultimap mit "buy" oder "play" und karte als Spielplan aufbauen
 	// Player Konstruktor ohne port?
 	// wenn es der potentiell letzte Zug ist, soll die Blacklist ignoriert werden und evtl ein Anwesen gekauft werden
-	
+
 	/**
-	 *  
+	 * constructor of the Artificial Intelligence
+	 * 
+	 * CLIENT_ID is managed by the GameServer and AI get's an ID according to it's position in the login queue
+	 * player has the CLIENT_ID and the general startSet of cards (3x Estate, 7x Copper; see GameBoard for more information)
+	 * blacklist basically blacklists all cards the AI should never buy, except special situations
+	 * nextMove determines the steps if it's the AI's turn
+	 * with the cardStore the AI can compare every handcard with the original card 'image' of the backend
+	 * computing is a flag which indicates whether the AI is already computing the next turn or does nothing at the momant
 	 */
 	public ArtificialIntelligence() {
 		int CLIENT_ID = GameServer.getCLIENT_ID();
 		LinkedList<Card> startSet = GameServer.getInstance().getGameController().getGameBoard().getStartSet();
 		this.player = new Player(CLIENT_ID, /* random default port */ 1995, startSet);
-		this.blacklist = this.getCardsFromStorage("Curse", "Copper", "Estate");
-		this.aiActions = LinkedListMultimap.create();
+		this.blacklist = this.getCardNamesFromStorage("Curse", "Copper", "Estate");
+		this.nextTurn = LinkedListMultimap.create();
 		this.cardStore = new CardStorageController("cards.bin");
 		this.computing = false;
 	}
@@ -67,18 +74,17 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @return the aiActions
+	 * @return the nextTurn
 	 */
-	public ListMultimap<String, Card> getAiActions() {
-		return aiActions;
+	public ListMultimap<String, Card> getNextTurn() {
+		return nextTurn;
 	}
 
 	/**
-	 * @param aiActions
-	 *            the aiActions to set
+	 * @param nextTurn the nextTurn to set
 	 */
-	public void setAiActions(ListMultimap<String, Card> aiActions) {
-		this.aiActions = aiActions;
+	public void setNextTurn(ListMultimap<String, Card> nextTurn) {
+		this.nextTurn = nextTurn;
 	}
 
 	/**
@@ -96,11 +102,14 @@ public class ArtificialIntelligence {
 	}
 	
 	/**
+	 * this method is used to see in the cardStore if there is a card called 'name'
+	 * so it takes the parameter 'names' and adds every cardname (when the card is truly available in cardStore)
+	 * to the return list. 
 	 * 
-	 * @param names
-	 * @return
+	 * @param names the names of all Cards which will be get from the CardStore
+	 * @return a list of names with the names of only the available cards in the game
 	 */
-	private LinkedList<String> getCardsFromStorage(String... names) {
+	private LinkedList<String> getCardNamesFromStorage(String... names) {
 		LinkedList<String> list = new LinkedList<String>();
 		for (String cardname : names) {
 			list.addLast(cardStore.getCard(cardname).getName());
@@ -110,7 +119,7 @@ public class ArtificialIntelligence {
 	
 	/**
 	 * 
-	 * @return
+	 * @return if its the AIs turn
 	 */
 	private boolean myTurn() {
 		return GameServer.getInstance().getGameController().getActivePlayer().equals(this.player);
@@ -118,28 +127,33 @@ public class ArtificialIntelligence {
 
 	/**
 	 * 
-	 * @return
+	 * @return if the game is NOT finished (so when the method returns true, the game is still running)
 	 */
 	private boolean gameNotFinished() {
 		return GameServer.getInstance().getGameController().isGameNotFinished();
 	}
 
 	/**
-	 * 
+	 * end the turn of AI
 	 */
 	private void endTurn() {
 		GameWindow.endTurn.onMouseClick();
 	}
 
 	/**
-	 * 
+	 * play all treasures of AI
 	 */
 	private void playTreasures() {
 		GameWindow.playTreasures.onMouseClick();
 	}
 
 	/**
+	 * start the AI, method is only called once when the game is initialized
+	 * it then runs until the game is finished
 	 * 
+	 * every 500ms the AI checks if it is its turn and if so, it executes the next Turn
+	 * if its not the AIs turn, and if its not already computing the next turn, the AI is going to compute
+	 * the next turn in the computeNextTurn() method
 	 */
 	public void start() {
 		new Thread(new Runnable() {
@@ -165,21 +179,50 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * 
+	 * execute the next turn of AI, which is determined by LinkedListMultimap nextTurn
 	 */
 	public void executeTurn() {
 		// LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
 		playTreasures();
 		endTurn();
+		/** set computing flag false here, because otherwise the AI would compute a new turn before it has even executed the old */
+		this.computing = false;
 	}
 	
 	/**
-	 * 
+	 * set computing to true so the computing will not be interrupted
+	 * first assign a default turn which should be an alternative solution, if the compution of the next turn of the AI is interrupted
 	 */
 	private void computeNextTurn() {
-		
+		this.computing = true;
+		/** method assigns a default turn as the next turn, if the computeNextTurn() method gets interrupted
+		before something useful is computed */
+		assignDefaultTurn();
 	}
 	
+	/**
+	 * assign a default turn to nextTurn
+	 */
+	private void assignDefaultTurn() {
+		/** availableCoinsAtStartOfTurn has to be checked several times (for example after a 'draw card' action is performed 
+		 *  and if there are enough coins to the desired action (/buy the desired card), don't draw any more cards e.g. */
+		int availableCoinsAtStartOfTurn = getTreasureCardsValue();
+		
+	}
+
+	/**
+	 * 
+	 * @return the value of all treasure cards in the cardHand of the AI
+	 */
+	private int getTreasureCardsValue() {
+		return this.player.getDeck().getTreasureValueOfList(this.player.getDeck().getCardHand());
+	}
+	
+	/**
+	 * main for testing purposes of LinkedListMultimap
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		ListMultimap<String, Integer> map = LinkedListMultimap.create();
 		map.put("a", 2);

@@ -1,11 +1,14 @@
 package com.tpps.technicalServices.network.login.SQLHandling;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import com.tpps.technicalServices.network.login.server.LoginServer;
 
 /**
  * This class delivers all functionalities that is needed to handle all player
@@ -36,7 +39,7 @@ public class SQLStatisticsHandler {
 		}
 		buf.deleteCharAt(buf.length() - 1);
 		buf.append(");");
-		// System.out.println(buf.toString());
+		System.out.println(buf.toString());
 		try {
 			Statement stmt = SQLHandler.getConnection().createStatement();
 			stmt.executeUpdate(buf.toString());
@@ -181,44 +184,6 @@ public class SQLStatisticsHandler {
 	}
 
 	/**
-	 * This method sets a description for a user, can be used to save more
-	 * information about the player
-	 * 
-	 * @author jhuhn - Johannes Huhn
-	 * @param nickname
-	 *            String representation of the account name
-	 * @param description
-	 *            String representation that delivers more detailed information
-	 *            about the nickname
-	 */
-	public static void setDescription(String nickname, String description) {
-		try {
-			PreparedStatement stmt = SQLHandler.getConnection()
-					.prepareStatement("UPDATE statistics SET description = ? WHERE nickname = ?;");
-			stmt.setString(1, description);
-			stmt.setString(2, nickname);
-			stmt.executeUpdate();
-			System.out.println("set description for " + nickname + "  successful");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static String getDescription(String nickname) {
-		try {
-			PreparedStatement stmt = SQLHandler.getConnection()
-					.prepareStatement("SELECT description FROM statistics WHERE nickname = ?");
-			stmt.setString(1, nickname);
-			ResultSet rs = stmt.executeQuery();
-			rs.next();
-			return rs.getString("description");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return "no description avaible";
-	}
-
-	/**
 	 * This method updates the win - loss ratio in the mysql database
 	 * 
 	 * @author jhuhn - Johannes Huhn
@@ -358,6 +323,78 @@ public class SQLStatisticsHandler {
 				.prepareStatement("SELECT * FROM statistics WHERE nickname = ?");
 		stmt.setString(1, playerName);
 		return stmt.executeQuery();
+	}
+	
+	public static void addPlaytimeArray(String nickname, long[] playtime){
+		PreparedStatement stmt;
+		String text = "";
+		for (int i = 0; i < playtime.length; i++) {
+			text += (playtime[i] + "|");
+		}
+		try {
+			stmt = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET LAST_TIME_PLAYED = ? WHERE nickname = ?;");
+			stmt.setString(1, text);
+			stmt.setString(2, nickname);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static long[] getPlaytimeArray(String nickname){
+		try {
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT LAST_TIME_PLAYED FROM statistics WHERE nickname = ?");
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			String text = rs.getString("LAST_TIME_PLAYED");
+			String[] values = text.split("|");
+			long[] dates = new long[10];
+			for (int i = 0; i < values.length; i++) {
+				dates[i] = Long.parseLong(values[i]);
+			}
+			return dates;
+		} catch (SQLException e) {		
+			e.printStackTrace();
+		}
+		return new long[]{};
+	}
+	
+	public static void insertPlaytimeToArray(String nickname, long playtime){
+		try {
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT LAST_TIME_PLAYED FROM statistics WHERE nickname = ?");
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			String text = rs.getString("LAST_TIME_PLAYED");
+			String[] array = text.split("|");
+			long[] newArray = new long[10];
+			newArray[0] = playtime;
+			for (int i = 1; i < newArray.length; i++) {
+				newArray[i] = Long.valueOf(array[i]);
+			}
+			SQLStatisticsHandler.addPlaytimeArray(nickname, newArray);
+		} catch (SQLException e) {		
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args) {
+		String hostname = "localhost";
+		String port = "3306";
+		String database = "accountmanager";
+		String user = "jojo";
+		String password = "password";
+		SQLHandler.init(hostname, port, user, password, database);
+		SQLHandler.connect();
+		String name = "name";
+		SQLOperations.createAccount(name, "rsdgdrgdr", "xxx", "yyyy");
+		SQLStatisticsHandler.insertRowForFirstLogin(name);
+		
+		long[] array = new long[13];
+		for (int i = 0; i < array.length; i++) {
+			array[i] = 1460497370656L + i;
 
+		}
+		
+		SQLStatisticsHandler.addPlaytimeArray(name, array);
 	}
 }
