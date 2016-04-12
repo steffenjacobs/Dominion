@@ -19,7 +19,10 @@ public class Button extends JButton implements MouseListener{
 	
 	public Button() {
 		try {
-			this.image = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/arrow_left.png"));
+			this.image = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/Back.png"));
+			this.setOpaque(false);
+			this.setContentAreaFilled(false);
+			this.setBorderPainted(false);
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}		
