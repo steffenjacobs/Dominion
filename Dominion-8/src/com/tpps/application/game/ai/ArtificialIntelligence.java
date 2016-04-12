@@ -14,7 +14,7 @@ public class ArtificialIntelligence {
 
 	private Player player;
 	private LinkedList<String> blacklist;
-	private ListMultimap<String, Card> aiActions;
+	private ListMultimap<String, Card> nextMove;
 	private CardStorageController cardStore;
 	private boolean computing;
 
@@ -24,16 +24,23 @@ public class ArtificialIntelligence {
 	// LinkedListMultimap mit "buy" oder "play" und karte als Spielplan aufbauen
 	// Player Konstruktor ohne port?
 	// wenn es der potentiell letzte Zug ist, soll die Blacklist ignoriert werden und evtl ein Anwesen gekauft werden
-	
+
 	/**
-	 *  
+	 * constructor of the Artificial Intelligence
+	 * 
+	 * CLIENT_ID is managed by the GameServer and AI get's an ID according to it's position in the login queue
+	 * player has the CLIENT_ID and the general startSet of cards (3x Estate, 7x Copper; see GameBoard for more information)
+	 * blacklist basically blacklists all cards the AI should never buy, except special situations
+	 * nextMove determines the steps if it's the AI's turn
+	 * with the cardStore the AI can compare every handcard with the original card 'image' of the backend
+	 * computing is a flag which indicates whether the AI is already computing the next turn or does nothing at the momant
 	 */
 	public ArtificialIntelligence() {
 		int CLIENT_ID = GameServer.getCLIENT_ID();
 		LinkedList<Card> startSet = GameServer.getInstance().getGameController().getGameBoard().getStartSet();
 		this.player = new Player(CLIENT_ID, /* random default port */ 1995, startSet);
 		this.blacklist = this.getCardsFromStorage("Curse", "Copper", "Estate");
-		this.aiActions = LinkedListMultimap.create();
+		this.nextMove = LinkedListMultimap.create();
 		this.cardStore = new CardStorageController("cards.bin");
 		this.computing = false;
 	}
@@ -70,15 +77,14 @@ public class ArtificialIntelligence {
 	 * @return the aiActions
 	 */
 	public ListMultimap<String, Card> getAiActions() {
-		return aiActions;
+		return nextMove;
 	}
 
 	/**
-	 * @param aiActions
-	 *            the aiActions to set
+	 * @param aiActions the aiActions to set
 	 */
 	public void setAiActions(ListMultimap<String, Card> aiActions) {
-		this.aiActions = aiActions;
+		this.nextMove = aiActions;
 	}
 
 	/**
@@ -97,8 +103,8 @@ public class ArtificialIntelligence {
 	
 	/**
 	 * 
-	 * @param names
-	 * @return
+	 * @param names the names of all Cards which will be get from the CardStore
+	 * @return a list with a 
 	 */
 	private LinkedList<String> getCardsFromStorage(String... names) {
 		LinkedList<String> list = new LinkedList<String>();
@@ -177,9 +183,27 @@ public class ArtificialIntelligence {
 	 * 
 	 */
 	private void computeNextTurn() {
-		
+		this.computing = true;
+		/* method assigns a default turn as the next turn, if the computeNextTurn() method gets interrupted
+		before something useful is computed */
+		assignDefaultTurn();
 	}
 	
+	/**
+	 * 
+	 */
+	private void assignDefaultTurn() {
+		int availableCoinsAtStartOfTurn = getTreasureCardsValue();
+		
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private int getTreasureCardsValue() {
+		return this.player.getDeck().getTreasureValueOfList(this.player.getDeck().getCardHand());
+	}
 	public static void main(String[] args) {
 		ListMultimap<String, Integer> map = LinkedListMultimap.create();
 		map.put("a", 2);
