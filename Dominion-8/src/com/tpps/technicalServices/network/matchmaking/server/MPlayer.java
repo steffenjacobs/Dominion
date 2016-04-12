@@ -54,8 +54,8 @@ public class MPlayer {
 				stats.put("TIMES_PLAYED", new StatisticUnit(res.getInt("games_played")));
 				stats.put("RANK", new StatisticUnit(res.getInt("rank")));
 				stats.put("TIME_PLAYED", new StatisticUnit(res.getInt("playtime")));
-				stats.put("LAST_GAMES_TIMES", new StatisticUnit(SQLStatisticsHandler.getPlaytimeAsLongArray(res.getString("LAST_TIME_PLAYED"))));
-				stats.put("LAST_GAMES_WINS", new StatisticUnit(SQLStatisticsHandler.getWinsAsBooleanArray(res.getString("LAST_TIME_WINS"))));
+				stats.put("LAST_GAMES_TIMES", new StatisticUnit(SQLStatisticsHandler.getPlaytimeDatesAsLongArray(res.getString("LAST_TIME_PLAYED"))));
+				stats.put("LAST_GAMES_WINS", new StatisticUnit(SQLStatisticsHandler.getLastTimeWinsParsed(res.getString("LAST_TIME_WINS"))));
 				return new MPlayer(request.getPlayerName(), request.getPlayerID(), stats, port);
 			}
 		} catch (SQLException e) {
