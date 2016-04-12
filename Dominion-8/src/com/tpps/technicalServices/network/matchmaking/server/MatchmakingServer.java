@@ -3,6 +3,8 @@ package com.tpps.technicalServices.network.matchmaking.server;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.PacketHandler;
@@ -13,10 +15,12 @@ import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingS
 
 public class MatchmakingServer extends Server {
 
+	private static MatchmakingServer instance;
+
 	public final static int PORT_MATCHMAKING = 1340;
 
 	public static void main(String[] args) throws IOException {
-		new MatchmakingServer(new InetSocketAddress(Addresses.getAllInterfaces(), PORT_MATCHMAKING),
+		instance = new MatchmakingServer(new InetSocketAddress(Addresses.getAllInterfaces(), PORT_MATCHMAKING),
 				new MatchmakingPacketHandler());
 	}
 
@@ -24,34 +28,50 @@ public class MatchmakingServer extends Server {
 		super(address, _handler);
 		super.getListenerManager().registerListener(new MatchmakingListener());
 	}
-
+	
 	public void sendJoinPacket(MPlayer receiver, String joinedPlayer) {
-		
+		ArrayList<MPlayer> tmp = new ArrayList<>();
+		tmp.add(receiver);
+		sendJoinPacket(tmp, joinedPlayer);
+	}
+
+	public void sendJoinPacket(Collection<MPlayer> receivers, String joinedPlayer) {
+
 		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(joinedPlayer, true);
 		try {
-			super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
+			for (MPlayer receiver : receivers) {
+				super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void sendSuccessPacket(MPlayer receiver, String[] opponents) {
+	public void sendSuccessPacket(Collection<MPlayer> receivers, String[] opponents) {
 
-		PacketMatchmakingSuccessful pms = new PacketMatchmakingSuccessful(opponents,0);
+		PacketMatchmakingSuccessful pms = new PacketMatchmakingSuccessful(opponents, 0);
 		try {
-			super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pms);
+			for (MPlayer receiver : receivers) {
+				super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pms);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void sendQuitPacket(MPlayer receiver, String quittedPlayer) {
+	public void sendQuitPacket(Collection<MPlayer> receivers, String quittedPlayer) {
 		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(quittedPlayer, false);
 		try {
-			super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
+			for (MPlayer receiver : receivers) {
+				super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static MatchmakingServer getInstance() {
+		return instance;
 	}
 
 	private static class MatchmakingListener implements NetworkListener {

@@ -18,13 +18,25 @@ public final class MatchmakingController {
 
 	private static CopyOnWriteArrayList<GameLobby> lobbies;
 
+	static void startGame(GameLobby lobby) {
+		removeLobby(lobby);
+		String[] playerNames = new String[lobby.getPlayers().size()];
+		MPlayer player;
+		for (int i = 0; i < lobby.getPlayers().size(); i++) {
+			player = lobby.getPlayers().get(i);
+			playerNames[i] = player.getPlayerName();
+		}
+		MatchmakingServer.getInstance().sendSuccessPacket(lobby.getPlayers(), playerNames);
+
+	}
+
 	private static void removeLobby(GameLobby lobby) {
 		lobbies.remove(lobby);
 		// INFO: lobby could not be in lobbiesByPlayer, since no player is in
 		// the lobby
 	}
-	
-	public static int getPortFromPlayer(MPlayer player){
+
+	public static int getPortFromPlayer(MPlayer player) {
 		return connectedPortsByPlayer.get(player);
 	}
 
