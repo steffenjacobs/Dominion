@@ -5,12 +5,14 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
 
 public class PacketMatchmakingSuccessful extends Packet {
 	private static final long serialVersionUID = 8824882326543059050L;
-	
-	private String[] joinedPlayers;
 
-	protected PacketMatchmakingSuccessful(String[] joinedPlayers) {
+	private final String[] joinedPlayers;
+	private final int gameserverPort;
+
+	protected PacketMatchmakingSuccessful(String[] joinedPlayers, int gameserverPort) {
 		super(PacketType.MATCHMAKING_SUCCESSFUL);
-		this.setJoinedPlayers(joinedPlayers);
+		this.joinedPlayers = joinedPlayers;
+		this.gameserverPort = gameserverPort;
 	}
 
 	@Override
@@ -23,8 +25,8 @@ public class PacketMatchmakingSuccessful extends Packet {
 		return joinedPlayers;
 	}
 
-	public void setJoinedPlayers(String[] joinedPlayers) {
-		this.joinedPlayers = joinedPlayers;
+	public int getGameserverPort() {
+		return gameserverPort;
 	}
 
 }
