@@ -15,11 +15,11 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.login.SQLHandling.Password;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLOperations;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
+import com.tpps.technicalServices.network.login.packets.PacketGetAllStatistics;
 import com.tpps.technicalServices.network.login.packets.PacketLoginCheckAnswer;
 import com.tpps.technicalServices.network.login.packets.PacketLoginCheckRequest;
 import com.tpps.technicalServices.network.login.packets.PacketRegisterAnswer;
 import com.tpps.technicalServices.network.login.packets.PacketRegisterRequest;
-import com.tpps.technicalServices.network.statisticServer.Packet.PacketGetAllStatistics;
 
 /**
  * This class delivers all functionalities that are used by the LoginServer

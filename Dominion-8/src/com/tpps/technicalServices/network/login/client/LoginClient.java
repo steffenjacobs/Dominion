@@ -12,11 +12,11 @@ import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.login.SQLHandling.Password;
+import com.tpps.technicalServices.network.login.packets.PacketGetAllStatistics;
 import com.tpps.technicalServices.network.login.packets.PacketLoginCheckAnswer;
 import com.tpps.technicalServices.network.login.packets.PacketLoginCheckRequest;
 import com.tpps.technicalServices.network.login.packets.PacketRegisterAnswer;
 import com.tpps.technicalServices.network.login.packets.PacketRegisterRequest;
-import com.tpps.technicalServices.network.statisticServer.Packet.PacketGetAllStatistics;
 import com.tpps.ui.loginscreen.LoginGUIController;
 
 /**
