@@ -13,6 +13,7 @@ public final class MatchmakingController {
 	}
 
 	private static ConcurrentHashMap<Integer, MPlayer> connectedPlayersByPort;
+	private static ConcurrentHashMap<MPlayer, Integer> connectedPortsByPlayer;
 	private static ConcurrentHashMap<MPlayer, GameLobby> lobbiesByPlayer;
 
 	private static CopyOnWriteArrayList<GameLobby> lobbies;
@@ -21,6 +22,10 @@ public final class MatchmakingController {
 		lobbies.remove(lobby);
 		// INFO: lobby could not be in lobbiesByPlayer, since no player is in
 		// the lobby
+	}
+	
+	public static int getPortFromPlayer(MPlayer player){
+		return connectedPortsByPlayer.get(player);
 	}
 
 	private static void joinLobby(MPlayer player, GameLobby lobby) {
@@ -57,11 +62,13 @@ public final class MatchmakingController {
 
 	public static void addPlayer(MPlayer player) {
 		connectedPlayersByPort.put(player.getConnectionPort(), player);
+		connectedPortsByPlayer.put(player, player.getConnectionPort());
 		findLobbyForPlayer(player);
 	}
 
 	private static void removePlayer(MPlayer player) {
 		connectedPlayersByPort.remove(player.getConnectionPort());
+		connectedPortsByPlayer.remove(player);
 		GameLobby lobby = lobbiesByPlayer.remove(player);
 		if (lobby != null) {
 			lobby.quitPlayer(player);

@@ -3,14 +3,16 @@ package com.tpps.technicalServices.network.matchmaking.packets;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
-public class PacketMatchmakingPlayerJoining extends Packet{
+public class PacketMatchmakingPlayerInfo extends Packet{
 	private static final long serialVersionUID = 2384133814902839060L;
 	
-	private final String playerNameJoining;
+	private final String playerNameInfo;
+	private final boolean status;
 
-	protected PacketMatchmakingPlayerJoining(String playerJoining) {
-		super(PacketType.MATCHMAKING_PLAYER_JOING);
-		this.playerNameJoining = playerJoining;
+	public PacketMatchmakingPlayerInfo(String playerJoining, boolean joined) {
+		super(PacketType.MATCHMAKING_PLAYER_INFO);
+		this.playerNameInfo = playerJoining;
+		this.status = joined;
 	}
 
 	@Override
@@ -20,7 +22,10 @@ public class PacketMatchmakingPlayerJoining extends Packet{
 	}
 
 	public String getPlayerNameJoining() {
-		return playerNameJoining;
+		return playerNameInfo;
 	}
 
+	public boolean isStatus() {
+		return status;
+	}
 }

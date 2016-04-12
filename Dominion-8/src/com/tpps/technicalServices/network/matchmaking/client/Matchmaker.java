@@ -45,7 +45,7 @@ public final class Matchmaker {
 			case MATCHMAKING_ANSWER:
 				// TODO: show LobbyScreen
 				break;
-			case MATCHMAKING_PLAYER_JOING:
+			case MATCHMAKING_PLAYER_INFO:
 				// TODO: add player and remove one instance of "Waiting for
 				// player..." @LobbyScreen
 

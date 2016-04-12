@@ -9,7 +9,7 @@ public class PacketMatchmakingSuccessful extends Packet {
 	private final String[] joinedPlayers;
 	private final int gameserverPort;
 
-	protected PacketMatchmakingSuccessful(String[] joinedPlayers, int gameserverPort) {
+	public PacketMatchmakingSuccessful(String[] joinedPlayers, int gameserverPort) {
 		super(PacketType.MATCHMAKING_SUCCESSFUL);
 		this.joinedPlayers = joinedPlayers;
 		this.gameserverPort = gameserverPort;
