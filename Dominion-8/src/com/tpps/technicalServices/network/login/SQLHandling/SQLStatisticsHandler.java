@@ -360,16 +360,21 @@ public class SQLStatisticsHandler {
 	}
 	
 	public static void insertPlaytimeToArray(String nickname, long playtime){
-//		try {
-//			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT LAST_TIME_PLAYED FROM statistics WHERE nickname = ?");
-//			ResultSet rs = stmt.executeQuery();
-//			rs.next();
-//			String text = rs.getString("LAST_TIME_PLAYED");
-//			String[] array = text.split("|");
-//			
-//		} catch (SQLException e) {		
-//			e.printStackTrace();
-//		}
+		try {
+			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT LAST_TIME_PLAYED FROM statistics WHERE nickname = ?");
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			String text = rs.getString("LAST_TIME_PLAYED");
+			String[] array = text.split("|");
+			long[] newArray = new long[10];
+			newArray[0] = playtime;
+			for (int i = 1; i < newArray.length; i++) {
+				newArray[i] = Long.valueOf(array[i]);
+			}
+			SQLStatisticsHandler.addPlaytimeArray(nickname, newArray);
+		} catch (SQLException e) {		
+			e.printStackTrace();
+		}
 	}
 	
 	public static void main(String[] args) {
