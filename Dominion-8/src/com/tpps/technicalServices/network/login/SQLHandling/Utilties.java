@@ -29,6 +29,7 @@ public class Utilties {
 		Statistic six = new Statistic(SQLType.TEXT, "rank");
 		Statistic seven = new Statistic(SQLType.BIGINT, "playtime");
 		Statistic eight = new Statistic(SQLType.VARCHAR, "200", "LAST_TIME_PLAYED");
+		Statistic nine = new Statistic(SQLType.VARCHAR, "200", "LAST_TIME_WINS");
 		ArrayList<Statistic> statistics = new ArrayList<Statistic>();
 		statistics.add(two);
 		statistics.add(tree);
@@ -37,6 +38,7 @@ public class Utilties {
 		statistics.add(six);
 		statistics.add(seven);
 		statistics.add(eight);
+		statistics.add(nine);
 		return statistics;
 	}
 }
