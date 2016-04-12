@@ -10,19 +10,14 @@ public class PacketMatchmakingRequest extends Packet {
 	
 	private final String playerName;
 	private final UUID playerID;
+	private final boolean abort;
 
-	public String getPlayerName() {
-		return playerName;
-	}
 
-	public UUID getPlayerID() {
-		return playerID;
-	}
-
-	public PacketMatchmakingRequest(String name, UUID uid) {
+	public PacketMatchmakingRequest(String name, UUID uid, boolean abort) {
 		super(PacketType.MATCHMAKING_REQUEST);
 		this.playerID = uid;
 		this.playerName = name;
+		this.abort = abort;
 	}
 
 	@Override
@@ -31,4 +26,15 @@ public class PacketMatchmakingRequest extends Packet {
 		return null;
 	}
 
+	public boolean isAbort() {
+		return abort;
+	}
+
+	public String getPlayerName() {
+		return playerName;
+	}
+
+	public UUID getPlayerID() {
+		return playerID;
+	}
 }

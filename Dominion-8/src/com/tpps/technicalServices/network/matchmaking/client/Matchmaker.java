@@ -17,15 +17,23 @@ public final class Matchmaker {
 	private static Client client;
 	private static MatchmakingHandler handler;
 
-	public static void findMatch(String username, UUID uid) throws IOException {
-		if (client == null) {
+	private static void checkAndCreateClient() throws IOException {
+		if (client == null || !client.isConnected()) {
 			handler = new MatchmakingHandler();
 			client = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.PORT_MATCHMAKING),
 					handler, false);
 		}
+	}
 
-		client.sendMessage(new PacketMatchmakingRequest(username, uid));
+	public static void findMatch(String username, UUID uid) throws IOException {
+		checkAndCreateClient();
+		client.sendMessage(new PacketMatchmakingRequest(username, uid, false));
 
+	}
+
+	public static void abort(String username, UUID uid) throws IOException {
+		checkAndCreateClient();
+		client.sendMessage(new PacketMatchmakingRequest(username, uid, true));
 	}
 
 	private static class MatchmakingHandler extends PacketHandler {
