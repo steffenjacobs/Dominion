@@ -139,8 +139,8 @@ public class LoginServer extends Server{
 			String hostname = "localhost";
 			String port = "3306";
 			String database = "accountmanager";
-			String user = "root";
-			String password = "root";
+			String user = "jojo";
+			String password = "password";
 			SQLHandler.init(hostname, port, user, password, database);
 			SQLHandler.connect();
 			new LoginServer(hostname, port, user, password, database);
