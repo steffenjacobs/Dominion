@@ -22,18 +22,13 @@ import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
  * @author Steffen Jacobs
  */
 public final class Matchmaker {
-	private static Client client;
-	private static PacketHandler handler;
+	private Client client;
+	private PacketHandler handler;
 	
-	/**this class should not be instanciated*/
-	private Matchmaker(){
-		//nothing
-	}
-
 	/**
 	 * creates & opens a new connection to the matchmaking-server if necessary
 	 */
-	private static void checkAndCreateClient() throws IOException {
+	private void checkAndCreateClient() throws IOException {
 		if (client == null || !client.isConnected()) {
 			handler = new MatchmakingHandler();
 			client = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.PORT_MATCHMAKING),
@@ -52,7 +47,7 @@ public final class Matchmaker {
 	 *             if there is no network connection available or the server is
 	 *             unreachable
 	 */
-	public static void findMatch(String username, UUID uid) throws IOException {
+	public void findMatch(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingRequest(username, uid, false));
 	}
@@ -65,13 +60,13 @@ public final class Matchmaker {
 	 * @param uid
 	 *            uuid of the player aborting the search
 	 */
-	public static void abort(String username, UUID uid) throws IOException {
+	public void abort(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingRequest(username, uid, true));
 	}
 
 	/** @return the actual network-client connected to the matchmaking-system */
-	public static Client getNetworkClient() {
+	public Client getNetworkClient() {
 		return client;
 	}
 
