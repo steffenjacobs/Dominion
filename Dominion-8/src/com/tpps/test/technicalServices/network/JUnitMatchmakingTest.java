@@ -3,11 +3,15 @@ package com.tpps.test.technicalServices.network;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
 import org.junit.Test;
 
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
@@ -31,7 +35,7 @@ import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 
 public class JUnitMatchmakingTest {
 
-	static UUID sessionID;
+	static HashMap<String, UUID> userSessions = new HashMap<>();
 
 	@Test
 	public void test() throws IOException, InterruptedException, NoSuchFieldException, SecurityException,
@@ -39,17 +43,28 @@ public class JUnitMatchmakingTest {
 
 		String username = "test";
 
+		HashMap<String, Matchmaker> matchmakers = new HashMap<>();
+
 		// init game-log
 		GameLog.init();
 		SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
 		SQLHandler.connect();
-
-		if(!SQLOperations.checkTable("statistics")){
+		if (!SQLOperations.checkTable("accountdetails")) {
+			SQLOperations.createAccountdetailsTable();
+		}
+		if (!SQLOperations.checkTable("statistics")) {
 			SQLStatisticsHandler.createStatisticsTable(Utilties.createStatisticsList());
 		}
-		
-		SQLStatisticsHandler.insertRowForFirstLogin("test");
-		
+
+		for (int i = 0; i < 4; i++) {
+			if (SQLOperations.createAccount(username + i, username + i + "@test.de", "test", "test") == 1) {
+				try {
+					SQLStatisticsHandler.insertRowForFirstLogin(username + i);
+				} catch (Exception ex) {
+					System.err.println(ex.getMessage());
+				}
+			}
+		}
 
 		// setup matchmaking-server
 		new MatchmakingServer(new InetSocketAddress(Addresses.getAllInterfaces(), MatchmakingServer.PORT_MATCHMAKING),
@@ -70,30 +85,46 @@ public class JUnitMatchmakingTest {
 				new InetSocketAddress(Addresses.getRemoteAddress(), SessionServer.getStandardPort()));
 		Semaphore halt = new Semaphore(1);
 		halt.acquire();
-		SessionPacketSenderAPI.sendGetRequest(sess, username, new SuperCallable<PacketSessionGetAnswer>() {
 
-			@Override
-			public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer object) {
-				sessionID = object.getLoginSessionID();
-				halt.release();
-				return null;
-			}
-		});
+		for (int i = 0; i < 4; i++) {
+			
+			
+			//Setup match-makers
+			Matchmaker mm = new Matchmaker();
+			matchmakers.put(username + i, mm);
+
+			Field client = Matchmaker.class.getDeclaredField("client");
+			client.setAccessible(true);
+			client.set(mm, new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.PORT_MATCHMAKING),
+					new TestMatchmakingHandler(), false));
+
+			Field handler = Matchmaker.class.getDeclaredField("handler");
+			handler.setAccessible(true);
+			handler.set(mm, new TestMatchmakingHandler());
+
+			//Setup sessions
+			SessionPacketSenderAPI.sendGetRequest(sess, username + i, new SuperCallable<PacketSessionGetAnswer>() {
+
+				@Override
+				public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer object) {
+					userSessions.put(object.getRequest().getUsername(), object.getLoginSessionID());
+					System.out.println("received session for " + object.getRequest().getUsername());
+					halt.release();
+					return null;
+				}
+			});
+		}
 		halt.acquire();
 		halt.release();
 
-		// setup matchmaking-client
+		Thread.sleep(200);
 
-		Field client = Matchmaker.class.getDeclaredField("client");
-		client.setAccessible(true);
-		client.set(null, new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.PORT_MATCHMAKING),
-				new TestMatchmakingHandler(), false));
-
-		Field handler = Matchmaker.class.getDeclaredField("handler");
-		handler.setAccessible(true);
-		handler.set(null, new TestMatchmakingHandler());
-
-		Matchmaker.findMatch(username, sessionID);
+		Iterator<String> it = userSessions.keySet().iterator();
+		for (int i = 0; i < 4; i++) {
+			String name = it.next();
+			matchmakers.get(name).findMatch(name, userSessions.get(name));
+			Thread.sleep(100);
+		}
 		Thread.sleep(1000);
 
 		Thread.sleep(50000);

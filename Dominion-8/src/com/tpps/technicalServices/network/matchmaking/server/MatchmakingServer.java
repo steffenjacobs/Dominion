@@ -25,7 +25,7 @@ public class MatchmakingServer extends Server {
 
 	/** main entry-point for the matchmaking-server */
 	public static void main(String[] args) throws IOException {
-		instance = new MatchmakingServer(new InetSocketAddress(Addresses.getAllInterfaces(), PORT_MATCHMAKING),
+		new MatchmakingServer(new InetSocketAddress(Addresses.getAllInterfaces(), PORT_MATCHMAKING),
 				new MatchmakingPacketHandler());
 	}
 
@@ -48,6 +48,7 @@ public class MatchmakingServer extends Server {
 		System.out.println();
 		System.out.println("Enter 'help' to see all available commands.");
 		System.out.println();
+		instance = this;
 	}
 
 	/**

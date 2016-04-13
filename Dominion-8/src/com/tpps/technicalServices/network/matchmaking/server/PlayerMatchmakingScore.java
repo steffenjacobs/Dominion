@@ -65,6 +65,9 @@ public class PlayerMatchmakingScore {
 		long[] lastGames = statistics.get("LAST_GAMES_TIMES").asLongArray();
 		/* score for the time the last 10 games were played in */
 
+		if (lastGames.length == 0)
+			return 1;
+
 		/* last played */
 		if (System.currentTimeMillis() - lastGames[0] < MILLIS_24_HOURS) {
 			// played already in the last 24 hours
@@ -92,6 +95,9 @@ public class PlayerMatchmakingScore {
 	private int getTimeIntervalModifier() {
 
 		long[] lastGames = statistics.get("LAST_GAMES_TIMES").asLongArray();
+
+		if (lastGames.length < 10)
+			return 1;
 
 		long totalTimeForTheLastTenGames = System.currentTimeMillis() - lastGames[9];
 

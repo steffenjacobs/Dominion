@@ -83,7 +83,6 @@ public class MPlayer {
 	public static MPlayer initialize(PacketMatchmakingRequest request, int port) {
 		try {
 			ResultSet res = SQLStatisticsHandler.getStatisticsForPlayer(request.getPlayerName());
-
 			if (res.next()) {
 				HashMap<String, StatisticUnit> stats = new HashMap<>();
 				stats.put("WINS", new StatisticUnit(res.getInt("wins")));
@@ -93,7 +92,7 @@ public class MPlayer {
 				stats.put("RANK", new StatisticUnit(res.getInt("rank")));
 				stats.put("TIME_PLAYED", new StatisticUnit(res.getInt("playtime")));
 				stats.put("LAST_GAMES_TIMES", new StatisticUnit(
-						SQLStatisticsHandler.getPlaytimeDatesAsLongArray(res.getString("LAST_TIME_PLAYED"))));
+						SQLStatisticsHandler.getPlaytimeDatesParsed(res.getString("LAST_TIME_PLAYED"))));
 				stats.put("LAST_GAMES_WINS",
 						new StatisticUnit(SQLStatisticsHandler.getLastTimeWinsParsed(res.getString("LAST_TIME_WINS"))));
 				return new MPlayer(request.getPlayerName(), request.getPlayerID(), stats, port);

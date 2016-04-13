@@ -92,6 +92,7 @@ public final class MatchmakingController {
 		int score = player.getScore();
 
 		if (lobbies.isEmpty()) {
+			System.out.println("Creating new lobby because there was none.");
 			GameLobby lobby = new GameLobby();
 			lobbies.add(lobby);
 			joinLobby(player, lobby);

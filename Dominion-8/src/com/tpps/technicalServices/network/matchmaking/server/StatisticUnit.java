@@ -23,13 +23,18 @@ public class StatisticUnit {
 		return (int) obj;
 	}
 
-	/** @return container-interpretation as an arry of longs */
+	/** @return container-interpretation as an array of longs */
 	public long[] asLongArray() {
 		return (long[]) obj;
 	}
 
-	/** @return container-interpretation as an arry of booleans */
+	/** @return container-interpretation as an array of booleans */
 	public boolean[] asBooleanArray() {
 		return (boolean[]) obj;
+	}
+	
+	/** @return container-interpretation as a string */
+	public String asString() {
+		return (String) obj;
 	}
 }
