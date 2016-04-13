@@ -1,5 +1,6 @@
 package com.tpps.technicalServices.network.matchmaking.server;
 
+import java.text.SimpleDateFormat;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -8,6 +9,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Steffen Jacobs
  */
 public class GameLobby {
+
+	private static SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 
 	private static final int MAX_LOBBY_SIZE = 4;
 
@@ -83,5 +86,23 @@ public class GameLobby {
 	/** @return all players in the lobby */
 	public CopyOnWriteArrayList<MPlayer> getPlayers() {
 		return this.players;
+	}
+
+	/** @return a readable representation of the object */
+	@Override
+	public String toString() {
+		String res = "[" + System.identityHashCode(this) + "] ";
+		
+		if (this.startTime != 0) {
+			res += " (running since " + sdf.format(this.startTime) + ") ";
+		}
+		
+		for (MPlayer p : this.players) {
+			res += p.getPlayerName() + " ";
+		}
+		
+		res += "Score: " + this.getLobbyScore();
+
+		return res;
 	}
 }

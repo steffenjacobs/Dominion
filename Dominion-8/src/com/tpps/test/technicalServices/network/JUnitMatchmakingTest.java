@@ -69,8 +69,15 @@ public class JUnitMatchmakingTest {
 		}
 
 		// setup matchmaking-server
-		new MatchmakingServer(new InetSocketAddress(Addresses.getAllInterfaces(), MatchmakingServer.PORT_MATCHMAKING),
-				new MatchmakingPacketHandler());
+		new Thread(() -> {
+			try {
+				new MatchmakingServer(
+						new InetSocketAddress(Addresses.getAllInterfaces(), MatchmakingServer.PORT_MATCHMAKING),
+						new MatchmakingPacketHandler());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
 
 		// setup session-server
 		new Thread(() -> {

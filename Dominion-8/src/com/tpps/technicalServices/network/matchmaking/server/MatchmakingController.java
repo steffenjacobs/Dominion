@@ -1,6 +1,7 @@
 package com.tpps.technicalServices.network.matchmaking.server;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -184,5 +185,27 @@ public final class MatchmakingController {
 		}
 		SQLStatisticsHandler.addWinOrLoss(winner, true);
 
+	}
+
+	/** @return a readable representation of all active lobbies */
+	public static String[] getLobbies() {
+		String[] res = new String[lobbies.size()];
+		int i = 0;
+		for (GameLobby gl : lobbies) {
+			res[i] = gl.toString();
+			i++;
+		}
+		return res;
+	}
+
+	/** @return a readable representation of all waiting & playing players */
+	public static String[] getPlayers() {
+		String[] res = new String[playersByPort.size()];
+		int cnt = 0;
+		for (Map.Entry<Integer, MPlayer> entr : playersByPort.entrySet()) {
+			res[cnt] = entr.getValue().getPlayerName() + " @" + entr.getKey();
+			cnt++;
+		}
+		return res;
 	}
 }

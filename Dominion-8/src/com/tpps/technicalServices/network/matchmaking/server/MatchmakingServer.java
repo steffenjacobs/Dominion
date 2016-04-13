@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Scanner;
 
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.PacketHandler;
@@ -30,7 +31,7 @@ public class MatchmakingServer extends Server {
 	}
 
 	/**
-	 * constructor for the matchmaking-server
+	 * constructor for the matchmaking-server; warning: blocks!
 	 * 
 	 * @parma address the addres + port the server is listening on
 	 * @param _handler
@@ -39,16 +40,63 @@ public class MatchmakingServer extends Server {
 	public MatchmakingServer(InetSocketAddress address, PacketHandler _handler) throws IOException {
 		super(address, _handler);
 		super.getListenerManager().registerListener(new MatchmakingListener());
+		instance = this;
+		setupConsoleInput(address.getPort());
+	}
+
+	private void setupConsoleInput(int port) {
+
 		System.out.println("            * * * * * * * * * * * * * *      ");
 		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
 		System.out.println("* * * * * Dominion Matchmaking Server - Team ++; * * * * *");
-		System.out.println("* * * * * * * * * * * Port " + address.getPort() + " * * * * * * * * * * * ");
+		System.out.println("* * * * * * * * * * * Port " + port + " * * * * * * * * * * * ");
 		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
 		System.out.println("            * * * * * * * * * * * * * *      ");
 		System.out.println();
 		System.out.println("Enter 'help' to see all available commands.");
 		System.out.println();
-		instance = this;
+
+		String line = null;
+		Scanner scanInput = new Scanner(System.in);
+		while (true) {
+			line = scanInput.nextLine();
+			try {
+				if (line.equals("exit") || line.equals("stop")) {
+					System.exit(0);
+					break;
+				} else if (line.startsWith("countplayers")) {
+					System.out.println(MatchmakingController.getPlayers().length);
+				} else if (line.startsWith("listlobbies")) {
+					int cnt = 0;
+					for (String player : MatchmakingController.getLobbies()) {
+						System.out.println(player);
+						cnt++;
+					}
+					if (cnt == 0)
+						System.out.println("(empty)");
+				} else if (line.startsWith("listusers")) {
+					int cnt = 0;
+					for (String player : MatchmakingController.getPlayers()) {
+						System.out.println(player);
+						cnt++;
+					}
+					if (cnt == 0)
+						System.out.println("(empty)");
+				} else if (line.startsWith("help")) {
+					System.out.println("-------- Available Commands --------");
+					System.out.println("exit");
+					System.out.println("listlobbies");
+					System.out.println("listusers");
+					System.out.println("help");
+					System.out.println("------------------------------------");
+				} else {
+					System.out.println("Bad command: " + line);
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.err.println("Bad syntax.");
+			}
+		}
+		scanInput.close();
 	}
 
 	/**
