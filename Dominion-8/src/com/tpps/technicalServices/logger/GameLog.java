@@ -69,7 +69,7 @@ public class GameLog {
 	 */
 	public static void init() {
 		GameLog.isInitialized = true;
-		String team = "GameLogger4Team++;\n\n";
+		String team = " --- Game Log --- \n\n";
 		/*if (displayUIWindow) {
 			 create UI if desired 
 		}*/
