@@ -71,8 +71,8 @@ public class MatchmakingServer extends Server {
 					System.out.println(MatchmakingController.getPlayers().length);
 				} else if (line.startsWith("listlobbies")) {
 					int cnt = 0;
-					for (String player : MatchmakingController.getLobbies()) {
-						System.out.println(player);
+					for (String lobb : MatchmakingController.getLobbies()) {
+						System.out.println(lobb);
 						cnt++;
 					}
 					if (cnt == 0)
