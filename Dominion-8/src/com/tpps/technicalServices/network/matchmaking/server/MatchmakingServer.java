@@ -147,9 +147,9 @@ public class MatchmakingServer extends Server {
 	 * @param opponents
 	 *            all the players in the lobby
 	 */
-	public void sendSuccessPacket(Collection<MPlayer> receivers, String[] opponents) {
+	public void sendSuccessPacket(Collection<MPlayer> receivers, String[] opponents, int port) {
 
-		PacketMatchmakingSuccessful pms = new PacketMatchmakingSuccessful(opponents, 0);
+		PacketMatchmakingSuccessful pms = new PacketMatchmakingSuccessful(opponents, port);
 		try {
 			for (MPlayer receiver : receivers) {
 				super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pms);

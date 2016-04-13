@@ -11,7 +11,6 @@ import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
-import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingAnswer;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingPlayerInfo;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingRequest;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingSuccessful;
@@ -95,7 +94,7 @@ public final class Matchmaker {
 
 			switch (packet.getType()) {
 			case MATCHMAKING_ANSWER:
-				PacketMatchmakingAnswer pma = (PacketMatchmakingAnswer) packet;
+//				PacketMatchmakingAnswer pma = (PacketMatchmakingAnswer) packet;
 				// is called when the player is put into a matchmaking-lobby
 				// TODO: show LobbyScreen
 				break;
@@ -116,6 +115,7 @@ public final class Matchmaker {
 				PacketMatchmakingSuccessful pms = (PacketMatchmakingSuccessful) packet;
 				// is called, when the lobby is full and the game starts
 				// TODO: connect to the gameServer & start the round				
+				System.out.println("starting match!");
 				DominionController.getInstance().startMatch(pms.getGameserverPort());
 				break;
 			default:

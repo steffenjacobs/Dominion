@@ -49,11 +49,11 @@ public class MatchmakingPacketHandler extends PacketHandler {
 	public void handleReceivedPacket(int port, Packet packet) {
 		switch (packet.getType()) {
 		case MATCHMAKING_REQUEST:
-			handleClientConnect(port, (PacketMatchmakingRequest) packet);
-			break;
-		case MATCHMAKING_ABORT:
-			// TODO: stop running validation-service if necessary
-			MatchmakingController.onPlayerDisconnect(port);
+			PacketMatchmakingRequest pck = (PacketMatchmakingRequest) packet;
+			if (pck.isAbort()) {
+				MatchmakingController.onPlayerDisconnect(port);
+			} else
+				handleClientConnect(port, pck);
 			break;
 		case GAME_END:
 			PacketGameEnd endPacket = (PacketGameEnd) packet;
@@ -77,7 +77,7 @@ public class MatchmakingPacketHandler extends PacketHandler {
 
 		threadPool.submit(() -> {
 			if (sess.checkSessionSync(pmr.getPlayerName(), pmr.getPlayerID())) {
-				MPlayer p  = MPlayer.initialize(pmr, port);
+				MPlayer p = MPlayer.initialize(pmr, port);
 				MatchmakingController.addPlayer(p);
 				try {
 					super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 1));

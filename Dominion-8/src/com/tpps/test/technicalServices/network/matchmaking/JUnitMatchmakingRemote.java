@@ -28,6 +28,7 @@ public class JUnitMatchmakingRemote {
 	static HashMap<String, UUID> userSessions = new HashMap<>();
 
 	static String username = "test";
+	private static final int countClients = 3;
 
 	@Test
 	public void test() throws IOException, InterruptedException, NoSuchFieldException, SecurityException,
@@ -46,7 +47,7 @@ public class JUnitMatchmakingRemote {
 		Semaphore halt = new Semaphore(1);
 		halt.acquire();
 
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < countClients; i++) {
 
 			// Setup match-makers
 			Matchmaker mm = new Matchmaker();
@@ -79,22 +80,22 @@ public class JUnitMatchmakingRemote {
 		Thread.sleep(200);
 
 		// check sessions
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < countClients; i++) {
 			assertNotNull(userSessions.get(username + i));
 		}
 
 		Iterator<String> it = userSessions.keySet().iterator();
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < countClients; i++) {
 			String name = it.next();
 			matchmakers.get(name).findMatch(name, userSessions.get(name));
 			Thread.sleep(100);
 		}
 
-		Thread.sleep(4000);
+		Thread.sleep(40000);
 
-		assertEquals(4, tmh.checks[0].get());
-		assertEquals(16, tmh.checks[1].get());
-		assertEquals(20, tmh.checks[2].get());
+		assertEquals(countClients, tmh.checks[0].get());
+		assertEquals(countClients-1+countClients, tmh.checks[1].get());
+		assertEquals(countClients*5, tmh.checks[2].get());
 
 	}
 }

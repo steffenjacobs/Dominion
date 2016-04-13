@@ -6,7 +6,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Semaphore;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 
@@ -32,6 +35,8 @@ public final class MatchmakingController {
 	private static ConcurrentHashMap<MPlayer, GameLobby> lobbiesByPlayer;
 	private static ConcurrentHashMap<GameLobby, Thread> gameServersByLobby;
 
+	private static Semaphore blockPort = new Semaphore(1);
+
 	private static CopyOnWriteArrayList<GameLobby> lobbies;
 
 	/**
@@ -41,29 +46,43 @@ public final class MatchmakingController {
 	 *            the GameLobby to start
 	 */
 	static void startGame(GameLobby lobby) {
-		removeLobby(lobby);
+		// removeLobby(lobby);
 		String[] playerNames = new String[lobby.getPlayers().size()];
 		MPlayer player;
 		for (int i = 0; i < lobby.getPlayers().size(); i++) {
 			player = lobby.getPlayers().get(i);
 			playerNames[i] = player.getPlayerName();
 		}
-		MatchmakingServer.getInstance().sendSuccessPacket(lobby.getPlayers(), playerNames);
+		
+		//reserve port & start game-process
+		try {
+			blockPort.acquire(1);
+			int freePort = getFreePort();
 
-		/* start server */
-		Thread gsThread = new Thread(() -> {
-			try {
-				new GameServer(getFreePort());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
-		gsThread.start();
-		gameServersByLobby.put(lobby, gsThread);
+			/* start server */
+			Thread gsThread = new Thread(() -> {
+				try {
+					new GameServer(freePort);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+			gsThread.start();
+			gameServersByLobby.put(lobby, gsThread);
+
+			Thread.sleep(500);
+
+			MatchmakingServer.getInstance().sendSuccessPacket(lobby.getPlayers(), playerNames, freePort);
+			blockPort.release(1);
+
+		} catch (InterruptedException | IOException e1) {
+			e1.printStackTrace();
+		}
 
 	}
 
+	/** @return a random fre port */
 	private static int getFreePort() throws IOException {
 		ServerSocket srv = new ServerSocket(0);
 		srv.close();
@@ -159,6 +178,7 @@ public final class MatchmakingController {
 	 *            the player to remove
 	 */
 	private static void removePlayer(MPlayer player) {
+		GameLog.log(MsgType.NETWORK_INFO, "[-> " + player.getPlayerName() + " @" + player.getConnectionPort());
 		playersByPort.remove(player.getConnectionPort());
 		connectedPortsByPlayer.remove(player);
 		playersByName.remove(player.getPlayerName());
@@ -205,7 +225,6 @@ public final class MatchmakingController {
 			MPlayer player = playersByName.get(p);
 			int port = connectedPortsByPlayer.get(player);
 			MatchmakingServer.getInstance().disconnect(port);
-			
 
 			removePlayer(player);
 
