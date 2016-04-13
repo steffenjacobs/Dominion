@@ -59,7 +59,7 @@ public class GameLogTextPane extends JPanel {
 					StyledDocument doc = textPane.getStyledDocument();
 					doc.insertString(doc.getLength(), text, style);
 				} catch (BadLocationException e) {
-					// TODO
+					e.printStackTrace();
 				}
 			}
 		});
@@ -69,7 +69,8 @@ public class GameLogTextPane extends JPanel {
 	 * 
 	 * @param line the line update
 	 * @param textColor the color of the line
-	 * @param timestamp determines whether a timestamp is written in front of the text line
+	 * @param timestamp determines whether there is a timestamp written in front of the text line
+	 *        so the line is only parsed if its necessary
 	 */
 	public void updateLogger(final String line, Color textColor, boolean timestamp) {
 		if (timestamp) {

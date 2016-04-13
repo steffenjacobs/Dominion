@@ -4,9 +4,9 @@ import java.awt.Color;
 
 /**
  * 
- * 
- * class converts JAVAFX colors to JAVA AWT colors, but does not work correctly so far not sure if
- * it is supposed to work anyways because we shouldnt use fxColors in swing
+ * class converts JAVAFX colors to JAVA AWT colors, but does not work correctly so far and I'm not sure if
+ * it is supposed to work anyways because we shouldn't use fxColors in Swing. 
+ * The use of the methods is discouraged. 
  */
 public class ColorUtil {
 
@@ -22,9 +22,4 @@ public class ColorUtil {
 		String colorStr = color.toString().substring(2, color.toString().length());
 		return new Color(Integer.valueOf(colorStr.substring(1, 3), 16), Integer.valueOf(colorStr.substring(3, 5), 16), Integer.valueOf(colorStr.substring(5, 7), 16));
 	}
-
-	// public static java.awt.Color getAwtColor(javafx.scene.paint.Color color) {
-	// return new java.awt.Color((int) color.getRed(),(int) color.getGreen(), (int)
-	// color.getBlue());
-	// }
 }

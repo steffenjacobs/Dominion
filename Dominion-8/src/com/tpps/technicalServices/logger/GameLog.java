@@ -27,8 +27,8 @@ public class GameLog {
 	/**
 	 * Colors that can easily be changed for the UI Window
 	 */
-	private static Color backgroundColor = Color.BLACK;
-	private static Color timestampColor = Color.CYAN;
+	private static Color backgroundColor = Color.WHITE;
+	private static Color timestampColor = Color.BLUE;
 	private static Color msgColor = ColorUtil.MEDIUMGRAY;
 	
 	/**
@@ -69,7 +69,7 @@ public class GameLog {
 	 */
 	public static void init() {
 		GameLog.isInitialized = true;
-		String team = "GameLogger4Team++;\n\n";
+		String team = "Game Log\n\n";
 		/*if (displayUIWindow) {
 			 create UI if desired 
 		}*/
@@ -156,10 +156,10 @@ public class GameLog {
 	 * 
 	 * @param type the messageType of the log message
 	 * @param ansi determines whether the line shall have ANSI codes or not
-	 * @return the computed line with hostname, username, timestamp, messagetype and the actual 
+	 * @return the created line with hostname, username, timestamp, messagetype and the actual 
 	 * message with(out) ANSI codes;
 	 */
-	private static String computeLine(MsgType type, boolean ansi) {
+	private static String createTimestamp(MsgType type, boolean ansi) {
 		StringBuffer line = new StringBuffer();
 		try {
 			String timestamp = java.net.InetAddress.getLocalHost().getHostName() + ":~@"
@@ -185,12 +185,11 @@ public class GameLog {
 	public static void log(MsgType type, String line) {
 		if (isInitialized) {
 			if (type.getDisplay()) {
-			//  die folgende Zeile würde vor jeden GameLog.log(MsgType.GAME, ""); den Namen des aktuellen Spielers setzen
-			//  da man aber evtl schreiben will "--- Nico's Turn ---" und nicht Nico: --- Nico's Turn --- denke ich es ist besser
-			//  das immer von Hand davor zu schreiben
-			//	String msg = type.equals(MsgType.GAME) ? GameServer.getInstance().getGameController().getActivePlayerName() + ": " : "";
-				String msg = "";
-				msg += computeLine(type, true) + line;
+			/** die folgende Zeile wuerde vor jeden GameLog.log(MsgType.GAME, ""); den Namen des aktuellen Spielers setzen
+			    da man aber evtl schreiben will "--- Nico's Turn ---" und nicht Nico: --- Nico's Turn --- denke ich es ist besser
+			    das immer von Hand davor zu schreiben
+			  	String msg = type.equals(MsgType.GAME) ? GameServer.getInstance().getGameController().getActivePlayerName() + ": " : ""; */
+				String msg = type.getTimeStamp() ? createTimestamp(type, true) + line : line;
 				writeToConsole(msg);
 			//  if (guiPossible) {
 					write(msg, type.getColor(), type.getTimeStamp());
