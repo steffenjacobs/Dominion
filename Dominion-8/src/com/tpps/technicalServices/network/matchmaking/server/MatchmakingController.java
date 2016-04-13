@@ -6,6 +6,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 
+/**
+ * this represents the main controller managing all the lobbies and putting the
+ * players into lobbies
+ * 
+ * @author Steffen Jacobs
+ */
 public final class MatchmakingController {
 
 	static {
@@ -21,6 +27,12 @@ public final class MatchmakingController {
 
 	private static CopyOnWriteArrayList<GameLobby> lobbies;
 
+	/**
+	 * starts a game, if the lobby is full
+	 * 
+	 * @param lobby
+	 *            the GameLobby to start
+	 */
 	static void startGame(GameLobby lobby) {
 		removeLobby(lobby);
 		String[] playerNames = new String[lobby.getPlayers().size()];
@@ -33,21 +45,47 @@ public final class MatchmakingController {
 
 	}
 
+	/**
+	 * removes a lobby, if it is empty
+	 * 
+	 * @param lobby
+	 *            the GameLobby to remove
+	 */
 	private static void removeLobby(GameLobby lobby) {
 		lobbies.remove(lobby);
 		// INFO: lobby could not be in lobbiesByPlayer, since no player is in
 		// the lobby
 	}
 
+	/**
+	 * @return the port a player is connected with
+	 * @param player
+	 *            the requested player
+	 */
 	public static int getPortFromPlayer(MPlayer player) {
 		return connectedPortsByPlayer.get(player);
 	}
 
+	/**
+	 * adds a player to a lobby
+	 * 
+	 * @param player
+	 *            the player to add to the lobby
+	 * @param lobby
+	 *            the lobby the player is added to
+	 */
 	private static void joinLobby(MPlayer player, GameLobby lobby) {
 		lobby.joinPlayer(player);
 		lobbiesByPlayer.put(player, lobby);
 	}
 
+	/**
+	 * finds a lobby best-fitting to the player's matchmaking-score and puts the
+	 * player in
+	 * 
+	 * @param player
+	 *            the player to find a lobby for
+	 */
 	private static void findLobbyForPlayer(MPlayer player) {
 		int score = player.getScore();
 
@@ -75,6 +113,13 @@ public final class MatchmakingController {
 
 	}
 
+	/**
+	 * starts the match-finding process for a player & adds him to the
+	 * matchmaking-system
+	 * 
+	 * @param player
+	 *            the player to add
+	 */
 	public static void addPlayer(MPlayer player) {
 		playersByPort.put(player.getConnectionPort(), player);
 		connectedPortsByPlayer.put(player, player.getConnectionPort());
@@ -82,6 +127,12 @@ public final class MatchmakingController {
 		findLobbyForPlayer(player);
 	}
 
+	/**
+	 * removes a player from the matchmaking-system
+	 * 
+	 * @param player
+	 *            the player to remove
+	 */
 	private static void removePlayer(MPlayer player) {
 		playersByPort.remove(player.getConnectionPort());
 		connectedPortsByPlayer.remove(player);
@@ -95,10 +146,25 @@ public final class MatchmakingController {
 		}
 	}
 
+	/**
+	 * called by the NetworkListener when a client disconnected
+	 * 
+	 * @param port
+	 *            the port the client disconnected from
+	 */
 	public static void onPlayerDisconnect(int port) {
 		removePlayer(playersByPort.get(port));
 	}
 
+	/**
+	 * is called when the game-end-packet was received from the game-server,
+	 * adds all statistics to the database
+	 * 
+	 * @param winner
+	 *            the player who won the game
+	 * @param players
+	 *            all participants in the game that stayed until it ended
+	 */
 	public static void onGameEnd(String winner, String[] players) {
 		GameLobby lobby = lobbiesByPlayer.get(winner);
 		for (String p : players) {
