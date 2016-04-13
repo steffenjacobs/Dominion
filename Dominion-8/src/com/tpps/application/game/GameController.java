@@ -117,7 +117,7 @@ public class GameController {
 	}
 
 	/**
-	 * 
+	 * determines the next ative player
 	 */
 	public void setNextActivePlayer() {
 		Player activePlayer = this.getActivePlayer();
