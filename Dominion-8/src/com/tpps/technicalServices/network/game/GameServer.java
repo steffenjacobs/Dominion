@@ -17,8 +17,8 @@ public class GameServer extends Server{
 	private static GameServer instance;
 	private boolean flag;
 	
-	public GameServer() throws IOException{
-		super(new InetSocketAddress("0.0.0.0", 1339), new ServerGamePacketHandler());
+	public GameServer(int port) throws IOException{
+		super(new InetSocketAddress("0.0.0.0", port), new ServerGamePacketHandler());
 		((ServerGamePacketHandler)super.getHandler()).setServer(this);
 		this.gameController = new GameController();
 		this.flag = true;
@@ -51,7 +51,7 @@ public class GameServer extends Server{
 	
 	public static void main(String[] args) {
 		try {
-			new GameServer();
+			new GameServer(1339);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

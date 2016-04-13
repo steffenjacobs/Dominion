@@ -18,7 +18,7 @@ public class GameControllerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.gameServer = new GameServer();
+		this.gameServer = new GameServer(1339);
 		this.gameControlller = new GameController();
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++){
 		this.gameControlller.addPlayer(new Player(GameServer.getCLIENT_ID(), 80 + i, gameServer.getGameController().getGameBoard().getStartSet(), "test" + i));

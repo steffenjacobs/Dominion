@@ -13,7 +13,7 @@ public class GameServerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		new GameServer();
+		new GameServer(1339);
 	}
 
 	@Test
