@@ -26,6 +26,11 @@ public class GameLobby {
 	public long getStartTime() {
 		return startTime;
 	}
+	
+	/**@return whether there are 4 players in the lobby*/
+	public boolean isFull(){
+		return this.players.size()==4;
+	}
 
 	/**
 	 * adds a player to the lobby
