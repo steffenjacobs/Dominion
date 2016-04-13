@@ -40,7 +40,7 @@ public class GameLogTextPane extends JPanel {
 		MsgType.setGameMode();
 		this.textPane = new JTextPane();
 		this.textPane.setEditable(false);
-		this.textPane.setFont(new Font("Courier New", Font.PLAIN, 13));
+		this.textPane.setFont(new Font("Courier New", Font.PLAIN, 14));
 		this.textPane.setBackground(GameLog.getBackgroundColor());
 		this.setLayout(new BorderLayout());
 		this.add(new JScrollPane(this.textPane));
@@ -61,7 +61,7 @@ public class GameLogTextPane extends JPanel {
 					StyledDocument doc = textPane.getStyledDocument();
 					doc.insertString(doc.getLength(), text, style);
 				} catch (BadLocationException e) {
-					// TODO
+					e.printStackTrace();
 				}
 			}
 		});
@@ -71,7 +71,8 @@ public class GameLogTextPane extends JPanel {
 	 * 
 	 * @param line the line update
 	 * @param textColor the color of the line
-	 * @param timestamp determines whether a timestamp is written in front of the text line
+	 * @param timestamp determines whether there is a timestamp written in front of the text line
+	 *        so the line is only parsed if its necessary
 	 */
 	public void updateLogger(final String line, Color textColor, boolean timestamp) {
 		if (timestamp) {
@@ -79,7 +80,7 @@ public class GameLogTextPane extends JPanel {
 			this.updateTextArea(line.split("]")[1] + "]", textColor);
 			this.updateTextArea(line.split("]")[2] + "\n", GameLog.getMsgColor());
 		} else {
-			this.updateTextArea(line, textColor);
+			this.updateTextArea(line + "\n", GameLog.getMsgColor());
 		}
 	}
 

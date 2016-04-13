@@ -2,6 +2,8 @@ package com.tpps.ui.lobbyscreen;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -12,7 +14,7 @@ import javax.swing.JButton;
 
 import com.tpps.application.game.DominionController;
 
-public class Button extends JButton implements MouseListener{
+public class Button extends JButton implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	private BufferedImage image;
@@ -26,7 +28,7 @@ public class Button extends JButton implements MouseListener{
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}		
-		this.addMouseListener(this);
+		this.addActionListener(this);
 	}
 
 	protected void paintComponent(Graphics g) {
@@ -38,21 +40,10 @@ public class Button extends JButton implements MouseListener{
 	public Dimension getPreferredSize() {
 	    return new Dimension(image.getWidth(), image.getHeight());
 	}
-
+	
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		DominionController.getInstance().joinMainMenu();
+	public void actionPerformed(ActionEvent arg0) {
+		DominionController.getInstance().abortSearching();
+		DominionController.getInstance().joinMainMenu();		
 	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) { }
-
-	@Override
-	public void mouseExited(MouseEvent e) { }
-
-	@Override
-	public void mousePressed(MouseEvent e) { }
-
-	@Override
-	public void mouseReleased(MouseEvent e) { }
 }

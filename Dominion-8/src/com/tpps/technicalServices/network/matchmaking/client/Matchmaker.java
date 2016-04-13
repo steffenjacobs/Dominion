@@ -4,20 +4,31 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingPlayerInfo;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingRequest;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingSuccessful;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 
+/**
+ * main matchmaking system for client
+ * 
+ * @author Steffen Jacobs
+ */
 public final class Matchmaker {
-	private static Client client;
-	private static MatchmakingHandler handler;
-
-	private static void checkAndCreateClient() throws IOException {
+	private Client client;
+	private PacketHandler handler;
+	
+	/**
+	 * creates & opens a new connection to the matchmaking-server if necessary
+	 */
+	private void checkAndCreateClient() throws IOException {
 		if (client == null || !client.isConnected()) {
 			handler = new MatchmakingHandler();
 			client = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.PORT_MATCHMAKING),
@@ -25,43 +36,92 @@ public final class Matchmaker {
 		}
 	}
 
-	public static void findMatch(String username, UUID uid) throws IOException {
+	/**
+	 * finds a match for the player
+	 * 
+	 * @param username
+	 *            name of the player searching for a match
+	 * @param uid
+	 *            uuid of the player searching for a match
+	 * @throws IOException
+	 *             if there is no network connection available or the server is
+	 *             unreachable
+	 */
+	public void findMatch(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingRequest(username, uid, false));
-
+		System.out.println("Start searching a match");
 	}
 
-	public static void abort(String username, UUID uid) throws IOException {
+	/**
+	 * aborts the search for a match for a player
+	 * 
+	 * @param username
+	 *            name of the player aborting the search
+	 * @param uid
+	 *            uuid of the player aborting the search
+	 */
+	public void abort(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingRequest(username, uid, true));
+		System.out.println("Aborted to search a match");
 	}
 
+	/** @return the actual network-client connected to the matchmaking-system */
+	public Client getNetworkClient() {
+		return client;
+	}
+
+	/**
+	 * client packet-handler for the matchmaking
+	 * 
+	 * @author Steffen Jacobs
+	 */
 	private static class MatchmakingHandler extends PacketHandler {
 
+		/**
+		 * is called when a packet is received
+		 * 
+		 * @param port
+		 *            the port the packet was received on (unnecessary here,
+		 *            because all received packets are from the same server at
+		 *            the same port
+		 * @param packet
+		 *            the received packet
+		 */
 		@Override
 		public void handleReceivedPacket(int port, Packet packet) {
 
 			switch (packet.getType()) {
 			case MATCHMAKING_ANSWER:
-				//is called when the player is put into a matchmaking-lobby
+//				PacketMatchmakingAnswer pma = (PacketMatchmakingAnswer) packet;
+				// is called when the player is put into a matchmaking-lobby
 				// TODO: show LobbyScreen
 				break;
 			case MATCHMAKING_PLAYER_INFO:
-				//is called when a player joined or quitted the lobby
+				PacketMatchmakingPlayerInfo pmpi = (PacketMatchmakingPlayerInfo) packet;
+				// is called when a player joined or quitted the lobby
 				// TODO: add player and remove one instance of "Waiting for
 				// player..." @LobbyScreen
-
+				if(pmpi.isStatus()){
+					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
+					System.out.println("player joined the lobby");
+				}else{
+					DominionController.getInstance().deletePlayerFromGUI(pmpi.getPlayerName());
+					System.out.println("player left from lobby");
+				}				
 				break;
 			case MATCHMAKING_SUCCESSFUL:
-				//is called, when the lobby is full and the game starts
-				// TODO: connect to the gameServer & start the round
+				PacketMatchmakingSuccessful pms = (PacketMatchmakingSuccessful) packet;
+				// is called, when the lobby is full and the game starts
+				// TODO: connect to the gameServer & start the round				
+				System.out.println("starting match!");
+				DominionController.getInstance().startMatch(pms.getGameserverPort());
 				break;
 			default:
 				GameLog.log(MsgType.NETWORK_ERROR, "Bad packet received: " + packet);
 				break;
 			}
 		}
-
 	}
-
 }

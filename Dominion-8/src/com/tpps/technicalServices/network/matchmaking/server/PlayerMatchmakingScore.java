@@ -2,20 +2,31 @@ package com.tpps.technicalServices.network.matchmaking.server;
 
 import java.util.HashMap;
 
-public class PlayerScore {
-	
+/**
+ * represents the matchmaking-score of a player
+ * 
+ * @author Steffen Jacobs
+ */
+public class PlayerMatchmakingScore {
 
-	private final HashMap<String, StatisticUnit> statistics;	
+	private final HashMap<String, StatisticUnit> statistics;
 	private int totalScore = 0;
 
 	private static final long MILLIS_24_HOURS = 86400000;
 
-
-	public PlayerScore(HashMap<String, StatisticUnit> stats){
+	/**
+	 * initializes with all the statistics for a player
+	 * 
+	 * @param stats
+	 */
+	public PlayerMatchmakingScore(HashMap<String, StatisticUnit> stats) {
 		this.statistics = stats;
 	}
-	
-	/** a score representing the player's performance over the last 10 games */
+
+	/**
+	 * @return a score representing the player's performance over the last 10
+	 *         games
+	 */
 	private int getLastWinsCount() {
 		boolean[] lastGamesWins = statistics.get("LAST_GAMES_WINS").asBooleanArray();
 		int wins = 0;
@@ -27,7 +38,7 @@ public class PlayerScore {
 	}
 
 	/**
-	 * calculates a lower score, if the player is new to the game
+	 * @return a lower score, if the player is new to the game
 	 */
 	private int getGamesCountModifier() {
 
@@ -48,11 +59,14 @@ public class PlayerScore {
 		}
 	}
 
-	/** calculates a score representing the last time the player played */
+	/** @return a score representing the last time the player played */
 	private int getLastTimePlayedModifier() {
 
 		long[] lastGames = statistics.get("LAST_GAMES_TIMES").asLongArray();
 		/* score for the time the last 10 games were played in */
+
+		if (lastGames.length == 0)
+			return 1;
 
 		/* last played */
 		if (System.currentTimeMillis() - lastGames[0] < MILLIS_24_HOURS) {
@@ -75,12 +89,15 @@ public class PlayerScore {
 	}
 
 	/**
-	 * calculates a score representing the time-intervals the player played the
-	 * last 10 games in
+	 * @return a score representing the time-intervals the player played the
+	 *         last 10 games in
 	 */
 	private int getTimeIntervalModifier() {
 
 		long[] lastGames = statistics.get("LAST_GAMES_TIMES").asLongArray();
+
+		if (lastGames.length < 10)
+			return 1;
 
 		long totalTimeForTheLastTenGames = System.currentTimeMillis() - lastGames[9];
 
@@ -133,7 +150,7 @@ public class PlayerScore {
 		return 1;
 	}
 
-	/** calculates how many times a user played today */
+	/** @return how many times a user played today */
 	private int getTimesPlayedToday() {
 		long[] lastGames = statistics.get("LAST_GAMES_TIMES").asLongArray();
 		int count = 0;
@@ -146,15 +163,15 @@ public class PlayerScore {
 		return count;
 	}
 
-	/** calculates a modifier based on the times the player played already */
+	/** @return a modifier based on the times the player played already */
 	private int getTotalTimesPlayedModifier() {
 		int timesPlayedModifier = statistics.get("TIMES_PLAYED").asInteger() / 50;
 		return timesPlayedModifier > 10 ? 10 : timesPlayedModifier;
 	}
 
 	/**
-	 * calculates the fraction of the games that were wins and creates a
-	 * modifier based on that
+	 * @return the fraction of the games that were wins and creates a modifier
+	 *         based on that
 	 */
 	private int getWinLossModifier() {
 		double winFraction = (double) statistics.get("WINS").asInteger()
@@ -164,6 +181,9 @@ public class PlayerScore {
 
 	}
 
+	/**
+	 * @return the total matchmaking-score calculated based upon the statistics
+	 */
 	public int calculateMatchmakingScore() {
 		/* did the player play <5 or less <10 games */
 		this.totalScore = 100 * this.getGamesCountModifier();
@@ -189,11 +209,16 @@ public class PlayerScore {
 		return this.totalScore;
 	}
 
+	/** @return all statistics */
 	public HashMap<String, StatisticUnit> getStatistics() {
 		return this.statistics;
 	}
 
+	/** @return the calculated matchmaking-score */
 	public int getScore() {
+		if (this.totalScore == 0) {
+			this.calculateMatchmakingScore();
+		}
 		return this.totalScore;
 	}
 

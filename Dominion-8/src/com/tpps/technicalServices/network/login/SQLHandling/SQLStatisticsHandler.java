@@ -60,7 +60,7 @@ public class SQLStatisticsHandler {
 		try {
 			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement(
 					"INSERT INTO statistics (nickname, wins, losses, win_loss, games_played, rank, playtime, LAST_TIME_PLAYED, LAST_TIME_WINS) "
-					+ "VALUES (?, 0, 0, 0, 0,'silver', 0, '','')");
+							+ "VALUES (?, 0, 0, 0, 0,0, 0, '','')");
 			stmt.setString(1, nickname);
 			stmt.executeUpdate();
 			System.out.println("Added nickname Row for statistics");
@@ -155,25 +155,25 @@ public class SQLStatisticsHandler {
 		}
 	}
 
-	public static String getRank(String nickname) {
+	public static int getRank(String nickname) {
 		try {
 			PreparedStatement stmt = SQLHandler.getConnection()
 					.prepareStatement("SELECT rank FROM statistics WHERE nickname = ?");
 			stmt.setString(1, nickname);
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
-			return rs.getString("rank");
+			return rs.getInt("rank");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return 0;
 	}
 
-	public static void setRank(String nickname, String rank) {
+	public static void setRank(String nickname, int rank) {
 		try {
 			PreparedStatement stmt = SQLHandler.getConnection()
 					.prepareStatement("UPDATE statistics SET rank = ? WHERE nickname = ?");
-			stmt.setString(1, rank);
+			stmt.setInt(1, rank);
 			stmt.setString(2, nickname);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -284,7 +284,7 @@ public class SQLStatisticsHandler {
 				int losses = rs.getInt("losses");
 				double ratio = rs.getDouble("win_loss");
 				int games_played = rs.getInt("games_played");
-				String rank = rs.getString("rank");
+				int rank = rs.getInt("rank");
 				long playtime = rs.getLong("playtime");
 				// System.out.println(nick);
 
@@ -293,7 +293,7 @@ public class SQLStatisticsHandler {
 				statz[height][++width] = "" + losses;
 				statz[height][++width] = "" + ratio;
 				statz[height][++width] = "" + games_played;
-				statz[height][++width] = rank;
+				statz[height][++width] = "" + rank;
 				statz[height][++width] = "" + playtime;
 				height++;
 				width = 0;
@@ -321,15 +321,16 @@ public class SQLStatisticsHandler {
 		stmt.setString(1, playerName);
 		return stmt.executeQuery();
 	}
-	
-	public static void addPlaytimeArray(String nickname, long[] playtime){
+
+	public static void addPlaytimeArray(String nickname, long[] playtime) {
 		PreparedStatement stmt;
 		String text = "";
 		for (int i = 0; i < playtime.length; i++) {
 			text += (playtime[i] + "|");
 		}
 		try {
-			stmt = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET LAST_TIME_PLAYED = ? WHERE nickname = ?;");
+			stmt = SQLHandler.getConnection()
+					.prepareStatement("UPDATE statistics SET LAST_TIME_PLAYED = ? WHERE nickname = ?;");
 			stmt.setString(1, text);
 			stmt.setString(2, nickname);
 			stmt.executeUpdate();
@@ -337,15 +338,16 @@ public class SQLStatisticsHandler {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void addPlaytimeArray(String nickname, boolean[] winsAndLosses){
+
+	public static void addPlaytimeArray(String nickname, boolean[] winsAndLosses) {
 		PreparedStatement stmt;
 		String text = "";
 		for (int i = 0; i < winsAndLosses.length; i++) {
 			text += (winsAndLosses[i] + "|");
 		}
 		try {
-			stmt = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET LAST_TIME_WINS = ? WHERE nickname = ?;");
+			stmt = SQLHandler.getConnection()
+					.prepareStatement("UPDATE statistics SET LAST_TIME_WINS = ? WHERE nickname = ?;");
 			stmt.setString(1, text);
 			stmt.setString(2, nickname);
 			stmt.executeUpdate();
@@ -353,8 +355,10 @@ public class SQLStatisticsHandler {
 			e.printStackTrace();
 		}
 	}
-	
-	public static long[] getPlaytimeDatesParsed(String line){
+
+	public static long[] getPlaytimeDatesParsed(String line) {
+		if (!line.contains("\\|+"))
+			return new long[0];
 		String[] values = line.split("\\|+");
 		long[] dates = new long[10];
 		for (int i = 0; i < values.length; i++) {
@@ -362,22 +366,29 @@ public class SQLStatisticsHandler {
 		}
 		return dates;
 	}
-	
-	public static boolean[] getLastTimeWinsParsed(String line){
+
+	public static boolean[] getLastTimeWinsParsed(String line) {
+		if (!line.contains("\\|+"))
+			return new boolean[0];
 		String[] values = line.split("\\|+");
 		boolean[] winOrLosses = new boolean[10];
 		for (int i = 0; i < values.length; i++) {
-			switch(values[i]){
-			case "true": winOrLosses[i] = true; break;
-			case "false": winOrLosses[i] = false; break;
+			switch (values[i]) {
+			case "true":
+				winOrLosses[i] = true;
+				break;
+			case "false":
+				winOrLosses[i] = false;
+				break;
 			}
 		}
 		return winOrLosses;
 	}
-	
-	public static long[] getPlaytimeDatesAsLongArray(String nickname){
+
+	public static long[] getPlaytimeDatesAsLongArray(String nickname) {
 		try {
-			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT LAST_TIME_PLAYED FROM statistics WHERE nickname = ?");
+			PreparedStatement stmt = SQLHandler.getConnection()
+					.prepareStatement("SELECT LAST_TIME_PLAYED FROM statistics WHERE nickname = ?");
 			stmt.setString(1, nickname);
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
@@ -388,15 +399,16 @@ public class SQLStatisticsHandler {
 				dates[i] = Long.parseLong(values[i]);
 			}
 			return dates;
-		} catch (SQLException e) {		
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return new long[]{};
+		return new long[] {};
 	}
-	
-	public static void insertPlaytimeDateToDB(String nickname, long playtime){
+
+	public static void insertPlaytimeDateToDB(String nickname, long playtime) {
 		try {
-			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT LAST_TIME_PLAYED FROM statistics WHERE nickname = ?");
+			PreparedStatement stmt = SQLHandler.getConnection()
+					.prepareStatement("SELECT LAST_TIME_PLAYED FROM statistics WHERE nickname = ?");
 			stmt.setString(1, nickname);
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
@@ -412,19 +424,20 @@ public class SQLStatisticsHandler {
 				newArray[i] = Long.valueOf(array[i]);
 			}
 			SQLStatisticsHandler.addPlaytimeArray(nickname, newArray);
-		} catch (SQLException e) {		
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void addLastTimeWinsArray(String nickname, boolean[] playtime){
+
+	public static void addLastTimeWinsArray(String nickname, boolean[] playtime) {
 		PreparedStatement stmt;
 		String text = "";
 		for (int i = 0; i < playtime.length; i++) {
 			text += (playtime[i] + "|");
 		}
 		try {
-			stmt = SQLHandler.getConnection().prepareStatement("UPDATE statistics SET LAST_TIME_WINS = ? WHERE nickname = ?;");
+			stmt = SQLHandler.getConnection()
+					.prepareStatement("UPDATE statistics SET LAST_TIME_WINS = ? WHERE nickname = ?;");
 			stmt.setString(1, text);
 			stmt.setString(2, nickname);
 			stmt.executeUpdate();
@@ -432,33 +445,31 @@ public class SQLStatisticsHandler {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
-	
+
 	public static void main(String[] args) {
 		String hostname = "localhost";
 		String port = "3306";
 		String database = "accountmanager";
-		String user = "jojo";
-		String password = "password";
+		String user = "root";
+		String password = "root";
 		SQLHandler.init(hostname, port, user, password, database);
 		SQLHandler.connect();
 		String name = "name";
-//		SQLOperations.createAccount(name, "rsdgdrgdr", "xxx", "yyyy");
-//		SQLStatisticsHandler.insertRowForFirstLogin(name);
-		
+		// SQLOperations.createAccount(name, "rsdgdrgdr", "xxx", "yyyy");
+		// SQLStatisticsHandler.insertRowForFirstLogin(name);
+
 		long[] array = new long[10];
 		for (int i = 0; i < array.length; i++) {
 			array[i] = 1460497370656L + i;
 
-		}		
-	//	SQLStatisticsHandler.addPlaytimeArray(name, array);
-	//	SQLStatisticsHandler.insertPlaytimeDateToDB(name, 1111111111111l);
-		//long arrayx [] = SQLStatisticsHandler.getPlaytimeAsLongArray("1460497370656|1460497370657|1460497370658|1460497370659|1460497370660|1460497370661|1460497370662|1460497370663|1460497370664|1460497370665|");
-//		for (int i = 0; i < array.length; i++) {
-//			System.out.println(arrayx[i]);
-//		}
+		}
+		// SQLStatisticsHandler.addPlaytimeArray(name, array);
+		// SQLStatisticsHandler.insertPlaytimeDateToDB(name, 1111111111111l);
+		// long arrayx [] =
+		// SQLStatisticsHandler.getPlaytimeAsLongArray("1460497370656|1460497370657|1460497370658|1460497370659|1460497370660|1460497370661|1460497370662|1460497370663|1460497370664|1460497370665|");
+		// for (int i = 0; i < array.length; i++) {
+		// System.out.println(arrayx[i]);
+		// }
 		boolean[] wins = { true, false, true, false, true, false, true, false, true, true };
 		SQLStatisticsHandler.addLastTimeWinsArray(name, wins);
 	}

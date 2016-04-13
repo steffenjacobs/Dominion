@@ -4,8 +4,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.Semaphore;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
@@ -116,9 +119,14 @@ public class ServerConnectionThread extends Thread {
 	 */
 	private void sendMessage(byte[] data) throws IOException, InterruptedException {
 		holySemaphore.acquire();
+		try{
 		outStream.writeInt(data.length);
 		outStream.write(data);
 		outStream.flush();
+		}
+		catch(SocketException se){
+			GameLog.log(MsgType.NETWORK_INFO, "X " + this.getPort());
+		}
 		holySemaphore.release();
 	}
 

@@ -19,6 +19,7 @@ import com.tpps.technicalServices.network.chat.client.ChatClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
 import com.tpps.technicalServices.network.game.GameClient;
+import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.ui.MainFrame;
 import com.tpps.ui.MainMenuPanel;
 import com.tpps.ui.lobbyscreen.GlobalChatPanel;
@@ -40,6 +41,7 @@ public final class DominionController {
 	private SessionClient sessionClient;
 	private GameClient gameClient;
 	private CardClient cardClient;
+	private Matchmaker matchmaker;
 	private CardStorageController storageController;
 	private MainFrame mainFrame;
 	private LoginGUIController loginGuiController;
@@ -88,11 +90,15 @@ public final class DominionController {
 		}
 	}
 
+	/**
+	 * @author jhuhn
+	 */
 	private void loadPanels(){
 		mainMenuPanel = new MainMenuPanel(this.mainFrame);
 		globalChatPanel = new GlobalChatPanel();		
 		statisticsBoardPanel = new StatisticsBoard();
 		playerSettingsPanel = new PlayerSettingsPanel(statisticsBoardPanel);
+		this.playerSettingsPanel.insertPlayer(this.username);
 		try {
 			this.originalBackground = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
 		} catch (IOException e) {
@@ -100,27 +106,73 @@ public final class DominionController {
 		}	
 	}
 	
+	public void startMatch(int port){
+		try {
+			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), port), new ClientGamePacketHandler());
+		} catch (IOException e) {		
+			e.printStackTrace();
+		}
+	}
+	
+	public void findMatch(){
+		try {
+			this.matchmaker.findMatch(this.username, this.sessionID);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void abortSearching(){
+		try {
+			this.matchmaker.abort(this.username, this.sessionID);
+		} catch (IOException e) {		
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @author jhuhn
+	 * @param statistics
+	 */
 	public void loadStatisticsToGui(String[][] statistics){
 		this.statisticsBoardPanel.setTableData(statistics);
 	}
 	
+	/**
+	 * @author jhuhn
+	 */
 	public void sendPacketToGetStatistics(){
 		this.loginGuiController.getLoginclient().sendPacketForAllStatistics();
 	}
 	
+	/**
+	 * @author jhuhn
+	 */
 	private void initClients(){
 		this.chatClient = new ChatClient(this.username);
+		this.matchmaker = new Matchmaker();
 		System.out.println(this.username);
 	}
 	
+	/**
+	 * @author jhuhn
+	 * @param message
+	 */
 	public void sendChatToGlobalChat(String message){
 		this.chatClient.sendMessage(message);
 	}
 	
+	/**
+	 * @author jhuhn
+	 * @param message
+	 */
 	public void reveiveChatMessageFromChatServer(String message){
 		this.globalChatPanel.appendChatFromServer(message);
 	}
 	
+	/**
+	 * @author jhuhn
+	 */
 	public void endLogin(){
 		this.loadPanels();
 		this.initClients();
@@ -163,6 +215,7 @@ public final class DominionController {
 	
 	/**
 	 * opens the LobbyGui 
+	 * @author jhuhn
 	 */
 	public void joinLobbyGui() {
 		JPanel panel = new JPanel(){
@@ -195,6 +248,22 @@ public final class DominionController {
 		}
 		this.sessionClient = sc;
 		this.sessionClient.keepAlive(username, true);
+	}
+	
+	/**
+	 * @author jhuhn
+	 * @param player
+	 */
+	public void insertPlayerToGUI(String player){
+		this.playerSettingsPanel.insertPlayer(player);
+	}
+	
+	/**
+	 * @author jhuhn
+	 * @param player
+	 */
+	public void deletePlayerFromGUI(String player){
+		this.playerSettingsPanel.removePlayer(player);
 	}
 
 	/* getters and setters */

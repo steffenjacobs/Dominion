@@ -160,6 +160,7 @@ public class MainMenuPanel extends JPanel {
 			if (buttons[1].isOn(e.getX(), e.getY())) {				
 				DominionController.getInstance().joinLobbyGui();
 				DominionController.getInstance().sendPacketToGetStatistics();
+				DominionController.getInstance().findMatch();
 			}
 			if (buttons[2].isOn(e.getX(), e.getY())) {				
 			}

@@ -93,6 +93,7 @@ public class GameWindow extends JFrame {
 		System.out.println(getWIDTH() + "knlsd");
 		System.out.println(getHEIGHT() + "sdopj");
 
+		GameLog.init();
 		this.loggerPane = GameLog.getTextPane();
 		this.chatWindow = new ChatWindowForInGame();
 		this.topGap = Toolkit.getDefaultToolkit().getScreenSize().height / 4;
@@ -214,11 +215,11 @@ public class GameWindow extends JFrame {
 	}
 
 	private void loggerAdding(int width, int height) {
-		GameLog.init();
 		loggerPane.setBounds((int) (width * 0.5), (int) (height * 0.35), 200, 100);
 		framework.add(loggerPane);
+		/** TODO remove */
 		GameLog.log(MsgType.GAME, "XYZ");
-
+		GameLog.log(MsgType.GAME, "XYZ");
 	}
 
 	private void chatWindowAdding(int width, int height) {
@@ -568,7 +569,7 @@ public class GameWindow extends JFrame {
 	}
 
 	/**
-	 * all victory cards are created here on the top left corner. 90° Rotation
+	 * all victory cards are created here on the top left corner. 90ï¿½ Rotation
 	 * as well..
 	 * 
 	 * @param victory

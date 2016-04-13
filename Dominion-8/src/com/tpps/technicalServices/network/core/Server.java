@@ -247,7 +247,7 @@ public class Server {
 	}
 
 	/**
-	 * is called to disconnect all clients
+	 * disconnects all clients
 	 */
 	public void disconnectAll() {
 
@@ -258,5 +258,22 @@ public class Server {
 		}
 		this.clients.clear();
 
+	}
+
+	/**
+	 * disconnects a specific client with a port
+	 * 
+	 * @param the
+	 *            port mapped to the client to disconnect
+	 */
+	public void disconnect(int port) {
+		GameLog.log(MsgType.NETWORK_INFO, "Disconnecting Client @" + port + "...");
+		ServerConnectionThread sct = this.clients.remove(port);
+		try {
+			sct.closeSockets();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		sct.interrupt();
 	}
 }

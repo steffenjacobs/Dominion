@@ -1,6 +1,7 @@
 package com.tpps.application.game;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -11,8 +12,13 @@ import com.sun.xml.internal.ws.api.pipe.ThrowableContainerPropertySet;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
+import com.tpps.application.game.card.Tuple;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.Addresses;
+import com.tpps.technicalServices.network.core.Client;
+import com.tpps.technicalServices.network.core.PacketHandler;
+import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.game.TooMuchPlayerException;
@@ -26,6 +32,8 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketSendHandCard
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendRevealCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndReactions;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeCards;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketGameEnd;
+import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -68,6 +76,14 @@ public class GameController {
 	 */
 	public boolean isCardsEnabled() {
 		return cardsEnabled;
+	}
+	
+	/**
+	 * 
+	 * @return if the game is not finished
+	 */
+	public boolean getGameNotFinished() {
+		return this.gameNotFinished;
 	}
 
 	/**
@@ -117,7 +133,7 @@ public class GameController {
 	}
 
 	/**
-	 * 
+	 * determines the next active player
 	 */
 	public void setNextActivePlayer() {
 		Player activePlayer = this.getActivePlayer();
@@ -887,6 +903,15 @@ public class GameController {
 			endGame();
 		}
 	}
+	
+	public String[] getPlayerNames() {
+		LinkedList<String> names = new LinkedList<String>();
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			names.add(player.getPlayerName());
+		}
+		return (String[])names.toArray();
+	}
 
 	/**
 	 * 
@@ -896,12 +921,43 @@ public class GameController {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			try {
-				GameServer.getInstance().sendMessage(player.getPort(), new PacketDisable());
+				GameServer.getInstance().sendMessage(player.getPort(), new PacketDisable());				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		GameServer.getInstance().newGame();
+		}		
+		Client client;
+		try {
+			client = new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.PORT_MATCHMAKING), new PacketHandler() {
+				
+				@Override
+				public void handleReceivedPacket(int port, Packet packet) {
+					// TODO Auto-generated method stub
+					
+				}
+			}, false);
+			client.sendMessage(new PacketGameEnd(getPlayerNames(), getWinningPlayer().getPlayerName()));
+			GameServer.getInstance().newGame();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
+	}
+	
+	
+	private Player getWinningPlayer() {
+		int maxVictoryPoints = -1;
+		Player winningPlayer = null;
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			int victoryPoints = player.getDeck().getVictoryPoints();
+			if (victoryPoints > maxVictoryPoints) {
+				maxVictoryPoints = victoryPoints;
+				winningPlayer = player;
+				}
+			}
+		return winningPlayer;
 	}
 
 	/**
