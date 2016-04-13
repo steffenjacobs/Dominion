@@ -450,8 +450,8 @@ public class SQLStatisticsHandler {
 		String hostname = "localhost";
 		String port = "3306";
 		String database = "accountmanager";
-		String user = "jojo";
-		String password = "password";
+		String user = "root";
+		String password = "root";
 		SQLHandler.init(hostname, port, user, password, database);
 		SQLHandler.connect();
 		String name = "name";
