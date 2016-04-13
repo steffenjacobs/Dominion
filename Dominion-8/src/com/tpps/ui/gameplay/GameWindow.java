@@ -199,8 +199,9 @@ public class GameWindow extends JFrame {
 	private void loggerAdding(int width, int height) {
 		loggerPane.setBounds((int) (width * 0.5), (int) (height * 0.35), 200, 100);
 		framework.add(loggerPane);
+		/** TODO remove */
 		GameLog.log(MsgType.GAME, "XYZ");
-
+		GameLog.log(MsgType.GAME, "XYZ");
 	}
 
 	private void chatWindowAdding(int width, int height) {

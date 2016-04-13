@@ -33,9 +33,12 @@ public class GameLogUI {
 		}
 	}
 	
+	/** TODO remove */
 	public static void main(String[] args) {
 		GameLog.init();
 		new GameLogUI(GameLog.getTextPane());
+		GameLog.log(MsgType.GAME, "abc");
+		GameLog.log(MsgType.NETWORK_ERROR, "def");
 		GameLog.log(MsgType.GAME, "abc");
 	}
 }
