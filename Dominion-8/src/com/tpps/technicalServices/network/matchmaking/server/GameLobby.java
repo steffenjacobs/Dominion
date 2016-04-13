@@ -32,15 +32,13 @@ public class GameLobby {
 	 */
 	public void joinPlayer(MPlayer player) {
 		System.out.println("[" + System.identityHashCode(this) + "] <-" + player.getPlayerName());
+		for (MPlayer mplayer : players) {
+			MatchmakingServer.getInstance().sendJoinPacket(player, mplayer.getPlayerName());
+			MatchmakingServer.getInstance().sendJoinPacket(mplayer, player.getPlayerName());
+		}
+		MatchmakingServer.getInstance().sendJoinPacket(player, player.getPlayerName());
 		this.players.add(player);
 		this.updateLobbyScore();
-
-		MatchmakingServer.getInstance().sendJoinPacket(players, player.getPlayerName());
-		if (this.players.size() != 0) {
-			for (MPlayer mplayer : players) {
-				MatchmakingServer.getInstance().sendJoinPacket(mplayer, mplayer.getPlayerName());
-			}
-		}
 
 	}
 

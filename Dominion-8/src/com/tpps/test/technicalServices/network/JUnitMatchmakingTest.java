@@ -36,12 +36,12 @@ import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 public class JUnitMatchmakingTest {
 
 	static HashMap<String, UUID> userSessions = new HashMap<>();
+	static volatile int cntCheck1 = 0, cntCheck2 = 0, cntCheck3 = 0;;
+	static String username = "test";
 
 	@Test
 	public void test() throws IOException, InterruptedException, NoSuchFieldException, SecurityException,
 			IllegalArgumentException, IllegalAccessException {
-
-		String username = "test";
 
 		HashMap<String, Matchmaker> matchmakers = new HashMap<>();
 
@@ -129,7 +129,17 @@ public class JUnitMatchmakingTest {
 			matchmakers.get(name).findMatch(name, userSessions.get(name));
 			Thread.sleep(100);
 		}
-		Thread.sleep(1000);
+		// matchmakers.get(username + "0").findMatch(username + "0",
+		// userSessions.get(username + "0"));
+		// matchmakers.get(username + "1").findMatch(username + "1",
+		// userSessions.get(username + "1"));
+		// matchmakers.get(username + "2").findMatch(username + "2",
+		// userSessions.get(username + "2"));
+		Thread.sleep(2000);
+
+		assertEquals(4, cntCheck1);
+		assertEquals(16, cntCheck2);
+		assertEquals(20, cntCheck3);
 
 	}
 
@@ -145,22 +155,32 @@ public class JUnitMatchmakingTest {
 
 			switch (packet.getType()) {
 			case MATCHMAKING_ANSWER:
+				// is called when this specific player was added to the
+				// matchmaking-system
 				PacketMatchmakingAnswer pma = (PacketMatchmakingAnswer) packet;
-				// is called when the player is put into a matchmaking-lobby
-				// TODO: show LobbyScreen
+				// 4 checks
+				assertEquals(1, pma.getAnswerCode());
+				cntCheck1++;
 				break;
 			case MATCHMAKING_PLAYER_INFO:
-				PacketMatchmakingPlayerInfo pmpi = (PacketMatchmakingPlayerInfo) packet;
 				// is called when a player joined or quitted the lobby
-				// TODO: add player and remove one instance of "Waiting for
-				// player..." @LobbyScreen
+				PacketMatchmakingPlayerInfo pmpi = (PacketMatchmakingPlayerInfo) packet;
+				// 1+1+2+1+1+3+1+1+4 = 16 checks
+				assertTrue(pmpi.getPlayerName().startsWith(username));
+				cntCheck2++;
 
 				break;
 			case MATCHMAKING_SUCCESSFUL:
-				PacketMatchmakingSuccessful pms = (PacketMatchmakingSuccessful) packet;
-				System.out.println("start Packet received :) " + packet);
 				// is called, when the lobby is full and the game starts
-				// TODO: connect to the gameServer & start the round
+				PacketMatchmakingSuccessful pms = (PacketMatchmakingSuccessful) packet;
+				// 5*4 = 20 checks
+				assertEquals(4, pms.getJoinedPlayers().length);
+				cntCheck3++;
+				for (int i = 0; i < 4; i++) {
+					assertTrue(pms.getJoinedPlayers()[i].startsWith(username));					
+					cntCheck3++;
+				}
+				System.out.println("start Packet received :) " + packet);
 				break;
 			default:
 				System.err.println("Bad packet received: " + packet);
