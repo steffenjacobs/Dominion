@@ -910,7 +910,7 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			names.add(player.getPlayerName());
 		}
-		return (String[])names.toArray();
+		return (String[])(names.toArray());
 	}
 
 	/**
