@@ -14,7 +14,7 @@ public class MPlayer {
 	private final UUID playerUID;
 	private final int connectionPort;
 	
-	private PlayerScore matchmakingScore;
+	private PlayerMatchmakingScore matchmakingScore;
 
 
 	public StatisticUnit getStat(String statName) {
@@ -25,7 +25,7 @@ public class MPlayer {
 		this.playerName = name;
 		this.playerUID = uid;
 		this.connectionPort = port;
-		this.matchmakingScore = new PlayerScore(stats);
+		this.matchmakingScore = new PlayerMatchmakingScore(stats);
 		this.matchmakingScore.calculateMatchmakingScore();
 	}
 
