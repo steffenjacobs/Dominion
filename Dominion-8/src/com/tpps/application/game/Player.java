@@ -57,7 +57,7 @@ public class Player {
 	 * @param clientID
 	 * @param port
 	 */
-	public Player(Deck deck, int clientID, int port) {
+	public Player(Deck deck, int clientID, int port, String name) {
 		this.reactionCard = false;
 		this.discardMode = false;
 		this.trashMode = false;
@@ -86,8 +86,8 @@ public class Player {
 	 * @param port
 	 * @param initCards
 	 */
-	public Player(int clientID, int port, LinkedList<Card> initCards) {
-		this(new Deck(initCards), clientID, port);
+	public Player(int clientID, int port, LinkedList<Card> initCards, String name) {
+		this(new Deck(initCards), clientID, port, name);
 	}
 
 	/**
@@ -363,6 +363,14 @@ public class Player {
 	 */
 	public int getCoins() {
 		return coins;
+	}
+	
+	/**
+	 * 
+	 * @return playerName
+	 */
+	public String getPlayerName() {
+		return this.name;
 	}
 
 	/**

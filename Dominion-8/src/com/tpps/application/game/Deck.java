@@ -183,6 +183,51 @@ public class Deck {
 	
 	/**
 	 * 
+	 * @return the victoryPoints for the deck
+	 */
+	public int getVictoryPoints(){
+		int victoryPoints = 0;
+		LinkedList<Card> victoryCards = getCardsByTypeFromDeck(CardType.VICTORY);
+		for (Iterator<Card> iterator = victoryCards.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			victoryPoints += Integer.parseInt(card.getActions().get(CardAction.IS_VICTORY));
+		}
+		return victoryPoints;		
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return returns a list with all cards of the specified type
+	 */
+	public LinkedList<Card> getCardsByTypeFromDeck(CardType type) {
+		LinkedList<Card> victoryCards = new LinkedList<Card>();
+		for (Iterator<Card> iterator = this.cardHand.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(CardType.VICTORY)){
+				victoryCards.add(card);
+			}
+		}
+		
+		for (Iterator<Card> iterator = this.drawPile.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(CardType.VICTORY)){
+				victoryCards.add(card);
+			}
+		}
+		
+		for (Iterator<Card> iterator = this.discardPile.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(CardType.VICTORY)){
+				victoryCards.add(card);
+			}
+		}
+		
+		return victoryCards;
+	}
+	
+	/**
+	 * 
 	 * @param type
 	 * @return
 	 */
@@ -421,4 +466,6 @@ public class Deck {
 		}
 		return sBuf.append(">").toString();
 	}
+
+	
 }
