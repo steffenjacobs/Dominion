@@ -906,11 +906,13 @@ public class GameController {
 	
 	public String[] getPlayerNames() {
 		LinkedList<String> names = new LinkedList<String>();
+		
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			names.add(player.getPlayerName());
 		}
-		return (String[])(names.toArray());
+		String[] temp = new String[names.size()];
+		return names.toArray(temp);
 	}
 
 	/**
