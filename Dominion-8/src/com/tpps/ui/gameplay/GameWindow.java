@@ -115,7 +115,7 @@ public class GameWindow extends JFrame {
 		backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
 		closeImage = this.loadingImage(closeImage, "resources/img/gameObjects/close.png");
 		tableImage = this.loadingImage(tableImage, "resources/img/gameObjects/table.jpg");
-		buttonImage = this.loadingImage(buttonImage, "resources/img/gameObjects/testButton.png");
+		buttonImage = this.loadingImage(buttonImage, "resources/img/gameObjects/testButtonGame.png");
 		displayImageBuys = this.loadingImage(displayImageBuys, "resources/img/gameObjects/Buys.png");
 		displayImageCoins = this.loadingImage(displayImageCoins, "resources/img/gameObjects/Coins.png");
 		displayImageActions = this.loadingImage(displayImageActions, "resources/img/gameObjects/Actions.png");

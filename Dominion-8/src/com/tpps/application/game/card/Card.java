@@ -215,7 +215,7 @@ public class Card extends GameObject {
 		// TODO card specific hover.
 		if (!(name.equals("Copper") || name.equals("Silver") || name.equals("Gold") || name.equals("Curse")
 				|| name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
-			gameBackground = new GameBackground(relativeX + 0.1, relativeY, relativeWidth + 0.07, relativeHeight + 0.21,
+			gameBackground = new GameBackground(relativeX-0.025, relativeY+0.0725, relativeWidth + 0.08, relativeHeight + 0.24,
 					30, sourceImage, parent);
 			parent.addComponent(gameBackground);
 		}

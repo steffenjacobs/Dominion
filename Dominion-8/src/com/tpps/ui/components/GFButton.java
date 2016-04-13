@@ -72,10 +72,10 @@ public abstract class GFButton extends GameObject {
 
 	@Override
 	public void onResize(int absWidth, int absHeight) {
-		try {			
+		try {
 			if (customFont == null) {
 				customFont = Loader.getInstance().getXenipa();
-				if (customFont == null){
+				if (customFont == null) {
 					customFont = new Loader().importFont();
 				}
 			}
@@ -85,17 +85,27 @@ public abstract class GFButton extends GameObject {
 			e.printStackTrace();
 		}
 		if (this.caption != null) {
-			if(this.caption.matches("\\d*")){
+			if (this.caption.matches("\\d*")) {
 				super.setRenderedImage(GraphicsUtil.drawStringCentered(
 						GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
 								super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)),
 						this.caption, customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
-			}
-			else{
-			super.setRenderedImage(GraphicsUtil.drawStringCentered(
-					GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
-							super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)),
-					this.caption, customFont.deriveFont(Font.PLAIN, 22), Color.BLACK));
+			} else if (this.caption.equals("Discard Deck") || this.caption.equals("End ActionPhase")
+					|| this.caption.equals("Play Treasures") || this.caption.equals("End Turn")
+					|| this.caption.equals("Stop Discard") || this.caption.equals("Stop Trash")
+					|| this.caption.equals("End Reactions") || this.caption.equals("Take Cards")
+					|| this.caption.equals("Put Back") || this.caption.equals("Take Thief Cards")
+					|| this.caption.equals("Put Back Thief Cards") || this.caption.equals("Take Drawed Card")
+					|| this.caption.equals("Set Aside Drawed Card")) {
+				super.setRenderedImage(GraphicsUtil.drawStringCentered(
+						GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
+								super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)),
+						this.caption, customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
+			} else {
+				super.setRenderedImage(GraphicsUtil.drawStringCentered(
+						GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
+								super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)),
+						this.caption, customFont.deriveFont(Font.PLAIN, 22), Color.BLACK));
 			}
 		}
 	}
