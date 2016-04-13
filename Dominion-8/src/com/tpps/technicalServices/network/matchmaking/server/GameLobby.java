@@ -31,7 +31,10 @@ public class GameLobby {
 	 *            player to add to the lobby
 	 */
 	public void joinPlayer(MPlayer player) {
+		System.out.println("[" + System.identityHashCode(this) + "] <-" + player.getPlayerName());
+		this.players.add(player);
 		this.updateLobbyScore();
+
 		MatchmakingServer.getInstance().sendJoinPacket(players, player.getPlayerName());
 		if (this.players.size() != 0) {
 			for (MPlayer mplayer : players) {
@@ -39,7 +42,6 @@ public class GameLobby {
 			}
 		}
 
-		this.players.add(player);
 	}
 
 	/** updates the average matchmaking-score of the players in the lobby */

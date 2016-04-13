@@ -92,12 +92,11 @@ public final class MatchmakingController {
 		int score = player.getScore();
 
 		if (lobbies.isEmpty()) {
-			System.out.println("Creating new lobby because there was none.");
 			GameLobby lobby = new GameLobby();
 			lobbies.add(lobby);
 			joinLobby(player, lobby);
 		} else if (lobbies.size() == 1) {
-			GameLobby lobby = lobbies.get(playersByPort.keys().nextElement());
+			GameLobby lobby = lobbies.get(0);
 			joinLobby(player, lobby);
 		} else {
 			Iterator<GameLobby> it = lobbies.iterator();
@@ -138,9 +137,9 @@ public final class MatchmakingController {
 	 */
 	private static void removePlayer(MPlayer player) {
 		if (player == null) {
-			System.err.println("Player not found: " + player);
-			return;
+			System.err.println("EMPTY PLAYER REMOVE");
 		}
+		
 		playersByPort.remove(player.getConnectionPort());
 		connectedPortsByPlayer.remove(player);
 		playersByName.remove(player.getPlayerName());

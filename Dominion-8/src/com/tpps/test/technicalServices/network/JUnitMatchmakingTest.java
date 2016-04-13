@@ -108,7 +108,6 @@ public class JUnitMatchmakingTest {
 				@Override
 				public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer object) {
 					userSessions.put(object.getRequest().getUsername(), object.getLoginSessionID());
-					System.out.println("received session for " + object.getRequest().getUsername());
 					halt.release();
 					return null;
 				}
@@ -140,7 +139,6 @@ public class JUnitMatchmakingTest {
 
 		@Override
 		public void handleReceivedPacket(int port, Packet packet) {
-			System.out.println(" Packet received :) " + packet);
 
 			switch (packet.getType()) {
 			case MATCHMAKING_ANSWER:
@@ -157,6 +155,7 @@ public class JUnitMatchmakingTest {
 				break;
 			case MATCHMAKING_SUCCESSFUL:
 				PacketMatchmakingSuccessful pms = (PacketMatchmakingSuccessful) packet;
+				System.out.println("start Packet received :) " + packet);
 				// is called, when the lobby is full and the game starts
 				// TODO: connect to the gameServer & start the round
 				break;
