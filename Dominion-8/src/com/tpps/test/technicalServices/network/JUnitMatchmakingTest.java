@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Test;
 
@@ -36,13 +37,14 @@ import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 public class JUnitMatchmakingTest {
 
 	static HashMap<String, UUID> userSessions = new HashMap<>();
-	static volatile int cntCheck1 = 0, cntCheck2 = 0, cntCheck3 = 0;;
+	static AtomicInteger cntCheck1 = new AtomicInteger(0), cntCheck2 = new AtomicInteger(0),
+			cntCheck3 = new AtomicInteger(0);
+
 	static String username = "test";
 
 	@Test
 	public void test() throws IOException, InterruptedException, NoSuchFieldException, SecurityException,
 			IllegalArgumentException, IllegalAccessException {
-
 		HashMap<String, Matchmaker> matchmakers = new HashMap<>();
 
 		// init game-log
@@ -137,9 +139,9 @@ public class JUnitMatchmakingTest {
 		// userSessions.get(username + "2"));
 		Thread.sleep(2000);
 
-		assertEquals(4, cntCheck1);
-		assertEquals(16, cntCheck2);
-		assertEquals(20, cntCheck3);
+		assertEquals(4, cntCheck1.get());
+		assertEquals(16, cntCheck2.get());
+		assertEquals(20, cntCheck3.get());
 
 	}
 
@@ -160,14 +162,14 @@ public class JUnitMatchmakingTest {
 				PacketMatchmakingAnswer pma = (PacketMatchmakingAnswer) packet;
 				// 4 checks
 				assertEquals(1, pma.getAnswerCode());
-				cntCheck1++;
+				cntCheck1.incrementAndGet();
 				break;
 			case MATCHMAKING_PLAYER_INFO:
 				// is called when a player joined or quitted the lobby
 				PacketMatchmakingPlayerInfo pmpi = (PacketMatchmakingPlayerInfo) packet;
 				// 1+1+2+1+1+3+1+1+4 = 16 checks
 				assertTrue(pmpi.getPlayerName().startsWith(username));
-				cntCheck2++;
+				cntCheck2.incrementAndGet();
 
 				break;
 			case MATCHMAKING_SUCCESSFUL:
@@ -175,10 +177,10 @@ public class JUnitMatchmakingTest {
 				PacketMatchmakingSuccessful pms = (PacketMatchmakingSuccessful) packet;
 				// 5*4 = 20 checks
 				assertEquals(4, pms.getJoinedPlayers().length);
-				cntCheck3++;
+				cntCheck3.incrementAndGet();
 				for (int i = 0; i < 4; i++) {
-					assertTrue(pms.getJoinedPlayers()[i].startsWith(username));					
-					cntCheck3++;
+					assertTrue(pms.getJoinedPlayers()[i].startsWith(username));
+					cntCheck3.incrementAndGet();
 				}
 				System.out.println("start Packet received :) " + packet);
 				break;
