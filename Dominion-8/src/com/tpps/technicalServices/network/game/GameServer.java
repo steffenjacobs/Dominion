@@ -21,7 +21,7 @@ public class GameServer extends Server{
 		super(new InetSocketAddress("0.0.0.0", port), new ServerGamePacketHandler());
 		((ServerGamePacketHandler)super.getHandler()).setServer(this);
 		this.gameController = new GameController();
-		this.flag = true;
+		this.flag = false;
 		instance = this;
 		setConsoleInput();		
 	}
@@ -36,10 +36,8 @@ public class GameServer extends Server{
 	}
 	
 	public void newGame() {
-		this.flag = false;
 		this.disconnectAll();
 		this.gameController = new GameController();
-		this.flag = true;
 		setConsoleInput();
 	}
 
