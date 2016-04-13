@@ -15,13 +15,11 @@ public class GameServer extends Server{
 
 	private GameController gameController;
 	private static GameServer instance;
-	private boolean flag;
 	
 	public GameServer(int port) throws IOException{
 		super(new InetSocketAddress("0.0.0.0", port), new ServerGamePacketHandler());
 		((ServerGamePacketHandler)super.getHandler()).setServer(this);
 		this.gameController = new GameController();
-		this.flag = false;
 		instance = this;
 		setConsoleInput();		
 	}
@@ -74,35 +72,6 @@ public class GameServer extends Server{
 		System.out.println("Enter 'help' to see all available commands.");
 		System.out.println();
 		
-		String line = null;
-		Scanner scanInput = new Scanner(System.in);
-		while (flag) {			
-			line = scanInput.nextLine();
-			try {
-				if (line.equals("exit")) {
-					System.exit(0);
-					break;
-				} else if (line.startsWith("help")) {
-					System.out.println("-------- Available Commands --------");
-//					
-					System.out.println("help");
-					System.out.println("exit");
-					System.out.println("newGame");
-					System.out.println("------------------------------------");
-				} else if (line.startsWith("newGame")){
-					System.out.println("Starting a new game please connect again to the server.");
-					
-					newGame();
-					
-					
-				}else {
-					System.out.println("Bad command: " + line);
-				}
-			} catch (ArrayIndexOutOfBoundsException e) {
-				System.err.println("Bad syntax.");
-			}
-		}
-		scanInput.close();
 	}
 	
 }
