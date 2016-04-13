@@ -53,13 +53,24 @@ public final class DominionController {
 	private boolean turnFlag;
 	
 	private ChatClient chatClient;
-	
+
 	/** main entry point for client application */
 	public static void main(String[] stuff) {
 		instance = new DominionController();
 		DominionController.instance.init();
 	}
 	
+	/**
+	 * 
+	 * @param test
+	 */
+	public DominionController(boolean test) {
+		storageController = new CardStorageController();
+		// do nothing else, just init object
+	}
+	
+
+	public DominionController() { }
 
 	private void init() {
 		boolean login = true;
