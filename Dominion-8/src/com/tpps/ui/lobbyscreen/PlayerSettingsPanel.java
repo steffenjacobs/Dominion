@@ -222,6 +222,7 @@ public class PlayerSettingsPanel extends JPanel{
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if(!connectedPlayers[i].isPlayerFlag()){
 				this.connectedPlayers[i].setPlayer(player);
+				System.out.println("GUI: inserted Player: " + connectedPlayers[i].getText());
 				return true;
 			}
 		}
@@ -231,6 +232,7 @@ public class PlayerSettingsPanel extends JPanel{
 	public boolean removePlayer(String player){
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if(connectedPlayers[i].getText().equals(player)){
+				System.out.println("GUI: removed Player: " + connectedPlayers[i].getText());
 				connectedPlayers[i].resetSearchingField();
 				return true;
 			}
@@ -241,7 +243,7 @@ public class PlayerSettingsPanel extends JPanel{
 	public void clearAllPlayers(){
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if(!connectedPlayers[i].getText().startsWith("Loading")){
-				System.out.println("removed: " + connectedPlayers[i].getText());
+				System.out.println("GUI: removed Player(all): " + connectedPlayers[i].getText());
 				connectedPlayers[i].resetSearchingField();
 			}
 		}

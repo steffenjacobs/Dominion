@@ -106,10 +106,10 @@ public final class Matchmaker {
 				// player..." @LobbyScreen
 				if (pmpi.isStatus()) {
 					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
-					System.out.println("player " + pmpi.getPlayerName() + " joined the lobby");
+					System.out.println("PACKET: player " + pmpi.getPlayerName() + " joined the lobby");
 				} else {
 					DominionController.getInstance().clearPlayerFromGUI(pmpi.getPlayerName());
-					System.out.println("player " + pmpi.getPlayerName() + " left from lobby");
+					System.out.println("PACKET: player " + pmpi.getPlayerName() + " left from lobby");
 				}
 				break;
 			case MATCHMAKING_SUCCESSFUL:
