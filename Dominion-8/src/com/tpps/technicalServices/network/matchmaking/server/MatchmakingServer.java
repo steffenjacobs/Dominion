@@ -10,6 +10,7 @@ import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.Server;
 import com.tpps.technicalServices.network.core.events.NetworkListener;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLHandler;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingPlayerInfo;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingSuccessful;
 
@@ -41,6 +42,8 @@ public class MatchmakingServer extends Server {
 		super(address, _handler);
 		super.getListenerManager().registerListener(new MatchmakingListener());
 		instance = this;
+		SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
+		SQLHandler.connect();
 		setupConsoleInput(address.getPort());
 	}
 
