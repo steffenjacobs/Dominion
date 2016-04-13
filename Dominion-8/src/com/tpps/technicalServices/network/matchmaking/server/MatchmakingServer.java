@@ -170,12 +170,12 @@ public class MatchmakingServer extends Server {
 	 */
 	public void sendQuitPacket(Collection<MPlayer> receivers, String quittedPlayer) {
 		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(quittedPlayer, false);
-		try {
-			for (MPlayer receiver : receivers) {
+		for (MPlayer receiver : receivers) {
+			try {
 				super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
+			} catch (NullPointerException | IOException npe) {
+				// if one this player is already disconnected, too
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
