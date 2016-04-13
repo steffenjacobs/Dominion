@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
@@ -50,6 +51,7 @@ public final class Matchmaker {
 	public void findMatch(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingRequest(username, uid, false));
+		System.out.println("Start searching a match");
 	}
 
 	/**
@@ -63,6 +65,7 @@ public final class Matchmaker {
 	public void abort(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingRequest(username, uid, true));
+		System.out.println("Aborted to search a match");
 	}
 
 	/** @return the actual network-client connected to the matchmaking-system */
@@ -101,12 +104,19 @@ public final class Matchmaker {
 				// is called when a player joined or quitted the lobby
 				// TODO: add player and remove one instance of "Waiting for
 				// player..." @LobbyScreen
-
+				if(pmpi.isStatus()){
+					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
+					System.out.println("player joined the lobby");
+				}else{
+					DominionController.getInstance().deletePlayerFromGUI(pmpi.getPlayerName());
+					System.out.println("player left from lobby");
+				}				
 				break;
 			case MATCHMAKING_SUCCESSFUL:
 				PacketMatchmakingSuccessful pms = (PacketMatchmakingSuccessful) packet;
 				// is called, when the lobby is full and the game starts
-				// TODO: connect to the gameServer & start the round
+				// TODO: connect to the gameServer & start the round				
+				DominionController.getInstance().startMatch(pms.getGameserverPort());
 				break;
 			default:
 				GameLog.log(MsgType.NETWORK_ERROR, "Bad packet received: " + packet);

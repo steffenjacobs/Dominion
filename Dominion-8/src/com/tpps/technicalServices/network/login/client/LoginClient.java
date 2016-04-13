@@ -97,6 +97,7 @@ public class LoginClient extends PacketHandler {
 				guicontroller.getStateOfLoginRequest(check.getState());
 				if (check.getState()) { // Anmeldung erfolgreich, pw richtig
 					this.setSessionid(check.getSessionID());
+					DominionController.getInstance().setSessionID(check.getSessionID());
 					c_session.keepAlive(username, true);
 				}
 				break;
