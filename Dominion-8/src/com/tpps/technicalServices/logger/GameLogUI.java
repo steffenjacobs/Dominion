@@ -32,4 +32,10 @@ public class GameLogUI {
 			GameLog.log(MsgType.EXCEPTION, e.getMessage());
 		}
 	}
+	
+	public static void main(String[] args) {
+		GameLog.init();
+		new GameLogUI(GameLog.getTextPane());
+		GameLog.log(MsgType.GAME, "abc");
+	}
 }
