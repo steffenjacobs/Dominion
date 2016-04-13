@@ -45,6 +45,6 @@ public class Button extends JButton implements ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		DominionController.getInstance().abortSearching();
 		DominionController.getInstance().joinMainMenu();
-		DominionController.getInstance().deletePlayerFromGUI(DominionController.getInstance().getUsername());
+		DominionController.getInstance().clearAllPlayersFromGUI();
 	}
 }

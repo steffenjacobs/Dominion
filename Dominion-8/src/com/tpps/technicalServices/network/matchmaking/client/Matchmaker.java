@@ -108,7 +108,7 @@ public final class Matchmaker {
 					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
 					System.out.println("player " + pmpi.getPlayerName() + " joined the lobby");
 				} else {
-					DominionController.getInstance().deletePlayerFromGUI(pmpi.getPlayerName());
+					DominionController.getInstance().clearPlayerFromGUI(pmpi.getPlayerName());
 					System.out.println("player " + pmpi.getPlayerName() + " left from lobby");
 				}
 				break;

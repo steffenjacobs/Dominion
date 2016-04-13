@@ -238,6 +238,15 @@ public class PlayerSettingsPanel extends JPanel{
 		return false;
 	}
 	
+	public void clearAllPlayers(){
+		for (int i = 0; i < connectedPlayers.length; i++) {
+			if(!connectedPlayers[i].getText().startsWith("Loading")){
+				System.out.println("removed: " + connectedPlayers[i].getText());
+				connectedPlayers[i].resetSearchingField();
+			}
+		}
+	}
+	
 	public JCheckBox[] getOptions() {
 		return options;
 	}

@@ -262,8 +262,12 @@ public final class DominionController {
 	 * @author jhuhn
 	 * @param player
 	 */
-	public void deletePlayerFromGUI(String player){
+	public void clearPlayerFromGUI(String player){
 		this.playerSettingsPanel.removePlayer(player);
+	}
+	
+	public void clearAllPlayersFromGUI(){
+		this.playerSettingsPanel.clearAllPlayers();
 	}
 
 	/* getters and setters */
