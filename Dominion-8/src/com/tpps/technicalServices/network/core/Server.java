@@ -51,6 +51,19 @@ public class Server {
 	}
 
 	/**
+	 * Opens a socket for clients to connect to. Don't forget to add a
+	 * PacketHandler!
+	 *
+	 * @param address
+	 *            SocketAddress of the socket to open
+	 * @throws IOException
+	 */
+	public Server(SocketAddress address) throws IOException {
+		bind(address);
+		startListening();
+	}
+
+	/**
 	 * binds the server to the port with the given SocketAddress
 	 * 
 	 * @param address
@@ -213,6 +226,14 @@ public class Server {
 	 */
 	public PacketHandler getHandler() {
 		return this.handler;
+	}
+
+	/**
+	 * overrides the current PacketHandler with the new one
+	 */
+	public void setPacketHandler(PacketHandler handler) {
+		this.handler = handler;
+		this.handler.setParent(this);
 	}
 
 	/**

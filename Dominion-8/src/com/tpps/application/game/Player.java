@@ -575,6 +575,11 @@ public class Player {
 				GameLog.log(MsgType.GAME, "Card was not found on hand.");
 			}
 		}
+		
+		/*TEST GAME LOG*/
+		GameLog.log(MsgType.GAME, "Played: " + serverCard.getName());
+		/*TEST GAME LOG*/
+		
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
 			return serverCard;

@@ -1,6 +1,5 @@
 package com.tpps.application.game.card;
 
-import java.awt.Container;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -8,9 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
@@ -23,6 +20,9 @@ import com.tpps.ui.components.GameBackground;
 /**
  * @author Nicolas Wipfler
  */
+
+// clone constructor
+// equals
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = -4157717625890678601L;
@@ -146,10 +146,6 @@ public class Card extends GameObject {
 		this.id = this.name + classID++;
 		// System.out.println(id);
 	}
-
-	// clone constructor
-
-	// equals
 
 	/**
 	 * 

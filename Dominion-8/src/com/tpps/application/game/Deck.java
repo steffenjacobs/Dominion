@@ -6,9 +6,8 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
 import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
-import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -105,11 +104,20 @@ public class Deck {
 		return this.drawPile.size() + this.discardPile.size() + this.cardHand.size();
 	}
 	
-	
+	/**
+	 * 
+	 * @return the amount of treasure cards which are not in cardHand 
+	 * (so the amount treasure carsd in drawPile and discardPile)
+	 */
 	public int getTreasureAmountNotOnHand() {		
 		return getTreasureAmountOfList(drawPile) + getTreasureAmountOfList(discardPile);		
 	}
 	
+	/**
+	 * 
+	 * @param list the list to investigate
+	 * @return the amount of treasure cards in the specific list
+	 */
 	public int getTreasureAmountOfList(LinkedList<Card> list) {
 		int treasureCounter = 0;
 		for (Iterator<Card> iterator = drawPile.iterator(); iterator.hasNext();) {
@@ -121,6 +129,19 @@ public class Deck {
 		return treasureCounter;
 	}
 
+	/**
+	 * 
+	 * @param list
+	 * @return
+	 */
+	public int getTreasureValueOfList(LinkedList<Card> list) {
+		int treasureCounter = 0;
+		for (Iterator<Card> iterator = getCardsByTypeFromHand(CardType.TREASURE).iterator(); iterator.hasNext();) {
+			treasureCounter += Integer.valueOf(iterator.next().getActions().get(CardAction.IS_TREASURE));
+		}
+		return treasureCounter;
+	}
+	
 	/**
 	 * @param cardID individual id of the card as a String
 	 * @return the card with cardID in cardHand (without removing it from the list)
@@ -158,6 +179,22 @@ public class Deck {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 */
+	public LinkedList<Card> getCardsByTypeFromHand(CardType type) {
+		LinkedList<Card> typeCards = new LinkedList<Card>();
+		for (Iterator<Card> iterator = getCardHand().iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(type)){
+				typeCards.addLast(card);
+			}
+		}
+		return typeCards;
 	}
 	
 	/**
@@ -340,8 +377,6 @@ public class Deck {
 		this.getCardHand().remove(card);
 		trashPile.addLast(card);
 	}
-	
-
 
 	/**
 	 * @return String representation of a deck object
@@ -385,9 +420,5 @@ public class Deck {
 			}
 		}
 		return sBuf.append(">").toString();
-	}
-	
-	public static void main(String[] args) {
-		GameLog.log(MsgType.DEBUG, "Test, funzt?");
 	}
 }

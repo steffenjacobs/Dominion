@@ -1,4 +1,4 @@
-package com.tpps.technicalServices.network.statisticServer.Packet;
+package com.tpps.technicalServices.network.login.packets;
 
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;

@@ -3,7 +3,6 @@ package com.tpps.ui.lobbyscreen;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -27,29 +26,20 @@ import com.tpps.ui.statisticsscreen.StatisticsBoard;
 public class PlayerSettingsPanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
- //	private final Font font = new Font("Calibri", Font.PLAIN, 20);
 	private final Font head = new Font("Arial Black", Font.BOLD, 20);
-	private final Font optionsFont = new Font("Calibri", Font.BOLD, 21);
 	
-	private BufferedImage[] images = new BufferedImage[4];
-	private JLabel[] labelImages;
-	boolean imageselected;
-	private BufferedImage blackBeauty;
+	private BufferedImage[] originalImages = new BufferedImage[4];
+	private BufferedImage[] transparentImages = new BufferedImage[4];
 	private BufferedImage selectedImage;
-	
-	private SearchingField[] connectedPlayers;
-	
+	private JLabel[] labelImages;
+		
+	private SearchingField[] connectedPlayers;	
 	private JCheckBox[] options;
 	
 	private static final int SPACE_PANEL_TO_PANEL = 25;
 	private static final int SPACE_PLAYER_TO_PLAYER = 5;
 	private static final int SPACE_FIRSTPANEL_TO_SECONDPANEL = 10;
 	private static int H_SPACE_EDGE_TO_FIRSTPANEL = 170;
-//	private static int H_GAP_OPTIONS = 100;
-//	private static int V_GAP_OPTIONS = 20;
-//	private static int EMPTYBORDER_LEFT_RIGHT = 100;
-//	private static int EMPTYBORDER_UP_BOTTOM = 25;
-//	private static float OPTIONS_TRANSPARENCY = 0.6F;
 	private static final int IMG_GRID_GAP = 20;
 	private static int HEADER_TO_IMG_MARGIN = 15;
 	private static int IMG_TO_BOTTOM = 15;
@@ -57,9 +47,11 @@ public class PlayerSettingsPanel extends JPanel{
 	
 	private StatisticsBoard statisticsBoardPanel;
 	
-	JPanel panel;
+	private JPanel panel;
 	
 	public PlayerSettingsPanel(StatisticsBoard statisticsBoardPanel) {
+		this.initOriginalBackgroundImages();
+		this.initTransparentBackgroundImages();
 		this.statisticsBoardPanel = statisticsBoardPanel;
 		this.setOpaque(false);
 		this.setLayout(new GridLayout(3,1, 0, SPACE_PANEL_TO_PANEL));
@@ -106,42 +98,8 @@ public class PlayerSettingsPanel extends JPanel{
 	
 	private JPanel middleAreaPanel(){
 		JPanel panel = new JPanel(new BorderLayout());
-		panel.setOpaque(false);		
-	//	panel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2));
-		
-/*		JPanel optionPanel = new JPanel(new GridLayout(3,3,H_GAP_OPTIONS,V_GAP_OPTIONS));
-		
-		optionPanel.setBorder(BorderFactory.createEmptyBorder(EMPTYBORDER_UP_BOTTOM, EMPTYBORDER_LEFT_RIGHT, EMPTYBORDER_UP_BOTTOM, EMPTYBORDER_LEFT_RIGHT));
-		optionPanel.setOpaque(false);
-		this.options = new JCheckBox[6];
-		
-		try {
-			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, OPTIONS_TRANSPARENCY);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	
-		for (int i = 0; i < 6; i++) {
-			this.options[i] = new JCheckBox("Option " + i){				
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public void paint(Graphics g) {
-					g.drawImage(blackBeauty, 0, 0, null);
-					super.paint(g);
-				}
-			};
-			this.options[i].setOpaque(false);
-			this.options[i].setFont(optionsFont);
-			this.options[i].setForeground(Color.WHITE);
-			this.options[i].setHorizontalAlignment(JCheckBox.CENTER);
-			
-			optionPanel.add(options[i]);
-		} */
-		
 		JTextField header = this.createHeader("Statistics: ");
-		
+		panel.setOpaque(false);						
 		panel.add(header, BorderLayout.PAGE_START);
 		panel.add(this.statisticsBoardPanel, BorderLayout.CENTER);
 		panel.add(Box.createHorizontalStrut(10), BorderLayout.LINE_START);
@@ -209,49 +167,37 @@ public class PlayerSettingsPanel extends JPanel{
 		public void mouseReleased(MouseEvent arg0) { }		
 	}
 	
-	public void changeSelectedPicture(int index){
+	public void initOriginalBackgroundImages(){
 		try {
-			this.images[0] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/spring.jpg"));
-			this.images[0] = (BufferedImage) GraphicsUtil.setAlpha(images[0], 0.5F);
-			this.images[1] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/summer.jpg"));
-			this.images[1] = (BufferedImage) GraphicsUtil.setAlpha(images[1], 0.5F);
-			this.images[2] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/fall.jpg"));
-			this.images[2] = (BufferedImage) GraphicsUtil.setAlpha(images[2], 0.5F);
-			this.images[3] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/winter.jpg"));
-			this.images[3] = (BufferedImage) GraphicsUtil.setAlpha(images[3], 0.5F);
+			this.originalImages[0] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/spring.jpg"));
+			this.originalImages[1] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/summer.jpg"));
+			this.originalImages[2] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/fall.jpg"));
+			this.originalImages[3] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/winter.jpg"));
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}
-		
-		for (int i = 0; i < images.length; i++) {
+	}
+	
+	public void initTransparentBackgroundImages(){			
+			this.transparentImages[0] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[0], 0.5F);			
+			this.transparentImages[1] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[1], 0.5F);			
+			this.transparentImages[2] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[2], 0.5F);
+			this.transparentImages[3] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[3], 0.5F);
+	}
+	
+	
+	
+	public void changeSelectedPicture(int index){		
+		for (int i = 0; i < originalImages.length; i++) {
 			if(i == index){
-				this.setAlphaOnPicture(index);
+				labelImages[i].setIcon(new ImageIcon(originalImages[i]));
+				labelImages[i].setBorder(BorderFactory.createLineBorder(Color.GREEN ,3));
 			}else{
-				labelImages[i].setIcon(new ImageIcon(images[i]));
+				labelImages[i].setIcon(new ImageIcon(transparentImages[i]));
 				labelImages[i].setBorder(BorderFactory.createLineBorder(Color.RED ,3));
 			}
 		}
 	}
-	
-	public void setAlphaOnPicture(int index){
-		String picture = "";
-		switch(index){
-			case 0: picture = "spring"; break;
-			case 1: picture = "summer"; break;
-			case 2: picture = "fall"; break;
-			case 3: picture = "winter"; break;
-			default:return;
-		}
-		try {
-			this.images[index] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/" + picture + ".jpg"));
-			selectedImage = this.images[index];
-			labelImages[index].setIcon(new ImageIcon(this.images[index]));
-			labelImages[index].setBorder(BorderFactory.createLineBorder(Color.GREEN, 3));
-		} catch (IOException e) {		
-			e.printStackTrace();
-		}
-	}
-	
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public JTextField createHeader(String text){

@@ -10,7 +10,8 @@ public enum SQLType {
 	INT,
 	BIGINT,
 	FLOAT,
-	DATE;
+	DATE,
+	BOOLEAN;
 	
 	/**
 	 * @author jhuhn - Johannes Huhn
