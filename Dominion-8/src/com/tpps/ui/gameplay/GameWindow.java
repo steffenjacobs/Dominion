@@ -6,6 +6,9 @@ import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
@@ -19,6 +22,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
+import com.sun.xml.internal.ws.api.ComponentEx;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.logger.GameLog;
@@ -27,6 +31,7 @@ import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GraphicFramework;
+import com.tpps.ui.MainMenuPanel;
 import com.tpps.ui.components.DisplayValue;
 import com.tpps.ui.components.GFButton;
 import com.tpps.ui.components.GameBackground;
@@ -58,6 +63,9 @@ public class GameWindow extends JFrame {
 	private int heightRelative;
 	private int widthRelative;
 	private GameLogTextPane loggerPane;
+	private int topGap;
+	private final int WIDTH, HEIGHT;
+	private int leftGap;
 	public static String coins, buys, actions;
 	private static final double CORRECTION_16TO9 = 16 / (double) 9;
 
@@ -79,14 +87,16 @@ public class GameWindow extends JFrame {
 
 	public GameWindow() throws IOException {
 		instance = this;
-		final int WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
-		final int HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
+		WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
+		HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-		System.out.println(WIDTH + "knlsd");
-		System.out.println(HEIGHT + "sdopj");
+		System.out.println(getWIDTH() + "knlsd");
+		System.out.println(getHEIGHT() + "sdopj");
 
 		this.loggerPane = GameLog.getTextPane();
 		this.chatWindow = new ChatWindowForInGame();
+		this.topGap = Toolkit.getDefaultToolkit().getScreenSize().height / 4;
+//		this.leftGap = Toolkit.getDefaultToolkit().getScreenSize().width / 7;
 
 		this.handCards = new LinkedList<Card>();
 		this.tableCards = new LinkedList<Card>();
@@ -122,30 +132,36 @@ public class GameWindow extends JFrame {
 		displayImageTurn = this.loadingImage(displayImageTurn, "resources/img/gameObjects/TurnButton.png");
 		buttonGameImage = this.loadingImage(buttonGameImage, "resources/img/gameObjects/ButtonsGame.png");
 
-		closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, WIDTH, 1, closeImage,
-				framework, "");
+		closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
+				closeImage, framework, "");
 
-		endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
+		endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
 				"End ActionPhase");
-		playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
+		playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
 				"Play Treasures");
-		stopDiscard = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Discard");
-		stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Stop Trash");
-		takeCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Take Cards");
-		putBack = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Put Back");
-		takeThiefCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
+		stopDiscard = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
+				"Stop Discard");
+		stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
+				"Stop Trash");
+		takeCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
+				"Take Cards");
+		putBack = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
+				"Put Back");
+		takeThiefCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
 				"Take Thief Cards");
-		putBackThiefCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
+		putBackThiefCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
 				"Put Back Thief Cards");
-		takeDrawedCard = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
+		takeDrawedCard = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
 				"Take Drawed Card");
-		setAsideDrawedCard = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
+		setAsideDrawedCard = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
 				"Set Aside Drawed Card");
 		// takeCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1,
 		// buttonImage, framework, "Temporary Trash");
-		discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Discard Deck");
-		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "End Turn");
-		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework,
+		discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
+				"Discard Deck");
+		endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
+				"End Turn");
+		endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
 				"End Reactions");
 
 		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 20, displayImageActions, framework,
@@ -156,8 +172,8 @@ public class GameWindow extends JFrame {
 				String.valueOf(GameConstant.INIT_PURCHASES));
 		turn = new DisplayValue(-0.06, 0.6, 0.20, 0.18, 1, 1, 20, displayImageTurn, framework, "#");
 
-		loggerAdding(WIDTH, HEIGHT);
-		chatWindowAdding(WIDTH, HEIGHT);
+		loggerAdding(getWIDTH(), getHEIGHT());
+		chatWindowAdding(getWIDTH(), getHEIGHT());
 
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
@@ -170,6 +186,8 @@ public class GameWindow extends JFrame {
 		framework.addComponent(coin);
 		framework.addComponent(buy);
 		framework.addComponent(turn);
+
+		this.addComponentListener(new MyComponentAdapter());
 
 		this.revalidate();
 		this.repaint();
@@ -218,11 +236,11 @@ public class GameWindow extends JFrame {
 		this.framework.removeComponent(coin);
 		this.framework.removeComponent(buy);
 
-		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, WIDTH, HEIGHT, displayImageActions, framework,
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageActions, framework,
 				String.valueOf(GameConstant.INIT_ACTIONS));
-		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, WIDTH, HEIGHT, displayImageCoins, framework,
+		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageCoins, framework,
 				String.valueOf(GameConstant.INIT_TREASURES));
-		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, WIDTH, HEIGHT, displayImageBuys, framework,
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageBuys, framework,
 				String.valueOf(GameConstant.INIT_PURCHASES));
 
 		this.framework.addComponent(action);
@@ -282,15 +300,15 @@ public class GameWindow extends JFrame {
 				Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 				matcher.find();
 				String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
-				number = String.valueOf((Integer.parseInt(number)+1));
+				number = String.valueOf((Integer.parseInt(number) + 1));
 
 				if (i < 5) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.06,
 							0.02, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 
-					GFButton button = new ButtonClass(shiftCard += 0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9, WIDTH,
-							HEIGHT, l++, buttonGameImage, framework, number);
+					GFButton button = new ButtonClass(shiftCard += 0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9,
+							getWIDTH(), getHEIGHT(), l++, buttonGameImage, framework, number);
 
 					framework.addComponent(button);
 					framework.addComponent(card);
@@ -301,7 +319,7 @@ public class GameWindow extends JFrame {
 							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
 							shiftBottom += 0.06, 0.2, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 					GFButton button = new ButtonClass(shiftCardBottom += 0.06, 0.2, 0.015, 0.015 * CORRECTION_16TO9,
-							WIDTH, HEIGHT, l++, buttonGameImage, framework, number);
+							getWIDTH(), getHEIGHT(), l++, buttonGameImage, framework, number);
 
 					framework.addComponent(button);
 					framework.addComponent(card);
@@ -403,15 +421,15 @@ public class GameWindow extends JFrame {
 			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 			matcher.find();
 			String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
-			number = String.valueOf((Integer.parseInt(number)+1));
+			number = String.valueOf((Integer.parseInt(number) + 1));
 
 			SerializedCard serializedCard = coins.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
 					serializedCard.getCost(), actionCardlds.get(i), 0.94, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 270), framework);
 
-			GFButton button = new ButtonClass(0.935, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, HEIGHT,
-					l++, buttonGameImage, framework, number);
+			GFButton button = new ButtonClass(0.935, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
+					getHEIGHT(), l++, buttonGameImage, framework, number);
 			framework.addComponent(button);
 			framework.addComponent(card);
 			this.coinCards.add(card);
@@ -581,14 +599,14 @@ public class GameWindow extends JFrame {
 			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 			matcher.find();
 			String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
-			number = String.valueOf((Integer.parseInt(number)+1));
+			number = String.valueOf((Integer.parseInt(number) + 1));
 
 			SerializedCard serializedCard = victory.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
 					serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 90), framework);
-			GFButton button = new ButtonClass(0.04, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, WIDTH, WIDTH,
-					l++, buttonGameImage, framework, number);
+			GFButton button = new ButtonClass(0.04, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
+					getWIDTH(), l++, buttonGameImage, framework, number);
 			framework.addComponent(button);
 			framework.addComponent(card);
 
@@ -626,7 +644,7 @@ public class GameWindow extends JFrame {
 	}
 
 	public void setCaptionTurn(String caption) {
-//		turn.renewCaption(caption);
+		// turn.renewCaption(caption);
 		framework.removeComponent(turn);
 		turn = new DisplayValue(-0.06, 0.6, 0.20, 0.18, 1, 1, 20, displayImageTurn, framework, caption);
 		framework.addComponent(turn);
@@ -811,6 +829,37 @@ public class GameWindow extends JFrame {
 
 	public void addSetAsideDrawedCard() {
 		framework.addComponent(setAsideDrawedCard);
+	}
+
+	private class MyComponentAdapter extends ComponentAdapter {
+		public void componentResized(ComponentEvent e) {
+			super.componentResized(e);
+
+			int width = GameWindow.this.getContentPane().getWidth();
+			int height = GameWindow.this.getContentPane().getHeight();
+
+			int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+			int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
+
+			onResize(width / Double.parseDouble(Integer.toString(maxWidth)),
+					height / Double.parseDouble(Integer.toString(maxHeight)));
+			repaint();
+		}
+
+	}
+
+	private void onResize(double relativeWidth, double relativeHeight) {
+		loggerPane.onResize(this.getWidth() , this.getHeight() - topGap, relativeWidth, relativeHeight, this);
+		// chatWindow.onResize();
+
+	}
+
+	public int getWIDTH() {
+		return WIDTH;
+	}
+
+	public int getHEIGHT() {
+		return HEIGHT;
 	}
 
 }

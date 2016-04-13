@@ -13,6 +13,8 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import com.tpps.ui.gameplay.GameWindow;
+
 /**
  * 
  * @author Nicolas
@@ -79,5 +81,14 @@ public class GameLogTextPane extends JPanel {
 		} else {
 			this.updateTextArea(line, textColor);
 		}
+	}
+
+	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
+
+		System.out.println(y+"y");
+		int width = (int) (sizeFactorWidth*gameWindow.getContentPane().getWidth()/4);
+		int height =  (int) (sizeFactorHeight*gameWindow.getContentPane().getHeight()/4);
+		System.out.println(x-width*1.5+"x");
+		this.setBounds(x-(int) (width*1.5), y, width,height);
 	}
 }
