@@ -185,10 +185,10 @@ public class GameLog {
 	public static void log(MsgType type, String line) {
 		if (isInitialized) {
 			if (type.getDisplay()) {
-			//  die folgende Zeile würde vor jeden GameLog.log(MsgType.GAME, ""); den Namen des aktuellen Spielers setzen
-			//  da man aber evtl schreiben will "--- Nico's Turn ---" und nicht Nico: --- Nico's Turn --- denke ich es ist besser
-			//  das immer von Hand davor zu schreiben
-			//	String msg = type.equals(MsgType.GAME) ? GameServer.getInstance().getGameController().getActivePlayerName() + ": " : "";
+			/** die folgende Zeile würde vor jeden GameLog.log(MsgType.GAME, ""); den Namen des aktuellen Spielers setzen
+			    da man aber evtl schreiben will "--- Nico's Turn ---" und nicht Nico: --- Nico's Turn --- denke ich es ist besser
+			    das immer von Hand davor zu schreiben
+			  	String msg = type.equals(MsgType.GAME) ? GameServer.getInstance().getGameController().getActivePlayerName() + ": " : ""; */
 				String msg = "";
 				msg += computeLine(type, true) + line;
 				writeToConsole(msg);
