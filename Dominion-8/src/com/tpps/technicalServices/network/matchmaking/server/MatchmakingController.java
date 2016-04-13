@@ -54,8 +54,8 @@ public final class MatchmakingController {
 			player = lobby.getPlayers().get(i);
 			playerNames[i] = player.getPlayerName();
 		}
-		
-		//reserve port & start game-process
+
+		// reserve port & start game-process
 		try {
 			blockPort.acquire(1);
 			int freePort = getFreePort();
@@ -136,7 +136,7 @@ public final class MatchmakingController {
 			GameLobby lobby = new GameLobby();
 			lobbies.add(lobby);
 			joinLobby(player, lobby);
-		} else if (lobbies.size() == 1) {
+		} else if (lobbies.size() == 1 && !lobbies.get(0).isFull()) {
 			GameLobby lobby = lobbies.get(0);
 			joinLobby(player, lobby);
 		} else {
@@ -145,12 +145,19 @@ public final class MatchmakingController {
 			int minDelta = Integer.MAX_VALUE;
 			while (it.hasNext()) {
 				gl = it.next();
+				if (gl.isFull()) {
+					continue;
+				}
 				int delta = Math.abs(gl.getLobbyScore() - score);
 				if (minDelta > delta) {
 					minDelta = delta;
 					bestFitting = gl;
 				}
 			}
+			if(bestFitting==null){
+				bestFitting = new GameLobby();
+			}
+			
 			joinLobby(player, bestFitting);
 		}
 
