@@ -1,10 +1,13 @@
 package com.tpps.technicalServices.network.matchmaking.server;
 
+import java.io.IOException;
+import java.net.ServerSocket;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 
 /**
@@ -27,6 +30,7 @@ public final class MatchmakingController {
 	private static ConcurrentHashMap<MPlayer, Integer> connectedPortsByPlayer;
 	private static ConcurrentHashMap<String, MPlayer> playersByName;
 	private static ConcurrentHashMap<MPlayer, GameLobby> lobbiesByPlayer;
+	private static ConcurrentHashMap<GameLobby, Thread> gameServersByLobby;
 
 	private static CopyOnWriteArrayList<GameLobby> lobbies;
 
@@ -46,6 +50,24 @@ public final class MatchmakingController {
 		}
 		MatchmakingServer.getInstance().sendSuccessPacket(lobby.getPlayers(), playerNames);
 
+		/* start server */
+		Thread gsThread = new Thread(() -> {
+			try {
+				new GameServer(getFreePort());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		gsThread.start();
+		gameServersByLobby.put(lobby, gsThread);
+
+	}
+
+	private static int getFreePort() throws IOException {
+		ServerSocket srv = new ServerSocket(0);
+		srv.close();
+		return srv.getLocalPort();
 	}
 
 	/**
@@ -180,11 +202,17 @@ public final class MatchmakingController {
 				SQLStatisticsHandler.addWinOrLoss(p, false);
 
 			}
+			MPlayer player = playersByName.get(p);
+			int port = connectedPortsByPlayer.get(player);
+			MatchmakingServer.getInstance().disconnect(port);
+			
 
-			removePlayer(playersByName.get(p));
+			removePlayer(player);
+
 		}
 		SQLStatisticsHandler.addWinOrLoss(winner, true);
 
+		gameServersByLobby.remove(lobby);
 	}
 
 	/** @return a readable representation of all active lobbies */

@@ -184,7 +184,7 @@ public class MatchmakingServer extends Server {
 	 */
 	public static MatchmakingServer getInstance() {
 		return instance;
-	}
+	}	
 
 	/**
 	 * this represents a Network-Listener for the matchmaking-server to catch if
