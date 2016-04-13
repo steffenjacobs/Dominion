@@ -23,7 +23,12 @@ import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
  */
 public final class Matchmaker {
 	private static Client client;
-	private static MatchmakingHandler handler;
+	private static PacketHandler handler;
+	
+	/**this class should not be instanciated*/
+	private Matchmaker(){
+		//nothing
+	}
 
 	/**
 	 * creates & opens a new connection to the matchmaking-server if necessary
@@ -50,7 +55,6 @@ public final class Matchmaker {
 	public static void findMatch(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingRequest(username, uid, false));
-
 	}
 
 	/**
@@ -64,6 +68,11 @@ public final class Matchmaker {
 	public static void abort(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingRequest(username, uid, true));
+	}
+
+	/** @return the actual network-client connected to the matchmaking-system */
+	public static Client getNetworkClient() {
+		return client;
 	}
 
 	/**

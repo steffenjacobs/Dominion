@@ -18,6 +18,8 @@ public final class MatchmakingController {
 		playersByPort = new ConcurrentHashMap<Integer, MPlayer>();
 		lobbies = new CopyOnWriteArrayList<>();
 		lobbiesByPlayer = new ConcurrentHashMap<>();
+		playersByName = new ConcurrentHashMap<>();
+		connectedPortsByPlayer = new ConcurrentHashMap<>();
 	}
 
 	private static ConcurrentHashMap<Integer, MPlayer> playersByPort;
@@ -134,6 +136,10 @@ public final class MatchmakingController {
 	 *            the player to remove
 	 */
 	private static void removePlayer(MPlayer player) {
+		if (player == null) {
+			System.err.println("Player not found: " + player);
+			return;
+		}
 		playersByPort.remove(player.getConnectionPort());
 		connectedPortsByPlayer.remove(player);
 		playersByName.remove(player.getPlayerName());

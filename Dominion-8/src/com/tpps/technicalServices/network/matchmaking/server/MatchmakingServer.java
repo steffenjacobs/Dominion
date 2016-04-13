@@ -2,7 +2,6 @@ package com.tpps.technicalServices.network.matchmaking.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -37,9 +36,18 @@ public class MatchmakingServer extends Server {
 	 * @param _handler
 	 *            a packet-handler for the server
 	 */
-	public MatchmakingServer(SocketAddress address, PacketHandler _handler) throws IOException {
+	public MatchmakingServer(InetSocketAddress address, PacketHandler _handler) throws IOException {
 		super(address, _handler);
 		super.getListenerManager().registerListener(new MatchmakingListener());
+		System.out.println("            * * * * * * * * * * * * * *      ");
+		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
+		System.out.println("* * * * * Dominion Matchmaking Server - Team ++; * * * * *");
+		System.out.println("* * * * * * * * * * * Port " + address.getPort() + " * * * * * * * * * * * ");
+		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
+		System.out.println("            * * * * * * * * * * * * * *      ");
+		System.out.println();
+		System.out.println("Enter 'help' to see all available commands.");
+		System.out.println();
 	}
 
 	/**
