@@ -38,7 +38,7 @@ public class GameLogTextPane extends JPanel {
 		MsgType.setGameMode();
 		this.textPane = new JTextPane();
 		this.textPane.setEditable(false);
-		this.textPane.setFont(new Font("Courier New", Font.PLAIN, 13));
+		this.textPane.setFont(new Font("Courier New", Font.PLAIN, 14));
 		this.textPane.setBackground(GameLog.getBackgroundColor());
 		this.setLayout(new BorderLayout());
 		this.add(new JScrollPane(this.textPane));
@@ -78,7 +78,7 @@ public class GameLogTextPane extends JPanel {
 			this.updateTextArea(line.split("]")[1] + "]", textColor);
 			this.updateTextArea(line.split("]")[2] + "\n", GameLog.getMsgColor());
 		} else {
-			this.updateTextArea(line, textColor);
+			this.updateTextArea(line + "\n", GameLog.getMsgColor());
 		}
 	}
 }

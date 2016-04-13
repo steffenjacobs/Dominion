@@ -13,6 +13,7 @@ public class ColorUtil {
 	public static final Color DARKSEAGREEN = new Color(143, 188, 143);
 	public static final Color MEDIUMGRAY = new Color(215, 215, 215);
 	public static final Color SNOW = new Color(255, 250, 250);
+	public static final Color EPICBLUE = new Color(25, 126, 255);
 
 	public static javafx.scene.paint.Color getFxColor(java.awt.Color color) {
 		return javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0);

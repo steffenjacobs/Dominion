@@ -8,28 +8,20 @@ import java.util.Calendar;
 import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.ColorUtil;
 
+/**
+ * TODO
+ * update comments in the following 4 classes: GameLog, GameLogUI, GameLogTextPane, MsgType
+ * */
 public class GameLog {
 
-	/**
-	 * How-To:
-	 * 
-	 * call GameLog.init()
-	 * get the JPanel with a JTextPane with GameLog.getTextPane();
-	 * add this panel to GameWindow
-	 * add GameLog.log(MsgType.GAME, "XYZ"); to every Game relevant action
-	 * 
-	 * update comments in the following 4 classes: GameLog, GameLogUI, GameLogTextPane, MsgType
-	 * 
-	 * */
-	
 	private static GameLogTextPane textPane;
 
 	/**
 	 * Colors that can easily be changed for the UI Window
 	 */
 	private static Color backgroundColor = Color.WHITE;
-	private static Color timestampColor = Color.BLUE;
-	private static Color msgColor = ColorUtil.MEDIUMGRAY;
+	private static Color timestampColor = ColorUtil.EPICBLUE;
+	private static Color msgColor = Color.BLACK;
 	
 	/**
 	 * @unused, for messageTypeColors see MsgType class
@@ -69,7 +61,7 @@ public class GameLog {
 	 */
 	public static void init() {
 		GameLog.isInitialized = true;
-		String team = "Game Log\n\n";
+		String team = "Game Log\n";
 		/*if (displayUIWindow) {
 			 create UI if desired 
 		}*/
