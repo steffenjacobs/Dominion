@@ -1,9 +1,10 @@
 package com.tpps.test.technicalServices.network;
 
+import static org.junit.Assert.*;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.UUID;
@@ -11,7 +12,6 @@ import java.util.concurrent.Semaphore;
 
 import org.junit.Test;
 
-import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
@@ -87,22 +87,22 @@ public class JUnitMatchmakingTest {
 		halt.acquire();
 
 		for (int i = 0; i < 4; i++) {
-			
-			
-			//Setup match-makers
+
+			// Setup match-makers
 			Matchmaker mm = new Matchmaker();
 			matchmakers.put(username + i, mm);
 
 			Field client = Matchmaker.class.getDeclaredField("client");
 			client.setAccessible(true);
-			client.set(mm, new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.PORT_MATCHMAKING),
-					new TestMatchmakingHandler(), false));
+			client.set(mm,
+					new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.PORT_MATCHMAKING),
+							new TestMatchmakingHandler(), false));
 
 			Field handler = Matchmaker.class.getDeclaredField("handler");
 			handler.setAccessible(true);
 			handler.set(mm, new TestMatchmakingHandler());
 
-			//Setup sessions
+			// Setup sessions
 			SessionPacketSenderAPI.sendGetRequest(sess, username + i, new SuperCallable<PacketSessionGetAnswer>() {
 
 				@Override
@@ -118,6 +118,11 @@ public class JUnitMatchmakingTest {
 
 		Thread.sleep(200);
 
+		// check sessions
+		for (int i = 0; i < 4; i++) {
+			assertNotNull(userSessions.get(username + i));
+		}
+
 		Iterator<String> it = userSessions.keySet().iterator();
 		for (int i = 0; i < 4; i++) {
 			String name = it.next();
@@ -125,8 +130,6 @@ public class JUnitMatchmakingTest {
 			Thread.sleep(100);
 		}
 		Thread.sleep(1000);
-
-		Thread.sleep(50000);
 
 	}
 

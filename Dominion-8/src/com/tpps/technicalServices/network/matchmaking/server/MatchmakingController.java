@@ -136,10 +136,6 @@ public final class MatchmakingController {
 	 *            the player to remove
 	 */
 	private static void removePlayer(MPlayer player) {
-		if (player == null) {
-			System.err.println("EMPTY PLAYER REMOVE");
-		}
-		
 		playersByPort.remove(player.getConnectionPort());
 		connectedPortsByPlayer.remove(player);
 		playersByName.remove(player.getPlayerName());
@@ -159,7 +155,11 @@ public final class MatchmakingController {
 	 *            the port the client disconnected from
 	 */
 	public static void onPlayerDisconnect(int port) {
-		removePlayer(playersByPort.get(port));
+		if (playersByPort.containsKey(port)) {
+			removePlayer(playersByPort.get(port));
+		} else {
+			// nothing
+		}
 	}
 
 	/**
