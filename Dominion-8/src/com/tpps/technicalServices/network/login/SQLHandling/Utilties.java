@@ -26,7 +26,7 @@ public class Utilties {
 		Statistic tree = new Statistic(SQLType.INT, "losses");
 		Statistic four = new Statistic(SQLType.FLOAT, "4,2", "win_loss");
 		Statistic five = new Statistic(SQLType.INT, "games_played");
-		Statistic six = new Statistic(SQLType.TEXT, "rank");
+		Statistic six = new Statistic(SQLType.INT, "rank");
 		Statistic seven = new Statistic(SQLType.BIGINT, "playtime");
 		Statistic eight = new Statistic(SQLType.VARCHAR, "200", "LAST_TIME_PLAYED");
 		Statistic nine = new Statistic(SQLType.VARCHAR, "200", "LAST_TIME_WINS");

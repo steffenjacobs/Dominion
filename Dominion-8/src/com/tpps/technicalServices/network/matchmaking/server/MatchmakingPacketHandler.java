@@ -77,7 +77,9 @@ public class MatchmakingPacketHandler extends PacketHandler {
 
 		threadPool.submit(() -> {
 			if (sess.checkSessionSync(pmr.getPlayerName(), pmr.getPlayerID())) {
-				MatchmakingController.addPlayer(MPlayer.initialize(pmr, port));
+				MPlayer p  = MPlayer.initialize(pmr, port);
+				MatchmakingController.addPlayer(p);
+				GameLog.log(MsgType.NETWORK_INFO, "-> " + p.getScore());
 			} else {
 				try {
 					super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 0));

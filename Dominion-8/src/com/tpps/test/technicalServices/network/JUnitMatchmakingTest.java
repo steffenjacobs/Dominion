@@ -18,6 +18,10 @@ import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.SuperCallable;
 import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLHandler;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLOperations;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
+import com.tpps.technicalServices.network.login.SQLHandling.Utilties;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingAnswer;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingPlayerInfo;
@@ -37,55 +41,59 @@ public class JUnitMatchmakingTest {
 
 		// init game-log
 		GameLog.init();
+		SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
+		SQLHandler.connect();
+
+		if(!SQLOperations.checkTable("statistics")){
+			SQLStatisticsHandler.createStatisticsTable(Utilties.createStatisticsList());
+		}
+		
+		SQLStatisticsHandler.insertRowForFirstLogin("test");
+		
 
 		// setup matchmaking-server
 		new MatchmakingServer(new InetSocketAddress(Addresses.getAllInterfaces(), MatchmakingServer.PORT_MATCHMAKING),
 				new MatchmakingPacketHandler());
 
 		// setup session-server
-		 new Thread(() -> {
-		 try {
-		 new SessionServer();
-		 } catch (Exception e) {
-		 e.printStackTrace();
-		 }
-		 }).start();
-		 Thread.sleep(100);
-		
-		 // get valid session
-		 SessionClient sess = new SessionClient(
-		 new InetSocketAddress(Addresses.getRemoteAddress(),
-		 SessionServer.getStandardPort()));
-		 Semaphore halt = new Semaphore(1);
-		 halt.acquire();
-		 SessionPacketSenderAPI.sendGetRequest(sess, username, new
-		 SuperCallable<PacketSessionGetAnswer>() {
-		
-		 @Override
-		 public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer
-		 object) {
-		 sessionID = object.getLoginSessionID();
-		 halt.release();
-		 return null;
-		 }
-		 });
-		 halt.acquire();
-		 halt.release();
+		new Thread(() -> {
+			try {
+				new SessionServer();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}).start();
+		Thread.sleep(100);
+
+		// get valid session
+		SessionClient sess = new SessionClient(
+				new InetSocketAddress(Addresses.getRemoteAddress(), SessionServer.getStandardPort()));
+		Semaphore halt = new Semaphore(1);
+		halt.acquire();
+		SessionPacketSenderAPI.sendGetRequest(sess, username, new SuperCallable<PacketSessionGetAnswer>() {
+
+			@Override
+			public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer object) {
+				sessionID = object.getLoginSessionID();
+				halt.release();
+				return null;
+			}
+		});
+		halt.acquire();
+		halt.release();
 
 		// setup matchmaking-client
 
 		Field client = Matchmaker.class.getDeclaredField("client");
 		client.setAccessible(true);
-		client.set(null,
-				new Client(new InetSocketAddress(Addresses.getAllInterfaces(), MatchmakingServer.PORT_MATCHMAKING),
-						new TestMatchmakingHandler(), false));
-		
+		client.set(null, new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.PORT_MATCHMAKING),
+				new TestMatchmakingHandler(), false));
+
 		Field handler = Matchmaker.class.getDeclaredField("handler");
 		handler.setAccessible(true);
 		handler.set(null, new TestMatchmakingHandler());
 
 		Matchmaker.findMatch(username, sessionID);
-		
 		Thread.sleep(1000);
 
 		Thread.sleep(50000);
@@ -101,7 +109,7 @@ public class JUnitMatchmakingTest {
 
 		@Override
 		public void handleReceivedPacket(int port, Packet packet) {
-			System.out.println("whoohooo");
+			System.out.println(" Packet received :) " + packet);
 
 			switch (packet.getType()) {
 			case MATCHMAKING_ANSWER:
@@ -125,7 +133,6 @@ public class JUnitMatchmakingTest {
 				System.err.println("Bad packet received: " + packet);
 				break;
 			}
-			System.out.println(" Packet received :) " + packet);
 		}
 	}
 

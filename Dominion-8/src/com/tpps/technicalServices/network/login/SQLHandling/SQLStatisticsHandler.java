@@ -60,7 +60,7 @@ public class SQLStatisticsHandler {
 		try {
 			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement(
 					"INSERT INTO statistics (nickname, wins, losses, win_loss, games_played, rank, playtime, LAST_TIME_PLAYED, LAST_TIME_WINS) "
-					+ "VALUES (?, 0, 0, 0, 0,'silver', 0, '','')");
+					+ "VALUES (?, 0, 0, 0, 0,0, 0, '','')");
 			stmt.setString(1, nickname);
 			stmt.executeUpdate();
 			System.out.println("Added nickname Row for statistics");
@@ -155,25 +155,25 @@ public class SQLStatisticsHandler {
 		}
 	}
 
-	public static String getRank(String nickname) {
+	public static int getRank(String nickname) {
 		try {
 			PreparedStatement stmt = SQLHandler.getConnection()
 					.prepareStatement("SELECT rank FROM statistics WHERE nickname = ?");
 			stmt.setString(1, nickname);
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
-			return rs.getString("rank");
+			return rs.getInt("rank");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return 0;
 	}
 
-	public static void setRank(String nickname, String rank) {
+	public static void setRank(String nickname, int rank) {
 		try {
 			PreparedStatement stmt = SQLHandler.getConnection()
 					.prepareStatement("UPDATE statistics SET rank = ? WHERE nickname = ?");
-			stmt.setString(1, rank);
+			stmt.setInt(1, rank);
 			stmt.setString(2, nickname);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -284,7 +284,7 @@ public class SQLStatisticsHandler {
 				int losses = rs.getInt("losses");
 				double ratio = rs.getDouble("win_loss");
 				int games_played = rs.getInt("games_played");
-				String rank = rs.getString("rank");
+				int rank = rs.getInt("rank");
 				long playtime = rs.getLong("playtime");
 				// System.out.println(nick);
 
@@ -293,7 +293,7 @@ public class SQLStatisticsHandler {
 				statz[height][++width] = "" + losses;
 				statz[height][++width] = "" + ratio;
 				statz[height][++width] = "" + games_played;
-				statz[height][++width] = rank;
+				statz[height][++width] = "" + rank;
 				statz[height][++width] = "" + playtime;
 				height++;
 				width = 0;
