@@ -98,7 +98,7 @@ public final class DominionController {
 		globalChatPanel = new GlobalChatPanel();		
 		statisticsBoardPanel = new StatisticsBoard();
 		playerSettingsPanel = new PlayerSettingsPanel(statisticsBoardPanel);
-		this.playerSettingsPanel.insertPlayer(this.username);
+		//this.playerSettingsPanel.insertPlayer(this.username);
 		try {
 			this.originalBackground = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
 		} catch (IOException e) {
