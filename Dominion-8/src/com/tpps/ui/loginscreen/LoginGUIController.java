@@ -1,5 +1,7 @@
 package com.tpps.ui.loginscreen;
 
+import java.util.UUID;
+
 import javax.swing.JOptionPane;
 
 import com.tpps.application.game.DominionController;
@@ -97,5 +99,9 @@ public class LoginGUIController{
 	
 	public LoginClient getLoginclient() {
 		return loginclient;
+	}
+	
+	public UUID getUUID(){
+		return this.loginclient.getSessionid();
 	}
 }
