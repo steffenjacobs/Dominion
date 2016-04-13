@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Scanner;
 
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.Server;
 import com.tpps.technicalServices.network.core.events.NetworkListener;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLHandler;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingPlayerInfo;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingSuccessful;
 
@@ -21,7 +23,7 @@ public class MatchmakingServer extends Server {
 
 	private static MatchmakingServer instance;
 
-	public final static int PORT_MATCHMAKING = 1340;
+	public final static int PORT_MATCHMAKING = 1341;
 
 	/** main entry-point for the matchmaking-server */
 	public static void main(String[] args) throws IOException {
@@ -30,7 +32,7 @@ public class MatchmakingServer extends Server {
 	}
 
 	/**
-	 * constructor for the matchmaking-server
+	 * constructor for the matchmaking-server; warning: blocks!
 	 * 
 	 * @parma address the addres + port the server is listening on
 	 * @param _handler
@@ -39,16 +41,65 @@ public class MatchmakingServer extends Server {
 	public MatchmakingServer(InetSocketAddress address, PacketHandler _handler) throws IOException {
 		super(address, _handler);
 		super.getListenerManager().registerListener(new MatchmakingListener());
+		instance = this;
+		SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
+		SQLHandler.connect();
+		setupConsoleInput(address.getPort());
+	}
+
+	private void setupConsoleInput(int port) {
+
 		System.out.println("            * * * * * * * * * * * * * *      ");
 		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
 		System.out.println("* * * * * Dominion Matchmaking Server - Team ++; * * * * *");
-		System.out.println("* * * * * * * * * * * Port " + address.getPort() + " * * * * * * * * * * * ");
+		System.out.println("* * * * * * * * * * * Port " + port + " * * * * * * * * * * * ");
 		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
 		System.out.println("            * * * * * * * * * * * * * *      ");
 		System.out.println();
 		System.out.println("Enter 'help' to see all available commands.");
 		System.out.println();
-		instance = this;
+
+		String line = null;
+		Scanner scanInput = new Scanner(System.in);
+		while (true) {
+			line = scanInput.nextLine();
+			try {
+				if (line.equals("exit") || line.equals("stop")) {
+					System.exit(0);
+					break;
+				} else if (line.startsWith("countplayers")) {
+					System.out.println(MatchmakingController.getPlayers().length);
+				} else if (line.startsWith("listlobbies")) {
+					int cnt = 0;
+					for (String player : MatchmakingController.getLobbies()) {
+						System.out.println(player);
+						cnt++;
+					}
+					if (cnt == 0)
+						System.out.println("(empty)");
+				} else if (line.startsWith("listusers")) {
+					int cnt = 0;
+					for (String player : MatchmakingController.getPlayers()) {
+						System.out.println(player);
+						cnt++;
+					}
+					if (cnt == 0)
+						System.out.println("(empty)");
+				} else if (line.startsWith("help")) {
+					System.out.println("-------- Available Commands --------");
+					System.out.println("exit");
+					System.out.println("listlobbies");
+					System.out.println("listusers");
+					System.out.println("help");
+					System.out.println("------------------------------------");
+				} else {
+					System.out.println("Bad command: " + line);
+				}
+			} catch (ArrayIndexOutOfBoundsException e) {
+				System.err.println("Bad syntax.");
+			}
+		}
+		scanInput.close();
 	}
 
 	/**
@@ -119,12 +170,12 @@ public class MatchmakingServer extends Server {
 	 */
 	public void sendQuitPacket(Collection<MPlayer> receivers, String quittedPlayer) {
 		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(quittedPlayer, false);
-		try {
-			for (MPlayer receiver : receivers) {
+		for (MPlayer receiver : receivers) {
+			try {
 				super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
+			} catch (NullPointerException | IOException npe) {
+				// if one this player is already disconnected, too
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
