@@ -27,6 +27,7 @@ public final class MatchmakingController {
 		lobbiesByPlayer = new ConcurrentHashMap<>();
 		playersByName = new ConcurrentHashMap<>();
 		connectedPortsByPlayer = new ConcurrentHashMap<>();
+		gameServersByLobby = new ConcurrentHashMap<>();
 	}
 
 	private static ConcurrentHashMap<Integer, MPlayer> playersByPort;
@@ -68,11 +69,9 @@ public final class MatchmakingController {
 					e.printStackTrace();
 				}
 			});
-			gsThread.start();
 			gameServersByLobby.put(lobby, gsThread);
-
+			gsThread.start();
 			Thread.sleep(500);
-
 			MatchmakingServer.getInstance().sendSuccessPacket(lobby.getPlayers(), playerNames, freePort);
 			blockPort.release(1);
 

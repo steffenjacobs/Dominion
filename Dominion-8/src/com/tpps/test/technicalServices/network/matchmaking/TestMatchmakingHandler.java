@@ -31,6 +31,7 @@ public class TestMatchmakingHandler extends PacketHandler {
 	/**trivial*/
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {
+		System.out.println(System.identityHashCode(this) + ": " + packet);
 
 		switch (packet.getType()) {
 		case MATCHMAKING_ANSWER:
