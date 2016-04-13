@@ -60,9 +60,6 @@ public final class DominionController {
 		DominionController.instance.init();
 	}
 	
-	DominionController() {
-		
-	}
 
 	private void init() {
 		boolean login = true;
@@ -175,15 +172,6 @@ public final class DominionController {
 		panel.add(this.globalChatPanel);
 		panel.add(this.playerSettingsPanel);
 		this.mainFrame.setPanel(panel);
-	}
-
-	/**
-	 * 
-	 * @param test
-	 */
-	public DominionController(boolean test) {
-		storageController = new CardStorageController();
-		// do nothing else, just init object
 	}
 
 	/**
