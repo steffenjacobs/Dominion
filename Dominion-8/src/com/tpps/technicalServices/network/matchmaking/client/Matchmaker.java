@@ -24,7 +24,7 @@ import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 public final class Matchmaker {
 	private Client client;
 	private PacketHandler handler;
-	
+
 	/**
 	 * creates & opens a new connection to the matchmaking-server if necessary
 	 */
@@ -94,7 +94,8 @@ public final class Matchmaker {
 
 			switch (packet.getType()) {
 			case MATCHMAKING_ANSWER:
-//				PacketMatchmakingAnswer pma = (PacketMatchmakingAnswer) packet;
+				// PacketMatchmakingAnswer pma = (PacketMatchmakingAnswer)
+				// packet;
 				// is called when the player is put into a matchmaking-lobby
 				// TODO: show LobbyScreen
 				break;
@@ -103,18 +104,18 @@ public final class Matchmaker {
 				// is called when a player joined or quitted the lobby
 				// TODO: add player and remove one instance of "Waiting for
 				// player..." @LobbyScreen
-				if(pmpi.isStatus()){
+				if (pmpi.isStatus()) {
 					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
-					System.out.println("player joined the lobby");
-				}else{
+					System.out.println("player " + pmpi.getPlayerName() + " joined the lobby");
+				} else {
 					DominionController.getInstance().deletePlayerFromGUI(pmpi.getPlayerName());
-					System.out.println("player left from lobby");
-				}				
+					System.out.println("player " + pmpi.getPlayerName() + " left from lobby");
+				}
 				break;
 			case MATCHMAKING_SUCCESSFUL:
 				PacketMatchmakingSuccessful pms = (PacketMatchmakingSuccessful) packet;
 				// is called, when the lobby is full and the game starts
-				// TODO: connect to the gameServer & start the round				
+				// TODO: connect to the gameServer & start the round
 				System.out.println("starting match!");
 				DominionController.getInstance().startMatch(pms.getGameserverPort());
 				break;
