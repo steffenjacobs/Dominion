@@ -75,7 +75,7 @@ public final class DominionController {
 	public DominionController() { }
 
 	private void init() {
-		boolean login = false;
+		boolean login = true;
 		if(login){
 			storageController = new CardStorageController();
 			mainFrame = new MainFrame();
