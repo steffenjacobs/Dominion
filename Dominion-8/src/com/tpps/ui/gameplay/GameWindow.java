@@ -53,6 +53,7 @@ public class GameWindow extends JFrame {
 
 	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage, displayImageBuys, displayImageActions,
 			displayImageTurn, displayImageCoins, buttonGameImage;
+
 	private GameBackground table;
 	private GraphicFramework framework;
 	private DisplayValue buy, coin, action, turn;
@@ -123,7 +124,7 @@ public class GameWindow extends JFrame {
 
 		this.add(framework);
 
-		backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
+//		backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
 		closeImage = this.loadingImage(closeImage, "resources/img/gameObjects/close.png");
 		tableImage = this.loadingImage(tableImage, "resources/img/gameObjects/table.jpg");
 		buttonImage = this.loadingImage(buttonImage, "resources/img/gameObjects/testButtonGame.png");
@@ -851,8 +852,15 @@ public class GameWindow extends JFrame {
 
 	private void onResize(double relativeWidth, double relativeHeight) {
 		loggerPane.onResize(this.getWidth() , this.getHeight() - topGap, relativeWidth, relativeHeight, this);
-		// chatWindow.onResize();
+//		 chatWindow.onResize(this.getWidth(),this.getHeight(),relativeWidth,relativeHeight,this);
 
+	}
+	public BufferedImage getBackgroundImage() {
+		return backgroundImage;
+	}
+
+	public void setBackgroundImage(BufferedImage backgroundImage) {
+		this.backgroundImage = backgroundImage;
 	}
 
 	public int getWIDTH() {
