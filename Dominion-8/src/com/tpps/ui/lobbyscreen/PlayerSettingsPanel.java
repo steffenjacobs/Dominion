@@ -192,6 +192,7 @@ public class PlayerSettingsPanel extends JPanel{
 			if(i == index){
 				labelImages[i].setIcon(new ImageIcon(originalImages[i]));
 				labelImages[i].setBorder(BorderFactory.createLineBorder(Color.GREEN ,3));
+				this.selectedImage = originalImages[i];
 			}else{
 				labelImages[i].setIcon(new ImageIcon(transparentImages[i]));
 				labelImages[i].setBorder(BorderFactory.createLineBorder(Color.RED ,3));
@@ -215,6 +216,7 @@ public class PlayerSettingsPanel extends JPanel{
 	}
 	
 	public BufferedImage getSelectedPicture(){
+		System.out.println("ZERO: " + this.selectedImage);
 		return this.selectedImage;
 	}
 	

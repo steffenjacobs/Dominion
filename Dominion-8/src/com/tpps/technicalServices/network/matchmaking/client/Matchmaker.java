@@ -105,11 +105,11 @@ public final class Matchmaker {
 				// TODO: add player and remove one instance of "Waiting for
 				// player..." @LobbyScreen
 				if (pmpi.isStatus()) {
-					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
 					System.out.println("PACKET: player " + pmpi.getPlayerName() + " joined the lobby");
+					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
 				} else {
-					DominionController.getInstance().clearPlayerFromGUI(pmpi.getPlayerName());
 					System.out.println("PACKET: player " + pmpi.getPlayerName() + " left from lobby");
+					DominionController.getInstance().clearPlayerFromGUI(pmpi.getPlayerName());
 				}
 				break;
 			case MATCHMAKING_SUCCESSFUL:

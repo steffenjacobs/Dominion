@@ -52,6 +52,7 @@ public final class DominionController {
 	private StatisticsBoard statisticsBoardPanel;
 
 	private BufferedImage originalBackground;
+	public static BufferedImage selectedGameImage;
 	private boolean turnFlag;
 	
 	private ChatClient chatClient;
@@ -108,7 +109,10 @@ public final class DominionController {
 	
 	public void startMatch(int port){
 		try {
+			selectedGameImage = this.playerSettingsPanel.getSelectedPicture();
+			System.out.println("FIRST: " + selectedGameImage);
 			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), port), new ClientGamePacketHandler());
+			//this.gameClient.getGameWindow().setBackgroundImage(this.getLobbyBackground());
 		} catch (IOException e) {		
 			e.printStackTrace();
 		}
@@ -205,6 +209,11 @@ public final class DominionController {
 		return storageController;
 	}
 
+	public BufferedImage getLobbyBackground(){
+		return this.playerSettingsPanel.getSelectedPicture();
+	}
+	
+	
 	/**
 	 * 
 	 * @return

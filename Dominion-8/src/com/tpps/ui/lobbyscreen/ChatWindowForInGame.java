@@ -24,6 +24,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.ui.gameplay.GameWindow;
 
 public class ChatWindowForInGame extends JPanel{
 	
@@ -193,8 +194,12 @@ public class ChatWindowForInGame extends JPanel{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight) {
-		// TODO Auto-generated method stub
+	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
+//		int width = (int) (sizeFactorWidth*gameWindow.getWIDTH()/8);
+//		int height =  (int) (sizeFactorHeight*gameWindow.getHEIGHT()/8);
+//		System.out.println(x-width*1.5+"x");
+//		System.out.println(y+"y");
+//		this.setBounds(x-(int) (width*1.5), y, width,height);
 		
 	}
 }
