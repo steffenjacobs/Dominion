@@ -1,10 +1,13 @@
 package com.tpps.technicalServices.logger;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.ColorUtil;
 
@@ -168,6 +171,14 @@ public class GameLog {
 		return line.toString();
 	}
 	
+	public static void broadcastMessage(MsgType type, String line) {
+		try {
+			DominionController.getInstance().getGameClient().sendMessage(new PacketBroadcastLog(type, line));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * log the message with message type to the ui (if GameLog.guiPossible is true) and console
 	 * 
@@ -177,20 +188,36 @@ public class GameLog {
 	public static void log(MsgType type, String line) {
 		if (isInitialized) {
 			if (type.getDisplay()) {
-			/** die folgende Zeile wuerde vor jeden GameLog.log(MsgType.GAME, ""); den Namen des aktuellen Spielers setzen
-			    da man aber evtl schreiben will "--- Nico's Turn ---" und nicht Nico: --- Nico's Turn --- denke ich es ist besser
-			    das immer von Hand davor zu schreiben
-			  	String msg = type.equals(MsgType.GAME) ? GameServer.getInstance().getGameController().getActivePlayerName() + ": " : ""; */
 				String msg = type.getTimeStamp() ? createTimestamp(type, true) + line : line;
 				writeToConsole(msg);
-			//  if (guiPossible) {
-					write(msg, type.getColor(), type.getTimeStamp());
-			//  }
+				write(msg, type.getColor(), type.getTimeStamp());
 			}
 		} else { // prevent Null Pointers
 			init();
 		}
 	}
+	
+//	/**
+//	 * log the message with message type to the ui (if GameLog.guiPossible is true) and console
+//	 * 
+//	 * @param type the message type of the message to log
+//	 * @param line the line to log
+//	 */
+//	public static void log(MsgType type, String line) {
+//		if (isInitialized) {
+//			if (type.getDisplay()) {
+//			/** die folgende Zeile wuerde vor jeden GameLog.log(MsgType.GAME, ""); den Namen des aktuellen Spielers setzen
+//			    da man aber evtl schreiben will "--- Nico's Turn ---" und nicht Nico: --- Nico's Turn --- denke ich es ist besser
+//			    das immer von Hand davor zu schreiben
+//			  	String msg = type.equals(MsgType.GAME) ? GameServer.getInstance().getGameController().getActivePlayerName() + ": " : ""; */
+//				String msg = type.getTimeStamp() ? createTimestamp(type, true) + line : line;
+//				writeToConsole(msg);
+//				write(msg, type.getColor(), type.getTimeStamp());
+//			}
+//		} else { // prevent Null Pointers
+//			init();
+//		}
+//	}
 	
 	/**
 	 * write to a JPanel of LogUI

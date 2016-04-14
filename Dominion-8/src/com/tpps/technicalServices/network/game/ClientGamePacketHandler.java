@@ -5,8 +5,11 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.GameStorageInterface;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.technicalServices.network.gameSession.packets.PacketOpenGuiAndEnableOne;
@@ -181,6 +184,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 		// gameGui.disableActionCards();
 		// gameGui.enalbeMoney();
 		// break;
+		case BROADCAST_LOG:
+			GameLog.log(((PacketBroadcastLog)packet).getMsgType(), ((PacketBroadcastLog)packet).getMessage());
+			break;
 		default:
 			System.out.println("unknown packet type: " + packet.getType());
 			break;

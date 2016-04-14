@@ -201,6 +201,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 				this.server.getGameController().getActivePlayer().getDeck().discardDrawPile();
 
 				break;
+			case BROADCAST_LOG:
+				this.server.broadcastMessage(packet);
+				break;
 			default:
 				System.out.println("unknown packed type");
 				break;
