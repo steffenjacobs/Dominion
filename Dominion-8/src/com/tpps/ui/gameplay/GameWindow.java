@@ -23,6 +23,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 
 import com.sun.xml.internal.ws.api.ComponentEx;
+import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.logger.GameLog;
@@ -124,7 +125,9 @@ public class GameWindow extends JFrame {
 
 		this.add(framework);
 
-//		backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
+		//backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
+		backgroundImage = DominionController.selectedGameImage;
+		System.out.println("THIRD: " + backgroundImage);
 		closeImage = this.loadingImage(closeImage, "resources/img/gameObjects/close.png");
 		tableImage = this.loadingImage(tableImage, "resources/img/gameObjects/table.jpg");
 		buttonImage = this.loadingImage(buttonImage, "resources/img/gameObjects/testButtonGame.png");
