@@ -13,6 +13,7 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBuyCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
@@ -25,6 +26,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackThiefCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketReconnect;
+import com.tpps.technicalServices.network.gameSession.packets.PacketRegistratePlayerByServer;
 import com.tpps.technicalServices.network.gameSession.packets.PacketRemoveExtraTable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendActiveButtons;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendBoard;
@@ -64,7 +66,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 			switch (packet.getType()) {
 			case REGISTRATE_PLAYER_BY_SERVER:
 				int clientId = GameServer.getCLIENT_ID();
-				addPlayerAndCheckPlayerCount(port, clientId);
+				
+				addPlayerAndCheckPlayerCount(port, clientId, ((PacketRegistratePlayerByServer)packet).getUsername());
 				break;
 			case RECONNECT:
 				updatePortOfPlayer(port, packet);
@@ -506,12 +509,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 			server.sendMessage(port, new PacketSendHandCards(CollectionsUtil
 					.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 			Player player = this.server.getGameController().getActivePlayer();
-
+			server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, player.getPlayerName()));
 			this.server.getGameController().endTurn();
 
 			server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
 			server.broadcastMessage(
 					new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -532,9 +536,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 * @param clientId
 	 * @throws IOException
 	 */
-	private void addPlayerAndCheckPlayerCount(int port, int clientId) throws IOException {
+	private void addPlayerAndCheckPlayerCount(int port, int clientId, String username) throws IOException {
 		try {
-			server.getGameController().addPlayer(new Player(clientId, port, this.server.getGameController().getGameBoard().getStartSet(), "test" + clientId));
+			server.getGameController().addPlayer(new Player(clientId, port, this.server.getGameController().getGameBoard().getStartSet(), username));
 			server.sendMessage(port, new PacketSendClientId(clientId));
 			if (server.getGameController().getPlayers().size() == 4) {
 				server.getGameController().startGame();

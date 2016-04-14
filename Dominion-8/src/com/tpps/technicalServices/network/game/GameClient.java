@@ -3,6 +3,7 @@ package com.tpps.technicalServices.network.game;
 import java.io.IOException;
 import java.net.SocketAddress;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.application.game.GameStorageInterface;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.gameSession.packets.PacketRegistratePlayerByServer;
@@ -37,7 +38,7 @@ public class GameClient extends Client {
 	 * @throws IOException
 	 */
 	private void registrateByServer() throws IOException {
-		this.sendMessage(new PacketRegistratePlayerByServer());
+		this.sendMessage(new PacketRegistratePlayerByServer(DominionController.getInstance().getUsername()));
 	}
 
 	/**
