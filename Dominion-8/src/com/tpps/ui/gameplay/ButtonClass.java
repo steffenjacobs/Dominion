@@ -116,7 +116,6 @@ public class ButtonClass extends GFButton {
 			System.out.println("Caption: " + this.getCaption());
 			if (this.getCaption().equals("End Turn")) {
 				try {
-					GameLog.broadcastMessage(MsgType.GAME, DominionController.getInstance().getUsername() + " ended his Turn.");
 					this.getFramework().addComponent(GameWindow.endActionPhase);
 					System.out.println("Packet EndTurn");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndTurn());
