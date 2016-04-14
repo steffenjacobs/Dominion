@@ -1,4 +1,4 @@
-package com.tpps.technicalServices.network.chat.controller;
+package com.tpps.technicalServices.network.chat.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
