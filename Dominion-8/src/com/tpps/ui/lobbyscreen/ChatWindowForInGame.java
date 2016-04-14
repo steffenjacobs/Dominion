@@ -36,7 +36,7 @@ public class ChatWindowForInGame extends JPanel{
 	private JTextField chatInputLine;
 	private JButton sendButton;
 	private final int SPACE_FROM_CHATINPUT_TO_BUTTON = 20;
-	private static final float BLACK_TRANSPARENCY = 0.3F;
+	private static final float BLACK_TRANSPARENCY = 0.6F;
 
 	public ChatWindowForInGame() {
 		this.loadImage();
