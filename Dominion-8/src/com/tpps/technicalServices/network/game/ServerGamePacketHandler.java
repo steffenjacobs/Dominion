@@ -509,13 +509,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 			server.sendMessage(port, new PacketSendHandCards(CollectionsUtil
 					.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 			Player player = this.server.getGameController().getActivePlayer();
-			server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, player.getPlayerName()));
+			server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, " -- " + player.getPlayerName()+ "'s TURN ENDED -- "));
 			this.server.getGameController().endTurn();
 
 			server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
 			server.broadcastMessage(
 					new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
-			
+			server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, " ++ " + this.server.getGameController().getActivePlayer().getPlayerName()+ "'s TURN STARTED ++ "));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
