@@ -121,7 +121,8 @@ public class PlayerSettingsPanel extends JPanel{
 			labelImages[i].addMouseListener(new ImageListener());
 			labelImages[i].setHorizontalAlignment(JLabel.CENTER);
 		}
-		this.changeSelectedPicture(0);
+		
+		this.initStandardBackground();
 		
 		panel.add(labelImages[0]);
 		panel.add(labelImages[1]);
@@ -249,6 +250,10 @@ public class PlayerSettingsPanel extends JPanel{
 				connectedPlayers[i].resetSearchingField();
 			}
 		}
+	}
+	
+	public void initStandardBackground(){
+		this.changeSelectedPicture(0);
 	}
 	
 	public JCheckBox[] getOptions() {

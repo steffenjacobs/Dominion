@@ -30,7 +30,7 @@ import com.tpps.ui.statisticsscreen.StatisticsBoard;
 /**
  * main controller class containing main entry point for client-application
  * 
- * @author Steffen Jacobs
+ * @author Steffen Jacobs, Johannes Huhn
  */
 public final class DominionController {
 
@@ -75,16 +75,23 @@ public final class DominionController {
 
 	public DominionController() { }
 
+	/**
+	 * This Methos is called, when the user starts the .jar File important
+	 * components (e.g to handle the Login) will be initialized
+	 * @author jhuhn
+	 */
 	private void init() {
 		boolean login = true;
-		if(login){
+		if (login) {
 			storageController = new CardStorageController();
 			mainFrame = new MainFrame();
 			loginGuiController = new LoginGUIController();
-		}else{
+		} else {
 			this.turnFlag = false;
 			try {
-				gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), 1339), new ClientGamePacketHandler());
+				gameClient = new GameClient(new InetSocketAddress(
+						Addresses.getRemoteAddress(), 1339),
+						new ClientGamePacketHandler());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -92,32 +99,56 @@ public final class DominionController {
 	}
 
 	/**
+	 * This method is responsible to load all GUI components that are needed for: 
+	 * - MainMenu 
+	 * - CommunityBoard 
+	 * - Lobby
 	 * @author jhuhn
 	 */
-	private void loadPanels(){
+	private void loadPanels() {
 		mainMenuPanel = new MainMenuPanel(this.mainFrame);
-		globalChatPanel = new GlobalChatPanel();		
+		globalChatPanel = new GlobalChatPanel();
 		statisticsBoardPanel = new StatisticsBoard();
 		playerSettingsPanel = new PlayerSettingsPanel(statisticsBoardPanel);
-		//this.playerSettingsPanel.insertPlayer(this.username);
+		// this.playerSettingsPanel.insertPlayer(this.username);
 		try {
-			this.originalBackground = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+			this.originalBackground = ImageIO
+					.read(ClassLoader
+							.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
 		} catch (IOException e) {
-			e.printStackTrace();
-		}	
-	}
-	
-	public void startMatch(int port){
-		try {
-			selectedGameImage = this.playerSettingsPanel.getSelectedPicture();
-			System.out.println("FIRST: " + selectedGameImage);
-			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), port), new ClientGamePacketHandler());
-			//this.gameClient.getGameWindow().setBackgroundImage(this.getLobbyBackground());
-		} catch (IOException e) {		
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * This Method starts the Match
+	 * 
+	 * @author jhuhn
+	 * @param port
+	 *            The Port that is needed to connect to the GameServer
+	 */
+	public void startMatch(int port) {
+		try {
+			selectedGameImage = this.playerSettingsPanel.getSelectedPicture();
+			System.out.println("FIRST: " + selectedGameImage);
+			gameClient = new GameClient(new InetSocketAddress(
+					Addresses.getRemoteAddress(), port),
+					new ClientGamePacketHandler());
+			// this.gameClient.getGameWindow().setBackgroundImage(this.getLobbyBackground());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void finishMatch(){
+		this.playerSettingsPanel.initStandardBackground();
+	}
+	
+	/**
+	 * This method starts the to search a lobby. 
+	 * It is called, when the user joins the lobby gui
+	 * @author jhuhn
+	 */
 	public void findMatch(){
 		try {
 			this.matchmaker.findMatch(this.username, this.sessionID);
@@ -135,14 +166,17 @@ public final class DominionController {
 	}
 	
 	/**
+	 * This method is called to set the statistics data on the gui
 	 * @author jhuhn
-	 * @param statistics
+	 * @param statistics a twodimensional Array that is filled with all statistics from the database
 	 */
 	public void loadStatisticsToGui(String[][] statistics){
 		this.statisticsBoardPanel.setTableData(statistics);
 	}
 	
 	/**
+	 * This method is called to send a packet to the LoginServer (like a push
+	 * notification) to receive all statistics
 	 * @author jhuhn
 	 */
 	public void sendPacketToGetStatistics(){
@@ -150,6 +184,7 @@ public final class DominionController {
 	}
 	
 	/**
+	 * This method initializes client instances
 	 * @author jhuhn
 	 */
 	private void initClients(){
@@ -322,14 +357,6 @@ public final class DominionController {
 		return instance;
 	}
 
-	/**
-	 * @param username new Username
-	 * @param mailAddress new Email-Address
-	 */
-	public void setCredentials(String username, String mailAddress) {
-		this.username = username;
-		this.email = mailAddress;
-	}
 
 	public void openStatisticsGui() {
 		JPanel panel = new JPanel(){
