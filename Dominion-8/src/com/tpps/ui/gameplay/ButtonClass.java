@@ -4,6 +4,8 @@ import java.awt.Image;
 import java.io.IOException;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameClient;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndActionPhase;
@@ -114,6 +116,7 @@ public class ButtonClass extends GFButton {
 			System.out.println("Caption: " + this.getCaption());
 			if (this.getCaption().equals("End Turn")) {
 				try {
+					GameLog.broadcastMessage(MsgType.GAME, DominionController.getInstance().getUsername() + " ended his Turn.");
 					this.getFramework().addComponent(GameWindow.endActionPhase);
 					System.out.println("Packet EndTurn");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndTurn());
