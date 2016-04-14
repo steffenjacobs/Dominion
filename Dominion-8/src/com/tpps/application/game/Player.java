@@ -79,6 +79,7 @@ public class Player {
 		this.CLIENT_ID = clientID;
 		this.port = port;
 		this.playedCards = new LinkedList<Card>();
+		this.name = name;
 	}
 
 	/**
