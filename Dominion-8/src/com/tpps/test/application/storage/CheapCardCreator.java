@@ -319,7 +319,8 @@ public class CheapCardCreator {
 
 		// setup Dummy-DominionController
 		DominionController dom = new DominionController(true);
-		dom.setCredentials("testname", "test@test.test");
+	//	dom.setCredentials("testname", "test@test.test");
+		dom.setUsername("testname");
 
 		// get valid session
 		if (DEBUG)

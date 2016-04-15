@@ -69,8 +69,9 @@ public class JUnitCardServer {
 
 		// setup Dummy-DominionController
 		DominionController dom = new DominionController(true);
-		dom.setCredentials("testname", "test@test.test");
-
+		//dom.setCredentials("testname", "test@test.test");
+		dom.setUsername("testname");
+		
 		// setup session-server
 		new Thread(() -> {
 			try {
