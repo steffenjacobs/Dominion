@@ -1,6 +1,7 @@
 package com.tpps.ui.cardeditor;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -43,8 +44,8 @@ public class CardEditor extends JFrame {
 	private JTextField nameField;
 	private JComboBox selectCardType;
 	private ImageIcon loading;
-	private int width;
-	private int height;
+	private int width,gridwidth;
+	private int height,gridheight;
 	private Font smallfont;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc;
@@ -54,10 +55,13 @@ public class CardEditor extends JFrame {
 	public CardEditor(){
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
-		loadImage();
-		resizeImage();
-//		iniateLayout();
+		gbl = new GridBagLayout();
+		setLayout(gbl);
+	    gbc = new GridBagConstraints();
 		//createButtons();
+	    loadImage();
+		resizeImage();
+		iniateLayout();
 		c = this.getContentPane();
 		all = new JLabel(loading);
 //		all.setLayout(new GridLayout(4, 1, 0, 30));
@@ -74,6 +78,8 @@ public class CardEditor extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		
 		c.add(all);
 	}
 	
@@ -130,34 +136,39 @@ public class CardEditor extends JFrame {
 //		testImage.setBounds(x,y,width,height);
 	}
 	
+//TODO : Dokumentation
+//TODO : Layout fixen	
 	
 	private void createButtons(){
 		uploadImage = new JButton("uploadImage");
-//      add(uploadImage,gbc);
+//		uploadImage.setPreferredSize(new Dimension(10,20));
+		gbl.setConstraints(uploadImage,gbc);
+		gbl.addLayoutComponent(uploadImage, gbc);
 		increasePrice = new JButton("increasePrice");
+//		add(increasePrice,gbc);
 		decreasePrice = new JButton("decreasePrice");
 		standartPrice = new JButton("standardPrice");
 		createCard= new JButton("createCard");
 		cancel= new JButton("cancel");
 	}
 	
-/*	private void iniateLayout() {
-	    GridBagLayout gbl = new GridBagLayout();
-	    GridBagConstraints gbc = new GridBagConstraints();
-	    setLayout(gbl);
-	    gbc.gridwidth = GridBagConstraints.REMAINDER;
-	    gbc.gridheight = GridBagConstraints.REMAINDER;
-	    gbc.gridy = height; 
-	    gbc.gridx = width;
-	    gbc.weightx = 2;
-	    gbc.weighty = 2;
-//	    gbc.fill = GridBagConstraints.BOTH;
-	    gbc.anchor = GridBagConstraints.EAST;
-//	    gbc.insets = new Insets(0, 5, 0, 5);
-	    createButtons();
+	private void iniateLayout() {
+
+	   gbc.gridwidth = 6;
+	   gbc.gridheight = 6;
+	   gbc.gridy = 2; 
+	   gbc.gridx = 2;
+	   gbc.weightx = 2;
+	   gbc.weighty = 2;
+	   gbc.fill = GridBagConstraints.BOTH;
+	   gbc.ipadx = 2;
+	   gbc.ipady = 2;
+	   gbc.anchor = GridBagConstraints.ABOVE_BASELINE;
+	
+	   createButtons();
 		
 	}
-*/
+
 	
 	private void createTextfield(){
 		nameField = new JTextField("");
