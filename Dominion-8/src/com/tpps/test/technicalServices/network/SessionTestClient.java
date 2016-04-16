@@ -36,6 +36,7 @@ public final class SessionTestClient extends PacketHandler {
 	 * Main Entry-Point for Connection-Tester
 	 * 
 	 * @author Steffen Jacobs
+	 * @param args start-parameters
 	 */
 	public static void main(String[] args) {
 		new SessionTestClient(Addresses.getLocalHost(), SessionServer.getStandardPort());
@@ -54,6 +55,8 @@ public final class SessionTestClient extends PacketHandler {
 	 * constructor, automatically tries to connect to give server
 	 * 
 	 * @author Steffen Jacobs
+	 * @param ipAddress the ip to connect to
+	 * @param port the port to connect to
 	 */
 	public SessionTestClient(String ipAddress, int port) {
 		instance = this;
@@ -132,6 +135,7 @@ public final class SessionTestClient extends PacketHandler {
 	 * YOU SENT PACKETS!!***
 	 * 
 	 * @author Steffen Jacobs
+	 * @param address the address to connect to 
 	 */
 	public void setup(InetSocketAddress address) {
 		System.out.println("Enter 'help' to see all available commands.");
@@ -148,6 +152,9 @@ public final class SessionTestClient extends PacketHandler {
 	 * only send keep-alive-packets for one user at a time
 	 * 
 	 * @author Steffen Jacobs
+	 * @param c the client to send the keep-alives through
+	 * @param username the user-name to send the keep-alives
+	 * @param state whether to start or stop sending keep-alives
 	 */
 	public static void keepAlive(Client c, final String username, boolean state) {
 		if (state) {

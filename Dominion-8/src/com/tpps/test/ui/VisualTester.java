@@ -40,8 +40,10 @@ public class VisualTester extends JFrame {
 
 	/**
 	 * updates the instance
-	 * @param gw new instance
-	 * @return
+	 * 
+	 * @param gw
+	 *            new instance
+	 * @return the new instance
 	 */
 	public static VisualTester setInstance(VisualTester gw) {
 		instance = gw;
@@ -50,19 +52,20 @@ public class VisualTester extends JFrame {
 
 	/**
 	 * main-entry-point
+	 * 
 	 * @param args
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
 		instance = new VisualTester();
 	}
-	
+
 	private GraphicFramework framework;
 
 	/**
 	 * creates the GameWindow
 	 * 
-	 * @author Steffen Jacobs
+	 * @throws IOException
 	 */
 	public VisualTester() throws IOException {
 		instance = this;

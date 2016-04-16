@@ -17,7 +17,7 @@ public class TestPacket extends Packet {
 	/**
 	 * creates the TestPacket with some test-data
 	 * 
-	 * @author Steffen Jacobs
+	 * @param _data the containing data
 	 */
 	protected TestPacket(Serializable _data) {
 		super(PacketType.TEST);
@@ -25,7 +25,6 @@ public class TestPacket extends Packet {
 	}
 
 	/**
-	 * @author Steffen Jacobs
 	 * @return the serialized data to test
 	 */
 	public Serializable getData() {
@@ -34,7 +33,6 @@ public class TestPacket extends Packet {
 
 	/**
 	 * @return a readable representation of the packet
-	 * @author Steffen JAcobs
 	 */
 	@Override
 	public String toString() {

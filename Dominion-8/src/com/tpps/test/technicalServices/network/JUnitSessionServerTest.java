@@ -51,7 +51,9 @@ public class JUnitSessionServerTest {
 
 	private static UUID receivedUUID;
 
-	/** tests the Session-Server */
+	/** tests the Session-Server 
+	 * @throws IOException 
+	 * @throws InterruptedException */
 	@Test
 	public void test() throws IOException, InterruptedException {
 		// initialize variables
