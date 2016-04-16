@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -111,8 +113,11 @@ public class StatisticsBoard extends JPanel{
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(blackBeauty, 0, 0, null);
-				super.paint(g);
+				Graphics2D h = (Graphics2D) g;
+				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+				
+				h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
+				super.paint(h);
 			}
 		};
 		pane.setOpaque(false);

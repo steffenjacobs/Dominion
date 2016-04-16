@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -144,9 +146,12 @@ public class GlobalChatPanel extends JPanel{
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void paint(Graphics g) {
-				g.drawImage(blackBeauty, 0, 0, null);
-				super.paint(g);
+			public void paint(Graphics g) {				
+				Graphics2D h = (Graphics2D) g;
+				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+				
+				h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
+				super.paint(h);
 			}
 		};
 		sendButton.setForeground(Color.WHITE);	
@@ -167,8 +172,11 @@ public class GlobalChatPanel extends JPanel{
 
 			@Override
 			public void paint(Graphics g) {				
-				g.drawImage(blackBeauty, 0, 0, null);
-				super.paint(g);
+				Graphics2D h = (Graphics2D) g;
+				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+				
+				h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
+				super.paint(h);
 			}
 			
 		};
