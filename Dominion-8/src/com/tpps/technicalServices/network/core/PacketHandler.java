@@ -34,10 +34,18 @@ public abstract class PacketHandler {
 		GameLog.log(MsgType.NETWORK_INFO, sdf.format(new Date()) + ": " + str);
 	}
 
+	/** empty - you can override this */
 	public PacketHandler() {
 
 	}
 
+	/**
+	 * sets the overlying server, ONLY USE THIS if this is a
+	 * server-packet-handler
+	 * 
+	 * @param _parent
+	 *            the instance of the server this is handling the packets of
+	 */
 	public void setParent(Server _parent) {
 		this.parent = _parent;
 	}

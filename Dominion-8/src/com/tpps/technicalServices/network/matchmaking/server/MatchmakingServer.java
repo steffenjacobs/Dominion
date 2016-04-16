@@ -24,8 +24,9 @@ public class MatchmakingServer extends Server {
 	private static MatchmakingServer instance;
 
 	private final static int PORT_MATCHMAKING = 1341;
-	
-	public static int getStandardPort(){
+
+	/** @return the standard-port 1341 */
+	public static int getStandardPort() {
 		return PORT_MATCHMAKING;
 	}
 
@@ -188,7 +189,7 @@ public class MatchmakingServer extends Server {
 	 */
 	public static MatchmakingServer getInstance() {
 		return instance;
-	}	
+	}
 
 	/**
 	 * this represents a Network-Listener for the matchmaking-server to catch if
