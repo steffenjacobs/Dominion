@@ -8,11 +8,9 @@ import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.sun.xml.internal.ws.api.pipe.ThrowableContainerPropertySet;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
-import com.tpps.application.game.card.Tuple;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
@@ -46,6 +44,7 @@ import com.tpps.technicalServices.util.GameConstant;
 /* --------Methoden nach Logik sortieren und sichtbarkeit anpassen-------- */
 
 public class GameController {
+	GameServer gameServer;
 
 	public String getActivePlayerName() {
 		return null /* this.activePlayer.getName() */;
@@ -62,7 +61,8 @@ public class GameController {
 	/**
 	 * 
 	 */
-	public GameController() {
+	public GameController(GameServer gameServer) {
+		this.gameServer = gameServer;
 		this.cardsEnabled = true;
 		this.players = new LinkedList<Player>();
 		this.thiefList = new CopyOnWriteArrayList<Player>();
@@ -187,7 +187,7 @@ public class GameController {
 			if (player.isReactionMode() && card.getTypes().contains(CardType.REACTION)) {
 				System.out.println("spielt reaktionskarte");
 				player.playCard(cardID);
-				GameServer.getInstance().sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
+				this.gameServer.sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
 				return true;
 			}
 			if (this.gamePhase.equals("actionPhase")) {
@@ -229,7 +229,7 @@ public class GameController {
 				if (player.isOnHand()) {
 					player.setOnHandFalse();
 					player.getDeck().getCardHand().add(card);
-					GameServer.getInstance().sendMessage(player.getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
+					this.gameServer.sendMessage(player.getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
 					return true;
 				}
 				player.getDeck().getDiscardPile().add(card);
@@ -316,7 +316,7 @@ public class GameController {
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setReactionCard(true);
 					try {
-						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
+						this.gameServer.sendMessage(player.getPort(), new PacketShowEndReactions());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -326,7 +326,7 @@ public class GameController {
 
 				player.setReactionMode();
 				try {
-					GameServer.getInstance().broadcastMessage(player.getPort(), new PacketEnableOthers(this.activePlayer.getClientID()));
+					this.gameServer.broadcastMessage(player.getPort(), new PacketEnableOthers(this.activePlayer.getClientID()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -348,7 +348,7 @@ public class GameController {
 					reactivePlayer = true;
 					player.setThiefFalse();
 					try {
-						GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketDisable());
+						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable());
 					} catch (IOException e1) {
 
 						e1.printStackTrace();
@@ -356,8 +356,8 @@ public class GameController {
 					player.setReactionCard(true);
 					player.setReactionMode();
 					try {
-						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
-						GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
+						this.gameServer.sendMessage(player.getPort(), new PacketShowEndReactions());
+						this.gameServer.sendMessage(player.getPort(), new PacketEnable());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -379,8 +379,8 @@ public class GameController {
 		System.out.println("im gamecontrolloer thiefList size: " + thiefList.size());
 		if (thiefList.size() > 0) {
 			try {
-				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketSendActiveButtons(false, false, false));
-				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
+				this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketSendActiveButtons(false, false, false));
+				this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -401,15 +401,15 @@ public class GameController {
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setSpyFalse();
 					try {
-						GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketDisable());
+						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable());
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
 					player.setReactionCard(true);
 					player.setReactionMode();
 					try {
-						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
-						GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
+						this.gameServer.sendMessage(player.getPort(), new PacketShowEndReactions());
+						this.gameServer.sendMessage(player.getPort(), new PacketEnable());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -428,9 +428,9 @@ public class GameController {
 		System.out.println("im gamecontrolloer spyList size: " + this.spyList.size());
 		if (this.spyList.size() > 0) {
 			try {
-				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketTakeCards(this.activePlayer.getClientID()));
-				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketPutBackCards(this.activePlayer.getClientID()));
-				GameServer.getInstance().sendMessage(this.getActivePlayer().getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(spyList.get(0).getRevealList())));
+				this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketTakeCards(this.activePlayer.getClientID()));
+				this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketPutBackCards(this.activePlayer.getClientID()));
+				this.gameServer.sendMessage(this.getActivePlayer().getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(spyList.get(0).getRevealList())));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -449,7 +449,7 @@ public class GameController {
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setWitchFalse();
 					try {
-						GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketDisable());
+						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable());
 					} catch (IOException e1) {
 
 						e1.printStackTrace();
@@ -457,8 +457,8 @@ public class GameController {
 					player.setReactionCard(true);
 					player.setReactionMode();
 					try {
-						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
-						GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
+						this.gameServer.sendMessage(player.getPort(), new PacketShowEndReactions());
+						this.gameServer.sendMessage(player.getPort(), new PacketEnable());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -475,7 +475,7 @@ public class GameController {
 		}
 		checkReactionModeFinishedAndEnableGuis();
 		try {
-			GameServer.getInstance().broadcastMessage(new PacketSendBoard(this.getGameBoard().getTreasureCardIDs(), getGameBoard().getVictoryCardIDs(), getGameBoard().getActionCardIDs()));
+			this.gameServer.broadcastMessage(new PacketSendBoard(this.getGameBoard().getTreasureCardIDs(), getGameBoard().getVictoryCardIDs(), getGameBoard().getActionCardIDs()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -499,7 +499,7 @@ public class GameController {
 					if (sendPacketDisable) {
 						sendPacketDisable = false;
 						try {
-							GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketDisable());
+							this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable());
 						} catch (IOException e1) {
 
 							e1.printStackTrace();
@@ -508,8 +508,8 @@ public class GameController {
 					player.setReactionCard(true);
 					player.setReactionMode();
 					try {
-						GameServer.getInstance().sendMessage(player.getPort(), new PacketShowEndReactions());
-						GameServer.getInstance().sendMessage(player.getPort(), new PacketEnable());
+						this.gameServer.sendMessage(player.getPort(), new PacketShowEndReactions());
+						this.gameServer.sendMessage(player.getPort(), new PacketEnable());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -520,7 +520,7 @@ public class GameController {
 						player.getDeck().getCardHand().remove(card);
 						player.getDeck().getDrawPile().addLast(card);
 						try {
-							GameServer.getInstance().sendMessage(player.getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
+							this.gameServer.sendMessage(player.getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -534,7 +534,7 @@ public class GameController {
 			}
 		}
 		try {
-			GameServer.getInstance().broadcastMessage(new PacketSendBoard(this.getGameBoard().getTreasureCardIDs(), getGameBoard().getVictoryCardIDs(), getGameBoard().getActionCardIDs()));
+			this.gameServer.broadcastMessage(new PacketSendBoard(this.getGameBoard().getTreasureCardIDs(), getGameBoard().getVictoryCardIDs(), getGameBoard().getActionCardIDs()));
 		} catch (IOException e) {
 
 			e.printStackTrace();
@@ -651,8 +651,8 @@ public class GameController {
 			thiefList.add(player);
 			if (thiefList.size() == 1) {
 				try {
-					GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketSendActiveButtons(false, false, false));
-					GameServer.getInstance().sendMessage(activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
+					this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketSendActiveButtons(false, false, false));
+					this.gameServer.sendMessage(activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(thiefList.get(0).getRevealList())));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -673,9 +673,9 @@ public class GameController {
 		spyList.add(player);
 		if (spyList.size() == 1) {
 			try {
-				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketTakeCards(this.activePlayer.getClientID()));
-				GameServer.getInstance().sendMessage(this.activePlayer.getPort(), new PacketPutBackCards(this.activePlayer.getClientID()));
-				GameServer.getInstance().sendMessage(activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(spyList.get(0).getRevealList())));
+				this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketTakeCards(this.activePlayer.getClientID()));
+				this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketPutBackCards(this.activePlayer.getClientID()));
+				this.gameServer.sendMessage(activePlayer.getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(spyList.get(0).getRevealList())));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -731,7 +731,7 @@ public class GameController {
 		checkBureaucratFinish();
 
 		try {
-			GameServer.getInstance().sendMessage(this.getActivePlayer().getPort(), new PacketEnable());
+			this.gameServer.sendMessage(this.getActivePlayer().getPort(), new PacketEnable());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -923,7 +923,7 @@ public class GameController {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			try {
-				GameServer.getInstance().sendMessage(player.getPort(), new PacketDisable());				
+				this.gameServer.sendMessage(player.getPort(), new PacketDisable());				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -939,7 +939,7 @@ public class GameController {
 				}
 			}, false);
 			client.sendMessage(new PacketGameEnd(getPlayerNames(), getWinningPlayer().getPlayerName()));
-			GameServer.getInstance().newGame();
+			this.gameServer.newGame();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
