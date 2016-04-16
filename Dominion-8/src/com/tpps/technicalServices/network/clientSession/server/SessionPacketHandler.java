@@ -22,6 +22,8 @@ public class SessionPacketHandler extends PacketHandler {
 	 * is called in async thread when a packet was received
 	 * 
 	 * @author Steffen Jacobs
+	 * @param port the port the packet was received on
+	 * @param packet the received packet
 	 */
 	public void handleReceivedPacket(int port, Packet packet) {
 		ServerConnectionThread requester = parent.getClientThread(port);
