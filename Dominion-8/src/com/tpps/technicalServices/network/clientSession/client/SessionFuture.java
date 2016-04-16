@@ -27,6 +27,7 @@ public class SessionFuture {
 	 *            the name of the user who's session should be checked
 	 * @param uuid
 	 *            the sessionID of the user who should be checked
+	 * @throws InterruptedException 
 	 */
 	void sendRequest(SessionClient client, String username, UUID uuid) throws InterruptedException {
 		sem.acquire();
@@ -44,6 +45,7 @@ public class SessionFuture {
 	 * Blocks the thread until the result of the session-check arrived
 	 * 
 	 * @return the result of the session-check
+	 * @throws InterruptedException 
 	 */
 	public boolean getResult() throws InterruptedException {
 		sem.acquire();

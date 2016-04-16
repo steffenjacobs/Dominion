@@ -26,6 +26,7 @@ public class PacketSessionGetRequest extends Packet {
 	 * initialize Packet with the requested user-name
 	 * 
 	 * @author Steffen Jacobs
+	 * @param name the requested name
 	 */
 	public PacketSessionGetRequest(String name) {
 		super(PacketType.SESSION_GET_REQUEST);

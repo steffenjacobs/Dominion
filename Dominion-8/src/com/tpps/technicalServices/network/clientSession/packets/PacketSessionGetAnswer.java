@@ -43,6 +43,9 @@ public class PacketSessionGetAnswer extends Packet {
 	/**
 	 * initializes the Packet with the request and a newly generated
 	 * Game-Session
+	 * @param request the request-packet
+	 * @param sID the requested ID
+	 * @param _answerCode the answer-code
 	 */
 	public PacketSessionGetAnswer(PacketSessionGetRequest request, UUID sID, int _answerCode) {
 		super(PacketType.SESSION_GET_ANSWER);

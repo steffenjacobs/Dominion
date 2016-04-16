@@ -16,7 +16,6 @@ public class PacketSessionCheckAnswer extends Packet {
 
 	/**
 	 * @return the received request
-	 * @author Steffen Jacobs
 	 */
 	public PacketSessionCheckRequest getRequest() {
 		return this.request;
@@ -24,7 +23,6 @@ public class PacketSessionCheckAnswer extends Packet {
 
 	/**
 	 * @return the validation result
-	 * @author Steffen Jacobs
 	 */
 	public boolean getState() {
 		return this.state;
@@ -32,8 +30,9 @@ public class PacketSessionCheckAnswer extends Packet {
 
 	/**
 	 * initializes the Packet with the request and the validation result
+	 * @param req the request
+	 * @param _state the state
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public PacketSessionCheckAnswer(PacketSessionCheckRequest req, boolean _state) {
 		super(PacketType.SESSION_CHECK_ANSWER);
@@ -43,7 +42,6 @@ public class PacketSessionCheckAnswer extends Packet {
 
 	/**
 	 * @return a readable String
-	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {

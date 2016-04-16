@@ -30,8 +30,7 @@ public class SessionServer extends Server {
 
 	/**
 	 * normal constructor
-	 * 
-	 * @author Steffen Jacobs
+	 * @throws IOException 
 	 */
 	public SessionServer() throws IOException {
 		super(new InetSocketAddress(Addresses.getAllInterfaces(),
@@ -42,7 +41,8 @@ public class SessionServer extends Server {
 	/**
 	 * constructor used by JUnit-Test
 	 * 
-	 * @author Steffen Jacobs
+	 * @param handler
+	 * @throws IOException
 	 */
 	public SessionServer(SessionPacketHandler handler) throws IOException {
 		super(new InetSocketAddress(Addresses.getAllInterfaces(),
@@ -54,6 +54,7 @@ public class SessionServer extends Server {
 	 * 
 	 * @param args
 	 *            the start-arguments
+	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
 		try {
@@ -68,8 +69,6 @@ public class SessionServer extends Server {
 
 	/**
 	 * sets up the console-input
-	 * 
-	 * @author Steffen Jacobs
 	 */
 	private void setConsoleInput() {
 		System.out.println("            * * * * * * * * * * * * * *      ");
@@ -126,8 +125,9 @@ public class SessionServer extends Server {
 	}
 
 	/**
-	 * getter for standard-port for session-server @return standard-port for
-	 * session-server @author Steffen Jacobs
+	 * getter for standard-port for session-server
+	 * 
+	 * @return standard-port for session-server
 	 */
 	public static int getStandardPort() {
 		return Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT));

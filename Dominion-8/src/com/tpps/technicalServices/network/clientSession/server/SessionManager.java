@@ -51,6 +51,7 @@ public class SessionManager {
 	 * 
 	 * @param username
 	 *            name of the user who's session should be checked
+	 * @return whether there is a session for the user existing
 	 */
 	public static boolean hasSession(String username) {
 		return validSessions.getIfPresent(username) != null;
@@ -67,10 +68,10 @@ public class SessionManager {
 	}
 
 	/**
+	 * @param username
+	 *            name of the user
 	 * @param uuid
 	 *            unique-ID linked with username
-	 * @param username:
-	 *            name of the user
 	 * @return wheter the uuid with the given username is valid
 	 */
 	public static boolean isValid(String username, UUID uuid) {
