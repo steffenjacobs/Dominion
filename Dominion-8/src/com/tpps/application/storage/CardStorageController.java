@@ -144,6 +144,7 @@ public class CardStorageController {
 	 * 
 	 * @param card
 	 *            the card to be removed
+	 * @return the card which was removed
 	 */
 	public SerializedCard removeCard(SerializedCard card) {
 		return storedCards.remove(card.getName());
@@ -153,8 +154,9 @@ public class CardStorageController {
 	 * removes a card from the storage. Note: Removes the card from the file
 	 * after calling save().
 	 * 
-	 * @param card
+	 * @param cardName
 	 *            the name of the card to be removed
+	 * @return the card which was removed by name
 	 */
 	public SerializedCard removeCard(String cardName) {
 		return storedCards.remove(cardName);

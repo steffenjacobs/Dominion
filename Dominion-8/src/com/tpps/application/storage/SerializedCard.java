@@ -32,7 +32,7 @@ public class SerializedCard {
 	/**
 	 * constructor for SerializedCard, taking all required data
 	 * 
-	 * @param action
+	 * @param actions
 	 *            the list of CardActions mapped to their value
 	 * @param types
 	 *            the list of CardTypes
@@ -71,6 +71,7 @@ public class SerializedCard {
 	 * 
 	 * @param bytes
 	 *            byte-array containing all important data
+	 * @throws IOException 
 	 */
 	public SerializedCard(byte[] bytes) throws IOException {
 		if (bytes.length == 0) {
