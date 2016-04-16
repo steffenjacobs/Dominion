@@ -96,6 +96,7 @@ public class MatchmakingPacketHandler extends PacketHandler {
 	 *            the port of the client searching for a match
 	 * @param pmr
 	 *            the Request-Packet containing player-information
+	 * @param lobbyID the lobby the client wants to connect
 	 */
 	public void handleClientConnect(int port, PacketMatchmakingRequest pmr, UUID lobbyID) {
 

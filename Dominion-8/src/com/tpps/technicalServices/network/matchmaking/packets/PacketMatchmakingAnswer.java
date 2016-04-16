@@ -32,6 +32,7 @@ public class PacketMatchmakingAnswer extends Packet {
 	 *            request packet received from the client
 	 * @param answerCode
 	 *            0: Error, bad session; 1: Success
+	 * @param lobbyID the ID of the lobby that was joined
 	 */
 	public PacketMatchmakingAnswer(PacketMatchmakingRequest req, int answerCode, UUID lobbyID) {
 		super(PacketType.MATCHMAKING_ANSWER);

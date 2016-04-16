@@ -30,6 +30,7 @@ public class GameLobby {
 	/**
 	 * sets the time the game started, should be called just before the game
 	 * starts
+	 * @return the time the match started
 	 */
 	public long getStartTime() {
 		return startTime;

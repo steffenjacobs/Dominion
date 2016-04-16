@@ -112,7 +112,8 @@ public final class MatchmakingController {
 
 	}
 
-	/** @return a random fre port */
+	/** @return a random free port 
+	 * @throws IOException */
 	private static int getFreePort() throws IOException {
 		ServerSocket srv = new ServerSocket(0);
 		srv.close();
@@ -202,6 +203,7 @@ public final class MatchmakingController {
 	 * 
 	 * @param player
 	 *            the player to add
+	 * @param search whether to search for a lobby or not
 	 */
 	public static void addPlayer(MPlayer player, boolean search) {
 		playersByPort.put(player.getConnectionPort(), player);

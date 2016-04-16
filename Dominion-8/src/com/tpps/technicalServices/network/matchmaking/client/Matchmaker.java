@@ -29,6 +29,7 @@ public final class Matchmaker {
 
 	/**
 	 * creates & opens a new connection to the matchmaking-server if necessary
+	 * @throws IOException 
 	 */
 	private void checkAndCreateClient() throws IOException {
 		if (client == null || !client.isConnected()) {
@@ -81,6 +82,7 @@ public final class Matchmaker {
 	 *            name of the player aborting the search
 	 * @param uid
 	 *            uuid of the player aborting the search
+	 * @throws IOException 
 	 */
 	public void abort(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
@@ -146,7 +148,8 @@ public final class Matchmaker {
 			}
 		}
 
-		/** processes the answer-code: shows MessageDialogs or saves lobby-id */
+		/** processes the answer-code: shows MessageDialogs or saves lobby-id 
+		 * @param pck the packet containg the answer-code to process*/
 		private static void processAnswerCode(PacketMatchmakingAnswer pck) {
 			switch (pck.getAnswerCode()) {
 			case 0: // Bad Session
