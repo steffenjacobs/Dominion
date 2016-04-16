@@ -538,7 +538,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 */
 	private void addPlayerAndCheckPlayerCount(int port, int clientId, String username) throws IOException {
 		try {
-			server.getGameController().addPlayer(new Player(clientId, port, this.server.getGameController().getGameBoard().getStartSet(), username));
+			server.getGameController().addPlayer(new Player(clientId, port, this.server.getGameController().getGameBoard().getStartSet(), username, this.server));
 			server.sendMessage(port, new PacketSendClientId(clientId));
 			if (server.getGameController().getPlayers().size() == 4) {
 				server.getGameController().startGame();
