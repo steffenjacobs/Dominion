@@ -23,7 +23,11 @@ public class MatchmakingServer extends Server {
 
 	private static MatchmakingServer instance;
 
-	public final static int PORT_MATCHMAKING = 1341;
+	private final static int PORT_MATCHMAKING = 1341;
+	
+	public static int getStandardPort(){
+		return PORT_MATCHMAKING;
+	}
 
 	/** main entry-point for the matchmaking-server */
 	public static void main(String[] args) throws IOException {
