@@ -50,6 +50,12 @@ public class SessionServer extends Server {
 				Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))), handler);
 	}
 
+	/**
+	 * main entry-point for the Session-Server
+	 * 
+	 * @param args
+	 *            the start-arguments
+	 */
 	public static void main(String[] args) throws IOException {
 		try {
 			new SessionServer();
