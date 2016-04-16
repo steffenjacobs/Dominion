@@ -65,6 +65,8 @@ public class GraphicFramework extends JPanel {
 	/**
 	 * @return the top object (sorted by layers)
 	 * @author Steffen Jacobs
+	 * @param x the x-location
+	 * @param y the y-location
 	 */
 	public GameObject getTopObject(int x, int y) {
 		GameObject highest = null;
@@ -83,6 +85,7 @@ public class GraphicFramework extends JPanel {
 	/**
 	 * @return all game-objects which collide with the given area
 	 * @author Steffen Jacobs
+	 * @param area the area to check collision for
 	 */
 	private ArrayList<GameObject> getAllCollisions(Rectangle area) {
 		ArrayList<GameObject> objects = new ArrayList<>();
@@ -99,6 +102,7 @@ public class GraphicFramework extends JPanel {
 	 * redrawed
 	 * 
 	 * @author Steffen Jacobs
+	 * @param area the area to repaint
 	 */
 	public void repaintSpecificArea(Rectangle area) {
 		for (GameObject go : getAllCollisions(area)) {
@@ -111,6 +115,8 @@ public class GraphicFramework extends JPanel {
 	 * moves the game-object to the desired location and updates the area
 	 * 
 	 * @author Steffen Jacobs
+	 * @param obj the object to move
+	 * @param location the location to move the object to
 	 */
 	public void moveObject(GameObject obj, RelativeGeom2D location) {
 		Rectangle old = (Rectangle) obj.getHitbox().clone();
@@ -125,6 +131,7 @@ public class GraphicFramework extends JPanel {
 	/**
 	 * @return all GameObject which the location is on top of
 	 * @author Steffen Jacobs
+	 * @param location the location to raytrace
 	 */
 	protected ArrayList<GameObject> raytrace(RelativeGeom2D location) {
 		GameObject[] objects = gameObjects.values().toArray(new GameObject[] {});
@@ -160,6 +167,7 @@ public class GraphicFramework extends JPanel {
 	 * force-redraw the GameObject without raytrace
 	 * 
 	 * @author Steffen Jacobs
+	 * @param obj the object to redraw
 	 */
 	private void redrawWithoutRaytrace(GameObject obj) {
 		obj.resizeObject(parent.getWidth(), parent.getHeight());
@@ -172,13 +180,13 @@ public class GraphicFramework extends JPanel {
 	 * mouse-listeners
 	 * 
 	 * @author Steffen Jacobs
+	 * @param _parent the parent JFrame
 	 */
 	public GraphicFramework(JFrame _parent) {
 		this.parent = _parent;
 		this.mouseListener = new Mouse(this);
 		_parent.getContentPane().addMouseListener(mouseListener);
 		_parent.getContentPane().addMouseMotionListener(mouseListener);
-//		TODO fuer GameWindow an Nishit
 		_parent.addComponentListener(new ComponentAdapter() {
 			private ExecutorService threadPool = Executors.newCachedThreadPool();
 
@@ -217,17 +225,19 @@ public class GraphicFramework extends JPanel {
 	 * adds the game object to the framework and updates the visuals
 	 * 
 	 * @author Steffen Jacobs
+	 * @param obj the object to add
 	 */
 	public void addComponent(GameObject obj) {
 		gameObjects.put(obj.getID(), obj);
 		this.redrawWithoutRaytrace(obj);
-		// this.repaint(obj.getHitbox());
 	}
 
 	/**
 	 * removes the game object from the framework and updates the visuals
 	 * 
 	 * @author Steffen Jacobs
+	 * @param obj the object to remove
+	 * @return the removed object
 	 */
 	public GameObject removeComponent(GameObject obj) {
 		GameObject res = gameObjects.remove(obj.getID());
@@ -236,9 +246,10 @@ public class GraphicFramework extends JPanel {
 	}
 
 	/**
-	 * redraws all given GameObjects
+	 * redraws all given GameObjects without checking for overlap
 	 * 
 	 * @author Steffen Jacobs
+	 * @param gameObjects the objects to redraw
 	 */
 	public void redrawObjectsWithoutRaytrace(GameObject... gameObjects) {
 		Arrays.sort(gameObjects, new GameObject.CompareByLayer());
@@ -248,7 +259,7 @@ public class GraphicFramework extends JPanel {
 	}
 
 	/**
-	 * listenes to the mouse-input and tunnels it to the underlying game-objects
+	 * listens to the mouse-input and tunnels it to the underlying game-objects
 	 * 
 	 * @author Steffen Jacobs
 	 */
@@ -305,6 +316,7 @@ public class GraphicFramework extends JPanel {
 
 	/**
 	 * @author Steffen Jacobs @return the parent frame everything is drawn upon
+	 * @return the parent JFrame
 	 */
 	public JFrame getDisplayFrame() {
 		return this.parent;

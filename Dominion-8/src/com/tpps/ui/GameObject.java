@@ -45,7 +45,16 @@ public abstract class GameObject implements Cloneable, Serializable {
 	/**
 	 * creates a game object, only used for cloning
 	 * 
-	 * @author Steffen Jacobs
+	 * @param relativeLocX the relative X-location on the screen
+	 * @param relativeLocY the relative Y-location on the screen
+	 * @param relativeWidth the relative width
+	 * @param relativeHeight the relative height
+	 * @param absWidth the absolute width of the screen
+	 * @param absHeight the absolute height of the screen
+	 * @param _layer the layer the game-object is on
+	 * @param sourceImage the image-source for the image
+	 * @param _parent the parent framework
+	 * @param _id the unique-id of the object
 	 **/
 	protected GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
 			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, int _id) {
@@ -62,7 +71,13 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * creates a game object and automatically sets absolute values for width
 	 * and height
 	 * 
-	 * @author Steffen Jacobs
+	 * @param relativeLocX the relative X-location on the screen
+	 * @param relativeLocY the relative Y-location on the screen
+	 * @param relativeWidth the relative width
+	 * @param relativeHeight the relative height
+	 * @param _layer the layer the game-object is on
+	 * @param sourceImage the image-source for the image
+	 * @param _parent the parent framework
 	 */
 	public GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int _layer,
 			Image sourceImage, GraphicFramework _parent) {
@@ -78,7 +93,15 @@ public abstract class GameObject implements Cloneable, Serializable {
 	/**
 	 * creates a game object
 	 * 
-	 * @author Steffen Jacobs
+	 * @param relativeLocX the relative X-location on the screen
+	 * @param relativeLocY the relative Y-location on the screen
+	 * @param relativeWidth the relative width
+	 * @param relativeHeight the relative height
+	 * @param absWidth the absolute width of the screen
+	 * @param absHeight the absolute height of the screen
+	 * @param _layer the layer the game-object is on
+	 * @param sourceImage the image-source for the image
+	 * @param _parent the parent framework
 	 */
 	public GameObject(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
 			int absWidth, int absHeight, int _layer, Image sourceImage, GraphicFramework _parent) {
@@ -94,7 +117,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	/**
 	 * constructor for all objects that are not visible instantaneous
 	 * 
-	 * @author Steffen Jacobs
+	 * @param _parent the parent framework
 	 */
 	public GameObject(GraphicFramework _parent) {
 		this.location = new RelativeGeom2D(1, 1);
@@ -111,7 +134,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * 
 	 * @param layer
 	 *            new layer
-	 * @author Steffen Jacobs
 	 */
 	public void setLayer(int layer) {
 		this.layer = layer;
@@ -120,8 +142,8 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * changes the visibility of the game object
+	 * @param state true or false
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public void setVisible(boolean state) {
 		this.visible = state;
@@ -130,23 +152,23 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return whether the game object is visible
-	 * @author Steffen Jacobs
 	 */
 	public boolean isVisible() {
 		return this.visible;
 	}
 
 	/**
+	 * @param x point location x
+	 * @param y point location y
 	 * @return whether a point is inside the hitbox of the rectangle
-	 * @author Steffen Jacobs
 	 */
 	public boolean isInside(int x, int y) {
 		return this.getHitbox().contains(x, y);
 	}
 
 	/**
+	 * @param go2 the other game-object to check if it overlaps with this
 	 * @return whether two game objects overlap
-	 * @author Steffen Jacobs
 	 */
 	public boolean overlap(GameObject go2) {
 		return PhysicsUtil.collides(new Rectangle(this.x, this.y, this.width, this.height),
@@ -154,8 +176,8 @@ public abstract class GameObject implements Cloneable, Serializable {
 	}
 
 	/**
+	 * @param area some rectangular shape to check if it overlaps with this
 	 * @return whether the game-object overlaps with the rectangle
-	 * @author Steffen Jacobs
 	 */
 	public boolean overlap(Rectangle area) {
 		return PhysicsUtil.collides(area, new Rectangle(this.x, this.y, this.width, this.height));
@@ -168,7 +190,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 *            new width
 	 * @param height
 	 *            new height
-	 * @author Steffen Jacobs
 	 */
 	public void updateRelativeSize(double width, double height) {
 		this.dimension = new RelativeGeom2D(width, height);
@@ -177,7 +198,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return the location (x, y)
-	 * @author Steffen Jacobs
 	 */
 	public Point getLocation() {
 		return new Point(this.x, this.y);
@@ -185,7 +205,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return the dimension (width and height)
-	 * @author Steffen Jacobs
 	 */
 	public Dimension getDimension() {
 		return new Dimension(this.width, this.height);
@@ -193,7 +212,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return the hitbox of the game-object
-	 * @author Steffen Jacobs
 	 */
 	public Rectangle getHitbox() {
 		return new Rectangle(this.x, this.y, this.width, this.height);
@@ -201,7 +219,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return game object height
-	 * @author Steffen Jacobs
 	 */
 	public int getHeight() {
 		return this.height;
@@ -209,7 +226,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return game object width
-	 * @author Steffen Jacobs
 	 */
 	public int getWidth() {
 		return this.width;
@@ -217,7 +233,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return game object id
-	 * @author Steffen Jacobs
 	 */
 	protected int getID() {
 		return this.id;
@@ -225,7 +240,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return the layer the game object is on
-	 * @author Steffen Jacobs
 	 */
 	public int getLayer() {
 		return this.layer;
@@ -233,7 +247,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return the original image of the game object
-	 * @author Steffen Jacobs
 	 */
 	public Image getBufferedImage() {
 		return this.bufferedImage;
@@ -241,7 +254,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return the current image of the game object
-	 * @author Steffen Jacobs
 	 */
 	public Image getRenderdImage() {
 		return this.renderedImage;
@@ -249,7 +261,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return parent framework
-	 * @author Steffen Jacobs
 	 */
 	protected GraphicFramework getFramework() {
 		return this.parent;
@@ -257,7 +268,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 
 	/**
 	 * @return a readable representation of the game object
-	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {
@@ -268,8 +278,9 @@ public abstract class GameObject implements Cloneable, Serializable {
 	/**
 	 * is called when the window has been resized and the object have to be
 	 * resized and repositioned, too
+	 * @param absWidth the absolute width of the screen
+	 * @param absHeight the absolute height of the screen
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public void resizeObject(int absWidth, int absHeight) {
 		this.x = this.location.getAbsoluteX(absWidth);
@@ -290,7 +301,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @param absHeight
 	 *            absolute height of the framework-frame
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	private void updateBufferedImage(Image newImage, int absWidth, int absHeight) {
 		this.bufferedImage = newImage;
@@ -305,7 +315,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * @param newImage
 	 *            the new image
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public void updatedBufferedImage(Image newImage) {
 		updateBufferedImage(newImage, parent.getWidth(), parent.getHeight());
@@ -314,8 +323,8 @@ public abstract class GameObject implements Cloneable, Serializable {
 	/**
 	 * replaces the image which is actually drawn on the screen with the
 	 * newImage and udpates the framework without recalculating the size
+	 * @param newImage the new image
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public void setRenderedImage(Image newImage) {
 		this.renderedImage = newImage;
@@ -324,7 +333,7 @@ public abstract class GameObject implements Cloneable, Serializable {
 	/**
 	 * sets the id
 	 * 
-	 * @author Steffen Jacobs
+	 * @param _id the unique ID
 	 */
 	public void setID(int _id) {
 		this.id = _id;
@@ -345,8 +354,8 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * ONLY USED BY FRAMEWORK - DO NOT CALL THIS METHOD
 	 * 
 	 * moves the object to the newLocation and redraws it on the framework
+	 * @param newLocation the location to move th object to
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public void moveTo(RelativeGeom2D newLocation) {
 		this.location = newLocation;
@@ -375,7 +384,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 	/**
 	 * should be implemented for compatibilty. Should clone the object
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	@Override
 	public abstract GameObject clone();
@@ -384,7 +392,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * is called by the framework when the mouse enters the visual
 	 * representation of the game object
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public abstract void onMouseEnter();
 
@@ -392,7 +399,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * is called by the framework when the mouse exits the visual representation
 	 * of the game object
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public abstract void onMouseExit();
 
@@ -400,7 +406,6 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * is called by the framework when the visual representation of the game
 	 * object is clicked
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public abstract void onMouseClick();
 
@@ -408,14 +413,14 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 * is called by the framework when the visual representation of the game
 	 * object is dragged
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public abstract void onMouseDrag();
 
 	/**
 	 * is called directly when the game window is resized
+	 * @param absWidth the new absolute width
+	 * @param absHeight the new absolute height
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public abstract void onResize(int absWidth, int absHeight);
 
