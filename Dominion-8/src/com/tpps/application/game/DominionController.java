@@ -368,6 +368,11 @@ public final class DominionController {
 	public static DominionController getInstance() {
 		return instance;
 	}
+	
+	public void setCredentials(String username, String email){
+		this.username = username;
+		this.email = email;
+	}
 
 
 	public void openStatisticsGui() {
