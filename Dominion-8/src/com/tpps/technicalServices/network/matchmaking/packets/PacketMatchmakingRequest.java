@@ -36,6 +36,26 @@ public class PacketMatchmakingRequest extends Packet {
 		this.abort = abort;
 	}
 
+	/**
+	 * constructor for inheriting objects with the name & uuid of the player
+	 * searching for a match or aborting the search
+	 * 
+	 * @param name
+	 *            name of the player who searches for a match
+	 * @param uid
+	 *            uuid of the player who searches for a match
+	 * @param abort
+	 *            true if the search should be aborted, false otherwise
+	 * @param type
+	 *            sub-type of the packet
+	 */
+	public PacketMatchmakingRequest(PacketType type, String name, UUID uid, boolean abort) {
+		super(type);
+		this.playerID = uid;
+		this.playerName = name;
+		this.abort = abort;
+	}
+
 	/** @return a representation of the packet as a String */
 	@Override
 	public String toString() {

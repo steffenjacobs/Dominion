@@ -76,7 +76,8 @@ public enum PacketType {
 	MATCHMAKING_SUCCESSFUL(64),
 	UNUSED(65),
 	GAME_END(66),
-	BROADCAST_LOG(67);
+	BROADCAST_LOG(67), 
+	MATCHMAKING_JOIN_LOBBY(68);
 
 	private final int internalID;
 

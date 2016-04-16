@@ -1,5 +1,7 @@
 package com.tpps.technicalServices.network.matchmaking.packets;
 
+import java.util.UUID;
+
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
@@ -15,9 +17,13 @@ public class PacketMatchmakingAnswer extends Packet {
 	private final PacketMatchmakingRequest request;
 
 	/*
-	 * answerCode = 0: Error: Bad Session 1: Success
+	 * answerCode = 0: Error: Bad Session, 1: Success, 2: Lobby does not exist, 3:
+	 * Lobby is full, 4: Lobby has already started
 	 */
 	private final int answerCode;
+
+	/* represents the lobby you were put into */
+	private final UUID lobbyID;
 
 	/**
 	 * constructor with the request and the answer
@@ -27,10 +33,11 @@ public class PacketMatchmakingAnswer extends Packet {
 	 * @param answerCode
 	 *            0: Error, bad session; 1: Success
 	 */
-	public PacketMatchmakingAnswer(PacketMatchmakingRequest req, int answerCode) {
+	public PacketMatchmakingAnswer(PacketMatchmakingRequest req, int answerCode, UUID lobbyID) {
 		super(PacketType.MATCHMAKING_ANSWER);
 		this.answerCode = answerCode;
 		this.request = req;
+		this.lobbyID = lobbyID;
 	}
 
 	/** @return a representation of the packet as a String */
@@ -49,6 +56,11 @@ public class PacketMatchmakingAnswer extends Packet {
 	/** @return the request sent to the server */
 	public PacketMatchmakingRequest getRequest() {
 		return request;
+	}
+
+	/** @return the unique ID of the lobby you were put into */
+	public UUID getLobbyID() {
+		return lobbyID;
 	}
 
 }

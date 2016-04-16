@@ -2,6 +2,7 @@ package com.tpps.technicalServices.network.matchmaking.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,6 +13,7 @@ import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketGameEnd;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketJoinLobby;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingAnswer;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingRequest;
 
@@ -53,13 +55,35 @@ public class MatchmakingPacketHandler extends PacketHandler {
 			if (pck.isAbort()) {
 				MatchmakingController.onPlayerDisconnect(port);
 			} else
-				handleClientConnect(port, pck);
+				handleClientConnect(port, pck, null);
 			break;
 		case GAME_END:
 			PacketGameEnd endPacket = (PacketGameEnd) packet;
 			MatchmakingController.onGameEnd(endPacket.getWinner(), endPacket.getPlayers());
 			// called when the game ends
 			break;
+		case MATCHMAKING_JOIN_LOBBY:
+			PacketJoinLobby pjl = (PacketJoinLobby) packet;
+			if (!pjl.isAbort()) {
+				GameLobby lobb = MatchmakingController.getLobbyByID(pjl.getLobbyID());
+				try {
+					if (lobb == null) {
+						// no lobby
+						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 2, null));
+					} else if (lobb.isFull()) {
+						// lobby is full
+						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 3, null));
+					} else if (lobb.hasStarted()) {
+						// lobby has started
+						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 4, null));
+					} else {
+						handleClientConnect(port, pjl, pjl.getLobbyID());
+					}
+				} catch (IOException ex) {
+
+				}
+			}
+
 		default:
 			GameLog.log(MsgType.NETWORK_ERROR, "Bad packet received: " + packet);
 		}
@@ -73,21 +97,27 @@ public class MatchmakingPacketHandler extends PacketHandler {
 	 * @param pmr
 	 *            the Request-Packet containing player-information
 	 */
-	public void handleClientConnect(int port, PacketMatchmakingRequest pmr) {
+	public void handleClientConnect(int port, PacketMatchmakingRequest pmr, UUID lobbyID) {
 
 		threadPool.submit(() -> {
 			if (sess.checkSessionSync(pmr.getPlayerName(), pmr.getPlayerID())) {
-				MPlayer p = MPlayer.initialize(pmr, port);
-				MatchmakingController.addPlayer(p);
+				MPlayer player = MPlayer.initialize(pmr, port);
+				MatchmakingController.addPlayer(player, lobbyID == null);
+
+				if (lobbyID != null) {
+					MatchmakingController.getLobbyByID(lobbyID).joinPlayer(player);
+				}
+
 				try {
-					super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 1));
+					super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 1,
+							MatchmakingController.getLobbyFromPlayer(player).getLobbyID()));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				GameLog.log(MsgType.NETWORK_INFO, "-> " + p.getScore());
+				GameLog.log(MsgType.NETWORK_INFO, "-> " + player.getScore());
 			} else {
 				try {
-					super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 0));
+					super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 0, null));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
