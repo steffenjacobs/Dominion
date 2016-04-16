@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
  * This class represents a packet-queue
  * 
  * @author Steffen Jacobs
+ * @param <E> the type of the PacketQueue (most likely some kind of Packet)
  */
 public class PacketQueue<E> extends ConcurrentLinkedQueue<E> {
 	private static final long serialVersionUID = 9133220497162299860L;

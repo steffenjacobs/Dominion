@@ -144,7 +144,7 @@ public class Server {
 	 *
 	 * @param port
 	 *            the port of the client
-	 * @param data
+	 * @param packet
 	 *            the data to send
 	 * @throws IOException
 	 * @throws IllegalArgumentException
@@ -166,6 +166,7 @@ public class Server {
 	 * @param senderPort
 	 *            identifies the client who wants to broadcast. He will not get
 	 *            the packet.
+	 * @throws IOException
 	 */
 	public void broadcastMessage(int senderPort, Packet packet) throws IOException {
 		for (Entry<Integer, ServerConnectionThread> entr : clients.entrySet()) {
@@ -180,6 +181,7 @@ public class Server {
 	 * 
 	 * @param packet
 	 *            Packet to broadcast
+	 * @throws IOException
 	 */
 	public void broadcastMessage(Packet packet) throws IOException {
 		for (ServerConnectionThread entr : clients.values()) {
@@ -207,6 +209,7 @@ public class Server {
 	 * 
 	 * @param port
 	 *            client-thread client-port
+	 * @return the instance of the ServerConnectionThread mapped to the port
 	 */
 	ServerConnectionThread removeClientThread(int port) {
 		return clients.remove(port);
@@ -230,6 +233,9 @@ public class Server {
 
 	/**
 	 * overrides the current PacketHandler with the new one
+	 * 
+	 * @param handler
+	 *            the packet-handler that overrides the old one
 	 */
 	public void setPacketHandler(PacketHandler handler) {
 		this.handler = handler;
@@ -263,8 +269,8 @@ public class Server {
 	/**
 	 * disconnects a specific client with a port
 	 * 
-	 * @param the
-	 *            port mapped to the client to disconnect
+	 * @param port
+	 *            the port mapped to the client to disconnect
 	 */
 	public void disconnect(int port) {
 		GameLog.log(MsgType.NETWORK_INFO, "Disconnecting Client @" + port + "...");

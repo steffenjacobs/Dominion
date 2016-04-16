@@ -36,7 +36,11 @@ public class ClientConnectionThread extends Thread {
 
 	private ExecutorService threadPool = Executors.newCachedThreadPool();
 
-	/** disconnects from the server */
+	/**
+	 * disconnects from the server
+	 * 
+	 * @throws IOException
+	 */
 	void disconnect() throws IOException {
 		clientSocket.close();
 	}
@@ -70,8 +74,10 @@ public class ClientConnectionThread extends Thread {
 
 	/**
 	 * constructor for ConnectionThread
+	 * @param clientSocket the socket connected to the server
+	 * @param receiver the list of packet-handlers
+	 * @param _parent the parent Client-instance
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	ClientConnectionThread(Socket clientSocket, ArrayList<PacketHandler> receiver, Client _parent) {
 		this.receivers = new CopyOnWriteArrayList<>();
@@ -83,7 +89,6 @@ public class ClientConnectionThread extends Thread {
 	/**
 	 * is called as soon as the thread starts
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	@Override
 	public void run() {
@@ -144,7 +149,8 @@ public class ClientConnectionThread extends Thread {
 	/**
 	 * sends the bytes over the network to the connected server.
 	 * 
-	 * @author Steffen Jacobs
+	 * @param data the serialized data to send
+	 * @throws IOException 
 	 * @throws InterruptedException
 	 */
 
@@ -171,6 +177,7 @@ public class ClientConnectionThread extends Thread {
 
 	/**
 	 * adds a packet to the queue and allows the queue-worker to work the queue
+	 * @param pack the packet to add to the queue
 	 */
 	public void addPacketToQueue(Packet pack) {
 		packetQueue.offer(pack);
@@ -198,7 +205,6 @@ public class ClientConnectionThread extends Thread {
 	 * needed for testing
 	 * 
 	 * @return remote port on server
-	 * @author Steffen Jacobs
 	 */
 	public int getRemotePort() {
 		return clientSocket.getPort();
@@ -208,7 +214,6 @@ public class ClientConnectionThread extends Thread {
 	 * needed for testing
 	 * 
 	 * @return local port
-	 * @author Steffen Jacobs
 	 */
 	public int getLocalPort() {
 		return clientSocket.getLocalPort();

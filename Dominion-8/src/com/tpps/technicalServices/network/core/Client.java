@@ -33,14 +33,13 @@ public class Client {
 	/**
 	 * Tries to connect to the specified server (5sec timeout)
 	 *
-	 * @param address
+	 * @param _address
 	 *            SocketAddress of the server
 	 * @param _handler
 	 *            an implementation of the interface
-	 * @param async:
+	 * @param connectAsync
 	 *            make the thread wait until the connection is established
 	 * @throws IOException
-	 * @author Steffen Jacobs
 	 */
 	public Client(SocketAddress _address, PacketHandler _handler, boolean connectAsync) throws IOException {
 		this.address = _address;
@@ -52,12 +51,11 @@ public class Client {
 	/**
 	 * Tries to connect to the specified server (5sec timeout)
 	 *
-	 * @param address
+	 * @param _address
 	 *            SocketAddress of the server
 	 * @param _handler
 	 *            an implementation of the interface
 	 * @throws IOException
-	 * @author Steffen Jacobs
 	 */
 	public Client(SocketAddress _address, PacketHandler _handler) throws IOException {
 		this(_address, _handler, true);
@@ -69,7 +67,6 @@ public class Client {
 	 * 
 	 * (ATTENTION: blocks the calling thread!)
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	private void connectAndLoopLogic() {
 		int CONNECTION_TIMEOUT = 1500;
@@ -92,8 +89,7 @@ public class Client {
 						connectionThread.interrupt();
 					}
 					GameLog.log(MsgType.NETWORK_ERROR, "Connection refused. Reconnecting...");
-				}
-				catch(SocketTimeoutException ste){
+				} catch (SocketTimeoutException ste) {
 					GameLog.log(MsgType.NETWORK_ERROR, ste.getMessage());
 				}
 				Thread.sleep(50);
@@ -117,7 +113,8 @@ public class Client {
 	 * Tries to connect to the loaded server synchronously or asynchronously
 	 * until a connection is established.
 	 * 
-	 * @author Steffen Jacobs
+	 * @param async
+	 *            whether to connect async or not
 	 */
 	public void connectAndLoop(boolean async) {
 
@@ -139,7 +136,6 @@ public class Client {
 	/**
 	 * tries to reconnect to the server
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public void tryReconnect() {
 		connected = false;
@@ -154,11 +150,10 @@ public class Client {
 	/**
 	 * Closes the connection
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public void disconnect() {
 		this.connected = false;
-		
+
 		if (this.connectionThread != null) {
 			try {
 				this.connectionThread.disconnect();
@@ -177,10 +172,9 @@ public class Client {
 	/**
 	 * Sends a message to the server - replacement for sendPacket(byte[])
 	 * 
-	 * @param data
+	 * @param packet
 	 *            the data to send
 	 * @throws IOException
-	 * @author Steffen Jacobs
 	 */
 
 	public void sendMessage(Packet packet) throws IOException {
@@ -202,7 +196,6 @@ public class Client {
 
 	/**
 	 * @return wheter the client is connected to the server
-	 * @author Steffen Jacobs
 	 */
 	public boolean isConnected() {
 		return connected;
@@ -211,7 +204,6 @@ public class Client {
 	/**
 	 * sets the connected-boolean to false
 	 *
-	 * @author Steffen Jacobs
 	 */
 	void setDisconnected() {
 		this.connected = false;
@@ -220,7 +212,6 @@ public class Client {
 	/**
 	 * needed for testing
 	 * 
-	 * @author Steffen Jacobs
 	 * @return ClientConnectionThread holding the connection to the server
 	 */
 	public ClientConnectionThread getConnectionThread() {

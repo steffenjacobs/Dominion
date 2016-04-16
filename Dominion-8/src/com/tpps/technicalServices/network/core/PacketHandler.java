@@ -23,15 +23,21 @@ public abstract class PacketHandler {
 	 */
 	protected Server parent;
 
-	/** is called when a packet was received */
+	/**
+	 * is called when a packet was received
+	 * 
+	 * @param port
+	 *            the port a packet was received at
+	 * @param packet
+	 *            the received packet
+	 */
 	public abstract void handleReceivedPacket(int port, Packet packet);
 
 	/**
-	 * outputs a String to the console
+	 * outputs a String to the console, tunnels to the Game-Log
+	 * @param str the message to log
 	 * 
-	 * @author Steffen Jacobs
 	 */
-	// TODO: save log
 	public void output(String str) {
 		GameLog.log(MsgType.NETWORK_INFO, sdf.format(new Date()) + ": " + str);
 	}
