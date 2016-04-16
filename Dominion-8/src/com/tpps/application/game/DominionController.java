@@ -78,8 +78,9 @@ public final class DominionController {
 	public DominionController() { }
 
 	/**
-	 * This Methos is called, when the user starts the .jar File important
+	 * This method is called, when the user starts the .jar File, important
 	 * components (e.g to handle the Login) will be initialized
+	 * 
 	 * @author jhuhn
 	 */
 	private void init() {
@@ -137,6 +138,9 @@ public final class DominionController {
 					Addresses.getRemoteAddress(), port),
 					new ClientGamePacketHandler());
 			// this.gameClient.getGameWindow().setBackgroundImage(this.getLobbyBackground());
+			this.clearAllPlayersFromGUI();
+			this.joinMainMenu();
+			this.mainFrame.setVisible(false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -144,11 +148,13 @@ public final class DominionController {
 	
 	public void finishMatch(){
 		this.playerSettingsPanel.initStandardBackground();
+		this.joinMainMenu();
 	}
 	
 	/**
-	 * This method starts the to search a lobby. 
-	 * It is called, when the user joins the lobby gui
+	 * This method starts the to search a lobby. It is called, when the user
+	 * joins the lobby gui
+	 * 
 	 * @author jhuhn
 	 */
 	public void findMatch(){
