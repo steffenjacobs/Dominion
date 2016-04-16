@@ -17,8 +17,10 @@ public abstract class PacketHandler {
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
-	// represents the server-instance who's packets are handled by this
-	// PacketHandler-instance
+	/**
+	 * represents the server-instance who's packets are handled by this
+	 * PacketHandler-instance
+	 */
 	protected Server parent;
 
 	/** is called when a packet was received */
