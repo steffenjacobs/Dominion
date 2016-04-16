@@ -1,7 +1,8 @@
 package com.tpps.technicalServices.util;
 
+/** a class containing simple calculations */
 public final class MathUtil {
-	
+
 	/**
 	 * @return the signum
 	 * @author Steffen Jacobs

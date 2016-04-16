@@ -44,6 +44,11 @@ public class JUnitCardServer {
 
 	private final boolean DEBUG = true;
 
+	/**
+	 * main-entry-point
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	@Test
 	public void test() throws IOException, InterruptedException {
 		// create test-card

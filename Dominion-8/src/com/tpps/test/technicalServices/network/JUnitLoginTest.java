@@ -22,9 +22,13 @@ import com.tpps.ui.loginscreen.LoginGUIController;
  * @author Steffen Jacobs
  */
 public class JUnitLoginTest {
-	final boolean DO_BAD_PW_BULK_TEST = false;
-	final boolean DO_BULK_REGISTER_TEST = true;
+	private static final boolean DO_BAD_PW_BULK_TEST = false;
+	private static final boolean DO_BULK_REGISTER_TEST = true;
 
+	/**
+	 * main-entry-point
+	 * @throws InterruptedException
+	 */
 	@Test
 	public void test() throws InterruptedException {
 

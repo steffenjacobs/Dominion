@@ -10,15 +10,19 @@ import java.awt.Rectangle;
 public final class PhysicsUtil {
 
 	/**
-	 * checks wheter two 2D rectangular areas overlap
-	 * 
-	 * @author Steffen Jacobs
+	 * checks whether two 2D rectangular areas overlap
 	 */
 	public static boolean collides(Rectangle area1, Rectangle area2) {
 		return area1.x < area2.x + area2.width && area1.x + area1.width > area2.x && area1.y < area2.y + area2.height
 				&& area1.height + area1.y > area2.y;
 	}
 
+	/**
+	 * @return the smallest rectangular shape, all parameters fit in without
+	 *         moving them around
+	 * @param areas
+	 *            the areas to box around
+	 */
 	public static Rectangle getBigBox(Rectangle... areas) {
 		double smallestX = Integer.MAX_VALUE;
 		double biggestX = -1;

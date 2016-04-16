@@ -27,6 +27,10 @@ import com.tpps.application.storage.SerializedCard;
  */
 public class JUnitCardStorageController {
 
+	/**
+	 * main-entry-point
+	 * @throws IOException
+	 */
 	@SuppressWarnings("unchecked")
 	@Test
 	public void test() throws IOException {

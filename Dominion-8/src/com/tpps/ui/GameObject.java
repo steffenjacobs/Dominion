@@ -24,6 +24,9 @@ public abstract class GameObject implements Cloneable, Serializable {
 	private int id;
 	private Image bufferedImage, renderedImage;
 	private RelativeGeom2D location;
+	/**
+	 * the size of the component
+	 */
 	protected RelativeGeom2D dimension;
 	private int x, y, height, width;
 	private GraphicFramework parent;
@@ -327,6 +330,13 @@ public abstract class GameObject implements Cloneable, Serializable {
 		this.id = _id;
 	}
 
+	/**
+	 * checks if the game-objects are equal by checking their ID
+	 * 
+	 * @param go
+	 *            the game-object to check with this instance
+	 * @return true if they are equal, false else
+	 */
 	public boolean equals(GameObject go) {
 		return this.id == go.id;
 	}
@@ -351,6 +361,9 @@ public abstract class GameObject implements Cloneable, Serializable {
 	 */
 	static class CompareByLayer implements Comparator<GameObject> {
 
+		/**
+		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+		 */
 		@Override
 		public int compare(GameObject go1, GameObject go2) {
 

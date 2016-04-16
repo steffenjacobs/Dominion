@@ -26,10 +26,19 @@ public class CardStorageController {
 	private String storageFile;
 	private static final boolean DEBUG = false;
 
+	/**
+	 * sets storage-file-name to default name
+	 */
 	public CardStorageController() {
 		this.storageFile = DEFAULT_STORAGE_FILE;
 	}
 
+	/**
+	 * sets storage-file-name to parameter
+	 * 
+	 * @param filename
+	 *            the name of the file to load the storage from
+	 */
 	public CardStorageController(String filename) {
 		this.storageFile = filename;
 	}

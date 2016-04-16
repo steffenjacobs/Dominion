@@ -15,10 +15,22 @@ import com.tpps.technicalServices.network.clientSession.packets.PacketSessionGet
 import com.tpps.technicalServices.network.clientSession.server.SessionServer;
 import com.tpps.technicalServices.network.core.SuperCallable;
 
+/**
+ * Tests, if there can be multiple clients logged in with the same username/Pw
+ * 
+ * @author Steffen Jacobs
+ *
+ */
 public class JUnitTestDoubleLogin {
 
-	static boolean test1, test2;
+	private static boolean test1, test2;
 
+	/**
+	 * main-entry
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	@Test
 	public void test() throws IOException, InterruptedException {
 		new Thread(() -> {

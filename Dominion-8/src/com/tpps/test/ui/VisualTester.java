@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
 import com.tpps.application.game.card.Card;
@@ -21,25 +20,43 @@ import com.tpps.ui.animations.FadeOutAnimation;
 import com.tpps.ui.animations.MoveAnimation;
 import com.tpps.ui.components.GFButton;
 
+/**
+ * Second-Playground for the UI-stuff
+ * 
+ * @author Steffen Jacobs
+ *
+ */
 public class VisualTester extends JFrame {
 	private static final long serialVersionUID = -5389003835573453281L;
 
 	private static VisualTester instance;
 
+	/**
+	 * @return the instance
+	 */
 	public static VisualTester getInstance() {
 		return instance;
 	}
 
+	/**
+	 * updates the instance
+	 * @param gw new instance
+	 * @return
+	 */
 	public static VisualTester setInstance(VisualTester gw) {
 		instance = gw;
 		return gw;
 	}
 
+	/**
+	 * main-entry-point
+	 * @param args
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException {
 		instance = new VisualTester();
 	}
-
-	JButton button;
+	
 	private GraphicFramework framework;
 
 	/**

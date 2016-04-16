@@ -29,12 +29,30 @@ import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingPacketHandler;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 
+/**
+ * 
+ * JUnit-Test to test if all aspects of the matchmaking on the local-server are
+ * working
+ * 
+ * @author Steffen Jacobs
+ *
+ */
 public class JUnitMatchmakingTest {
 
-	static HashMap<String, UUID> userSessions = new HashMap<>();
+	private static HashMap<String, UUID> userSessions = new HashMap<>();
 
-	static String username = "test";
+	private static String username = "test";
 
+	/**
+	 * main-entry-point
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	@Test
 	public void test() throws IOException, InterruptedException, NoSuchFieldException, SecurityException,
 			IllegalArgumentException, IllegalAccessException {

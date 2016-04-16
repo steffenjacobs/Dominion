@@ -31,6 +31,11 @@ import com.tpps.application.storage.SerializedCard;
 public class JUnitSerializedCard {
 	private static final boolean DEBUG = false;
 
+	/**
+	 * main-entry-point
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	@Test
 	public void test() throws IOException, InterruptedException {
 
