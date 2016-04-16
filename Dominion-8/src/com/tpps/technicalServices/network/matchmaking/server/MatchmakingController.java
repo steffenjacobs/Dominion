@@ -62,6 +62,11 @@ public final class MatchmakingController {
 		return rnd;
 	}
 
+	/**
+	 * @param player
+	 *            the player to get the associated GameLobby from
+	 * @return the GameLobby-instance associated with the MPlayer-object
+	 */
 	static GameLobby getLobbyFromPlayer(MPlayer player) {
 		return lobbiesByPlayer.get(player);
 	}

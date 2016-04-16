@@ -21,7 +21,7 @@ import com.tpps.technicalServices.network.core.packet.Packet;
  * @author Steffen Jacobs
  */
 public class Server {
-
+	/** DEBUG-Flag */
 	public static final boolean DEBUG = false;
 
 	private ServerSocket serverSocket;
@@ -30,7 +30,7 @@ public class Server {
 
 	private NetworkListenerManager listenerManager = new NetworkListenerManager();
 
-	// Integer represents the port
+	/** Integer represents the port */
 	protected ConcurrentHashMap<Integer, ServerConnectionThread> clients = new ConcurrentHashMap<>();
 
 	/**

@@ -100,6 +100,7 @@ public class SessionClient extends Client {
 		}
 	}
 
+	/**@return if debugging is switched on*/
 	public static boolean debug() {
 		return DEBUG;
 	}

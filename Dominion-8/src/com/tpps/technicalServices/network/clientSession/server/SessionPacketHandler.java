@@ -49,7 +49,6 @@ public class SessionPacketHandler extends PacketHandler {
 			super.output("<- Created Session: " + pack.getUsername() + " - " + uid.toString());
 			break;
 		case SESSION_CHECK_REQUEST:
-			SessionServer.log("req");
 			PacketSessionCheckRequest pack2 = (PacketSessionCheckRequest) packet;
 			super.output("-> Session-Check-Request for " + pack2.getUsername());
 			boolean result = SessionManager.isValid(pack2.getUsername(), pack2.getSessionID());

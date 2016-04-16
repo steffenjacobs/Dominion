@@ -124,6 +124,7 @@ public class GameLobby {
 		return res;
 	}
 
+	/**@return the unique ID of this lobby*/
 	public UUID getLobbyID() {
 		return lobbyID;
 	}

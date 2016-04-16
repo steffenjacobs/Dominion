@@ -930,7 +930,7 @@ public class GameController {
 		}		
 		Client client;
 		try {
-			client = new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.PORT_MATCHMAKING), new PacketHandler() {
+			client = new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.getStandardPort()), new PacketHandler() {
 				
 				@Override
 				public void handleReceivedPacket(int port, Packet packet) {

@@ -68,7 +68,7 @@ public class JUnitMatchmakingTest {
 		new Thread(() -> {
 			try {
 				new MatchmakingServer(
-						new InetSocketAddress(Addresses.getAllInterfaces(), MatchmakingServer.PORT_MATCHMAKING),
+						new InetSocketAddress(Addresses.getAllInterfaces(), MatchmakingServer.getStandardPort()),
 						new MatchmakingPacketHandler());
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -100,7 +100,7 @@ public class JUnitMatchmakingTest {
 			Field client = Matchmaker.class.getDeclaredField("client");
 			client.setAccessible(true);
 			client.set(mm,
-					new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.PORT_MATCHMAKING),
+					new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.getStandardPort()),
 							handler, false));
 
 			Field handl = Matchmaker.class.getDeclaredField("handler");

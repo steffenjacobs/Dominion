@@ -56,7 +56,7 @@ public class JUnitMatchmakingRemote {
 			Field client = Matchmaker.class.getDeclaredField("client");
 			client.setAccessible(true);
 			client.set(mm,
-					new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.PORT_MATCHMAKING),
+					new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.getStandardPort()),
 							tmh, false));
 
 			Field handler = Matchmaker.class.getDeclaredField("handler");
