@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.gameplay.GameWindow;
 
@@ -141,13 +142,18 @@ public class ChatWindowForInGame extends JPanel{
 		return center;
 	}
 	
-	private void handleChatmessage(String message){
-	//	System.out.println("send message: " + message);
-		ChatWindowForInGame.this.chatInputLine.setText("");
-		this.appendChat(message + "\n");
+	private void appendChatGlobal(String chatmessage){
+		this.textbox.append(chatmessage);
+		DominionController.getInstance().sendChatMessage(chatmessage);
+		try {
+			Thread.sleep(1);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	
-	public synchronized void appendChat(String chatmessage) {
+	public synchronized void appendChatLocal(String chatmessage) {
 		this.textbox.append(chatmessage);
 		try {
 			Thread.sleep(1);
@@ -162,7 +168,7 @@ public class ChatWindowForInGame extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(!ChatWindowForInGame.this.chatInputLine.getText().equals("")){			
-				ChatWindowForInGame.this.handleChatmessage(ChatWindowForInGame.this.chatInputLine.getText());				
+				ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());				
 			}
 			ChatWindowForInGame.this.chatInputLine.requestFocus();
 		}		
@@ -173,7 +179,7 @@ public class ChatWindowForInGame extends JPanel{
 		@Override
 		public void keyPressed(KeyEvent e) {			
 			if(e.getKeyCode() == KeyEvent.VK_ENTER && !ChatWindowForInGame.this.chatInputLine.getText().equals("")){
-				ChatWindowForInGame.this.handleChatmessage(ChatWindowForInGame.this.chatInputLine.getText());
+				ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());
 			}
 		}
 
@@ -199,7 +205,6 @@ public class ChatWindowForInGame extends JPanel{
 //		int height =  (int) (sizeFactorHeight*gameWindow.getHEIGHT()/8);
 //		System.out.println(x-width*1.5+"x");
 //		System.out.println(y+"y");
-//		this.setBounds(x-(int) (width*1.5), y, width,height);
-		
+//		this.setBounds(x-(int) (width*1.5), y, width,height);		
 	}
 }

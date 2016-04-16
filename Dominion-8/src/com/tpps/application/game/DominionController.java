@@ -205,7 +205,7 @@ public final class DominionController {
 	 * @author jhuhn
 	 * @param message
 	 */
-	public void sendChatToGlobalChat(String message){
+	public void sendChatMessage(String message){
 		this.chatClient.sendMessage(message);
 	}
 	
@@ -214,7 +214,11 @@ public final class DominionController {
 	 * @param message
 	 */
 	public void reveiveChatMessageFromChatServer(String message){
-		this.globalChatPanel.appendChatFromServer(message);
+		if(this.gameClient == null){	//player is not ingame, player is in globalchat
+			this.globalChatPanel.appendChatLocal(message);
+		}else{							//player is ingame
+			this.gameClient.getGameWindow().getChatWindow().appendChatLocal(message);
+		}
 	}
 	
 	/**

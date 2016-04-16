@@ -95,7 +95,7 @@ public class GlobalChatPanel extends JPanel{
 	public void testChatInput(){
 		new Thread(() -> {
 			for (int i = 0; i < 10000; i++) {
-				GlobalChatPanel.this.appendChat("TestString " + i + "\n");
+				GlobalChatPanel.this.appendChatGlobal("TestString " + i + "\n");
 			}
 		}).start();	
 	}
@@ -233,9 +233,9 @@ public class GlobalChatPanel extends JPanel{
 	 * The carret will be set to the maximum (last chatmessage)
 	 * @param chatmessage
 	 */
-	public synchronized void appendChat(String chatmessage) {
+	public synchronized void appendChatGlobal(String chatmessage) {
 		this.textbox.append(chatmessage);
-		DominionController.getInstance().sendChatToGlobalChat(chatmessage);
+		DominionController.getInstance().sendChatMessage(chatmessage);
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e) {
@@ -244,7 +244,7 @@ public class GlobalChatPanel extends JPanel{
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	
-	public synchronized void appendChatFromServer(String chatmessage){
+	public synchronized void appendChatLocal(String chatmessage){
 		this.textbox.append(chatmessage);
 		try {
 			Thread.sleep(1);
@@ -275,7 +275,7 @@ public class GlobalChatPanel extends JPanel{
 	private void handleChatmessage(String message){
 	//	System.out.println("send message: " + message);
 		GlobalChatPanel.this.chatInputLine.setText("");
-		this.appendChat(message + "\n");
+		this.appendChatGlobal(message + "\n");
 	}
 
 	
