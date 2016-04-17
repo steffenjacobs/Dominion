@@ -44,6 +44,7 @@ public class GameLogTextPane extends JPanel {
 		this.textPane.setBackground(GameLog.getBackgroundColor());
 		this.setLayout(new BorderLayout());
 		this.add(new JScrollPane(this.textPane));
+		repaint();
 	}
 
 	/**
@@ -91,5 +92,6 @@ public class GameLogTextPane extends JPanel {
 		int height =  (int) (sizeFactorHeight*gameWindow.getHEIGHT()/5);
 //		System.out.println(x-width*1.5+"x");
 		this.setBounds(x-(int) (width*1.5), y, width,height);
+		repaint();
 	}
 }

@@ -125,7 +125,7 @@ public class GameWindow extends JFrame {
 
 		this.add(framework);
 
-		//backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
+//		backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
 		backgroundImage = DominionController.selectedGameImage;
 		System.out.println("THIRD: " + backgroundImage);
 		closeImage = this.loadingImage(closeImage, "resources/img/gameObjects/close.png");
