@@ -526,7 +526,7 @@ public class Player {
 	}
 
 	/**
-	 * plays all treasures at once
+	 * plays all treasures at once and adds the treasures to the playedCards list
 	 * @throws IOException
 	 */
 	public void playTreasures() throws IOException {
