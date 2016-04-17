@@ -10,10 +10,11 @@ import org.junit.Test;
 import com.tpps.technicalServices.network.game.GameServer;
 
 public class GameServerTest {
+	GameServer gameServer;
 
 	@Before
 	public void setUp() throws Exception {
-		new GameServer(1339);
+		this.gameServer = new GameServer(1339);
 	}
 
 	@Test

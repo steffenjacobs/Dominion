@@ -7,12 +7,20 @@ import com.tpps.technicalServices.network.clientSession.packets.PacketSessionGet
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
 
+/**
+ * PacketHandler for the client-end, receiving answer-packets from the server
+ * 
+ * @author Steffen Jacobs
+ */
 public class SessionPacketReceiver extends PacketHandler {
 
 	/**
 	 * is called when a packet is received
 	 * 
-	 * @author Steffen Jacobs
+	 * @param port
+	 *            the port
+	 * @param packet
+	 *            the packet
 	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) {

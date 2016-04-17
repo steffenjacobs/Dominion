@@ -11,6 +11,8 @@ import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketJoinLobby;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingAnswer;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingPlayerInfo;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingRequest;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingSuccessful;
@@ -27,13 +29,33 @@ public final class Matchmaker {
 
 	/**
 	 * creates & opens a new connection to the matchmaking-server if necessary
+	 * @throws IOException 
 	 */
 	private void checkAndCreateClient() throws IOException {
 		if (client == null || !client.isConnected()) {
 			handler = new MatchmakingHandler();
-			client = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.PORT_MATCHMAKING),
+			client = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.getStandardPort()),
 					handler, false);
 		}
+	}
+
+	/**
+	 * tries to join a specific lobby
+	 * 
+	 * @param username
+	 *            name of the player searching for a match
+	 * @param uid
+	 *            uuid of the player searching for a match
+	 * @param lobbyID
+	 *            the uuid of the lobby the player wants to join
+	 * @throws IOException
+	 *             if there is no network connection available or the server is
+	 *             unreachable
+	 */
+	public void tryJoinLobby(String username, UUID uid, UUID lobbyID) throws IOException {
+		checkAndCreateClient();
+		client.sendMessage(new PacketJoinLobby(username, uid, lobbyID, true));
+		System.out.println("Sent request to join lobby " + lobbyID.toString());
 	}
 
 	/**
@@ -60,6 +82,7 @@ public final class Matchmaker {
 	 *            name of the player aborting the search
 	 * @param uid
 	 *            uuid of the player aborting the search
+	 * @throws IOException 
 	 */
 	public void abort(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
@@ -94,10 +117,10 @@ public final class Matchmaker {
 
 			switch (packet.getType()) {
 			case MATCHMAKING_ANSWER:
-				// PacketMatchmakingAnswer pma = (PacketMatchmakingAnswer)
-				// packet;
+				PacketMatchmakingAnswer pma = (PacketMatchmakingAnswer) packet;
 				// is called when the player is put into a matchmaking-lobby
-				// TODO: show LobbyScreen
+				processAnswerCode(pma);
+
 				break;
 			case MATCHMAKING_PLAYER_INFO:
 				PacketMatchmakingPlayerInfo pmpi = (PacketMatchmakingPlayerInfo) packet;
@@ -121,6 +144,27 @@ public final class Matchmaker {
 				break;
 			default:
 				GameLog.log(MsgType.NETWORK_ERROR, "Bad packet received: " + packet);
+				break;
+			}
+		}
+
+		/** processes the answer-code: shows MessageDialogs or saves lobby-id 
+		 * @param pck the packet containg the answer-code to process*/
+		private static void processAnswerCode(PacketMatchmakingAnswer pck) {
+			switch (pck.getAnswerCode()) {
+			case 0: // Bad Session
+				break;
+			case 1: // Success
+				// TODO:
+				// save pck.getLobbyID() somewhere (-> DominionController?)
+				break;
+			case 2: // Lobby does not exist
+				break;
+			case 3: // Lobby is already full
+				break;
+			case 4: // Lobby already started
+				break;
+			default: // unknown error
 				break;
 			}
 		}

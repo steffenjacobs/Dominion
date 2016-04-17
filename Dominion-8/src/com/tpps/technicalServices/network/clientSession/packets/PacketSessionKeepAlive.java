@@ -21,7 +21,8 @@ public class PacketSessionKeepAlive extends Packet {
 		return this.username;
 	}
 
-	/** initialize the packet with the username */
+	/** initialize the packet with the username 
+	 * @param _username the requested name*/
 	public PacketSessionKeepAlive(String _username) {
 		super(PacketType.SESSION_KEEP_ALIVE);
 		this.username = _username;

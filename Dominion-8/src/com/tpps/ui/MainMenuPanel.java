@@ -60,7 +60,7 @@ public class MainMenuPanel extends JPanel {
 	private void createButtons(MainFrame parent) {
 	
 			buttons = new MainMenuButton[4];
-			String[] names = new String[]{"Single Player", "Multi Player", "Settings", "Community"};
+			String[] names = new String[]{"Single Player", "Multi Player", "Cardeditor", "Community"};
 			try {
 				for (int i = 0; i < buttons.length; i++) {
 					buttons[i] = new MainMenuButton((parent.getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1) + topGap,
@@ -161,7 +161,8 @@ public class MainMenuPanel extends JPanel {
 				DominionController.getInstance().sendPacketToGetStatistics();
 				DominionController.getInstance().findMatch();
 			}
-			if (buttons[2].isOn(e.getX(), e.getY())) {				
+			if (buttons[2].isOn(e.getX(), e.getY())) {
+				DominionController.getInstance().openCardeditor();
 			}
 			if (buttons[3].isOn(e.getX(), e.getY())) {				
 				DominionController.getInstance().openStatisticsGui();

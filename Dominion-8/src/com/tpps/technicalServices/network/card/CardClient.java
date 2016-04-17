@@ -38,6 +38,7 @@ public class CardClient extends Client {
 	 *            whether to connect asynchronously
 	 * @param _parent
 	 *            the main instance of the entire application
+	 * @throws IOException 
 	 */
 	public CardClient(SocketAddress _address, PacketHandler _handler, boolean connectAsync, DominionController _parent)
 			throws IOException {

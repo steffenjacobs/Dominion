@@ -9,6 +9,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+/**
+ * This class is used for testing various things and as a playground for new
+ * UI-Features
+ * 
+ * @author Steffen Jacobs
+ */
 public class VisualExperiment extends JFrame {
 	/**
 	 * 
@@ -17,10 +23,21 @@ public class VisualExperiment extends JFrame {
 	private JTextArea jtext;
 	private JScrollPane pain;
 
+	/**
+	 * main-entry-point
+	 * 
+	 * @param args
+	 * @throws InterruptedException
+	 */
 	public static void main(String[] args) throws InterruptedException {
 		new VisualExperiment();
 	}
 
+	/**
+	 * constructor
+	 * 
+	 * @throws InterruptedException
+	 */
 	public VisualExperiment() throws InterruptedException {
 		final int WIDTH = 1280, HEIGHT = 720;
 
@@ -51,6 +68,12 @@ public class VisualExperiment extends JFrame {
 		}).start();
 	}
 
+	/**
+	 * cheap synchronized method to append some message to the chat
+	 * 
+	 * @param str
+	 *            the message to append
+	 */
 	public synchronized void appendChat(String str) {
 		this.jtext.append(str);
 		try {

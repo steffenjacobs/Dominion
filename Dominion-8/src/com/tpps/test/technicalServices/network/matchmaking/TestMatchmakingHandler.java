@@ -18,9 +18,18 @@ import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingS
  */
 public class TestMatchmakingHandler extends PacketHandler {
 
+	/**
+	 * 
+	 */
 	public AtomicInteger[] checks;
+	/**
+	 * 
+	 */
 	public String username;
 
+	/**
+	 * creates the atomic-integers used for testing
+	 */
 	public TestMatchmakingHandler() {
 		checks = new AtomicInteger[3];
 		for (int i = 0; i < 3; i++) {

@@ -26,10 +26,19 @@ public class CardStorageController {
 	private String storageFile;
 	private static final boolean DEBUG = false;
 
+	/**
+	 * sets storage-file-name to default name
+	 */
 	public CardStorageController() {
 		this.storageFile = DEFAULT_STORAGE_FILE;
 	}
 
+	/**
+	 * sets storage-file-name to parameter
+	 * 
+	 * @param filename
+	 *            the name of the file to load the storage from
+	 */
 	public CardStorageController(String filename) {
 		this.storageFile = filename;
 	}
@@ -135,6 +144,7 @@ public class CardStorageController {
 	 * 
 	 * @param card
 	 *            the card to be removed
+	 * @return the card which was removed
 	 */
 	public SerializedCard removeCard(SerializedCard card) {
 		return storedCards.remove(card.getName());
@@ -144,8 +154,9 @@ public class CardStorageController {
 	 * removes a card from the storage. Note: Removes the card from the file
 	 * after calling save().
 	 * 
-	 * @param card
+	 * @param cardName
 	 *            the name of the card to be removed
+	 * @return the card which was removed by name
 	 */
 	public SerializedCard removeCard(String cardName) {
 		return storedCards.remove(cardName);

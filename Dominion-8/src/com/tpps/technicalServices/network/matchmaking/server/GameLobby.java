@@ -1,6 +1,7 @@
 package com.tpps.technicalServices.network.matchmaking.server;
 
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -19,17 +20,30 @@ public class GameLobby {
 	private CopyOnWriteArrayList<MPlayer> players = new CopyOnWriteArrayList<>();
 	private long startTime = 0;
 
+	private final UUID lobbyID;
+
+	/** constructor, generating its unique lobbyID */
+	public GameLobby() {
+		this.lobbyID = MatchmakingController.generateLobbyID();
+	}
+
 	/**
 	 * sets the time the game started, should be called just before the game
 	 * starts
+	 * @return the time the match started
 	 */
 	public long getStartTime() {
 		return startTime;
 	}
-	
-	/**@return whether there are 4 players in the lobby*/
-	public boolean isFull(){
-		return this.players.size()==4;
+
+	/** @return whether there are 4 players in the lobby */
+	public boolean isFull() {
+		return this.players.size() == 4;
+	}
+
+	/** @return wether the game has started yet */
+	public boolean hasStarted() {
+		return this.startTime != 0;
 	}
 
 	/**
@@ -97,17 +111,22 @@ public class GameLobby {
 	@Override
 	public String toString() {
 		String res = "[" + System.identityHashCode(this) + "] ";
-		
+
 		if (this.startTime != 0) {
 			res += " (running since " + sdf.format(this.startTime) + ") ";
 		}
-		
+
 		for (MPlayer p : this.players) {
 			res += p.getPlayerName() + " ";
 		}
-		
+
 		res += "Score: " + this.getLobbyScore();
 
 		return res;
+	}
+
+	/**@return the unique ID of this lobby*/
+	public UUID getLobbyID() {
+		return lobbyID;
 	}
 }

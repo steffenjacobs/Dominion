@@ -12,7 +12,7 @@ public interface NetworkListener {
 	/**
 	 * is called when a connection was established.
 	 * 
-	 * @param port,
+	 * @param port
 	 *            the connection is established through
 	 */
 	public void onClientConnect(int port);
@@ -20,7 +20,7 @@ public interface NetworkListener {
 	/**
 	 * is called when a connection was lost or closed.
 	 * 
-	 * @param port,
+	 * @param port
 	 *            the connection was established through
 	 */
 	public void onClientDisconnect(int port);

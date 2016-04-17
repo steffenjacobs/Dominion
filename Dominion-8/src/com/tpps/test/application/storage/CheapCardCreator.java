@@ -33,12 +33,20 @@ import com.tpps.technicalServices.network.clientSession.server.SessionServer;
 import com.tpps.technicalServices.network.core.SuperCallable;
 import com.tpps.technicalServices.util.GameConstant;
 
+/**
+ * @author Steffen Jacobs
+ *
+ */
 public class CheapCardCreator {
 	private static final boolean DEBUG = false;
 	private static final boolean REMOTE = true;
 	private static final boolean doCheck = true;
 	private static final boolean doSend = true;
 
+	/**
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	@SuppressWarnings("unchecked")
 	@Test
 	public void test() throws IOException, InterruptedException {
@@ -319,8 +327,8 @@ public class CheapCardCreator {
 
 		// setup Dummy-DominionController
 		DominionController dom = new DominionController(true);
-	//	dom.setCredentials("testname", "test@test.test");
-		dom.setUsername("testname");
+		dom.setCredentials("testname", "test@test.test");
+	//	dom.setUsername("testname");
 
 		// get valid session
 		if (DEBUG)

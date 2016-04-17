@@ -33,8 +33,10 @@ public class ServerConnectionThread extends Thread {
 
 	/**
 	 * constructor
+	 * @param clientSocket the socket connected to the client
+	 * @param receiver the packet-handler handling the packetrs
+	 * @param _parent the parent instance of the Server
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	ServerConnectionThread(Socket clientSocket, PacketHandler receiver, Server _parent) {
 		this.receiver = receiver;
@@ -45,8 +47,8 @@ public class ServerConnectionThread extends Thread {
 
 	/**
 	 * closes all sockets & streams
+	 * @throws IOException 
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public void closeSockets() throws IOException {
 		clientSocket.close();
@@ -56,7 +58,6 @@ public class ServerConnectionThread extends Thread {
 
 	/**
 	 * @return a readable representation of the Connection
-	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {
@@ -66,7 +67,6 @@ public class ServerConnectionThread extends Thread {
 	/**
 	 * is called when the thread is started. Opens streams and receives bytes
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	@Override
 	public void run() {
@@ -114,7 +114,7 @@ public class ServerConnectionThread extends Thread {
 	 * 
 	 * @param data
 	 *            bytes to send
-	 * @author Steffen Jacobs
+	 * @throws IOException 
 	 * @throws InterruptedException
 	 */
 	private void sendMessage(byte[] data) throws IOException, InterruptedException {

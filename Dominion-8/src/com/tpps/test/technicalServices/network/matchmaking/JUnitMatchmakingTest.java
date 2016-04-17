@@ -29,12 +29,30 @@ import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingPacketHandler;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 
+/**
+ * 
+ * JUnit-Test to test if all aspects of the matchmaking on the local-server are
+ * working
+ * 
+ * @author Steffen Jacobs
+ *
+ */
 public class JUnitMatchmakingTest {
 
-	static HashMap<String, UUID> userSessions = new HashMap<>();
+	private static HashMap<String, UUID> userSessions = new HashMap<>();
 
-	static String username = "test";
+	private static String username = "test";
 
+	/**
+	 * main-entry-point
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	@Test
 	public void test() throws IOException, InterruptedException, NoSuchFieldException, SecurityException,
 			IllegalArgumentException, IllegalAccessException {
@@ -68,7 +86,7 @@ public class JUnitMatchmakingTest {
 		new Thread(() -> {
 			try {
 				new MatchmakingServer(
-						new InetSocketAddress(Addresses.getAllInterfaces(), MatchmakingServer.PORT_MATCHMAKING),
+						new InetSocketAddress(Addresses.getAllInterfaces(), MatchmakingServer.getStandardPort()),
 						new MatchmakingPacketHandler());
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -100,7 +118,7 @@ public class JUnitMatchmakingTest {
 			Field client = Matchmaker.class.getDeclaredField("client");
 			client.setAccessible(true);
 			client.set(mm,
-					new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.PORT_MATCHMAKING),
+					new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.getStandardPort()),
 							handler, false));
 
 			Field handl = Matchmaker.class.getDeclaredField("handler");

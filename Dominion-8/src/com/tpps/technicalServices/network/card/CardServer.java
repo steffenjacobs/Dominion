@@ -41,6 +41,10 @@ public class CardServer extends Server {
 	/**
 	 * constructor for the CardServer, taking an address (where the server will
 	 * listen), a packet-handler, and a card-storage
+	 * @param address the address to connect to
+	 * @param _handler the handler to listen to the received packets
+	 * @param cardStorage the card-storage-instance
+	 * @throws IOException 
 	 */
 	public CardServer(SocketAddress address, PacketHandler _handler, CardStorageController cardStorage)
 			throws IOException {
@@ -51,7 +55,9 @@ public class CardServer extends Server {
 		new Thread(() -> setConsoleInput()).start();
 	}
 
-	/** main entry-point for the CardServer */
+	/** main entry-point for the CardServer 
+	 * @param input start-parameters
+	 * @throws IOException */
 	public static void main(String[] input) throws IOException {
 		CardStorageController tmpStorage = new CardStorageController(config.getProperty(CARD_FILE, "serverCards.bin"));
 		new CardServer(
@@ -132,7 +138,8 @@ public class CardServer extends Server {
 		return Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT));
 	}
 
-	/** getter for the Card-Server-Properties */
+	/** getter for the Card-Server-Properties 
+	 * @return the card-server-properties*/
 	public Properties getCardServerProperties() {
 		return config;
 	}

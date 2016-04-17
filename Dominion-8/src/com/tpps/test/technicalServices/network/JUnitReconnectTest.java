@@ -21,6 +21,12 @@ public class JUnitReconnectTest {
 
 	private static final int TEST_PORT = 1234;
 
+	/**
+	 * main-entry
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	@Test
 	public void test() throws IOException, InterruptedException {
 

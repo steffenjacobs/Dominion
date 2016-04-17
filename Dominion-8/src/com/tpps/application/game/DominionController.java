@@ -21,6 +21,7 @@ import com.tpps.technicalServices.network.game.GameClient;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.ui.MainFrame;
 import com.tpps.ui.MainMenuPanel;
+import com.tpps.ui.cardeditor.CardEditor;
 import com.tpps.ui.lobbyscreen.GlobalChatPanel;
 import com.tpps.ui.lobbyscreen.PlayerSettingsPanel;
 import com.tpps.ui.loginscreen.LoginGUIController;
@@ -49,6 +50,7 @@ public final class DominionController {
 	private GlobalChatPanel globalChatPanel;
 	private PlayerSettingsPanel playerSettingsPanel;
 	private StatisticsBoard statisticsBoardPanel;
+	private CardEditor cardEditor;
 
 	private BufferedImage originalBackground;
 	public static BufferedImage selectedGameImage;
@@ -75,8 +77,9 @@ public final class DominionController {
 	public DominionController() { }
 
 	/**
-	 * This Methos is called, when the user starts the .jar File important
+	 * This method is called, when the user starts the .jar File, important
 	 * components (e.g to handle the Login) will be initialized
+	 * 
 	 * @author jhuhn
 	 */
 	private void init() {
@@ -134,6 +137,9 @@ public final class DominionController {
 					Addresses.getRemoteAddress(), port),
 					new ClientGamePacketHandler());
 			// this.gameClient.getGameWindow().setBackgroundImage(this.getLobbyBackground());
+			this.clearAllPlayersFromGUI();
+			this.joinMainMenu();
+			this.mainFrame.setVisible(false);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -141,11 +147,13 @@ public final class DominionController {
 	
 	public void finishMatch(){
 		this.playerSettingsPanel.initStandardBackground();
+		this.joinMainMenu();
 	}
 	
 	/**
-	 * This method starts the to search a lobby. 
-	 * It is called, when the user joins the lobby gui
+	 * This method starts the to search a lobby. It is called, when the user
+	 * joins the lobby gui
+	 * 
 	 * @author jhuhn
 	 */
 	public void findMatch(){
@@ -196,7 +204,7 @@ public final class DominionController {
 	 * @author jhuhn
 	 * @param message
 	 */
-	public void sendChatToGlobalChat(String message){
+	public void sendChatMessage(String message){
 		this.chatClient.sendMessage(message);
 	}
 	
@@ -205,7 +213,11 @@ public final class DominionController {
 	 * @param message
 	 */
 	public void reveiveChatMessageFromChatServer(String message){
-		this.globalChatPanel.appendChatFromServer(message);
+		if(this.gameClient == null){	//player is not ingame, player is in globalchat
+			this.globalChatPanel.appendChatLocal(message);
+		}else{							//player is ingame
+			this.gameClient.getGameWindow().getChatWindow().appendChatLocal(message);
+		}
 	}
 	
 	/**
@@ -215,12 +227,12 @@ public final class DominionController {
 		this.loadPanels();
 		this.initClients();
 		
-		mainFrame.setPanel(mainMenuPanel);
-		mainFrame.setVisible(true);
+		this.joinMainMenu();
 	}
 	
 	public void joinMainMenu(){
 		mainFrame.setPanel(mainMenuPanel);
+		mainFrame.setVisible(true);
 	}
 	
 	public boolean isTurnFlag() {
@@ -355,6 +367,11 @@ public final class DominionController {
 	public static DominionController getInstance() {
 		return instance;
 	}
+	
+	public void setCredentials(String username, String email){
+		this.username = username;
+		this.email = email;
+	}
 
 
 	public void openStatisticsGui() {
@@ -376,5 +393,10 @@ public final class DominionController {
 		panel.add(this.globalChatPanel);
 		panel.add(this.statisticsBoardPanel);
 		this.mainFrame.setPanel(panel);		
+	}
+	
+	public void openCardeditor(){
+		this.mainFrame.setVisible(false);
+		this.cardEditor = new CardEditor();
 	}
 }

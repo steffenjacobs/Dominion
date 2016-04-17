@@ -24,12 +24,30 @@ import com.tpps.technicalServices.network.core.SuperCallable;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 
+/**
+ * 
+ * JUnit-Test to test if all aspects of the matchmaking on the remote-server are
+ * working
+ * 
+ * @author Steffen Jacobs
+ *
+ */
 public class JUnitMatchmakingRemote {
-	static HashMap<String, UUID> userSessions = new HashMap<>();
+	private static HashMap<String, UUID> userSessions = new HashMap<>();
 
-	static String username = "test";
+	private static String username = "test";
 	private static final int countClients = 3;
 
+	/**
+	 * test stuff
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws NoSuchFieldException
+	 * @throws SecurityException
+	 * @throws IllegalArgumentException
+	 * @throws IllegalAccessException
+	 */
 	@Test
 	public void test() throws IOException, InterruptedException, NoSuchFieldException, SecurityException,
 			IllegalArgumentException, IllegalAccessException {
@@ -56,7 +74,7 @@ public class JUnitMatchmakingRemote {
 			Field client = Matchmaker.class.getDeclaredField("client");
 			client.setAccessible(true);
 			client.set(mm,
-					new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.PORT_MATCHMAKING),
+					new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.getStandardPort()),
 							tmh, false));
 
 			Field handler = Matchmaker.class.getDeclaredField("handler");
@@ -94,8 +112,8 @@ public class JUnitMatchmakingRemote {
 		Thread.sleep(40000);
 
 		assertEquals(countClients, tmh.checks[0].get());
-		assertEquals(countClients-1+countClients, tmh.checks[1].get());
-		assertEquals(countClients*5, tmh.checks[2].get());
+		assertEquals(countClients - 1 + countClients, tmh.checks[1].get());
+		assertEquals(countClients * 5, tmh.checks[2].get());
 
 	}
 }

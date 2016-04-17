@@ -2,26 +2,57 @@ package com.tpps.technicalServices.network.core.events;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+/**
+ * This Listener Manager is responsible for managing, adding and removing
+ * Network-Listeners. It is also called to fire Disconnect- and Connect-Events,
+ * if a client connects to a server or disconnects.
+ * 
+ * @author Steffen Jacobs
+ */
 public class NetworkListenerManager {
 
 	private CopyOnWriteArrayList<NetworkListener> listeners = new CopyOnWriteArrayList<>();
 
+	/**
+	 * adds a listener
+	 * 
+	 * @param listener
+	 *            the listener to add
+	 */
 	public void registerListener(NetworkListener listener) {
 		listeners.add(listener);
 	}
 
+	/**
+	 * removes a listener
+	 * 
+	 * @param listener
+	 *            the listener to remove
+	 */
 	public void unregisterListener(NetworkListener listener) {
 		listeners.remove(listener);
 	}
-	
-	public void fireConnectEvent(int port){
-		for(NetworkListener listen : listeners){
+
+	/**
+	 * call all listener's connect-procedure
+	 * 
+	 * @param port
+	 *            the port where someone connected
+	 */
+	public void fireConnectEvent(int port) {
+		for (NetworkListener listen : listeners) {
 			listen.onClientConnect(port);
 		}
 	}
-	
-	public void fireDisconnectEvent(int port){
-		for(NetworkListener listen : listeners){
+
+	/**
+	 * call all listener's disconnect-procedure
+	 * 
+	 * @param port
+	 *            the port where someone disconnected
+	 */
+	public void fireDisconnectEvent(int port) {
+		for (NetworkListener listen : listeners) {
 			listen.onClientDisconnect(port);
 		}
 	}

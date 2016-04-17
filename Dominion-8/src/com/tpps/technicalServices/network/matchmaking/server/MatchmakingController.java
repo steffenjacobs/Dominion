@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
@@ -28,6 +29,7 @@ public final class MatchmakingController {
 		playersByName = new ConcurrentHashMap<>();
 		connectedPortsByPlayer = new ConcurrentHashMap<>();
 		gameServersByLobby = new ConcurrentHashMap<>();
+		lobbiesByID = new ConcurrentHashMap<>();
 	}
 
 	private static ConcurrentHashMap<Integer, MPlayer> playersByPort;
@@ -36,9 +38,38 @@ public final class MatchmakingController {
 	private static ConcurrentHashMap<MPlayer, GameLobby> lobbiesByPlayer;
 	private static ConcurrentHashMap<GameLobby, Thread> gameServersByLobby;
 
+	private static ConcurrentHashMap<UUID, GameLobby> lobbiesByID;
+
 	private static Semaphore blockPort = new Semaphore(1);
 
 	private static CopyOnWriteArrayList<GameLobby> lobbies;
+
+	/**
+	 * @return the GameLobby associated with the lobbyID
+	 * @param lobbyID
+	 *            the ID of the lobby to get
+	 */
+	static GameLobby getLobbyByID(UUID lobbyID) {
+		return lobbiesByID.get(lobbyID);
+	}
+
+	/** @return a newly generated, unique ID for the lobby */
+	static UUID generateLobbyID() {
+		UUID rnd = null;
+		do {
+			rnd = UUID.randomUUID();
+		} while (lobbiesByID.containsKey(rnd));
+		return rnd;
+	}
+
+	/**
+	 * @param player
+	 *            the player to get the associated GameLobby from
+	 * @return the GameLobby-instance associated with the MPlayer-object
+	 */
+	static GameLobby getLobbyFromPlayer(MPlayer player) {
+		return lobbiesByPlayer.get(player);
+	}
 
 	/**
 	 * starts a game, if the lobby is full
@@ -81,7 +112,8 @@ public final class MatchmakingController {
 
 	}
 
-	/** @return a random fre port */
+	/** @return a random free port 
+	 * @throws IOException */
 	private static int getFreePort() throws IOException {
 		ServerSocket srv = new ServerSocket(0);
 		srv.close();
@@ -96,6 +128,7 @@ public final class MatchmakingController {
 	 */
 	private static void removeLobby(GameLobby lobby) {
 		lobbies.remove(lobby);
+		lobbiesByID.remove(lobby.getLobbyID());
 		// INFO: lobby could not be in lobbiesByPlayer, since no player is in
 		// the lobby
 	}
@@ -135,8 +168,9 @@ public final class MatchmakingController {
 		if (lobbies.isEmpty()) {
 			GameLobby lobby = new GameLobby();
 			lobbies.add(lobby);
+			lobbiesByID.put(lobby.getLobbyID(), lobby);
 			joinLobby(player, lobby);
-		} else if (lobbies.size() == 1 && !lobbies.get(0).isFull()) {
+		} else if (lobbies.size() == 1 && !lobbies.get(0).isFull() && !lobbies.get(0).hasStarted()) {
 			GameLobby lobby = lobbies.get(0);
 			joinLobby(player, lobby);
 		} else {
@@ -145,7 +179,7 @@ public final class MatchmakingController {
 			int minDelta = Integer.MAX_VALUE;
 			while (it.hasNext()) {
 				gl = it.next();
-				if (gl.isFull()) {
+				if (gl.isFull() || gl.hasStarted()) {
 					continue;
 				}
 				int delta = Math.abs(gl.getLobbyScore() - score);
@@ -154,10 +188,10 @@ public final class MatchmakingController {
 					bestFitting = gl;
 				}
 			}
-			if(bestFitting==null){
+			if (bestFitting == null) {
 				bestFitting = new GameLobby();
 			}
-			
+
 			joinLobby(player, bestFitting);
 		}
 
@@ -169,12 +203,14 @@ public final class MatchmakingController {
 	 * 
 	 * @param player
 	 *            the player to add
+	 * @param search whether to search for a lobby or not
 	 */
-	public static void addPlayer(MPlayer player) {
+	public static void addPlayer(MPlayer player, boolean search) {
 		playersByPort.put(player.getConnectionPort(), player);
 		connectedPortsByPlayer.put(player, player.getConnectionPort());
 		playersByName.put(player.getPlayerName(), player);
-		findLobbyForPlayer(player);
+		if (search)
+			findLobbyForPlayer(player);
 	}
 
 	/**

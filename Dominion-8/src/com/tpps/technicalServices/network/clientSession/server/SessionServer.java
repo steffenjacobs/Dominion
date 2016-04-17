@@ -8,7 +8,6 @@ import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Server;
@@ -31,8 +30,7 @@ public class SessionServer extends Server {
 
 	/**
 	 * normal constructor
-	 * 
-	 * @author Steffen Jacobs
+	 * @throws IOException 
 	 */
 	public SessionServer() throws IOException {
 		super(new InetSocketAddress(Addresses.getAllInterfaces(),
@@ -43,13 +41,21 @@ public class SessionServer extends Server {
 	/**
 	 * constructor used by JUnit-Test
 	 * 
-	 * @author Steffen Jacobs
+	 * @param handler
+	 * @throws IOException
 	 */
 	public SessionServer(SessionPacketHandler handler) throws IOException {
 		super(new InetSocketAddress(Addresses.getAllInterfaces(),
 				Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))), handler);
 	}
 
+	/**
+	 * main entry-point for the Session-Server
+	 * 
+	 * @param args
+	 *            the start-arguments
+	 * @throws IOException 
+	 */
 	public static void main(String[] args) throws IOException {
 		try {
 			new SessionServer();
@@ -63,8 +69,6 @@ public class SessionServer extends Server {
 
 	/**
 	 * sets up the console-input
-	 * 
-	 * @author Steffen Jacobs
 	 */
 	private void setConsoleInput() {
 		System.out.println("            * * * * * * * * * * * * * *      ");
@@ -87,8 +91,7 @@ public class SessionServer extends Server {
 				} else if (line.startsWith("create")) {
 					SessionManager.getValidSession(line.split("\\s")[1]);
 				} else if (line.startsWith("count")) {
-					System.out.println(data.size());
-					data.clear();
+					System.out.println(super.clients.size());
 				} else if (line.startsWith("show")) {
 					SessionManager.outputAll(System.out);
 				} else if (line.startsWith("list")) {
@@ -122,18 +125,12 @@ public class SessionServer extends Server {
 	}
 
 	/**
-	 * getter for standard-port for session-server @return standard-port for
-	 * session-server @author Steffen Jacobs
+	 * getter for standard-port for session-server
+	 * 
+	 * @return standard-port for session-server
 	 */
 	public static int getStandardPort() {
 		return Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT));
-	}
-
-	// TODO: remove both
-	private static CopyOnWriteArrayList<String> data = new CopyOnWriteArrayList<>();
-
-	public static void log(String s) {
-		data.add(s);
 	}
 
 }

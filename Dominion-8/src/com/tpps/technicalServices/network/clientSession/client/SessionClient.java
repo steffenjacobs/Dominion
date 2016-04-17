@@ -27,6 +27,7 @@ public class SessionClient extends Client {
 	 * 
 	 * @param address
 	 *            SocketAddress to connect to
+	 * @throws IOException 
 	 */
 	public SessionClient(SocketAddress address) throws IOException {
 		super(address, new SessionPacketReceiver(), false);
@@ -58,7 +59,8 @@ public class SessionClient extends Client {
 	 * sets wheter keep-alive packets should be sent for a given user. You can
 	 * only send keep-alive-packets for one user at a time
 	 * 
-	 * @author Steffen Jacobs
+	 * @param username the user-name to keep alive
+	 * @param state whether to keep alive or stop keeping-alive the user 
 	 */
 	public void keepAlive(final String username, boolean state) {
 		if (state) {
@@ -100,6 +102,7 @@ public class SessionClient extends Client {
 		}
 	}
 
+	/**@return if debugging is switched on*/
 	public static boolean debug() {
 		return DEBUG;
 	}

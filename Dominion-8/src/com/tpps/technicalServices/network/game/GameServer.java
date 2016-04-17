@@ -19,14 +19,15 @@ public class GameServer extends Server{
 	public GameServer(int port) throws IOException{
 		super(new InetSocketAddress("0.0.0.0", port), new ServerGamePacketHandler());
 		((ServerGamePacketHandler)super.getHandler()).setServer(this);
-		this.gameController = new GameController();
+		this.gameController = new GameController(this);
 		instance = this;
 		setConsoleInput();		
 	}
 	
 	
 	/**
-	 * 
+	 * @deprecated
+	 * it will cause errors inf future
 	 * @return an instance of the GameServer
 	 */
 	public static GameServer getInstance() {
@@ -35,7 +36,7 @@ public class GameServer extends Server{
 	
 	public void newGame() {
 		this.disconnectAll();
-		this.gameController = new GameController();
+		this.gameController = new GameController(this);
 		setConsoleInput();
 	}
 

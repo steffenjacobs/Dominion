@@ -29,6 +29,11 @@ public class JUnitEventTest {
 
 	private static HashMap<String, Boolean> checkMap = new HashMap<>();
 
+	/**
+	 * main-entry-point
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	@Test
 	public void test() throws IOException, InterruptedException {
 

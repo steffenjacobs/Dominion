@@ -873,5 +873,8 @@ public class GameWindow extends JFrame {
 	public int getHEIGHT() {
 		return HEIGHT;
 	}
-
+	
+	public ChatWindowForInGame getChatWindow() {
+		return chatWindow;
+	}
 }

@@ -34,6 +34,12 @@ import com.tpps.technicalServices.network.core.packet.Packet;
  * @author Steffen Jacobs
  */
 public class JUnitNetworkTest {
+	/**
+	 * main-entry
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	@Test
 	public void test() throws IOException, InterruptedException {
 		// initialize variables

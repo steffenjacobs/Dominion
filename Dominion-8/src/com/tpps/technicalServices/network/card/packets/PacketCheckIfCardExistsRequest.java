@@ -57,7 +57,7 @@ public class PacketCheckIfCardExistsRequest extends Packet {
 	/**
 	 * getter for the requester's uuid
 	 * 
-	 * @rturn the requester's sessionID
+	 * @return the requester's sessionID
 	 */
 	public UUID getRequesterID() {
 		return requesterID;

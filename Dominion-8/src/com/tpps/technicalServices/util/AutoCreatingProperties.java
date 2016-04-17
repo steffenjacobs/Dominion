@@ -20,14 +20,21 @@ public class AutoCreatingProperties extends Properties {
 	private static final long serialVersionUID = -8882987098297632096L;
 	private File f;
 
+	/** only calles the super-constructor */
 	public AutoCreatingProperties() {
 		super();
 	}
 
+	/**
+	 * @throws NotImplementedException
+	 */
 	public void load(InputStream is) {
 		throw new NotImplementedException();
 	}
 
+	/**
+	 * @throws NotImplementedException
+	 */
 	public void load(Reader reader) {
 		throw new NotImplementedException();
 	}

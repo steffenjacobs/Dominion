@@ -23,9 +23,16 @@ public class MatchmakingServer extends Server {
 
 	private static MatchmakingServer instance;
 
-	public final static int PORT_MATCHMAKING = 1341;
+	private final static int PORT_MATCHMAKING = 1341;
 
-	/** main entry-point for the matchmaking-server */
+	/** @return the standard-port 1341 */
+	public static int getStandardPort() {
+		return PORT_MATCHMAKING;
+	}
+
+	/** main entry-point for the matchmaking-server 
+	 * @param args start-parameters
+	 * @throws IOException */
 	public static void main(String[] args) throws IOException {
 		new MatchmakingServer(new InetSocketAddress(Addresses.getAllInterfaces(), PORT_MATCHMAKING),
 				new MatchmakingPacketHandler());
@@ -34,9 +41,10 @@ public class MatchmakingServer extends Server {
 	/**
 	 * constructor for the matchmaking-server; warning: blocks!
 	 * 
-	 * @parma address the addres + port the server is listening on
+	 * @param address the addres + port the server is listening on
 	 * @param _handler
 	 *            a packet-handler for the server
+	 * @throws IOException 
 	 */
 	public MatchmakingServer(InetSocketAddress address, PacketHandler _handler) throws IOException {
 		super(address, _handler);
@@ -146,6 +154,7 @@ public class MatchmakingServer extends Server {
 	 *            the players to receive the packet
 	 * @param opponents
 	 *            all the players in the lobby
+	 * @param port the port the new game-server is waiting
 	 */
 	public void sendSuccessPacket(Collection<MPlayer> receivers, String[] opponents, int port) {
 
@@ -184,7 +193,7 @@ public class MatchmakingServer extends Server {
 	 */
 	public static MatchmakingServer getInstance() {
 		return instance;
-	}	
+	}
 
 	/**
 	 * this represents a Network-Listener for the matchmaking-server to catch if

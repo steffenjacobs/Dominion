@@ -70,6 +70,9 @@ public abstract class GFButton extends GameObject {
 		this.caption = caption;
 	}
 
+	/**
+	 * @see com.tpps.ui.GameObject#onResize(int, int)
+	 */
 	@Override
 	public void onResize(int absWidth, int absHeight) {
 		try {

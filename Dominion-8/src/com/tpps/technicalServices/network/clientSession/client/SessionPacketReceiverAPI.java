@@ -11,16 +11,12 @@ import com.tpps.technicalServices.network.core.SuperCallable;
  * represents some kind of API-like interface where the answered requests will
  * be deployed
  * 
- * Note: ask Steffen Jacobs when you have any questions regarding network &
- * netcode
- * 
  * @author Steffen Jacobs
  */
 public final class SessionPacketReceiverAPI {
 	/**
 	 * the answer to a session validity request will be deployed here.
-	 * 
-	 * @author Steffen Jacobs
+	 * @param packet the packet that was received
 	 */
 	public static void onPacketSessionCheckAnswer(PacketSessionCheckAnswer packet) {
 		checkRequests.remove(packet.getRequest().getTimestamp()).callMeMaybe(packet);
@@ -28,8 +24,8 @@ public final class SessionPacketReceiverAPI {
 
 	/**
 	 * the answer to the session-get-request will be deployed here
+	 * @param packet the received packet
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	public static void onPacketSessionGetAnswer(PacketSessionGetAnswer packet) {
 		SuperCallable<PacketSessionGetAnswer> toCall = getRequests.remove(packet.getRequest().getUsername());
@@ -43,8 +39,9 @@ public final class SessionPacketReceiverAPI {
 
 	/**
 	 * adds a get-Request
+	 * @param username the username of the get-request
+	 * @param callable the callable to call later
 	 * 
-	 * @author Steffen Jacobs
 	 */
 	static void addGetRequest(String username, SuperCallable<PacketSessionGetAnswer> callable) {
 		getRequests.putIfAbsent(username, callable);
@@ -52,8 +49,10 @@ public final class SessionPacketReceiverAPI {
 
 	/**
 	 * adds a check-Request
+	 * @param req the received request-packet
+	 * @param callable the callable to call later
+	 * @param sendedTimestamp the timestamp when sended
 	 * 
-	 * @author Steffen Jacobs
 	 */
 
 	static void addCheckRequest(PacketSessionCheckRequest req, SuperCallable<PacketSessionCheckAnswer> callable,

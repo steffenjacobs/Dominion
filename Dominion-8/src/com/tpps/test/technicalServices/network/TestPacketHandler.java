@@ -15,12 +15,12 @@ public class TestPacketHandler extends PacketHandler {
 	private HashMap<Integer, Packet> lastReceived = new HashMap<>();
 	private CopyOnWriteArrayList<Packet> receivedPackets = new CopyOnWriteArrayList<>();
 
-	/** trivial */
+	/** removes the list of received packets */
 	public void clearPackets() {
 		this.receivedPackets.clear();
 	}
 
-	/** trivial */
+	/** @return the number of packets received */
 	public int countPackets() {
 		return this.receivedPackets.size();
 	}
@@ -37,13 +37,14 @@ public class TestPacketHandler extends PacketHandler {
 	}
 
 	/**
-	 * trivial
+	 * @return the last received packet from a specific port
+	 * @param port the port to return the last received packet from
 	 */
 	public Packet getLastReceived(int port) {
 		return lastReceived.get(port);
 	}
 
-	/** trivial */
+	/** @return all received packets */
 	public CopyOnWriteArrayList<Packet> getReceivedPackets() {
 		return receivedPackets;
 	}

@@ -79,6 +79,7 @@ public class MPlayer {
 	 *            player-information
 	 * @param port
 	 *            the port the player is connected with
+	 * @return a new instance created from the request and filled with data from the data-base
 	 */
 	public static MPlayer initialize(PacketMatchmakingRequest request, int port) {
 		try {

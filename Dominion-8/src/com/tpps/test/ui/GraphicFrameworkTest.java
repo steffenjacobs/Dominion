@@ -53,6 +53,11 @@ import com.tpps.ui.components.GFButton;
 public class GraphicFrameworkTest {
 	private static final int F_WIDTH = 1280, F_HEIGHT = 720;
 
+	/**
+	 * main-entry
+	 * @throws AWTException
+	 * @throws IOException
+	 */
 	@Test
 	public void test() throws AWTException, IOException {
 

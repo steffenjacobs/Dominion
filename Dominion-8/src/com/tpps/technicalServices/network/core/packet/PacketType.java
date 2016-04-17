@@ -76,7 +76,8 @@ public enum PacketType {
 	MATCHMAKING_SUCCESSFUL(64),
 	UNUSED(65),
 	GAME_END(66),
-	BROADCAST_LOG(67);
+	BROADCAST_LOG(67), 
+	MATCHMAKING_JOIN_LOBBY(68);
 
 	private final int internalID;
 
@@ -84,6 +85,7 @@ public enum PacketType {
 	 * initializs PacketType with id
 	 * 
 	 * @author Steffen Jacobs
+	 * @param id the internal integer-id
 	 */
 	private PacketType(int id) {
 		internalID = id;
@@ -102,6 +104,7 @@ public enum PacketType {
 	 * 
 	 * @return serialized packet
 	 * @author Steffen Jacobs
+	 * @param packet the packet to convert
 	 */
 	public static byte[] getBytes(Packet packet) {
 		return ByteUtil.getBytes(packet);
@@ -112,6 +115,7 @@ public enum PacketType {
 	 * 
 	 * @return deserialized packet
 	 * @author Steffen Jacobs
+	 * @param bytes the serialized packet to convert
 	 */
 	public static Packet getPacket(byte[] bytes) {
 		return (Packet) ByteUtil.getObject(bytes);

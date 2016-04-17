@@ -45,6 +45,9 @@ public class PacketSessionCheckRequest extends Packet {
 	 * initializes the Packet with a username and a sessionID to check
 	 * 
 	 * @author Steffen Jacobs
+	 * @param name the requested name
+	 * @param sID the requested sessionID
+	 * @param timestamp the timestamp
 	 */
 	public PacketSessionCheckRequest(String name, UUID sID, long timestamp) {
 		super(PacketType.SESSION_CHECK_REQUEST);

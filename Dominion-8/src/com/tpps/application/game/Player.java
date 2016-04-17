@@ -51,13 +51,14 @@ public class Player {
 	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand;
 	private Tuple<CardAction> discardOrTrashAction;
 	private LinkedList<Card> playedCards, drawList, revealList, temporaryTrashPile, setAsideCards;
+	GameServer gameServer;
 
 	/**
 	 * @param deck
 	 * @param clientID
 	 * @param port
 	 */
-	public Player(Deck deck, int clientID, int port, String name) {
+	public Player(Deck deck, int clientID, int port, String name, GameServer gameServer) {
 		this.reactionCard = false;
 		this.discardMode = false;
 		this.trashMode = false;
@@ -80,6 +81,7 @@ public class Player {
 		this.port = port;
 		this.playedCards = new LinkedList<Card>();
 		this.name = name;
+		this.gameServer = gameServer;
 	}
 
 	/**
@@ -87,8 +89,8 @@ public class Player {
 	 * @param port
 	 * @param initCards
 	 */
-	public Player(int clientID, int port, LinkedList<Card> initCards, String name) {
-		this(new Deck(initCards), clientID, port, name);
+	public Player(int clientID, int port, LinkedList<Card> initCards, String name, GameServer gameServer) {
+		this(new Deck(initCards), clientID, port, name, gameServer);
 	}
 
 	/**
@@ -633,7 +635,7 @@ public class Player {
 				}
 				break;
 			case DRAW_CARD_OTHERS:
-				GameServer.getInstance().getGameController().drawOthers();
+				this.gameServer.getGameController().drawOthers();
 				break;
 			case GAIN_CARD:
 
@@ -659,13 +661,13 @@ public class Player {
 				break;
 			case GAIN_CARD_OTHERS:
 				if (value.toLowerCase().equals("curse")) {
-					GameServer.getInstance().getGameController().gainCurseOthers();
+					this.gameServer.getGameController().gainCurseOthers();
 				}
 				break;
 			case GAIN_CARD_DRAW_PILE:
 				try {
 					if (value.toLowerCase().equals("silver")) {
-						getDeck().getDrawPile().addLast(GameServer.getInstance().getGameController().getGameBoard()
+						getDeck().getDrawPile().addLast(this.gameServer.getGameController().getGameBoard()
 								.getTableForTreasureCards().get("Silver").removeLast());
 					}
 				} catch (NoSuchElementException e) {
@@ -674,25 +676,25 @@ public class Player {
 				break;
 			case DISCARD_CARD:
 				if (value.toLowerCase().equals("deck")) {
-					GameServer.getInstance().sendMessage(port, new PacketDiscardDeck());
+					this.gameServer.sendMessage(port, new PacketDiscardDeck());
 				}
 				break;
 			case DISCARD_AND_DRAW:
 				this.discardMode = true;
 				this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
-				((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketStartDiscardMode());
+				this.gameServer.sendMessage(port, new PacketStartDiscardMode());
 				break;
 			case DISCARD_OTHER_DOWNTO:
-				GameServer.getInstance().getGameController().discardOtherDownto(value);
+				this.gameServer.getGameController().discardOtherDownto(value);
 				break;
 			case ALL_REVEAL_CARDS_TRASH_COINS_I_CAN_TAKE_DISCARD_OTHERS:
-				GameServer.getInstance().getGameController().revealAndTakeCardsDiscardOthers();
+				this.gameServer.getGameController().revealAndTakeCardsDiscardOthers();
 				break;
 			case REVEAL_UNTIL_TREASURES:
 				revealUntilTreasures(Integer.parseInt(value));
 				break;
 			case REVEAL_CARD_OTHERS_PUT_IT_ON_TOP_OF_DECK:
-				GameServer.getInstance().getGameController().revealCardOthersPutItOnTopOfDeck();
+				this.gameServer.getGameController().revealCardOthersPutItOnTopOfDeck();
 				break;
 			case TRASH_CARD:
 
@@ -702,7 +704,7 @@ public class Player {
 
 				} else {
 
-					((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketStartTrashMode());
+					this.gameServer.sendMessage(port, new PacketStartTrashMode());
 
 					this.trashMode = true;
 					this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
@@ -718,7 +720,7 @@ public class Player {
 
 						getDeck().getCardHand().remove(card);
 						getDeck().trash(card,
-								GameServer.getInstance().getGameController().getGameBoard().getTrashPile());
+								this.gameServer.getGameController().getGameBoard().getTrashPile());
 						this.coins += Integer.parseInt(value.split("_")[1]);
 					}
 				}
@@ -750,13 +752,13 @@ public class Player {
 				this.revealMode = true;
 				revealList.add(getDeck().removeSaveFromDrawPile());
 
-				GameServer.getInstance().sendMessage(port,
+				this.gameServer.sendMessage(port,
 						new PacketSendRevealCards(CollectionsUtil.getCardIDs(revealList)));
 				// GameServer.getInstance().sendMessage(port,
 				// new PacketSendHandCards(revealList));
 				break;
 			case REVEAL_CARD_ALL:
-				GameServer.getInstance().getGameController().revealCardAll();
+				this.gameServer.getGameController().revealCardAll();
 				break;
 			case CHOOSE_CARD_PLAY_TWICE:
 				this.actions++;
@@ -780,14 +782,14 @@ public class Player {
 			this.getDeck().getCardHand().remove(serverCard);
 		}
 		if (this.reactionMode) {
-			GameServer.getInstance().sendMessage(port, new PacketDontShowEndReactions());
+			this.gameServer.sendMessage(port, new PacketDontShowEndReactions());
 			setModesFalse();
-			GameServer.getInstance().sendMessage(port, new PacketDisable());
-			GameServer.getInstance().getGameController().checkReactionModeFinishedAndEnableGuis();
+			this.gameServer.sendMessage(port, new PacketDisable());
+			this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 		}
 		if (trashFlag) {
 			trashFlag = false;
-			GameServer.getInstance().getGameController().getGameBoard().getTrashPile().add(serverCard);
+			this.gameServer.getGameController().getGameBoard().getTrashPile().add(serverCard);
 			return null;
 		}
 
@@ -837,7 +839,7 @@ public class Player {
 				this.drawedCard = card;
 				this.getDeck().getCardHand().add(card);
 				try {
-					GameServer.getInstance().sendMessage(port,
+					this.gameServer.sendMessage(port,
 							new PacketSendHandCards(CollectionsUtil.getCardIDs(this.getDeck().getCardHand())));
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -849,10 +851,10 @@ public class Player {
 				}
 
 				if (card.getTypes().contains(this.setAside)) {
-					GameServer.getInstance().getGameController().setCardsDisabled();
+					this.gameServer.getGameController().setCardsDisabled();
 					try {
-						GameServer.getInstance().sendMessage(port, new PacketSetAsideDrawedCard());
-						GameServer.getInstance().sendMessage(port, new PacketTakeDrawedCard());
+						this.gameServer.sendMessage(port, new PacketSetAsideDrawedCard());
+						this.gameServer.sendMessage(port, new PacketTakeDrawedCard());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -905,7 +907,7 @@ public class Player {
 				LinkedList<Card> cardHand = this.getDeck().getCardHand();
 				if (cardHand.size() == 0) {
 					endDiscardAndDrawMode();
-					((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketEndDiscardMode());
+					this.gameServer.sendMessage(port, new PacketEndDiscardMode());
 				}
 			}
 			break;
@@ -919,8 +921,8 @@ public class Player {
 				this.discardMode = false;
 				if (this.reactionMode) {
 					setModesFalse();
-					GameServer.getInstance().sendMessage(port, new PacketDisable());
-					GameServer.getInstance().getGameController().checkReactionModeFinishedAndEnableGuis();
+					this.gameServer.sendMessage(port, new PacketDisable());
+					this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 				}
 			}
 			break;
@@ -950,7 +952,7 @@ public class Player {
 		LinkedList<Card> cardHand = this.getDeck().getCardHand();
 		if (cardHand.size() == 0) {
 			this.trashMode = false;
-			((GameServer) (GameServer.getInstance())).sendMessage(port, new PacketEndTrashMode());
+			this.gameServer.sendMessage(port, new PacketEndTrashMode());
 		}
 		this.getDeck().getCardHand().remove(card);
 

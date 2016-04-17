@@ -17,27 +17,43 @@ public abstract class PacketHandler {
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
-	// represents the server-instance who's packets are handled by this
-	// PacketHandler-instance
+	/**
+	 * represents the server-instance who's packets are handled by this
+	 * PacketHandler-instance
+	 */
 	protected Server parent;
 
-	/** is called when a packet was received */
+	/**
+	 * is called when a packet was received
+	 * 
+	 * @param port
+	 *            the port a packet was received at
+	 * @param packet
+	 *            the received packet
+	 */
 	public abstract void handleReceivedPacket(int port, Packet packet);
 
 	/**
-	 * outputs a String to the console
+	 * outputs a String to the console, tunnels to the Game-Log
+	 * @param str the message to log
 	 * 
-	 * @author Steffen Jacobs
 	 */
-	// TODO: save log
 	public void output(String str) {
 		GameLog.log(MsgType.NETWORK_INFO, sdf.format(new Date()) + ": " + str);
 	}
 
+	/** empty - you can override this */
 	public PacketHandler() {
 
 	}
 
+	/**
+	 * sets the overlying server, ONLY USE THIS if this is a
+	 * server-packet-handler
+	 * 
+	 * @param _parent
+	 *            the instance of the server this is handling the packets of
+	 */
 	public void setParent(Server _parent) {
 		this.parent = _parent;
 	}
