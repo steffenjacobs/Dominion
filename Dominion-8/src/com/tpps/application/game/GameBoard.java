@@ -12,6 +12,7 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.network.game.SynchronisationException;
+import com.tpps.technicalServices.network.game.WrongSyntaxException;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -407,9 +408,10 @@ public class GameBoard {
 	 * @return the card specified by the param cardId
 	 * @throws synchronisationException when the card is not on the board
 	 */
-	protected synchronized Card findAndRemoveCardFromBoard(String cardId) throws SynchronisationException {
+	protected synchronized Card findAndRemoveCardFromBoard(String cardId) throws SynchronisationException, WrongSyntaxException {
 		Matcher matcher = Pattern.compile("\\d+").matcher(cardId);
-		matcher.find();	
+		
+		if (matcher.find()) {	
 		
 		String key = cardId.substring(0, matcher.start());
 		if (this.tableForTreasureCards.containsKey(key) || 
@@ -419,6 +421,9 @@ public class GameBoard {
 			return cardList.removeLast();
 		} else {
 			throw new SynchronisationException();
+			}
+		} else {
+			throw new WrongSyntaxException();
 		}
 	}
 	
@@ -431,29 +436,35 @@ public class GameBoard {
 	 * @throws SynchronisationException if the card was not found on the board
 	 */
 	/*------- schoener machen? -----------*/
-	public LinkedList<Card> findCardListFromBoard(String cardId) throws SynchronisationException, NoSuchElementException {
+	public LinkedList<Card> findCardListFromBoard(String cardId)
+			throws SynchronisationException, NoSuchElementException,
+			WrongSyntaxException {
 		Matcher matcher = Pattern.compile("\\d+").matcher(cardId);
-		matcher.find();	
-		
-		String key = cardId.substring(0, matcher.start());
-		LinkedList<Card> cardList;
-		if (this.tableForTreasureCards.containsKey(key)) {
-			cardList = this.tableForTreasureCards.get(key);
-			
-		} else if (this.tableForVictoryCards.containsKey(key)) {
-			cardList = this.tableForVictoryCards.get(key);
-			
-		} else if (this.tableForActionCards.containsKey(key)) {
-			cardList = this.tableForActionCards.get(key);
-			
+
+		if (matcher.find()) {
+
+			String key = cardId.substring(0, matcher.start());
+			LinkedList<Card> cardList;
+			if (this.tableForTreasureCards.containsKey(key)) {
+				cardList = this.tableForTreasureCards.get(key);
+
+			} else if (this.tableForVictoryCards.containsKey(key)) {
+				cardList = this.tableForVictoryCards.get(key);
+
+			} else if (this.tableForActionCards.containsKey(key)) {
+				cardList = this.tableForActionCards.get(key);
+
+			} else {
+				throw new SynchronisationException();
+			}
+			if (!cardList.isEmpty() && cardList.getLast().getId().equals(cardId)) {
+				return cardList;
+			} else {
+				throw new SynchronisationException();
+			}
 		} else {
-			throw new SynchronisationException();
+			throw new WrongSyntaxException();
 		}
-		if (cardList.getLast().getId().equals(cardId)){
-			return cardList;
-		}else{
-			throw new SynchronisationException();
-		}		
 	}
 	
 	/**
@@ -462,7 +473,6 @@ public class GameBoard {
 	 */
 	public boolean checkThreePilesEmpty() {
 		int counter = 0;
-				System.out.println(counter);
 		counter += amountOfPilesEmpty(this.tableForActionCards);
 		if (counter >= GameConstant.EMPTY_PILES){
 			return true;
