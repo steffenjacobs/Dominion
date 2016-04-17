@@ -46,6 +46,9 @@ public class PacketRegisterAnswer extends Packet {
 	 * initializes the Packet with the request and the validation result
 	 * 
 	 * @author Steffen Jacobs
+	 * @param req the packet which was send from the client to register
+	 * @param _state a int representation of the state of registering
+	 * @param _sessionID UUID to verify the session (generated from the SessionServer)
 	 */
 	public PacketRegisterAnswer(PacketRegisterRequest req, int _state, UUID _sessionID) {
 		super(PacketType.LOGIN_REGISTER_ANSWER);

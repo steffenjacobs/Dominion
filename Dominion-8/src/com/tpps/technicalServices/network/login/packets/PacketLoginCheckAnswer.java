@@ -46,6 +46,9 @@ public class PacketLoginCheckAnswer extends Packet {
 	 * initializes the Packet with the request and the validation result
 	 * 
 	 * @author Steffen Jacobs
+	 * @param req the request packet
+	 * @param _state a boolean representation of the state of login
+	 * @param _sessionID UUID to verify the session (generated from the SessionServer)
 	 */
 	public PacketLoginCheckAnswer(PacketLoginCheckRequest req, boolean _state, UUID _sessionID) {
 		super(PacketType.LOGIN_CHECK_ANSWER);

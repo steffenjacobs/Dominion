@@ -19,7 +19,6 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,19 +27,21 @@ import javax.swing.JTextField;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.ui.statisticsscreen.StatisticsScreen;
 
+/**
+ * This method is responsible to create and handle the global chat in the gui
+ * @author jhuhn
+ *
+ */
 public class GlobalChatPanel extends JPanel{
 	
 	private JTextArea textbox;
 	private JScrollPane scrollpane;
-	private StatisticsScreen parentStat;
 	private JTextField chatInputLine;
 	private BufferedImage blackBeauty;
 	private Font font;
 	private JButton sendButton;
 	
-	private static final int VERTICAL_STRUT = 30;
 	private static final int HORIZONTAL_STRUT = 50;
 	private static final int SPACE_FROM_CHATBOX_TO_CHATINPUT = 5;
 	private static final int SPACE_FROM_CHATINPUT_TO_BUTTON = 20;
@@ -48,14 +49,13 @@ public class GlobalChatPanel extends JPanel{
 	
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * initializes the object
+	 */
 	public GlobalChatPanel() {
 		this.createComponents();
 	}
-	
-	public GlobalChatPanel(StatisticsScreen parent){
-		this.parentStat = parent;
-		this.createComponents();
-	}
+
 	
 	/**
 	 * this method creates all UI components and put them into a BoderLayout
@@ -229,9 +229,9 @@ public class GlobalChatPanel extends JPanel{
 	}
 	
 	/**
-	 * This method appends a chatmessage to the globalchat on the UI.
+	 * This method appends a chatmessage to the globalchat on the UI and sends it to the server.
 	 * The carret will be set to the maximum (last chatmessage)
-	 * @param chatmessage
+	 * @param chatmessage a String representation of the chatmessage to send
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
 		this.textbox.append(chatmessage);
@@ -244,6 +244,12 @@ public class GlobalChatPanel extends JPanel{
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	
+	
+	/**
+	 * This method appends a chatmessage to the globalchat on the UI.
+	 * The carret will be set to the maximum (last chatmessage)
+	 * @param chatmessage a String representation of the chatmessage
+	 */
 	public synchronized void appendChatLocal(String chatmessage){
 		this.textbox.append(chatmessage);
 		try {
@@ -256,7 +262,7 @@ public class GlobalChatPanel extends JPanel{
 	
 	
 	/**
-	 * 
+	 * This inner class is responsible to handle the send button
 	 * @author jhuhn - Johannes Huhn
 	 *
 	 */
@@ -278,7 +284,11 @@ public class GlobalChatPanel extends JPanel{
 		this.appendChatGlobal(message + "\n");
 	}
 
-	
+	/**
+	 * This inner class is responsible to send messages via the enter key
+	 * @author jhuhn - Johannes Huhn
+	 *
+	 */
 	private class ChatButtonInputListener implements KeyListener{
 
 		@Override

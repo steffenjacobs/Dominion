@@ -42,7 +42,7 @@ public class StatisticsScreen extends JFrame{
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	
 		statBoard = new StatisticsBoard();
-		c.add(new GlobalChatPanel(this));
+		c.add(new GlobalChatPanel());
 		c.add(statBoard);
 			
 		

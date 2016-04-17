@@ -145,6 +145,9 @@ public class LoginClient extends PacketHandler {
 		System.out.println("client sent accountinformaion to server to create a new account");
 	}
 	
+	/**
+	 * This method sends a request packet to get all statistics from the database
+	 */
 	public void sendPacketForAllStatistics(){
 		try {
 			this.c_login.sendMessage(new PacketGetAllStatistics());
@@ -179,6 +182,10 @@ public class LoginClient extends PacketHandler {
 		return c_login;
 	}
 	
+	/**
+	 * 
+	 * @return a String representation of the used username (will be set after login)
+	 */
 	public String getUsername() {
 		return username;
 	}

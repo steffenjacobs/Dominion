@@ -41,6 +41,9 @@ public class PacketRegisterRequest extends Packet {
 	 * initializes the Packet with a username and a hashed password to check
 	 * 
 	 * @author Steffen Jacobs
+	 * @param name a String representation of the username
+	 * @param _hashedPW first hashed password in a String representation
+	 * @param _emailAddress plaintext of the email adress, which is needed for the database
 	 */
 	public PacketRegisterRequest(String name, String _hashedPW, String _emailAddress) {
 		super(PacketType.LOGIN_REGISTER_REQUEST);

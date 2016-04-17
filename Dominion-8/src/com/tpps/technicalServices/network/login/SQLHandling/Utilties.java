@@ -21,6 +21,10 @@ public class Utilties {
 	}
 	
 	
+	/**
+	 * @author jhuhn
+	 * @return an ArrayList with all Statistics objects that are used to create the statistics table
+	 */
 	public static ArrayList<Statistic> createStatisticsList(){
 		Statistic two = new Statistic(SQLType.INT, "wins");
 		Statistic tree = new Statistic(SQLType.INT, "losses");
