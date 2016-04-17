@@ -284,7 +284,11 @@ public class GlobalChatPanel extends JPanel{
 		this.appendChatGlobal(message + "\n");
 	}
 
-	
+	/**
+	 * This inner class is responsible to send messages via the enter key
+	 * @author jhuhn - Johannes Huhn
+	 *
+	 */
 	private class ChatButtonInputListener implements KeyListener{
 
 		@Override

@@ -13,6 +13,11 @@ import javax.swing.JLabel;
 
 import com.tpps.ui.statisticsscreen.StatisticsBoard;
 
+/**
+ * This class is created mainly for gui testing purposes
+ * @author jhuhn
+ *
+ */
 public class LobbyScreen extends JFrame{
 
 	private static final long serialVersionUID = 1L;
@@ -23,6 +28,9 @@ public class LobbyScreen extends JFrame{
 	
 	private PlayerSettingsPanel right;
 	
+	/**
+	 * initializes this test class
+	 */
 	LobbyScreen(){
 		try {
 			this.originalBackground = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
@@ -52,8 +60,11 @@ public class LobbyScreen extends JFrame{
 		this.repaint();
 	}
 	
+	/**
+	 * mein method for testing
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		new LobbyScreen();
 	}
-
 }
