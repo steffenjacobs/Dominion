@@ -20,6 +20,7 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.game.TooMuchPlayerException;
+import com.tpps.technicalServices.network.game.WrongSyntaxException;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableOthers;
@@ -235,6 +236,8 @@ public class GameController {
 				player.getDeck().getDiscardPile().add(card);
 				return true;
 			}
+		}catch (WrongSyntaxException e){
+			GameLog.log(MsgType.GAME, e.getMessage());
 		} catch (SynchronisationException e) {
 			GameLog.log(MsgType.GAME, "Card is not on the board please click on an another card.");
 		} catch (IOException e) {
@@ -251,7 +254,7 @@ public class GameController {
 	 * @return
 	 * @throws SynchronisationException
 	 */
-	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException, NoSuchElementException {
+	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException, NoSuchElementException, WrongSyntaxException {
 		System.out.println("checkBoardCardExists");
 		LinkedList<Card> cards = this.getGameBoard().findCardListFromBoard(cardID);
 		Card card = cards.getLast();
@@ -834,7 +837,7 @@ public class GameController {
 	 * @param cardId
 	 * @throws SynchronisationException
 	 */
-	public void buyOneCard(String cardId) throws SynchronisationException {
+	public void buyOneCard(String cardId) throws SynchronisationException, WrongSyntaxException {
 		Card card = gameBoard.findAndRemoveCardFromBoard(cardId);
 		this.getActivePlayer().getDeck().getDiscardPile().add(card);
 	}

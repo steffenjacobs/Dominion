@@ -19,7 +19,7 @@ public class GameServerTest {
 
 	@Test
 	public void test() {
-		assertThat(GameServer.getInstance(), is(notNullValue()));
+		assertThat(this.gameServer, is(notNullValue()));
 	}
 
 }
