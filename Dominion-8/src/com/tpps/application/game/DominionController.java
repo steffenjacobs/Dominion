@@ -35,6 +35,7 @@ import com.tpps.ui.statisticsscreen.StatisticsBoard;
 public final class DominionController {
 
 	private static DominionController instance;
+	private UUID lobbyID;
 
 	private String username, email;
 	private UUID sessionID;
@@ -273,6 +274,8 @@ public final class DominionController {
 	 * @author jhuhn
 	 */
 	public void joinLobbyGui() {
+	//	statisticsBoardPanel = new StatisticsBoard();
+	//	this.playerSettingsPanel.setStatisticsBoardPanel(this.statisticsBoardPanel);
 		JPanel panel = new JPanel(){
 			private static final long serialVersionUID = 1L;
 
@@ -288,9 +291,9 @@ public final class DominionController {
 		panel.setLayout(new GridLayout(1, 2));
 		panel.setVisible(true);
 		panel.setOpaque(false);
-		panel.add(this.globalChatPanel);
+		panel.add(this.globalChatPanel);		
 		panel.add(this.playerSettingsPanel);
-		this.playerSettingsPanel.setStatisticsBoardPanel(this.statisticsBoardPanel);
+		//this.playerSettingsPanel.setStatisticsBoardPanel(this.statisticsBoardPanel);
 		this.mainFrame.setPanel(panel);
 	}
 
@@ -399,5 +402,13 @@ public final class DominionController {
 	public void openCardeditor(){
 		this.mainFrame.setVisible(false);
 		this.cardEditor = new CardEditor();
+	}
+
+	public UUID getLobbyID() {
+		return lobbyID;
+	}
+
+	public void setLobbyID(UUID lobbyID) {
+		this.lobbyID = lobbyID;
 	}
 }

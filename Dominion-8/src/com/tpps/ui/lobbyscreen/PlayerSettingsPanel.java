@@ -48,6 +48,7 @@ public class PlayerSettingsPanel extends JPanel{
 	private StatisticsBoard statisticsBoardPanel;
 	
 	private JPanel panel;
+	JPanel panelMid;
 	
 	public PlayerSettingsPanel(StatisticsBoard statisticsBoardPanel) {
 		this.initOriginalBackgroundImages();
@@ -97,14 +98,14 @@ public class PlayerSettingsPanel extends JPanel{
 	}
 	
 	private JPanel middleAreaPanel(){
-		JPanel panel = new JPanel(new BorderLayout());
+		panelMid = new JPanel(new BorderLayout());
 		JTextField header = this.createHeader("Statistics: ");
-		panel.setOpaque(false);						
-		panel.add(header, BorderLayout.PAGE_START);
-		panel.add(this.statisticsBoardPanel, BorderLayout.CENTER);
-		panel.add(Box.createHorizontalStrut(10), BorderLayout.LINE_START);
-		panel.add(Box.createHorizontalStrut(10), BorderLayout.LINE_END);
-		return panel;
+		panelMid.setOpaque(false);						
+		panelMid.add(header, BorderLayout.PAGE_START);
+		panelMid.add(this.statisticsBoardPanel, BorderLayout.CENTER);
+		panelMid.add(Box.createHorizontalStrut(10), BorderLayout.LINE_START);
+		panelMid.add(Box.createHorizontalStrut(10), BorderLayout.LINE_END);
+		return panelMid;
 	}
 
 	private JPanel bottomAreaPanel(){

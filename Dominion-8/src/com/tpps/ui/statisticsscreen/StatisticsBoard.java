@@ -67,7 +67,7 @@ public class StatisticsBoard extends JPanel{
 		this.clearTable();			
 		for (int i = 0; i < statistics.length; i++) {
 			this.model.addRow(statistics[i]);
-		}
+		}		
 	}
 	
 	private void clearTable(){
@@ -84,20 +84,7 @@ public class StatisticsBoard extends JPanel{
 	
 	private JScrollPane createTable(){
 		this.loadImage();
-		this.table = new JTable(model){
-			private static final long serialVersionUID = 1L;
-
-//			@Override
-//			public void paint(Graphics g) {
-//				g.drawImage(blackBeauty, 0, 0, null);
-//				super.paint(g);
-//			}
-			
-//			@Override
-//			public TableCellRenderer getCellRenderer(int row, int column) {
-//				return renderer;	//returns custom cell renderererer
-//			}
-		};
+		this.table = new JTable(model);
 		this.initColumnData();
 		table.setOpaque(false);
 		((DefaultTableCellRenderer)table.getDefaultRenderer(Object.class)).setOpaque(false);

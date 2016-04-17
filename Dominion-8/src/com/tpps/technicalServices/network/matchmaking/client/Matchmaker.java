@@ -149,22 +149,29 @@ public final class Matchmaker {
 		}
 
 		/** processes the answer-code: shows MessageDialogs or saves lobby-id 
-		 * @param pck the packet containg the answer-code to process*/
+		 * @param pck the packet contains the answer-code to process*/
 		private static void processAnswerCode(PacketMatchmakingAnswer pck) {
 			switch (pck.getAnswerCode()) {
 			case 0: // Bad Session
+				//system.exit();
 				break;
 			case 1: // Success
 				// TODO:
 				// save pck.getLobbyID() somewhere (-> DominionController?)
+				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] You joined a lobby successful: id:" + pck.getLobbyID());
+				DominionController.getInstance().setLobbyID(pck.getLobbyID());
 				break;
 			case 2: // Lobby does not exist
+				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] Lobby does not exist");
 				break;
 			case 3: // Lobby is already full
+				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] Lobby is already full");
 				break;
 			case 4: // Lobby already started
+				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] Lobby already started");
 				break;
 			default: // unknown error
+				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] unknown error");
 				break;
 			}
 		}

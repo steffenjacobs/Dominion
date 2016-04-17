@@ -156,7 +156,7 @@ public class MainMenuPanel extends JPanel {
 				MainMenuPanel.this.parent.dispose();
 				
 			}
-			if (buttons[1].isOn(e.getX(), e.getY())) {				
+			if (buttons[1].isOn(e.getX(), e.getY())) {								
 				DominionController.getInstance().joinLobbyGui();
 				DominionController.getInstance().sendPacketToGetStatistics();
 				DominionController.getInstance().findMatch();
