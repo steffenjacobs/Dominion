@@ -290,6 +290,7 @@ public final class DominionController {
 		panel.setOpaque(false);
 		panel.add(this.globalChatPanel);
 		panel.add(this.playerSettingsPanel);
+		this.playerSettingsPanel.setStatisticsBoardPanel(this.statisticsBoardPanel);
 		this.mainFrame.setPanel(panel);
 	}
 
