@@ -259,4 +259,8 @@ public class PlayerSettingsPanel extends JPanel{
 	public JCheckBox[] getOptions() {
 		return options;
 	}
+	
+	public void setStatisticsBoardPanel(StatisticsBoard statisticsBoardPanel) {
+		this.statisticsBoardPanel = statisticsBoardPanel;
+	}
 }
