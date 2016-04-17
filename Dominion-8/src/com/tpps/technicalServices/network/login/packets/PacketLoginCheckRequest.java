@@ -34,6 +34,8 @@ public class PacketLoginCheckRequest extends Packet {
 	 * initializes the Packet with a username and a hashed password to check
 	 * 
 	 * @author Steffen Jacobs
+	 * @param name a String representation of the username to log into the game
+	 * @param _hashedPW first hashes password in a String representaion
 	 */
 	public PacketLoginCheckRequest(String name, String _hashedPW) {
 		super(PacketType.LOGIN_CHECK_REQUEST);

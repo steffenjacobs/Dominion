@@ -17,7 +17,7 @@ import com.tpps.technicalServices.network.login.SQLHandling.Utilties;
  */
 public class LoginServer extends Server{
 	
-	private static int port = 1338;
+	private static int server_port = 1338;
 	
 	/**
 	 * This method initializes the LoginServer object and the MySQL server
@@ -29,11 +29,11 @@ public class LoginServer extends Server{
 	 * @param database a String representation of the database(MySQL) to use
 	 * @throws IOException
 	 */
-	public LoginServer(String sqlhost, String sqlport, String sqlusername, String sqlpassword, String sqldatabase) throws IOException {
-		super(new InetSocketAddress(Addresses.getAllInterfaces(), port), new LoginPacketHandler());
+	public LoginServer(String host, String port, String username, String password, String database) throws IOException {
+		super(new InetSocketAddress(Addresses.getAllInterfaces(), server_port), new LoginPacketHandler());
 		((LoginPacketHandler)super.getHandler()).setServer(this);
 		
-		this.initMySQLServer(sqlhost, sqlport, sqlusername, sqlpassword, sqldatabase);
+		this.initMySQLServer(host, port, username, password, database);
 		this.checkExistingDatabase();
 		this.setConsoleOutput();
 	}
@@ -134,6 +134,10 @@ public class LoginServer extends Server{
 		SQLHandler.connect();
 	}
 	
+	/**
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		try {
 			String hostname = "localhost";

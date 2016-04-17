@@ -36,8 +36,9 @@ public class SQLOperations {
 	}
 	
 	/**
+	 * This method checks if a database exists
 	 * @author jhuhn - Johannes Huhn
-	 * @param table String of the named database
+	 * @param database a String representation of the database's name
 	 * @return true if the table exists in the database, false else
 	 */
 	public static boolean checkDatabase(String database){
@@ -60,6 +61,7 @@ public class SQLOperations {
 	}
 	
 	/**
+	 * This method creates the table accountdetails
 	 * @author jhuhn - Johannes Huhn
 	 * This method creates a table 'accountdetails' in the database
 	 * Columns are: nickname, email, salt_hashed_pw, salt
@@ -80,6 +82,11 @@ public class SQLOperations {
 		}
 	}
 	
+	/**
+	 * This method gets the nickname from an email adress
+	 * @param emailOrNickname A String which can be a an mailadress or a username
+	 * @return a String representation of the username
+	 */
 	public static String getNicknameFromEmail(String emailOrNickname){
 		if(emailOrNickname.matches("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")){
 			try {
@@ -98,15 +105,18 @@ public class SQLOperations {
 	}
 	
 	/**
-	 * @author jhuhn - Johannes Huhn
+	 * This method creates an account into the database
+	 *  @author jhuhn - Johannes Huhn
 	 *  @param nickname plaintext representation of the claimed username,
 	 *  @param	email plaintext representation of the claimed email
+	 *  @param salt_hashed_pw a String representation of the double hashed password
+	 *  @param salt a String representation of the used salt
 	 *  @return 1 if account created successfully,
 	 *  		2 if nickname already in use,
 	 *  		3 if email already in use 
 	 *  */
 	public static int createAccount(String nickname, String email, String salt_hashed_pw, String salt){		
-		if(doesMailExists(email)){
+		if(doesMailExist(email)){
 			System.out.println("email already in use");
 			return 3;
 		}
@@ -133,7 +143,7 @@ public class SQLOperations {
 	 * @param email String representation of the plaintext of requested email
 	 * @return 1 if email already exists in database, 0 if not.
 	 */
-	public static boolean doesMailExists(String email){
+	public static boolean doesMailExist(String email){
 		try {
 			PreparedStatement stmt = SQLHandler.getConnection().prepareStatement("SELECT * FROM accountdetails WHERE email = ?");
 			stmt.setString(1, email);
@@ -149,9 +159,9 @@ public class SQLOperations {
 		return true;
 	}
 	/**
+	 * This method creates a database
 	 * @author jhuhn - Johannes Huhn
-	 * @param database String representation of the database to be created
-	 * This method creates a database 
+	 * @param database String representation of the database to be created 
 	 */
 	public static void createDatabase(String database){		
 		try {
@@ -169,6 +179,7 @@ public class SQLOperations {
 	}
 	
 	/**
+	 * This method gets the salt from the database
 	 * @author jhuhn - Johannes Huhn
 	 * @param nickname is the nickname or the email of the user
 	 * @return a String representation of the requested salt, null for failure
