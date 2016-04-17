@@ -14,7 +14,6 @@ import javax.swing.JPanel;
 
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.technicalServices.network.Addresses;
-import com.tpps.technicalServices.network.card.CardClient;
 import com.tpps.technicalServices.network.chat.client.ChatClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
@@ -40,7 +39,7 @@ public final class DominionController {
 	private UUID sessionID;
 	private SessionClient sessionClient;
 	private GameClient gameClient;
-	private CardClient cardClient;
+//	private CardClient cardClient;
 	private Matchmaker matchmaker;
 	private CardStorageController storageController;
 	private MainFrame mainFrame;
