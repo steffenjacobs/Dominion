@@ -54,6 +54,7 @@ public class Player {
 	GameServer gameServer;
 
 	/**
+	 * creates the player sets all the initial values
 	 * @param deck
 	 * @param clientID
 	 * @param port
@@ -85,6 +86,7 @@ public class Player {
 	}
 
 	/**
+	 * calls the other constructor
 	 * @param clientID
 	 * @param port
 	 * @param initCards
@@ -285,8 +287,8 @@ public class Player {
 	}
 
 	/**
-	 * @param deck
-	 *            the deck to set
+	 * @param deck the deck to set
+	 *            
 	 */
 	public void setDeck(Deck deck) {
 		this.deck = deck;
@@ -354,8 +356,8 @@ public class Player {
 	}
 
 	/**
-	 * @param buys
-	 *            the buys to set
+	 * @param buys the buys to set
+	 *            
 	 */
 	public void setBuys(int buys) {
 		this.buys = buys;
@@ -408,8 +410,8 @@ public class Player {
 	}
 
 	/**
-	 * @param coins
-	 *            the coins to set
+	 * @param coins the coins to set
+	 *            
 	 */
 	public void setCoins(int coins) {
 		this.coins = coins;
@@ -468,7 +470,7 @@ public class Player {
 	}
 
 	/**
-	 * called by the game controller if player is in discard or trash mode. decides in which mode the player is
+	 * called by the game controller if player is in discard or trash mode. looks up in which mode the player is
 	 * and appends the cards to the right pile. calls the do action method for the card. 
 	 * @param cardID
 	 * @param trashPile
