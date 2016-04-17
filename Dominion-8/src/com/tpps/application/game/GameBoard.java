@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.sun.xml.internal.ws.api.pipe.ThrowableContainerPropertySet;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
@@ -28,7 +27,9 @@ public class GameBoard {
 	private LinkedList<Card> trashPile;
 
 	/**
-	 * 
+	 * Constructor creates the tables for victory, treasure and action cards.
+	 * initialises the linkedList for the trashPile
+	 * calls the init method which calls all the init methods for the tables
 	 */
 	public GameBoard() {
 		this.tableForVictoryCards = new LinkedHashMap<String, LinkedList<Card>>();
@@ -74,7 +75,8 @@ public class GameBoard {
 	}
 
 	/**
-	 * @param tableForActionCards the tableForActionCards to set
+	 * sets the referen for the tableActionCards on the given parameter
+	 * @param tableForActionCards 
 	 */
 	public void setTableForActionCards(LinkedHashMap<String, LinkedList<Card>> tableForActionCards) {
 		this.tableForActionCards = tableForActionCards;
@@ -88,6 +90,7 @@ public class GameBoard {
 	}
 
 	/**
+	 * sets the trashPile with the given parameter
 	 * @param trashPile the trashPile to set
 	 */
 	public void setTrashPile(LinkedList<Card> trashPile) {
@@ -117,7 +120,8 @@ public class GameBoard {
 	
 
 	/**
-	 * returns the ids of the cards selected through the key of the hashMap lying at the end of the list
+	 * goes over all lists in the hashMap and takes the cardId of the last card of this list
+	 * @return return this cardIds
 	 */
 	public synchronized LinkedList<String> getCardIDs(LinkedHashMap<String, LinkedList<Card>> table) {
 		Set<String> keys = table.keySet();
@@ -127,7 +131,7 @@ public class GameBoard {
 			String string = (String) iterator.next();
 			cardList = table.get(string);
 			if (cardList.size() > 0){
-				cardIds.add(cardList.get(cardList.size() - 1).getId());
+				cardIds.add(cardList.getLast().getId());
 			} else {
 				System.out.println("nil added");
 				cardIds.add(string + "#");
@@ -137,7 +141,8 @@ public class GameBoard {
 	}
 	
 	/**
-	 * 
+	 * initialises the tables for victory, treasure and action cards.
+	 * for this purpose the table are filled with card
 	 */
 	private void init() {
 		initHashMapTreasureCards();
@@ -167,7 +172,7 @@ public class GameBoard {
 	}
 
 	/**
-	 * initializes the tableForVictoryCards with 3 piles à 10 cards of Estate, Duchy and Province
+	 * initializes the tableForVictoryCards with 4 piles à 10 cards of Estate, Duchy, Province and curse
 	 */
 	private void initHashMapVictoryCards() {
 		LinkedList<Card> estateList = new LinkedList<Card>();
@@ -376,9 +381,31 @@ public class GameBoard {
 		this.tableForActionCards.put("Adventurer", adventurerList);
 		Card.resetClassID();
 	}
+	
+	/**
+	 * 
+	 * @return a list of cards which are the initial cards for the player at the beginning of the game
+	 */
+	public synchronized LinkedList<Card> getStartSet(){
+		LinkedList<Card> startCards = new LinkedList<Card>();
+		LinkedList<Card> copperList = this.tableForTreasureCards.get(GameConstant.COPPER);
+		
+		for (int i = 0; i < GameConstant.INIT_COPPER_CARDS; i++){
+			startCards.addFirst(copperList.removeLast());			
+			
+		}
+		
+		LinkedList<Card> estateList = this.tableForVictoryCards.get(GameConstant.ESTATE);
+		for (int i = 0; i < GameConstant.INIT_ESTATE_CARDS; i++){
+			startCards.add(estateList.removeLast());
+		}
+		return startCards;
+	}
 
 	/**
-	 * maybe
+	 * @param cardId
+	 * @return the card specified by the param cardId
+	 * @throws synchronisationException when the card is not on the board
 	 */
 	protected synchronized Card findAndRemoveCardFromBoard(String cardId) throws SynchronisationException {
 		Matcher matcher = Pattern.compile("\\d+").matcher(cardId);
@@ -395,27 +422,13 @@ public class GameBoard {
 		}
 	}
 	
-	public synchronized LinkedList<Card> getStartSet(){
-		LinkedList<Card> startCards = new LinkedList<Card>();
-		LinkedList<Card> copperList = this.tableForTreasureCards.get(GameConstant.COPPER);
-		
-		for (int i = 0; i < GameConstant.INIT_COPPER_CARDS; i++){
-			startCards.addFirst(copperList.removeLast());			
-			
-		}
-		
-		LinkedList<Card> estateList = this.tableForVictoryCards.get(GameConstant.ESTATE);
-		for (int i = 0; i < GameConstant.INIT_ESTATE_CARDS; i++){
-			startCards.add(estateList.removeLast());
-		}
-		return startCards;
-	}
+
 	
 	/**
 	 * 
 	 * @param cardId
-	 * @return
-	 * @throws SynchronisationException
+	 * @return a list of which cards which contains the card with the given parameter cardId
+	 * @throws SynchronisationException if the card was not found on the board
 	 */
 	/*------- schoener machen? -----------*/
 	public LinkedList<Card> findCardListFromBoard(String cardId) throws SynchronisationException, NoSuchElementException {
@@ -445,7 +458,7 @@ public class GameBoard {
 	
 	/**
 	 * 
-	 * @return true if three piles are empty
+	 * @return true if three piles(lists) are empty in all hashMaps
 	 */
 	public boolean checkThreePilesEmpty() {
 		int counter = 0;
@@ -469,7 +482,7 @@ public class GameBoard {
 	/**
 	 * 
 	 * @param table
-	 * @return the number of empty lists in a hashMap
+	 * @return the number of empty piles(lists) in the given hashMap
 	 */
 	public int amountOfPilesEmpty(LinkedHashMap<String, LinkedList<Card>> table) {
 		int counter = 0;
