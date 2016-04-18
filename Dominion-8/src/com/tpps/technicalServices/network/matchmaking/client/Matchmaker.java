@@ -29,14 +29,34 @@ public final class Matchmaker {
 
 	/**
 	 * creates & opens a new connection to the matchmaking-server if necessary
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	private void checkAndCreateClient() throws IOException {
 		if (client == null || !client.isConnected()) {
 			handler = new MatchmakingHandler();
-			client = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.getStandardPort()),
-					handler, false);
+			client = new Client(
+					new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.getStandardPort()), handler,
+					false);
 		}
+	}
+
+	/**
+	 * sends an AI-Packet to the matchmaking-system
+	 * 
+	 * @param name
+	 *            displayed name of the AI
+	 * @param lobbyID
+	 *            UUID of the lobby
+	 * @throws IOException
+	 *             if there is no network connection available or the server is
+	 *             unreachable
+	 */
+	public void sendAIPacket(String name, UUID lobbyID) throws IOException {
+		checkAndCreateClient();
+		client.sendMessage(
+				new PacketJoinLobby(name, UUID.fromString("00000000-0000-0000-0000-000000000000"), lobbyID, true));
+		System.out.println("Sent request to join lobby " + lobbyID.toString());
 	}
 
 	/**
@@ -82,7 +102,7 @@ public final class Matchmaker {
 	 *            name of the player aborting the search
 	 * @param uid
 	 *            uuid of the player aborting the search
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void abort(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
@@ -148,17 +168,22 @@ public final class Matchmaker {
 			}
 		}
 
-		/** processes the answer-code: shows MessageDialogs or saves lobby-id 
-		 * @param pck the packet contains the answer-code to process*/
+		/**
+		 * processes the answer-code: shows MessageDialogs or saves lobby-id
+		 * 
+		 * @param pck
+		 *            the packet contains the answer-code to process
+		 */
 		private static void processAnswerCode(PacketMatchmakingAnswer pck) {
 			switch (pck.getAnswerCode()) {
 			case 0: // Bad Session
-				//system.exit();
+				// system.exit();
 				break;
 			case 1: // Success
 				// TODO:
 				// save pck.getLobbyID() somewhere (-> DominionController?)
-				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] You joined a lobby successful: id:" + pck.getLobbyID());
+				DominionController.getInstance().reveiveChatMessageFromChatServer(
+						"[BOT] You joined a lobby successful: id:" + pck.getLobbyID());
 				DominionController.getInstance().setLobbyID(pck.getLobbyID());
 				break;
 			case 2: // Lobby does not exist

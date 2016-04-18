@@ -52,6 +52,8 @@ public class MatchmakingPacketHandler extends PacketHandler {
 		switch (packet.getType()) {
 		case MATCHMAKING_REQUEST:
 			PacketMatchmakingRequest pck = (PacketMatchmakingRequest) packet;
+			
+			
 			if (pck.isAbort()) {
 				MatchmakingController.onPlayerDisconnect(port);
 			} else
