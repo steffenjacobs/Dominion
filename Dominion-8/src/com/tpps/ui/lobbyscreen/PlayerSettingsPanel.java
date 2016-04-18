@@ -2,8 +2,11 @@ package com.tpps.ui.lobbyscreen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.font.TextAttribute;
@@ -15,6 +18,7 @@ import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,7 +49,11 @@ public class PlayerSettingsPanel extends JPanel{
 	private static int IMG_TO_BOTTOM = 15;
 	private static final int IMG_TO_EDGE = 30;
 	
-	private StatisticsBoard statisticsBoardPanel;
+	private JButton plusKI,minusKi;
+	
+	
+//	TODO Statistics einkommentieren
+//	private StatisticsBoard statisticsBoardPanel;
 	
 	private JPanel panel;
 	JPanel panelMid;
@@ -53,7 +61,7 @@ public class PlayerSettingsPanel extends JPanel{
 	public PlayerSettingsPanel(StatisticsBoard statisticsBoardPanel) {
 		this.initOriginalBackgroundImages();
 		this.initTransparentBackgroundImages();
-		this.statisticsBoardPanel = statisticsBoardPanel;
+//		this.statisticsBoardPanel = statisticsBoardPanel;
 		this.setOpaque(false);
 		this.setLayout(new GridLayout(3,1, 0, SPACE_PANEL_TO_PANEL));
 
@@ -98,13 +106,20 @@ public class PlayerSettingsPanel extends JPanel{
 	}
 	
 	private JPanel middleAreaPanel(){
-		panelMid = new JPanel(new BorderLayout());
+//		panelMid = new JPanel(new BorderLayout());
+		panelMid = new JPanel(new FlowLayout());
 		JTextField header = this.createHeader("Statistics: ");
 		panelMid.setOpaque(false);						
 		panelMid.add(header, BorderLayout.PAGE_START);
-		panelMid.add(this.statisticsBoardPanel, BorderLayout.CENTER);
+		plusKI = new JButton("Add KI");
+		minusKi = new JButton("Remove KI");
+//		panelMid.add(this.statisticsBoardPanel, BorderLayout.CENTER);
+		panelMid.add(plusKI,BorderLayout.CENTER);
+		panelMid.add(minusKi,BorderLayout.CENTER);
 		panelMid.add(Box.createHorizontalStrut(10), BorderLayout.LINE_START);
 		panelMid.add(Box.createHorizontalStrut(10), BorderLayout.LINE_END);
+		plusKI.addActionListener(new KiListener());
+		minusKi.addActionListener(new KiListener());
 		return panelMid;
 	}
 
@@ -261,7 +276,17 @@ public class PlayerSettingsPanel extends JPanel{
 		return options;
 	}
 	
-	public void setStatisticsBoardPanel(StatisticsBoard statisticsBoardPanel) {
-		this.statisticsBoardPanel = statisticsBoardPanel;
+	private class KiListener implements ActionListener{
+
+
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			System.out.println("click");
+		}
+		
 	}
+	
+//	public void setStatisticsBoardPanel(StatisticsBoard statisticsBoardPanel) {
+//		this.statisticsBoardPanel = statisticsBoardPanel;
+//	}
 }
