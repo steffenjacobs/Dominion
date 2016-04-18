@@ -234,8 +234,9 @@ public class GlobalChatPanel extends JPanel{
 	 * @param chatmessage a String representation of the chatmessage to send
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
-		this.textbox.append(chatmessage);
-		DominionController.getInstance().sendChatMessage(chatmessage);
+		GlobalChatPanel.this.chatInputLine.setText("");
+		this.textbox.append("ME: " + chatmessage.trim() + "\n");
+		DominionController.getInstance().sendChatMessage(chatmessage.trim() + "\n");
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e) {
@@ -251,7 +252,7 @@ public class GlobalChatPanel extends JPanel{
 	 * @param chatmessage a String representation of the chatmessage
 	 */
 	public synchronized void appendChatLocal(String chatmessage){
-		this.textbox.append(chatmessage);
+		this.textbox.append(chatmessage.trim() + "\n");
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e) {
@@ -271,17 +272,11 @@ public class GlobalChatPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(!GlobalChatPanel.this.chatInputLine.getText().equals("")){
-				GlobalChatPanel.this.handleChatmessage(GlobalChatPanel.this.chatInputLine.getText());				
+				GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());				
 			}
 			GlobalChatPanel.this.chatInputLine.requestFocus();
 		}
 		
-	}
-	
-	private void handleChatmessage(String message){
-	//	System.out.println("send message: " + message);
-		GlobalChatPanel.this.chatInputLine.setText("");
-		this.appendChatGlobal(message + "\n");
 	}
 
 	/**
@@ -294,7 +289,7 @@ public class GlobalChatPanel extends JPanel{
 		@Override
 		public void keyPressed(KeyEvent e) {			
 			if(e.getKeyCode() == KeyEvent.VK_ENTER && !GlobalChatPanel.this.chatInputLine.getText().equals("")){
-				GlobalChatPanel.this.handleChatmessage(GlobalChatPanel.this.chatInputLine.getText());
+				GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());
 			}
 		}
 

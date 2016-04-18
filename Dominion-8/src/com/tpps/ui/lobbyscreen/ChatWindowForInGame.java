@@ -142,9 +142,15 @@ public class ChatWindowForInGame extends JPanel{
 		return center;
 	}
 	
-	private void appendChatGlobal(String chatmessage){
-		this.textbox.append(chatmessage);
-		DominionController.getInstance().sendChatMessage(chatmessage);
+	/**
+	 * This method appends a chatmessage to the chatroom on the UI (ingame) and sends it to the server.
+	 * The carret will be set to the maximum (last chatmessage)
+	 * @param chatmessage a String representation of the chatmessage to send
+	 */
+	public synchronized void appendChatGlobal(String chatmessage) {
+		ChatWindowForInGame.this.chatInputLine.setText("");
+		this.textbox.append("ME: " + chatmessage.trim() + "\n");
+		DominionController.getInstance().sendChatMessage(chatmessage.trim() + "\n");
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e) {
@@ -153,8 +159,14 @@ public class ChatWindowForInGame extends JPanel{
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	
-	public synchronized void appendChatLocal(String chatmessage) {
-		this.textbox.append(chatmessage);
+	
+	/**
+	 * This method appends a chatmessage to the chatroom on the UI (ingame).
+	 * The carret will be set to the maximum (last chatmessage)
+	 * @param chatmessage a String representation of the chatmessage
+	 */
+	public synchronized void appendChatLocal(String chatmessage){
+		this.textbox.append(chatmessage.trim() + "\n");
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e) {
@@ -167,11 +179,11 @@ public class ChatWindowForInGame extends JPanel{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(!ChatWindowForInGame.this.chatInputLine.getText().equals("")){			
+			if(!ChatWindowForInGame.this.chatInputLine.getText().equals("")){
 				ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());				
 			}
 			ChatWindowForInGame.this.chatInputLine.requestFocus();
-		}		
+		}
 	}
 	
 	private class ChatButtonInputListener implements KeyListener{
