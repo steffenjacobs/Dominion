@@ -13,13 +13,25 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 public class ChatController extends PacketHandler{
 	
 	private static Client chatclient;
+	private static ChatController instance;
 	
-	public ChatController() {
-		try {
-			ChatController.chatclient = new Client(new InetSocketAddress(Addresses.getAllInterfaces(), 1340), this, false);
-		} catch (IOException e) {
-			e.printStackTrace();
+	public ChatController() { }
+	
+	public void init(){
+		if(ChatController.chatclient == null){
+			try {
+				ChatController.chatclient = new Client(new InetSocketAddress(Addresses.getLocalHost(), 1340), this, false);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+	}
+	public static ChatController getInstance(){
+		if(instance == null){
+			instance = new ChatController();
+			instance.init();
+		}
+		return instance;
 	}
 	
 	public static void createChatRoom(ArrayList<String> members){
@@ -31,7 +43,7 @@ public class ChatController extends PacketHandler{
 		}
 	}
 	
-	public static void createChatRoom(String[] usernames){
+	public void createChatRoom(String[] usernames){
 		ArrayList<String> members = new ArrayList<String>();
 		for (int i = 0; i < usernames.length; i++) {
 			members.add(usernames[i]);
@@ -39,7 +51,7 @@ public class ChatController extends PacketHandler{
 		ChatController.createChatRoom(members);
 	}
 	
-	public static void deleteChatroom(String onemember){
+	public void deleteChatroom(String onemember){
 		PacketChatController packet = new PacketChatController("deleteChatroom", onemember);
 		try {
 			ChatController.chatclient.sendMessage(packet);

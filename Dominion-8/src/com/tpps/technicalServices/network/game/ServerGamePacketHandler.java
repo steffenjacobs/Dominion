@@ -1,6 +1,7 @@
 package com.tpps.technicalServices.network.game;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -11,6 +12,7 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.chat.server.ChatController;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
@@ -545,6 +547,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			server.getGameController().addPlayer(new Player(clientId, port, this.server.getGameController().getGameBoard().getStartSet(), username, this.server));
 			server.sendMessage(port, new PacketSendClientId(clientId));
 			if (server.getGameController().getPlayers().size() == 4) {
+				ChatController.getInstance().createChatRoom(this.server.getGameController().getPlayerNames());
 				server.getGameController().startGame();
 				setUpGui();
 
