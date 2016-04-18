@@ -431,4 +431,8 @@ public class ChatRoom {
 	public ConcurrentHashMap<String, Integer> getClientsByUsername() {
 		return clientsByUsername;
 	}
+	
+	public void removeUser(String user){
+		this.clientsByUsername.remove(user);		
+	}
 }
