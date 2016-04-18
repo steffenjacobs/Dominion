@@ -411,4 +411,12 @@ public final class DominionController {
 	public void setLobbyID(UUID lobbyID) {
 		this.lobbyID = lobbyID;
 	}
+	
+	public void sendAIPacket(String name) {
+		try {
+			this.matchmaker.sendAIPacket(name, this.lobbyID);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

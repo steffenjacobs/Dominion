@@ -13,6 +13,7 @@ import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -24,6 +25,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.tpps.application.game.DominionController;
+import com.tpps.application.game.ai.ArtificialIntelligence;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketJoinLobby;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.statisticsscreen.StatisticsBoard;
 
@@ -277,13 +281,12 @@ public class PlayerSettingsPanel extends JPanel{
 	}
 	
 	private class KiListener implements ActionListener{
-
-
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			System.out.println("click");
+			ArtificialIntelligence ai1 = new ArtificialIntelligence();
+			DominionController.getInstance().sendAIPacket(ai1.getPlayer().getPlayerName());
 		}
-		
 	}
 	
 //	public void setStatisticsBoardPanel(StatisticsBoard statisticsBoardPanel) {
