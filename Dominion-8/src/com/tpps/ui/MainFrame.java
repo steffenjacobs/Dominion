@@ -3,6 +3,9 @@ package com.tpps.ui;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -22,18 +25,23 @@ public class MainFrame extends JFrame {
 	 * Contructor for the mainMenu
 	 */
 	public MainFrame() {
+		try {
+			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.c = this.getContentPane();
 		int width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// this.fullscreenmode();
+		 this.fullscreenmode();
 		this.setMinimumSize(new Dimension(1280, 720));
 	}
 
 	private void fullscreenmode() {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		this.setUndecorated(true);
+	//	this.setUndecorated(true);
 	}
 
 	public void setPanel(JPanel panel) {

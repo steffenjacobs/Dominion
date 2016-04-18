@@ -222,8 +222,8 @@ public class GameWindow extends JFrame {
 		loggerPane.setBounds((int) (width * 0.5), (int) (height * 0.35), 200, 100);
 		framework.add(loggerPane);
 		/** TODO remove */
-		GameLog.log(MsgType.GAME, "XYZ");
-		GameLog.log(MsgType.GAME, "XYZ");
+		GameLog.log(MsgType.GAME, "REMOVE KEBAP !");
+		GameLog.log(MsgType.GAME, "REMOVE KEBAP !");
 	}
 
 	private void chatWindowAdding(int width, int height) {
