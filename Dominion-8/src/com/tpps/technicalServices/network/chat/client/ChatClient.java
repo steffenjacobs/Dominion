@@ -74,6 +74,7 @@ public class ChatClient extends PacketHandler{
 		}
 		else if(chatmessage.startsWith("/")){
 			this.sendCommand(new StringBuffer(chatmessage).deleteCharAt(0).toString());
+			System.out.println("chatmessage starts with /");
 		}
 		else if(chatmessage.startsWith("@")){
 			this.sendMessageToClient(new StringBuffer(chatmessage).deleteCharAt(0).toString());

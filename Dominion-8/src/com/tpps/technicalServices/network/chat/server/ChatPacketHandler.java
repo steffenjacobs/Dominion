@@ -70,6 +70,7 @@ public class ChatPacketHandler extends PacketHandler{
 			
 			ChatRoom room2 =  this.getSpecificChatRoom(castedpacket2.getSender());
 			if(room2 != null){
+				System.out.println("chatcommand in chatroom: " + room2.getId());
 				room2.evaluateCommand(castedpacket2);
 			}else{
 				global.sendChatCommand(port, castedpacket2);

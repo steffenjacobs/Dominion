@@ -19,7 +19,7 @@ public class ChatServer extends Server {
 
 	public static int port = 1340;
 	private ChatPacketHandler chatpackethandler;
-	public static final SimpleDateFormat sdf = new SimpleDateFormat("<HH:mm:ss>: ");
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]: ");
 
 	/**
 	 * initializes the chatserver object

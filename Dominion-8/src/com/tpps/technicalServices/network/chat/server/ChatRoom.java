@@ -138,7 +138,8 @@ public class ChatRoom {
 	 * 	This method evaluates commands and passes to the right method
 	 * @param packet the packet that received the server from a client
 	 */
-	public void evaluateCommand(PacketSendChatCommand packet){		
+	public void evaluateCommand(PacketSendChatCommand packet){
+		System.out.println("1|" + packet.getChatmessage() + "|");
 		if(packet.getChatmessage().startsWith("votekick ")){
 			if(this.votekick != null){
 				PacketSendAnswer answer6 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There is an active vote currently");
@@ -155,9 +156,11 @@ public class ChatRoom {
 			this.evaluateCommand6(packet);
 			return;
 		}
-		
+		System.out.println("2|" + packet.getChatmessage() + "|");
+		System.out.println(servercommand1.equals(packet.getChatmessage()));
 		switch(packet.getChatmessage()){
-		case servercommand1: 
+		case servercommand1:
+			System.out.println("go to chatcmd1 <=> help command");
 			this.evaluateCommand1(packet);
 			break;
 		case servercommand2:
