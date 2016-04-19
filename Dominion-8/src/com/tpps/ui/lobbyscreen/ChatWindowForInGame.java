@@ -27,8 +27,8 @@ import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.gameplay.GameWindow;
 
-public class ChatWindowForInGame extends JPanel{
-	
+public class ChatWindowForInGame extends JPanel {
+
 	private static final long serialVersionUID = 1L;
 	private BufferedImage blackBeauty;
 	private JTextArea textbox;
@@ -39,68 +39,69 @@ public class ChatWindowForInGame extends JPanel{
 	private final int SPACE_FROM_CHATINPUT_TO_BUTTON = 20;
 	private static final float BLACK_TRANSPARENCY = 0.6F;
 
+	
 	public ChatWindowForInGame() {
 		this.loadImage();
 		this.setOpaque(false);
 		this.setVisible(true);
-		
-		this.createMiddlePanel();		
+
+		this.createMiddlePanel();
 		this.createComponents();
 	}
-	
-	private void createComponents(){
+
+	private void createComponents() {
 		this.setLayout(new BorderLayout(0, 5));
 		this.add(scrollpane, BorderLayout.CENTER);
 		this.add(this.createChatInputArea(), BorderLayout.PAGE_END);
 	}
-	
-	private void loadImage(){
+
+	private void loadImage() {
 		try {
 			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
 			this.blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, BLACK_TRANSPARENCY);
-		} catch (IOException e) {		
+		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
-	
-	private void createMiddlePanel(){
+
+	private void createMiddlePanel() {
 		textbox = new JTextArea();
 		textbox.setFocusable(false);
 		textbox.setForeground(Color.WHITE);
 		textbox.setBorder(BorderFactory.createEmptyBorder());
 		textbox.setLineWrap(true);
 		textbox.setOpaque(false);
-		textbox.setText("Welcome to our chatserver \n");		
+		textbox.setText("Welcome to our chatserver \n");
 		font = new Font("Calibri", Font.PLAIN, 20);
 		textbox.setFont(font);
-		scrollpane =  new JScrollPane(textbox){
-				private static final long serialVersionUID = 1L;
-				
-				@Override
-				public void paint(Graphics g) {
-					g.drawImage(blackBeauty, 0, 0, null);					
-					super.paint(g);					
-				}
-				
-			};
-		scrollpane.setOpaque(false);		
+		scrollpane = new JScrollPane(textbox) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(blackBeauty, 0, 0, null);
+				super.paint(g);
+			}
+
+		};
+		scrollpane.setOpaque(false);
 		scrollpane.setBorder(BorderFactory.createEmptyBorder());
 		scrollpane.setFocusable(false);
 		scrollpane.setVisible(true);
 		scrollpane.getViewport().setOpaque(false);
 		scrollpane.getVerticalScrollBar().setOpaque(false);
 	}
-	
-	private JTextField initChatInputLine(){		
-		chatInputLine = new JTextField("Type in your chatmessage"){
-		private static final long serialVersionUID = 1L;
-		
+
+	private JTextField initChatInputLine() {
+		chatInputLine = new JTextField("Type in your chatmessage") {
+			private static final long serialVersionUID = 1L;
+
 			@Override
-			public void paint(Graphics g) {				
+			public void paint(Graphics g) {
 				g.drawImage(blackBeauty, 0, 0, null);
 				super.paint(g);
 			}
-			
+
 		};
 		chatInputLine.setFont(font);
 		chatInputLine.setCaretColor(Color.WHITE);
@@ -110,9 +111,9 @@ public class ChatWindowForInGame extends JPanel{
 		chatInputLine.addKeyListener(new ChatButtonInputListener());
 		return chatInputLine;
 	}
-	
-	private JButton initSendButton(){
-		sendButton = new JButton("SEND"){
+
+	private JButton initSendButton() {
+		sendButton = new JButton("SEND") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -121,31 +122,34 @@ public class ChatWindowForInGame extends JPanel{
 				super.paint(g);
 			}
 		};
-		sendButton.setForeground(Color.WHITE);	
+		sendButton.setForeground(Color.WHITE);
 		sendButton.setContentAreaFilled(false);
 		sendButton.setBorderPainted(true);
 		sendButton.setOpaque(false);
 		sendButton.addActionListener(new SendButtonListener());
 		return sendButton;
 	}
-	
-	private JPanel createChatInputArea(){	
+
+	private JPanel createChatInputArea() {
 		chatInputLine = this.initChatInputLine();
 		sendButton = this.initSendButton();
-		
+
 		JPanel center = new JPanel();
-		center.setLayout(new BoxLayout(center, BoxLayout.LINE_AXIS ));
+		center.setLayout(new BoxLayout(center, BoxLayout.LINE_AXIS));
 		center.setOpaque(false);
 		center.add(chatInputLine);
-		center.add(Box.createRigidArea(new Dimension(SPACE_FROM_CHATINPUT_TO_BUTTON ,0)));
+		center.add(Box.createRigidArea(new Dimension(SPACE_FROM_CHATINPUT_TO_BUTTON, 0)));
 		center.add(sendButton);
 		return center;
 	}
-	
+
 	/**
-	 * This method appends a chatmessage to the chatroom on the UI (ingame) and sends it to the server.
-	 * The carret will be set to the maximum (last chatmessage)
-	 * @param chatmessage a String representation of the chatmessage to send
+	 * This method appends a chatmessage to the chatroom on the UI (ingame) and
+	 * sends it to the server. The carret will be set to the maximum (last
+	 * chatmessage)
+	 * 
+	 * @param chatmessage
+	 *            a String representation of the chatmessage to send
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
 		ChatWindowForInGame.this.chatInputLine.setText("");
@@ -158,14 +162,15 @@ public class ChatWindowForInGame extends JPanel{
 		}
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
-	
-	
+
 	/**
-	 * This method appends a chatmessage to the chatroom on the UI (ingame).
-	 * The carret will be set to the maximum (last chatmessage)
-	 * @param chatmessage a String representation of the chatmessage
+	 * This method appends a chatmessage to the chatroom on the UI (ingame). The
+	 * carret will be set to the maximum (last chatmessage)
+	 * 
+	 * @param chatmessage
+	 *            a String representation of the chatmessage
 	 */
-	public synchronized void appendChatLocal(String chatmessage){
+	public synchronized void appendChatLocal(String chatmessage) {
 		this.textbox.append(chatmessage.trim() + "\n");
 		try {
 			Thread.sleep(1);
@@ -175,36 +180,38 @@ public class ChatWindowForInGame extends JPanel{
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 
-	private class SendButtonListener implements ActionListener{
+	private class SendButtonListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(!ChatWindowForInGame.this.chatInputLine.getText().equals("")){
-				ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());				
+			if (!ChatWindowForInGame.this.chatInputLine.getText().equals("")) {
+				ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());
 			}
 			ChatWindowForInGame.this.chatInputLine.requestFocus();
 		}
 	}
-	
-	private class ChatButtonInputListener implements KeyListener{
+
+	private class ChatButtonInputListener implements KeyListener {
 
 		@Override
-		public void keyPressed(KeyEvent e) {			
-			if(e.getKeyCode() == KeyEvent.VK_ENTER && !ChatWindowForInGame.this.chatInputLine.getText().equals("")){
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER && !ChatWindowForInGame.this.chatInputLine.getText().equals("")) {
 				ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());
 			}
 		}
 
 		@Override
-		public void keyReleased(KeyEvent arg0) { }
+		public void keyReleased(KeyEvent arg0) {
+		}
 
 		@Override
-		public void keyTyped(KeyEvent arg0) { }
+		public void keyTyped(KeyEvent arg0) {
+		}
 	}
-	
+
 	public static void main(String[] args) {
-		ChatWindowForInGame chat = new ChatWindowForInGame();		
-		
+		ChatWindowForInGame chat = new ChatWindowForInGame();
+
 		JFrame frame = new JFrame();
 		frame.getContentPane().add(chat);
 		frame.setVisible(true);
@@ -213,10 +220,11 @@ public class ChatWindowForInGame extends JPanel{
 	}
 
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
-//		int width = (int) (sizeFactorWidth*gameWindow.getWIDTH()/8);
-//		int height =  (int) (sizeFactorHeight*gameWindow.getHEIGHT()/8);
-//		System.out.println(x-width*1.5+"x");
-//		System.out.println(y+"y");
-//		this.setBounds(x-(int) (width*1.5), y, width,height);		
+		double width = (sizeFactorWidth * x) / 4;
+		double height = (sizeFactorHeight * y) / 4;
+		this.setBounds(x - (int) (500 * sizeFactorWidth), y - (int) (500 * sizeFactorHeight), (int) (width),
+				(int) height);
+		repaint();
+		revalidate();
 	}
 }

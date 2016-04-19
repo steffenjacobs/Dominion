@@ -3,6 +3,7 @@ package com.tpps.technicalServices.logger;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Toolkit;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,6 +25,7 @@ import com.tpps.ui.gameplay.GameWindow;
 public class GameLogTextPane extends JPanel {
 
 	private JTextPane textPane;
+	private int topGap;
 
 	/**
 	 * 
@@ -37,6 +39,7 @@ public class GameLogTextPane extends JPanel {
 	 * constructor for Display JPanel
 	 */
 	public GameLogTextPane() {
+		this.topGap = Toolkit.getDefaultToolkit().getScreenSize().height / 6;
 		MsgType.setGameMode();
 		this.textPane = new JTextPane();
 		this.textPane.setEditable(false);
@@ -45,6 +48,7 @@ public class GameLogTextPane extends JPanel {
 		this.setLayout(new BorderLayout());
 		this.add(new JScrollPane(this.textPane));
 		repaint();
+		revalidate();
 	}
 
 	/**
@@ -87,11 +91,13 @@ public class GameLogTextPane extends JPanel {
 
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
 
-//		System.out.println(y+"y");
-		int width = (int) (sizeFactorWidth*gameWindow.getWIDTH()/6);
-		int height =  (int) (sizeFactorHeight*gameWindow.getHEIGHT()/5);
-//		System.out.println(x-width*1.5+"x");
-		this.setBounds(x-(int) (width*1.5), y, width,height);
+		double width = x / 4;
+		double height = y / 4;
+		System.out.println(width+"Breite");
+		System.out.println(x+"position");
+		this.setBounds(x - (int) (1750 * sizeFactorWidth), y - (int) (1100 * sizeFactorHeight), (int) (width*sizeFactorWidth),
+				(int) (height*sizeFactorHeight));
 		repaint();
+		revalidate();
 	}
 }

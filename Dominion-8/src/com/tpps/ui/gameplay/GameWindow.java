@@ -177,8 +177,6 @@ public class GameWindow extends JFrame {
 				String.valueOf(GameConstant.INIT_PURCHASES));
 		turn = new DisplayValue(-0.06, 0.6, 0.20, 0.18, 1, 1, 20, displayImageTurn, framework, "#");
 
-		loggerAdding(getWIDTH(), getHEIGHT());
-		chatWindowAdding(getWIDTH(), getHEIGHT());
 
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
@@ -191,6 +189,13 @@ public class GameWindow extends JFrame {
 		framework.addComponent(coin);
 		framework.addComponent(buy);
 		framework.addComponent(turn);
+		
+		framework.add(chatWindow);
+		framework.add(loggerPane);
+		/** TODO remove */
+		GameLog.log(MsgType.GAME, "REMOVE KEBAP !");
+		GameLog.log(MsgType.GAME, "REMOVE KEBAP !");
+		
 
 		this.addComponentListener(new MyComponentAdapter());
 
@@ -216,19 +221,6 @@ public class GameWindow extends JFrame {
 		}
 		return im;
 
-	}
-
-	private void loggerAdding(int width, int height) {
-		loggerPane.setBounds((int) (width * 0.5), (int) (height * 0.35), 200, 100);
-		framework.add(loggerPane);
-		/** TODO remove */
-		GameLog.log(MsgType.GAME, "REMOVE KEBAP !");
-		GameLog.log(MsgType.GAME, "REMOVE KEBAP !");
-	}
-
-	private void chatWindowAdding(int width, int height) {
-		chatWindow.setBounds((int) (width * 0.045), (int) (height * 0.03), 300, 150);
-		framework.add(chatWindow);
 	}
 
 	/**
@@ -514,6 +506,7 @@ public class GameWindow extends JFrame {
 		LinkedList<String> actionCardIds = new LinkedList<>(handCards.keySet());
 
 		int k = 14;
+		String handTrigger = "handCards";
 		double sub = handCards.size();
 		double shift = ((0.8 - (sub * 0.1))) / sub;
 		double shiftsmall = ((0.4 - (sub * 0.1))) / sub;
@@ -544,13 +537,13 @@ public class GameWindow extends JFrame {
 				if (i == 0) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), start += shift,
-							0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				} else {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							start += (shift + 0.1), 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							start += (shift + 0.1), 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				}
@@ -558,13 +551,13 @@ public class GameWindow extends JFrame {
 				if (i == 0) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							startsmall += shift, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							startsmall += shift, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				} else {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							startsmall += shiftsmall + 0.1, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							startsmall += shiftsmall + 0.1, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				}
@@ -854,8 +847,9 @@ public class GameWindow extends JFrame {
 	}
 
 	private void onResize(double relativeWidth, double relativeHeight) {
-		loggerPane.onResize(this.getWidth() , this.getHeight() - topGap, relativeWidth, relativeHeight, this);
-//		 chatWindow.onResize(this.getWidth(),this.getHeight(),relativeWidth,relativeHeight,this);
+		loggerPane.onResize(this.getWidth() , this.getHeight(), relativeWidth, relativeHeight, this);
+//		1280,720,2/3,2/3
+		 chatWindow.onResize(this.getWidth(),this.getHeight(),relativeWidth,relativeHeight,this);
 
 	}
 	public BufferedImage getBackgroundImage() {
