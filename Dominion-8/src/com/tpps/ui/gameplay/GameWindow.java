@@ -514,6 +514,7 @@ public class GameWindow extends JFrame {
 		LinkedList<String> actionCardIds = new LinkedList<>(handCards.keySet());
 
 		int k = 14;
+		String handTrigger = "handCards";
 		double sub = handCards.size();
 		double shift = ((0.8 - (sub * 0.1))) / sub;
 		double shiftsmall = ((0.4 - (sub * 0.1))) / sub;
@@ -544,13 +545,13 @@ public class GameWindow extends JFrame {
 				if (i == 0) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), start += shift,
-							0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				} else {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							start += (shift + 0.1), 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							start += (shift + 0.1), 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				}
@@ -558,13 +559,13 @@ public class GameWindow extends JFrame {
 				if (i == 0) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							startsmall += shift, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							startsmall += shift, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				} else {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							startsmall += shiftsmall + 0.1, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework);
+							startsmall += shiftsmall + 0.1, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				}

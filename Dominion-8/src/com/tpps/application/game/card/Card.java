@@ -38,6 +38,7 @@ public class Card extends GameObject {
 	private double relativeX, relativeY, relativeWidth, relativeHeight;
 	private Image sourceImage;
 	private GameBackground gameBackground;
+	private String handTrigger = "";
 	private static int classID = 0;
 
 	/**
@@ -147,6 +148,24 @@ public class Card extends GameObject {
 		// System.out.println(id);
 	}
 
+	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
+			String cardId, double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
+			int _layer, Image sourceImage, GraphicFramework _parent, String handTrigger) {
+		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
+		this.name = name;
+		this.actions = actions;
+		this.cost = cost;
+		this.sourceImage = sourceImage;
+		this.parent = _parent;
+		this.relativeX = relativeLocX;
+		this.relativeY = relativeLocY;
+		this.relativeWidth = relativeWidth;
+		this.relativeHeight = relativeHeight;
+		this.types = types;
+		this.id = cardId;
+		this.handTrigger = handTrigger;
+	}
+
 	/**
 	 * 
 	 * @return
@@ -204,26 +223,25 @@ public class Card extends GameObject {
 	}
 
 	/**
-	 * 
+	 * Hover animation
 	 */
 	@Override
 	public void onMouseEnter() {
-		// TODO card specific hover.
-		if (!(name.equals("Copper") || name.equals("Silver") || name.equals("Gold") || name.equals("Curse")
-				|| name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
-			gameBackground = new GameBackground(relativeX-0.025, relativeY+0.0725, relativeWidth + 0.08, relativeHeight + 0.24,
-					30, sourceImage, parent);
+		if (!(handTrigger.equals("handCards") || name.equals("Copper") || name.equals("Silver") || name.equals("Gold")
+				|| name.equals("Curse") || name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
+			gameBackground = new GameBackground(relativeX - 0.025, relativeY + 0.0725, relativeWidth + 0.08,
+					relativeHeight + 0.24, 101, sourceImage, parent);
 			parent.addComponent(gameBackground);
 		}
 	}
 
 	/**
-	 * 
+	 * Hover animation
 	 */
-	@Override
+	
 	public void onMouseExit() {
-		if (!(name.equals("Copper") || name.equals("Silver") || name.equals("Gold") || name.equals("Curse")
-				|| name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
+		if (!(handTrigger.equals("handCards") || name.equals("Copper") || name.equals("Silver") || name.equals("Gold")
+				|| name.equals("Curse") || name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
 			parent.removeComponent(gameBackground);
 		}
 	}
