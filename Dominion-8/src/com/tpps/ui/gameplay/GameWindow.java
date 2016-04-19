@@ -847,7 +847,7 @@ public class GameWindow extends JFrame {
 	}
 
 	private void onResize(double relativeWidth, double relativeHeight) {
-//		loggerPane.onResize(this.getWidth() , this.getHeight(), relativeWidth, relativeHeight, this);
+		loggerPane.onResize(this.getWidth() , this.getHeight(), relativeWidth, relativeHeight, this);
 //		1280,720,2/3,2/3
 		 chatWindow.onResize(this.getWidth(),this.getHeight(),relativeWidth,relativeHeight,this);
 

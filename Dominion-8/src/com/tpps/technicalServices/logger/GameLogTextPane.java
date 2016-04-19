@@ -91,12 +91,12 @@ public class GameLogTextPane extends JPanel {
 
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
 
-//		System.out.println(y+"y");
-		double width =  (sizeFactorWidth*x)/4;
-		double height =   (sizeFactorHeight*y)/4;
-//		this.setBounds(x-(int) (width*4), y- (int) topGap, width,height);
-//		this.setBounds(x-(int)(width*1.5),y-(int)(height/2),(int) width,(int) height);
-		this.setBounds(x-(int) (500*sizeFactorWidth),y-(int) (1200*sizeFactorHeight),(int) width,(int) height);
+		double width = x / 4;
+		double height = y / 4;
+		System.out.println(width+"Breite");
+		System.out.println(x+"position");
+		this.setBounds(x - (int) (1750 * sizeFactorWidth), y - (int) (1100 * sizeFactorHeight), (int) (width*sizeFactorWidth),
+				(int) (height*sizeFactorHeight));
 		repaint();
 		revalidate();
 	}

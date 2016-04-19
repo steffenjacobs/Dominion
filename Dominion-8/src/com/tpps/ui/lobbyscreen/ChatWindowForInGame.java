@@ -220,12 +220,8 @@ public class ChatWindowForInGame extends JPanel {
 	}
 
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
-		// System.out.println(y+"y");
 		double width = (sizeFactorWidth * x) / 4;
 		double height = (sizeFactorHeight * y) / 4;
-		// this.setBounds(x-(int) (width*4), y- (int) topGap, width,height);
-		// this.setBounds(x-(int)(width*1.5),y-(int)(height/2),(int) width,(int)
-		// height);
 		this.setBounds(x - (int) (500 * sizeFactorWidth), y - (int) (500 * sizeFactorHeight), (int) (width),
 				(int) height);
 		repaint();
