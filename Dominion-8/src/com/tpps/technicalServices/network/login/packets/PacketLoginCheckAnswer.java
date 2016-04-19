@@ -20,7 +20,6 @@ public class PacketLoginCheckAnswer extends Packet {
 
 	/**
 	 * @return the received request
-	 * @author Steffen Jacobs
 	 */
 	public PacketLoginCheckRequest getRequest() {
 		return this.request;
@@ -28,7 +27,6 @@ public class PacketLoginCheckAnswer extends Packet {
 
 	/**
 	 * @return the validation result 0: bad password, 1: success, 2: already logged in
-	 * @author Steffen Jacobs
 	 */
 	public int getState() {
 		return this.state;
@@ -36,7 +34,6 @@ public class PacketLoginCheckAnswer extends Packet {
 
 	/**
 	 * @return the validation result
-	 * @author Steffen Jacobs
 	 */
 	public UUID getSessionID() {
 		return this.sessionID;
@@ -45,7 +42,6 @@ public class PacketLoginCheckAnswer extends Packet {
 	/**
 	 * initializes the Packet with the request and the validation result
 	 * 
-	 * @author Steffen Jacobs
 	 * @param req the request packet
 	 * @param _state a boolean representation of the state of login
 	 * @param _sessionID UUID to verify the session (generated from the SessionServer)
@@ -59,7 +55,6 @@ public class PacketLoginCheckAnswer extends Packet {
 
 	/**
 	 * @return a readable String
-	 * @author Steffen Jacobs
 	 */
 	@Override
 	public String toString() {

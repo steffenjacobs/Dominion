@@ -82,13 +82,17 @@ public class LoginGUIController{
 	 * @author jhuhn - Johannes Huhn
 	 * @param state true if your login request ellaborated correctly, false else
 	 */
-	public void getStateOfLoginRequest(boolean state){
-		if (state) { // logged in successfully
+	public void getStateOfLoginRequest(int state){
+		if (state ==1) { // logged in successfully
 			JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.INFORMATION_MESSAGE);
 			this.logingui.dispose();
 			DominionController.getInstance().setUsername(this.loginclient.getUsername());
 			DominionController.getInstance().endLogin();			
-		} else {	//login request failed 
+		} else if(state == 2) {
+			//already logged in
+			JOptionPane.showMessageDialog(null, "Already logged in", "Login", JOptionPane.ERROR_MESSAGE);
+		}
+		else{//login request failed 
 			JOptionPane.showMessageDialog(null, "Wrong Password or nickname", "Login", JOptionPane.ERROR_MESSAGE);
 		}
 	}
