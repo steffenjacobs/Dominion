@@ -94,11 +94,17 @@ public class LoginClient extends PacketHandler {
 			switch (answer.getType()) {
 			case LOGIN_CHECK_ANSWER:
 				PacketLoginCheckAnswer check = (PacketLoginCheckAnswer) answer;
-				guicontroller.getStateOfLoginRequest(check.getState());
-				if (check.getState()) { // Anmeldung erfolgreich, pw richtig
+				guicontroller.getStateOfLoginRequest(check.getState()==1);
+				if (check.getState()==1) { // Anmeldung erfolgreich, pw richtig
 					this.setSessionid(check.getSessionID());
 					DominionController.getInstance().setSessionID(check.getSessionID());
 					c_session.keepAlive(username, true);
+				}
+				else if (check.getState()==0){
+					//TODO: bad password
+				}
+				else if (check.getState() == 2){
+					//TODO: already logged in
 				}
 				break;
 			case LOGIN_REGISTER_ANSWER:

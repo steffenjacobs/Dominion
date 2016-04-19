@@ -42,12 +42,12 @@ public class SessionPacketHandler extends PacketHandler {
 			super.output("-> Session-Get-Request for " + pack.getUsername());
 			if (SessionManager.hasSession(pack.getUsername())) {
 				requester.addPacketToQueue(
-						new PacketSessionGetAnswer(pack, SessionManager.getValidSession(pack.getUsername()), 1));
+						new PacketSessionGetAnswer(pack, SessionManager.getValidSession(pack.getUsername()), 2));
 				super.output("<- Already logged in: " + pack.getUsername());
 				break;
 			}
 			UUID uid = SessionManager.getValidSession(pack.getUsername());
-			requester.addPacketToQueue(new PacketSessionGetAnswer(pack, uid, 0));
+			requester.addPacketToQueue(new PacketSessionGetAnswer(pack, uid, 1));
 			super.output("<- Created Session: " + pack.getUsername() + " - " + uid.toString());
 			break;
 		case SESSION_CHECK_REQUEST:

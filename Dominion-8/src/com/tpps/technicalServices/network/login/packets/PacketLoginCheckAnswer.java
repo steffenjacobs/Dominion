@@ -16,7 +16,7 @@ public class PacketLoginCheckAnswer extends Packet {
 	private static final long serialVersionUID = 4238263297967404678L;
 	private final PacketLoginCheckRequest request;
 	private final UUID sessionID;
-	private final boolean state;
+	private final int state;
 
 	/**
 	 * @return the received request
@@ -27,10 +27,10 @@ public class PacketLoginCheckAnswer extends Packet {
 	}
 
 	/**
-	 * @return the validation result
+	 * @return the validation result 0: bad password, 1: success, 2: already logged in
 	 * @author Steffen Jacobs
 	 */
-	public boolean getState() {
+	public int getState() {
 		return this.state;
 	}
 
@@ -50,7 +50,7 @@ public class PacketLoginCheckAnswer extends Packet {
 	 * @param _state a boolean representation of the state of login
 	 * @param _sessionID UUID to verify the session (generated from the SessionServer)
 	 */
-	public PacketLoginCheckAnswer(PacketLoginCheckRequest req, boolean _state, UUID _sessionID) {
+	public PacketLoginCheckAnswer(PacketLoginCheckRequest req, int _state, UUID _sessionID) {
 		super(PacketType.LOGIN_CHECK_ANSWER);
 		this.request = req;
 		this.state = _state;

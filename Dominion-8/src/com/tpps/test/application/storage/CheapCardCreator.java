@@ -38,7 +38,7 @@ import com.tpps.technicalServices.util.GameConstant;
  *
  */
 public class CheapCardCreator {
-	private static final boolean DEBUG = false;
+	private static final boolean DEBUG = true;
 	private static final boolean REMOTE = true;
 	private static final boolean doCheck = true;
 	private static final boolean doSend = true;

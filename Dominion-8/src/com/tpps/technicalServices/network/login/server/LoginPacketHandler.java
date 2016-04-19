@@ -74,7 +74,7 @@ public class LoginPacketHandler extends PacketHandler{
 					SessionPacketSenderAPI.sendGetRequest(sessionclient, nickname, new SuperCallable<PacketSessionGetAnswer>() {						
 						@Override
 						public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer answer) {							
-							PacketLoginCheckAnswer checkAnswer = new PacketLoginCheckAnswer(pac, true, answer.getLoginSessionID());
+							PacketLoginCheckAnswer checkAnswer = new PacketLoginCheckAnswer(pac, answer.getAnswerCode(), answer.getLoginSessionID());
 							try {
 								server.sendMessage(waitingForSessionAnswer.remove(nickname), checkAnswer);
 							} catch (IOException e) {
@@ -85,12 +85,12 @@ public class LoginPacketHandler extends PacketHandler{
 					});
 				}else{
 					System.out.println("calculated hash doesn't match with hash out of the database");
-					PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, false, null);
+					PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, 0, null);
 					server.sendMessage(port, answer);
 				}
 			} catch (Exception e) {			
 			//	e.printStackTrace();
-				PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, false, null);
+				PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, 0, null);
 				try {
 					server.sendMessage(port, answer);
 				} catch (IOException e1) {

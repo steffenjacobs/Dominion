@@ -32,7 +32,7 @@ public class PacketSessionGetAnswer extends Packet {
 	}
 
 	/**
-	 * returns: 0: Success, 1: already logged in
+	 * returns: 1: Success, 2: already logged in
 	 * 
 	 * @return the answer-code for the session-get request
 	 */
