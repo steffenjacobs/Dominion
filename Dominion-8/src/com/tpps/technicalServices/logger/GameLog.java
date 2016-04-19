@@ -1,6 +1,7 @@
 package com.tpps.technicalServices.logger;
 
 import java.awt.Color;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
@@ -47,7 +48,7 @@ public class GameLog {
 	 * guiPossible: is the device is able to display a gui?
 	 * iWantAJFrame: do I want to have an extra JFrame for this? 
 	 */
-	// private static boolean guiPossible = !GraphicsEnvironment.isHeadless();
+	private static boolean guiPossible = !GraphicsEnvironment.isHeadless();
 	// private static boolean iWantAJFrame = false;
 
 	/**
@@ -68,7 +69,9 @@ public class GameLog {
 		/*if (displayUIWindow) {
 			 create UI if desired 
 		}*/
-		GameLog.textPane = new GameLogTextPane();
+		if (guiPossible) {
+			GameLog.textPane = new GameLogTextPane();
+		} else return;
 		write(team, timestampColor, false);
  		if (ansiFlag)
 			writeToConsole(ANSIUtil.getCyanText(team));
@@ -186,7 +189,7 @@ public class GameLog {
 	 * @param line the line to log
 	 */
 	public static void log(MsgType type, String line) {
-		if (isInitialized) {
+		if (isInitialized && guiPossible) {
 			if (type.getDisplay()) {
 				String msg = type.getTimeStamp() ? createTimestamp(type, true) + line : line;
 				writeToConsole(msg);
