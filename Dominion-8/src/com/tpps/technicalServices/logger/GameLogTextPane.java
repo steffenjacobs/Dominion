@@ -26,6 +26,8 @@ public class GameLogTextPane extends JPanel {
 
 	private JTextPane textPane;
 	private int topGap;
+	private int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+	private int maxHeight =	Toolkit.getDefaultToolkit().getScreenSize().height;	
 
 	/**
 	 * 
@@ -43,7 +45,8 @@ public class GameLogTextPane extends JPanel {
 		MsgType.setGameMode();
 		this.textPane = new JTextPane();
 		this.textPane.setEditable(false);
-		this.textPane.setFont(new Font("Courier New", Font.PLAIN, 14));
+//		this.textPane.setFont(new Font("Courier New", Font.PLAIN, 14));
+		this.textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
 		this.textPane.setBackground(GameLog.getBackgroundColor());
 		this.setLayout(new BorderLayout());
 		this.add(new JScrollPane(this.textPane));
@@ -53,8 +56,10 @@ public class GameLogTextPane extends JPanel {
 
 	/**
 	 * 
-	 * @param text the text to update on the JTextPane
-	 * @param fontColor the fontColor of the text
+	 * @param text
+	 *            the text to update on the JTextPane
+	 * @param fontColor
+	 *            the fontColor of the text
 	 */
 	public void updateTextArea(final String text, Color fontColor) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -71,13 +76,16 @@ public class GameLogTextPane extends JPanel {
 			}
 		});
 	}
-	
+
 	/**
 	 * 
-	 * @param line the line update
-	 * @param textColor the color of the line
-	 * @param timestamp determines whether there is a timestamp written in front of the text line
-	 *        so the line is only parsed if its necessary
+	 * @param line
+	 *            the line update
+	 * @param textColor
+	 *            the color of the line
+	 * @param timestamp
+	 *            determines whether there is a timestamp written in front of
+	 *            the text line so the line is only parsed if its necessary
 	 */
 	public void updateLogger(final String line, Color textColor, boolean timestamp) {
 		if (timestamp) {
@@ -91,12 +99,10 @@ public class GameLogTextPane extends JPanel {
 
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
 
-		double width = x / 4;
-		double height = y / 4;
-		System.out.println(width+"Breite");
-		System.out.println(x+"position");
-		this.setBounds(x - (int) (1750 * sizeFactorWidth), y - (int) (1100 * sizeFactorHeight), (int) (width*sizeFactorWidth),
-				(int) (height*sizeFactorHeight));
+		double width = (sizeFactorWidth * maxWidth) / 6;
+		double height = (sizeFactorHeight * maxHeight) / 6;
+		this.setBounds(x - (int) ((maxWidth/1.097) * sizeFactorWidth), y - (int) ((maxHeight*0.99) * sizeFactorHeight), (int) (width),
+				(int) (height));
 		repaint();
 		revalidate();
 	}
