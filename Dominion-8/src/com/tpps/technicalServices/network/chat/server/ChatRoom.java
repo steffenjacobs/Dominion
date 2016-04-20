@@ -318,6 +318,7 @@ public class ChatRoom {
 			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There is currently no vote");
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
+			return;
 		}		
 		
 		if(this.votekick.checkIfUserVoted(packet.getSender())){
