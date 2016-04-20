@@ -23,9 +23,9 @@ public class GameLog {
 	/**
 	 * Colors that can easily be changed for the UI Window
 	 */
-	private static Color backgroundColor = Color.WHITE;
+	private static Color backgroundColor = Color.BLACK;
 	private static Color timestampColor = ColorUtil.EPICBLUE;
-	private static Color msgColor = Color.BLACK;
+	private static Color msgColor = Color.WHITE;
 	
 	/**
 	 * @unused, for messageTypeColors see MsgType class

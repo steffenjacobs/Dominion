@@ -38,16 +38,7 @@ public class ArtificialIntelligence {
 	 */
 	public ArtificialIntelligence(Player player, UUID uuid) {
 		int CLIENT_ID = GameServer.getCLIENT_ID();
-		LinkedList<Card> startSet = GameServer.getInstance().getGameController().getGameBoard().getStartSet();
-
-		/**
-		 * FIX
-		 * */
-		this.player = new Player(CLIENT_ID, /* random default port */ 1995, startSet, "AI", uuid,  GameServer.getInstance());
-		/**
-		 * FIX
-		 * */
-		
+		this.player = player;
 		this.blacklist = this.getCardNamesFromStorage("Curse", "Copper", "Estate");
 		this.nextTurn = LinkedListMultimap.create();
 		this.cardStore = new CardStorageController("cards.bin");

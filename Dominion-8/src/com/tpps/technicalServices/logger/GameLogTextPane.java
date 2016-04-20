@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -25,7 +26,7 @@ import com.tpps.ui.gameplay.GameWindow;
 public class GameLogTextPane extends JPanel {
 
 	private JTextPane textPane;
-	private int topGap;
+	private JScrollPane scrollPane;
 	private int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private int maxHeight =	Toolkit.getDefaultToolkit().getScreenSize().height;	
 
@@ -41,7 +42,6 @@ public class GameLogTextPane extends JPanel {
 	 * constructor for Display JPanel
 	 */
 	public GameLogTextPane() {
-		this.topGap = Toolkit.getDefaultToolkit().getScreenSize().height / 6;
 		MsgType.setGameMode();
 		this.textPane = new JTextPane();
 		this.textPane.setEditable(false);
@@ -49,7 +49,10 @@ public class GameLogTextPane extends JPanel {
 		this.textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
 		this.textPane.setBackground(GameLog.getBackgroundColor());
 		this.setLayout(new BorderLayout());
-		this.add(new JScrollPane(this.textPane));
+		this.scrollPane = new JScrollPane(this.textPane);
+		this.scrollPane.setBorder(BorderFactory.createEmptyBorder());
+//		this.scrollPane.setFocusable(false);
+		this.add(scrollPane);
 		repaint();
 		revalidate();
 	}
@@ -101,8 +104,8 @@ public class GameLogTextPane extends JPanel {
 
 		double width = (sizeFactorWidth * maxWidth) / 6;
 		double height = (sizeFactorHeight * maxHeight) / 6;
-		this.setBounds(x - (int) ((maxWidth/1.097) * sizeFactorWidth), y - (int) ((maxHeight*0.99) * sizeFactorHeight), (int) (width),
-				(int) (height));
+		this.setBounds(x - (int) ((maxWidth/1.097) * sizeFactorWidth), y - (int) 
+				((maxHeight*0.999) * sizeFactorHeight), (int) (width), (int) (height));
 		repaint();
 		revalidate();
 	}
