@@ -392,7 +392,7 @@ public class SQLStatisticsHandler {
 		}
 	}
 
-	public static void addPlaytimeArray(String nickname, boolean[] winsAndLosses) {
+	public static void addLastWinOrLossArray(String nickname, boolean[] winsAndLosses) {
 		PreparedStatement stmt;
 		String text = "";
 		for (int i = 0; i < winsAndLosses.length; i++) {

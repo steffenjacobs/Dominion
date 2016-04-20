@@ -1,6 +1,8 @@
 package com.tpps.technicalServices.network.chat.server;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Map.Entry;
@@ -10,6 +12,8 @@ import com.tpps.technicalServices.network.chat.packets.PacketSendAnswer;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatAll;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatCommand;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatToClient;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLHandler;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 
 public class GlobalChat {
 	
@@ -17,6 +21,7 @@ public class GlobalChat {
 	private final static String servercommand2 = "show all clients";
 	private final static String servercommand3 = "show all ports";
 	private final static String servercommand4 = "show all clients by ports";
+	private final static String servercommand5 = "show statistic ";
 
 	private ChatServer server;
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
@@ -28,7 +33,7 @@ public class GlobalChat {
 	}
 	
 	public void sendChatToAll(PacketSendChatAll packet){
-		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + packet.getUsername() + ":" + packet.getChatmessage());
+		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + packet.getUsername() + ": " + packet.getChatmessage());
 		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 		    String nickname = entry.getKey();
 		    if(nickname.equals(packet.getUsername())){
@@ -87,7 +92,7 @@ public class GlobalChat {
 		switch(command.trim()){
 		case servercommand1: //send answer packet back to user, with all comands servercommand1 == /help
 			String allcomands = "Commands: \n/" + servercommand1 + "\n/" + servercommand2 + "\n/"
-			+ servercommand3 + "\n/" + servercommand4 + "\n";
+			+ servercommand3 + "\n/" + servercommand4 + "\n/" + servercommand5 + "<nickname> \n";
 			PacketSendAnswer answer = new PacketSendAnswer(allcomands);
 			try {
 				server.sendMessage(port, answer);
@@ -139,6 +144,44 @@ public class GlobalChat {
 				e.printStackTrace();
 			}
 			return true;			
+		}
+		//not in switch case, cause startsWith method is important
+		if(command.trim().startsWith(servercommand5)){
+			String[] split = command.trim().split("\\s+");
+			System.out.println(split[2]);
+			String nickname = split[2];
+			
+			SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
+			SQLHandler.connect();
+	
+			String line = "";		
+			ResultSet rs;
+			try {
+				rs = SQLStatisticsHandler.getStatisticsForPlayer(nickname);
+				rs.next();
+				String wins = "" + rs.getInt("wins");
+				String losses = "" + rs.getInt("losses");
+				String ratio = "" + rs.getDouble("win_loss");
+				String totalMatches = "" + rs.getInt("games_played");
+				String rank = "" + rs.getInt("rank");
+				line = nickname + ": \n" + "	wins: " + wins + "\n	"
+					+ "losses: " + losses + "\n	" + "ratio: " + ratio
+					+ "\n	" + "total matches: " + totalMatches + "\n	"
+					+ "rank: " + rank + "\n-------------------------\n";
+			} catch (SQLException e1) {				
+			//	e1.printStackTrace(); unknown user, resultset is empty
+				line = "unknown  user: " + nickname; 
+			}
+			System.out.println(line);
+
+			PacketSendAnswer answer5 = new PacketSendAnswer("User: " + line);
+			try {
+				this.server.sendMessage(port, answer5);
+			} catch (IOException e) {			
+				e.printStackTrace();
+			}	
+			SQLHandler.closeConnection();
+			return true;
 		}
 		return false;
 	}
