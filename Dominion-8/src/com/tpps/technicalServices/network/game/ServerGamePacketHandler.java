@@ -561,17 +561,21 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 	}
 	
-
+	/**
+	 * 
+	 * @param port
+	 * @param username
+	 * @param sessionID
+	 */
 	private void addAIAndCheckPlayerCount(int port, String username, UUID sessionID) {	
-		Player player = new Player(-1, port,
-				this.server.getGameController().getGameBoard().getStartSet(), username, sessionID, this.server);
+		Player player = new Player(-1, port, this.server.getGameController().getGameBoard().getStartSet(), username, sessionID, this.server);
 		try {
 			server.getGameController().addPlayer(player);
 		} catch (TooMuchPlayerException e) {
 			System.err.println("Haha steffen");
 			this.server.disconnect(port);
 		}
-		new ArtificialIntelligence(player, sessionID);
+		new ArtificialIntelligence(player, sessionID).start();
 	}
 
 	/**
@@ -590,8 +594,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				server.getGameController().startGame();
 				setUpGui();
 			}
-			System.out.println(
-					"registrate one more client to server with id: " + clientId + "listening on port: " + port);
+			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
 		} catch (TooMuchPlayerException tmpe) {
 			server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();

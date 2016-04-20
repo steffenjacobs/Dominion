@@ -3,6 +3,7 @@ package com.tpps.technicalServices.logger;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
