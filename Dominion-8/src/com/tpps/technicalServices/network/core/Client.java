@@ -72,7 +72,7 @@ public class Client {
 		int CONNECTION_TIMEOUT = 1500;
 		Socket clientSocket = null;
 		while (!Thread.interrupted()) {
-			GameLog.log(MsgType.NETWORK_INFO, "Trying to connect...");
+			GameLog.log(MsgType.NETWORK_INFO, "Trying to connect to " + address.toString() + "...");
 			this.connected = false;
 			try {
 				try {
@@ -99,6 +99,15 @@ public class Client {
 					Thread.sleep(CONNECTION_TIMEOUT);
 				}
 			} catch (IOException e) {
+				if (e.getMessage().startsWith("Network is unreachable")){
+					try {
+						GameLog.log(MsgType.NETWORK_ERROR, e.getMessage() + " to " + address.toString());
+						Thread.sleep(CONNECTION_TIMEOUT);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+				}
+				else
 				e.printStackTrace();
 			} catch (InterruptedException e) {
 				// do nothing: this exception is normal when the program

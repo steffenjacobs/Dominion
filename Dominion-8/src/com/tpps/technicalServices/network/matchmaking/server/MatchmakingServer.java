@@ -30,9 +30,13 @@ public class MatchmakingServer extends Server {
 		return PORT_MATCHMAKING;
 	}
 
-	/** main entry-point for the matchmaking-server 
-	 * @param args start-parameters
-	 * @throws IOException */
+	/**
+	 * main entry-point for the matchmaking-server
+	 * 
+	 * @param args
+	 *            start-parameters
+	 * @throws IOException
+	 */
 	public static void main(String[] args) throws IOException {
 		new MatchmakingServer(new InetSocketAddress(Addresses.getAllInterfaces(), PORT_MATCHMAKING),
 				new MatchmakingPacketHandler());
@@ -41,10 +45,11 @@ public class MatchmakingServer extends Server {
 	/**
 	 * constructor for the matchmaking-server; warning: blocks!
 	 * 
-	 * @param address the addres + port the server is listening on
+	 * @param address
+	 *            the addres + port the server is listening on
 	 * @param _handler
 	 *            a packet-handler for the server
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public MatchmakingServer(InetSocketAddress address, PacketHandler _handler) throws IOException {
 		super(address, _handler);
@@ -154,15 +159,14 @@ public class MatchmakingServer extends Server {
 	 *            the players to receive the packet
 	 * @param opponents
 	 *            all the players in the lobby
-	 * @param port the port the new game-server is waiting
+	 * @param port
+	 *            the port the new game-server is waiting
 	 */
-	public void sendSuccessPacket(Collection<MPlayer> receivers, String[] opponents, int port) {
+	public void sendSuccessPacket(MPlayer receiver, String[] opponents, int port) {
 
 		PacketMatchmakingSuccessful pms = new PacketMatchmakingSuccessful(opponents, port);
 		try {
-			for (MPlayer receiver : receivers) {
-				super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pms);
-			}
+			super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pms);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,16 +1,23 @@
 package com.tpps.technicalServices.network.matchmaking.server;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.Addresses;
+import com.tpps.technicalServices.network.core.Client;
+import com.tpps.technicalServices.network.core.PacketHandler;
+import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 
@@ -31,6 +38,8 @@ public final class MatchmakingController {
 		gameServersByLobby = new ConcurrentHashMap<>();
 		lobbiesByID = new ConcurrentHashMap<>();
 	}
+
+	private static ExecutorService exec = Executors.newCachedThreadPool();
 
 	private static ConcurrentHashMap<Integer, MPlayer> playersByPort;
 	private static ConcurrentHashMap<MPlayer, Integer> connectedPortsByPlayer;
@@ -102,7 +111,29 @@ public final class MatchmakingController {
 			gameServersByLobby.put(lobby, gsThread);
 			gsThread.start();
 			Thread.sleep(500);
-			MatchmakingServer.getInstance().sendSuccessPacket(lobby.getPlayers(), playerNames, freePort);
+			for (MPlayer pl : lobby.getPlayers()) {
+
+				/* add AI-dummy-clients (for Lukas) */
+				if (pl.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+					exec.submit(() -> {
+						try {
+							new Client(new InetSocketAddress(Addresses.getLocalHost(), freePort), new PacketHandler() {
+								@Override
+								public void handleReceivedPacket(int port, Packet packet) {
+									// do nothing - be dummy
+								}
+							}, false);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					});
+				}
+
+				else {
+					/* send success to client */
+					MatchmakingServer.getInstance().sendSuccessPacket(pl, playerNames, freePort);
+				}
+			}
 			blockPort.release(1);
 
 		} catch (InterruptedException | IOException e1) {
@@ -111,8 +142,10 @@ public final class MatchmakingController {
 
 	}
 
-	/** @return a random free port 
-	 * @throws IOException */
+	/**
+	 * @return a random free port
+	 * @throws IOException
+	 */
 	private static int getFreePort() throws IOException {
 		ServerSocket srv = new ServerSocket(0);
 		srv.close();
@@ -202,7 +235,8 @@ public final class MatchmakingController {
 	 * 
 	 * @param player
 	 *            the player to add
-	 * @param search whether to search for a lobby or not
+	 * @param search
+	 *            whether to search for a lobby or not
 	 */
 	public static void addPlayer(MPlayer player, boolean search) {
 		playersByPort.put(player.getConnectionPort(), player);
