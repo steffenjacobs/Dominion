@@ -182,7 +182,7 @@ public final class Matchmaker {
 				// TODO:
 				// save pck.getLobbyID() somewhere (-> DominionController?)
 				DominionController.getInstance().reveiveChatMessageFromChatServer(
-						"[BOT] You joined a lobby successful: id:" + pck.getLobbyID());
+						"[BOT] You joined a lobby successfully "/*: id:" + pck.getLobbyID()*/);
 				DominionController.getInstance().setLobbyID(pck.getLobbyID());
 				break;
 			case 2: // Lobby does not exist
