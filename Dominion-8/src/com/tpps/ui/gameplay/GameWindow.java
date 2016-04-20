@@ -9,6 +9,8 @@ import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
@@ -197,6 +199,41 @@ public class GameWindow extends JFrame {
 		GameLog.log(MsgType.GAME, "REMOVE KEBAP !");
 
 		this.addComponentListener(new MyComponentAdapter());
+		this.setFocusable(true);
+		this.addKeyListener(new KeyListener() {
+			
+			private boolean trigger = true;
+
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+/***
+ * 
+ * chatWindo pop up animation added
+ * @param e
+ */
+			public void keyPressed(KeyEvent e) {
+				if(Character.isSpaceChar(e.getKeyChar())){
+					if(trigger){
+					chatWindow.setVisible(false);
+					trigger = false;
+					}
+					else{
+						chatWindow.setVisible(true);
+						trigger = true;
+					}
+				}
+			}
+		});
 
 		this.revalidate();
 		this.repaint();

@@ -190,7 +190,7 @@ public class ChatWindowForInGame extends JPanel {
 			if (!ChatWindowForInGame.this.chatInputLine.getText().equals("")) {
 				ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());
 			}
-			ChatWindowForInGame.this.chatInputLine.requestFocus();
+//			ChatWindowForInGame.this.chatInputLine.requestFocus();
 		}
 	}
 
@@ -210,6 +210,10 @@ public class ChatWindowForInGame extends JPanel {
 		@Override
 		public void keyTyped(KeyEvent arg0) {
 		}
+	}
+	
+	public JTextField getChatInputLine() {
+		return chatInputLine;
 	}
 
 	public static void main(String[] args) {
