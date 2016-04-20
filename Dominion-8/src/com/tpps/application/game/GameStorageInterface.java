@@ -99,8 +99,6 @@ public class GameStorageInterface {
 	public void loadActionCardsAndPassToGameWindow(LinkedList<String> actionCardIds) {
 		
 		LinkedHashMap<String, SerializedCard> serializedCardWithId = loadCards(actionCardIds);
-		System.out.println(Arrays.toString(actionCardIds.toArray()));
-		System.out.println(Arrays.toString(serializedCardWithId.keySet().toArray()));
 		this.gameWindow.tableActionCards(serializedCardWithId);
 	}
 
