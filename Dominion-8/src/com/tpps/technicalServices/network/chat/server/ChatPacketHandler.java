@@ -94,7 +94,7 @@ public class ChatPacketHandler extends PacketHandler{
 			break;
 		case CHAT_CONTROLLER:
 			PacketChatController castedpacket6 = (PacketChatController) packet;
-			this.evaluateChatController(castedpacket6);
+			this.evaluateChatController(castedpacket6, port);
 			break;
 		default:
 			System.out.println("sth went wrong with received packet");
@@ -103,13 +103,23 @@ public class ChatPacketHandler extends PacketHandler{
 		}
 	}
 	
-	private void evaluateChatController(PacketChatController packet){
+	private void evaluateChatController(PacketChatController packet, int port){
+		System.out.println("received chatcommand");
 		switch(packet.getCommand()){
 		case "createChatroom":
-			this.addChatRoom(packet.getMembers());
+			int chatid = this.addChatRoom(packet.getMembers());
+			PacketChatController idPacket = new PacketChatController(chatid);
+			try {
+				this.server.sendMessage(port, idPacket);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			break;
 		case "deleteChatroom":
 			this.deleteChatRoom(packet.getMemberOfChatRoom());
+		case "addUser":
+			System.out.println("received command is a addUserCommand");
+			this.insertPlayerToChatRoom(packet.getUser(), packet.getChatroomId(), packet.getUserport());
 			break;
 		}
 	}
@@ -156,14 +166,17 @@ public class ChatPacketHandler extends PacketHandler{
 	 * @author jhuhn - Johannes Huhn
 	 * @param clients an arraylist of Strings which includes nicknames that should be all together in one chatroom
 	 */
-	public void addChatRoom(ArrayList<String> clients){
+	public int addChatRoom(ArrayList<String> clients){
 		ConcurrentHashMap<String, Integer> clientsByUserRoom = new ConcurrentHashMap<String, Integer>();
 		for (int j = 0; j < clients.size(); j++) {
 			int port = this.global.getClientsByUsername().get(clients.get(j));
 			this.global.getClientsByUsername().remove(clients.get(j));
 			clientsByUserRoom.put(clients.get(j), port);
 		}
-		this.chatrooms.add(new ChatRoom(clientsByUserRoom, server, this));
+		ChatRoom newRoom = new ChatRoom(clientsByUserRoom, server, this);
+		this.chatrooms.add(newRoom);
+		System.out.println("neue chatroom ID: " + newRoom.getId());
+		return newRoom.getId();
 	}
 		
 	/**
@@ -278,6 +291,17 @@ public class ChatPacketHandler extends PacketHandler{
 			this.server.sendMessage(port, answer);
 		} catch (IOException e) {			
 			e.printStackTrace();
+		}
+	}
+	
+	public void insertPlayerToChatRoom(String nickname, int chatroomId, int userport){
+		for (Iterator<ChatRoom> iterator = chatrooms.iterator(); iterator.hasNext();) {
+			ChatRoom chatRoom = (ChatRoom) iterator.next();
+			if(chatRoom.getId() == chatroomId){
+				chatRoom.getClientsByUsername().putIfAbsent(nickname, userport);
+				System.out.println("inserted player: " + nickname + " in chatroom: " + chatroomId);
+				return;
+			}
 		}
 	}
 	
