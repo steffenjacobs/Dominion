@@ -236,7 +236,7 @@ public class GlobalChatPanel extends JPanel{
 	public synchronized void appendChatGlobal(String chatmessage) {
 		GlobalChatPanel.this.chatInputLine.setText("");
 		this.textbox.append("ME: " + chatmessage.trim() + "\n");
-		DominionController.getInstance().sendChatMessage(chatmessage.trim() + "\n");
+		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e) {

@@ -154,7 +154,7 @@ public class ChatWindowForInGame extends JPanel {
 	public synchronized void appendChatGlobal(String chatmessage) {
 		ChatWindowForInGame.this.chatInputLine.setText("");
 		this.textbox.append("ME: " + chatmessage.trim() + "\n");
-		DominionController.getInstance().sendChatMessage(chatmessage.trim() + "\n");
+		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 		try {
 			Thread.sleep(1);
 		} catch (InterruptedException e) {
