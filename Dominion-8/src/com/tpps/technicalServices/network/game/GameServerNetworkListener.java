@@ -30,9 +30,9 @@ public class GameServerNetworkListener implements NetworkListener {
 			Player player = (Player) iterator.next();
 			
 				if (player.getPort() == port) {
-					if (player.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-						return;
-					}
+//					if (player.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+//						return;
+//					}
 					if (!this.gameServer.getDisconnectedUser().contains(player)) {
 						this.gameServer.getDisconnectedUser().add(player);
 					}
