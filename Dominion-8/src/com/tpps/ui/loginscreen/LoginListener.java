@@ -18,11 +18,13 @@ import javax.swing.JTextField;
 
 public class LoginListener implements MouseListener {
 
-	JButton clicked;
-	LogInGUI lg;
-	JTextField userinfo;
-	JPasswordField passwordbox;
-	LoginGUIController guicontroller;
+	private JButton clicked;
+	private JButton cancel;
+	private JButton createAccount;
+	
+	private JTextField userinfo;
+	private JPasswordField passwordbox;
+	private LoginGUIController guicontroller;
 
 	/**
 	 * simple constructor initialize all parameters
@@ -33,13 +35,14 @@ public class LoginListener implements MouseListener {
 	 * @param passwordbox
 	 */
 
-	public LoginListener(JButton clicked, LogInGUI logInGUI, JTextField userinfo, JPasswordField passwordbox,
-			LoginGUIController guicontroller) {
+	public LoginListener(JButton clicked, JTextField userinfo, JPasswordField passwordbox,
+			LoginGUIController guicontroller, JButton cancel, JButton createAccount) {
 		this.clicked = clicked;
-		lg = logInGUI;
 		this.userinfo = userinfo;
 		this.passwordbox = passwordbox;
 		this.guicontroller = guicontroller;
+		this.cancel = cancel;
+		this.createAccount = createAccount;
 	}
 
 	/**
@@ -55,14 +58,13 @@ public class LoginListener implements MouseListener {
 		} else if (clicked.getText().equals("Cancel")) {
 			System.exit(0);
 		}
-
-		// for Johannes and his further works..
 		else if (clicked.getText().equals("Login")) {
+			System.out.println("disabled");
+			this.clicked.setEnabled(false);
+			this.cancel.setEnabled(false);
+			this.createAccount.setEnabled(false);
 			// -------------------------------
-			// new LoginClient().handlelogin(userinfo.getText(),
-			// String.valueOf(passwordbox.getPassword()));
 			guicontroller.createLoginClient(userinfo.getText(), String.valueOf(passwordbox.getPassword()));
-
 			// -------------------------------
 		}
 	}

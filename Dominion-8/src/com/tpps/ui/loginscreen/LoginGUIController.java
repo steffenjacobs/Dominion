@@ -17,7 +17,6 @@ public class LoginGUIController{
 	private LogInGUI logingui;
 	private CreateAccount createaccount;
 	private LoginClient loginclient;
-	DominionController domCon;
 	
 	/**
 	 * Initializes this object
@@ -107,5 +106,17 @@ public class LoginGUIController{
 	
 	public UUID getUUID(){
 		return this.loginclient.getSessionid();
+	}
+	
+	public void handleExecuteButton(boolean enable){
+		this.logingui.getExecute().setEnabled(enable);
+	}
+	
+	public void handleCancelButton(boolean enable){
+		this.logingui.getCancel().setEnabled(enable);
+	}
+	
+	public void handleAccountCreatorButton(boolean enable){
+		this.logingui.getCreateAccount().setEnabled(enable);
 	}
 }

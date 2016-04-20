@@ -100,6 +100,10 @@ public class LoginClient extends PacketHandler {
 					DominionController.getInstance().setSessionID(check.getSessionID());
 					c_session.keepAlive(username, true);
 				}
+				DominionController.getInstance().getLoginGuiController().handleExecuteButton(true);
+				DominionController.getInstance().getLoginGuiController().handleCancelButton(true);
+				DominionController.getInstance().getLoginGuiController().handleAccountCreatorButton(true);
+				System.out.println("enabled");
 				break;
 			case LOGIN_REGISTER_ANSWER:
 				PacketRegisterAnswer check2 = (PacketRegisterAnswer) answer;

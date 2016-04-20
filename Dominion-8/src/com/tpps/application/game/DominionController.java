@@ -419,4 +419,8 @@ public final class DominionController {
 			e.printStackTrace();
 		}
 	}
+	
+	public LoginGUIController getLoginGuiController() {
+		return loginGuiController;
+	}
 }

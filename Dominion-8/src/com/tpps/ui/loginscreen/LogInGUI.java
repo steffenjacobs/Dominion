@@ -40,6 +40,7 @@ public class LogInGUI extends JFrame {
 	private int height;
 	private Container c;
 	private JButton execute;
+
 	private JButton cancel;
 	private ImageIcon loading;
 	private BufferedImage background;
@@ -73,20 +74,6 @@ public class LogInGUI extends JFrame {
 		this.userinfo.setText(username);
 		this.passwordbox.setText(plaintext);
 	}
-
-	/**
-	 * If new Account created, this constructor will be used by the Class
-	 * CreateAccount
-	 * 
-	 * @param text
-	 * @param password
-	 */
-
-	// public LogInGUI(String text, char[] password) {
-	// createdComponent();
-	// this.userinfo.setText(text);
-	// this.passwordbox.setText(String.valueOf(password));
-	// }
 
 	/**
 	 * All components merged together
@@ -340,18 +327,32 @@ public class LogInGUI extends JFrame {
 		c.add(all);
 		panels[3].revalidate();
 
-		createAccount.addMouseListener(new LoginListener(createAccount, this, userinfo, passwordbox, guicontroller));
-		cancel.addMouseListener(new LoginListener(cancel, this, userinfo, passwordbox, guicontroller));
-		execute.addMouseListener(new LoginListener(execute, this, userinfo, passwordbox, guicontroller));
+		createAccount.addMouseListener(new LoginListener(createAccount, userinfo, passwordbox, guicontroller, cancel, createAccount));
+		cancel.addMouseListener(new LoginListener(cancel, userinfo, passwordbox, guicontroller, cancel, createAccount));
+		execute.addMouseListener(new LoginListener(execute, userinfo, passwordbox, guicontroller, cancel, createAccount));
 	}
 
-	/**
-	 * a testing main
-	 * 
-	 * @param args
-	 */
+	public JButton getExecute() {
+		return execute;
+	}
 
-	// public static void main(String[] args) {
-	// new LogInGUI(null);
-	// }
+	public void setExecute(JButton execute) {
+		this.execute = execute;
+	}
+
+	public JButton getCancel() {
+		return cancel;
+	}
+
+	public void setCancel(JButton cancel) {
+		this.cancel = cancel;
+	}
+
+	public JButton getCreateAccount() {
+		return createAccount;
+	}
+
+	public void setCreateAccount(JButton createAccount) {
+		this.createAccount = createAccount;
+	}
 }
