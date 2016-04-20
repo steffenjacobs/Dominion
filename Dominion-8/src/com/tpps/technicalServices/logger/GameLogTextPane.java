@@ -45,7 +45,8 @@ public class GameLogTextPane extends JPanel {
 		MsgType.setGameMode();
 		this.textPane = new JTextPane();
 		this.textPane.setEditable(false);
-		this.textPane.setFont(new Font("Courier New", Font.PLAIN, 14));
+//		this.textPane.setFont(new Font("Courier New", Font.PLAIN, 14));
+		this.textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
 		this.textPane.setBackground(GameLog.getBackgroundColor());
 		this.setLayout(new BorderLayout());
 		this.add(new JScrollPane(this.textPane));

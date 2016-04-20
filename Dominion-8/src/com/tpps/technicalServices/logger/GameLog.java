@@ -74,9 +74,9 @@ public class GameLog {
 		} else return;
 		write(team, timestampColor, false);
  		if (ansiFlag)
-			writeToConsole(ANSIUtil.getCyanText(team));
+			writeToConsole(ANSIUtil.getCyanText(team + " Ready."));
 		else
-			writeToConsole(team);
+			writeToConsole(team + "\n");
 		GameLog.log(MsgType.INIT, "GameLogger initialized");
 	}
 
