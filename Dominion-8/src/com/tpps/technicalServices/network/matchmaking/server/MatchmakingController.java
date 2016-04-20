@@ -19,6 +19,7 @@ import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.GameServer;
+import com.tpps.technicalServices.network.gameSession.packets.PacketRegistratePlayerByServer;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 
 /**
@@ -117,12 +118,15 @@ public final class MatchmakingController {
 				if (pl.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 					exec.submit(() -> {
 						try {
-							new Client(new InetSocketAddress(Addresses.getLocalHost(), freePort), new PacketHandler() {
-								@Override
-								public void handleReceivedPacket(int port, Packet packet) {
-									// do nothing - be dummy
-								}
-							}, false);
+							Client cl = new Client(new InetSocketAddress(Addresses.getLocalHost(), freePort),
+									new PacketHandler() {
+										@Override
+										public void handleReceivedPacket(int port, Packet packet) {
+											// do nothing - be dummy
+										}
+									}, false);
+							cl.sendMessage(new PacketRegistratePlayerByServer("AI" + System.identityHashCode(cl),
+									UUID.fromString("00000000-0000-0000-0000-000000000000")));
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
