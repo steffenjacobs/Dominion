@@ -96,7 +96,6 @@ public final class MatchmakingController {
 				try {
 					new GameServer(freePort);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			});
