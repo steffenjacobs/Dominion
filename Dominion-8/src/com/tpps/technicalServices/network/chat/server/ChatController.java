@@ -14,6 +14,7 @@ public class ChatController extends PacketHandler{
 	
 	private static Client chatclient;
 	private static ChatController instance;
+	private int id;
 	
 	public ChatController() { }
 	
@@ -59,8 +60,23 @@ public class ChatController extends PacketHandler{
 			e.printStackTrace();
 		}
 	}
+	
+	public void addUserToChatRoom(String nickname, int userport ){
+		PacketChatController packet = new PacketChatController("addUser", nickname, userport, this.id);
+		try {
+			ChatController.chatclient.sendMessage(packet);
+		} catch (IOException e) {		
+			e.printStackTrace();
+		}
+		System.out.println("sent packet to add a user");
+	}
 
 	@Override
-	public void handleReceivedPacket(int port, Packet packet) { }
+	public void handleReceivedPacket(int port, Packet packet) { 
+		//TODO: get chatroom id
+	}
 	
+	public int getId() {
+		return id;
+	}
 }

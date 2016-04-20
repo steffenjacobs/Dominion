@@ -12,6 +12,10 @@ public class PacketChatController extends Packet{
 	private ArrayList<String> members;
 	private String memberOfChatRoom;
 	
+	private String user;
+	private int userport;
+	private int chatroomId;
+	
 	
 	public PacketChatController(String command, ArrayList<String> members) {
 		super(PacketType.CHAT_CONTROLLER); 
@@ -23,6 +27,26 @@ public class PacketChatController extends Packet{
 		super(PacketType.CHAT_CONTROLLER); 
 		this.command = command;
 		this.memberOfChatRoom = memberOfChatRoom;
+	}
+	
+	
+	/**
+	 * constructor to add a user to a chatroom
+	 * @param command
+	 * @param user
+	 * @param userport
+	 */
+	public PacketChatController(String command, String user, int userport, int chatroomId) {
+		super(PacketType.CHAT_CONTROLLER); 
+		this.command = command;
+		this.user = user;
+		this.userport = userport;
+		this.chatroomId = chatroomId;
+	}
+	
+	public PacketChatController(int chatRoomId) {
+		super(PacketType.CHAT_CONTROLLER); 
+		this.chatroomId = chatRoomId;
 	}
 
 	@Override
@@ -41,5 +65,16 @@ public class PacketChatController extends Packet{
 	public String getMemberOfChatRoom() {
 		return memberOfChatRoom;
 	}
-
+	
+	public String getUser() {
+		return user;
+	}
+	
+	public int getUserport() {
+		return userport;
+	}
+	
+	public int getChatroomId() {
+		return chatroomId;
+	}
 }
