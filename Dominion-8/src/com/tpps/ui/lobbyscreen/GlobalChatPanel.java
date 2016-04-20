@@ -12,6 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -158,7 +161,7 @@ public class GlobalChatPanel extends JPanel{
 		sendButton.setContentAreaFilled(false);
 		sendButton.setBorderPainted(true);
 		sendButton.setOpaque(false);
-		sendButton.addActionListener(new SendButtonListener());
+		sendButton.addMouseListener(new SendButtonListener());
 		return sendButton;
 	}
 	
@@ -167,7 +170,7 @@ public class GlobalChatPanel extends JPanel{
 	 * @return a JTextField with semitransparent look and white characters, used to type in chatmessages
 	 */
 	private JTextField initChatInputLine(){
-		chatInputLine = new JTextField("Type in your chatmessage"){
+		chatInputLine = new JTextField("Type in /help for commands"){
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -180,6 +183,12 @@ public class GlobalChatPanel extends JPanel{
 			}
 			
 		};
+        chatInputLine.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                chatInputLine.setText("");
+            }
+        });
 		chatInputLine.setFont(font);
 		chatInputLine.setCaretColor(Color.WHITE);
 		chatInputLine.setForeground(Color.WHITE);
@@ -267,16 +276,27 @@ public class GlobalChatPanel extends JPanel{
 	 * @author jhuhn - Johannes Huhn
 	 *
 	 */
-	private class SendButtonListener implements ActionListener{
+	private class SendButtonListener implements MouseListener{
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void mouseClicked(MouseEvent e) { }
+
+		@Override
+		public void mouseEntered(MouseEvent e) { }
+
+		@Override
+		public void mouseExited(MouseEvent e) { }
+
+		@Override
+		public void mousePressed(MouseEvent e) {
 			if(!GlobalChatPanel.this.chatInputLine.getText().equals("")){
 				GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());				
 			}
 			GlobalChatPanel.this.chatInputLine.requestFocus();
 		}
-		
+
+		@Override
+		public void mouseReleased(MouseEvent e) { }
 	}
 
 	/**

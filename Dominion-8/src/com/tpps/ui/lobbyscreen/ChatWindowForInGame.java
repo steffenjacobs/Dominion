@@ -101,7 +101,7 @@ public class ChatWindowForInGame extends JPanel {
 	}
 
 	private JTextField initChatInputLine() {
-		chatInputLine = new JTextField("Type in your chatmessage") {
+		chatInputLine = new JTextField("Type in /help for commands") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -134,7 +134,7 @@ public class ChatWindowForInGame extends JPanel {
 		sendButton.setContentAreaFilled(false);
 		sendButton.setBorderPainted(true);
 		sendButton.setOpaque(false);
-		sendButton.addActionListener(new SendButtonListener());
+		sendButton.addMouseListener(new SendButtonListener());
 		return sendButton;
 	}
 
@@ -196,15 +196,27 @@ public class ChatWindowForInGame extends JPanel {
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 
-	private class SendButtonListener implements ActionListener {
+	private class SendButtonListener implements MouseListener {
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void mouseClicked(MouseEvent e) { }
+
+		@Override
+		public void mouseEntered(MouseEvent e) { }
+
+		@Override
+		public void mouseExited(MouseEvent e) { }
+
+		@Override
+		public void mousePressed(MouseEvent e) {
 			if (!ChatWindowForInGame.this.chatInputLine.getText().equals("")) {
 				ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());
 			}
-//			ChatWindowForInGame.this.chatInputLine.requestFocus();
+			ChatWindowForInGame.this.chatInputLine.requestFocus();
 		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) { }
 	}
 
 	private class ChatButtonInputListener implements KeyListener {
