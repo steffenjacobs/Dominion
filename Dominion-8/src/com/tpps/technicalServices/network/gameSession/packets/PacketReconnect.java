@@ -1,5 +1,7 @@
 package com.tpps.technicalServices.network.gameSession.packets;
 
+import java.util.UUID;
+
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
@@ -11,7 +13,8 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
  */
 public class PacketReconnect extends Packet {
 	
-	private final int clientId;
+	private final UUID sessionID;
+	private String username;
 	private static final long serialVersionUID = -3390002980740295573L;
 
 	/**
@@ -20,19 +23,29 @@ public class PacketReconnect extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketReconnect(int clientId) {
+	public PacketReconnect(UUID sessionID, String username) {
 		super(PacketType.RECONNECT);
-		this.clientId = clientId;
+		this.sessionID = sessionID;
+		this.username = username;
 	}
 	
 	
 	/**
-	 * 
-	 * @return the clientId
+	 * @return the sessionID
 	 */
-	public int getClientId() {
-		return clientId;
+	public UUID getSessionID() {
+		return this.sessionID;
 	}
+	
+	/**
+	 * 
+	 * @return the username
+	 */
+	public String getUsername() {
+		return this.username;
+	}
+	
+	
 
 
 
@@ -42,6 +55,7 @@ public class PacketReconnect extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + "clientId: " + this.clientId;
+		return this.getClass().getSimpleName() + "sessionID:" + this.sessionID + 
+				"username: " + this.username;
 	}
 }

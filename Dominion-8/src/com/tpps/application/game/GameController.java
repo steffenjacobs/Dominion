@@ -34,7 +34,6 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketTakeCards;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketGameEnd;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 import com.tpps.technicalServices.util.CollectionsUtil;
-import com.tpps.technicalServices.util.GameConstant;
 
 /**
  * @author Lukas Adler
@@ -141,10 +140,10 @@ public class GameController {
 	public void setNextActivePlayer() {
 		Player activePlayer = this.getActivePlayer();
 		LinkedList<Player> players = this.getPlayers();
-		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
+		for (int i = 0; i < this.players.size(); i++) {
 			Player player = players.get(i);
 			if (player.equals(activePlayer)) {
-				this.setActivePlayer(players.get(i < GameConstant.HUMAN_PLAYERS - 1 ? i + 1 : 0));
+				this.setActivePlayer(players.get(i < this.players.size() - 1 ? i + 1 : 0));
 				break;
 			}
 		}

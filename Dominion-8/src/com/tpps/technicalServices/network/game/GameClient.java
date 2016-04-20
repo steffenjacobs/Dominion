@@ -26,6 +26,7 @@ public class GameClient extends Client {
 		this.gameWindow = new GameWindow();
 		_handler.setGameWindow(gameWindow);
 		_handler.setGameStorageInterface(new GameStorageInterface(gameWindow));
+		super.getListenerManager().registerListener(new GameClientNetworkListener(this));
 		registrateByServer();
 	}
 	
@@ -38,7 +39,8 @@ public class GameClient extends Client {
 	 * @throws IOException
 	 */
 	private void registrateByServer() throws IOException {
-		this.sendMessage(new PacketRegistratePlayerByServer(DominionController.getInstance().getUsername()));
+		this.sendMessage(new PacketRegistratePlayerByServer(DominionController.getInstance().getUsername(),
+				DominionController.getInstance().getSessionID()));
 	}
 
 	/**

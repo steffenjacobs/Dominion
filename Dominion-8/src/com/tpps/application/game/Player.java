@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
@@ -38,10 +39,9 @@ public class Player {
 	private String name; // oder sollen wir hier ein Tupel machen mit id und zugehörigem namen?
 	// getter hinzufügen
 	private static int playerID = 0;
-
+	private UUID sessionID;
 	private final int CLIENT_ID;
 	private int port;
-
 	private int actions;
 	private int buys;
 	private int coins;
@@ -59,7 +59,7 @@ public class Player {
 	 * @param clientID
 	 * @param port
 	 */
-	public Player(Deck deck, int clientID, int port, String name, GameServer gameServer) {
+	public Player(Deck deck, int clientID, int port, String name, UUID uuid, GameServer gameServer) {
 		this.reactionCard = false;
 		this.discardMode = false;
 		this.trashMode = false;
@@ -75,6 +75,7 @@ public class Player {
 		this.setAsideCards = new LinkedList<Card>();
 		this.deck = deck;
 		this.id = playerID++;
+		this.sessionID = uuid;
 		this.actions = GameConstant.INIT_ACTIONS;
 		this.buys = GameConstant.INIT_PURCHASES;
 		this.coins = GameConstant.INIT_TREASURES;
@@ -91,8 +92,8 @@ public class Player {
 	 * @param port
 	 * @param initCards
 	 */
-	public Player(int clientID, int port, LinkedList<Card> initCards, String name, GameServer gameServer) {
-		this(new Deck(initCards), clientID, port, name, gameServer);
+	public Player(int clientID, int port, LinkedList<Card> initCards, String name, UUID uuid, GameServer gameServer) {
+		this(new Deck(initCards), clientID, port, name, uuid, gameServer);
 	}
 
 	/**
@@ -102,6 +103,18 @@ public class Player {
 		this.coins = 0;
 		this.buys = 1;
 		this.actions = 1;
+	}
+	
+	/**
+	 * 
+	 * @return the uuid
+	 */
+	public UUID getSessionID() {
+		return sessionID;
+	}
+	
+	public void updateSessionID(UUID sessionID) {
+		this.sessionID = sessionID;
 	}
 
 	/**

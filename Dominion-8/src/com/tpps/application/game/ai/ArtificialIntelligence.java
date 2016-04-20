@@ -1,6 +1,7 @@
 package com.tpps.application.game.ai;
 
 import java.util.LinkedList;
+import java.util.UUID;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -35,14 +36,14 @@ public class ArtificialIntelligence {
 	 * with the cardStore the AI can compare every handcard with the original card 'image' of the backend
 	 * computing is a flag which indicates whether the AI is already computing the next turn or does nothing at the momant
 	 */
-	public ArtificialIntelligence() {
+	public ArtificialIntelligence(Player player, UUID uuid) {
 		int CLIENT_ID = GameServer.getCLIENT_ID();
 		LinkedList<Card> startSet = GameServer.getInstance().getGameController().getGameBoard().getStartSet();
 
 		/**
 		 * FIX
 		 * */
-		this.player = new Player(CLIENT_ID, /* random default port */ 1995, startSet, "AI", GameServer.getInstance());
+		this.player = new Player(CLIENT_ID, /* random default port */ 1995, startSet, "AI", uuid,  GameServer.getInstance());
 		/**
 		 * FIX
 		 * */

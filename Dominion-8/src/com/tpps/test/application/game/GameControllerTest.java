@@ -19,7 +19,7 @@ public class GameControllerTest {
 		this.gameServer = new GameServer(1339);
 		this.gameControlller = new GameController(gameServer);
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++){
-		this.gameControlller.addPlayer(new Player(GameServer.getCLIENT_ID(), 80 + i, gameServer.getGameController().getGameBoard().getStartSet(), "test" + i, gameServer));
+//		this.gameControlller.addPlayer(new Player(GameServer.getCLIENT_ID(), 80 + i, gameServer.getGameController().getGameBoard().getStartSet(), "test" + i, gameServer));
 		}
 	}
 	

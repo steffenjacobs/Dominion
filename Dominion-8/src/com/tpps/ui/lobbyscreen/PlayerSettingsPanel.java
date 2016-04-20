@@ -284,8 +284,10 @@ public class PlayerSettingsPanel extends JPanel{
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			System.out.println("click");
-			ArtificialIntelligence ai1 = new ArtificialIntelligence();
-			DominionController.getInstance().sendAIPacket(ai1.getPlayer().getPlayerName());
+			
+//			??
+//			ArtificialIntelligence ai1 = new ArtificialIntelligence();
+			DominionController.getInstance().sendAIPacket("todo test ai" + System.identityHashCode(this));
 		}
 	}
 	
