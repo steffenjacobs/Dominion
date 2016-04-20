@@ -3,7 +3,6 @@ package com.tpps.technicalServices.logger;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -65,9 +64,6 @@ public class GameLog {
 	public static void init() {
 		GameLog.isInitialized = true;
 		String team = "Game Log\n";
-		/*
-		 * if (displayUIWindow) { create UI if desired }
-		 */
 		if (guiPossible) {
 			GameLog.textPane = new GameLogTextPane();
 		} else
@@ -186,7 +182,7 @@ public class GameLog {
 	/**
 	 * log the message with message type to the ui (if GameLog.guiPossible is
 	 * true) and console
-	 * 
+	 *
 	 * @param type
 	 *            the message type of the message to log
 	 * @param line
@@ -206,22 +202,26 @@ public class GameLog {
 
 	// /**
 	// * log the message with message type to the ui (if GameLog.guiPossible is
-	// true) and console
+	// * true) and console
 	// *
-	// * @param type the message type of the message to log
-	// * @param line the line to log
+	// * @param type
+	// * the message type of the message to log
+	// * @param line
+	// * the line to log
 	// */
 	// public static void log(MsgType type, String line) {
 	// if (isInitialized) {
 	// if (type.getDisplay()) {
-	// /** die folgende Zeile wuerde vor jeden GameLog.log(MsgType.GAME, "");
-	// den Namen des aktuellen Spielers setzen
-	// da man aber evtl schreiben will "--- Nico's Turn ---" und nicht Nico: ---
-	// Nico's Turn --- denke ich es ist besser
-	// das immer von Hand davor zu schreiben
-	// String msg = type.equals(MsgType.GAME) ?
-	// GameServer.getInstance().getGameController().getActivePlayerName() + ": "
-	// : ""; */
+	// /**
+	// * die folgende Zeile wuerde vor jeden GameLog.log(MsgType.GAME,
+	// * ""); den Namen des aktuellen Spielers setzen da man aber evtl
+	// * schreiben will "--- Nico's Turn ---" und nicht Nico: ---
+	// * Nico's Turn --- denke ich es ist besser das immer von Hand
+	// * davor zu schreiben String msg = type.equals(MsgType.GAME) ?
+	// * GameServer
+	// * .getInstance().getGameController().getActivePlayerName() +
+	// * ": " : "";
+	// */
 	// String msg = type.getTimeStamp() ? createTimestamp(type, true) + line :
 	// line;
 	// writeToConsole(msg);

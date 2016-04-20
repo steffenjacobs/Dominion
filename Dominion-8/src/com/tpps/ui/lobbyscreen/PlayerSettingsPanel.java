@@ -89,14 +89,14 @@ public class PlayerSettingsPanel extends JPanel{
 		
 		center.add(Box.createVerticalStrut(SPACE_PLAYER_TO_PLAYER));
 		center.add(connectedPlayers[0]);
-		center.add(Box.createVerticalStrut(SPACE_PLAYER_TO_PLAYER));
 		
+		center.add(Box.createVerticalStrut(SPACE_PLAYER_TO_PLAYER));
 		center.add(connectedPlayers[1]);
-		center.add(Box.createVerticalStrut(SPACE_PLAYER_TO_PLAYER));
 		
+		center.add(Box.createVerticalStrut(SPACE_PLAYER_TO_PLAYER));
 		center.add(connectedPlayers[2]);
-		center.add(Box.createVerticalStrut(SPACE_PLAYER_TO_PLAYER));
 		
+		center.add(Box.createVerticalStrut(SPACE_PLAYER_TO_PLAYER));
 		center.add(connectedPlayers[3]);
 		
 		JTextField header = this.createHeader("Connected Players:");		
@@ -164,13 +164,13 @@ public class PlayerSettingsPanel extends JPanel{
 
 		@Override
 		public void mouseClicked(MouseEvent e) {	
-			if(e.getSource() == labelImages[0]){
+			if(e.getSource() == labelImages[0]) {
 				PlayerSettingsPanel.this.changeSelectedPicture(0);
-			}else if(e.getSource() == labelImages[1]){
+			} else if(e.getSource() == labelImages[1]) {
 				PlayerSettingsPanel.this.changeSelectedPicture(1);
-			}else if(e.getSource() == labelImages[2]){
+			} else if(e.getSource() == labelImages[2]) {
 				PlayerSettingsPanel.this.changeSelectedPicture(2);
-			}else if(e.getSource() == labelImages[3]){
+			} else if(e.getSource() == labelImages[3]) {
 				PlayerSettingsPanel.this.changeSelectedPicture(3);
 			}
 		}
