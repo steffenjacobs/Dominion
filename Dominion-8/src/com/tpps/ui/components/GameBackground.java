@@ -66,8 +66,7 @@ public class GameBackground extends GameObject {
 
 	@Override
 	public void onMouseDrag() {
-		// TODO Auto-generated method stub
-
+		GameWindow.getInstance().requestFocus();
 	}
 
 	/**

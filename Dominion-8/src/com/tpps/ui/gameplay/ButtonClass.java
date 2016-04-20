@@ -234,7 +234,146 @@ public class ButtonClass extends GFButton {
 	 * checking
 	 */
 	public void onMouseDrag() {
-		System.out.println("dragged " + this.toString());
+		if (DominionController.getInstance().isTurnFlag()) {
+			if (this.getCaption().equals("")) {
+				System.exit(0);
+			}
+			if (this.getCaption().equals("End ActionPhase")) {
+				try {
+					System.out.println("EndActionPhase");
+					this.getFramework().removeComponent(this);
+					this.getFramework().addComponent(GameWindow.playTreasures);
+					DominionController.getInstance().getGameClient().sendMessage(new PacketEndActionPhase());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (this.getCaption().equals("Play Treasures")) {
+				try {
+					System.out.println("PacketPlayTreasures");
+					this.getFramework().removeComponent(this);
+					DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			System.out.println("Caption: " + this.getCaption());
+			if (this.getCaption().equals("End Turn")) {
+				try {
+					this.getFramework().addComponent(GameWindow.endActionPhase);
+					System.out.println("Packet EndTurn");
+					DominionController.getInstance().getGameClient().sendMessage(new PacketEndTurn());
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+				}
+			}
+			if (this.getCaption().equals("Stop Discard")) {
+				try {
+					System.out.println("packet send end discard mode");
+					DominionController.getInstance().getGameClient().sendMessage(new PacketEndDiscardMode());
+					this.getFramework().removeComponent(this);
+				} catch (IOException e) {
+
+					e.printStackTrace();
+				}
+			}
+			if (this.getCaption().equals("Stop Trash")) {
+				try {
+					DominionController.getInstance().getGameClient().sendMessage(new PacketEndTrashMode());
+					this.getFramework().removeComponent(this);
+				} catch (IOException e) {
+
+					e.printStackTrace();
+				}
+			}
+			if (this.getCaption().equals("Discard Deck")) {
+				try {
+					System.out.println("PacketDiscardDeck");
+					DominionController.getInstance().getGameClient().sendMessage(new PacketDiscardDeck());
+					this.getFramework().removeComponent(this);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (this.getCaption().equals("End Reactions")) {
+				GameClient gameClient = DominionController.getInstance().getGameClient();
+				try {
+					gameClient.sendMessage(new PacketEndReactions(gameClient.getClientId()));
+					this.getFramework().removeComponent(this);
+					this.getFramework().addComponent(GameWindow.endActionPhase);
+					this.getFramework().addComponent(GameWindow.endTurn);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			if (this.getCaption().equals("Take Cards")) {
+				GameClient gameClient = DominionController.getInstance().getGameClient();
+				try {
+					gameClient.sendMessage(new PacketTakeCards(gameClient.getClientId()));
+					this.getFramework().removeComponent(this);
+					this.getFramework().removeComponent(GameWindow.putBack);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			if (this.getCaption().equals("Put Back")) {
+				GameClient gameClient = DominionController.getInstance().getGameClient();
+				try {
+					gameClient.sendMessage(new PacketPutBackCards(gameClient.getClientId()));
+					this.getFramework().removeComponent(this);
+					this.getFramework().removeComponent(GameWindow.takeCards);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (this.getCaption().equals("Take Thief Cards")) {
+				GameClient gameClient = DominionController.getInstance().getGameClient();
+				try {
+					gameClient.sendMessage(new PacketTakeThiefCards());
+					this.getFramework().removeComponent(GameWindow.takeThiefCards);
+					this.getFramework().removeComponent(GameWindow.putBackThiefCards);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (this.getCaption().equals("Put Back Thief Cards")) {
+				GameClient gameClient = DominionController.getInstance().getGameClient();
+				try {
+					gameClient.sendMessage(new PacketPutBackThiefCards());
+					this.getFramework().removeComponent(GameWindow.putBackThiefCards);
+					this.getFramework().removeComponent(GameWindow.takeThiefCards);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (this.getCaption().equals("Take Drawed Card")) {
+				System.out.println("take drawedCard");
+				GameClient gameClient = DominionController.getInstance().getGameClient();
+				try {
+					gameClient.sendMessage(new PacketTakeDrawedCard());
+					this.getFramework().removeComponent(GameWindow.takeDrawedCard);
+					this.getFramework().removeComponent(GameWindow.setAsideDrawedCard);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (this.getCaption().equals("Set Aside Drawed Card")) {
+				GameClient gameClient = DominionController.getInstance().getGameClient();
+				try {
+					gameClient.sendMessage(new PacketSetAsideDrawedCard());
+					this.getFramework().removeComponent(GameWindow.takeDrawedCard);
+					this.getFramework().removeComponent(GameWindow.setAsideDrawedCard);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 
 	}
 
