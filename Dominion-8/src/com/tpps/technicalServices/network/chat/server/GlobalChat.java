@@ -33,15 +33,13 @@ public class GlobalChat {
 		    String nickname = entry.getKey();
 		    if(nickname.equals(packet.getUsername())){
 		    	continue;
-		    }				    
-		    if(!chathandler.isUserInChatRoom(nickname)){ //nötig ?, copy paste fehler^^
-		    	try {
-					this.server.sendMessage(entry.getValue(), answer);
-				} catch (IOException e) {						
-					e.printStackTrace();
-					continue;
-				}
-		   }
+		    }  
+		    try {
+				this.server.sendMessage(entry.getValue(), answer);
+			} catch (IOException e) {						
+				e.printStackTrace();
+				continue;
+			}		   
 		}
 	}
 	
@@ -101,10 +99,8 @@ public class GlobalChat {
 			StringBuffer buf = new StringBuffer("All connected clients: \n");
 			Enumeration<String> clients = this.clientsByUsername.keys();
 			while (clients.hasMoreElements()) {
-				String user = clients.nextElement();
-				if(!this.chathandler.isUserInChatRoom(user)){
-					buf.append(user + "\n");
-				}								
+				String user = clients.nextElement();				
+				buf.append(user + "\n");												
 			}
 			PacketSendAnswer answer2 = new PacketSendAnswer(buf.toString());
 			try {
@@ -115,13 +111,10 @@ public class GlobalChat {
 			return true;
 		case servercommand3: //show all ports
 			StringBuffer buf2 = new StringBuffer("All connected ports: \n");
-			Enumeration<Integer> ports = this.clientsByUsername.elements();
-			Enumeration<String> clients2 = this.clientsByUsername.keys();
+			Enumeration<Integer> ports = this.clientsByUsername.elements();			
 			while (ports.hasMoreElements()) {
 				int port2 = ports.nextElement();
-				if(!this.chathandler.isUserInChatRoom(clients2.nextElement())){
-					buf2.append(port2 + "\n");
-				}							
+				buf2.append(port2 + "\n");						
 			}
 			PacketSendAnswer answer3 = new PacketSendAnswer(buf2.toString());
 			try {
@@ -137,9 +130,7 @@ public class GlobalChat {
 			while (clients3.hasMoreElements()) {
 				String user = clients3.nextElement();
 				int port3 = ports3.nextElement();
-				if(!this.chathandler.isUserInChatRoom(user)){
-					buf3.append(user + " : " + port3 + "\n");
-				}				
+				buf3.append(user + " : " + port3 + "\n");			
 			}
 			PacketSendAnswer answer4 = new PacketSendAnswer(buf3.toString());
 			try {

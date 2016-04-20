@@ -1,6 +1,8 @@
 package com.tpps.technicalServices.network.chat.server;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.tpps.technicalServices.network.chat.packets.PacketChatController;
 import com.tpps.technicalServices.network.chat.packets.PacketChatHandshake;
 import com.tpps.technicalServices.network.chat.packets.PacketChatVote;
+import com.tpps.technicalServices.network.chat.packets.PacketSendAnswer;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatAll;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatCommand;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatToClient;
@@ -270,6 +273,12 @@ public class ChatPacketHandler extends PacketHandler{
 		chatroom.getClientsByUsername().remove(usertogetkicked, port);
 		
 		this.global.getClientsByUsername().put(usertogetkicked, port);
+		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "[BOT]: You joined the global chat \n");
+		try {
+			this.server.sendMessage(port, answer);
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
 	}
 	
 	private class Listener implements NetworkListener{

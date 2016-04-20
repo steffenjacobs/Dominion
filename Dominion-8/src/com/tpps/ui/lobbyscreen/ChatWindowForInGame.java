@@ -72,7 +72,7 @@ public class ChatWindowForInGame extends JPanel {
 		textbox.setLineWrap(true);
 		textbox.setOpaque(false);
 		textbox.setText("Welcome to our chatserver \n");
-		font = new Font("Calibri", Font.PLAIN, 20);
+		font = new Font("Calibri", Font.PLAIN, 12);
 		textbox.setFont(font);
 		scrollpane = new JScrollPane(textbox) {
 			private static final long serialVersionUID = 1L;
