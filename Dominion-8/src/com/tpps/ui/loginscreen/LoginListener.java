@@ -59,10 +59,6 @@ public class LoginListener implements MouseListener {
 			System.exit(0);
 		}
 		else if (clicked.getText().equals("Login")) {
-			System.out.println("disabled");
-			this.clicked.setEnabled(false);
-			this.cancel.setEnabled(false);
-			this.createAccount.setEnabled(false);
 			// -------------------------------
 			guicontroller.createLoginClient(userinfo.getText(), String.valueOf(passwordbox.getPassword()));
 			// -------------------------------

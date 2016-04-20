@@ -24,6 +24,7 @@ public class LoginGUIController{
 	 */
 	public LoginGUIController(){
 		logingui = new LogInGUI(this);
+		loginclient = new LoginClient(this);
 	}
 	
 	/**
@@ -34,7 +35,6 @@ public class LoginGUIController{
 	 * @param plaintext a String representation as a plaintext of the password
 	 */
 	public void createLoginClient(String nickname, String plaintext){
-		loginclient = new LoginClient(this);
 		loginclient.handlelogin(nickname, plaintext);
 	}
 	
@@ -47,10 +47,7 @@ public class LoginGUIController{
 		createaccount = new CreateAccount(this);
 	}
 	
-	public void createAccountWithServer(String username, String plaintext, String email){
-		if(loginclient == null){
-			loginclient = new LoginClient(this);
-		}
+	public void createAccountWithServer(String username, String plaintext, String email){		
 		loginclient.handleAccountCreation(username, plaintext, email);
 	}
 	
@@ -106,17 +103,5 @@ public class LoginGUIController{
 	
 	public UUID getUUID(){
 		return this.loginclient.getSessionid();
-	}
-	
-	public void handleExecuteButton(boolean enable){
-		this.logingui.getExecute().setEnabled(enable);
-	}
-	
-	public void handleCancelButton(boolean enable){
-		this.logingui.getCancel().setEnabled(enable);
-	}
-	
-	public void handleAccountCreatorButton(boolean enable){
-		this.logingui.getCreateAccount().setEnabled(enable);
 	}
 }

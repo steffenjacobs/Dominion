@@ -1,6 +1,8 @@
 package com.tpps.technicalServices.network.chat.server;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -15,6 +17,8 @@ import com.tpps.technicalServices.network.chat.packets.PacketSendAnswer;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatAll;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatCommand;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatToClient;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLHandler;
+import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 
 /**
  * This class delivers all functionalities to run a chatroom
@@ -35,6 +39,7 @@ public class ChatRoom {
 	private final static String servercommand5 = "votekick <nickname>";
 	private final static String servercommand6 = "vote [y/n] only use in a active vote";
 	private final static String servercommand7 = "show votekickresults";
+	private final static String servercommand8 = "show all statistics";
 	
 	private String votekickresults;	
 	private Votekick votekick;
@@ -175,6 +180,9 @@ public class ChatRoom {
 		case servercommand7:
 			this.evaluateCommand7(packet);
 			break;
+		case servercommand8:
+			this.evaluateCommand8(packet);
+			break;
 		default:
 			PacketSendAnswer answer5 = new PacketSendAnswer("Wrong command: " + packet.getChatmessage());
 			try {
@@ -186,6 +194,42 @@ public class ChatRoom {
 		}		
 	}
 	
+	private void evaluateCommand8(PacketSendChatCommand packet){
+		SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
+		SQLHandler.connect();
+	
+		String result = "";
+		String line = "";
+		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
+			String nextMember = entry.getKey();
+			try {
+				ResultSet rs = SQLStatisticsHandler.getStatisticsForPlayer(nextMember.trim());
+				rs.next();
+				String wins = "" + rs.getInt("wins");
+				String losses = "" + rs.getInt("losses");
+				String ratio = "" + rs.getDouble("win_loss");
+				String totalMatches = "" + rs.getInt("games_played");
+				String rank = "" + rs.getInt("rank");
+				line = nextMember + ": \n" + "	wins: " + wins + "\n	"
+						+ "losses: " + losses + "\n	" + "ratio: " + ratio
+						+ "\n	" + "total matches: " + totalMatches + "\n	"
+						+ "rank: " + rank + "\n-------------------------\n";
+				result += line;
+				System.out.println(line);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				continue;				
+			}
+		}
+		PacketSendAnswer answer5 = new PacketSendAnswer("ALL STATISTICS IN ROOM: \n" + result);
+		try {
+			this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer5);
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}	
+		SQLHandler.closeConnection();
+	}
+	
 	/**
 	 * executes the help command
 	 * @param packet the packet that received the server from a client
@@ -194,7 +238,8 @@ public class ChatRoom {
 		String msg = "Commands: \n/" + servercommand1 + "\n/"
 				+ servercommand2 + "\n/" + servercommand3 + "\n/"
 				+ servercommand4 + "\n/" + servercommand5 + "\n/"
-				+ servercommand6 + "\n/" + servercommand7 + "\n";
+				+ servercommand6 + "\n/" + servercommand7 + "\n/"
+				+ servercommand8 + "\n";
 		PacketSendAnswer answer = new PacketSendAnswer(msg);
 		try {
 			this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);

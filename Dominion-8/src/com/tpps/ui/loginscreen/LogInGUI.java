@@ -331,28 +331,4 @@ public class LogInGUI extends JFrame {
 		cancel.addMouseListener(new LoginListener(cancel, userinfo, passwordbox, guicontroller, cancel, createAccount));
 		execute.addMouseListener(new LoginListener(execute, userinfo, passwordbox, guicontroller, cancel, createAccount));
 	}
-
-	public JButton getExecute() {
-		return execute;
-	}
-
-	public void setExecute(JButton execute) {
-		this.execute = execute;
-	}
-
-	public JButton getCancel() {
-		return cancel;
-	}
-
-	public void setCancel(JButton cancel) {
-		this.cancel = cancel;
-	}
-
-	public JButton getCreateAccount() {
-		return createAccount;
-	}
-
-	public void setCreateAccount(JButton createAccount) {
-		this.createAccount = createAccount;
-	}
 }
