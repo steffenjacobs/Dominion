@@ -8,8 +8,13 @@ import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -135,9 +140,17 @@ public class ChatWindowForInGame extends JPanel {
 
 	private JPanel createChatInputArea() {
 		chatInputLine = this.initChatInputLine();
+        chatInputLine.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                chatInputLine.setText("");
+            }
+        });
+		
 		sendButton = this.initSendButton();
 
 		JPanel center = new JPanel();
+//		center.addFocusListener(new FordFocus());
 		center.setLayout(new BoxLayout(center, BoxLayout.LINE_AXIS));
 		center.setOpaque(false);
 		center.add(chatInputLine);
