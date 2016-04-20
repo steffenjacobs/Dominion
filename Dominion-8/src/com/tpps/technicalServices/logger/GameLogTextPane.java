@@ -26,6 +26,8 @@ public class GameLogTextPane extends JPanel {
 
 	private JTextPane textPane;
 	private int topGap;
+	private int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+	private int maxHeight =	Toolkit.getDefaultToolkit().getScreenSize().height;	
 
 	/**
 	 * 
@@ -96,9 +98,9 @@ public class GameLogTextPane extends JPanel {
 
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
 
-		double width = (sizeFactorWidth * Toolkit.getDefaultToolkit().getScreenSize().width) / 6;
-		double height = (sizeFactorHeight * Toolkit.getDefaultToolkit().getScreenSize().height) / 6;
-		this.setBounds(x - (int) (1750 * sizeFactorWidth), y - (int) (1100 * sizeFactorHeight), (int) (width),
+		double width = (sizeFactorWidth * maxWidth) / 6;
+		double height = (sizeFactorHeight * maxHeight) / 6;
+		this.setBounds(x - (int) ((maxWidth/1.097) * sizeFactorWidth), y - (int) ((maxHeight*0.99) * sizeFactorHeight), (int) (width),
 				(int) (height));
 		repaint();
 		revalidate();

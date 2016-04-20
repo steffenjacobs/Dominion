@@ -226,7 +226,7 @@ public class ChatWindowForInGame extends JPanel {
 		double width = (sizeFactorWidth * maxWidth) / 4;
 		double height = (sizeFactorHeight * maxHeight) / 4;
 		//3.84
-		this.setBounds(x - (int) ((maxWidth/4) * sizeFactorWidth), y - (int) ((maxHeight/2.16) * sizeFactorHeight), (int) (width),
+		this.setBounds(x - (int) ((maxWidth/3.5) * sizeFactorWidth), y - (int) ((maxHeight/2.16) * sizeFactorHeight), (int) (width),
 				(int) height);
 		repaint();
 		revalidate();
