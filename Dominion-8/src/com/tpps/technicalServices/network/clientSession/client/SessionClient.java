@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.clientSession.server.SessionManager;
 import com.tpps.technicalServices.network.core.Client;
 
 /**
@@ -20,14 +21,13 @@ public class SessionClient extends Client {
 
 	private static final boolean DEBUG = false;
 	private static Timer scheduler = null;
-	private static int DELTA_SEND_KEEP_ALIVE_MILLISECONDS = 5000;
 
 	/**
 	 * constructor for session-client
 	 * 
 	 * @param address
 	 *            SocketAddress to connect to
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public SessionClient(SocketAddress address) throws IOException {
 		super(address, new SessionPacketReceiver(), false);
@@ -59,8 +59,10 @@ public class SessionClient extends Client {
 	 * sets wheter keep-alive packets should be sent for a given user. You can
 	 * only send keep-alive-packets for one user at a time
 	 * 
-	 * @param username the user-name to keep alive
-	 * @param state whether to keep alive or stop keeping-alive the user 
+	 * @param username
+	 *            the user-name to keep alive
+	 * @param state
+	 *            whether to keep alive or stop keeping-alive the user
 	 */
 	public void keepAlive(final String username, boolean state) {
 		if (state) {
@@ -79,7 +81,7 @@ public class SessionClient extends Client {
 				public void run() {
 					SessionPacketSenderAPI.sendKeepAlive(instance, username);
 				}
-			}, 0, DELTA_SEND_KEEP_ALIVE_MILLISECONDS);
+			}, 0, SessionManager.getExpiration() / 3);
 		} else {
 			if (scheduler != null) {
 				scheduler.cancel();
@@ -102,7 +104,7 @@ public class SessionClient extends Client {
 		}
 	}
 
-	/**@return if debugging is switched on*/
+	/** @return if debugging is switched on */
 	public static boolean debug() {
 		return DEBUG;
 	}
