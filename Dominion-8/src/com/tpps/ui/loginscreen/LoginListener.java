@@ -67,8 +67,16 @@ public class LoginListener implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
+		if (clicked.getText().equals("New Account")) {
+			guicontroller.createAccountGUI();
+		} else if (clicked.getText().equals("Cancel")) {
+			System.exit(0);
+		}
+		else if (clicked.getText().equals("Login")) {
+			// -------------------------------
+			guicontroller.createLoginClient(userinfo.getText(), String.valueOf(passwordbox.getPassword()));
+			// -------------------------------
+		}
 	}
 
 	@Override
