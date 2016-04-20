@@ -150,7 +150,7 @@ public class MainMenuPanel extends JPanel {
 		 * reacts on mouseclicked event
 		 */
 		@Override
-		public void mouseClicked(MouseEvent e) {
+		public void mousePressed(MouseEvent e) {
 			MyAudioPlayer.doClick();
 			if (buttons[0].isOn(e.getX(), e.getY())) {
 				MainMenuPanel.this.parent.dispose();
