@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 
 /** @author Steffen Jacobs */
 public class SessionManager {
@@ -92,7 +94,7 @@ public class SessionManager {
 	public static UUID getValidSession(String username) {
 		UUID sessionID = validSessions.getIfPresent(username);
 		if (sessionID == null) {
-			System.out.println("Generating new UUID for player " + username + "...");
+			GameLog.log(MsgType.NETWORK_INFO, "Generating new UUID for player " + username + "...");
 			sessionID = generateUUID();
 			validSessions.put(username, sessionID);
 		}

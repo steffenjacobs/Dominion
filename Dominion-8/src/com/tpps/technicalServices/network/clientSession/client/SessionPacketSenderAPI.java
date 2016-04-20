@@ -40,7 +40,7 @@ public final class SessionPacketSenderAPI {
 				e.printStackTrace();
 			}
 		} else {
-			System.err.println("Network Error: No connnection");
+			GameLog.log(MsgType.NETWORK_ERROR, "Can't send packet without connection!");
 		}
 	}
 
