@@ -79,7 +79,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 							"sessionID: " + packetRegistratePlayerByServer.getSessionID());
 					addPlayerAndCheckPlayerCount(port, clientId, packetRegistratePlayerByServer.getUsername(),
 							packetRegistratePlayerByServer.getSessionID());
-				}else {
+				} else {
 					this.server.disconnect(port);
 				}
 				break;

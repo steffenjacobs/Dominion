@@ -54,8 +54,7 @@ public final class Matchmaker {
 	 */
 	public void sendAIPacket(String name, UUID lobbyID) throws IOException {
 		checkAndCreateClient();
-		client.sendMessage(
-				new PacketJoinLobby(name, UUID.fromString("00000000-0000-0000-0000-000000000000"), lobbyID, true));
+		client.sendMessage( new PacketJoinLobby(name, UUID.fromString("00000000-0000-0000-0000-000000000000"), lobbyID, true));
 		System.out.println("Sent request to join lobby " + lobbyID.toString());
 	}
 

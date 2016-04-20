@@ -280,7 +280,7 @@ public class PlayerSettingsPanel extends JPanel{
 		return options;
 	}
 	
-	private class KiListener implements ActionListener{
+	private class KiListener implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			System.out.println("click");

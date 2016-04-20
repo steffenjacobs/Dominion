@@ -12,8 +12,9 @@ import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.ColorUtil;
 
 /**
- * TODO update comments in the following 4 classes: GameLog, GameLogUI,
- * GameLogTextPane, MsgType
+ * 
+ * @author nicolaswipfler
+ *
  */
 public class GameLog {
 
