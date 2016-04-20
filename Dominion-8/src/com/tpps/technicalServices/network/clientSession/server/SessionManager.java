@@ -15,7 +15,7 @@ public class SessionManager {
 
 	private static final int MAX_CACHE_SIZE = 10000;
 	private static final int MAX_CONCURRENT_USERS = 5;
-	private static final int EXPIRATION_TIME_SECONDS = 120;
+	private static final int EXPIRATION_TIME_SECONDS = 30;
 
 	// represents a cache which entries will be auto-removed after
 	// EXPIRATION_TIME_SECONDS
