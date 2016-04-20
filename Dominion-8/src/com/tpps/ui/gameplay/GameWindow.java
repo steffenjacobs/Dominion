@@ -99,7 +99,7 @@ public class GameWindow extends JFrame {
 		this.loggerPane = GameLog.getTextPane();
 		this.chatWindow = new ChatWindowForInGame();
 		this.topGap = Toolkit.getDefaultToolkit().getScreenSize().height / 4;
-//		this.leftGap = Toolkit.getDefaultToolkit().getScreenSize().width / 7;
+		// this.leftGap = Toolkit.getDefaultToolkit().getScreenSize().width / 7;
 
 		this.handCards = new LinkedList<Card>();
 		this.tableCards = new LinkedList<Card>();
@@ -125,7 +125,8 @@ public class GameWindow extends JFrame {
 
 		this.add(framework);
 
-//		backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
+		// backgroundImage = this.loadingImage(backgroundImage,
+		// "resources/img/gamePlay/GameBackground.jpg");
 		backgroundImage = DominionController.selectedGameImage;
 		System.out.println("THIRD: " + backgroundImage);
 		closeImage = this.loadingImage(closeImage, "resources/img/gameObjects/close.png");
@@ -177,7 +178,6 @@ public class GameWindow extends JFrame {
 				String.valueOf(GameConstant.INIT_PURCHASES));
 		turn = new DisplayValue(-0.06, 0.6, 0.20, 0.18, 1, 1, 20, displayImageTurn, framework, "#");
 
-
 		framework.addComponent(new GameBackground(0, 0, 1, 1, 0, backgroundImage, framework));
 		framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, tableImage, framework));
 		framework.addComponent(closeButton);
@@ -189,13 +189,12 @@ public class GameWindow extends JFrame {
 		framework.addComponent(coin);
 		framework.addComponent(buy);
 		framework.addComponent(turn);
-		
+
 		framework.add(chatWindow);
 		framework.add(loggerPane);
 		/** TODO remove */
 		GameLog.log(MsgType.GAME, "REMOVE KEBAP !");
 		GameLog.log(MsgType.GAME, "REMOVE KEBAP !");
-		
 
 		this.addComponentListener(new MyComponentAdapter());
 
@@ -537,13 +536,14 @@ public class GameWindow extends JFrame {
 				if (i == 0) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), start += shift,
-							0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
+							0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework, handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				} else {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							start += (shift + 0.1), 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
+							start += (shift + 0.1), 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,
+							handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				}
@@ -551,13 +551,15 @@ public class GameWindow extends JFrame {
 				if (i == 0) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							startsmall += shift, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
+							startsmall += shift, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,
+							handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				} else {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							startsmall += shiftsmall + 0.1, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,handTrigger);
+							startsmall += shiftsmall + 0.1, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,
+							handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				}
@@ -839,19 +841,20 @@ public class GameWindow extends JFrame {
 			int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 			int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-			onResize(width / Double.parseDouble(Integer.toString(maxWidth)),
-					height / Double.parseDouble(Integer.toString(maxHeight)));
+			 onResize(width / Double.parseDouble(Integer.toString(maxWidth)),
+			 height / Double.parseDouble(Integer.toString(maxHeight)));
 			repaint();
 		}
 
 	}
 
 	private void onResize(double relativeWidth, double relativeHeight) {
-		loggerPane.onResize(this.getWidth() , this.getHeight(), relativeWidth, relativeHeight, this);
-//		1280,720,2/3,2/3
-		 chatWindow.onResize(this.getWidth(),this.getHeight(),relativeWidth,relativeHeight,this);
+		loggerPane.onResize(this.getWidth(), this.getHeight(), relativeWidth, relativeHeight, this);
+		// 1280,720,2/3,2/3
+		chatWindow.onResize(this.getWidth(), this.getHeight(), relativeWidth, relativeHeight, this);
 
 	}
+
 	public BufferedImage getBackgroundImage() {
 		return backgroundImage;
 	}
@@ -867,7 +870,7 @@ public class GameWindow extends JFrame {
 	public int getHEIGHT() {
 		return HEIGHT;
 	}
-	
+
 	public ChatWindowForInGame getChatWindow() {
 		return chatWindow;
 	}

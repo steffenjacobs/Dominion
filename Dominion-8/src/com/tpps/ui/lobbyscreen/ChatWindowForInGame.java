@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -36,6 +37,8 @@ public class ChatWindowForInGame extends JPanel {
 	private JScrollPane scrollpane;
 	private JTextField chatInputLine;
 	private JButton sendButton;
+	private int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+	private int maxHeight =	Toolkit.getDefaultToolkit().getScreenSize().height;	
 	private final int SPACE_FROM_CHATINPUT_TO_BUTTON = 20;
 	private static final float BLACK_TRANSPARENCY = 0.6F;
 
@@ -220,9 +223,10 @@ public class ChatWindowForInGame extends JPanel {
 	}
 
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
-		double width = (sizeFactorWidth * x) / 4;
-		double height = (sizeFactorHeight * y) / 4;
-		this.setBounds(x - (int) (500 * sizeFactorWidth), y - (int) (500 * sizeFactorHeight), (int) (width),
+		double width = (sizeFactorWidth * maxWidth) / 4;
+		double height = (sizeFactorHeight * maxHeight) / 4;
+		//3.84
+		this.setBounds(x - (int) ((maxWidth/4) * sizeFactorWidth), y - (int) ((maxHeight/2.16) * sizeFactorHeight), (int) (width),
 				(int) height);
 		repaint();
 		revalidate();

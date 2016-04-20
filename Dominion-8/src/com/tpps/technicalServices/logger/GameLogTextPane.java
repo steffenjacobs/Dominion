@@ -53,8 +53,10 @@ public class GameLogTextPane extends JPanel {
 
 	/**
 	 * 
-	 * @param text the text to update on the JTextPane
-	 * @param fontColor the fontColor of the text
+	 * @param text
+	 *            the text to update on the JTextPane
+	 * @param fontColor
+	 *            the fontColor of the text
 	 */
 	public void updateTextArea(final String text, Color fontColor) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -71,13 +73,16 @@ public class GameLogTextPane extends JPanel {
 			}
 		});
 	}
-	
+
 	/**
 	 * 
-	 * @param line the line update
-	 * @param textColor the color of the line
-	 * @param timestamp determines whether there is a timestamp written in front of the text line
-	 *        so the line is only parsed if its necessary
+	 * @param line
+	 *            the line update
+	 * @param textColor
+	 *            the color of the line
+	 * @param timestamp
+	 *            determines whether there is a timestamp written in front of
+	 *            the text line so the line is only parsed if its necessary
 	 */
 	public void updateLogger(final String line, Color textColor, boolean timestamp) {
 		if (timestamp) {
@@ -91,12 +96,10 @@ public class GameLogTextPane extends JPanel {
 
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
 
-		double width = x / 4;
-		double height = y / 4;
-		System.out.println(width+"Breite");
-		System.out.println(x+"position");
-		this.setBounds(x - (int) (1750 * sizeFactorWidth), y - (int) (1100 * sizeFactorHeight), (int) (width*sizeFactorWidth),
-				(int) (height*sizeFactorHeight));
+		double width = (sizeFactorWidth * Toolkit.getDefaultToolkit().getScreenSize().width) / 6;
+		double height = (sizeFactorHeight * Toolkit.getDefaultToolkit().getScreenSize().height) / 6;
+		this.setBounds(x - (int) (1750 * sizeFactorWidth), y - (int) (1100 * sizeFactorHeight), (int) (width),
+				(int) (height));
 		repaint();
 		revalidate();
 	}
