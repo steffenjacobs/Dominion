@@ -61,12 +61,14 @@ public class GameBackground extends GameObject {
 
 	@Override
 	public void onMouseClick() {
-		GameWindow.getInstance().requestFocus();
+		if (this.layer == 0)
+			GameWindow.getInstance().requestFocus();
 	}
 
 	@Override
 	public void onMouseDrag() {
-		GameWindow.getInstance().requestFocus();
+		if (this.layer == 0)
+			GameWindow.getInstance().requestFocus();
 	}
 
 	/**

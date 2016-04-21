@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.tpps.application.game.DominionController;
@@ -16,6 +17,7 @@ import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.GameBackground;
+import com.tpps.ui.gameplay.GameWindow;
 
 /**
  * @author Nicolas Wipfler
@@ -37,8 +39,10 @@ public class Card extends GameObject {
 	private GraphicFramework parent;
 	private double relativeX, relativeY, relativeWidth, relativeHeight;
 	private Image sourceImage;
-	private GameBackground gameBackground;
+	private GameBackground gameBackground, cardReaction;
 	private String handTrigger = "";
+	private int mouseReaction = 0;
+	private int cardClickCounter = 0;
 	private static int classID = 0;
 
 	/**
@@ -230,7 +234,7 @@ public class Card extends GameObject {
 		if (!(handTrigger.equals("handCards") || name.equals("Copper") || name.equals("Silver") || name.equals("Gold")
 				|| name.equals("Curse") || name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
 			gameBackground = new GameBackground(relativeX - 0.025, relativeY + 0.0725, relativeWidth + 0.08,
-					relativeHeight + 0.24, 101, sourceImage, parent);
+					relativeHeight + 0.24, 110, sourceImage, parent);
 			parent.addComponent(gameBackground);
 		}
 	}
@@ -238,7 +242,7 @@ public class Card extends GameObject {
 	/**
 	 * Hover animation
 	 */
-	
+
 	public void onMouseExit() {
 		if (!(handTrigger.equals("handCards") || name.equals("Copper") || name.equals("Silver") || name.equals("Gold")
 				|| name.equals("Curse") || name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
@@ -251,11 +255,22 @@ public class Card extends GameObject {
 	 */
 	@Override
 	public void onMouseClick() {
+		if (mouseReaction == 0 && !(handTrigger.equals("handCards") || handTrigger.equals("middleCards"))) {
+			cardReaction = new GameBackground(this.relativeX, this.relativeY, this.relativeWidth, this.relativeHeight,
+					102, GameWindow.getInstance().getClickImage(), this.parent);
+			this.parent.addComponent(cardReaction);
+			mouseReaction++;
+		}
 		if (DominionController.getInstance().isTurnFlag()) {
 			System.out.println("MouseClick on Card");
+
 			try {
 				DominionController.getInstance().getGameClient().sendMessage(
 						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
+				if (cardReaction != null) {
+					this.parent.removeComponent(cardReaction);
+					mouseReaction = 0;
+				}
 			} catch (IOException e) {
 
 				e.printStackTrace();
@@ -268,11 +283,22 @@ public class Card extends GameObject {
 	 */
 	@Override
 	public void onMouseDrag() {
+		if (mouseReaction == 0 && !(handTrigger.equals("handCards"))) {
+			cardReaction = new GameBackground(this.relativeX, this.relativeY, this.relativeWidth, this.relativeHeight,
+					102, GameWindow.getInstance().getClickImage(), this.parent);
+			this.parent.addComponent(cardReaction);
+			mouseReaction++;
+		}
 		if (DominionController.getInstance().isTurnFlag()) {
 			System.out.println("MouseClick on Card");
+
 			try {
 				DominionController.getInstance().getGameClient().sendMessage(
 						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
+				if (cardReaction != null) {
+					this.parent.removeComponent(cardReaction);
+					mouseReaction = 0;
+				}
 			} catch (IOException e) {
 
 				e.printStackTrace();

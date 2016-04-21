@@ -68,6 +68,7 @@ public class GameWindow extends JFrame {
 	private int widthRelative;
 	private GameLogTextPane loggerPane;
 	private int topGap;
+	private BufferedImage clickImage;
 	private final int WIDTH, HEIGHT;
 	private int leftGap;
 	public static String coins, buys, actions;
@@ -139,6 +140,7 @@ public class GameWindow extends JFrame {
 		displayImageActions = this.loadingImage(displayImageActions, "resources/img/gameObjects/Actions.png");
 		displayImageTurn = this.loadingImage(displayImageTurn, "resources/img/gameObjects/TurnButton.png");
 		buttonGameImage = this.loadingImage(buttonGameImage, "resources/img/gameObjects/ButtonsGame.png");
+		clickImage = this.loadingImage(clickImage, "resources/img/gameObjects/CardGreen.png");
 
 		closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
 				closeImage, framework, "");
@@ -201,33 +203,33 @@ public class GameWindow extends JFrame {
 		this.addComponentListener(new MyComponentAdapter());
 		this.setFocusable(true);
 		this.addKeyListener(new KeyListener() {
-			
+
 			private boolean trigger = true;
 
 			@Override
 			public void keyTyped(KeyEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
-/***
- * 
- * chatWindo pop up animation added
- * @param e
- */
+
+			/***
+			 * 
+			 * chatWindo pop up animation added
+			 * 
+			 * @param e
+			 */
 			public void keyPressed(KeyEvent e) {
-				if(Character.isSpaceChar(e.getKeyChar())){
-					if(trigger){
-					chatWindow.setVisible(false);
-					trigger = false;
-					}
-					else{
+				if (Character.isSpaceChar(e.getKeyChar())) {
+					if (trigger) {
+						chatWindow.setVisible(false);
+						trigger = false;
+					} else {
 						chatWindow.setVisible(true);
 						trigger = true;
 					}
@@ -305,7 +307,7 @@ public class GameWindow extends JFrame {
 		double shiftCard = 0.29;
 		double shiftCardBottom = 0.29;
 		int k = 3;
-		int l = 4;
+		int l = 103;
 
 		for (int i = 0; i < tableCards.size(); i++) {
 			Card card = tableCards.get(i);
@@ -341,7 +343,7 @@ public class GameWindow extends JFrame {
 							0.02, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 
 					GFButton button = new ButtonClass(shiftCard += 0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9,
-							getWIDTH(), getHEIGHT(), l++, buttonGameImage, framework, number);
+							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number);
 
 					framework.addComponent(button);
 					framework.addComponent(card);
@@ -352,7 +354,7 @@ public class GameWindow extends JFrame {
 							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
 							shiftBottom += 0.06, 0.2, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 					GFButton button = new ButtonClass(shiftCardBottom += 0.06, 0.2, 0.015, 0.015 * CORRECTION_16TO9,
-							getWIDTH(), getHEIGHT(), l++, buttonGameImage, framework, number);
+							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number);
 
 					framework.addComponent(button);
 					framework.addComponent(card);
@@ -438,7 +440,7 @@ public class GameWindow extends JFrame {
 		double shift = -0.05;
 		double shiftCard = -0.055;
 		int k = 3;
-		int l = 4;
+		int l = 103;
 
 		for (int i = 0; i < coinCards.size(); i++) {
 			Card card = coinCards.get(i);
@@ -462,7 +464,7 @@ public class GameWindow extends JFrame {
 					GraphicsUtil.rotate(serializedCard.getImage(), 270), framework);
 
 			GFButton button = new ButtonClass(0.935, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
-					getHEIGHT(), l++, buttonGameImage, framework, number);
+					getHEIGHT(), l, buttonGameImage, framework, number);
 			framework.addComponent(button);
 			framework.addComponent(card);
 			this.coinCards.add(card);
@@ -500,14 +502,15 @@ public class GameWindow extends JFrame {
 
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), start += shift,
-							0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+							0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework, "middleCards");
 					framework.addComponent(card);
 					this.middleCards.add(card);
 				} else {
 					SerializedCard serializedCard = middleCards.get(actionCardlds.get(i));
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
-							start += (shift + 0.05), 0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+							start += (shift + 0.05), 0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework,
+							"middleCards");
 					framework.addComponent(card);
 					this.middleCards.add(card);
 				}
@@ -516,7 +519,8 @@ public class GameWindow extends JFrame {
 					SerializedCard serializedCard = middleCards.get(actionCardlds.get(i));
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
-							startsmall += shiftsmall, 0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+							startsmall += shiftsmall, 0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework,
+							"middleCards");
 					framework.addComponent(card);
 					this.middleCards.add(card);
 				} else {
@@ -524,7 +528,7 @@ public class GameWindow extends JFrame {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
 							startsmall += (shiftsmall + 0.05), 0.45, 0.05, 0.15, k++, serializedCard.getImage(),
-							framework);
+							framework, "middleCards");
 					framework.addComponent(card);
 					this.middleCards.add(card);
 				}
@@ -616,7 +620,7 @@ public class GameWindow extends JFrame {
 		double shift = -0.05;
 		double shiftCard = -0.055;
 		int k = 3;
-		int l = 4;
+		int l = 103;
 
 		// Example For nishit
 
@@ -643,7 +647,7 @@ public class GameWindow extends JFrame {
 					serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 90), framework);
 			GFButton button = new ButtonClass(0.04, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
-					getWIDTH(), l++, buttonGameImage, framework, number);
+					getWIDTH(), l, buttonGameImage, framework, number);
 			framework.addComponent(button);
 			framework.addComponent(card);
 
@@ -878,8 +882,8 @@ public class GameWindow extends JFrame {
 			int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 			int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-			 onResize(width / Double.parseDouble(Integer.toString(maxWidth)),
-			 height / Double.parseDouble(Integer.toString(maxHeight)));
+			onResize(width / Double.parseDouble(Integer.toString(maxWidth)),
+					height / Double.parseDouble(Integer.toString(maxHeight)));
 			repaint();
 		}
 
@@ -906,6 +910,10 @@ public class GameWindow extends JFrame {
 
 	public int getHEIGHT() {
 		return HEIGHT;
+	}
+
+	public BufferedImage getClickImage() {
+		return clickImage;
 	}
 
 	public ChatWindowForInGame getChatWindow() {
