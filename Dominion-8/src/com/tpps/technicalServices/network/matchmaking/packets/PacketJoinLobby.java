@@ -21,7 +21,7 @@ public class PacketJoinLobby extends PacketMatchmakingRequest {
 	 * @param lobbyID the ID of the lobby the player wants to join
 	 * @param abort whether the player wants to join or quit*/
 	public PacketJoinLobby(String name, UUID playerUID, UUID lobbyID, boolean abort) {
-		super(PacketType.MATCHMAKING_REQUEST, name, playerUID, abort);
+		super(PacketType.MATCHMAKING_JOIN_LOBBY, name, playerUID, abort);
 		this.lobbyID = lobbyID;
 	}
 

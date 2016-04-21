@@ -30,6 +30,7 @@ public class GameLobby {
 	/**
 	 * sets the time the game started, should be called just before the game
 	 * starts
+	 * 
 	 * @return the time the match started
 	 */
 	public long getStartTime() {
@@ -55,10 +56,23 @@ public class GameLobby {
 	public void joinPlayer(MPlayer player) {
 		System.out.println("[" + System.identityHashCode(this) + "] <-" + player.getPlayerName());
 		for (MPlayer mplayer : players) {
-			MatchmakingServer.getInstance().sendJoinPacket(player, mplayer.getPlayerName());
-			MatchmakingServer.getInstance().sendJoinPacket(mplayer, player.getPlayerName());
+
+			// send the new player the old player
+			if (!player.isAI()) {
+				MatchmakingServer.getInstance().sendJoinPacket(player, mplayer.getPlayerName());
+			}
+
+			// send the old player the new player
+			if (!mplayer.isAI()) {
+				MatchmakingServer.getInstance().sendJoinPacket(mplayer, player.getPlayerName());
+			}
 		}
-		MatchmakingServer.getInstance().sendJoinPacket(player, player.getPlayerName());
+
+		// send the new player himself
+		if (!player.isAI()) {
+			MatchmakingServer.getInstance().sendJoinPacket(player, player.getPlayerName());
+		}
+
 		this.players.add(player);
 		this.updateLobbyScore();
 
@@ -77,6 +91,17 @@ public class GameLobby {
 			MatchmakingController.startGame(this);
 			this.startTime = System.currentTimeMillis();
 		}
+
+		int aiCounter = 0;
+		for (MPlayer player : this.players) {
+			if (player.isAI()) {
+				aiCounter++;
+			}
+		}
+
+		if (aiCounter > 0) {
+			this.lobbyScore = this.lobbyScore / (this.getPlayers().size() - aiCounter) * this.getPlayers().size();
+		}
 	}
 
 	/**
@@ -89,7 +114,12 @@ public class GameLobby {
 		this.players.remove(player);
 		this.updateLobbyScore();
 
-		MatchmakingServer.getInstance().sendQuitPacket(players, player.getPlayerName());
+		for (MPlayer mplayer : this.players) {
+			if (!mplayer.isAI()) {
+				MatchmakingServer.getInstance().sendQuitPacket(mplayer, player.getPlayerName());
+			}
+		}
+
 	}
 
 	/** @return if the lobby is empty */
@@ -125,7 +155,7 @@ public class GameLobby {
 		return res;
 	}
 
-	/**@return the unique ID of this lobby*/
+	/** @return the unique ID of this lobby */
 	public UUID getLobbyID() {
 		return lobbyID;
 	}

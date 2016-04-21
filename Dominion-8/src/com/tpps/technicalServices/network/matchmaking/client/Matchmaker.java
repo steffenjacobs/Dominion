@@ -48,13 +48,16 @@ public final class Matchmaker {
 	 *            displayed name of the AI
 	 * @param lobbyID
 	 *            UUID of the lobby
+	 * @param abort
+	 *            whether to join or quit an ai
 	 * @throws IOException
 	 *             if there is no network connection available or the server is
 	 *             unreachable
 	 */
-	public void sendAIPacket(String name, UUID lobbyID) throws IOException {
+	public void sendAIPacket(String name, UUID lobbyID, boolean abort) throws IOException {
 		checkAndCreateClient();
-		client.sendMessage(new PacketJoinLobby(name, UUID.fromString("00000000-0000-0000-0000-000000000000"), lobbyID, true));
+		client.sendMessage(
+				new PacketJoinLobby(name, UUID.fromString("00000000-0000-0000-0000-000000000000"), lobbyID, abort));
 		System.out.println("Sent request to join lobby " + lobbyID.toString());
 	}
 
@@ -182,7 +185,10 @@ public final class Matchmaker {
 				// TODO:
 				// save pck.getLobbyID() somewhere (-> DominionController?)
 				DominionController.getInstance().reveiveChatMessageFromChatServer(
-						"[BOT] You joined a lobby successfully "/*: id:" + pck.getLobbyID()*/);
+						"[BOT] You joined a lobby successfully "/*
+																 * : id:" + pck.
+																 * getLobbyID()
+																 */);
 				DominionController.getInstance().setLobbyID(pck.getLobbyID());
 				break;
 			case 2: // Lobby does not exist

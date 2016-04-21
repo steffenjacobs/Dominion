@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
 
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.Server;
@@ -58,6 +59,7 @@ public class MatchmakingServer extends Server {
 		SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
 		SQLHandler.connect();
 		setupConsoleInput(address.getPort());
+		GameLog.init();
 	}
 
 	private void setupConsoleInput(int port) {
@@ -174,21 +176,19 @@ public class MatchmakingServer extends Server {
 
 	/**
 	 * sends a packet back to the Matchmaker on the client-side if a player
-	 * joins the lobby
+	 * quits the lobby
 	 * 
-	 * @param receivers
-	 *            the players to receive the packet
+	 * @param receiver
+	 *            the player to receive the packet
 	 * @param quittedPlayer
 	 *            the player who quitted
 	 */
-	public void sendQuitPacket(Collection<MPlayer> receivers, String quittedPlayer) {
+	public void sendQuitPacket(MPlayer receiver, String quittedPlayer) {
 		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(quittedPlayer, false);
-		for (MPlayer receiver : receivers) {
-			try {
-				super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
-			} catch (NullPointerException | IOException npe) {
-				// if one this player is already disconnected, too
-			}
+		try {
+			super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
+		} catch (NullPointerException | IOException npe) {
+			// if one this player is already disconnected, too
 		}
 	}
 

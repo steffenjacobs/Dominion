@@ -52,8 +52,7 @@ public class MatchmakingPacketHandler extends PacketHandler {
 		switch (packet.getType()) {
 		case MATCHMAKING_REQUEST:
 			PacketMatchmakingRequest pck = (PacketMatchmakingRequest) packet;
-			
-			
+
 			if (pck.isAbort()) {
 				MatchmakingController.onPlayerDisconnect(port);
 			} else
@@ -72,23 +71,45 @@ public class MatchmakingPacketHandler extends PacketHandler {
 					if (lobb == null) {
 						// no lobby
 						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 2, null));
+						GameLog.log(MsgType.NETWORK_ERROR, "No such lobby as " + pjl.getLobbyID());
 					} else if (lobb.isFull()) {
 						// lobby is full
 						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 3, null));
+						GameLog.log(MsgType.NETWORK_ERROR, "Lobby " + pjl.getLobbyID() + " is full.");
 					} else if (lobb.hasStarted()) {
 						// lobby has started
 						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 4, null));
+						GameLog.log(MsgType.NETWORK_ERROR, "Lobby " + pjl.getLobbyID() + " has already started");
 					} else {
-						handleClientConnect(port, pjl, pjl.getLobbyID());
+						GameLog.log(MsgType.NETWORK_INFO, "Adding " + pjl.getPlayerName() + " to " + pjl.getLobbyID());
+
+						if (pjl.getPlayerID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+							addAI(pjl.getLobbyID(), pjl);
+							GameLog.log(MsgType.NETWORK_INFO,
+									"Added AI " + pjl.getPlayerName() + " to " + pjl.getLobbyID());
+						} else {
+							handleClientConnect(port, pjl, pjl.getLobbyID());
+							GameLog.log(MsgType.NETWORK_INFO,
+									"Added Player " + pjl.getPlayerName() + " to " + pjl.getLobbyID());
+						}
 					}
 				} catch (IOException ex) {
 
 				}
 			}
+			break;
 
 		default:
 			GameLog.log(MsgType.NETWORK_ERROR, "Bad packet received: " + packet);
 		}
+	}
+
+	public void addAI(UUID lobbyID, PacketMatchmakingRequest pmr) {
+		MPlayer player = MPlayer.initialize(pmr, -1);		
+		if (lobbyID != null) {
+			MatchmakingController.getLobbyByID(lobbyID).joinPlayer(player);
+		}
+		GameLog.log(MsgType.NETWORK_INFO, "<- AI " + player.getPlayerName());
 	}
 
 	/**
@@ -98,7 +119,8 @@ public class MatchmakingPacketHandler extends PacketHandler {
 	 *            the port of the client searching for a match
 	 * @param pmr
 	 *            the Request-Packet containing player-information
-	 * @param lobbyID the lobby the client wants to connect
+	 * @param lobbyID
+	 *            the lobby the client wants to connect
 	 */
 	public void handleClientConnect(int port, PacketMatchmakingRequest pmr, UUID lobbyID) {
 

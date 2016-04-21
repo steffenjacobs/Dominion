@@ -1,25 +1,17 @@
 package com.tpps.technicalServices.network.matchmaking.server;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
-import com.tpps.technicalServices.network.Addresses;
-import com.tpps.technicalServices.network.core.Client;
-import com.tpps.technicalServices.network.core.PacketHandler;
-import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.GameServer;
-import com.tpps.technicalServices.network.gameSession.packets.PacketRegistratePlayerByServer;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 
 /**
@@ -39,8 +31,6 @@ public final class MatchmakingController {
 		gameServersByLobby = new ConcurrentHashMap<>();
 		lobbiesByID = new ConcurrentHashMap<>();
 	}
-
-	private static ExecutorService exec = Executors.newCachedThreadPool();
 
 	private static ConcurrentHashMap<Integer, MPlayer> playersByPort;
 	private static ConcurrentHashMap<MPlayer, Integer> connectedPortsByPlayer;
@@ -116,21 +106,21 @@ public final class MatchmakingController {
 
 				/* add AI-dummy-clients (for Lukas) */
 				if (pl.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-					exec.submit(() -> {
-						try {
-							Client cl = new Client(new InetSocketAddress(Addresses.getLocalHost(), freePort),
-									new PacketHandler() {
-										@Override
-										public void handleReceivedPacket(int port, Packet packet) {
-											// do nothing - be dummy
-										}
-									}, false);
-							cl.sendMessage(new PacketRegistratePlayerByServer("AI" + System.identityHashCode(cl),
-									UUID.fromString("00000000-0000-0000-0000-000000000000")));
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					});
+//					exec.submit(() -> {
+//						try {
+//							Client cl = new Client(new InetSocketAddress(Addresses.getLocalHost(), freePort),
+//									new PacketHandler() {
+//										@Override
+//										public void handleReceivedPacket(int port, Packet packet) {
+//											// do nothing - be dummy
+//										}
+//									}, false);
+//							cl.sendMessage(new PacketRegistratePlayerByServer("AI" + System.identityHashCode(cl),
+//									UUID.fromString("00000000-0000-0000-0000-000000000000")));
+//						} catch (Exception e) {
+//							e.printStackTrace();
+//						}
+//					});
 				}
 
 				else {

@@ -18,6 +18,7 @@ public class MPlayer {
 	private final String playerName;
 	private final UUID playerUID;
 	private final int connectionPort;
+	private boolean isAI;
 
 	private PlayerMatchmakingScore matchmakingScore;
 
@@ -33,12 +34,14 @@ public class MPlayer {
 	 * @param port
 	 *            the port the player is connected with
 	 */
-	private MPlayer(String name, UUID uid, HashMap<String, StatisticUnit> stats, int port) {
+	private MPlayer(String name, UUID uid, HashMap<String, StatisticUnit> stats, int port, boolean ai) {
 		this.playerName = name;
 		this.playerUID = uid;
 		this.connectionPort = port;
 		this.matchmakingScore = new PlayerMatchmakingScore(stats);
-		this.matchmakingScore.calculateMatchmakingScore();
+		if (!ai)
+			this.matchmakingScore.calculateMatchmakingScore();
+		this.isAI = ai;
 	}
 
 	/** @return the uuid of the player */
@@ -58,7 +61,11 @@ public class MPlayer {
 
 	/** @return the matchmaking-score of the player */
 	public int getScore() {
-		return this.matchmakingScore.getScore();
+		if (this.isAI) {
+			return 0;
+		} else {
+			return this.matchmakingScore.getScore();
+		}
 	}
 
 	/**
@@ -79,7 +86,8 @@ public class MPlayer {
 	 *            player-information
 	 * @param port
 	 *            the port the player is connected with
-	 * @return a new instance created from the request and filled with data from the data-base
+	 * @return a new instance created from the request and filled with data from
+	 *         the data-base
 	 */
 	public static MPlayer initialize(PacketMatchmakingRequest request, int port) {
 		try {
@@ -96,11 +104,28 @@ public class MPlayer {
 						SQLStatisticsHandler.getPlaytimeDatesParsed(res.getString("LAST_TIME_PLAYED"))));
 				stats.put("LAST_GAMES_WINS",
 						new StatisticUnit(SQLStatisticsHandler.getLastTimeWinsParsed(res.getString("LAST_TIME_WINS"))));
-				return new MPlayer(request.getPlayerName(), request.getPlayerID(), stats, port);
+				return new MPlayer(request.getPlayerName(), request.getPlayerID(), stats, port, false);
+			} else {
+				return new MPlayer(request.getPlayerName(), request.getPlayerID(), null, 0, true);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/** @return true: if this is an AI-Player, false: otherwise */
+	public boolean isAI() {
+		return this.isAI;
+	}
+
+	/**
+	 * setter for isAI
+	 * 
+	 * @param state
+	 *            the new ai-state
+	 */
+	public void setAi(boolean state) {
+		this.isAI = state;
 	}
 }

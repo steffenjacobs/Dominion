@@ -412,9 +412,9 @@ public final class DominionController {
 		this.lobbyID = lobbyID;
 	}
 	
-	public void sendAIPacket(String name) {
+	public void sendAIPacket(String name, boolean abort) {
 		try {
-			this.matchmaker.sendAIPacket(name, this.lobbyID);
+			this.matchmaker.sendAIPacket(name, this.lobbyID, abort);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
