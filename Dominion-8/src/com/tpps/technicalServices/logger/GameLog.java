@@ -192,8 +192,8 @@ public class GameLog {
 	public static void log(MsgType type, String line) {
 		String msg = type.getTimeStamp() ? createTimestamp(type, true) + line : line;
 		writeToConsole(msg);
-		if (isInitialized && guiPossible) {
-			if (type.getDisplay()) {
+		if (isInitialized) {
+			if (type.getDisplay() && guiPossible) {
 				write(msg, type.getColor(), type.getTimeStamp());
 			}
 		} else { // prevent Null Pointers
