@@ -190,12 +190,12 @@ public class GameLog {
 	 *            the line to log
 	 */
 	public static void log(MsgType type, String line) {
+		String msg = type.getTimeStamp() ? createTimestamp(type, true) + line : line;
+		writeToConsole(msg);
 		if (isInitialized && guiPossible) {
-			String msg = type.getTimeStamp() ? createTimestamp(type, true) + line : line;
 			if (type.getDisplay()) {
 				write(msg, type.getColor(), type.getTimeStamp());
 			}
-			writeToConsole(msg);
 		} else { // prevent Null Pointers
 			init();
 		}
