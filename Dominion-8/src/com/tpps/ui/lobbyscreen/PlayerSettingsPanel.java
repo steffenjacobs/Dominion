@@ -287,7 +287,7 @@ public class PlayerSettingsPanel extends JPanel{
 			
 //			??
 //			ArtificialIntelligence ai1 = new ArtificialIntelligence();
-			DominionController.getInstance().sendAIPacket("AI" + System.identityHashCode(e), false);
+			DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
 		}
 	}
 	
