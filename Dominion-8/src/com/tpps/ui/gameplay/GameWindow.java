@@ -70,6 +70,7 @@ public class GameWindow extends JFrame {
 	private int topGap;
 	private BufferedImage clickImage;
 	private final int WIDTH, HEIGHT;
+	private int reactionCounter,gameBackgroundCounter;
 	private int leftGap;
 	public static String coins, buys, actions;
 	private static final double CORRECTION_16TO9 = 16 / (double) 9;
@@ -910,6 +911,30 @@ public class GameWindow extends JFrame {
 
 	public int getHEIGHT() {
 		return HEIGHT;
+	}
+	
+	public void reactionCounterInkrement(){
+		reactionCounter++;
+	}
+	
+	public void setReactionCounter(int reactionCounter){
+		this.reactionCounter = reactionCounter;
+	}
+	
+	public int getReactionCounter() {
+		return reactionCounter;
+	}
+	
+	public int getGameBackgroundCounter() {
+		return gameBackgroundCounter;
+	}
+	
+	public void gameBackgroundCounterInkrement(){
+		gameBackgroundCounter++;
+	}
+	
+	public void setGamebackgroundCounter(int gamebackgroundCounter){
+		this.gameBackgroundCounter = gamebackgroundCounter;
 	}
 
 	public BufferedImage getClickImage() {
