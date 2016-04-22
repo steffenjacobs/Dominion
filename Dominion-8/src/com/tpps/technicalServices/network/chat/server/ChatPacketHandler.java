@@ -127,12 +127,13 @@ public class ChatPacketHandler extends PacketHandler{
 			PacketChatController idPacket = new PacketChatController(chatid);
 			try {
 				this.server.sendMessage(port, idPacket);
+				System.out.println("send packet for chatid: " + chatid);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			break;
 		case "deleteChatroom":
-			this.deleteChatRoom(packet.getMemberOfChatRoom());
+			this.deleteChatRoom(packet.getChatroomId());
 		case "addUser":
 			this.insertPlayerToChatRoom(packet.getUser(), packet.getChatroomId(), packet.getUserport());
 			break;

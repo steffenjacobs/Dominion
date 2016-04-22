@@ -45,13 +45,13 @@ public class PacketChatController extends Packet{
 	 * @author jhuhn
 	 * @param command
 	 *            String representation of the command
-	 * @param memberOfChatRoom
-	 *            String representation of one user, who is in the chatroom
+	 * @param chatroomId
+	 *            ID of a specific chatroom, needed to delete a chatroom
 	 */
-	public PacketChatController(String command, String memberOfChatRoom) {
+	public PacketChatController(String command, int chatroomId) {
 		super(PacketType.CHAT_CONTROLLER); 
 		this.command = command;
-		this.memberOfChatRoom = memberOfChatRoom;
+		this.chatroomId = chatroomId;
 	}
 	
 	

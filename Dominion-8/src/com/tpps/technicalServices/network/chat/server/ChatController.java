@@ -20,7 +20,7 @@ public class ChatController extends PacketHandler{
 	
 	private static Client chatclient;
 	private static ChatController instance;
-	private int id;	
+	private int chatID;	
 	
 	/**
 	 * initializes the chatcontroller class
@@ -83,15 +83,12 @@ public class ChatController extends PacketHandler{
 	}
 	
 	/**
-	 * This method deletes a chatroom by one given member
+	 * This method deletes a chatroom by one given chatID
 	 * 
 	 * @author jhuhn
-	 * @param onemember
-	 *            String representation of a user who participate in the
-	 *            chatroom
 	 */
-	public void deleteChatroom(String onemember){
-		PacketChatController packet = new PacketChatController("deleteChatroom", onemember);
+	public void deleteChatroom(){
+		PacketChatController packet = new PacketChatController("deleteChatroom", this.chatID);
 		try {
 			ChatController.chatclient.sendMessage(packet);
 		} catch (IOException e) {		
@@ -110,7 +107,7 @@ public class ChatController extends PacketHandler{
 	 *            Integer representation of the users port
 	 */
 	public void addUserToChatRoom(String nickname, int userport ){
-		PacketChatController packet = new PacketChatController("addUser", nickname, userport, this.id);
+		PacketChatController packet = new PacketChatController("addUser", nickname, userport, this.chatID);
 		try {
 			ChatController.chatclient.sendMessage(packet);
 		} catch (IOException e) {		
@@ -121,14 +118,23 @@ public class ChatController extends PacketHandler{
 
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) { 
-		//TODO: get chatroom id
+		switch(packet.getType()){
+		case CHAT_CONTROLLER:
+			PacketChatController packetID = (PacketChatController) packet;
+			this.chatID = packetID.getChatroomId();
+			System.out.println("received chatID: " + chatID);
+			break;
+		default:
+			System.out.println("sth went wrong with received packet");
+			break;
+		}
 	}
 	
 	/**
 	 * @author jhuhn
 	 * @return chatroom id as an Integer
 	 */
-	public int getId() {
-		return id;
+	public int getChatID() {
+		return chatID;
 	}
 }
