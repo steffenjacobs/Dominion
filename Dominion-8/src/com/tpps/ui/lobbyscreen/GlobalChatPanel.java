@@ -8,8 +8,6 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -33,6 +31,7 @@ import com.tpps.technicalServices.util.GraphicsUtil;
 
 /**
  * This method is responsible to create and handle the global chat in the gui
+ * 
  * @author jhuhn
  *
  */
@@ -54,6 +53,8 @@ public class GlobalChatPanel extends JPanel{
 	
 	/**
 	 * initializes the object
+	 * 
+	 * @author jhuhn
 	 */
 	public GlobalChatPanel() {
 		this.createComponents();
@@ -62,6 +63,8 @@ public class GlobalChatPanel extends JPanel{
 	
 	/**
 	 * this method creates all UI components and put them into a BoderLayout
+	 * 
+	 * @author jhuhn
 	 */
 	private void createComponents(){
 		this.setVisible(true);
@@ -77,23 +80,30 @@ public class GlobalChatPanel extends JPanel{
 		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_END);		
 		
 	//	this.testChatInput();
-
 	//	this.revalidate();
-	//	parentLobby.revalidate();
 	}
 	
+	/**
+	 * upper area of the globalchatpanel
+	 * 
+	 * @author jhuhn
+	 * @return a JPanel with button (painted as arrow)
+	 */
 	private JPanel createArrowButtonPanel(){
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
  
-		panel.add(new Button());
+		panel.add(new BackButton());
 		return panel;			  
 	}
 	
 	
 	/**
-	 * This method is for testing purposes only. It create 10000 teststrings and put them into the global chat
+	 * This method is for testing purposes only. It create 10000 teststrings and
+	 * put them into the global chat
+	 * 
+	 * @author jhuhn
 	 */
 	public void testChatInput(){
 		new Thread(() -> {
@@ -104,8 +114,10 @@ public class GlobalChatPanel extends JPanel{
 	}
 	
 	/**
-	 * This method creates the overall chatinput area. It centers the textfield bar 
-	 * and creates gaps from the chatinputbar to the frame 
+	 * This method creates the overall chatinput area. It centers the textfield
+	 * bar and creates gaps from the chatinputbar to the frame
+	 * 
+	 * @author jhuhn
 	 * @return a JPanel with a chatbar and a send button
 	 */
 	private JPanel createPanelForChatInput(){
@@ -123,7 +135,10 @@ public class GlobalChatPanel extends JPanel{
 	}
 	
 	/**
-	 * this method puts the chatbar and the send button into a panel without margin or gaps
+	 * this method puts the chatbar and the send button into a panel without
+	 * margin or gaps
+	 * 
+	 * @author jhuhn
 	 * @return a panel with a chatbar and a sendbutton
 	 */
 	private JPanel createChatInputArea(){	
@@ -140,9 +155,12 @@ public class GlobalChatPanel extends JPanel{
 	}
 	
 	/**
-	 * This method initializes and creates the send button object.
-	 * The button delivers a semitransparent look
-	 * @return a JButton with a white text 'SEND' a semitransparent black background
+	 * This method initializes and creates the send button object. The button
+	 * delivers a semitransparent look
+	 * 
+	 * @author jhuhn
+	 * @return a JButton with a white text 'SEND' a semitransparent black
+	 *         background
 	 */
 	private JButton initSendButton(){
 		sendButton = new JButton("SEND"){
@@ -167,7 +185,10 @@ public class GlobalChatPanel extends JPanel{
 	
 	/**
 	 * This method initializes and create the chatinputbar
-	 * @return a JTextField with semitransparent look and white characters, used to type in chatmessages
+	 * 
+	 * @author jhuhn
+	 * @return a JTextField with semitransparent look and white characters, used
+	 *         to type in chatmessages
 	 */
 	private JTextField initChatInputLine(){
 		chatInputLine = new JTextField("Type in /help for commands"){
@@ -199,8 +220,12 @@ public class GlobalChatPanel extends JPanel{
 	}
 	
 	/**
-	 * This method creates and initizalizes the globalchatarea. The globalchatarea is represented in textbox which is embedded in
-	 * a scrollpane. The globalchatarea is in a semitransparent look with white characters
+	 * This method creates and initizalizes the globalchatarea. The
+	 * globalchatarea is represented in textbox which is embedded in a
+	 * scrollpane. The globalchatarea is in a semitransparent look with white
+	 * characters
+	 * 
+	 * @author jhuhn
 	 */
 	private void createScrollingChatArea(){
 		
@@ -238,9 +263,13 @@ public class GlobalChatPanel extends JPanel{
 	}
 	
 	/**
-	 * This method appends a chatmessage to the globalchat on the UI and sends it to the server.
-	 * The carret will be set to the maximum (last chatmessage)
-	 * @param chatmessage a String representation of the chatmessage to send
+	 * This method appends a chatmessage to the globalchat on the UI and sends
+	 * it to the server. The carret will be set to the maximum (last
+	 * chatmessage)
+	 * 
+	 * @param chatmessage
+	 *            a String representation of the chatmessage to send
+	 * @author jhuhn
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
 		GlobalChatPanel.this.chatInputLine.setText("");
@@ -256,9 +285,12 @@ public class GlobalChatPanel extends JPanel{
 	
 	
 	/**
-	 * This method appends a chatmessage to the globalchat on the UI.
-	 * The carret will be set to the maximum (last chatmessage)
-	 * @param chatmessage a String representation of the chatmessage
+	 * This method appends a chatmessage to the globalchat on the UI. The carret
+	 * will be set to the maximum (last chatmessage)
+	 * 
+	 * @author jhuhn
+	 * @param chatmessage
+	 *            a String representation of the chatmessage
 	 */
 	public synchronized void appendChatLocal(String chatmessage){
 		this.textbox.append(chatmessage.trim() + "\n");
@@ -273,6 +305,7 @@ public class GlobalChatPanel extends JPanel{
 	
 	/**
 	 * This inner class is responsible to handle the send button
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 *
 	 */
@@ -301,6 +334,7 @@ public class GlobalChatPanel extends JPanel{
 
 	/**
 	 * This inner class is responsible to send messages via the enter key
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 *
 	 */

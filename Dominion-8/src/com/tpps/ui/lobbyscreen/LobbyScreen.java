@@ -15,6 +15,7 @@ import com.tpps.ui.statisticsscreen.StatisticsBoard;
 
 /**
  * This class is created mainly for gui testing purposes
+ * 
  * @author jhuhn
  *
  */
@@ -30,6 +31,8 @@ public class LobbyScreen extends JFrame{
 	
 	/**
 	 * initializes this test class
+	 * 
+	 * @author jhuhn
 	 */
 	LobbyScreen(){
 		try {
@@ -59,10 +62,13 @@ public class LobbyScreen extends JFrame{
 		this.revalidate();
 		this.repaint();
 	}
-	
+
 	/**
-	 * mein method for testing
+	 * main method for testing
+	 * 
+	 * @author jhuhn
 	 * @param args
+	 *            not used
 	 */
 	public static void main(String[] args) {
 		new LobbyScreen();

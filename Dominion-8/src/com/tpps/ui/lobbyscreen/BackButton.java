@@ -16,7 +16,7 @@ import com.tpps.application.game.DominionController;
  * This class represents the button which is used to go back to the main menu
  * @author jhuhn
  */
-public class Button extends JButton implements ActionListener{
+public class BackButton extends JButton implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	private BufferedImage image;
@@ -25,7 +25,7 @@ public class Button extends JButton implements ActionListener{
 	 * initializes the object
 	 * @author jhuhn
 	 */
-	public Button() {
+	public BackButton() {
 		try {
 			this.image = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/Back.png"));
 			this.setOpaque(false);

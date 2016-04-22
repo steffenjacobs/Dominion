@@ -13,7 +13,6 @@ import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -26,11 +25,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.tpps.application.game.DominionController;
-import com.tpps.application.game.ai.ArtificialIntelligence;
-import com.tpps.technicalServices.network.matchmaking.packets.PacketJoinLobby;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.statisticsscreen.StatisticsBoard;
 
+/**
+ * This class creates a JPanel with all gui components, that are shown on the
+ * right side of the lobbygui
+ * 
+ * @author jhuhn
+ *
+ */
 public class PlayerSettingsPanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
@@ -60,8 +64,12 @@ public class PlayerSettingsPanel extends JPanel{
 //	private StatisticsBoard statisticsBoardPanel;
 	
 	private JPanel panel;
-	JPanel panelMid;
+	private JPanel panelMid;
 	
+	/**
+	 * 
+	 * @param statisticsBoardPanel
+	 */
 	public PlayerSettingsPanel(StatisticsBoard statisticsBoardPanel) {
 		this.initOriginalBackgroundImages();
 		this.initTransparentBackgroundImages();
