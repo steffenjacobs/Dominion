@@ -70,7 +70,7 @@ public class ChatPacketHandler extends PacketHandler{
 			if(room3 != null){
 				room3.sendChatToChatRoomClient(castedpacket3);
 			}else{							
-				global.sendChatToClient(castedpacket3);
+				global.sendPMToClient(castedpacket3);
 			}
 			break;
 		case SEND_CHAT_COMMAND:

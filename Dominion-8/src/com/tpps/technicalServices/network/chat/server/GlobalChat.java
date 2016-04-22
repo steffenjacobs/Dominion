@@ -23,26 +23,34 @@ import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler
  */
 public class GlobalChat {
 	
-	private final static String servercommand1 = "help";
-	private final static String servercommand2 = "show all clients";
-	private final static String servercommand3 = "show all ports";
-	private final static String servercommand4 = "show all clients by ports";
-	private final static String servercommand5 = "show statistic ";
+	private final static String help_servercommand1 = "help";
+	private final static String showClients_servercommand2 = "show all clients";
+	private final static String showPorts_servercommand3 = "show all ports";
+	private final static String showClientsAndPorts_servercommand4 = "show all clients by ports";
+	private final static String statistic_servercommand5 = "show statistic ";
 
 	private ChatServer server;
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
 
 	/**
 	 * initializes the global chat instance
-	 * @param server the server object that belongs to the ChatPacketHandler
+	 * 
+	 * @author jhuhn
+	 * @param server
+	 *            the server object that belongs to the ChatPacketHandler
 	 */
 	public GlobalChat (ChatServer server){
 		this.server =  server;
 	}
 	
 	/**
-	 * This method sends a chatmessage to all clients except the client who sent the message
-	 * @param packet a packet that received from the ChatPacketHandler from a client
+	 * This method sends a chatmessage to all clients except the client who sent
+	 * the message
+	 * 
+	 * @author jhuhn
+	 * @param packet
+	 *            a packet that received from the ChatPacketHandler from a
+	 *            client
 	 */
 	public void sendChatToAllExceptSender(PacketSendChatAll packet){
 		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + packet.getUsername() + ": " + packet.getChatmessage());
@@ -61,10 +69,15 @@ public class GlobalChat {
 	}
 	
 	/**
+	 * This method checks if the user can send a PM to a client. If yes, this
+	 * method calls the method which executes the PM
 	 * 
+	 * @author jhuhn
 	 * @param packet
+	 *            a packet that received from the ChatPacketHandler from a
+	 *            client
 	 */
-	public void sendChatToClient(PacketSendChatToClient packet){
+	public void sendPMToClient(PacketSendChatToClient packet){
 		String receiver = packet.getReceiver().trim();
 		if(!this.clientsByUsername.containsKey(receiver)){
 			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "The User '" + receiver + "' doesn't exist in global chat \n");
@@ -75,9 +88,20 @@ public class GlobalChat {
 			}
 			return;
 		}		
-		this.sendMessageToClient(packet.getSender(), receiver, packet.getMessage(), this.clientsByUsername.get(packet.getReceiver()));		
+		this.sendMessageToSpecificClient(packet.getSender(), receiver, packet.getMessage(), this.clientsByUsername.get(packet.getReceiver()));		
 	}
 	
+	/**
+	 * This method mainly calls the 'evaluateCommands' method and handles the
+	 * state of command
+	 * 
+	 * @author jhuhn
+	 * @param port
+	 *            Integer representation of the client port who sent the command
+	 * @param packet
+	 *            a packet that received from the ChatPacketHandler from a
+	 *            client
+	 */
 	public void sendChatCommand(int port, PacketSendChatCommand packet){
 		String msg = packet.getChatmessage();
 		System.out.println("Chat Command: " + packet);
@@ -93,9 +117,22 @@ public class GlobalChat {
 	}
 	
 	
-	
-	private void sendMessageToClient(String sender, String receiver, String msg, int port){
-		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "PM from " + sender + ": " + msg + "\n");
+	/**
+	 * This method sends a chatmessage to a specific client
+	 * 
+	 * @author jhuhn
+	 * @param sender
+	 *            String representation of the client, who want to send the PM
+	 * @param receiver
+	 *            String representation of the client, who should receive the PM
+	 * @param message
+	 *            String representation of the message
+	 * @param port
+	 *            Integer representation of the clients port, who receives the
+	 *            PM
+	 */
+	private void sendMessageToSpecificClient(String sender, String receiver, String message, int port){
+		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "PM from " + sender + ": " + message + "\n");
 		try {
 			server.sendMessage(port, answer);
 		} catch (IOException e) {
@@ -103,12 +140,24 @@ public class GlobalChat {
 		}
 	}
 	
-	private boolean evaluateCommands(String command, String sender, int port){
-		
+	/**
+	 * This method evaluates all chatcommands that are supported in the global
+	 * chat
+	 * 
+	 * @author jhuhn
+	 * @param command
+	 *            String representation of the command who sent by the user
+	 * @param sender
+	 *            String representation of the sender
+	 * @param port
+	 *            Integer representation of the users port
+	 * @return true if the cammand executed successful, false else
+	 */
+	private boolean evaluateCommands(String command, String sender, int port){		
 		switch(command.trim()){
-		case servercommand1: //send answer packet back to user, with all comands servercommand1 == /help
-			String allcomands = "Commands: \n/" + servercommand1 + "\n/" + servercommand2 + "\n/"
-			+ servercommand3 + "\n/" + servercommand4 + "\n/" + servercommand5 + "<nickname> \n";
+		case help_servercommand1: //send answer packet back to user, with all comands servercommand1 == /help
+			String allcomands = "Commands: \n/" + help_servercommand1 + "\n/" + showClients_servercommand2 + "\n/"
+			+ showPorts_servercommand3 + "\n/" + showClientsAndPorts_servercommand4 + "\n/" + statistic_servercommand5 + "<nickname> \n";
 			PacketSendAnswer answer = new PacketSendAnswer(allcomands);
 			try {
 				server.sendMessage(port, answer);
@@ -116,7 +165,7 @@ public class GlobalChat {
 				e.printStackTrace();
 			}
 			return true;
-		case servercommand2: //show all clients
+		case showClients_servercommand2: //show all clients
 			StringBuffer buf = new StringBuffer("All connected clients: \n");
 			Enumeration<String> clients = this.clientsByUsername.keys();
 			while (clients.hasMoreElements()) {
@@ -130,7 +179,7 @@ public class GlobalChat {
 				e.printStackTrace();
 			}
 			return true;
-		case servercommand3: //show all ports
+		case showPorts_servercommand3: //show all ports
 			StringBuffer buf2 = new StringBuffer("All connected ports: \n");
 			Enumeration<Integer> ports = this.clientsByUsername.elements();			
 			while (ports.hasMoreElements()) {
@@ -144,7 +193,7 @@ public class GlobalChat {
 				e.printStackTrace();
 			}
 			return true;
-		case servercommand4://show all clients by ports
+		case showClientsAndPorts_servercommand4://show all clients by ports
 			StringBuffer buf3 = new StringBuffer("<client> : <port> \n");
 			Enumeration<String> clients3 = this.clientsByUsername.keys();
 			Enumeration<Integer> ports3 = this.clientsByUsername.elements();
@@ -162,7 +211,7 @@ public class GlobalChat {
 			return true;			
 		}
 		//not in switch case, cause startsWith method is important
-		if(command.trim().startsWith(servercommand5)){
+		if(command.trim().startsWith(statistic_servercommand5)){
 			String[] split = command.trim().split("\\s+");
 			System.out.println(split[2]);
 			String nickname = split[2];
@@ -202,14 +251,36 @@ public class GlobalChat {
 		return false;
 	}
 	
+	/**
+	 * This method puts a user in this global chat instance
+	 * 
+	 * @author jhuhn
+	 * @param name
+	 *            String representation of the clients username
+	 * @param port
+	 *            Integer representation of the clients port
+	 */
 	public void putUser(String name, int port){
 		this.clientsByUsername.putIfAbsent(name, port);
 	}
 	
+	/**
+	 * @author jhuhn
+	 * @return gets the client by username hashmap. The key is the user(String),
+	 *         value is the port(Integer)
+	 */
 	public ConcurrentHashMap<String, Integer> getClientsByUsername() {
 		return this.clientsByUsername;
 	}
 	
+	/**
+	 * This method removes a user from the global chat
+	 * 
+	 * @author jhuhn
+	 * @param user
+	 *            String representation of the user who should get kicked by the
+	 *            global chat
+	 */
 	public void removeUser(String user){
 		this.clientsByUsername.remove(user);		
 	}

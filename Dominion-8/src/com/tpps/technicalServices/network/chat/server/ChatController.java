@@ -10,14 +10,23 @@ import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
 
+/**
+ * This class sends and receives packets that deal with chatroom management
+ * 
+ * @author jhuhn
+ *
+ */
 public class ChatController extends PacketHandler{
 	
 	private static Client chatclient;
 	private static ChatController instance;
-	private int id;
+	private int id;	
 	
-	public ChatController() { }
-	
+	/**
+	 * initializes the chatcontroller class
+	 * 
+	 * @author jhuhn
+	 */
 	public void init(){
 		if(ChatController.chatclient == null){
 			try {
@@ -27,6 +36,13 @@ public class ChatController extends PacketHandler{
 			}
 		}
 	}
+	
+	/**
+	 * if the chatcontroller instance is null, it gets initialized
+	 * 
+	 * @author jhuhn
+	 * @return the instance of the chatcontroller
+	 */
 	public static ChatController getInstance(){
 		if(instance == null){
 			instance = new ChatController();
@@ -35,6 +51,13 @@ public class ChatController extends PacketHandler{
 		return instance;
 	}
 	
+	/**
+	 * This method sends a packet to create a chatroom with given members
+	 * 
+	 * @author jhuhn
+	 * @param members
+	 *            an ArrayList of all members who participate in the chatroom
+	 */
 	public static void createChatRoom(ArrayList<String> members){
 		PacketChatController packet = new PacketChatController("createChatroom", members);
 		try {
@@ -44,6 +67,13 @@ public class ChatController extends PacketHandler{
 		}
 	}
 	
+	/**
+	 * This method sends a packet to create a chatroom with given members
+	 * 
+	 * @author jhuhn
+	 * @param usernames
+	 *            String Array of all members who participate in the chatroom
+	 */
 	public void createChatRoom(String[] usernames){
 		ArrayList<String> members = new ArrayList<String>();
 		for (int i = 0; i < usernames.length; i++) {
@@ -52,6 +82,14 @@ public class ChatController extends PacketHandler{
 		ChatController.createChatRoom(members);
 	}
 	
+	/**
+	 * This method deletes a chatroom by one given member
+	 * 
+	 * @author jhuhn
+	 * @param onemember
+	 *            String representation of a user who participate in the
+	 *            chatroom
+	 */
 	public void deleteChatroom(String onemember){
 		PacketChatController packet = new PacketChatController("deleteChatroom", onemember);
 		try {
@@ -61,6 +99,16 @@ public class ChatController extends PacketHandler{
 		}
 	}
 	
+	/**
+	 * This method adds a user to a specific chatroom
+	 * 
+	 * @author jhuhn
+	 * @param nickname
+	 *            String representation of the user who should be added to a
+	 *            specific chatroom
+	 * @param userport
+	 *            Integer representation of the users port
+	 */
 	public void addUserToChatRoom(String nickname, int userport ){
 		PacketChatController packet = new PacketChatController("addUser", nickname, userport, this.id);
 		try {
@@ -76,6 +124,10 @@ public class ChatController extends PacketHandler{
 		//TODO: get chatroom id
 	}
 	
+	/**
+	 * @author jhuhn
+	 * @return chatroom id as an Integer
+	 */
 	public int getId() {
 		return id;
 	}
