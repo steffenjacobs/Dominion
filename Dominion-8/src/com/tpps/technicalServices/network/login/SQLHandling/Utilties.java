@@ -3,15 +3,19 @@ import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * @author jhuhn - Johannes Huhn
  * This class is for basic utilities
+ * 
+ * @author jhuhn - Johannes Huhn
  */
 public class Utilties {
 	
 	/**
-	 * @author jhuhn - Johannes Huhn
 	 * byte range: -128 to 127
-	 * @param arraylength length of the created array
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * 
+	 * @param arraylength
+	 *            length of the created array
 	 * @return a bytearray with random byte entries
 	 */
 	public static byte[] createRandomBytes(int arraylength){
@@ -23,7 +27,8 @@ public class Utilties {
 	
 	/**
 	 * @author jhuhn
-	 * @return an ArrayList with all Statistics objects that are used to create the statistics table
+	 * @return an ArrayList with all Statistics objects that are used to create
+	 *         the statistics table
 	 */
 	public static ArrayList<Statistic> createStatisticsList(){
 		Statistic two = new Statistic(SQLType.INT, "wins");

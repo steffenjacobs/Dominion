@@ -71,8 +71,11 @@ public class SQLStatisticsHandler {
 
 	/**
 	 * This method gets the overall playtime out of the database
-	 * @param nickname a String representation of the nickname
-	 * @return a long of milliseconds which represents the overall  playtime
+	 * 
+	 * @author jhuhn
+	 * @param nickname
+	 *            a String representation of the nickname
+	 * @return a long of milliseconds which represents the overall playtime
 	 */
 	public static long getOverallPlaytime(String nickname) {
 		PreparedStatement stmt;
@@ -90,9 +93,13 @@ public class SQLStatisticsHandler {
 
 	/**
 	 * This method adds playtime to the overall playtime
+	 * 
 	 * @author jhuhn
-	 * @param nickname a String representation of the username
-	 * @param time a long of milliseconds which represents time to add to the overall playtime
+	 * @param nickname
+	 *            a String representation of the username
+	 * @param time
+	 *            a long of milliseconds which represents time to add to the
+	 *            overall playtime
 	 */
 	public static void addOverallPlaytime(String nickname, long time) {
 		long oldPlaytime = getOverallPlaytime(nickname);
@@ -111,8 +118,10 @@ public class SQLStatisticsHandler {
 
 	/**
 	 * This method gets all games that the user ever played
+	 * 
 	 * @author jhuhn
-	 * @param nickname a String representation of the username
+	 * @param nickname
+	 *            a String representation of the username
 	 * @return an Integer which represents all games that the user played
 	 */
 	public static int getOverallGamesPlayed(String nickname) {
@@ -132,8 +141,10 @@ public class SQLStatisticsHandler {
 
 	/**
 	 * This method increments the overall games played statistic
+	 * 
 	 * @author jhuhn
-	 * @param nickname a String representation of the username
+	 * @param nickname
+	 *            a String representation of the username
 	 */
 	private static void incrementOverallGamesPlayed(String nickname) {
 		try {
@@ -179,8 +190,10 @@ public class SQLStatisticsHandler {
 
 	/**
 	 * This method gets the rank of the user
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param nickname String representation of the account name
+	 * @param nickname
+	 *            String representation of the account name
 	 * @return an int which represents the rank of the user
 	 */
 	public static int getRank(String nickname) {
@@ -199,8 +212,12 @@ public class SQLStatisticsHandler {
 
 	/**
 	 * This method sets the rank of the user
-	 * @param nickname String representation of the account name
-	 * @param rank an int which sets the rank of the user
+	 * 
+	 * @author jhuhn
+	 * @param nickname
+	 *            String representation of the account name
+	 * @param rank
+	 *            an int which sets the rank of the user
 	 */
 	public static void setRank(String nickname, int rank) {
 		try {
@@ -256,7 +273,9 @@ public class SQLStatisticsHandler {
 	}
 
 	/**
-	 * @param nickname String representation of the account name
+	 * @author jhuhn
+	 * @param nickname
+	 *            String representation of the account name
 	 * @return an Integer of all wins that has the user in the database
 	 */
 	public static int getWins(String nickname) {
@@ -275,8 +294,10 @@ public class SQLStatisticsHandler {
 
 	/**
 	 * This method gets all losses from the database
+	 * 
 	 * @author jhuhn
-	 * @param nickname String representation of the account name
+	 * @param nickname
+	 *            String representation of the account name
 	 * @return an Integer of all losses that has the user in the database
 	 */
 	public static int getLosses(String nickname) {
@@ -295,8 +316,11 @@ public class SQLStatisticsHandler {
 
 	/**
 	 * This method gets the win loss ratio of the user
-	 * @param nickname String representation of the account name
-	 * @return a Double which represents the win/loss ratio of the database 
+	 * 
+	 * @author jhuhn
+	 * @param nickname
+	 *            String representation of the account name
+	 * @return a Double which represents the win/loss ratio of the database
 	 */
 	public static double getWinLossRatio(String nickname) {
 		PreparedStatement stmt;
@@ -314,6 +338,8 @@ public class SQLStatisticsHandler {
 
 	/**
 	 * This method gets all statistics from the database
+	 * 
+	 * @author jhuhn
 	 * @return a twodimensional array which is filled with all statistics
 	 */
 	public static String[][] getAllStatistics() {

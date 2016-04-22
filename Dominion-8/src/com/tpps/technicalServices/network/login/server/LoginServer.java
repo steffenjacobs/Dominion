@@ -11,8 +11,10 @@ import com.tpps.technicalServices.network.login.SQLHandling.SQLHandler;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLOperations;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 import com.tpps.technicalServices.network.login.SQLHandling.Utilties;
+
 /**
  * This class sets the LoginServer up.
+ * 
  * @author jhuhn - Johannes Huhn
  */
 public class LoginServer extends Server{
@@ -21,12 +23,20 @@ public class LoginServer extends Server{
 	
 	/**
 	 * This method initializes the LoginServer object and the MySQL server
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param host a String representation of the hostname
-	 * @param port a String representation of the used MySQL server port
-	 * @param username a String representation of the used username of the MySQL database
-	 * @param password a String representation in plaintext of the MySQL server root password 
-	 * @param database a String representation of the database(MySQL) to use
+	 * @param host
+	 *            a String representation of the hostname
+	 * @param port
+	 *            a String representation of the used MySQL server port
+	 * @param username
+	 *            a String representation of the used username of the MySQL
+	 *            database
+	 * @param password
+	 *            a String representation in plaintext of the MySQL server root
+	 *            password
+	 * @param database
+	 *            a String representation of the database(MySQL) to use
 	 * @throws IOException
 	 */
 	public LoginServer(String host, String port, String username, String password, String database) throws IOException {
@@ -39,8 +49,10 @@ public class LoginServer extends Server{
 	}
 	
 	/**
-	 * This methods is called when the server is finished with initializing
-	 * This method outputs a 'Dominion Login Server' banner and delivers specific server commands like help, reconnect or some basic sql statements
+	 * This methods is called when the server is finished with initializing This
+	 * method outputs a 'Dominion Login Server' banner and delivers specific
+	 * server commands like help, reconnect or some basic sql statements
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 */
 	private void setConsoleOutput(){
@@ -121,13 +133,22 @@ public class LoginServer extends Server{
 	}
 	
 	/**
-	 * This method initializes the SQLHandler with host, port etc. and connects to the MySQL databse
+	 * This method initializes the SQLHandler with host, port etc. and connects
+	 * to the MySQL databse
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param host a String representation of the hostname
-	 * @param port a String representation of the used MySQL server port
-	 * @param username a String representation of the used username of the MySQL database
-	 * @param password a String representation in plaintext of the MySQL server root password 
-	 * @param database a String representation of the database(MySQL) to use
+	 * @param host
+	 *            a String representation of the hostname
+	 * @param port
+	 *            a String representation of the used MySQL server port
+	 * @param username
+	 *            a String representation of the used username of the MySQL
+	 *            database
+	 * @param password
+	 *            a String representation in plaintext of the MySQL server root
+	 *            password
+	 * @param database
+	 *            a String representation of the database(MySQL) to use
 	 */
 	private void initMySQLServer(String host, String port, String username, String password, String database){
 		SQLHandler.init(host, port, username, password, database);
@@ -135,8 +156,10 @@ public class LoginServer extends Server{
 	}
 	
 	/**
+	 * main entrypoint for the loginserver
 	 * 
 	 * @param args
+	 *            not used
 	 */
 	public static void main(String[] args) {
 		try {
@@ -154,8 +177,9 @@ public class LoginServer extends Server{
 	}
 	
 	/**
-	 * This method is important to setup the mysql database
-	 * This method creates MySQL tables and/or databases, if they aren't created
+	 * This method is important to setup the mysql database This method creates
+	 * MySQL tables and/or databases, if they aren't created
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 */
 	private void checkExistingDatabase() {

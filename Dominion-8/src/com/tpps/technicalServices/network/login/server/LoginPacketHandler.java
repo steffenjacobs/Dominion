@@ -23,6 +23,7 @@ import com.tpps.technicalServices.network.login.packets.PacketRegisterRequest;
 
 /**
  * This class delivers all functionalities that are used by the LoginServer
+ * 
  * @author jhuhn - Johannes Huhn
  */
 public class LoginPacketHandler extends PacketHandler{
@@ -32,7 +33,9 @@ public class LoginPacketHandler extends PacketHandler{
 	private ConcurrentHashMap<String, Integer> waitingForSessionAnswer;
 	
 	/**
-	 * Initializes the LoginPacketHandler object, opens a connection to the Sessionserver with a sessionclient
+	 * Initializes the LoginPacketHandler object, opens a connection to the
+	 * Sessionserver with a sessionclient
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 */
 	public LoginPacketHandler() {
@@ -45,10 +48,11 @@ public class LoginPacketHandler extends PacketHandler{
 	}
 
 	/**
-	 * called when a packet from the LoginClient received,
-	 * method to handle the received packet from the loginClient
-	 * important to validate the loginrequest and sends a packet back to the loginClient
-	 * important to validate the Accountcreation and sends a packet back to the loginClient
+	 * called when a packet from the LoginClient received, method to handle the
+	 * received packet from the loginClient important to validate the
+	 * loginrequest and sends a packet back to the loginClient important to
+	 * validate the Accountcreation and sends a packet back to the loginClient
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 */
 	@Override

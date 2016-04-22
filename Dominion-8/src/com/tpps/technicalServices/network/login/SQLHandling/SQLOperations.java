@@ -7,16 +7,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
+ * This class delivers functionalities that is used to handle databases The main
+ * focus of this class is handling the table of the account details
+ * 
  * @author jhuhn - Johannes Huhn
- * This class delivers functionalities that is used to handle databases
- * The main focus of this class is handling the table of the account details
  */
 public class SQLOperations {
 	
 
 	/**
 	 * @author jhuhn - Johannes Huhn
-	 * @param table String of the named table to ask in database
+	 * @param table
+	 *            String of the named table to ask in database
 	 * @return true if the table exists in the database, false else
 	 */
 	public static boolean checkTable(String table){
@@ -37,8 +39,10 @@ public class SQLOperations {
 	
 	/**
 	 * This method checks if a database exists
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param database a String representation of the database's name
+	 * @param database
+	 *            a String representation of the database's name
 	 * @return true if the table exists in the database, false else
 	 */
 	public static boolean checkDatabase(String database){
@@ -61,10 +65,10 @@ public class SQLOperations {
 	}
 	
 	/**
-	 * This method creates the table accountdetails
+	 * This method creates a table 'accountdetails' in the database Columns are:
+	 * nickname, email, salt_hashed_pw, salt
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * This method creates a table 'accountdetails' in the database
-	 * Columns are: nickname, email, salt_hashed_pw, salt
 	 */
 	public static void createAccountdetailsTable(){
 		String sqlStatement = "CREATE TABLE accountdetails ("
@@ -84,7 +88,10 @@ public class SQLOperations {
 	
 	/**
 	 * This method gets the nickname from an email adress
-	 * @param emailOrNickname A String which can be a an mailadress or a username
+	 * 
+	 * @author jhuhn
+	 * @param emailOrNickname
+	 *            A String which can be a an mailadress or a username
 	 * @return a String representation of the username
 	 */
 	public static String getNicknameFromEmail(String emailOrNickname){
@@ -106,15 +113,19 @@ public class SQLOperations {
 	
 	/**
 	 * This method creates an account into the database
-	 *  @author jhuhn - Johannes Huhn
-	 *  @param nickname plaintext representation of the claimed username,
-	 *  @param	email plaintext representation of the claimed email
-	 *  @param salt_hashed_pw a String representation of the double hashed password
-	 *  @param salt a String representation of the used salt
-	 *  @return 1 if account created successfully,
-	 *  		2 if nickname already in use,
-	 *  		3 if email already in use 
-	 *  */
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param nickname
+	 *            plaintext representation of the claimed username,
+	 * @param email
+	 *            plaintext representation of the claimed email
+	 * @param salt_hashed_pw
+	 *            a String representation of the double hashed password
+	 * @param salt
+	 *            a String representation of the used salt
+	 * @return 1 if account created successfully, 2 if nickname already in use,
+	 *         3 if email already in use
+	 * */
 	public static int createAccount(String nickname, String email, String salt_hashed_pw, String salt){		
 		if(doesMailExist(email)){
 			System.out.println("email already in use");
@@ -138,9 +149,10 @@ public class SQLOperations {
 		return 1;
 	}
 	
-	/** 
+	/**
 	 * @author jhuhn - Johannes Huhn
-	 * @param email String representation of the plaintext of requested email
+	 * @param email
+	 *            String representation of the plaintext of requested email
 	 * @return 1 if email already exists in database, 0 if not.
 	 */
 	public static boolean doesMailExist(String email){
@@ -158,10 +170,13 @@ public class SQLOperations {
 		}
 		return true;
 	}
+
 	/**
 	 * This method creates a database
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param database String representation of the database to be created 
+	 * @param database
+	 *            String representation of the database to be created
 	 */
 	public static void createDatabase(String database){		
 		try {
@@ -180,8 +195,10 @@ public class SQLOperations {
 	
 	/**
 	 * This method gets the salt from the database
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param nickname is the nickname or the email of the user
+	 * @param nickname
+	 *            is the nickname or the email of the user
 	 * @return a String representation of the requested salt, null for failure
 	 */
 	public static String getSaltForLogin(String nickname){
@@ -197,15 +214,20 @@ public class SQLOperations {
 		//	e.printStackTrace();
 			return null;
 		}		
-	//	return null;
 	}
 
 	/**
-	 * This method checks if the calculated hash matches with the hash out ouf the database
+	 * This method checks if the calculated hash matches with the hash out ouf
+	 * the database
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param nickname a String representation of the username, needed to get the salt hashed password
-	 * @param doublehashedpw a String representation of the calculated hash
-	 * @return true, if the calculated hash(deliver) matches with the hash out of the database 
+	 * @param nickname
+	 *            a String representation of the username, needed to get the
+	 *            salt hashed password
+	 * @param doublehashedpw
+	 *            a String representation of the calculated hash
+	 * @return true, if the calculated hash(deliver) matches with the hash out
+	 *         of the database
 	 */
 	public static boolean rightDoubleHashedPassword(String nickname, String doublehashedpw){
 		try {
@@ -228,6 +250,7 @@ public class SQLOperations {
 	
 	/**
 	 * This method gets all nicknames(PRIMARY KEY) in the table accountdetails
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 * @return a String with all nicknames in the table accountdetails
 	 */
@@ -248,8 +271,10 @@ public class SQLOperations {
 	
 	/**
 	 * This methods deletetes a table
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param tablename a String representation of the table to delete
+	 * @param tablename
+	 *            a String representation of the table to delete
 	 * @return true if the table deletes successfully, false else
 	 */
 	public static boolean deleteTable(String tablename){
@@ -266,6 +291,7 @@ public class SQLOperations {
 
 	/**
 	 * This method gets all tables (names) that are in the database
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 * @return a String with all tables
 	 */

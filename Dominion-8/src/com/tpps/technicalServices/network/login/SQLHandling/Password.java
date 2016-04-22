@@ -3,10 +3,10 @@ package com.tpps.technicalServices.network.login.SQLHandling;
 import java.security.MessageDigest;
 
 /**
+ * This class delivers all functionalities that is needed to create or validate
+ * an used account This classes uses hashing
  * 
  * @author jhuhn - Johannes Huhn
- * This class delivers all functionalities that is needed to create or validate an used account
- * This classes uses  hashing
  */
 public class Password {
 	
@@ -15,8 +15,9 @@ public class Password {
 	private String hashedPassword;
 	
 	/**
-	 * @author jhuhn - Johannes Huhn
 	 * creates salt & hashed password for a given plaintext
+	 * 
+	 * @author jhuhn - Johannes Huhn
 	 * @param plaintext password in clear characters
 	 */
 	public Password(String plaintext){
@@ -32,10 +33,13 @@ public class Password {
 	}
 	
 	/**
-	 * @author jhuhn - Johannes Huhn
 	 * creates the hashed password for given plaintext and salt
-	 * @param plaintext password in clear characters
-	 * @param salt	
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param plaintext
+	 *            password in clear characters
+	 * @param salt
+	 *            String representation of the salt
 	 */
 	public Password(String plaintext, String salt){
 		this.plaintext = plaintext;
@@ -48,8 +52,9 @@ public class Password {
 	}
 	
 	/**
-	 * @author jhuhn - Johannes Huhn
 	 * Creates random bytes requires to generate a salt
+	 * 
+	 * @author jhuhn - Johannes Huhn
 	 * @return a byte array of a random generated salt value
 	 */
 	public byte[] generateSalt(){
@@ -57,8 +62,10 @@ public class Password {
 	}
 	
 	/**
+	 * This method generates with the plaintext and a salt a hashed value for
+	 * security reasons
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * This method generates with the plaintext and a salt a hashed value for security reasons
 	 * @return a String of unique created hash in UTF-8
 	 * @throws Exception
 	 */
@@ -74,7 +81,9 @@ public class Password {
 	
 	/**
 	 * @author jhuhn - Johannes Huhn
-	 * @param externalHashedPassword a String that should be compared with the hashed value of this object
+	 * @param externalHashedPassword
+	 *            a String that should be compared with the hashed value of this
+	 *            object
 	 * @return true, if the hashes are equal, false else
 	 */
 	public boolean SameHashedPassword(String externalHashedPassword){
@@ -83,16 +92,18 @@ public class Password {
 
 	/**
 	 * @author jhuhn - Johannes Huhn
-	 * @return a String representation of the password as a plaintext 
+	 * @return a String representation of the password as a plaintext
 	 */
 	public String getPlaintext() {
 		return plaintext;
 	}
 
 	/**
-	 * @author jhuhn - Johannes Huhn
 	 * sets the plaintext (password)
-	 * @param plaintext String representation of the password to set
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param plaintext
+	 *            String representation of the password to set
 	 */
 	public void setPlaintext(String plaintext) {
 		this.plaintext = plaintext;
@@ -107,9 +118,11 @@ public class Password {
 	}
 
 	/**
-	 * @author jhuhn - Johannes Huhn
 	 * sets the salt
-	 * @param salt to set
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param salt
+	 *            salt to set
 	 */
 	public void setSalt(String salt) {
 		this.salt = salt;
@@ -125,7 +138,8 @@ public class Password {
 	
 	/**
 	 * @author jhuhn - Johannes Huhn
-	 * @param hashedPassword sets the hashed password
+	 * @param hashedPassword
+	 *            sets the hashed password
 	 */
 	public void setHashedPassword(String hashedPassword) {
 		this.hashedPassword = hashedPassword;
