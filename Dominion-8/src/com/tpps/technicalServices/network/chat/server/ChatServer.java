@@ -17,8 +17,18 @@ import com.tpps.technicalServices.network.core.Server;
  */
 public class ChatServer extends Server {
 
+	/**
+	 * Integer that represents the port of the ChatServer instance
+	 *
+	 * @author jhuhn - Johannes Huhn
+	 */
 	public static int port = 1340;
 	private ChatPacketHandler chatpackethandler;
+	/**
+	 * a SimpleDateFormat object to add time stamps to all chatmessages
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 */
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]: ");
 
 	/**
@@ -98,6 +108,13 @@ public class ChatServer extends Server {
 		}
 	}
 
+	/**
+	 * main entry point for the ChatServer instance
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param args
+	 *            unused
+	 */
 	public static void main(String[] args) {
 		try {
 			new ChatServer();

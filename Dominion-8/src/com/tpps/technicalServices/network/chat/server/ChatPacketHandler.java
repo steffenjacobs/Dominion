@@ -19,8 +19,10 @@ import com.tpps.technicalServices.network.core.events.NetworkListener;
 import com.tpps.technicalServices.network.core.packet.Packet;
 
 /**
- * This class is used to control the received packets from the server
- * Mainly this class is responsible for passing the packets to the global chat or to one specific chatroom
+ * This class is used to control the received packets from the server Mainly
+ * this class is responsible for passing the packets to the global chat or to
+ * one specific chatroom
+ * 
  * @author jhuhn - Johannes Huhn
  */
 public class ChatPacketHandler extends PacketHandler{
@@ -31,6 +33,7 @@ public class ChatPacketHandler extends PacketHandler{
 	
 	/**
 	 * initializes the chathandler object, respectively the list of chatrooms
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 */
 	public ChatPacketHandler() {				
@@ -38,10 +41,12 @@ public class ChatPacketHandler extends PacketHandler{
 	}
 	
 	/**
-	 * This method is called when the chatserver receives a packet from a client.
-	 * It casts the packet to the right class and parses information out of the packet.
-	 * With these information (sender, message, receiver) the method finds out 
-	 * if the packet passes to the gloabl chat or to one specific chatroom
+	 * This method is called when the chatserver receives a packet from a
+	 * client. It casts the packet to the right class and parses information out
+	 * of the packet. With these information (sender, message, receiver) the
+	 * method finds out if the packet passes to the gloabl chat or to one
+	 * specific chatroom
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 */
 	@Override
@@ -54,7 +59,7 @@ public class ChatPacketHandler extends PacketHandler{
 			if(room != null){
 				room.sendChatToAllExceptSender(castedpacket);
 			}else{
-				global.sendChatToAll(castedpacket);
+				global.sendChatToAllExceptSender(castedpacket);
 			}
 			break;
 			
@@ -103,6 +108,17 @@ public class ChatPacketHandler extends PacketHandler{
 		}
 	}
 	
+	/**
+	 * This method is called when the ChatController class sends a Packet to the
+	 * server. The ChatController handles the communication with the GameServer
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * 
+	 * @param packet
+	 *            the packet that received from the ChatController
+	 * @param port
+	 *            the port from the ChatController as an Integer
+	 */
 	private void evaluateChatController(PacketChatController packet, int port){
 		System.out.println("received chatcommand");
 		switch(packet.getCommand()){
@@ -118,17 +134,19 @@ public class ChatPacketHandler extends PacketHandler{
 		case "deleteChatroom":
 			this.deleteChatRoom(packet.getMemberOfChatRoom());
 		case "addUser":
-			System.out.println("received command is a addUserCommand");
 			this.insertPlayerToChatRoom(packet.getUser(), packet.getChatroomId(), packet.getUserport());
 			break;
 		}
 	}
 	
 	/**
-	 * This method finds out the chatroom where the sender belongs to
+	 * This method finds out the chatroom where the given sender belongs to
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param sender a String representation of the user, that sent the packet
-	 * @return one specific chatroom object where the sender is included, if the sender isn't part of a chatroom the chatroom returns null
+	 * @param sender
+	 *            a String representation of the user, that sent the packet
+	 * @return one specific chatroom object where the sender is included, if the
+	 *         sender isn't part of a chatroom the chatroom returns null
 	 */
 	public ChatRoom getSpecificChatRoom(String sender){
 		Iterator<ChatRoom> chatiter = this.chatrooms.iterator();
@@ -146,11 +164,16 @@ public class ChatPacketHandler extends PacketHandler{
 	
 	/**
 	 * This method is able to create a chatroom for 4 user.
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param user1 a String representation of one nickname
-	 * @param user2 a String representation of one nickname
-	 * @param user3 a String representation of one nickname
-	 * @param user4 a String representation of one nickname
+	 * @param user1
+	 *            a String representation of one nickname
+	 * @param user2
+	 *            a String representation of one nickname
+	 * @param user3
+	 *            a String representation of one nickname
+	 * @param user4
+	 *            a String representation of one nickname
 	 */
 	public void createChatRoom(String user1, String user2, String user3, String user4){
 		ArrayList<String> clients = new ArrayList<String>();
@@ -162,9 +185,13 @@ public class ChatPacketHandler extends PacketHandler{
 	}
 	
 	/**
-	 * This method is able to create a chatroom.
+	 * This method is able to add a specific chatroom
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param clients an arraylist of Strings which includes nicknames that should be all together in one chatroom
+	 * @param clients
+	 *            an arraylist of Strings which includes nicknames that should
+	 *            be all together in one chatroom
+	 * @return the chatroom id as an Integer
 	 */
 	public int addChatRoom(ArrayList<String> clients){
 		ConcurrentHashMap<String, Integer> clientsByUserRoom = new ConcurrentHashMap<String, Integer>();
@@ -180,9 +207,11 @@ public class ChatPacketHandler extends PacketHandler{
 	}
 		
 	/**
-	 * This method deletes a chatroom by an id
+	 * This method deletes a chatroom by a chatroom id
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param id an Integer which identifies the chatroom
+	 * @param id
+	 *            an Integer which identifies the chatroom
 	 * @return true if the chatroom deleted successfully, false else
 	 */
 	public boolean deleteChatRoom(int id){		
@@ -197,10 +226,13 @@ public class ChatPacketHandler extends PacketHandler{
 	}
 	
 	/**
-	 * This method deletes a chatroom by one member
+	 * This method deletes a chatroom by one given member
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param user a String representation of a user that is included in one chatroom
-	 * @return true if the chatroom deleted successfully, false else 
+	 * @param user
+	 *            a String representation of a user that is included in one
+	 *            chatroom
+	 * @return true if the chatroom deleted successfully, false else
 	 */
 	public boolean deleteChatRoom(String user){
 		ChatRoom chatroom = this.getSpecificChatRoom(user);
@@ -212,9 +244,12 @@ public class ChatPacketHandler extends PacketHandler{
 	}
 	
 	/**
-	 * This method removes one chatroom object from the chatroom list and puts all members in the global chat
+	 * This method removes one chatroom object from the chatroom list and puts
+	 * all members in the global chat
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param chatroom the chatroom object to delete
+	 * @param chatroom
+	 *            the chatroom object to delete
 	 */
 	private void killChatRoom(ChatRoom chatroom){
 		ConcurrentHashMap<String, Integer> clientsByUsername = chatroom.getClientsByUsername();				
@@ -228,8 +263,10 @@ public class ChatPacketHandler extends PacketHandler{
 	
 	/**
 	 * This method is able to find out if a user is in a chatroom or not
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param user a String representation of the nickname
+	 * @param user
+	 *            a String representation of the users nickname
 	 * @return true if the user is in a chatroom, false else
 	 */
 	public boolean isUserInChatRoom(String user){
@@ -248,6 +285,7 @@ public class ChatPacketHandler extends PacketHandler{
 	
 	/**
 	 * gets the server object
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 * @return the server object
 	 */
@@ -257,18 +295,20 @@ public class ChatPacketHandler extends PacketHandler{
 
 	/**
 	 * initializes the server and the globalchat
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 * @param server
+	 *            the server object that belongs to the ChatPacketHandler
 	 */
 	public void init(ChatServer server) {
 		this.server = server;
-		this.global = new GlobalChat(server, this);
-		System.out.println(ChatPacketHandler.this.global);
-		this.server.getListenerManager().registerListener(new Listener());
+		this.global = new GlobalChat(server);		
+		this.server.getListenerManager().registerListener(new ConnectAndDisconnectListener());
 	}
 	
 	/**
 	 * gets all chatrooms
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 * @return an arraylist of all chatrooms
 	 */
@@ -277,8 +317,12 @@ public class ChatPacketHandler extends PacketHandler{
 	}
 	
 	/**
-	 * This method moves the kicked player from the old chatroom to the global chat
+	 * This method moves the kicked player from the old chatroom to the global
+	 * chat. This method is called when a user gets votekicked
+	 * 
+	 * @author jhuhn - Johannes Huhn
 	 * @param usertogetkicked
+	 *            a String representation of the user who have been voted off
 	 */
 	public void kickPlayer(String usertogetkicked){
 		ChatRoom chatroom = this.getSpecificChatRoom(usertogetkicked);
@@ -294,6 +338,17 @@ public class ChatPacketHandler extends PacketHandler{
 		}
 	}
 	
+	/**
+	 * This method inserts a player to the chatroom.
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param nickname
+	 *            a String representation of the users nickname
+	 * @param chatroomId
+	 *            the chatroom id which identifies the right chatroom
+	 * @param userport
+	 *            the port which is needed to identify the chatclient
+	 */
 	public void insertPlayerToChatRoom(String nickname, int chatroomId, int userport){
 		for (Iterator<ChatRoom> iterator = chatrooms.iterator(); iterator.hasNext();) {
 			ChatRoom chatRoom = (ChatRoom) iterator.next();
@@ -305,19 +360,40 @@ public class ChatPacketHandler extends PacketHandler{
 		}
 	}
 	
-	private class Listener implements NetworkListener{
+	/**
+	 * This Listeners handles all users that disconnects from the server
+	 * 
+	 * @author jhuhn
+	 *
+	 */
+	private class ConnectAndDisconnectListener implements NetworkListener{
 
 		@Override
 		public void onClientConnect(int port) { }
 
 		@Override
-		public void onClientDisconnect(int port) {
-			System.out.println(ChatPacketHandler.this.global);
+		/**
+		 * This method is called when a user disconnects.
+		 * This method identifies if the user was in a chatroom or in the globalchat
+		 * 
+		 * @author jhuhn - Johannes Huhn
+		 * @param port 
+		 * 			Integer representation of the clients port
+		 */
+		public void onClientDisconnect(int port) {			
 			if(!this.kickUserFromGlobalChat(port)){
 				this.kickUserFromChatRoom(port);
 			}
 		}
 		
+		/**
+		 * This method kicks a user from his specific chatroom.
+		 * 
+		 * @author jhuhn - Johannes Huhn
+		 * @param port
+		 *            Integer representation of the clients port
+		 * @return true, if the user kicked kicked correctly, false else
+		 */
 		private boolean kickUserFromChatRoom(int port){
 			Iterator<ChatRoom> chatIter = ChatPacketHandler.this.chatrooms.iterator();
 			while(chatIter.hasNext()){
@@ -339,8 +415,15 @@ public class ChatPacketHandler extends PacketHandler{
 			return false;
 		}
 		
+		/**
+		 * This method kicks a user from the globalchat
+		 * 
+		 * @author jhuhn - Johannes Huhn
+		 * @param port
+		 *            Integer representation of the users port
+		 * @return true, if the user kicked correctly, false else
+		 */
 		private boolean kickUserFromGlobalChat(int port){
-		//	ConcurrentHashMap<String, Integer> clientsByUsername = ChatPacketHandler.this.global.getClientsByUsername();
 			for (Entry<String, Integer> entry : ChatPacketHandler.this.global.getClientsByUsername().entrySet()) {
 				if(entry.getValue() == port){
 					ChatPacketHandler.this.global.removeUser(entry.getKey());

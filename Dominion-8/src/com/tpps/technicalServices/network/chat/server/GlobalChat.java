@@ -15,6 +15,12 @@ import com.tpps.technicalServices.network.chat.packets.PacketSendChatToClient;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLHandler;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 
+/**
+ * This class delivers all functionalities to run a global chat
+ * 
+ * @author jhuhn
+ *
+ */
 public class GlobalChat {
 	
 	private final static String servercommand1 = "help";
@@ -25,14 +31,20 @@ public class GlobalChat {
 
 	private ChatServer server;
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
-	private ChatPacketHandler chathandler;
-	
-	public GlobalChat (ChatServer server, ChatPacketHandler chathandler){
+
+	/**
+	 * initializes the global chat instance
+	 * @param server the server object that belongs to the ChatPacketHandler
+	 */
+	public GlobalChat (ChatServer server){
 		this.server =  server;
-		this.chathandler = chathandler;
 	}
 	
-	public void sendChatToAll(PacketSendChatAll packet){
+	/**
+	 * This method sends a chatmessage to all clients except the client who sent the message
+	 * @param packet a packet that received from the ChatPacketHandler from a client
+	 */
+	public void sendChatToAllExceptSender(PacketSendChatAll packet){
 		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + packet.getUsername() + ": " + packet.getChatmessage());
 		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 		    String nickname = entry.getKey();
@@ -48,6 +60,10 @@ public class GlobalChat {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param packet
+	 */
 	public void sendChatToClient(PacketSendChatToClient packet){
 		String receiver = packet.getReceiver().trim();
 		if(!this.clientsByUsername.containsKey(receiver)){

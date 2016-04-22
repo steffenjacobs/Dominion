@@ -32,22 +32,29 @@ public class ChatRoom {
 	private int id;
 	private static int idcounter = 1;
 	
-	private final static String servercommand1 = "help";
-	private final static String servercommand2 = "show all clients";
-	private final static String servercommand3 = "show all ports";
-	private final static String servercommand4 = "show all clients by ports";
-	private final static String servercommand5 = "votekick <nickname>";
-	private final static String servercommand6 = "vote [y/n] only use in a active vote";
-	private final static String servercommand7 = "show votekickresults";
-	private final static String servercommand8 = "show all statistics";
+	private final static String help_servercommand1 = "help";
+	private final static String clients_servercommand2 = "show all clients";
+	private final static String ports_servercommand3 = "show all ports";
+	private final static String clientsAndPort_servercommand4 = "show all clients by ports";
+	private final static String votekick_servercommand5 = "votekick <nickname>";
+	private final static String vote_servercommand6 = "vote [y/n] only use in a active vote";
+	private final static String votekickresult_servercommand7 = "show votekickresults";
+	private final static String statistics_servercommand8 = "show all statistics";
 	
 	private String votekickresults;	
 	private Votekick votekick;
 	
 	/**
 	 * initializes the ChatRoom object
-	 * @param clientsByUser a ConcuttentHashMap that handle all clients and ports for this chatroom object
-	 * @param server the serverobject which is important to send packets
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param clientsByUser
+	 *            a ConcuttentHashMap that handle all clients and ports for this
+	 *            chatroom object
+	 * @param server
+	 *            the serverobject which is important to send packets
+	 * @param chatpackethandler
+	 *            the chatpackethandler object, that receives all packets
 	 */
 	public ChatRoom(ConcurrentHashMap<String, Integer> clientsByUser, ChatServer server, ChatPacketHandler chatpackethandler){
 		this.clientsByUsername = clientsByUser;
@@ -57,10 +64,13 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * This method sends a packet to all clients in a chatroom except the user that sent the packet,
-	 * used for public chat in chatroom
-	 * @param packet a packet that received the server from a user (public chat)
-	 */	
+	 * This method sends a packet to all clients in a chatroom except the user
+	 * that sent the packet, used for public chat in chatroom
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param packet
+	 *            a packet that received the server from a user (public chat)
+	 */
 	public void sendChatToAllExceptSender(PacketSendChatAll packet){
 		String message = packet.getChatmessage();
 		String sender = packet.getUsername();
@@ -80,8 +90,12 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * this method either counts a vote from a user or sends a message back that he already voited
-	 * @param packet the packet that received to cast a vote
+	 * this method either counts a vote from a user or sends a message back that
+	 * he already voited
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param packet
+	 *            the packet that received to cast a vote
 	 */
 	public void handleVote(PacketChatVote packet){
 		if(votekick.getNotvotedyet().contains(packet.getSender())){
@@ -99,7 +113,11 @@ public class ChatRoom {
 	
 	/**
 	 * This method is responsible to send a private message to a client
-	 * @param packet the packet that received the server. it contains a private message
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param packet
+	 *            the packet that received the server. it contains a private
+	 *            message
 	 */
 	public void sendChatToChatRoomClient(PacketSendChatToClient packet){
 		String sender = packet.getSender();
@@ -127,8 +145,12 @@ public class ChatRoom {
 	
 	/**
 	 * This method is responsible to send a message back to a client
-	 * @param sender a String representation of the nickname who sent the message
-	 * @param answer the packet which receive the receiver (including the message)
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param sender
+	 *            a String representation of the nickname who sent the message
+	 * @param answer
+	 *            the packet which receive the receiver (including the message)
 	 */
 	public void sendChatToChatRoomClient(String sender, PacketSendAnswer answer){
 		int port = this.clientsByUsername.get(sender);
@@ -140,11 +162,13 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * 	This method evaluates commands and passes to the right method
-	 * @param packet the packet that received the server from a client
+	 * This method evaluates commands and passes to the right method
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param packet
+	 *            the packet that received the server from a client
 	 */
-	public void evaluateCommand(PacketSendChatCommand packet){
-		System.out.println("1|" + packet.getChatmessage() + "|");
+	public void evaluateCommand(PacketSendChatCommand packet){		
 		if(packet.getChatmessage().startsWith("votekick ")){
 			if(this.votekick != null){
 				PacketSendAnswer answer6 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There is an active vote currently");
@@ -154,34 +178,33 @@ public class ChatRoom {
 					e.printStackTrace();
 				}
 			}else{
-				this.evaluateCommand5(packet);									
+				this.setupVotekick(packet);									
 			}
 			return;
 		}else if(packet.getChatmessage().startsWith("vote ")){
-			this.evaluateCommand6(packet);
+			this.voteForVotekickCommand(packet);
 			return;
 		}
-		System.out.println("2|" + packet.getChatmessage() + "|");
-		System.out.println(servercommand1.equals(packet.getChatmessage()));
+		
 		switch(packet.getChatmessage()){
-		case servercommand1:
+		case help_servercommand1:
 			System.out.println("go to chatcmd1 <=> help command");
-			this.evaluateCommand1(packet);
+			this.evaluateHelpCommand(packet);
 			break;
-		case servercommand2:
-			this.evaluateCommand2(packet);
+		case clients_servercommand2:
+			this.evaluateShowAllClientsCommand(packet);
 			break;
-		case servercommand3:
-			this.evaluateCommand3(packet);
+		case ports_servercommand3:
+			this.evaluateShowAllPortsCommand(packet);
 			break;
-		case servercommand4: 
-			this.evaluateCommand4(packet);
+		case clientsAndPort_servercommand4: 
+			this.evaluateClientAndPortsCommand(packet);
 			break;
-		case servercommand7:
-			this.evaluateCommand7(packet);
+		case votekickresult_servercommand7:
+			this.evaluateShowVotekickResulutsCommand(packet);
 			break;
-		case servercommand8:
-			this.evaluateCommand8(packet);
+		case statistics_servercommand8:
+			this.evaluateStatisticsCommand(packet);
 			break;
 		default:
 			PacketSendAnswer answer5 = new PacketSendAnswer("Wrong command: " + packet.getChatmessage());
@@ -194,7 +217,16 @@ public class ChatRoom {
 		}		
 	}
 	
-	private void evaluateCommand8(PacketSendChatCommand packet){
+	/**
+	 * This method is called when a user types in chat: '/show all statistics'.
+	 * This method gets all statistics from the database from all users in the
+	 * chatroom
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param packet
+	 *            the packet that received from the user
+	 */
+	private void evaluateStatisticsCommand(PacketSendChatCommand packet){
 		SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
 		SQLHandler.connect();
 	
@@ -231,15 +263,19 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * executes the help command
-	 * @param packet the packet that received the server from a client
+	 * This method is called when a user types in chat: '/help'. This method
+	 * sends all chatcommands as a String back to the user
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param packet
+	 *            the packet that received the server from a client
 	 */
-	private void evaluateCommand1(PacketSendChatCommand packet){
-		String msg = "Commands: \n/" + servercommand1 + "\n/"
-				+ servercommand2 + "\n/" + servercommand3 + "\n/"
-				+ servercommand4 + "\n/" + servercommand5 + "\n/"
-				+ servercommand6 + "\n/" + servercommand7 + "\n/"
-				+ servercommand8 + "\n";
+	private void evaluateHelpCommand(PacketSendChatCommand packet){
+		String msg = "Commands: \n/" + help_servercommand1 + "\n/"
+				+ clients_servercommand2 + "\n/" + ports_servercommand3 + "\n/"
+				+ clientsAndPort_servercommand4 + "\n/" + votekick_servercommand5 + "\n/"
+				+ vote_servercommand6 + "\n/" + votekickresult_servercommand7 + "\n/"
+				+ statistics_servercommand8 + "\n";
 		PacketSendAnswer answer = new PacketSendAnswer(msg);
 		try {
 			this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
@@ -249,10 +285,14 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * executes the 'show all clients' command
-	 * @param packet the packet that received the server from a client
+	 * This method is called when a user types in chat: '/show all clients'. This
+	 * method put all users from this chatroom in a String and sends it back
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param packet
+	 *            the packet that received the server from a client
 	 */
-	private void evaluateCommand2(PacketSendChatCommand packet){
+	private void evaluateShowAllClientsCommand(PacketSendChatCommand packet){
 		Enumeration<String> clients = this.clientsByUsername.keys();
 		String msg2 = "All connected Clients in this chatroom: \n";
 		while(clients.hasMoreElements()){
@@ -267,10 +307,13 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * executes the 'show all ports' command
+	 * This method is called when a user types in chat: '/show all ports'. This
+	 * method put all ports from this chatroom in a String and sends it back
+	 * 
+	 * @author jhuhn - Johannes Huhn
 	 * @param packet the packet that received the server from a client
 	 */
-	private void evaluateCommand3(PacketSendChatCommand packet){
+	private void evaluateShowAllPortsCommand(PacketSendChatCommand packet){
 		Enumeration<Integer> ports = this.clientsByUsername.elements();
 		String msg3 = "All connected ports in this chatroom: \n";
 		while(ports.hasMoreElements()){
@@ -285,10 +328,13 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * executes the 'show all client and ports' command. This command combines servercommand3 & servercommand2
+	 * This method is called when a user types in chat: '/show all clients b ports'. This
+	 * method put all users/ports from this chatroom in a String and sends it back.
+	 * 
+	 * @author jhuhn - Johannes Huhn
 	 * @param packet the packet that received the server from a client
 	 */
-	private void evaluateCommand4(PacketSendChatCommand packet){
+	private void evaluateClientAndPortsCommand(PacketSendChatCommand packet){
 		Enumeration<Integer> ports2 = this.clientsByUsername.elements();
 		Enumeration<String> clients2 = this.clientsByUsername.keys();
 		String msg4 = "All connected clients with ports in this chatroom: \n";
@@ -304,10 +350,14 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * sets up the votekick command
-	 * @param packet the packet that received the server from a client
+	 * This mehtod is called when a user calls the /votekick command correctly.
+	 * It is used to set up a votekick object
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param packet
+	 *            the packet that received the server from a client
 	 */
-	private void evaluateCommand5(PacketSendChatCommand packet){
+	private void setupVotekick(PacketSendChatCommand packet){
 		try{	//sets up the votekick
 			String[] words = packet.getChatmessage().split("\\s+");
 			ArrayList<String> notvoted = this.getClients();
@@ -355,10 +405,13 @@ public class ChatRoom {
 	}
 
 	/**
-	 * evaluate the '/vote ' command
-	 * @param packet the packet that received the server from a client
+	 * evaluate the '/vote ' command. It is used to vote for a votekick.
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param packet
+	 *            the packet that received the server from a client
 	 */
-	private void evaluateCommand6(PacketSendChatCommand packet){
+	private void voteForVotekickCommand(PacketSendChatCommand packet){
 		if(this.votekick == null){
 			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There is currently no vote");
 			String sender = packet.getSender();
@@ -391,10 +444,14 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * executes the votekickresults command
-	 * @param packet the packet that received the server from a client
+	 * executes the 'show votekickresults' command. This method gets all results
+	 * and send it back to the user
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param packet
+	 *            the packet that received the server from a client
 	 */
-	private void evaluateCommand7(PacketSendChatCommand packet){
+	private void evaluateShowVotekickResulutsCommand(PacketSendChatCommand packet){
 		if(this.votekickresults == null){
 			PacketSendAnswer answerx = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There are no votekick results");
 			this.sendChatToChatRoomClient(packet.getSender(), answerx);
@@ -406,7 +463,10 @@ public class ChatRoom {
 	
 	/**
 	 * This methods sends a message to all clients in the chatroom
-	 * @param msg a String representation of text message to send
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param msg
+	 *            a String representation of text message to send
 	 */
 	public void sendMessageToAll(String msg){
 		String message = ChatServer.sdf.format(new Date().getTime()) + msg;
@@ -423,8 +483,10 @@ public class ChatRoom {
 	
 	/**
 	 * This method evaluates the votekick, if necessary the player gets kicked
+	 * 
+	 * @author jhuhn - Johannes Huhn
 	 */
-	public void evaluateVotekick(){
+	private void evaluateVotekick(){
 		String getkicked = this.votekick.getUsertogetkicked();
 		if(this.votekick.fastEvaluateVote()){			
 			this.chatpackethandler.kickPlayer(getkicked);
@@ -439,7 +501,10 @@ public class ChatRoom {
 	
 	/**
 	 * gets all clients in the chatroom
-	 * @return an Arraylist of Strings with all clients that are connected in the chatroom
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @return an Arraylist of Strings with all clients that are connected in
+	 *         the chatroom
 	 */
 	public ArrayList<String> getClients() {
 		ArrayList<String> clientsInChatRoom = new ArrayList<String>();
@@ -451,7 +516,7 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * 
+	 * @author jhuhn - Johannes Huhn
 	 * @return the chatroom id as an Integer
 	 */
 	public int getId() {
@@ -460,6 +525,8 @@ public class ChatRoom {
 	
 	/**
 	 * overrides the toString() method to get a useful String representation of the chatroom
+	 * 
+	 * @author jhuhn - Johannes Huhn
 	 */
 	@Override
 	public String toString(){
@@ -472,15 +539,22 @@ public class ChatRoom {
 	}
 	
 	/**
-	 * 
-	 * @return the ConcurrentHashMap included all clients by its ports
-	 * 	Key: String: username
-	 * Object: Integer: port
+	 * @author jhuhn - Johannes Huhn
+	 * @return the ConcurrentHashMap included all clients by its ports Key:
+	 *         String: username and Object: Integer: port
 	 */
 	public ConcurrentHashMap<String, Integer> getClientsByUsername() {
 		return clientsByUsername;
 	}
 	
+	/**
+	 * This method removes a user from this chatroom. It is called e.g. when a
+	 * user disconnects from the server
+	 * 
+	 * @author jhuhn - Johannes Huhn
+	 * @param user
+	 *            a String representation of the users nickname
+	 */
 	public void removeUser(String user){
 		this.clientsByUsername.remove(user);		
 	}
