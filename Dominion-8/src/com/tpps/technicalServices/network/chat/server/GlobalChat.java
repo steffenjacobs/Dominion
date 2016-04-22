@@ -103,10 +103,10 @@ public class GlobalChat {
 	 *            client
 	 */
 	public void sendChatCommand(int port, PacketSendChatCommand packet){
-		String msg = packet.getChatmessage();
+		String msg = packet.getChatcommand();
 		System.out.println("Chat Command: " + packet);
 		
-		if(!this.evaluateCommands(packet.getChatmessage(), packet.getSender(), port)){
+		if(!this.evaluateCommands(packet.getChatcommand(), packet.getSender(), port)){
 			PacketSendAnswer answer2 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "unknown command: " + msg + "\n");
 			try {
 				server.sendMessage(port, answer2);

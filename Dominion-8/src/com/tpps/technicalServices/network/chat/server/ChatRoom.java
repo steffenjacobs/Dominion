@@ -169,7 +169,7 @@ public class ChatRoom {
 	 *            the packet that received the server from a client
 	 */
 	public void evaluateCommand(PacketSendChatCommand packet){		
-		if(packet.getChatmessage().startsWith("votekick ")){
+		if(packet.getChatcommand().startsWith("votekick ")){
 			if(this.votekick != null){
 				PacketSendAnswer answer6 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There is an active vote currently");
 				try {
@@ -181,12 +181,12 @@ public class ChatRoom {
 				this.setupVotekick(packet);									
 			}
 			return;
-		}else if(packet.getChatmessage().startsWith("vote ")){
+		}else if(packet.getChatcommand().startsWith("vote ")){
 			this.voteForVotekickCommand(packet);
 			return;
 		}
 		
-		switch(packet.getChatmessage()){
+		switch(packet.getChatcommand()){
 		case help_servercommand1:
 			System.out.println("go to chatcmd1 <=> help command");
 			this.evaluateHelpCommand(packet);
@@ -207,7 +207,7 @@ public class ChatRoom {
 			this.evaluateStatisticsCommand(packet);
 			break;
 		default:
-			PacketSendAnswer answer5 = new PacketSendAnswer("Wrong command: " + packet.getChatmessage());
+			PacketSendAnswer answer5 = new PacketSendAnswer("Wrong command: " + packet.getChatcommand());
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer5);
 			} catch (IOException e) {			
@@ -359,7 +359,7 @@ public class ChatRoom {
 	 */
 	private void setupVotekick(PacketSendChatCommand packet){
 		try{	//sets up the votekick
-			String[] words = packet.getChatmessage().split("\\s+");
+			String[] words = packet.getChatcommand().split("\\s+");
 			ArrayList<String> notvoted = this.getClients();
 			notvoted.remove(packet.getSender());
 			
@@ -394,7 +394,7 @@ public class ChatRoom {
 	         //----------------------
 			
 		}catch(ArrayIndexOutOfBoundsException e){
-			PacketSendAnswer answer7 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "Wrong command " + packet.getChatmessage());
+			PacketSendAnswer answer7 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "Wrong command " + packet.getChatcommand());
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer7);
 			} catch (IOException e1) {					
@@ -426,12 +426,12 @@ public class ChatRoom {
 			return;
 		}
 		
-		if(packet.getChatmessage().startsWith("vote y")){
+		if(packet.getChatcommand().startsWith("vote y")){
 			this.votekick.addVote(packet.getSender(), true);
 			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "You voted successfully");
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
-		}else if(packet.getChatmessage().startsWith("vote n")){
+		}else if(packet.getChatcommand().startsWith("vote n")){
 			this.votekick.addVote(packet.getSender(), false);
 			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "You voted successfully");
 			String sender = packet.getSender();
