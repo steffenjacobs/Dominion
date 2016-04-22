@@ -3,6 +3,7 @@ package com.tpps.application.game.card;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -39,10 +40,11 @@ public class Card extends GameObject {
 	private GraphicFramework parent;
 	private double relativeX, relativeY, relativeWidth, relativeHeight;
 	private Image sourceImage;
-	private GameBackground gameBackground, cardReaction;
+	private GameBackground gameBackground;
 	private String handTrigger = "";
 	private int mouseReaction = 0;
-	private int cardClickCounter = 0;
+	private ArrayList<GameBackground> cardReaction = new ArrayList<>();
+	private GameBackground tmp;
 	private static int classID = 0;
 
 	/**
@@ -255,22 +257,11 @@ public class Card extends GameObject {
 	 */
 	@Override
 	public void onMouseClick() {
-		if (mouseReaction == 0 && !(handTrigger.equals("handCards") || handTrigger.equals("middleCards"))) {
-			cardReaction = new GameBackground(this.relativeX, this.relativeY, this.relativeWidth, this.relativeHeight,
-					102, GameWindow.getInstance().getClickImage(), this.parent);
-			this.parent.addComponent(cardReaction);
-			mouseReaction++;
-		}
 		if (DominionController.getInstance().isTurnFlag()) {
 			System.out.println("MouseClick on Card");
-
 			try {
 				DominionController.getInstance().getGameClient().sendMessage(
 						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
-				if (cardReaction != null) {
-					this.parent.removeComponent(cardReaction);
-					mouseReaction = 0;
-				}
 			} catch (IOException e) {
 
 				e.printStackTrace();
@@ -283,27 +274,41 @@ public class Card extends GameObject {
 	 */
 	@Override
 	public void onMouseDrag() {
-		if (mouseReaction == 0 && !(handTrigger.equals("handCards"))) {
-			cardReaction = new GameBackground(this.relativeX, this.relativeY, this.relativeWidth, this.relativeHeight,
-					102, GameWindow.getInstance().getClickImage(), this.parent);
-			this.parent.addComponent(cardReaction);
-			mouseReaction++;
-		}
 		if (DominionController.getInstance().isTurnFlag()) {
 			System.out.println("MouseClick on Card");
-
 			try {
 				DominionController.getInstance().getGameClient().sendMessage(
 						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
-				if (cardReaction != null) {
-					this.parent.removeComponent(cardReaction);
-					mouseReaction = 0;
-				}
 			} catch (IOException e) {
 
 				e.printStackTrace();
 			}
 		}
+		// if (mouseReaction == 0 &&
+		// !(handTrigger.equals("handCards"))&&DominionController.getInstance().isTurnFlag())
+		// {
+		// cardReaction = new GameBackground(this.relativeX, this.relativeY,
+		// this.relativeWidth, this.relativeHeight,
+		// 102, GameWindow.getInstance().getClickImage(), this.parent);
+		// this.parent.addComponent(cardReaction);
+		// mouseReaction++;
+		// }
+		// if (DominionController.getInstance().isTurnFlag()) {
+		// System.out.println("MouseClick on Card");
+		//
+		// try {
+		// DominionController.getInstance().getGameClient().sendMessage(
+		// new PacketPlayCard(this.id,
+		// DominionController.getInstance().getGameClient().getClientId()));
+		// if (cardReaction != null) {
+		// this.parent.removeComponent(cardReaction);
+		// mouseReaction = 0;
+		// }
+		// } catch (IOException e) {
+		//
+		// e.printStackTrace();
+		// }
+		// }
 	}
 
 	/**

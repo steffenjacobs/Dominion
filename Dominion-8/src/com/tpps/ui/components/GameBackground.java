@@ -19,6 +19,7 @@ public class GameBackground extends GameObject {
 
 	private static final long serialVersionUID = -8029224710447313551L;
 	private int layer;
+	private int counter;
 
 	/**
 	 * 
@@ -39,6 +40,13 @@ public class GameBackground extends GameObject {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
 		this.layer = _layer;
 
+	}
+	
+	public GameBackground(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
+			int _layer, Image sourceImage, GraphicFramework _parent, int counter) {
+		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
+		this.layer = _layer;
+		this.counter = counter;
 	}
 
 	@Override
@@ -69,6 +77,10 @@ public class GameBackground extends GameObject {
 	public void onMouseDrag() {
 		if (this.layer == 0)
 			GameWindow.getInstance().requestFocus();
+	}
+	
+	public int getCounter() {
+		return counter;
 	}
 
 	/**
