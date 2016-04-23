@@ -381,6 +381,7 @@ public class Deck {
 	public Card removeSaveFromDrawPile() throws NoSuchElementException{
 		this.shuffleIfLessThan(1);		
 		return this.drawPile.removeLast();		
+		
 	}
 	
 	/**

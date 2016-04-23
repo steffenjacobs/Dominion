@@ -1,17 +1,25 @@
 package com.tpps.technicalServices.network.matchmaking.server;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.Addresses;
+import com.tpps.technicalServices.network.core.Client;
+import com.tpps.technicalServices.network.core.PacketHandler;
+import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.GameServer;
+import com.tpps.technicalServices.network.gameSession.packets.PacketRegistratePlayerByServer;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 
 /**
@@ -43,6 +51,8 @@ public final class MatchmakingController {
 	private static Semaphore blockPort = new Semaphore(1);
 
 	private static CopyOnWriteArrayList<GameLobby> lobbies;
+
+	private static ExecutorService exec = Executors.newCachedThreadPool();
 
 	/**
 	 * @return the GameLobby associated with the lobbyID
@@ -78,12 +88,20 @@ public final class MatchmakingController {
 	 *            the GameLobby to start
 	 */
 	static void startGame(GameLobby lobby) {
+		exec.submit(()->{
 		// removeLobby(lobby);
 		String[] playerNames = new String[lobby.getPlayers().size()];
 		MPlayer player;
+
+		boolean hasAI = false;
+
 		for (int i = 0; i < lobby.getPlayers().size(); i++) {
 			player = lobby.getPlayers().get(i);
 			playerNames[i] = player.getPlayerName();
+
+			if (!hasAI && player.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+				hasAI = true;
+			}
 		}
 
 		// reserve port & start game-process
@@ -102,25 +120,29 @@ public final class MatchmakingController {
 			gameServersByLobby.put(lobby, gsThread);
 			gsThread.start();
 			Thread.sleep(500);
+
+			Client cl = null;
+			if (hasAI) {
+				cl = new Client(new InetSocketAddress(Addresses.getLocalHost(), freePort), new PacketHandler() {
+					@Override
+					public void handleReceivedPacket(int port, Packet packet) {
+						// do nothing - be dummy
+					}
+				}, false);
+			}
+
 			for (MPlayer pl : lobby.getPlayers()) {
 
-				/* add AI-dummy-clients (for Lukas) */
+				/* send AI-register packets */
 				if (pl.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-//					exec.submit(() -> {
-//						try {
-//							Client cl = new Client(new InetSocketAddress(Addresses.getLocalHost(), freePort),
-//									new PacketHandler() {
-//										@Override
-//										public void handleReceivedPacket(int port, Packet packet) {
-//											// do nothing - be dummy
-//										}
-//									}, false);
-//							cl.sendMessage(new PacketRegistratePlayerByServer("AI" + System.identityHashCode(cl),
-//									UUID.fromString("00000000-0000-0000-0000-000000000000")));
-//						} catch (Exception e) {
-//							e.printStackTrace();
-//						}
-//					});
+					try {
+						cl.sendMessage(new PacketRegistratePlayerByServer("AI" + System.identityHashCode(cl),
+								UUID.fromString("00000000-0000-0000-0000-000000000000")));
+						Thread.sleep(100);
+						cl.disconnect();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 
 				else {
@@ -133,7 +155,7 @@ public final class MatchmakingController {
 		} catch (InterruptedException | IOException e1) {
 			e1.printStackTrace();
 		}
-
+		});
 	}
 
 	/**

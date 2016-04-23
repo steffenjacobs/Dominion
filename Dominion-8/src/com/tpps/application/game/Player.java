@@ -243,7 +243,7 @@ public class Player {
 	 * @param cardAction
 	 * @param val
 	 */
-	public void setDiscardOrTrashAction(CardAction cardAction, int val) {
+	protected void setDiscardOrTrashAction(CardAction cardAction, int val) {
 		this.discardOrTrashAction = new Tuple<CardAction>(cardAction, val);
 	}
 
@@ -895,7 +895,7 @@ public class Player {
 				}
 			}
 		} catch (NoSuchElementException e) {
-			e.printStackTrace();
+			GameLog.log(MsgType.GAME, "Not enough");
 		}
 		CollectionsUtil.appendListToList(this.setAsideCards, getDeck().getDiscardPile());
 	}

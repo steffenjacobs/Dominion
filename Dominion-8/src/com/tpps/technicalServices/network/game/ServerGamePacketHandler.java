@@ -70,9 +70,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case REGISTRATE_PLAYER_BY_SERVER:
 				int clientId = GameServer.getCLIENT_ID();
 				PacketRegistratePlayerByServer packetRegistratePlayerByServer = (PacketRegistratePlayerByServer) packet;
-				if (packetRegistratePlayerByServer.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-					addAIAndCheckPlayerCount(port, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
-				} else if (this.server.validSession(packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID())) {
+				if (packetRegistratePlayerByServer.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))){
+					addPlayerAndCheckPlayerCount(port, clientId, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
+				}
+				else if (this.server.validSession(packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID())) {
 					System.out.println("Connect valid Session username: " + packetRegistratePlayerByServer.getUsername() + "sessionID: " + packetRegistratePlayerByServer.getSessionID());
 					addPlayerAndCheckPlayerCount(port, clientId, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
 				} else {
@@ -548,16 +549,21 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 * @param clientId
 	 * @throws IOException
 	 */
-	private void addPlayerAndCheckPlayerCount(int port, int clientId, String username, UUID uuid) throws IOException {
+	private void addPlayerAndCheckPlayerCount(int port, int clientId, String username, UUID sessionID) throws IOException {
 		try {
-			server.getGameController().addPlayer(new Player(clientId, port, this.server.getGameController().getGameBoard().getStartSet(), username, uuid, this.server));
+			Player player = new Player(clientId, port, this.server.getGameController().getGameBoard().getStartSet(), username, sessionID, this.server);
+			server.getGameController().addPlayer(player);
 			server.sendMessage(port, new PacketSendClientId(clientId));
+			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+				new ArtificialIntelligence(player, sessionID).start();
+				System.out.println("created a new artificial intelligence");				
+			}
 			if (server.getGameController().getPlayers().size() == GameConstant.HUMAN_PLAYERS) {
 				ChatController.getInstance().createChatRoom(this.server.getGameController().getPlayerNames());
 				server.getGameController().startGame();
 				setUpGui();
 			}
-			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
+			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);	
 		} catch (TooMuchPlayerException tmpe) {
 			server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();
@@ -571,13 +577,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 * @throws IOException
 	 */
 	private void setUpGui() throws IOException {
-
 		GameBoard gameBoard = this.server.getGameController().getGameBoard();
-
 		server.broadcastMessage(new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
-
 		server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
-
 		LinkedList<Player> players = server.getGameController().getPlayers();
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
 			server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
