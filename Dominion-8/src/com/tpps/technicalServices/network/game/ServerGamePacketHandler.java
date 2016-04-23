@@ -71,7 +71,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				int clientId = GameServer.getCLIENT_ID();
 				PacketRegistratePlayerByServer packetRegistratePlayerByServer = (PacketRegistratePlayerByServer) packet;
 				if (packetRegistratePlayerByServer.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))){
-					addPlayerAndCheckPlayerCount(port, -1, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
+					addPlayerAndCheckPlayerCount(port, clientId, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
 				}
 				else if (this.server.validSession(packetRegistratePlayerByServer.getUsername(),
 						packetRegistratePlayerByServer.getSessionID())) {
@@ -588,8 +588,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		try {
 			Player player = new Player(clientId, port,
 					this.server.getGameController().getGameBoard().getStartSet(), username, sessionID, this.server);
-			server.getGameController().addPlayer(new Player(clientId, port,
-					this.server.getGameController().getGameBoard().getStartSet(), username, sessionID, this.server));
+			server.getGameController().addPlayer(player);
 			server.sendMessage(port, new PacketSendClientId(clientId));
 			
 			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {

@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -249,6 +250,15 @@ public class Card extends GameObject {
 		if (!(handTrigger.equals("handCards") || name.equals("Copper") || name.equals("Silver") || name.equals("Gold")
 				|| name.equals("Curse") || name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
 			parent.removeComponent(gameBackground);
+		}
+	}
+	
+	public<T extends Client> void onAiClick(T client, int clientId) {
+		System.out.println("AiClick on Card");
+		try {
+			client.sendMessage(new PacketPlayCard(this.id, clientId));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
