@@ -100,7 +100,12 @@ public class GameLobby {
 		}
 
 		if (aiCounter > 0) {
+			try{
 			this.lobbyScore = this.lobbyScore / (this.getPlayers().size() - aiCounter) * this.getPlayers().size();
+			}
+			catch(ArithmeticException divByZero){
+				this.lobbyScore = 0;
+			}
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.tpps.technicalServices.util;
 
 import java.awt.Color;
+import java.util.List;
 
 /**
  * 
@@ -15,6 +16,8 @@ public class ColorUtil {
 	public static final Color SNOW = new Color(255, 250, 250);
 	public static final Color EPICBLUE = new Color(25, 126, 255);
 
+	public static final List<Color> playerColors = CollectionsUtil.linkedColorList(Color.BLUE, Color.ORANGE, ColorUtil.DARKSEAGREEN, Color.YELLOW);
+	
 	public static javafx.scene.paint.Color getFxColor(java.awt.Color color) {
 		return javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0);
 	}
