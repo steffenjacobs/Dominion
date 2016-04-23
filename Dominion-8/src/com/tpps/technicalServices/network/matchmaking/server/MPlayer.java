@@ -62,7 +62,7 @@ public class MPlayer {
 	/** @return the matchmaking-score of the player */
 	public int getScore() {
 		if (this.isAI) {
-			return 0;
+			return 1;
 		} else {
 			return this.matchmakingScore.getScore();
 		}
