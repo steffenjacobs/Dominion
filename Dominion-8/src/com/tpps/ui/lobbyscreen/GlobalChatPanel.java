@@ -23,8 +23,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -37,7 +41,7 @@ import com.tpps.technicalServices.util.GraphicsUtil;
  */
 public class GlobalChatPanel extends JPanel{
 	
-	private JTextArea textbox;
+	private JTextPane textbox;
 	private JScrollPane scrollpane;
 	private JTextField chatInputLine;
 	private BufferedImage blackBeauty;
@@ -235,11 +239,12 @@ public class GlobalChatPanel extends JPanel{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		textbox = new JTextArea();
+		textbox = new JTextPane();
 		textbox.setFocusable(false);
 		textbox.setForeground(Color.WHITE);
+		textbox.setBackground(new Color(100,100,100,100));
 		textbox.setBorder(BorderFactory.createEmptyBorder());
-		textbox.setLineWrap(true);
+//		textbox.setLineWrap(true);
 		textbox.setOpaque(false);
 		textbox.setText("Welcome to our chatserver \n");		
 		font = new Font("Calibri", Font.PLAIN, 20);
@@ -273,14 +278,27 @@ public class GlobalChatPanel extends JPanel{
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
 		GlobalChatPanel.this.chatInputLine.setText("");
-		this.textbox.append("ME: " + chatmessage.trim() + "\n");
-		DominionController.getInstance().sendChatMessage(chatmessage.trim());
+		addText(chatmessage);
 		try {
-			Thread.sleep(1);
+			Thread.sleep(10);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
+	}
+	
+	private synchronized void addText(String chatmessage){
+		Style style = textbox.addStyle("Style", null);
+//		StyleConstants.setBackground(style, GameLog.getBackgroundColor());
+		StyleConstants.setForeground(style, new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
+		StyledDocument doc = textbox.getStyledDocument();
+		try {
+			doc.insertString(doc.getLength(), "ME: " + chatmessage.trim() + "\n", style);
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		}
+//		this.textbox.append("ME: " + chatmessage.trim() + "\n");
+		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 	}
 	
 	
@@ -293,9 +311,9 @@ public class GlobalChatPanel extends JPanel{
 	 *            a String representation of the chatmessage
 	 */
 	public synchronized void appendChatLocal(String chatmessage){
-		this.textbox.append(chatmessage.trim() + "\n");
+		addText(chatmessage);
 		try {
-			Thread.sleep(1);
+			Thread.sleep(10);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
