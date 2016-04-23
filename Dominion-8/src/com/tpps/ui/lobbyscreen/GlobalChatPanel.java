@@ -254,8 +254,11 @@ public class GlobalChatPanel extends JPanel{
 				
 				@Override
 				public void paint(Graphics g) {
-					g.drawImage(blackBeauty, 0, 0, null);					
-					super.paint(g);					
+					Graphics2D h = (Graphics2D) g;
+					h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+					
+					h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
+					super.paint(h);								
 				}
 				
 			};
