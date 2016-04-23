@@ -591,16 +591,19 @@ public class ServerGamePacketHandler extends PacketHandler {
 			server.getGameController().addPlayer(new Player(clientId, port,
 					this.server.getGameController().getGameBoard().getStartSet(), username, sessionID, this.server));
 			server.sendMessage(port, new PacketSendClientId(clientId));
+			
+			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+				new ArtificialIntelligence(player, sessionID).start();
+				System.out.println("created a new artificial intelligence");				
+			}
+			
 			if (server.getGameController().getPlayers().size() == GameConstant.HUMAN_PLAYERS) {
 				ChatController.getInstance().createChatRoom(this.server.getGameController().getPlayerNames());
 				server.getGameController().startGame();
 				setUpGui();
 			}
 			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
-			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-				new ArtificialIntelligence(player, sessionID).start();
-				System.out.println("created a new artificial intelligence");				
-			}
+			
 		} catch (TooMuchPlayerException tmpe) {
 			server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();
