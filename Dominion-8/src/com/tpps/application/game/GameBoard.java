@@ -231,11 +231,11 @@ public class GameBoard {
 //		this.tableForActionCards.put("Chancellor", chancellorList);
 //		Card.resetClassID();
 		
-//		LinkedList<Card> militiaList = new LinkedList<Card>();
-//		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, CardAction.DISCARD_OTHER_DOWNTO}), 
-//				CollectionsUtil.linkedList(new String[] {"2", "3"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION, CardType.ATTACK}), "Militia", 4), GameConstant.INIT_PILE_SIZE, militiaList);
-//		this.tableForActionCards.put("Militia", militiaList);
-//		Card.resetClassID();
+		LinkedList<Card> militiaList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] {CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, CardAction.DISCARD_OTHER_DOWNTO}), 
+				CollectionsUtil.linkedList(new String[] {"2", "3"})), CollectionsUtil.linkedList(new CardType[]{CardType.ACTION, CardType.ATTACK}), "Militia", 4), GameConstant.INIT_PILE_SIZE, militiaList);
+		this.tableForActionCards.put("Militia", militiaList);
+		Card.resetClassID();
 		
 //		moat
 		LinkedList<Card> moatList = new LinkedList<Card>();

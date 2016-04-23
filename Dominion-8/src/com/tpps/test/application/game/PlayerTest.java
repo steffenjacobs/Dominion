@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import org.junit.Before;
@@ -19,6 +20,7 @@ import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
+import com.tpps.application.game.card.CardType;
 import com.tpps.application.game.card.Tuple;
 import com.tpps.technicalServices.util.CollectionsUtil;
 
@@ -28,7 +30,7 @@ public class PlayerTest {
 	@Before
 	public void setUp() throws Exception {
 		GameBoard gameBoard = new GameBoard();
-//		this.player = new Player(new Deck(gameBoard.getStartSet()), 0, 0, "Test0", null);
+		this.player = new Player(new Deck(gameBoard.getStartSet()), 0, 0, "Test0", null, null);
 	}
 
 //	@Test
@@ -120,8 +122,11 @@ public class PlayerTest {
 			
 			
 			
-			
-			this.player.setDiscardOrTrashAction(CardAction.ADD_ACTION_TO_PLAYER, 2);
+			Method setDiscardOrTrahsActionMethod = playerClass.getDeclaredMethod("setDiscardOrTrashAction", CardAction.class, int.class);
+			if (!setDiscardOrTrahsActionMethod.isAccessible()){
+				setDiscardOrTrahsActionMethod.setAccessible(true);
+			}
+			setDiscardOrTrahsActionMethod.invoke(this.player, CardAction.ADD_ACTION_TO_PLAYER, 2);
 			discardOrTrashActionField = playerClass.getDeclaredField("discardOrTrashAction");
 			if(!discardOrTrashActionField.isAccessible()) {
 			      discardOrTrashActionField.setAccessible(true);
@@ -140,6 +145,10 @@ public class PlayerTest {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
 		
@@ -305,10 +314,29 @@ public class PlayerTest {
 		CollectionsUtil.appendListToList(this.player.getPlayedCards(), this.player.getDeck().getDiscardPile());
 		this.player.getDeck().refreshCardHand();
 		this.player.refreshPlayedCardsList();
-		for (int i = 0; i < 5; i++){
+		for (int i = 0; i < 10; i++){
+			int constant = (int)(Math.random() * 6);
+			for(int i1 = 0; i1 < constant; i1++){
+				Card card = this.player.getDeck().getCardHand().getFirst();
+				try {
+					this.player.playCard(card.getId());
+					assertThat(this.player.getDeck().getCardHand().size(), is(5 - i1 - 1));
+					assertThat(this.player.getPlayedCards().size(), is(1 + i1));
+				} catch (IOException e) {
+				
+					e.printStackTrace();
+				}
+			}
+			CollectionsUtil.appendListToList(this.player.getPlayedCards(), this.player.getDeck().getDiscardPile());
+			this.player.getDeck().refreshCardHand();
+			this.player.refreshPlayedCardsList();
+			assertThat(this.player.getDeck().getCardHand().size(), is(5));
+			LinkedList<Card> deck = new LinkedList<>(this.player.getDeck().getDrawPile());
+			deck.addAll(this.player.getDeck().getCardHand());
+			deck.addAll(this.player.getDeck().getDiscardPile());
+			assertThat(deck.size(), is(8));
 			
-//			this.player.playCard(this.player.getDeck().getCardHand().get(0).getId());
-			System.out.println(this.player.getDeck().getCardHand().size());
+			
 		}
 		
 	}
@@ -351,22 +379,65 @@ public class PlayerTest {
 
 	@Test
 	public void testEndDiscardAndDrawMode() {
-		fail("Not yet implemented");
+		this.player.endDiscardAndDrawMode();
+		assertTrue(!this.player.isDiscardMode());
+		Class<? extends Player> playerClass = this.player.getClass();
+		Field drawListField;
+		try {			
+			drawListField = playerClass.getDeclaredField("drawList");
+			if (!drawListField.isAccessible()) {
+				drawListField.setAccessible(true);
+			}
+			@SuppressWarnings("unchecked")
+			LinkedList<Card>drawList = (LinkedList<Card>)drawListField.get(this.player);
+			assertTrue(drawList.isEmpty());
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Test
 	public void testEndTrashMode() {
-		fail("Not yet implemented");
+		this.player.endTrashMode();
+		assertTrue(this.player.isTrashMode());
 	}
 
 	@Test
 	public void testPlayCard() {
-		fail("Not yet implemented");
+		Card card = this.player.getDeck().getCardHand().getFirst();
+		try {
+			this.player.playCard(card.getId());
+			assertThat(this.player.getDeck().getCardHand().size(), is(4));
+			assertThat(this.player.getPlayedCards().size(), is(1));
+			CollectionsUtil.appendListToList(this.player.getPlayedCards(), this.player.getDeck().getDiscardPile());
+			this.player.getDeck().refreshCardHand();
+			this.player.refreshPlayedCardsList();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testPlayTreasures() {
-		fail("Not yet implemented");
+		try {
+			this.player.playTreasures();
+			for (Iterator<Card> iterator = this.player.getDeck().getCardHand().iterator(); iterator.hasNext();) {
+				Card card = (Card) iterator.next();
+				assertTrue(!card.getTypes().contains(CardType.TREASURE));
+				CollectionsUtil.appendListToList(this.player.getPlayedCards(), this.player.getDeck().getDiscardPile());
+				this.player.getDeck().refreshCardHand();
+				this.player.refreshPlayedCardsList();
+			} 
+		} catch (IOException e) {		
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -386,12 +457,50 @@ public class PlayerTest {
 
 	@Test
 	public void testDiscardOrTrashCard() {
-		fail("Not yet implemented");
+		Card card = this.player.getDeck().getCardHand().getFirst();
+		try {
+			
+			Class<? extends Player> playerClass = this.player.getClass();
+			
+				
+				Method setDiscardOrTrahsActionMethod = playerClass.getDeclaredMethod("setDiscardOrTrashAction", CardAction.class, int.class);
+				if(!setDiscardOrTrahsActionMethod.isAccessible()) {
+				      setDiscardOrTrahsActionMethod.setAccessible(true);
+				 }
+				setDiscardOrTrahsActionMethod.invoke(this.player, CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, 2);
+				Field discardOrTrashActionField;
+				
+				discardOrTrashActionField = playerClass.getDeclaredField("discardOrTrashAction");
+				if(!discardOrTrashActionField.isAccessible()) {
+				      discardOrTrashActionField.setAccessible(true);
+				 }
+				@SuppressWarnings("unchecked")
+				Tuple<CardAction> discardOrTrashAction = (Tuple<CardAction>)(discardOrTrashActionField.get(this.player));
+				System.out.println(discardOrTrashAction.getFirstEntry());
+				System.out.println(discardOrTrashAction.getSecondEntry());
+				this.player.discardOrTrash(card);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
 	}
+		
 
 	@Test
 	public void testResetTemporaryTrashPile() {
-		fail("Not yet implemented");
+		this.player.resetTemporaryTrashPile();
+		assertThat(this.player.getTemporaryTrashPile(), is(0));
 	}
 
 }
