@@ -428,6 +428,7 @@ public class ChatPacketHandler extends PacketHandler{
 			for (Entry<String, Integer> entry : ChatPacketHandler.this.global.getClientsByUsername().entrySet()) {
 				if(entry.getValue() == port){
 					ChatPacketHandler.this.global.removeUser(entry.getKey());
+					ChatPacketHandler.this.global.getPool().deleteUserFromGlobalChat_COLOR(entry.getKey());
 					System.out.println("kicked " + entry.getKey() + " from globalchat");
 					return true;
 				}

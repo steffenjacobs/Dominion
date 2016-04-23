@@ -292,4 +292,11 @@ public class GlobalChat {
 	public void removeUser(String user){
 		this.clientsByUsername.remove(user);		
 	}
+	
+	/**
+	 * @return the colorpool instance
+	 */
+	public ColorPool getPool() {
+		return pool;
+	}
 }
