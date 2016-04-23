@@ -282,6 +282,15 @@ public class GlobalChatPanel extends JPanel{
 	public synchronized void appendChatGlobal(String chatmessage) {
 		GlobalChatPanel.this.chatInputLine.setText("");
 	//	addText(chatmessage);
+		Style style = textbox.addStyle("Style", null);
+		StyleConstants.setForeground(style, new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
+		StyledDocument doc = textbox.getStyledDocument();
+		try {
+			doc.insertString(doc.getLength(), "ME: " + chatmessage.trim() + "\n", style);
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		}
+		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
@@ -290,20 +299,19 @@ public class GlobalChatPanel extends JPanel{
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	
-	private synchronized void addText(String chatmessage){
-		Style style = textbox.addStyle("Style", null);
-//		StyleConstants.setBackground(style, GameLog.getBackgroundColor());
-		StyleConstants.setForeground(style, new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
-		StyledDocument doc = textbox.getStyledDocument();
-		try {
-			doc.insertString(doc.getLength(), "ME: " + chatmessage.trim() + "\n", style);
-		} catch (BadLocationException e1) {
-			e1.printStackTrace();
-		}
-//		this.textbox.append("ME: " + chatmessage.trim() + "\n");
-		DominionController.getInstance().sendChatMessage(chatmessage.trim());
-	}
-	
+//	private synchronized void addText(String chatmessage){
+//		Style style = textbox.addStyle("Style", null);
+//		StyleConstants.setForeground(style, new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
+//		StyledDocument doc = textbox.getStyledDocument();
+//		try {
+//			doc.insertString(doc.getLength(), "ME: " + chatmessage.trim() + "\n", style);
+//		} catch (BadLocationException e1) {
+//			e1.printStackTrace();
+//		}
+////		this.textbox.append("ME: " + chatmessage.trim() + "\n");
+//		DominionController.getInstance().sendChatMessage(chatmessage.trim());
+//	}
+//	
 	
 	/**
 	 * This method appends a chatmessage to the globalchat on the UI. The carret
@@ -314,7 +322,14 @@ public class GlobalChatPanel extends JPanel{
 	 *            a String representation of the chatmessage
 	 */
 	public synchronized void appendChatLocal(String chatmessage){
-	//	addText(chatmessage);
+		Style style = textbox.addStyle("Style", null);
+		StyleConstants.setForeground(style, new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
+		StyledDocument doc = textbox.getStyledDocument();
+		try {
+			doc.insertString(doc.getLength(), chatmessage.trim() + "\n", style);
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		}
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {

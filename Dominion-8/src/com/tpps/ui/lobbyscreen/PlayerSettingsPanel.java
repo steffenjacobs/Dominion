@@ -171,7 +171,16 @@ public class PlayerSettingsPanel extends JPanel{
 	private class ImageListener implements MouseListener{
 
 		@Override
-		public void mouseClicked(MouseEvent e) {	
+		public void mouseClicked(MouseEvent e) { }
+
+		@Override
+		public void mouseEntered(MouseEvent arg0) { }
+
+		@Override
+		public void mouseExited(MouseEvent arg0) { }
+
+		@Override
+		public void mousePressed(MouseEvent e) {
 			if(e.getSource() == labelImages[0]) {
 				PlayerSettingsPanel.this.changeSelectedPicture(0);
 			} else if(e.getSource() == labelImages[1]) {
@@ -182,15 +191,6 @@ public class PlayerSettingsPanel extends JPanel{
 				PlayerSettingsPanel.this.changeSelectedPicture(3);
 			}
 		}
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) { }
-
-		@Override
-		public void mouseExited(MouseEvent arg0) { }
-
-		@Override
-		public void mousePressed(MouseEvent arg0) { }
 
 		@Override
 		public void mouseReleased(MouseEvent arg0) { }		
