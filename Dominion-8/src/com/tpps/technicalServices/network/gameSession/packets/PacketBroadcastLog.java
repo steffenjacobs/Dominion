@@ -2,6 +2,9 @@ package com.tpps.technicalServices.network.gameSession.packets;
 
 
 
+import java.awt.Color;
+
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
@@ -23,10 +26,11 @@ public class PacketBroadcastLog extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketBroadcastLog(MsgType msgType, String msg) {
+	public PacketBroadcastLog(MsgType msgType, String msg, Color color) {
 		super(PacketType.BROADCAST_LOG);
 		this.msg = msg;
 		this.msgType = msgType;
+		GameLog.setMsgColor(color);
 	}
 	
 	public MsgType getMsgType(){

@@ -198,8 +198,6 @@ public class GameWindow extends JFrame {
 		framework.add(chatWindow);
 		framework.add(loggerPane);
 		/** TODO remove */
-		GameLog.log(MsgType.GAME, "REMOVE KEBAP !");
-		GameLog.log(MsgType.GAME, "REMOVE KEBAP !");
 
 		this.addComponentListener(new MyComponentAdapter());
 		this.setFocusable(true);

@@ -1,5 +1,6 @@
 package com.tpps.application.game;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,6 +27,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketStartDiscard
 import com.tpps.technicalServices.network.gameSession.packets.PacketStartTrashMode;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeDrawedCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
+import com.tpps.technicalServices.util.ColorUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
 /**
@@ -36,8 +38,8 @@ public class Player {
 	private Deck deck;
 
 	private final int id;
-	private String name; // oder sollen wir hier ein Tupel machen mit id und zugehörigem namen?
-	// getter hinzufügen
+	private String name;
+	private Color logColor;
 	private static int playerID = 0;
 	private UUID sessionID;
 	private final int CLIENT_ID;
@@ -83,6 +85,7 @@ public class Player {
 		this.port = port;
 		this.playedCards = new LinkedList<Card>();
 		this.name = name;
+		this.logColor = ColorUtil.playerColors.get(clientID % 4);
 		this.gameServer = gameServer;
 	}
 
@@ -103,6 +106,21 @@ public class Player {
 		this.coins = 0;
 		this.buys = 1;
 		this.actions = 1;
+	}
+	
+	/**
+	 * @return the logColor
+	 */
+	public Color getLogColor() {
+		return this.logColor;
+	}
+	
+	/**
+	 * 
+	 * @param logColor the logColor to set
+	 */
+	public void setLogColor(Color logColor) {
+		this.logColor = logColor;
 	}
 	
 	/**

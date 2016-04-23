@@ -47,7 +47,7 @@ public class GameController {
 	GameServer gameServer;
 
 	public String getActivePlayerName() {
-		return null /* this.activePlayer.getName() */;
+		return this.activePlayer.getPlayerName();
 	}
 	
 	private LinkedList<Player> players;
@@ -990,8 +990,8 @@ public class GameController {
 			if (victoryPoints > maxVictoryPoints) {
 				maxVictoryPoints = victoryPoints;
 				winningPlayer = player;
-				}
 			}
+		}
 		return winningPlayer;
 	}
 

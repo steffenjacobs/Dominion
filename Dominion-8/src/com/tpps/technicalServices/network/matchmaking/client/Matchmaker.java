@@ -35,9 +35,7 @@ public final class Matchmaker {
 	private void checkAndCreateClient() throws IOException {
 		if (client == null || !client.isConnected()) {
 			handler = new MatchmakingHandler();
-			client = new Client(
-					new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.getStandardPort()), handler,
-					false);
+			client = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.getStandardPort()), handler, false);
 		}
 	}
 
@@ -56,8 +54,7 @@ public final class Matchmaker {
 	 */
 	public void sendAIPacket(String name, UUID lobbyID, boolean abort) throws IOException {
 		checkAndCreateClient();
-		client.sendMessage(
-				new PacketJoinLobby(name, UUID.fromString("00000000-0000-0000-0000-000000000000"), lobbyID, abort));
+		client.sendMessage(new PacketJoinLobby(name, UUID.fromString("00000000-0000-0000-0000-000000000000"), lobbyID, abort));
 		System.out.println("Sent request to join lobby " + lobbyID.toString());
 	}
 
@@ -184,11 +181,10 @@ public final class Matchmaker {
 			case 1: // Success
 				// TODO:
 				// save pck.getLobbyID() somewhere (-> DominionController?)
-				DominionController.getInstance().reveiveChatMessageFromChatServer(
-						"[BOT] You joined a lobby successfully "/*
-																 * : id:" + pck.
-																 * getLobbyID()
-																 */);
+				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] You joined a lobby successfully");
+				/*
+				 * :id : " + pck.getLobbyID()
+				 */
 				DominionController.getInstance().setLobbyID(pck.getLobbyID());
 				break;
 			case 2: // Lobby does not exist
