@@ -22,13 +22,17 @@ import com.tpps.ui.gameplay.GameWindow;
  * @author Nicolas
  * 
  */
-@SuppressWarnings("serial")
 public class GameLogTextPane extends JPanel {
 
+	/**
+	 * default 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private JTextPane textPane;
 	private JScrollPane scrollPane;
 	private int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-	private int maxHeight =	Toolkit.getDefaultToolkit().getScreenSize().height;	
+	private int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 
 	/**
 	 * 
@@ -45,13 +49,13 @@ public class GameLogTextPane extends JPanel {
 		MsgType.setGameMode();
 		this.textPane = new JTextPane();
 		this.textPane.setEditable(false);
-//		this.textPane.setFont(new Font("Courier New", Font.PLAIN, 14));
+		// this.textPane.setFont(new Font("Courier New", Font.PLAIN, 14));
 		this.textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
 		this.textPane.setBackground(GameLog.getBackgroundColor());
 		this.setLayout(new BorderLayout());
 		this.scrollPane = new JScrollPane(this.textPane);
 		this.scrollPane.setBorder(BorderFactory.createEmptyBorder());
-//		this.scrollPane.setFocusable(false);
+		// this.scrollPane.setFocusable(false);
 		this.add(scrollPane);
 		repaint();
 		revalidate();
@@ -100,12 +104,19 @@ public class GameLogTextPane extends JPanel {
 		}
 	}
 
+	/**
+	 * 
+	 * @param x
+	 * @param y
+	 * @param sizeFactorWidth
+	 * @param sizeFactorHeight
+	 * @param gameWindow
+	 * @author Nishit
+	 */
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
-
 		double width = (sizeFactorWidth * maxWidth) / 6;
 		double height = (sizeFactorHeight * maxHeight) / 6;
-		this.setBounds(x - (int) ((maxWidth/1.097) * sizeFactorWidth), y - (int) 
-				((maxHeight*0.999) * sizeFactorHeight), (int) (width), (int) (height));
+		this.setBounds(x - (int) ((maxWidth / 1.097) * sizeFactorWidth), y - (int) ((maxHeight * 0.999) * sizeFactorHeight), (int) (width), (int) (height));
 		repaint();
 		revalidate();
 	}

@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.ColorUtil;
@@ -126,7 +127,7 @@ public class GameLog {
 	 * @return the msgColor
 	 */
 	public static Color getMsgColor() {
-		return msgColor;
+		return GameLog.msgColor;
 	}
 
 	/**
@@ -174,7 +175,7 @@ public class GameLog {
 
 	public static void broadcastMessage(MsgType type, String line) {
 		try {
-			DominionController.getInstance().getGameClient().sendMessage(new PacketBroadcastLog(type, line));
+			DominionController.getInstance().getGameClient().sendMessage(new PacketBroadcastLog(type, line, msgColor));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -27,7 +27,6 @@ public class PacketSendRevealCards extends Packet {
 		this.cardIds = cardIds;
 	}
 	
-	
 	/**
 	 * 
 	 * @return the ids of the cards the player has on his hand
@@ -35,8 +34,6 @@ public class PacketSendRevealCards extends Packet {
 	public LinkedList<String> getCardIds() {
 		return cardIds;
 	}
-
-
 
 	/**
 	 * @return a readable String
