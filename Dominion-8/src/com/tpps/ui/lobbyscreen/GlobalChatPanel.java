@@ -281,7 +281,7 @@ public class GlobalChatPanel extends JPanel{
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
 		GlobalChatPanel.this.chatInputLine.setText("");
-		addText(chatmessage);
+	//	addText(chatmessage);
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
@@ -314,7 +314,7 @@ public class GlobalChatPanel extends JPanel{
 	 *            a String representation of the chatmessage
 	 */
 	public synchronized void appendChatLocal(String chatmessage){
-		addText(chatmessage);
+	//	addText(chatmessage);
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
