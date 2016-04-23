@@ -28,6 +28,7 @@ public class GlobalChat {
 	private final static String showPorts_servercommand3 = "show all ports";
 	private final static String showClientsAndPorts_servercommand4 = "show all clients by ports";
 	private final static String statistic_servercommand5 = "show statistic ";
+	private ColorPool pool;
 
 	private ChatServer server;
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
@@ -41,25 +42,47 @@ public class GlobalChat {
 	 */
 	public GlobalChat (ChatServer server){
 		this.server =  server;
+		pool = new ColorPool();
 	}
 	
-	/**
-	 * This method sends a chatmessage to all clients except the client who sent
-	 * the message
-	 * 
-	 * @author jhuhn
-	 * @param packet
-	 *            a packet that received from the ChatPacketHandler from a
-	 *            client
-	 */
+//	/**
+//	 * This method sends a chatmessage to all clients except the client who sent
+//	 * the message
+//	 * 
+//	 * @author jhuhn
+//	 * @param packet
+//	 *            a packet that received from the ChatPacketHandler from a
+//	 *            client
+//	 */
+//	public void sendChatToAllExceptSender(PacketSendChatAll packet){
+//		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + packet.getUsername() + ": " + packet.getChatmessage());
+//		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
+//		    String nickname = entry.getKey();
+//		    if(nickname.equals(packet.getUsername())){
+//		    	continue;
+//		    }  
+//		    try {
+//				this.server.sendMessage(entry.getValue(), answer);
+//			} catch (IOException e) {						
+//				e.printStackTrace();
+//				continue;
+//			}		   
+//		}
+//	}
+	
+	
 	public void sendChatToAllExceptSender(PacketSendChatAll packet){
-		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + packet.getUsername() + ": " + packet.getChatmessage());
+		PacketSendAnswer answer = new PacketSendAnswer(
+				ChatServer.sdf.format(new Date()),
+				packet.getUsername(), packet.getChatmessage(),
+				pool.getUserColor(packet.getUsername()));
+		
 		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 		    String nickname = entry.getKey();
 		    if(nickname.equals(packet.getUsername())){
 		    	continue;
 		    }  
-		    try {
+		    try {		    	
 				this.server.sendMessage(entry.getValue(), answer);
 			} catch (IOException e) {						
 				e.printStackTrace();

@@ -15,6 +15,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -54,6 +56,9 @@ public class GlobalChatPanel extends JPanel{
 	private static final float BLACK_TRANSPARENCY = 0.6F;
 	
 	private static final long serialVersionUID = 1L;
+	private static final Color ownColor = new Color(0,255,0);
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]: ");
+	private static final Color whiteColor = new Color(255,255,255);
 	
 	/**
 	 * initializes the object
@@ -281,15 +286,9 @@ public class GlobalChatPanel extends JPanel{
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
 		GlobalChatPanel.this.chatInputLine.setText("");
-	//	addText(chatmessage);
-		Style style = textbox.addStyle("Style", null);
-		StyleConstants.setForeground(style, new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
-		StyledDocument doc = textbox.getStyledDocument();
-		try {
-			doc.insertString(doc.getLength(), "ME: " + chatmessage.trim() + "\n", style);
-		} catch (BadLocationException e1) {
-			e1.printStackTrace();
-		}
+		this.createChatInputPart(sdf.format(new Date()), whiteColor);
+		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
+		this.createChatInputPart(chatmessage + "\n", whiteColor);
 		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 		try {
 			Thread.sleep(10);
@@ -299,19 +298,26 @@ public class GlobalChatPanel extends JPanel{
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	
-//	private synchronized void addText(String chatmessage){
-//		Style style = textbox.addStyle("Style", null);
-//		StyleConstants.setForeground(style, new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
-//		StyledDocument doc = textbox.getStyledDocument();
-//		try {
-//			doc.insertString(doc.getLength(), "ME: " + chatmessage.trim() + "\n", style);
-//		} catch (BadLocationException e1) {
-//			e1.printStackTrace();
-//		}
-////		this.textbox.append("ME: " + chatmessage.trim() + "\n");
-//		DominionController.getInstance().sendChatMessage(chatmessage.trim());
-//	}
-//	
+	
+	/**
+	 * This method formats a String with a specific color to a documentobject
+	 * 
+	 * @author jhuhn
+	 * @param chatmessage
+	 *            the string of text that should be shown in the chatarea
+	 * @param color
+	 *            Chatmessage gets that visible color
+	 */
+	public synchronized void createChatInputPart(String chatmessage, Color color){
+		Style style = textbox.addStyle("Style", null);
+		StyleConstants.setForeground(style, color);
+		StyledDocument doc = textbox.getStyledDocument();
+		try {
+			doc.insertString(doc.getLength(), chatmessage, style);
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		}
+	}
 	
 	/**
 	 * This method appends a chatmessage to the globalchat on the UI. The carret
@@ -321,20 +327,12 @@ public class GlobalChatPanel extends JPanel{
 	 * @param chatmessage
 	 *            a String representation of the chatmessage
 	 */
-	public synchronized void appendChatLocal(String chatmessage){
-		Style style = textbox.addStyle("Style", null);
-		StyleConstants.setForeground(style, new Color((int)(Math.random()*256),(int)(Math.random()*256),(int)(Math.random()*256)));
-		StyledDocument doc = textbox.getStyledDocument();
-		try {
-			doc.insertString(doc.getLength(), chatmessage.trim() + "\n", style);
-		} catch (BadLocationException e1) {
-			e1.printStackTrace();
-		}
-		try {
-			Thread.sleep(10);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	public synchronized void appendChatLocal(String message, String user, String timeStamp, Color color){
+		this.createChatInputPart(timeStamp, whiteColor);
+		this.createChatInputPart(user + ": ", color);
+		this.createChatInputPart(message + "\n", whiteColor);
+		
+		
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	

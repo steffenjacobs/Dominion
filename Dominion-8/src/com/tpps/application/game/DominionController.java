@@ -1,5 +1,6 @@
 package com.tpps.application.game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
@@ -213,9 +214,9 @@ public final class DominionController {
 	 * @author jhuhn
 	 * @param message
 	 */
-	public void reveiveChatMessageFromChatServer(String message){
+	public void reveiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color){
 		if(this.gameClient == null){	//player is not ingame, player is in globalchat
-			this.globalChatPanel.appendChatLocal(message);
+			this.globalChatPanel.appendChatLocal(message, user, timeStamp, color);
 		}else{							//player is ingame
 			this.gameClient.getGameWindow().getChatWindow().appendChatLocal(message);
 		}
