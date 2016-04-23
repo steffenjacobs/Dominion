@@ -324,8 +324,14 @@ public class GlobalChatPanel extends JPanel{
 	 * will be set to the maximum (last chatmessage)
 	 * 
 	 * @author jhuhn
-	 * @param chatmessage
+	 * @param message
 	 *            a String representation of the chatmessage
+	 * @param user
+	 *            a String representation of the user
+	 * @param timeStamp
+	 *            a String representation of time
+	 * @param color
+	 *            the username should be shown as this given color
 	 */
 	public synchronized void appendChatLocal(String message, String user, String timeStamp, Color color){
 		this.createChatInputPart(timeStamp, whiteColor);
