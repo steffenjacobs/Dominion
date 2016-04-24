@@ -11,6 +11,7 @@ import com.tpps.technicalServices.network.chat.packets.PacketChatController;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 
 /**
  * This class sends and receives packets that deal with chatroom management
@@ -23,13 +24,15 @@ public class ChatController extends PacketHandler{
 	private static Client chatclient;
 	private int chatID;	
 	private HashMap<String, Color> colorMap;
+	private ServerGamePacketHandler handler;
 	
 	/**
 	 * initializes the chatcontroller class
 	 * 
 	 * @author jhuhn
 	 */
-	public ChatController(){	
+	public ChatController(ServerGamePacketHandler handler){
+		this.handler = handler;
 		try {
 			ChatController.chatclient = new Client(new InetSocketAddress(Addresses.getLocalHost(), 1340), this, false);
 		} catch (IOException e) {
@@ -112,6 +115,7 @@ public class ChatController extends PacketHandler{
 			this.chatID = packetID.getChatroomId();
 			this.colorMap = packetID.getColorMap();
 			System.out.println("received chatID: " + chatID);
+			this.handler.startGame();
 			break;
 		default:
 			System.out.println("sth went wrong with received packet");

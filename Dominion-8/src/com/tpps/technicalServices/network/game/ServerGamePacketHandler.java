@@ -49,9 +49,11 @@ import com.tpps.technicalServices.util.GameConstant;
  */
 public class ServerGamePacketHandler extends PacketHandler {
 	private GameServer server;
+	ChatController chatController;
 
 	public void setServer(GameServer server) {
 		this.server = server;
+		chatController = new ChatController(this);
 	}
 
 	/**
@@ -496,7 +498,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().endTurn();
 			this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
-			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, " ++ " + this.server.getGameController().getActivePlayer().getPlayerName() + "'s TURN STARTED ++ ", player.getLogColor()));
+			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, " ++ " + this.server.getGameController().getActivePlayer().getPlayerName() + "'s TURN STARTED ++ ", this.chatController.getColorMap().get(this.server.getGameController().getActivePlayer().getPlayerName())));
 //			GameLog.broadcastMessage(MsgType.GAME, " ++ " + this.server.getGameController().getActivePlayer().getPlayerName() + "'s TURN STARTED ++ ");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -530,17 +532,28 @@ public class ServerGamePacketHandler extends PacketHandler {
 				System.out.println("created a new artificial intelligence");
 			}
 			if (server.getGameController().getPlayers().size() == GameConstant.HUMAN_PLAYERS) {
-				//TODO: connect chatroom
-				ChatController chatController = new ChatController();
-				chatController.createChatRoom(this.server.getGameController().getPlayerNames());
+				//TODO: connect chatroom correctly "without AI"
+//				ChatController chatController = new ChatController();
+				this.chatController.createChatRoom(this.server.getGameController().getPlayerNames());
+				this.chatController.getColorMap();
 //				ChatController.getInstance().createChatRoom(this.server.getGameController().getPlayerNames());
-				server.getGameController().startGame();
-				setUpGui();
+//				server.getGameController().startGame();
+//				setUpGui();
 			}
 			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
 		} catch (TooMuchPlayerException tmpe) {
 			this.server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();
+		}
+	}
+	
+	public void startGame(){
+		server.getGameController().startGame();
+		try {
+			setUpGui();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
