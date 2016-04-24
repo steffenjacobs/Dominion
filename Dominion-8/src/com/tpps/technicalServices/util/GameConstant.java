@@ -5,12 +5,7 @@ package com.tpps.technicalServices.util;
  * */
 public final class GameConstant {
 	
-	public static int HUMAN_PLAYERS = 4; // add setter
-	
-	// s. Deck: init()
-	// CardAction.IS_VICTORY ; GameConstant.ESTATE_VALUE ; CardType.ESTATE ; "Estate"
-	// redundant, create Constructor which only takes GameConstant.'CARDNAME' (e.g. GameConstant.COPPER) 
-	// and add switch case to GameConstant class to compute the outcome/created card
+	public static int PLAYERS = 4; 
 	
 	/**
 	 * INIT VALUES
@@ -68,8 +63,4 @@ public final class GameConstant {
 	public static final String NIL = "NIL";
 	
 	public static final int EMPTY_PILES = 3;
-	
-	
-	
-	
 }

@@ -529,12 +529,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 				new ArtificialIntelligence(player, sessionID).start();
 				System.out.println("created a new artificial intelligence");
 			}
-			if (server.getGameController().getPlayers().size() == GameConstant.HUMAN_PLAYERS) {
+			if (this.server.getGameController().getPlayers().size() == GameConstant.PLAYERS) {
 				//TODO: connect chatroom
 				ChatController chatController = new ChatController();
 				chatController.createChatRoom(this.server.getGameController().getPlayerNames());
 //				ChatController.getInstance().createChatRoom(this.server.getGameController().getPlayerNames());
-				server.getGameController().startGame();
+				this.server.getGameController().startGame();
 				setUpGui();
 			}
 			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
@@ -555,7 +555,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		this.server.broadcastMessage(new PacketOpenGuiAndEnableOne(this.server.getGameController().getActivePlayer().getClientID()));
 		this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
 		LinkedList<Player> players = this.server.getGameController().getPlayers();
-		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
+		for (int i = 0; i < GameConstant.PLAYERS; i++) {
 			this.server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
 		}
 	}
