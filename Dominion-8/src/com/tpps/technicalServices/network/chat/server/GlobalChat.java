@@ -29,10 +29,10 @@ public class GlobalChat {
 	private final static String showPorts_servercommand3 = "show all ports";
 	private final static String showClientsAndPorts_servercommand4 = "show all clients by ports";
 	private final static String statistic_servercommand5 = "show statistic ";
-	private ColorPool pool;
 
 	private ChatServer server;
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
+	private ColorPool pool;
 
 	/**
 	 * initializes the global chat instance
@@ -40,10 +40,12 @@ public class GlobalChat {
 	 * @author jhuhn
 	 * @param server
 	 *            the server object that belongs to the ChatPacketHandler
+	 * @param pool
+	 *            ColorPool instance, manages nickname colors
 	 */
-	public GlobalChat (ChatServer server){
-		this.server =  server;
-		pool = new ColorPool();
+	public GlobalChat (ChatServer server, ColorPool pool){
+		this.server =  server;		
+		this.pool = pool;
 	}
 
 	

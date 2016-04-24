@@ -529,9 +529,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 				new ArtificialIntelligence(player, sessionID).start();
 				System.out.println("created a new artificial intelligence");
 			}
-			if (this.server.getGameController().getPlayers().size() == GameConstant.HUMAN_PLAYERS) {
-				ChatController.getInstance().createChatRoom(this.server.getGameController().getPlayerNames());
-				this.server.getGameController().startGame();
+			if (server.getGameController().getPlayers().size() == GameConstant.HUMAN_PLAYERS) {
+				//TODO: connect chatroom
+				ChatController chatController = new ChatController();
+				chatController.createChatRoom(this.server.getGameController().getPlayerNames());
+//				ChatController.getInstance().createChatRoom(this.server.getGameController().getPlayerNames());
+				server.getGameController().startGame();
 				setUpGui();
 			}
 			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);

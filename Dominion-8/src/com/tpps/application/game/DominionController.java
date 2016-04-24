@@ -218,7 +218,7 @@ public final class DominionController {
 		if(this.gameClient == null){	//player is not ingame, player is in globalchat
 			this.globalChatPanel.appendChatLocal(message, user, timeStamp, color);
 		}else{							//player is ingame
-			this.gameClient.getGameWindow().getChatWindow().appendChatLocal(message);
+			this.gameClient.getGameWindow().getChatWindow().appendChatLocal(message, user, timeStamp, color);
 		}
 	}
 	

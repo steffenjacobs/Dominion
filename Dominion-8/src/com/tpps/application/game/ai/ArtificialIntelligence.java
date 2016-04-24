@@ -124,7 +124,7 @@ public class ArtificialIntelligence {
 		 * enough coins to the desired action (/buy the desired card), don't
 		 * draw any more cards e.g.
 		 */
-		int availableCoinsAtStartOfTurn = getTreasureCardsValue();
+		int availableCoinsAtStartOfTurn = information.getTreasureCardsValue(this.player);
 
 	}
 
