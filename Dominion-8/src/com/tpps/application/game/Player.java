@@ -22,10 +22,10 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketEndDiscardMo
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendRevealCards;
-import com.tpps.technicalServices.network.gameSession.packets.PacketSetAsideDrawedCard;
+import com.tpps.technicalServices.network.gameSession.packets.PacketSetAsideDrewCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketStartDiscardMode;
 import com.tpps.technicalServices.network.gameSession.packets.PacketStartTrashMode;
-import com.tpps.technicalServices.network.gameSession.packets.PacketTakeDrawedCard;
+import com.tpps.technicalServices.network.gameSession.packets.PacketTakeDrewCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.ColorUtil;
 import com.tpps.technicalServices.util.GameConstant;
@@ -35,28 +35,27 @@ import com.tpps.technicalServices.util.GameConstant;
  */
 public class Player {
 
+	private GameServer gameServer;
 	private Deck deck;
 
-	private final int id;
-	private String name;
-	private Color logColor;
-	private static int playerID = 0;
-	private UUID sessionID;
-	private final int CLIENT_ID;
-	private int port;
-	private int actions;
-	private int buys;
-	private int coins;
-	private int gainValue, drawUntil;
+	private Card drewCard;
 	private CardType setAside;
-	private Card drawedCard;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand;
 	private Tuple<CardAction> discardOrTrashAction;
 	private LinkedList<Card> playedCards, drawList, revealList, temporaryTrashPile, setAsideCards;
-	GameServer gameServer;
+
+	private String name;
+	private Color logColor;
+	private final int id;
+	private static int player_ID = 0;
+	private UUID session_ID;
+	private final int client_ID;
+
+	private int port, actions, buys, coins, gainValue, drawUntil;
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand;
 
 	/**
 	 * creates the player sets all the initial values
+	 * 
 	 * @param deck
 	 * @param clientID
 	 * @param port
@@ -76,12 +75,12 @@ public class Player {
 		this.temporaryTrashPile = new LinkedList<Card>();
 		this.setAsideCards = new LinkedList<Card>();
 		this.deck = deck;
-		this.id = playerID++;
-		this.sessionID = uuid;
+		this.id = player_ID++;
+		this.session_ID = uuid;
 		this.actions = GameConstant.INIT_ACTIONS;
 		this.buys = GameConstant.INIT_PURCHASES;
 		this.coins = GameConstant.INIT_TREASURES;
-		this.CLIENT_ID = clientID;
+		this.client_ID = clientID;
 		this.port = port;
 		this.playedCards = new LinkedList<Card>();
 		this.name = name;
@@ -91,6 +90,7 @@ public class Player {
 
 	/**
 	 * calls the other constructor
+	 * 
 	 * @param clientID
 	 * @param port
 	 * @param initCards
@@ -107,32 +107,41 @@ public class Player {
 		this.buys = 1;
 		this.actions = 1;
 	}
-	
+
+	/**
+	 * 
+	 * @return the gameServer
+	 */
+	public GameServer getGameServer() {
+		return this.gameServer;
+	}
+
 	/**
 	 * @return the logColor
 	 */
 	public Color getLogColor() {
 		return this.logColor;
 	}
-	
+
 	/**
 	 * 
-	 * @param logColor the logColor to set
+	 * @param logColor
+	 *            the logColor to set
 	 */
 	public void setLogColor(Color logColor) {
 		this.logColor = logColor;
 	}
-	
+
 	/**
 	 * 
 	 * @return the uuid
 	 */
 	public UUID getSessionID() {
-		return sessionID;
+		return session_ID;
 	}
-	
+
 	public void updateSessionID(UUID sessionID) {
-		this.sessionID = sessionID;
+		this.session_ID = sessionID;
 	}
 
 	/**
@@ -192,7 +201,7 @@ public class Player {
 	public void setWitchFalse() {
 		this.witch = false;
 	}
-	
+
 	/**
 	 * 
 	 * @return if the player is in the bureaucrat mode or not
@@ -200,21 +209,21 @@ public class Player {
 	public boolean isBureaucrat() {
 		return this.bureaucrat;
 	}
-	
+
 	/**
 	 * sets the bureaucrat mode true
 	 */
 	public void setBureaucrat() {
 		this.bureaucrat = true;
 	}
-	
+
 	/**
 	 * sets the bureaucrat mode false
 	 */
 	public void setBureaucratFalse() {
 		this.bureaucrat = false;
 	}
-	
+
 	/**
 	 * 
 	 * @return if the player is in the spy mode or not
@@ -222,14 +231,14 @@ public class Player {
 	public boolean isSpy() {
 		return this.spy;
 	}
-	
+
 	/**
 	 * sets the spy mode true
 	 */
 	public void setSpy() {
 		this.spy = true;
 	}
-	
+
 	/**
 	 * sets the spy mode false
 	 */
@@ -238,8 +247,9 @@ public class Player {
 	}
 
 	/**
-	 * sets the tuple which contains the chosen discard or trash actions (listed in class CardAction) and the 
-	 * value for the discard or trash action
+	 * sets the tuple which contains the chosen discard or trash actions (listed
+	 * in class CardAction) and the value for the discard or trash action
+	 * 
 	 * @param cardAction
 	 * @param val
 	 */
@@ -248,7 +258,9 @@ public class Player {
 	}
 
 	/**
-	 * sets the value if the player has a reaction card or not on the value specified through the parameter
+	 * sets the value if the player has a reaction card or not on the value
+	 * specified through the parameter
+	 * 
 	 * @param reactionCard
 	 */
 	public void setReactionCard(boolean reactionCard) {
@@ -318,8 +330,9 @@ public class Player {
 	}
 
 	/**
-	 * @param deck the deck to set
-	 *            
+	 * @param deck
+	 *            the deck to set
+	 * 
 	 */
 	public void setDeck(Deck deck) {
 		this.deck = deck;
@@ -336,7 +349,7 @@ public class Player {
 	 * @return the CLIENT_ID
 	 */
 	public int getClientID() {
-		return CLIENT_ID;
+		return client_ID;
 	}
 
 	/**
@@ -387,8 +400,9 @@ public class Player {
 	}
 
 	/**
-	 * @param buys the buys to set
-	 *            
+	 * @param buys
+	 *            the buys to set
+	 * 
 	 */
 	public void setBuys(int buys) {
 		this.buys = buys;
@@ -400,7 +414,7 @@ public class Player {
 	public int getCoins() {
 		return coins;
 	}
-	
+
 	/**
 	 * 
 	 * @return playerName
@@ -414,7 +428,7 @@ public class Player {
 	 * @return the last drawed card. be carefull is not set by every card
 	 */
 	public Card getDrawedCard() {
-		return this.drawedCard;
+		return this.drewCard;
 	}
 
 	/**
@@ -427,22 +441,25 @@ public class Player {
 
 	/**
 	 * 
-	 * @return if the gained card should be put on the hand after the action (if on hand = true)
+	 * @return if the gained card should be put on the hand after the action (if
+	 *         on hand = true)
 	 */
 	public boolean isOnHand() {
 		return onHand;
 	}
 
 	/**
-	 * set on hand false if the gained card shall be put on the discard pile and not on the hand
+	 * set on hand false if the gained card shall be put on the discard pile and
+	 * not on the hand
 	 */
 	public void setOnHandFalse() {
 		this.onHand = false;
 	}
 
 	/**
-	 * @param coins the coins to set
-	 *            
+	 * @param coins
+	 *            the coins to set
+	 * 
 	 */
 	public void setCoins(int coins) {
 		this.coins = coins;
@@ -470,8 +487,9 @@ public class Player {
 	}
 
 	/**
-	 * resets the thief mode triggered through the card thief. thief, revealMode, reactionMode, reactionCard 
-	 * are set on false. a new revealList is created.
+	 * resets the thief mode triggered through the card thief. thief,
+	 * revealMode, reactionMode, reactionCard are set on false. a new revealList
+	 * is created.
 	 */
 	public void resetThiefMode() {
 		this.thief = false;
@@ -482,8 +500,8 @@ public class Player {
 	}
 
 	/**
-	 * takes the revealed card from the revealList append the list to the discard pile. sets the reveal mode false
-	 * and creates a new reveal list
+	 * takes the revealed card from the revealList append the list to the
+	 * discard pile. sets the reveal mode false and creates a new reveal list
 	 */
 	public void takeRevealedCardsSetRevealModeFalse() {
 		CollectionsUtil.appendListToList(revealList, getDeck().getDiscardPile());
@@ -492,7 +510,8 @@ public class Player {
 	}
 
 	/**
-	 * appends the revealed cards to the draw pile. sets the reveal mode false. creates a new reveal list
+	 * appends the revealed cards to the draw pile. sets the reveal mode false.
+	 * creates a new reveal list
 	 */
 	public void putBackRevealedCardsSetRevealModeFalse() {
 		CollectionsUtil.appendListToList(revealList, getDeck().getDrawPile());
@@ -501,21 +520,22 @@ public class Player {
 	}
 
 	/**
-	 * called by the game controller if player is in discard or trash mode. looks up in which mode the player is
-	 * and appends the cards to the right pile. calls the do action method for the card. 
+	 * called by the game controller if player is in discard or trash mode.
+	 * looks up in which mode the player is and appends the cards to the right
+	 * pile. calls the do action method for the card.
+	 * 
 	 * @param cardID
 	 * @param trashPile
 	 * @throws IOException
 	 */
 	public void discardOrTrash(String cardID, LinkedList<Card> trashPile) throws IOException {
-		
+
 		if (this.discardMode) {
 			this.getDeck().getDiscardPile().add(doAction(cardID));
 			return;
 		}
 		if (this.trashMode) {
-			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND)
-					&& !this.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.TREASURE)) {
+			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND) && !this.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.TREASURE)) {
 				return;
 			}
 			trashPile.add(doAction(cardID));
@@ -541,8 +561,10 @@ public class Player {
 	}
 
 	/**
-	 * called whenever a card is played calls the doAction method appends the played card to the played card list
-	 * sets the play twice flag if a card should be played twice
+	 * called whenever a card is played calls the doAction method appends the
+	 * played card to the played card list sets the play twice flag if a card
+	 * should be played twice
+	 * 
 	 * @param cardID
 	 * @throws IOException
 	 */
@@ -559,7 +581,9 @@ public class Player {
 	}
 
 	/**
-	 * plays all treasures at once and adds the treasures to the playedCards list
+	 * plays all treasures at once and adds the treasures to the playedCards
+	 * list
+	 * 
 	 * @throws IOException
 	 */
 	public void playTreasures() throws IOException {
@@ -603,8 +627,8 @@ public class Player {
 	}
 
 	/**
-	 * most important method for the card action. every method which executes card actions is called 
-	 * from this method
+	 * most important method for the card action. every method which executes
+	 * card actions is called from this method
 	 * 
 	 * @author Lukas Adler
 	 * @throws IOException
@@ -619,11 +643,11 @@ public class Player {
 				GameLog.log(MsgType.GAME, "Card was not found on hand.");
 			}
 		}
-		
-		/*TEST GAME LOG*/
+
+		/* TEST GAME LOG */
 		GameLog.log(MsgType.GAME, "Played: " + serverCard.getName());
-		/*TEST GAME LOG*/
-		
+		/* TEST GAME LOG */
+
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
 			return serverCard;
@@ -700,8 +724,7 @@ public class Player {
 			case GAIN_CARD_DRAW_PILE:
 				try {
 					if (value.toLowerCase().equals("silver")) {
-						getDeck().getDrawPile().addLast(this.gameServer.getGameController().getGameBoard()
-								.getTableForTreasureCards().get("Silver").removeLast());
+						getDeck().getDrawPile().addLast(this.gameServer.getGameController().getGameBoard().getTableForTreasureCards().get("Silver").removeLast());
 					}
 				} catch (NoSuchElementException e) {
 					GameLog.log(MsgType.GAME, "couldn't gain the card because ther are no more silver card on the board");
@@ -752,28 +775,24 @@ public class Player {
 					if (card != null) {
 
 						getDeck().getCardHand().remove(card);
-						getDeck().trash(card,
-								this.gameServer.getGameController().getGameBoard().getTrashPile());
+						getDeck().trash(card, this.gameServer.getGameController().getGameBoard().getTrashPile());
 						this.coins += Integer.parseInt(value.split("_")[1]);
 					}
 				}
 				break;
 			case TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND:
 				this.trashMode = true;
-				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND,
-						Integer.parseInt(value.split("_")[0]));
+				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, Integer.parseInt(value.split("_")[0]));
 				this.gainValue = Integer.parseInt(value.split("_")[1]);
 				break;
 			case TRASH_AND_GAIN_MORE_THAN:
 				this.trashMode = true;
-				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN_MORE_THAN,
-						Integer.parseInt(value.split("_")[0]));
+				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN_MORE_THAN, Integer.parseInt(value.split("_")[0]));
 				this.gainValue = Integer.parseInt(value.split("_")[1]);
 				break;
 			case TRASH_AND_GAIN:
 				this.trashMode = true;
-				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN,
-						Integer.parseInt(value.split("_")[0]));
+				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN, Integer.parseInt(value.split("_")[0]));
 				this.gainValue = Integer.parseInt(value.split("_")[1]);
 				break;
 
@@ -785,8 +804,7 @@ public class Player {
 				this.revealMode = true;
 				revealList.add(getDeck().removeSaveFromDrawPile());
 
-				this.gameServer.sendMessage(port,
-						new PacketSendRevealCards(CollectionsUtil.getCardIDs(revealList)));
+				this.gameServer.sendMessage(port, new PacketSendRevealCards(CollectionsUtil.getCardIDs(revealList)));
 				// GameServer.getInstance().sendMessage(port,
 				// new PacketSendHandCards(revealList));
 				break;
@@ -831,7 +849,9 @@ public class Player {
 
 	/**
 	 * reveals so much cards until value treasure cards are revealed
-	 * @throws noSuchElement exceptions if not enough treasure cards are in the deck
+	 * 
+	 * @throws noSuchElement
+	 *             exceptions if not enough treasure cards are in the deck
 	 * @param value
 	 */
 	private void revealUntilTreasures(int value) {
@@ -852,28 +872,29 @@ public class Player {
 		} catch (NoSuchElementException e) {
 			System.out.println("not enough treasures are in the deck");
 		}
-		System.out.println("hinzuf�gen");
+		System.out.println("hinzufuegen");
 		CollectionsUtil.appendListToList(treasureList, this.getDeck().getCardHand());
 		CollectionsUtil.appendListToList(this.revealList, this.getDeck().getDiscardPile());
 		this.revealList = new LinkedList<Card>();
-
 	}
 
 	/**
-	 * draws until this.drawUntil if card contains the type which is set in this.setAside the player is asked
-	 * if he wants to take the card or to set it aside
-	 * @throws no such elemnt exception if there are not enough cards to draw
+	 * draws until this.drawUntil if card contains the type which is set in
+	 * this.setAside the player is asked if he wants to take the card or to set
+	 * it aside
+	 * 
+	 * @throws no
+	 *             such elemnt exception if there are not enough cards to draw
 	 */
 	public void drawUntil() {
 		try {
 			while (this.getDeck().getCardHand().size() < this.drawUntil) {
 				System.out.println("cardHandSize: " + this.getDeck().getCardHand().size());
 				Card card = this.getDeck().removeSaveFromDrawPile();
-				this.drawedCard = card;
+				this.drewCard = card;
 				this.getDeck().getCardHand().add(card);
 				try {
-					this.gameServer.sendMessage(port,
-							new PacketSendHandCards(CollectionsUtil.getCardIDs(this.getDeck().getCardHand())));
+					this.gameServer.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.getDeck().getCardHand())));
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
@@ -886,8 +907,8 @@ public class Player {
 				if (card.getTypes().contains(this.setAside)) {
 					this.gameServer.getGameController().setCardsDisabled();
 					try {
-						this.gameServer.sendMessage(port, new PacketSetAsideDrawedCard());
-						this.gameServer.sendMessage(port, new PacketTakeDrawedCard());
+						this.gameServer.sendMessage(port, new PacketSetAsideDrewCard());
+						this.gameServer.sendMessage(port, new PacketTakeDrewCard());
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -901,8 +922,8 @@ public class Player {
 	}
 
 	/**
-	 * sets the gainMode false sets the gainValue on -1 which shows that there is nothing to gain
-	 * because no card costs -1
+	 * sets the gainMode false sets the gainValue on -1 which shows that there
+	 * is nothing to gain because no card costs -1
 	 */
 	protected void setGainModeFalse() {
 		this.gainMode = false;
@@ -926,8 +947,9 @@ public class Player {
 	}
 
 	/**
-	 * executes the discard or trash action after this flag was set in the doAction method.
-	 * action is specified in the Tuple discardOrTrashAction
+	 * executes the discard or trash action after this flag was set in the
+	 * doAction method. action is specified in the Tuple discardOrTrashAction
+	 * 
 	 * @param card
 	 * @throws IOException
 	 */
@@ -948,7 +970,6 @@ public class Player {
 			if (this.discardOrTrashAction.getSecondEntry() > 0) {
 				this.discardOrTrashAction.decrementSecondEntry();
 			}
-
 			this.getDeck().getCardHand().remove(card);
 			if (this.discardOrTrashAction.getSecondEntry() == 0) {
 				this.discardMode = false;
@@ -978,6 +999,7 @@ public class Player {
 
 	/**
 	 * executes the trash Action specified in the Tuple discard or TrashAction
+	 * 
 	 * @param card
 	 * @throws IOException
 	 */
@@ -988,7 +1010,6 @@ public class Player {
 			this.gameServer.sendMessage(port, new PacketEndTrashMode());
 		}
 		this.getDeck().getCardHand().remove(card);
-
 		this.discardOrTrashAction.decrementSecondEntry();
 		if (this.discardOrTrashAction.getSecondEntry() == 0) {
 			this.trashMode = false;
@@ -996,15 +1017,13 @@ public class Player {
 				this.gainMode = true;
 			}
 			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_AND_GAIN_MORE_THAN)
-					|| this.discardOrTrashAction.getFirstEntry()
-							.equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND)) {
+					|| this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND)) {
 				this.gainMode = true;
 				this.gainValue += card.getCost();
 			}
 			if (this.discardOrTrashAction.getFirstEntry().equals(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND)) {
 				this.onHand = true;
 			}
-
 		}
 	}
 

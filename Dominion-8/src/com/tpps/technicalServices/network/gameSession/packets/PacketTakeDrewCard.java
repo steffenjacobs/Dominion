@@ -7,11 +7,11 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
  * the packet is send to the server if the player wants to take the drawed card
  * @author Lukas Adler
  */
-public class PacketTakeDrawedCard extends Packet {
+public class PacketTakeDrewCard extends Packet {
 
 	private static final long serialVersionUID = -2732334431695539456L;
 
-	public PacketTakeDrawedCard() {
+	public PacketTakeDrewCard() {
 		super(PacketType.TAKE_DRAWED_CARD);		
 	}
 	

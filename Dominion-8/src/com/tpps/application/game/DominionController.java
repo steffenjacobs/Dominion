@@ -261,7 +261,6 @@ public final class DominionController {
 		return this.playerSettingsPanel.getSelectedPicture();
 	}
 	
-	
 	/**
 	 * 
 	 * @return
@@ -377,7 +376,6 @@ public final class DominionController {
 		this.username = username;
 		this.email = email;
 	}
-
 
 	public void openStatisticsGui() {
 		JPanel panel = new JPanel(){

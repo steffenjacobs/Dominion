@@ -16,11 +16,9 @@ import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.server.ChatController;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBuyCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
-import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndActionPhase;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndReactions;
@@ -70,10 +68,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case REGISTRATE_PLAYER_BY_SERVER:
 				int clientId = GameServer.getCLIENT_ID();
 				PacketRegistratePlayerByServer packetRegistratePlayerByServer = (PacketRegistratePlayerByServer) packet;
-				if (packetRegistratePlayerByServer.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))){
+				if (packetRegistratePlayerByServer.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 					addPlayerAndCheckPlayerCount(port, clientId, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
-				}
-				else if (this.server.validSession(packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID())) {
+				} else if (this.server.validSession(packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID())) {
 					System.out.println("Connect valid Session username: " + packetRegistratePlayerByServer.getUsername() + "sessionID: " + packetRegistratePlayerByServer.getSessionID());
 					addPlayerAndCheckPlayerCount(port, clientId, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
 				} else {
@@ -111,7 +108,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case END_TURN:
 				// alle Karten ablegen
-
 				nextActivePlayer(port);
 
 				break;
@@ -340,14 +336,15 @@ public class ServerGamePacketHandler extends PacketHandler {
 		// Player activePlayer =
 		// this.server.getGameController().getActivePlayer();
 		Player player = this.server.getGameController().getClientById(clientID);
-		
+
 		/**
-		 * Prüfen ob 
-		 * 1. jeder die broadcast und nur ich die log message sehen kann bei cardPlayed
-		 * 2. wo steht cliendID%4
-		 * 3. funktionieren die Farben
-		 * 4. test bei servergamepackethandler removen und color übergeben sodass die farben funzen können
-		 * 5. im GameLog.broadcastMessage die color removen aber das wird automatisch passieren wenn der konstruktor vom Packet geändert wird und die farbe vom konstruktor auf die GameLog Methode geändert wird
+		 * Prüfen ob 1. jeder die broadcast und nur ich die log message sehen
+		 * kann bei cardPlayed 2. wo steht cliendID%4 3. funktionieren die
+		 * Farben 4. test bei servergamepackethandler removen und color
+		 * übergeben sodass die farben funzen können 5. im
+		 * GameLog.broadcastMessage die color removen aber das wird automatisch
+		 * passieren wenn der konstruktor vom Packet geändert wird und die farbe
+		 * vom konstruktor auf die GameLog Methode geändert wird
 		 * 
 		 * */
 		GameLog.log(MsgType.GAME, "only I can see this");
@@ -469,19 +466,16 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 	}
 
-	private void canActivePlayerContinue() throws IOException {
-		boolean activePlayerCanContinue = true;
-		for (Iterator<Player> iterator = this.server.getGameController().getPlayers().iterator(); iterator.hasNext();) {
-			Player p = (Player) iterator.next();
-			if (p.isRevealMode()) {
-				activePlayerCanContinue = false;
-				break;
-			}
-		}
-		if (activePlayerCanContinue) {
-			server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketEnable());
-		}
-	}
+	/*
+	 * private void canActivePlayerContinue() throws IOException { boolean
+	 * activePlayerCanContinue = true; for (Iterator<Player> iterator =
+	 * this.server.getGameController().getPlayers().iterator();
+	 * iterator.hasNext();) { Player p = (Player) iterator.next(); if
+	 * (p.isRevealMode()) { activePlayerCanContinue = false; break; } } if
+	 * (activePlayerCanContinue) {
+	 * server.sendMessage(this.server.getGameController
+	 * ().getActivePlayer().getPort(), new PacketEnable()); } }
+	 */
 
 	private void buyCardAndUpdateBoards(Packet packet) throws IOException {
 		try {
@@ -501,13 +495,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 			Player player = this.server.getGameController().getActivePlayer();
-//			server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, " -- " + player.getPlayerName() + "'s TURN ENDED -- ", player.getLogColor()));
+			// server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME,
+			// " -- " + player.getPlayerName() + "'s TURN ENDED -- ",
+			// player.getLogColor()));
 			GameLog.broadcastMessage(MsgType.GAME, " -- " + player.getPlayerName() + "'s TURN ENDED -- ");
 			this.server.getGameController().endTurn();
 
 			server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
 			server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
-//			server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, " ++ " + this.server.getGameController().getActivePlayer().getPlayerName() + "'s TURN STARTED ++ ", player.getLogColor()));
+			// server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME,
+			// " ++ " +
+			// this.server.getGameController().getActivePlayer().getPlayerName()
+			// + "'s TURN STARTED ++ ", player.getLogColor()));
 			GameLog.broadcastMessage(MsgType.GAME, " ++ " + this.server.getGameController().getActivePlayer().getPlayerName() + "'s TURN STARTED ++ ");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -518,29 +517,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 		LinkedList<Player> disconnectedPlayers = this.server.getDisconnectedUser();
 		for (Iterator<Player> iterator = disconnectedPlayers.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-
 			if (packetReconnect.getUsername().equals(player.getPlayerName())) {
 				player.setPort(port);
 				player.updateSessionID(packetReconnect.getSessionID());
 			}
 		}
-	}
-
-	/**
-	 * 
-	 * @param port
-	 * @param username
-	 * @param sessionID
-	 */
-	private void addAIAndCheckPlayerCount(int port, String username, UUID sessionID) {
-		Player player = new Player(-1, port, this.server.getGameController().getGameBoard().getStartSet(), username, sessionID, this.server);
-		try {
-			server.getGameController().addPlayer(player);
-		} catch (TooMuchPlayerException e) {
-			System.err.println("Haha steffen");
-			this.server.disconnect(port);
-		}
-		new ArtificialIntelligence(player, sessionID).start();
 	}
 
 	/**
@@ -556,14 +537,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 			server.sendMessage(port, new PacketSendClientId(clientId));
 			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 				new ArtificialIntelligence(player, sessionID).start();
-				System.out.println("created a new artificial intelligence");				
+				System.out.println("created a new artificial intelligence");
 			}
 			if (server.getGameController().getPlayers().size() == GameConstant.HUMAN_PLAYERS) {
 				ChatController.getInstance().createChatRoom(this.server.getGameController().getPlayerNames());
 				server.getGameController().startGame();
 				setUpGui();
 			}
-			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);	
+			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
 		} catch (TooMuchPlayerException tmpe) {
 			server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();
@@ -584,6 +565,5 @@ public class ServerGamePacketHandler extends PacketHandler {
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
 			server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
 		}
-
 	}
 }

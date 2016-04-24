@@ -765,7 +765,6 @@ public class GameController {
 	 * ActionPhase
 	 */
 	public synchronized void endTurn() {
-
 		this.getActivePlayer().resetPlayerValues();
 		this.getActivePlayer().refreshPlayedCardsList();
 		this.setNextActivePlayer();

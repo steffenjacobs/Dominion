@@ -16,9 +16,9 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketEndTurn;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackThiefCards;
-import com.tpps.technicalServices.network.gameSession.packets.PacketSetAsideDrawedCard;
+import com.tpps.technicalServices.network.gameSession.packets.PacketSetAsideDrewCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeCards;
-import com.tpps.technicalServices.network.gameSession.packets.PacketTakeDrawedCard;
+import com.tpps.technicalServices.network.gameSession.packets.PacketTakeDrewCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeThiefCards;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
@@ -209,7 +209,7 @@ public class ButtonClass extends GFButton {
 				System.out.println("take drawedCard");
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
-					gameClient.sendMessage(new PacketTakeDrawedCard());
+					gameClient.sendMessage(new PacketTakeDrewCard());
 					this.getFramework().removeComponent(GameWindow.takeDrawedCard);
 					this.getFramework().removeComponent(GameWindow.setAsideDrawedCard);
 				} catch (IOException e) {
@@ -220,7 +220,7 @@ public class ButtonClass extends GFButton {
 			if (this.getCaption().equals("Set Aside Drawed Card")) {
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
-					gameClient.sendMessage(new PacketSetAsideDrawedCard());
+					gameClient.sendMessage(new PacketSetAsideDrewCard());
 					this.getFramework().removeComponent(GameWindow.takeDrawedCard);
 					this.getFramework().removeComponent(GameWindow.setAsideDrawedCard);
 				} catch (IOException e) {
@@ -355,7 +355,7 @@ public class ButtonClass extends GFButton {
 				System.out.println("take drawedCard");
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
-					gameClient.sendMessage(new PacketTakeDrawedCard());
+					gameClient.sendMessage(new PacketTakeDrewCard());
 					this.getFramework().removeComponent(GameWindow.takeDrawedCard);
 					this.getFramework().removeComponent(GameWindow.setAsideDrawedCard);
 				} catch (IOException e) {
@@ -366,7 +366,7 @@ public class ButtonClass extends GFButton {
 			if (this.getCaption().equals("Set Aside Drawed Card")) {
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
-					gameClient.sendMessage(new PacketSetAsideDrawedCard());
+					gameClient.sendMessage(new PacketSetAsideDrewCard());
 					this.getFramework().removeComponent(GameWindow.takeDrawedCard);
 					this.getFramework().removeComponent(GameWindow.setAsideDrawedCard);
 				} catch (IOException e) {
