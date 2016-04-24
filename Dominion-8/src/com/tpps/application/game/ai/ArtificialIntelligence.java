@@ -5,59 +5,57 @@ import java.util.UUID;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.tpps.application.game.Player;
-import com.tpps.ui.gameplay.GameWindow;
 
-/**
- * board anschauen, wenn angriffskarten gekauft werden dann defensiv kaufen wenn
- * es nix bringt, mehr karten zu ziehen, ggf. aktionskarten nicht spielen
- * LinkedListMultimap mit "buy" oder "play" und karte als Spielplan aufbauen
- * Player Konstruktor ohne port? wenn es der potentiell letzte Zug ist, soll die
- * Blacklist ignoriert werden und evtl ein Anwesen gekauft werden
+/*
+ * - board anschauen, wenn angriffskarten gekauft werden dann defensiv kaufen 
+ * - wenn es nix bringt, mehr karten zu ziehen, ggf. aktionskarten nicht spielen
+ * - LinkedListMultimap mit "buy" oder "play" und karte als Spielplan aufbauen
+ * - wenn es der potentiell letzte Zug ist, soll die Blacklist ignoriert werden und evtl ein Anwesen gekauft werden
  */
 
+/**
+ * AI -> computes Move -> Information(Handler) needed -> Move is computed ->
+ * GameHandler needed to execute turn
+ * 
+ * @author Nicolas Wipfler
+ */
 public class ArtificialIntelligence {
 
 	private Player player;
 	private boolean computing;
 
-	private GameView game;
+	private GameHandler game;
 	private Move move;
+	private InformationHandler information;
 
-	/**
-	 * 
-	 * 
-	 * move determines the steps if it's the AI's turn 
-	 * with the cardStore the AI can compare every handcard with the
-	 * original card 'image' of the backend computing is a flag which indicates
-	 * whether the AI is already computing the next turn or does nothing at the
-	 * moment
-	 */
-	
 	/**
 	 * constructor of the Artificial Intelligence
 	 * 
-	 * @param player the player which is controlled by the AI
+	 * @param player
+	 *            the player which is controlled by the AI
 	 * @param uuid
+	 *            the sessionID of the AI instance
 	 */
 	public ArtificialIntelligence(Player player, UUID uuid) {
 		this.player = player;
-		this.game = new GameView(this.player.getGameServer());
-		this.move = new Move();
+		this.game = new GameHandler(this.player.getGameServer());
+		this.information = new InformationHandler();
 		this.computing = false;
 	}
 
 	/**
-	 * end the turn of AI
+	 * @return the player
 	 */
-	private void endTurn() {
-		GameWindow.endTurn.onMouseClick();
+	public Player getPlayer() {
+		return player;
 	}
 
 	/**
-	 * play all treasures of AI
+	 * @param player
+	 *            the player to set
 	 */
-	private void playTreasures() {
-		GameWindow.playTreasures.onMouseClick();
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	/**
@@ -92,8 +90,8 @@ public class ArtificialIntelligence {
 	 */
 	public void executeTurn() {
 		// LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
-		playTreasures();
-		endTurn();
+		game.playTreasures();
+		game.endTurn();
 		/**
 		 * set computing flag false here, because otherwise the AI would compute
 		 * a new turn before it has even executed the old
@@ -126,7 +124,7 @@ public class ArtificialIntelligence {
 		 * enough coins to the desired action (/buy the desired card), don't
 		 * draw any more cards e.g.
 		 */
-		int availableCoinsAtStartOfTurn = getTreasureCardsValue();
+		int availableCoinsAtStartOfTurn = information.getTreasureCardsValue(this.player);
 
 	}
 
@@ -138,14 +136,6 @@ public class ArtificialIntelligence {
 				computeNextTurn();
 			}
 		}
-	}
-
-	/**
-	 * 
-	 * @return the value of all treasure cards in the cardHand of the AI
-	 */
-	private int getTreasureCardsValue() {
-		return this.player.getDeck().getTreasureValueOfList(this.player.getDeck().getCardHand());
 	}
 
 	/**
@@ -172,4 +162,49 @@ public class ArtificialIntelligence {
 			System.out.println(i);
 		}
 	}
+	
+//	/**
+//	 * @return the game
+//	 */
+//	public GameHandler getGame() {
+//		return game;
+//	}
+//
+//	/**
+//	 * @param game
+//	 *            the game to set
+//	 */
+//	public void setGame(GameHandler game) {
+//		this.game = game;
+//	}
+//
+//	/**
+//	 * @return the move
+//	 */
+//	public Move getMove() {
+//		return move;
+//	}
+//
+//	/**
+//	 * @param move
+//	 *            the move to set
+//	 */
+//	public void setMove(Move move) {
+//		this.move = move;
+//	}
+//
+//	/**
+//	 * @return the information
+//	 */
+//	public InformationHandler getInformation() {
+//		return information;
+//	}
+//
+//	/**
+//	 * @param information
+//	 *            the information to set
+//	 */
+//	public void setInformation(InformationHandler information) {
+//		this.information = information;
+//	}
 }

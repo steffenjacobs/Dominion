@@ -4,8 +4,6 @@ import java.awt.Image;
 import java.io.IOException;
 
 import com.tpps.application.game.DominionController;
-import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameClient;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndActionPhase;
@@ -50,7 +48,6 @@ public class ButtonClass extends GFButton {
 	 * @param _parent
 	 * @param caption
 	 */
-
 	public ButtonClass(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,
@@ -70,7 +67,6 @@ public class ButtonClass extends GFButton {
 
 	public void onMouseEnter() {
 		super.updatedBufferedImage(original);
-
 	}
 
 	/**
@@ -79,7 +75,6 @@ public class ButtonClass extends GFButton {
 
 	public void onMouseExit() {
 		super.updatedBufferedImage(GraphicsUtil.setAlpha(super.getBufferedImage(), .6f));
-
 	}
 
 	/**
@@ -102,7 +97,6 @@ public class ButtonClass extends GFButton {
 					e.printStackTrace();
 				}
 			}
-
 			if (this.getCaption().equals("Play Treasures")) {
 				try {
 					System.out.println("PacketPlayTreasures");
@@ -170,11 +164,9 @@ public class ButtonClass extends GFButton {
 					this.getFramework().removeComponent(this);
 					this.getFramework().removeComponent(GameWindow.putBack);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-
 			if (this.getCaption().equals("Put Back")) {
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
