@@ -3,12 +3,10 @@ package com.tpps.application.game.card;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.tpps.application.game.DominionController;
@@ -19,14 +17,11 @@ import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.GameBackground;
-import com.tpps.ui.gameplay.GameWindow;
 
 /**
  * @author Nicolas Wipfler
  */
 
-// clone constructor
-// equals
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = -4157717625890678601L;
@@ -43,9 +38,9 @@ public class Card extends GameObject {
 	private Image sourceImage;
 	private GameBackground gameBackground;
 	private String handTrigger = "";
-	private int mouseReaction = 0;
-	private ArrayList<GameBackground> cardReaction = new ArrayList<>();
-	private GameBackground tmp;
+	// private int mouseReaction = 0;
+	// private ArrayList<GameBackground> cardReaction = new ArrayList<>();
+	// private GameBackground tmp;
 	private static int classID = 0;
 
 	/**

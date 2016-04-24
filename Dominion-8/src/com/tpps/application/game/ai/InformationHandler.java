@@ -4,21 +4,24 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.Player;
 import com.tpps.application.storage.CardStorageController;
-import com.tpps.technicalServices.network.game.GameServer;
 
-public class GameView {
-
-	private GameServer gameServer;
-	private LinkedList<String> blacklist;
-	private CardStorageController cardStore;
+/***
+ * InformationHandler provides all kind of information about the game and the
+ * cardHand of the AI. It contains several methods with basic information for
+ * making a decision of the next Move.
+ *
+ * @author Nicolas Wipfler
+ */
+public class InformationHandler {
 
 	/**
-	 * blacklist basically blacklists all cards the AI should never buy, except special situations
-	 * 
-	 * @param gameServer the GameServer which contains all relevant game information for the AI
+	 * with the cardStore the AI can compare every handcard with the 'original
+	 * card' of the backend
 	 */
-	public GameView(GameServer gameServer) {
-		this.gameServer = gameServer;
+	private CardStorageController cardStore;
+	private LinkedList<String> blacklist;
+
+	public InformationHandler() {
 		this.blacklist = this.getCardNamesFromStorage("Curse", "Copper", "Estate");
 		this.cardStore = new CardStorageController("cards.bin");
 	}
@@ -54,8 +57,8 @@ public class GameView {
 	}
 
 	/**
-	 * this method is used to see in the cardStore if there is a card called
-	 * 'name' so it takes the parameter 'names' and adds every cardname (when
+	 * this method is used to check if there is a card called 'name' in the cardStore
+	 * so it takes the parameter 'names' and adds every cardname (when
 	 * the card is truly available in cardStore) to the return list.
 	 * 
 	 * @param names
@@ -73,18 +76,11 @@ public class GameView {
 
 	/**
 	 * 
-	 * @return if the game is NOT finished (so when the method returns true, the
-	 *         game is still running)
+	 * @param player
+	 *            the player to get the information from
+	 * @return
 	 */
-	protected boolean notFinished() {
-		return this.gameServer.getGameController().isGameNotFinished();
-	}
-
-	/**
-	 * 
-	 * @return if its the AIs turn
-	 */
-	protected boolean myTurn(Player player) {
-		return this.gameServer.getGameController().getActivePlayer().equals(player);
+	protected int getTreasureCardsValue(Player player) {
+		return player.getDeck().getTreasureValueOfList(player.getDeck().getCardHand());
 	}
 }

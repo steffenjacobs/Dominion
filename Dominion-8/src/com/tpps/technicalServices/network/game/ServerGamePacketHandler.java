@@ -16,6 +16,7 @@ import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.server.ChatController;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBuyCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
@@ -101,25 +102,20 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case PLAY_TREASURES:
 				this.server.getGameController().playTreasures();
-
-				server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-				server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getPlayedCards())));
-				server.sendMessage(port, new PacketUpdateTreasures(server.getGameController().getActivePlayer().getCoins()));
+				this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+				this.server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getPlayedCards())));
+				this.server.sendMessage(port, new PacketUpdateTreasures(server.getGameController().getActivePlayer().getCoins()));
 				break;
 			case END_TURN:
 				// alle Karten ablegen
-				nextActivePlayer(port);
-
+				this.nextActivePlayer(port);
 				break;
 			case END_DISCARD_MODE:
 				this.server.getGameController().getActivePlayer().endDiscardAndDrawMode();
-
 				this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 				break;
 			case END_TRASH_MODE:
-
 				this.server.getGameController().getActivePlayer().endTrashMode();
-
 				break;
 			case TAKE_CARDS:
 				int clientID = ((PacketTakeCards) packet).getClientID();
@@ -492,22 +488,16 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 	private void nextActivePlayer(int port) {
 		try {
-			this.server.getGameController().organizePilesAndrefreshCardHand();
-			server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 			Player player = this.server.getGameController().getActivePlayer();
-			// server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME,
-			// " -- " + player.getPlayerName() + "'s TURN ENDED -- ",
-			// player.getLogColor()));
-			GameLog.broadcastMessage(MsgType.GAME, " -- " + player.getPlayerName() + "'s TURN ENDED -- ");
+			this.server.getGameController().organizePilesAndrefreshCardHand();
+			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, " -- " + player.getPlayerName() + "'s TURN ENDED -- ", player.getLogColor()));
+//			GameLog.broadcastMessage(MsgType.GAME, " -- " + player.getPlayerName() + "'s TURN ENDED -- ");
 			this.server.getGameController().endTurn();
-
-			server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
-			server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
-			// server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME,
-			// " ++ " +
-			// this.server.getGameController().getActivePlayer().getPlayerName()
-			// + "'s TURN STARTED ++ ", player.getLogColor()));
-			GameLog.broadcastMessage(MsgType.GAME, " ++ " + this.server.getGameController().getActivePlayer().getPlayerName() + "'s TURN STARTED ++ ");
+			this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
+			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
+			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, " ++ " + this.server.getGameController().getActivePlayer().getPlayerName() + "'s TURN STARTED ++ ", player.getLogColor()));
+//			GameLog.broadcastMessage(MsgType.GAME, " ++ " + this.server.getGameController().getActivePlayer().getPlayerName() + "'s TURN STARTED ++ ");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -533,20 +523,20 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void addPlayerAndCheckPlayerCount(int port, int clientId, String username, UUID sessionID) throws IOException {
 		try {
 			Player player = new Player(clientId, port, this.server.getGameController().getGameBoard().getStartSet(), username, sessionID, this.server);
-			server.getGameController().addPlayer(player);
-			server.sendMessage(port, new PacketSendClientId(clientId));
+			this.server.getGameController().addPlayer(player);
+			this.server.sendMessage(port, new PacketSendClientId(clientId));
 			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 				new ArtificialIntelligence(player, sessionID).start();
 				System.out.println("created a new artificial intelligence");
 			}
-			if (server.getGameController().getPlayers().size() == GameConstant.HUMAN_PLAYERS) {
+			if (this.server.getGameController().getPlayers().size() == GameConstant.HUMAN_PLAYERS) {
 				ChatController.getInstance().createChatRoom(this.server.getGameController().getPlayerNames());
-				server.getGameController().startGame();
+				this.server.getGameController().startGame();
 				setUpGui();
 			}
 			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
 		} catch (TooMuchPlayerException tmpe) {
-			server.sendMessage(port, new PacketClientShouldDisconect());
+			this.server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();
 		}
 	}
@@ -559,11 +549,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 */
 	private void setUpGui() throws IOException {
 		GameBoard gameBoard = this.server.getGameController().getGameBoard();
-		server.broadcastMessage(new PacketOpenGuiAndEnableOne(server.getGameController().getActivePlayer().getClientID()));
-		server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
-		LinkedList<Player> players = server.getGameController().getPlayers();
+		this.server.broadcastMessage(new PacketOpenGuiAndEnableOne(this.server.getGameController().getActivePlayer().getClientID()));
+		this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
+		LinkedList<Player> players = this.server.getGameController().getPlayers();
 		for (int i = 0; i < GameConstant.HUMAN_PLAYERS; i++) {
-			server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
+			this.server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
 		}
 	}
 }
