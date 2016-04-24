@@ -58,11 +58,11 @@ public class GameHandler {
 		GameWindow.playTreasures.onMouseClick();
 	}
 	
-	protected void buyCard() {
+	protected void buyCard(String cardname) {
 		
 	}
 	
-	protected void playCard() {
+	protected void playCard(String cardname) {
 		
 	}
 }

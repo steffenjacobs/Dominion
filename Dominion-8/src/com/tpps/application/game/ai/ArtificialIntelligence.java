@@ -1,10 +1,12 @@
 package com.tpps.application.game.ai;
 
+import java.util.LinkedList;
 import java.util.UUID;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.tpps.application.game.Player;
+import com.tpps.application.game.card.Card;
 
 /*
  * - board anschauen, wenn angriffskarten gekauft werden dann defensiv kaufen 
@@ -84,12 +86,22 @@ public class ArtificialIntelligence {
 		}).start();
 	}
 
+	private void handleTurn() {
+		if (game.myTurn(this.player)) {
+			executeMove();
+		} else {
+			if (!computing) {
+				determineMove();
+			}
+		}
+	}
+	
 	/**
 	 * execute the next turn of AI, which is determined by LinkedListMultimap
 	 * nextTurn
 	 */
-	public void executeTurn() {
-		// LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
+	public void executeMove() {
+		LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
 		game.playTreasures();
 		game.endTurn();
 		/**
@@ -104,20 +116,20 @@ public class ArtificialIntelligence {
 	 * assign a default turn which should be an alternative solution, if the
 	 * compution of the next turn of the AI is interrupted
 	 */
-	private void computeNextTurn() {
+	private void determineMove() {
 		this.computing = true;
 		/**
 		 * method assigns a default turn as the next turn, if the
-		 * computeNextTurn() method gets interrupted before something useful is
+		 * determineMove() method gets interrupted before something useful is
 		 * computed
 		 */
-		assignDefaultTurn();
+		getDefaultMove();
 	}
 
 	/**
 	 * assign a default turn to nextTurn
 	 */
-	private void assignDefaultTurn() {
+	private void getDefaultMove() {
 		/**
 		 * availableCoinsAtStartOfTurn has to be checked several times (for
 		 * example after a 'draw card' action is performed and if there are
@@ -126,16 +138,6 @@ public class ArtificialIntelligence {
 		 */
 		int availableCoinsAtStartOfTurn = information.getTreasureCardsValue(this.player);
 
-	}
-
-	private void handleTurn() {
-		if (game.myTurn(this.player)) {
-			executeTurn();
-		} else {
-			if (!computing) {
-				computeNextTurn();
-			}
-		}
 	}
 
 	/**
@@ -163,48 +165,48 @@ public class ArtificialIntelligence {
 		}
 	}
 	
-//	/**
-//	 * @return the game
-//	 */
-//	public GameHandler getGame() {
-//		return game;
-//	}
-//
-//	/**
-//	 * @param game
-//	 *            the game to set
-//	 */
-//	public void setGame(GameHandler game) {
-//		this.game = game;
-//	}
-//
-//	/**
-//	 * @return the move
-//	 */
-//	public Move getMove() {
-//		return move;
-//	}
-//
-//	/**
-//	 * @param move
-//	 *            the move to set
-//	 */
-//	public void setMove(Move move) {
-//		this.move = move;
-//	}
-//
-//	/**
-//	 * @return the information
-//	 */
-//	public InformationHandler getInformation() {
-//		return information;
-//	}
-//
-//	/**
-//	 * @param information
-//	 *            the information to set
-//	 */
-//	public void setInformation(InformationHandler information) {
-//		this.information = information;
-//	}
+	/**
+	 * @return the game
+	 */
+	public GameHandler getGame() {
+		return game;
+	}
+
+	/**
+	 * @param game
+	 *            the game to set
+	 */
+	public void setGame(GameHandler game) {
+		this.game = game;
+	}
+
+	/**
+	 * @return the move
+	 */
+	public Move getMove() {
+		return move;
+	}
+
+	/**
+	 * @param move
+	 *            the move to set
+	 */
+	public void setMove(Move move) {
+		this.move = move;
+	}
+
+	/**
+	 * @return the information
+	 */
+	public InformationHandler getInformation() {
+		return information;
+	}
+
+	/**
+	 * @param information
+	 *            the information to set
+	 */
+	public void setInformation(InformationHandler information) {
+		this.information = information;
+	}
 }
