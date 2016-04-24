@@ -17,6 +17,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -28,6 +30,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -37,7 +44,7 @@ public class ChatWindowForInGame extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private BufferedImage blackBeauty;
-	private JTextArea textbox;
+	private JTextPane textbox;
 	private Font font;
 	private JScrollPane scrollpane;
 	private JTextField chatInputLine;
@@ -46,6 +53,10 @@ public class ChatWindowForInGame extends JPanel {
 	private int maxHeight =	Toolkit.getDefaultToolkit().getScreenSize().height;	
 	private final int SPACE_FROM_CHATINPUT_TO_BUTTON = 20;
 	private static final float BLACK_TRANSPARENCY = 0.6F;
+	
+	private static final Color ownColor = new Color(0,255,0);
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]: ");
+	private static final Color whiteColor = new Color(255,255,255);
 
 	
 	public ChatWindowForInGame() {
@@ -73,11 +84,11 @@ public class ChatWindowForInGame extends JPanel {
 	}
 
 	private void createMiddlePanel() {
-		textbox = new JTextArea();
+		textbox = new JTextPane();
 		textbox.setFocusable(false);
 		textbox.setForeground(Color.WHITE);
 		textbox.setBorder(BorderFactory.createEmptyBorder());
-		textbox.setLineWrap(true);
+	//	textbox.setLineWrap(true);
 		textbox.setOpaque(false);
 		textbox.setText("Welcome to our chatserver \n");
 		font = new Font("Calibri", Font.PLAIN, 12);
@@ -160,41 +171,72 @@ public class ChatWindowForInGame extends JPanel {
 	}
 
 	/**
-	 * This method appends a chatmessage to the chatroom on the UI (ingame) and
-	 * sends it to the server. The carret will be set to the maximum (last
+	 * This method appends a chatmessage to the globalchat on the UI and sends
+	 * it to the server. The carret will be set to the maximum (last
 	 * chatmessage)
 	 * 
 	 * @param chatmessage
 	 *            a String representation of the chatmessage to send
+	 * @author jhuhn
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
 		ChatWindowForInGame.this.chatInputLine.setText("");
-		this.textbox.append("ME: " + chatmessage.trim() + "\n");
+		this.createChatInputPart(sdf.format(new Date()), whiteColor);
+		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
+		this.createChatInputPart(chatmessage + "\n", whiteColor);
 		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 		try {
-			Thread.sleep(1);
+			Thread.sleep(10);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
-
+	
+	
 	/**
-	 * This method appends a chatmessage to the chatroom on the UI (ingame). The
-	 * carret will be set to the maximum (last chatmessage)
+	 * This method formats a String with a specific color to a documentobject
 	 * 
+	 * @author jhuhn
 	 * @param chatmessage
-	 *            a String representation of the chatmessage
+	 *            the string of text that should be shown in the chatarea
+	 * @param color
+	 *            Chatmessage gets that visible color
 	 */
-	public synchronized void appendChatLocal(String chatmessage) {
-		this.textbox.append(chatmessage.trim() + "\n");
+	public synchronized void createChatInputPart(String chatmessage, Color color){
+		Style style = textbox.addStyle("Style", null);
+		StyleConstants.setForeground(style, color);
+		StyledDocument doc = textbox.getStyledDocument();
 		try {
-			Thread.sleep(1);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			doc.insertString(doc.getLength(), chatmessage, style);
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
 		}
+	}
+	
+	/**
+	 * This method appends a chatmessage to the globalchat on the UI. The carret
+	 * will be set to the maximum (last chatmessage)
+	 * 
+	 * @author jhuhn
+	 * @param message
+	 *            a String representation of the chatmessage
+	 * @param user
+	 *            a String representation of the user
+	 * @param timeStamp
+	 *            a String representation of time
+	 * @param color
+	 *            the username should be shown as this given color
+	 */
+	public synchronized void appendChatLocal(String message, String user, String timeStamp, Color color){
+		this.createChatInputPart(timeStamp, whiteColor);
+		this.createChatInputPart(user + ": ", color);
+		this.createChatInputPart(message + "\n", whiteColor);
+		
+		
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
+	
 
 	private class SendButtonListener implements MouseListener {
 
