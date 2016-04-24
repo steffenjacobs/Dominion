@@ -15,6 +15,7 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.game.SynchronisationException;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDontShowEndReactions;
@@ -50,7 +51,7 @@ public class Player {
 	private UUID session_ID;
 	private final int client_ID;
 
-	private int port, actions, buys, coins, gainValue, drawUntil;
+	private int port, actions, buys, coins, gainValue, drawUntil, turnNr;
 	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand;
 
 	/**
@@ -85,6 +86,7 @@ public class Player {
 		this.playedCards = new LinkedList<Card>();
 		this.name = name;
 		this.logColor = ColorUtil.playerColors.get(clientID % 4);
+		this.turnNr = 0;
 		this.gameServer = gameServer;
 	}
 
@@ -130,6 +132,24 @@ public class Player {
 	 */
 	public void setLogColor(Color logColor) {
 		this.logColor = logColor;
+	}
+
+	/**
+	 * @return the turnNr
+	 */
+	public int getTurnNr() {
+		return turnNr;
+	}
+
+	/**
+	 * @param turnNr the turnNr to set
+	 */
+	public void setTurnNr(int turnNr) {
+		this.turnNr = turnNr;
+	}
+	
+	public void incTurnNr() {
+		this.turnNr++;
 	}
 
 	/**
@@ -630,7 +650,7 @@ public class Player {
 	 * most important method for the card action. every method which executes
 	 * card actions is called from this method
 	 * 
-	 * @author Lukas Adler
+	 * @author Lukas Adler, Nicolas Wipfler
 	 * @throws IOException
 	 */
 	public Card doAction(String cardID) throws IOException {
@@ -727,7 +747,7 @@ public class Player {
 						getDeck().getDrawPile().addLast(this.gameServer.getGameController().getGameBoard().getTableForTreasureCards().get("Silver").removeLast());
 					}
 				} catch (NoSuchElementException e) {
-					GameLog.log(MsgType.GAME, "couldn't gain the card because ther are no more silver card on the board");
+					this.gameServer.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, "couldn't gain the card because ther are no more silver card on the board", getLogColor()));
 				}
 				break;
 			case DISCARD_CARD:

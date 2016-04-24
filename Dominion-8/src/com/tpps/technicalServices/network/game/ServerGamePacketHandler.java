@@ -337,17 +337,22 @@ public class ServerGamePacketHandler extends PacketHandler {
 		Player player = this.server.getGameController().getClientById(clientID);
 
 		/**
-		 * Prüfen ob 1. jeder die broadcast und nur ich die log message sehen
-		 * kann bei cardPlayed 2. wo steht cliendID%4 3. funktionieren die
-		 * Farben 4. test bei servergamepackethandler removen und color
-		 * übergeben sodass die farben funzen können 5. im
-		 * GameLog.broadcastMessage die color removen aber das wird automatisch
+		 * Prüfen ob 
+		 * 1. jeder die broadcast und nur ich die log message sehen
+		 * kann bei cardPlayed 
+		 * 2. wo steht cliendID%4 (Konstruktor von Player)
+		 * 3. funktionieren die
+		 * Farben 
+		 * 4. test bei servergamepackethandler removen und color
+		 * übergeben sodass die farben funzen können 
+		 * 5. im GameLog.broadcastMessage die color removen aber das wird automatisch
 		 * passieren wenn der konstruktor vom Packet geändert wird und die farbe
 		 * vom konstruktor auf die GameLog Methode geändert wird
-		 * 
-		 * */
-		GameLog.log(MsgType.GAME, "only I can see this");
-		GameLog.broadcastMessage(MsgType.GAME, "Everyone can see this");
+		 * 6. Zeile 731 im Player überprüfen
+		 * 7. man kann ColorHash map von Jojo oder Player.getLogColor benutzen
+		 * 8. turn counter in player als attribut und dann in GameContr. einbauen
+		 */
+		GameLog.log(MsgType.GAME, "nur ich kann das sehen");
 
 		if (!player.playsReactionCard() && (player.isDiscardMode() || player.isTrashMode())) {
 			System.out.println("im handler discard mode set");
@@ -413,7 +418,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 			}
 			return;
 		}
-
 		if (this.server.getGameController().validateTurnAndExecute(cardID, player)) {
 			System.out.println("validate turn: " + player.getActions() + "buys: " + player.getBuys() + "coins: " + player.getCoins());
 
@@ -435,7 +439,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 					}
 				}
 			} catch (SynchronisationException | NoSuchElementException e) {
-				GameLog.log(MsgType.GAME, "The card you wanted to buy is not on the board.");
+				this.log("The card you wanted to buy is not on the board.");
 			} catch (WrongSyntaxException e) {
 				GameLog.log(MsgType.GAME, e.getMessage());
 			}
@@ -453,7 +457,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 * @throws IOException
 	 */
 	private void resetGameWindowAfterRevealAction(int port, Player player) throws IOException {
-
 		if (player.getActions() > 0) {
 			this.server.sendMessage(port, new PacketSendActiveButtons(true, true, false));
 		} else {
@@ -476,30 +479,46 @@ public class ServerGamePacketHandler extends PacketHandler {
 		try {
 			GameBoard gameBoard = this.server.getGameController().getGameBoard();
 			this.server.getGameController().buyOneCard(((PacketBuyCard) packet).getCardId());
-
-			server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
+			this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
 		} catch (SynchronisationException e) {
-			GameLog.log(MsgType.GAME, "The card you wanted to buy is not on the board.");
+			this.log("The card you wanted to buy is not on the board.");
 		} catch (WrongSyntaxException e) {
 			GameLog.log(MsgType.GAME, e.getMessage());
 		}
 	}
-
+	
 	private void nextActivePlayer(int port) {
 		try {
 			Player activePlayer = this.server.getGameController().getActivePlayer();
 			String playerName = activePlayer.getPlayerName();
 			Color playerColor = this.chatController.getColorMap().get(playerName);
+			Color playerColorAlternative = activePlayer.getLogColor();
 			
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(activePlayer.getDeck().getCardHand())));
-			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, "  >  " + playerName + "'s turn ended  <  ", playerColor));
+			this.log("  >>>  " + playerName + ": turn ended  <<<  ", playerColor);
 			
 			this.server.getGameController().endTurn();
 			this.server.sendMessage(port,new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(), activePlayer.getCoins()));
 			this.server.broadcastMessage(new PacketEnableDisable(activePlayer.getClientID()));
-			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, "  >  " + playerName + "'s turn started  <  ", playerColor));
+			this.log("  >>>  " + playerName + ": turn " + activePlayer.getTurnNr() + " started  <<<  ", playerColor);
 			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void log(String msg) {
+		try {
+			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, msg));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void log(String msg, Color color) {
+		try {
+			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, msg, color));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -144,6 +144,7 @@ public class GameController {
 			Player player = players.get(i);
 			if (player.equals(activePlayer)) {
 				this.setActivePlayer(players.get(i < this.players.size() - 1 ? i + 1 : 0));
+				this.getActivePlayer().incTurnNr();
 				break;
 			}
 		}

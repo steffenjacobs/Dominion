@@ -34,6 +34,13 @@ public class PacketBroadcastLog extends Packet {
 		GameLog.setMsgColor(color);
 	}
 	
+	public PacketBroadcastLog(MsgType msgType, String msg) {
+		super(PacketType.BROADCAST_LOG);
+		this.msg = msg;
+		this.msgType = msgType;
+		GameLog.setMsgColor(Color.WHITE);
+	}
+	
 	public MsgType getMsgType(){
 		return this.msgType;
 	}
