@@ -30,6 +30,7 @@ public class ChatPacketHandler extends PacketHandler{
 	private ChatServer server;
 	private ArrayList<ChatRoom> chatrooms;
 	private GlobalChat global;
+	private ColorPool pool;
 	
 	/**
 	 * initializes the chathandler object, respectively the list of chatrooms
@@ -37,7 +38,7 @@ public class ChatPacketHandler extends PacketHandler{
 	 * @author jhuhn - Johannes Huhn
 	 */
 	public ChatPacketHandler() {				
-		chatrooms = new ArrayList<ChatRoom>();		
+		chatrooms = new ArrayList<ChatRoom>();	
 	}
 	
 	/**
@@ -303,7 +304,8 @@ public class ChatPacketHandler extends PacketHandler{
 	 */
 	public void init(ChatServer server) {
 		this.server = server;
-		this.global = new GlobalChat(server);		
+		this.pool = new ColorPool();
+		this.global = new GlobalChat(server, pool);		
 		this.server.getListenerManager().registerListener(new ConnectAndDisconnectListener());
 	}
 	
@@ -437,4 +439,7 @@ public class ChatPacketHandler extends PacketHandler{
 		}
 	}
 	
+	public ColorPool getPool() {
+		return pool;
+	}
 }
