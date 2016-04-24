@@ -83,7 +83,6 @@ public class ChatRoom {
 		    	continue;
 		    }
 		    int port = entry.getValue();
-		   // PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + sender + ": " + message);
 		    PacketSendAnswer answer = new PacketSendAnswer(
 					ChatServer.sdf.format(new Date()),
 					packet.getUsername(), packet.getChatmessage(),
@@ -109,7 +108,6 @@ public class ChatRoom {
 			votekick.getNotvotedyet().add(packet.getSender());
 			votekick.addVote(packet.getSender(), packet.getVoted());
 		}else{
-			//PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "You voted already");
 			PacketSendAnswer answer = new PacketSendAnswer("", "BOT", "You voted already", ColorPool.commandAndErrorColor);
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
@@ -133,7 +131,10 @@ public class ChatRoom {
 		String message = packet.getMessage();
 		
 		if(!this.clientsByUsername.containsKey(receiver)){
-			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "No such a user online: ", receiver, "", ColorPool.commandAndErrorColor);
+			PacketSendAnswer answer = new PacketSendAnswer(
+					ChatServer.sdf.format(new Date().getTime())
+							+ "No such a user online: ", receiver, "",
+					ColorPool.commandAndErrorColor);
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
 			} catch (IOException e) {			
@@ -143,8 +144,9 @@ public class ChatRoom {
 		}
 		
 		int port = this.clientsByUsername.get(receiver);
-	//	PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "PM from " + sender + ": " + message);
-		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date()) + "PM from User: ", sender, message, this.pool.getUserColor(sender));
+		PacketSendAnswer answer = new PacketSendAnswer(
+				ChatServer.sdf.format(new Date()) + "PM from User: ", sender,
+				message, this.pool.getUserColor(sender));
 		try {
 			server.sendMessage(port, answer);
 		} catch (IOException e) {		
@@ -179,8 +181,7 @@ public class ChatRoom {
 	 */
 	public void evaluateCommand(PacketSendChatCommand packet){		
 		if(packet.getChatcommand().startsWith("votekick ")){
-			if(this.votekick != null){
-			//	PacketSendAnswer answer6 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There is an active vote currently");
+			if(this.votekick != null){			
 				PacketSendAnswer answer6 = new PacketSendAnswer("", "BOT", "There is an active vote currently", ColorPool.commandAndErrorColor);
 				try {
 					this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer6);
@@ -217,8 +218,9 @@ public class ChatRoom {
 			this.evaluateStatisticsCommand(packet);
 			break;
 		default:
-			//PacketSendAnswer answer5 = new PacketSendAnswer("Wrong command: " + packet.getChatcommand());
-			PacketSendAnswer answer5 = new PacketSendAnswer("", "BOT", "unknown command: " + packet.getChatcommand(), ColorPool.commandAndErrorColor); //WORKS ?
+			PacketSendAnswer answer5 = new PacketSendAnswer("", "BOT",
+					"unknown command: " + packet.getChatcommand(),
+					ColorPool.commandAndErrorColor);
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer5);
 			} catch (IOException e) {			
@@ -264,10 +266,9 @@ public class ChatRoom {
 				continue;				
 			}
 		}
-//		PacketSendAnswer answer5 = new PacketSendAnswer("ALL STATISTICS IN ROOM: \n" + result);
 		PacketSendAnswer answer5 = new PacketSendAnswer("", "BOT",
 				"ALL STATISTICS IN ROOM: \n" + result,
-				ColorPool.commandAndErrorColor); // WORKS ?
+				ColorPool.commandAndErrorColor);
 		try {
 			this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer5);
 		} catch (IOException e) {			
@@ -291,7 +292,7 @@ public class ChatRoom {
 				+ vote_servercommand6 + "\n/" + votekickresult_servercommand7 + "\n/"
 				+ statistics_servercommand8;
 //		PacketSendAnswer answer = new PacketSendAnswer(msg);
-		PacketSendAnswer answer = new PacketSendAnswer("", "BOT", msg, ColorPool.commandAndErrorColor); //WORKS ?
+		PacketSendAnswer answer = new PacketSendAnswer("", "BOT", msg, ColorPool.commandAndErrorColor);
 		try {
 			this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
 		} catch (IOException e) {			
@@ -313,8 +314,7 @@ public class ChatRoom {
 		while(clients.hasMoreElements()){
 			msg2 += clients.nextElement() + "\n";
 		}
-//		PacketSendAnswer answer2 = new PacketSendAnswer(msg2);
-		PacketSendAnswer answer2 = new PacketSendAnswer("", "BOT", msg2, ColorPool.commandAndErrorColor); //WORKS ?
+		PacketSendAnswer answer2 = new PacketSendAnswer("", "BOT", msg2, ColorPool.commandAndErrorColor);
 		try {
 			this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer2);
 		} catch (IOException e) {			
@@ -335,8 +335,7 @@ public class ChatRoom {
 		while(ports.hasMoreElements()){
 			msg3 += ports.nextElement() + "\n";
 		}
-//		PacketSendAnswer answer3 = new PacketSendAnswer(msg3);
-		PacketSendAnswer answer3 = new PacketSendAnswer("", "BOT", msg3, ColorPool.commandAndErrorColor); //WORKS ?
+		PacketSendAnswer answer3 = new PacketSendAnswer("", "BOT", msg3, ColorPool.commandAndErrorColor);
 		try {
 			this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer3);
 		} catch (IOException e) {			
@@ -358,8 +357,7 @@ public class ChatRoom {
 		while(ports2.hasMoreElements()){
 			msg4 += clients2.nextElement() + "  :  " + ports2.nextElement() + "\n";
 		}
-//		PacketSendAnswer answer4 = new PacketSendAnswer(msg4);
-		PacketSendAnswer answer4 = new PacketSendAnswer("", "BOT", msg4, ColorPool.commandAndErrorColor); //WORKS ?
+		PacketSendAnswer answer4 = new PacketSendAnswer("", "BOT", msg4, ColorPool.commandAndErrorColor);
 		try {
 			this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer4);
 		} catch (IOException e) {			
@@ -382,8 +380,13 @@ public class ChatRoom {
 			notvoted.remove(packet.getSender());
 			
 			if(!clientsByUsername.containsKey(words[1])){
-//				this.sendChatToChatRoomClient(packet.getSender(), new PacketSendAnswer("The Client '" + words[1] + "' doesn't exist in this chatroom") );
-				this.sendChatToChatRoomClient(packet.getSender(), new PacketSendAnswer("", "BOT", "Client doesn't exist in chatroom:_" + words[1], ColorPool.commandAndErrorColor));
+				this.sendChatToChatRoomClient(
+						packet.getSender(),
+						new PacketSendAnswer(
+								"",
+								"BOT",
+								"Client doesn't exist in chatroom:_" + words[1],
+								ColorPool.commandAndErrorColor));
 				return;
 			}
 			
@@ -413,8 +416,9 @@ public class ChatRoom {
 	         //----------------------
 			
 		}catch(ArrayIndexOutOfBoundsException e){
-//			PacketSendAnswer answer7 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "Wrong command " + packet.getChatcommand());
-			PacketSendAnswer answer7 = new PacketSendAnswer("", "BOT", "unknown command: " + packet.getChatcommand(), ColorPool.commandAndErrorColor);
+			PacketSendAnswer answer7 = new PacketSendAnswer("", "BOT",
+					"unknown command: " + packet.getChatcommand(),
+					ColorPool.commandAndErrorColor);
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer7);
 			} catch (IOException e1) {					
@@ -433,7 +437,6 @@ public class ChatRoom {
 	 */
 	private void voteForVotekickCommand(PacketSendChatCommand packet){
 		if(this.votekick == null){
-//			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There is currently no vote");
 			PacketSendAnswer answer = new PacketSendAnswer("", "BOT", "There is currently no vote", ColorPool.commandAndErrorColor);
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
@@ -441,7 +444,6 @@ public class ChatRoom {
 		}		
 		
 		if(this.votekick.checkIfUserVoted(packet.getSender())){
-//			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "You voted already");
 			PacketSendAnswer answer = new PacketSendAnswer("", "BOT", "You voted already", ColorPool.commandAndErrorColor);
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
@@ -450,18 +452,15 @@ public class ChatRoom {
 		
 		if(packet.getChatcommand().startsWith("vote y")){
 			this.votekick.addVote(packet.getSender(), true);
-//			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "You voted successfully");
 			PacketSendAnswer answer = new PacketSendAnswer("", "BOT", "You voted successfully", ColorPool.commandAndErrorColor);
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
 		}else if(packet.getChatcommand().startsWith("vote n")){
 			this.votekick.addVote(packet.getSender(), false);
-//			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "You voted successfully");
 			PacketSendAnswer answer = new PacketSendAnswer("", "BOT", "You voted successfully", ColorPool.commandAndErrorColor);
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
 		}else{
-//			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "Your vote command failed, [y/n] is avaible ");
 			PacketSendAnswer answer = new PacketSendAnswer("", "BOT", "Your vote command failed, [y/n] is avaible", ColorPool.commandAndErrorColor);
 			String sender = packet.getSender();
 			this.sendChatToChatRoomClient(sender, answer);
@@ -478,11 +477,9 @@ public class ChatRoom {
 	 */
 	private void evaluateShowVotekickResulutsCommand(PacketSendChatCommand packet){
 		if(this.votekickresults == null){
-//			PacketSendAnswer answerx = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "There are no votekick results");
 			PacketSendAnswer answerx = new PacketSendAnswer("", "BOT", "There are no votekick results", ColorPool.commandAndErrorColor);
 			this.sendChatToChatRoomClient(packet.getSender(), answerx);
 		}else{
-//			PacketSendAnswer answerx = new PacketSendAnswer(this.votekickresults);
 			PacketSendAnswer answerx = new PacketSendAnswer("", "BOT", this.votekickresults, ColorPool.commandAndErrorColor);
 			this.sendChatToChatRoomClient(packet.getSender(), answerx);
 		}
@@ -496,8 +493,6 @@ public class ChatRoom {
 	 *            a String representation of text message to send
 	 */
 	public void sendMessageToAll(String msg){
-	//	String message = ChatServer.sdf.format(new Date().getTime()) + msg;
-//		PacketSendAnswer answer = new PacketSendAnswer(message);
 		PacketSendAnswer answer = new PacketSendAnswer("", "BOT", msg, ColorPool.commandAndErrorColor);
 		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 			int port = entry.getValue();

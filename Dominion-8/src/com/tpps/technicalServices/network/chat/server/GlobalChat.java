@@ -90,7 +90,10 @@ public class GlobalChat {
 	public void sendPMToClient(PacketSendChatToClient packet){
 		String receiver = packet.getReceiver().trim();
 		if(!this.clientsByUsername.containsKey(receiver)){
-			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "No such a user online: ", receiver, "", ColorPool.commandAndErrorColor);
+			PacketSendAnswer answer = new PacketSendAnswer(
+					ChatServer.sdf.format(new Date().getTime())
+							+ "No such a user online: ", receiver, "",
+					ColorPool.commandAndErrorColor);
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
 			} catch (IOException e) {			
@@ -117,7 +120,7 @@ public class GlobalChat {
 		System.out.println("Chat Command: " + packet);
 		
 		if(!this.evaluateCommands(packet.getChatcommand(), packet.getSender(), port)){	
-			PacketSendAnswer answer2 = new PacketSendAnswer("", "BOT", "unknown command: " + msg, Color.RED); //WORKS ?
+			PacketSendAnswer answer2 = new PacketSendAnswer("", "BOT", "unknown command: " + msg, Color.RED);
 			try {
 				server.sendMessage(port, answer2);
 			} catch (IOException e) {				
@@ -142,7 +145,9 @@ public class GlobalChat {
 	 *            PM
 	 */
 	private void sendMessageToSpecificClient(String sender, String receiver, String message, int port){
-		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date()) + "PM from User: ", sender, message, this.pool.getUserColor(sender));
+		PacketSendAnswer answer = new PacketSendAnswer(
+				ChatServer.sdf.format(new Date()) + "PM from User: ", sender,
+				message, this.pool.getUserColor(sender));
 		try {
 			server.sendMessage(port, answer);
 		} catch (IOException e) {
@@ -168,7 +173,7 @@ public class GlobalChat {
 		case help_servercommand1: //send answer packet back to user, with all comands servercommand1 == /help
 			String allcomands = "Commands: \n/" + help_servercommand1 + "\n/" + showClients_servercommand2 + "\n/"
 			+ showPorts_servercommand3 + "\n/" + showClientsAndPorts_servercommand4 + "\n/" + statistic_servercommand5 + "<nickname>";			
-			PacketSendAnswer answer = new PacketSendAnswer("", "BOT", allcomands, ColorPool.commandAndErrorColor); //WORKS ?
+			PacketSendAnswer answer = new PacketSendAnswer("", "BOT", allcomands, ColorPool.commandAndErrorColor); 
 			try {
 				server.sendMessage(port, answer);
 			} catch (IOException e) {
@@ -182,7 +187,7 @@ public class GlobalChat {
 				String user = clients.nextElement();				
 				buf.append(user + "\n");												
 			}
-			PacketSendAnswer answer2 = new PacketSendAnswer("", "BOT", buf.toString(), ColorPool.commandAndErrorColor); //WORKS ?
+			PacketSendAnswer answer2 = new PacketSendAnswer("", "BOT", buf.toString(), ColorPool.commandAndErrorColor);
 			try {
 				server.sendMessage(port, answer2);
 			} catch (IOException e) {			
@@ -196,7 +201,7 @@ public class GlobalChat {
 				int port2 = ports.nextElement();
 				buf2.append(port2 + "\n");						
 			}
-			PacketSendAnswer answer3 = new PacketSendAnswer("", "BOT", buf2.toString(), ColorPool.commandAndErrorColor); //WORKS ?
+			PacketSendAnswer answer3 = new PacketSendAnswer("", "BOT", buf2.toString(), ColorPool.commandAndErrorColor); 
 			try {
 				server.sendMessage(port, answer3);
 			} catch (IOException e) {			
@@ -212,7 +217,7 @@ public class GlobalChat {
 				int port3 = ports3.nextElement();
 				buf3.append(user + " : " + port3 + "\n");			
 			}
-			PacketSendAnswer answer4 = new PacketSendAnswer("", "BOT", buf3.toString(), ColorPool.commandAndErrorColor); //WORKS ?
+			PacketSendAnswer answer4 = new PacketSendAnswer("", "BOT", buf3.toString(), ColorPool.commandAndErrorColor);
 			try {
 				server.sendMessage(port, answer4);
 			} catch (IOException e) {			
@@ -249,7 +254,7 @@ public class GlobalChat {
 			}
 			System.out.println(line);
 
-			PacketSendAnswer answer5 = new PacketSendAnswer("", "BOT", line, ColorPool.commandAndErrorColor); //WORKS ?
+			PacketSendAnswer answer5 = new PacketSendAnswer("", "BOT", line, ColorPool.commandAndErrorColor); 
 			try {
 				this.server.sendMessage(port, answer5);
 			} catch (IOException e) {			
