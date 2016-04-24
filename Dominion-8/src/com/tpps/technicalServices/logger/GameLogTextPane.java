@@ -64,6 +64,7 @@ public class GameLogTextPane extends JPanel {
 	public GameLogTextPane() {
 		MsgType.setGameMode();
 		this.setLayout(new BorderLayout());
+		this.setOpaque(false);
 
 		try {
 			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
@@ -78,7 +79,7 @@ public class GameLogTextPane extends JPanel {
 		this.textPane.setOpaque(false);
 		this.textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
 		this.textPane.setForeground(Color.WHITE);
-		this.textPane.setBackground(new Color(100, 100, 100, 100));
+	//	this.textPane.setBackground(new Color(100, 100, 100, 100));
 		this.textPane.setBorder(BorderFactory.createEmptyBorder());
 		// this.textPane.setBackground(GameLog.getBackgroundColor());
 		// this.textPane.setLineWrap(true);

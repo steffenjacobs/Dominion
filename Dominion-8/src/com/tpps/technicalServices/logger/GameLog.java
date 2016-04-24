@@ -81,13 +81,13 @@ public class GameLog {
 		return backgroundColor;
 	}
 
-	/**
-	 * @param backgroundColor
-	 *            the backgroundColor to set
-	 */
-	public static void setBackgroundColor(Color backgroundColor) {
-		GameLog.backgroundColor = backgroundColor;
-	}
+//	/**
+//	 * @param backgroundColor
+//	 *            the backgroundColor to set
+//	 */
+//	public static void setBackgroundColor(Color backgroundColor) {
+//		GameLog.backgroundColor = backgroundColor;
+//	}
 
 	/**
 	 * @return the timestampColor
