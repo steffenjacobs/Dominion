@@ -1,6 +1,8 @@
 package com.tpps.technicalServices.network.chat.packets;
 
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
@@ -21,6 +23,7 @@ public class PacketChatController extends Packet{
 	private String user;
 	private int userport;
 	private int chatroomId;
+	private HashMap<String, Color> colorMap = new HashMap<String, Color>();
 	
 	
 	/**
@@ -82,10 +85,12 @@ public class PacketChatController extends Packet{
 	 * @author jhuhn
 	 * @param chatRoomId
 	 *            Integer that identifies the chatroom
+	 * @param colorMap Map of all user colors, used for gamelog
 	 */
-	public PacketChatController(int chatRoomId) {
+	public PacketChatController(int chatRoomId, HashMap<String, Color> colorMap) {
 		super(PacketType.CHAT_CONTROLLER); 
 		this.chatroomId = chatRoomId;
+		this.colorMap =  colorMap;
 	}
 
 	@Override
@@ -139,5 +144,12 @@ public class PacketChatController extends Packet{
 	 */
 	public int getChatroomId() {
 		return chatroomId;
+	}
+	
+	/**
+	 * @return a Hashmap with key user and value Color
+	 */
+	public HashMap<String, Color> getColorMap() {
+		return colorMap;
 	}
 }
