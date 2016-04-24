@@ -1,8 +1,10 @@
 package com.tpps.technicalServices.network.chat.server;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.packets.PacketChatController;
@@ -20,6 +22,7 @@ public class ChatController extends PacketHandler{
 	
 	private static Client chatclient;
 	private int chatID;	
+	private HashMap<String, Color> colorMap;
 	
 	/**
 	 * initializes the chatcontroller class
@@ -107,6 +110,7 @@ public class ChatController extends PacketHandler{
 		case CHAT_CONTROLLER:
 			PacketChatController packetID = (PacketChatController) packet;
 			this.chatID = packetID.getChatroomId();
+			this.colorMap = packetID.getColorMap();
 			System.out.println("received chatID: " + chatID);
 			break;
 		default:
@@ -121,5 +125,13 @@ public class ChatController extends PacketHandler{
 	 */
 	public int getChatID() {
 		return chatID;
+	}
+	
+	/**
+	 * @author jhuhn
+	 * @return a Hashmap with key user and value Color, used for gamelog
+	 */
+	public HashMap<String, Color> getColorMap() {
+		return colorMap;
 	}
 }

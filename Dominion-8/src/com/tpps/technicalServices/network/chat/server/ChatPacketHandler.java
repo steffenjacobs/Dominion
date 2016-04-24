@@ -1,8 +1,10 @@
 package com.tpps.technicalServices.network.chat.server;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -125,8 +127,13 @@ public class ChatPacketHandler extends PacketHandler{
 		switch(packet.getCommand()){
 		case "createChatroom":
 			int chatid = this.addChatRoom(packet.getMembers());
-			PacketChatController idPacket = new PacketChatController(chatid);
+			
+			HashMap<String, Color> colorMap = new HashMap<String, Color>();
+			for (int i = 0; i < packet.getMembers().size(); i++) {
+				colorMap.put(packet.getMembers().get(i), this.pool.getUserColor(packet.getMembers().get(i)));
+			}
 			try {
+				PacketChatController idPacket = new PacketChatController(chatid,colorMap);
 				this.server.sendMessage(port, idPacket);
 				System.out.println("send packet for chatid: " + chatid);
 			} catch (IOException e) {
@@ -439,6 +446,9 @@ public class ChatPacketHandler extends PacketHandler{
 		}
 	}
 	
+	/**
+	 * @return gets the colorpool instance
+	 */
 	public ColorPool getPool() {
 		return pool;
 	}
