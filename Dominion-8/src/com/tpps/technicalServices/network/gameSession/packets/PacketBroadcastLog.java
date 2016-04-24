@@ -20,6 +20,7 @@ public class PacketBroadcastLog extends Packet {
 	private static final long serialVersionUID = 6438319829526897629L;
 	private final String msg;
 	private final MsgType msgType;
+	
 	/**
 	 * 
 	 * sets the packettype

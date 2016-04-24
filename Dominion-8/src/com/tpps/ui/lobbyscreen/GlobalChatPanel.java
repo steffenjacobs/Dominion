@@ -291,7 +291,7 @@ public class GlobalChatPanel extends JPanel{
 		this.createChatInputPart(chatmessage + "\n", whiteColor);
 		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 		try {
-			Thread.sleep(10);
+			Thread.sleep(1);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

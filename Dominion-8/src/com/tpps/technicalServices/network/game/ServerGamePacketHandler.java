@@ -1,5 +1,6 @@
 package com.tpps.technicalServices.network.game;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -49,9 +50,11 @@ import com.tpps.technicalServices.util.GameConstant;
  */
 public class ServerGamePacketHandler extends PacketHandler {
 	private GameServer server;
+	ChatController chatController;
 
 	public void setServer(GameServer server) {
 		this.server = server;
+		chatController = new ChatController(this);
 	}
 
 	/**
@@ -401,14 +404,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 			}
 			return;
 		}
-
 		if (player.isGainMode()) {
-
 			if (this.server.getGameController().gain(cardID, player)) {
-
 				this.server.broadcastMessage(new PacketSendBoard(this.server.getGameController().getGameBoard().getTreasureCardIDs(), this.server.getGameController().getGameBoard()
 						.getVictoryCardIDs(),
-
 				this.server.getGameController().getGameBoard().getActionCardIDs()));
 				this.server.getGameController().isGameFinished();
 			}
@@ -488,16 +487,19 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 	private void nextActivePlayer(int port) {
 		try {
-			Player player = this.server.getGameController().getActivePlayer();
+			Player activePlayer = this.server.getGameController().getActivePlayer();
+			String playerName = activePlayer.getPlayerName();
+			Color playerColor = this.chatController.getColorMap().get(playerName);
+			
 			this.server.getGameController().organizePilesAndrefreshCardHand();
-			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, " -- " + player.getPlayerName() + "'s TURN ENDED -- ", player.getLogColor()));
-//			GameLog.broadcastMessage(MsgType.GAME, " -- " + player.getPlayerName() + "'s TURN ENDED -- ");
+			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(activePlayer.getDeck().getCardHand())));
+			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, "  >  " + playerName + "'s turn ended  <  ", playerColor));
+			
 			this.server.getGameController().endTurn();
-			this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
-			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
-			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, " ++ " + this.server.getGameController().getActivePlayer().getPlayerName() + "'s TURN STARTED ++ ", player.getLogColor()));
-//			GameLog.broadcastMessage(MsgType.GAME, " ++ " + this.server.getGameController().getActivePlayer().getPlayerName() + "'s TURN STARTED ++ ");
+			this.server.sendMessage(port,new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(), activePlayer.getCoins()));
+			this.server.broadcastMessage(new PacketEnableDisable(activePlayer.getClientID()));
+			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, "  >  " + playerName + "'s turn started  <  ", playerColor));
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -529,18 +531,34 @@ public class ServerGamePacketHandler extends PacketHandler {
 				new ArtificialIntelligence(player, sessionID).start();
 				System.out.println("created a new artificial intelligence");
 			}
-			if (this.server.getGameController().getPlayers().size() == GameConstant.PLAYERS) {
-				//TODO: connect chatroom
-				ChatController chatController = new ChatController();
-				chatController.createChatRoom(this.server.getGameController().getPlayerNames());
-//				ChatController.getInstance().createChatRoom(this.server.getGameController().getPlayerNames());
-				this.server.getGameController().startGame();
-				setUpGui();
+			if (server.getGameController().getPlayers().size() == GameConstant.PLAYERS) {
+				// TODO: connect chatroom correctly "without AI"
+				// ChatController chatController = new ChatController();
+				this.chatController.createChatRoom(this.server.getGameController().getPlayerNames());
+				this.chatController.getColorMap();
+
+				// this.server.getGameController().startGame();
+				// setUpGui();
 			}
 			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
 		} catch (TooMuchPlayerException tmpe) {
 			this.server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();
+		}
+	}
+
+	/**
+	 * 
+	 * 
+	 * @author jhuhn
+	 */
+	public void startGame() {
+		server.getGameController().startGame();
+		try {
+			setUpGui();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
