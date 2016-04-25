@@ -105,9 +105,9 @@ public class GameWindow extends JFrame {
 		this.tabbedWindow = new JPanel();
 		this.tabbedWindow.setOpaque(false);
 		this.tabbedWindow.setBounds(200, 200, 400, 200);
-		jTabbedPane.add("Chat", chatWindow);
-		jTabbedPane.add("Game Log", loggerPane);
-		tabbedWindow.add(jTabbedPane);
+		this.jTabbedPane.add("Chat", this.chatWindow);
+		this.jTabbedPane.add("Game Log", this.loggerPane);
+		this.tabbedWindow.add(jTabbedPane);
 		
 		this.setTopGap(Toolkit.getDefaultToolkit().getScreenSize().height / 4);
 		// this.leftGap = Toolkit.getDefaultToolkit().getScreenSize().width / 7;
