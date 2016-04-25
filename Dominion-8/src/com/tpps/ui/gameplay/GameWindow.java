@@ -190,7 +190,7 @@ public class GameWindow extends JFrame {
 
 		// this.framework.add(this.chatWindow);
 		// this.framework.add(this.loggerPane);
-		this.framework.add(this.tabbedWindow);
+		this.framework.add(this.jTabbedPane);
 
 		this.addComponentListener(new MyComponentAdapter());
 		this.setFocusable(true);
@@ -215,10 +215,10 @@ public class GameWindow extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				if (Character.isSpaceChar(e.getKeyChar())) {
 					if (trigger) {
-						chatWindow.setVisible(false);
+						jTabbedPane.setVisible(false);
 						trigger = false;
 					} else {
-						chatWindow.setVisible(true);
+						jTabbedPane.setVisible(true);
 						trigger = true;
 					}
 				}
@@ -230,18 +230,14 @@ public class GameWindow extends JFrame {
 
 	private void tabbedComponent() {
 		UIManager.put("TabbedPane.tabsOpaque", Boolean.FALSE);
+		UIManager.put("TabbedPane.contentOpaque", false);
 		this.jTabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		this.jTabbedPane.setBorder(BorderFactory.createEmptyBorder());
-		
+		this.jTabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,0));
+
 		this.jTabbedPane.setOpaque(false);
 		this.jTabbedPane.setForeground(Color.WHITE);
-		this.tabbedWindow = new JPanel();
-		this.tabbedWindow.setBorder(BorderFactory.createEmptyBorder());
-		this.tabbedWindow.setOpaque(false);
 		this.jTabbedPane.add("Chat", this.chatWindow);
 		this.jTabbedPane.add("Game Log", this.loggerPane);
-		this.tabbedWindow.add(jTabbedPane);
-
 	}
 
 	/**
@@ -891,16 +887,15 @@ public class GameWindow extends JFrame {
 	}
 
 	private void onResize(double relativeWidth, double relativeHeight) {
-		loggerPane.onResize(this.getWidth(), this.getHeight(), relativeWidth, relativeHeight, this);
-		// 1280,720,2/3,2/3
-		chatWindow.onResize(this.getWidth(), this.getHeight(), relativeWidth, relativeHeight, this);
 		double width = (relativeWidth * WIDTH) / 4;
 		double height = (relativeHeight * HEIGHT) / 4;
-		//3.84
 		int y = this.getHeight();
 		int x = this.getWidth();
-		this.tabbedWindow.setBounds(x - (int) ((WIDTH/3.5) * relativeWidth), y - (int) ((HEIGHT*(1-0.65)) * relativeHeight), (int) (width),
-				(int) height);
+		// System.out.println("width: "+width + "height "+height +
+		// "relativeWidth "+relativeWidth + "relativeHeight "+relativeHeight
+		// +"WIDTH "+ WIDTH + "HEIGHT "+ HEIGHT);
+		this.jTabbedPane.setBounds(x - (int) ((WIDTH / 3.5) * relativeWidth),
+				y - (int) ((HEIGHT * (1 - 0.65)) * relativeHeight), (int) (width), (int) height);
 		repaint();
 		revalidate();
 	}
