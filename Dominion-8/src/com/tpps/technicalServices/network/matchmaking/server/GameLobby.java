@@ -136,6 +136,11 @@ public class GameLobby {
 	public int getLobbyScore() {
 		return lobbyScore;
 	}
+	
+	/**@return whether this lobby could support more players*/
+	public boolean isAvailable(){
+		return !this.hasStarted() && !this.isFull();
+	}
 
 	/** @return all players in the lobby */
 	public CopyOnWriteArrayList<MPlayer> getPlayers() {
