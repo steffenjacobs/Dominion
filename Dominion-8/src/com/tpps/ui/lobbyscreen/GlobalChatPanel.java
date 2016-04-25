@@ -437,7 +437,7 @@ public class GlobalChatPanel extends JPanel {
 	}
 
 	private boolean wordListContains(String word) {
-		return GameConstant.abusiveWords.contains(base64decode(word));
+		return GameConstant.ABUSIVE_WORDS.contains(base64decode(word));
 	}
 
 	private static String base64encode(String msg) {
