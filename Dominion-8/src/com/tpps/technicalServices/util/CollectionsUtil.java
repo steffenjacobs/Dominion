@@ -1,5 +1,6 @@
 package com.tpps.technicalServices.util;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -167,5 +168,14 @@ public final class CollectionsUtil {
 			cardHandIDs.add(((Card) iterator.next()).getId());
 		}
 		return cardHandIDs;
+	}
+	
+	
+	public static ArrayList<String> getArrayList(String... words) {
+		ArrayList<String> returnList = new ArrayList<String>();
+		for (String word : words) {
+			returnList.add(word);
+		}
+		return returnList;
 	}
 }

@@ -15,8 +15,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
 
@@ -35,6 +39,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.util.CollectionsUtil;
+import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.technicalServices.util.GraphicsUtil;
 
 /**
@@ -43,25 +49,25 @@ import com.tpps.technicalServices.util.GraphicsUtil;
  * @author jhuhn
  *
  */
-public class GlobalChatPanel extends JPanel{
-	
+public class GlobalChatPanel extends JPanel {
+
 	private JTextPane textbox;
 	private JScrollPane scrollpane;
 	private JTextField chatInputLine;
 	private BufferedImage blackBeauty;
 	private Font font;
 	private JButton sendButton;
-	
+
 	private static final int HORIZONTAL_STRUT = 50;
 	private static final int SPACE_FROM_CHATBOX_TO_CHATINPUT = 5;
 	private static final int SPACE_FROM_CHATINPUT_TO_BUTTON = 20;
 	private static final float BLACK_TRANSPARENCY = 0.6F;
-	
+
 	private static final long serialVersionUID = 1L;
-	private static final Color ownColor = new Color(0,255,0);
+	private static final Color ownColor = new Color(0, 255, 0);
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]: ");
-	private static final Color whiteColor = new Color(255,255,255);
-	
+	private static final Color whiteColor = new Color(255, 255, 255);
+
 	/**
 	 * initializes the object
 	 * 
@@ -71,59 +77,57 @@ public class GlobalChatPanel extends JPanel{
 		this.createComponents();
 	}
 
-	
 	/**
 	 * this method creates all UI components and put them into a BoderLayout
 	 * 
 	 * @author jhuhn
 	 */
-	private void createComponents(){
+	private void createComponents() {
 		this.setVisible(true);
 		this.setOpaque(false);
 		this.setLayout(new BorderLayout());
-		
+
 		this.createScrollingChatArea();
-		
+
 		this.add(scrollpane, BorderLayout.CENTER);
-		this.add(this.createPanelForChatInput(),BorderLayout.PAGE_END);		
+		this.add(this.createPanelForChatInput(), BorderLayout.PAGE_END);
 		this.add(this.createArrowButtonPanel(), BorderLayout.PAGE_START);
 		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_START);
-		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_END);		
-		
-	//	this.testChatInput();
-	//	this.revalidate();
+		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_END);
+
+		// this.testChatInput();
+		// this.revalidate();
 	}
-	
+
 	/**
 	 * upper area of the globalchatpanel
 	 * 
 	 * @author jhuhn
 	 * @return a JPanel with button (painted as arrow)
 	 */
-	private JPanel createArrowButtonPanel(){
+	private JPanel createArrowButtonPanel() {
 		JPanel panel = new JPanel();
 		panel.setOpaque(false);
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
- 
+
 		panel.add(new BackButton());
-		return panel;			  
+		return panel;
 	}
-	
-	
+
 	/**
 	 * This method is for testing purposes only. It create 10000 teststrings and
 	 * put them into the global chat
 	 * 
 	 * @author jhuhn
 	 */
-	public void testChatInput(){
+	public void testChatInput() {
 		new Thread(() -> {
 			for (int i = 0; i < 10000; i++) {
 				GlobalChatPanel.this.appendChatGlobal("TestString " + i + "\n");
 			}
-		}).start();	
+		}).start();
 	}
-	
+
 	/**
 	 * This method creates the overall chatinput area. It centers the textfield
 	 * bar and creates gaps from the chatinputbar to the frame
@@ -131,20 +135,20 @@ public class GlobalChatPanel extends JPanel{
 	 * @author jhuhn
 	 * @return a JPanel with a chatbar and a send button
 	 */
-	private JPanel createPanelForChatInput(){
+	private JPanel createPanelForChatInput() {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setOpaque(false);
-		
+
 		panel.add(Box.createVerticalStrut(SPACE_FROM_CHATBOX_TO_CHATINPUT), BorderLayout.PAGE_START);
 		panel.add(Box.createVerticalStrut(SPACE_FROM_CHATBOX_TO_CHATINPUT), BorderLayout.PAGE_END);
 		panel.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_START);
 		panel.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_END);
-		
+
 		JPanel center = this.createChatInputArea();
-		panel.add(center, BorderLayout.CENTER);		
+		panel.add(center, BorderLayout.CENTER);
 		return panel;
 	}
-	
+
 	/**
 	 * this method puts the chatbar and the send button into a panel without
 	 * margin or gaps
@@ -152,19 +156,19 @@ public class GlobalChatPanel extends JPanel{
 	 * @author jhuhn
 	 * @return a panel with a chatbar and a sendbutton
 	 */
-	private JPanel createChatInputArea(){	
+	private JPanel createChatInputArea() {
 		chatInputLine = this.initChatInputLine();
 		sendButton = this.initSendButton();
-		
+
 		JPanel center = new JPanel();
-		center.setLayout(new BoxLayout(center, BoxLayout.LINE_AXIS ));
+		center.setLayout(new BoxLayout(center, BoxLayout.LINE_AXIS));
 		center.setOpaque(false);
 		center.add(chatInputLine);
-		center.add(Box.createRigidArea(new Dimension(SPACE_FROM_CHATINPUT_TO_BUTTON,0)));
+		center.add(Box.createRigidArea(new Dimension(SPACE_FROM_CHATINPUT_TO_BUTTON, 0)));
 		center.add(sendButton);
 		return center;
 	}
-	
+
 	/**
 	 * This method initializes and creates the send button object. The button
 	 * delivers a semitransparent look
@@ -173,27 +177,27 @@ public class GlobalChatPanel extends JPanel{
 	 * @return a JButton with a white text 'SEND' a semitransparent black
 	 *         background
 	 */
-	private JButton initSendButton(){
-		sendButton = new JButton("SEND"){
+	private JButton initSendButton() {
+		sendButton = new JButton("SEND") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void paint(Graphics g) {				
+			public void paint(Graphics g) {
 				Graphics2D h = (Graphics2D) g;
 				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				
-				h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
+
+				h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
 				super.paint(h);
 			}
 		};
-		sendButton.setForeground(Color.WHITE);	
+		sendButton.setForeground(Color.WHITE);
 		sendButton.setContentAreaFilled(false);
 		sendButton.setBorderPainted(true);
 		sendButton.setOpaque(false);
 		sendButton.addMouseListener(new SendButtonListener());
 		return sendButton;
 	}
-	
+
 	/**
 	 * This method initializes and create the chatinputbar
 	 * 
@@ -201,26 +205,26 @@ public class GlobalChatPanel extends JPanel{
 	 * @return a JTextField with semitransparent look and white characters, used
 	 *         to type in chatmessages
 	 */
-	private JTextField initChatInputLine(){
-		chatInputLine = new JTextField("Type in /help for commands"){
+	private JTextField initChatInputLine() {
+		chatInputLine = new JTextField("Type in /help for commands") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void paint(Graphics g) {				
+			public void paint(Graphics g) {
 				Graphics2D h = (Graphics2D) g;
 				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				
-				h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
+
+				h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
 				super.paint(h);
 			}
-			
+
 		};
-        chatInputLine.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                chatInputLine.setText("");
-            }
-        });
+		chatInputLine.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				chatInputLine.setText("");
+			}
+		});
 		chatInputLine.setFont(font);
 		chatInputLine.setCaretColor(Color.WHITE);
 		chatInputLine.setForeground(Color.WHITE);
@@ -229,7 +233,7 @@ public class GlobalChatPanel extends JPanel{
 		chatInputLine.addKeyListener(new ChatButtonInputListener());
 		return chatInputLine;
 	}
-	
+
 	/**
 	 * This method creates and initizalizes the globalchatarea. The
 	 * globalchatarea is represented in textbox which is embedded in a
@@ -238,8 +242,8 @@ public class GlobalChatPanel extends JPanel{
 	 * 
 	 * @author jhuhn
 	 */
-	private void createScrollingChatArea(){
-		
+	private void createScrollingChatArea() {
+
 		try {
 			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
 			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, BLACK_TRANSPARENCY);
@@ -249,35 +253,35 @@ public class GlobalChatPanel extends JPanel{
 		textbox = new JTextPane();
 		textbox.setFocusable(false);
 		textbox.setForeground(Color.WHITE);
-		textbox.setBackground(new Color(100,100,100,100));
+		textbox.setBackground(new Color(100, 100, 100, 100));
 		textbox.setBorder(BorderFactory.createEmptyBorder());
-//		textbox.setLineWrap(true);
+		// textbox.setLineWrap(true);
 		textbox.setOpaque(false);
-		textbox.setText("Welcome to our Chat!\nType /help to see all available Commands.\n");		
+		textbox.setText("Welcome to our Chat!\nType /help to see all available Commands.\n");
 		font = new Font("Calibri", Font.PLAIN, 20);
 		textbox.setFont(font);
-		scrollpane =  new JScrollPane(new JPanel(new BorderLayout()).add(textbox)){
-				private static final long serialVersionUID = 1L;
-				
-				@Override
-				public void paint(Graphics g) {
-					Graphics2D h = (Graphics2D) g;
-					h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-					
-					h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
-					super.paint(h);								
-				}
-				
-			};
+		scrollpane = new JScrollPane(new JPanel(new BorderLayout()).add(textbox)) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				Graphics2D h = (Graphics2D) g;
+				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+				h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
+				super.paint(h);
+			}
+
+		};
 		scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollpane.setOpaque(false);		
+		scrollpane.setOpaque(false);
 		scrollpane.setBorder(BorderFactory.createEmptyBorder());
 		scrollpane.setFocusable(false);
 		scrollpane.setVisible(true);
 		scrollpane.getViewport().setOpaque(false);
 		scrollpane.getVerticalScrollBar().setOpaque(false);
 	}
-	
+
 	/**
 	 * This method appends a chatmessage to the globalchat on the UI and sends
 	 * it to the server. The carret will be set to the maximum (last
@@ -294,15 +298,18 @@ public class GlobalChatPanel extends JPanel{
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
 		this.createChatInputPart(chatmessage + "\n", whiteColor);
 		DominionController.getInstance().sendChatMessage(chatmessage.trim());
-//		try {
-//			Thread.sleep(1);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
+		// this.scrollpane.getViewport().setViewPosition(new
+		// Point(this.scrollpane.getWidth(), this.scrollpane.getHeight()));
 	}
-	
-	
+
 	/**
 	 * This method formats a String with a specific color to a documentobject
 	 * 
@@ -312,7 +319,7 @@ public class GlobalChatPanel extends JPanel{
 	 * @param color
 	 *            Chatmessage gets that visible color
 	 */
-	public synchronized void createChatInputPart(String chatmessage, Color color){
+	public synchronized void createChatInputPart(String chatmessage, Color color) {
 		Style style = textbox.addStyle("Style", null);
 		StyleConstants.setForeground(style, color);
 		StyledDocument doc = textbox.getStyledDocument();
@@ -322,7 +329,7 @@ public class GlobalChatPanel extends JPanel{
 			e1.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * This method appends a chatmessage to the globalchat on the UI. The carret
 	 * will be set to the maximum (last chatmessage)
@@ -337,45 +344,50 @@ public class GlobalChatPanel extends JPanel{
 	 * @param color
 	 *            the username should be shown as this given color
 	 */
-	public synchronized void appendChatLocal(String message, String user, String timeStamp, Color color){
+	public synchronized void appendChatLocal(String message, String user, String timeStamp, Color color) {
 		this.createChatInputPart(timeStamp, whiteColor);
 		this.createChatInputPart(user + ": ", color);
 		this.createChatInputPart(message + "\n", whiteColor);
-		
-		
-		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
-		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
+
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
-	
-	
+
 	/**
 	 * This inner class is responsible to handle the send button
 	 * 
 	 * @author jhuhn - Johannes Huhn
 	 *
 	 */
-	private class SendButtonListener implements MouseListener{
+	private class SendButtonListener implements MouseListener {
 
 		@Override
-		public void mouseClicked(MouseEvent e) { }
+		public void mouseClicked(MouseEvent e) {
+		}
 
 		@Override
-		public void mouseEntered(MouseEvent e) { }
+		public void mouseEntered(MouseEvent e) {
+		}
 
 		@Override
-		public void mouseExited(MouseEvent e) { }
+		public void mouseExited(MouseEvent e) {
+		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if(!GlobalChatPanel.this.chatInputLine.getText().trim().equals("")){
-				GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());				
+			if (!GlobalChatPanel.this.chatInputLine.getText().trim().equals("")) {
+				GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());
 			}
 			GlobalChatPanel.this.chatInputLine.requestFocus();
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent e) { }
+		public void mouseReleased(MouseEvent e) {
+		}
 	}
 
 	/**
@@ -384,42 +396,82 @@ public class GlobalChatPanel extends JPanel{
 	 * @author jhuhn - Johannes Huhn
 	 *
 	 */
-	private class ChatButtonInputListener implements KeyListener{
+	private class ChatButtonInputListener implements KeyListener {
 
 		@Override
-		public void keyPressed(KeyEvent e) {			
-			if(e.getKeyCode() == KeyEvent.VK_ENTER && !GlobalChatPanel.this.chatInputLine.getText().trim().equals("")){
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER && !GlobalChatPanel.this.chatInputLine.getText().trim().equals("")) {
 				GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());
 			}
 		}
 
 		@Override
-		public void keyReleased(KeyEvent arg0) { }
+		public void keyReleased(KeyEvent arg0) {
+		}
 
 		@Override
-		public void keyTyped(KeyEvent arg0) { }
-	}
-	
-	private String parseForbiddenWords(String msg) {
-		ArrayList<String> forbidden = new ArrayList<String>();
-		forbidden.add("Arsch");
-		StringBuffer parsedMsg = new StringBuffer();
-		String alphabet = "'#!@/()[]{}-_^Â°Â´`!#@;.:";
-		for (String word : msg.split("\\s+")) {
-			String filter = "";
-			System.out.println("word:" + word + " and forbidden.contains(word)" + forbidden.contains(word));
-			if (forbidden.contains(word)) {
-				for (int i = 0; i < word.length(); i++) {
-					filter += alphabet.charAt(new Random().nextInt(alphabet.length()));
-				}
-			} else filter = word;
-			parsedMsg.append(filter+" ");
+		public void keyTyped(KeyEvent arg0) {
 		}
-		System.out.println("parsedMsg:" + parsedMsg.toString());
-		return parsedMsg.toString();
+	}
+
+	private String parseForbiddenWords(String message) {
+		StringBuffer result = new StringBuffer();
+		String replaceCharacters = "#+*!?/§$%&_";
+		System.out.println("Message.split(\"\\s+\") > " + Arrays.toString(message.split("\\s+")));
+		for (String originalWord : message.split("\\s+")) {
+			String removedSpecialCharacters = originalWord.replaceAll("[^a-zA-Z0-9\\s]", "");
+			System.out.println("rsc: " + removedSpecialCharacters);
+			String filter = "";
+			System.out.println("originalWord: " + originalWord + " and wordListContains(removedSpecialCharacters.toLowerCase())" + wordListContains(removedSpecialCharacters.toLowerCase()));
+			if (wordListContains(removedSpecialCharacters.toLowerCase())) {
+				for (int i = 0; i < originalWord.length(); i++) {
+					filter += Character.isLetterOrDigit(originalWord.charAt(i)) ? replaceCharacters.charAt(new Random().nextInt(replaceCharacters.length())) : originalWord.charAt(i);
+				}
+			} else
+				filter = originalWord;
+			System.out.println("and according to that, filter is: " + filter);
+			result.append(filter + " ");
+		}
+		System.out.println("result: " + result.toString());
+		return result.toString();
+	}
+
+	private boolean wordListContains(String word) {
+		return GameConstant.ABUSIVE_WORDS.contains(base64decode(word));
+	}
+
+	private static String base64encode(String msg) {
+		try {
+			return Base64.getEncoder().encodeToString(msg.getBytes("utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return msg;
+	}
+
+	private static String base64decode(String msg) {
+		try {
+			return new String(Base64.getDecoder().decode(msg), "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return msg;
+	}
+
+	// wenn ein wort ein verbotenes wort enthält auch komplett naus
+	public static void main(String[] args) {
+		
 	}
 	
-	private ArrayList<String> createWordList(String alphabet) {
-		return new ArrayList<String>();
+	private static void abusiveWordCreator() {
+//		ArrayList<String> words = CollectionsUtil.getArrayList("wixer", "arsch", "nutte", "hure", "tunte", "penis", "cock", "dick", "noob", "cunt", "bitch");
+		ArrayList<String> words = CollectionsUtil.getArrayList();
+		StringBuffer sBuf = new StringBuffer();
+		for (String word : words) {
+			String encoding = base64encode(word);
+			sBuf.append("\"" + encoding + "\"" + ", ");
+			System.out.println("Encoding: " + encoding);
+		}
+		System.out.println("result: " + sBuf.toString());
 	}
 }
