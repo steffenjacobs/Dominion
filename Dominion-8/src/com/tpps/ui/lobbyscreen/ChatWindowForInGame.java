@@ -90,7 +90,7 @@ public class ChatWindowForInGame extends JPanel {
 		textbox.setBorder(BorderFactory.createEmptyBorder());
 	//	textbox.setLineWrap(true);
 		textbox.setOpaque(false);
-		textbox.setText("Welcome to our Chat!\nType /help to see all available Commands.\n");
+		textbox.setText(" Welcome to our Chat!\n Type /help to see all available Commands.\n");
 		font = new Font("Calibri", Font.PLAIN, 12);
 		textbox.setFont(font);
 		scrollpane = new JScrollPane(textbox) {
@@ -112,7 +112,7 @@ public class ChatWindowForInGame extends JPanel {
 	}
 
 	private JTextField initChatInputLine() {
-		chatInputLine = new JTextField("Type in /help for commands") {
+		chatInputLine = new JTextField("Type your message here!") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -181,7 +181,7 @@ public class ChatWindowForInGame extends JPanel {
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
 		ChatWindowForInGame.this.chatInputLine.setText("");
-		this.createChatInputPart(sdf.format(new Date()), whiteColor);
+		this.createChatInputPart(" " + sdf.format(new Date()), whiteColor);
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
 		this.createChatInputPart(chatmessage + "\n", whiteColor);
 		DominionController.getInstance().sendChatMessage(chatmessage.trim());
