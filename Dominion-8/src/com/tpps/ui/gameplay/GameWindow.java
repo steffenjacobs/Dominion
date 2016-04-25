@@ -214,6 +214,12 @@ public class GameWindow extends JFrame {
 			 * @param e
 			 */
 			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_1){
+					jTabbedPane.setSelectedIndex(0);
+				}
+				if(e.getKeyCode() == KeyEvent.VK_2){
+					jTabbedPane.setSelectedIndex(1);
+				}
 				if (Character.isSpaceChar(e.getKeyChar())) {
 					if (trigger) {
 						jTabbedPane.setVisible(false);
