@@ -119,9 +119,9 @@ public class GameStorageInterface {
 		try {
 			GameWindow gameWindow = new GameWindow();
 			gameWindow.setVisible(true);
-			gameWindow.addStopDiscardButton();
-			new GameStorageInterface(gameWindow)
-					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));
+			
+//			new GameStorageInterface(gameWindow)
+//					.loadActionCardsAndPassToGameWindow(CollectionsUtil.linkedList(new String[] { "Cellar2" }));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
