@@ -2,6 +2,7 @@ package com.tpps.technicalServices.network.game;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -552,12 +553,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().addPlayer(player);
 			this.server.sendMessage(port, new PacketSendClientId(clientId));
 			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-				new ArtificialIntelligence(player, sessionID).start();
+				new ArtificialIntelligence(player, new InetSocketAddress("127.0.0.1", this.server.getPort()), sessionID).start();
 				System.out.println("created a new artificial intelligence");
 			}
 			if (server.getGameController().getPlayers().size() == GameConstant.PLAYERS) {
 				// TODO: connect chatroom correctly "without AI"
 				// ChatController chatController = new ChatController();
+				
 				this.chatController.createChatRoom(this.server.getGameController().getPlayerNames());
 				this.chatController.getColorMap();
 

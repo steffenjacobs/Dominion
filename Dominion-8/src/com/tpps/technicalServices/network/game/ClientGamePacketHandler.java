@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.GameStorageInterface;
 import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
@@ -56,54 +55,53 @@ public class ClientGamePacketHandler extends PacketHandler {
 			break;
 		case ENABLE_DISABLE:
 			enableDisable(packet);
-			this.gameWindow.reset();	
+			this.gameWindow.reset();
 			break;
 		case ENABLE:
-//			this.gameWindow.setEnabled(true);
+			// this.gameWindow.setEnabled(true);
 			DominionController.getInstance().setTurnFlag(true);
 			this.gameWindow.setCaptionTurn("E");
 			break;
 		case ENABLE_OTHERS:
-			if (((PacketEnableOthers)packet).getClientID() == this.gameClient.getClientId()){
-//				this.gameWindow.setEnabled(false);
+			if (((PacketEnableOthers) packet).getClientID() == this.gameClient.getClientId()) {
+				// this.gameWindow.setEnabled(false);
 				DominionController.getInstance().setTurnFlag(false);
 				this.gameWindow.setCaptionTurn("D");
-			}else{
-//				this.gameWindow.setEnabled(true);
+			} else {
+				// this.gameWindow.setEnabled(true);
 				DominionController.getInstance().setTurnFlag(true);
 				this.gameWindow.setCaptionTurn("E");
 			}
 			break;
 		case DISABLE:
-//			this.gameWindow.setEnabled(false);
+			// this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameWindow.setCaptionTurn("D");
 			break;
 		case SEND_BOARD:
-			PacketSendBoard packetSendBoard = (PacketSendBoard)packet;
+			PacketSendBoard packetSendBoard = (PacketSendBoard) packet;
 			this.gameStorageInterface.loadActionCardsAndPassToGameWindow(packetSendBoard.getActionCardIds());
 			this.gameStorageInterface.loadCoinCardsAndPassToGameWindow(packetSendBoard.getCoinCardIds());
 			this.gameStorageInterface.loadVictoryCardsAndPassToGameWindow(packetSendBoard.getVictoryCardIds());
 			break;
 		case SEND_HAND_CARDS:
-			LinkedList<String> handCardIds = ((PacketSendHandCards)packet).getCardIds();
-			this.gameStorageInterface.loadHandCardsAndPassToGameWindow(handCardIds);			
+			LinkedList<String> handCardIds = ((PacketSendHandCards) packet).getCardIds();
+			this.gameStorageInterface.loadHandCardsAndPassToGameWindow(handCardIds);
 			break;
 		case SEND_REVEAL_CARDS:
-			System.out.println(Arrays.toString(((PacketSendRevealCards)packet).getCardIds().toArray()));
-			this.gameStorageInterface.loadRevealCardsAndPassToGameWindow(((PacketSendRevealCards)packet).getCardIds());
+			System.out.println(Arrays.toString(((PacketSendRevealCards) packet).getCardIds().toArray()));
+			this.gameStorageInterface.loadRevealCardsAndPassToGameWindow(((PacketSendRevealCards) packet).getCardIds());
 			break;
 		case UPDATE_VALUES:
-			PacketUpdateValues puv = ((PacketUpdateValues)packet);
-			System.out.println("clientGameHandler actions: " + puv.getActions() +
-					"buys: " + puv.getBuys() + "coins: " + puv.getCoins());
+			PacketUpdateValues puv = ((PacketUpdateValues) packet);
+			System.out.println("clientGameHandler actions: " + puv.getActions() + "buys: " + puv.getBuys() + "coins: " + puv.getCoins());
 			this.gameWindow.setCaptionActions(Integer.toString(puv.getActions()));
 			this.gameWindow.setCaptionBuys(Integer.toString(puv.getBuys()));
-			this.gameWindow.setCaptionCoins(Integer.toString(puv.getCoins()));			
+			this.gameWindow.setCaptionCoins(Integer.toString(puv.getCoins()));
 			break;
 		case UPDATE_TREASURES:
-			PacketUpdateTreasures put = (PacketUpdateTreasures)(packet);
-			
+			PacketUpdateTreasures put = (PacketUpdateTreasures) (packet);
+
 			this.gameWindow.setCaptionCoins(Integer.toString(put.getCoins()));
 			this.gameWindow.repaint();
 			break;
@@ -112,7 +110,6 @@ public class ClientGamePacketHandler extends PacketHandler {
 			break;
 		case START_DISCARD_MODE:
 			this.gameWindow.addStopDiscardButton();
-			
 			break;
 		case END_DISCARD_MODE:
 			this.gameWindow.removeStopDiscardButton();
@@ -142,20 +139,20 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameWindow.addPutBackButton();
 			break;
 		case SEND_ACTIVE_BUTTONS:
-			PacketSendActiveButtons p = (PacketSendActiveButtons)packet;
-			if (p.isEndTurn()){
+			PacketSendActiveButtons p = (PacketSendActiveButtons) packet;
+			if (p.isEndTurn()) {
 				this.gameWindow.addEndTurnButton();
-			}else{
+			} else {
 				this.gameWindow.removeEndTurnButton();
 			}
-			if (p.isPlayTreasures()){
+			if (p.isPlayTreasures()) {
 				this.gameWindow.addPlayTreasuresButton();
-			}else{
+			} else {
 				this.gameWindow.removePlayTreasuresButton();
 			}
-			if (p.isEndActionPhase()){
+			if (p.isEndActionPhase()) {
 				this.gameWindow.addEndActionPhaseButton();
-			}else{
+			} else {
 				this.gameWindow.removeEndActionPhaseButton();
 			}
 			break;
@@ -177,15 +174,14 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameWindow.addDiscardDeckButton();
 			break;
 		case SEND_PLAYED_CARDS_TO_ALL_CLIENTS:
-			
-			this.gameStorageInterface.loadPlayedCardsAndPassToGameWindow(((PacketSendPlayedCardsToAllClients)packet).getCardIds());
+			this.gameStorageInterface.loadPlayedCardsAndPassToGameWindow(((PacketSendPlayedCardsToAllClients) packet).getCardIds());
 			break;
 		// case PLAY_TREASURES:
 		// gameGui.disableActionCards();
 		// gameGui.enalbeMoney();
 		// break;
 		case BROADCAST_LOG:
-			GameLog.log(((PacketBroadcastLog)packet).getMsgType(), ((PacketBroadcastLog)packet).getMessage());
+			GameLog.log(((PacketBroadcastLog) packet).getMsgType(), ((PacketBroadcastLog) packet).getMessage());
 			break;
 		default:
 			System.out.println("unknown packet type: " + packet.getType());
@@ -198,16 +194,16 @@ public class ClientGamePacketHandler extends PacketHandler {
 	 * @param packet
 	 */
 	private void enableDisable(Packet packet) {
-//		if (this.gameClient.getClientId() == -1){
-//			System.out.println();
-//		}
+		// if (this.gameClient.getClientId() == -1){
+		// System.out.println();
+		// }
 		if (((PacketEnableDisable) packet).getClientId() == this.gameClient.getClientId()) {
-//			this.gameWindow.setEnabled(true);
+			// this.gameWindow.setEnabled(true);
 			DominionController.getInstance().setTurnFlag(true);
 			this.gameWindow.setCaptionTurn("E");
 			System.out.println("my gameWindow is enabled");
 		} else {
-//			this.gameWindow.setEnabled(false);
+			// this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameWindow.setCaptionTurn("D");
 			System.out.println("my gameWindo is disabled");
@@ -219,28 +215,28 @@ public class ClientGamePacketHandler extends PacketHandler {
 	 * @param packet
 	 */
 	private void openGuiAndEnableOne(Packet packet) {
-			while(this.gameClient.getClientId() == -1){
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				System.out.println("clientId not set. please wait a moment");
+		while (this.gameClient.getClientId() == -1) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		
-			if (((PacketOpenGuiAndEnableOne) packet).getClientId() == this.gameClient.getClientId()) {
-//				this.gameWindow.setEnabled(true);
-				DominionController.getInstance().setTurnFlag(true);
-				this.gameWindow.setCaptionTurn("E");
-				System.out.println("my gameWindow is enabled");
-			} else {
-//				this.gameWindow.setEnabled(false);
-				DominionController.getInstance().setTurnFlag(false);
-				this.gameWindow.setCaptionTurn("D");
-				System.out.println("my gameWindo is disabled");
-			}
-			this.gameWindow.setVisible(true);
+			System.out.println("clientId not set. please wait a moment");
+		}
+
+		if (((PacketOpenGuiAndEnableOne) packet).getClientId() == this.gameClient.getClientId()) {
+			// this.gameWindow.setEnabled(true);
+			DominionController.getInstance().setTurnFlag(true);
+			this.gameWindow.setCaptionTurn("E");
+			System.out.println("my gameWindow is enabled");
+		} else {
+			// this.gameWindow.setEnabled(false);
+			DominionController.getInstance().setTurnFlag(false);
+			this.gameWindow.setCaptionTurn("D");
+			System.out.println("my gameWindo is disabled");
+		}
+		this.gameWindow.setVisible(true);
 	}
 
 	/**

@@ -1,5 +1,7 @@
 package com.tpps.application.game.ai;
 
+import java.io.IOException;
+import java.net.SocketAddress;
 import java.util.LinkedList;
 import java.util.UUID;
 
@@ -26,7 +28,8 @@ public class ArtificialIntelligence {
 	private Player player;
 	private boolean computing;
 
-	private GameHandler game;
+	private AIPacketHandler aiPacketHandler;
+	private AIClient aiClient;
 	private Move move;
 	private InformationHandler information;
 
@@ -38,11 +41,17 @@ public class ArtificialIntelligence {
 	 * @param uuid
 	 *            the sessionID of the AI instance
 	 */
-	public ArtificialIntelligence(Player player, UUID uuid) {
-		this.player = player;
-		this.game = new GameHandler(this.player.getGameServer());
-		this.information = new InformationHandler();
-		this.computing = false;
+	public ArtificialIntelligence(Player player, SocketAddress _address, UUID uuid) {
+		try {
+			this.player = player;
+			this.aiPacketHandler = new AIPacketHandler();
+			this.aiClient = new AIClient(_address, aiPacketHandler);
+			this.aiPacketHandler.setAiClient(aiClient);
+			this.information = new InformationHandler();
+			this.computing = false;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -70,30 +79,30 @@ public class ArtificialIntelligence {
 	 * computeNextTurn() method
 	 */
 	public void start() {
-		new Thread(new Runnable() {
-
-			public void run() {
-				while (game.notFinished()) {
-					try {
-						Thread.sleep(500);
-						handleTurn();
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-
-		}).start();
+//		new Thread(new Runnable() {
+//
+//			public void run() {
+//				while (aiClient.notFinished()) {
+//					try {
+//						Thread.sleep(500);
+//						handleTurn();
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			}
+//
+//		}).start();
 	}
 
 	private void handleTurn() {
-		if (game.myTurn(this.player)) {
-			executeMove();
-		} else {
-			if (!computing) {
-				determineMove();
-			}
-		}
+//		if (aiClient.myTurn(this.player)) {
+//			executeMove();
+//		} else {
+//			if (!computing) {
+//				determineMove();
+//			}
+//		}
 	}
 	
 	/**
@@ -102,8 +111,8 @@ public class ArtificialIntelligence {
 	 */
 	public void executeMove() {
 		LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
-		game.playTreasures();
-		game.endTurn();
+//		aiClient.playTreasures();
+//		aiClient.endTurn();
 		/**
 		 * set computing flag false here, because otherwise the AI would compute
 		 * a new turn before it has even executed the old
@@ -168,16 +177,16 @@ public class ArtificialIntelligence {
 	/**
 	 * @return the game
 	 */
-	public GameHandler getGame() {
-		return game;
+	public AIClient getGame() {
+		return aiClient;
 	}
 
 	/**
 	 * @param game
 	 *            the game to set
 	 */
-	public void setGame(GameHandler game) {
-		this.game = game;
+	public void setGame(AIClient game) {
+		this.aiClient = game;
 	}
 
 	/**
@@ -208,5 +217,19 @@ public class ArtificialIntelligence {
 	 */
 	public void setInformation(InformationHandler information) {
 		this.information = information;
+	}
+
+	/**
+	 * @return the aiPacketHandler
+	 */
+	public AIPacketHandler getAiPacketHandler() {
+		return aiPacketHandler;
+	}
+
+	/**
+	 * @param aiPacketHandler the aiPacketHandler to set
+	 */
+	public void setAiPacketHandler(AIPacketHandler aiPacketHandler) {
+		this.aiPacketHandler = aiPacketHandler;
 	}
 }
