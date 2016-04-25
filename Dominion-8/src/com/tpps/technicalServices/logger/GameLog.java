@@ -45,7 +45,6 @@ public class GameLog {
 	 * iWantAJFrame: do I want to have an extra JFrame for this?
 	 */
 	private static boolean guiPossible = !GraphicsEnvironment.isHeadless();
-	// private static boolean iWantAJFrame = false;
 
 	/**
 	 * determines wheter the textPane is already initialized so there won't be a
@@ -61,7 +60,7 @@ public class GameLog {
 	 */
 	public static void init() {
 		GameLog.isInitialized = true;
-		String team = "Game Log\n";
+		String team = " Game Log\n";
 		if (guiPossible) {
 			GameLog.textPane = new GameLogTextPane();
 		} else
@@ -81,13 +80,13 @@ public class GameLog {
 		return backgroundColor;
 	}
 
-//	/**
-//	 * @param backgroundColor
-//	 *            the backgroundColor to set
-//	 */
-//	public static void setBackgroundColor(Color backgroundColor) {
-//		GameLog.backgroundColor = backgroundColor;
-//	}
+	/**
+	 * @param backgroundColor
+	 *            the backgroundColor to set
+	 */
+	public static void setBackgroundColor(Color backgroundColor) {
+		GameLog.backgroundColor = backgroundColor;
+	}
 
 	/**
 	 * @return the timestampColor
@@ -169,14 +168,13 @@ public class GameLog {
 		return line.toString();
 	}
 
-	
-	public static void broadcastMessage(MsgType type, String line) {
+//	public static void broadcastMessage(MsgType type, String line) {
 //		try {
 //			DominionController.getInstance().getGameClient().sendMessage(new PacketBroadcastLog(type, line, msgColor));
 //		} catch (IOException e) {
 //			e.printStackTrace();
 //		}
-	}
+//	}
 
 	/**
 	 * log the message with message type to the ui (if GameLog.guiPossible is

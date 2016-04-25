@@ -17,10 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
 
@@ -39,7 +37,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.tpps.application.game.DominionController;
-import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.technicalServices.util.GraphicsUtil;
 
@@ -414,12 +411,20 @@ public class GlobalChatPanel extends JPanel {
 		}
 	}
 
-	private String parseForbiddenWords(String message) {
+	/**
+	 * This method parses any chat/log message and removes abusive language. Abusive words will be replaced in every position of their length randomly by "#+*!?/§$%&_"
+	 * 
+	 * @param message the message to be parsed
+	 * @return the parsed message without any abusive words.
+	 * 
+	 * @author Nicolas Wipfler
+	 */
+	private static String parseForbiddenWords(String message) {
 		StringBuffer result = new StringBuffer();
 		String replaceCharacters = "#+*!?/§$%&_";
-		System.out.println("Message.split(\"\\s+\") > " + Arrays.toString(message.split("\\s+")));
+		System.out.println("Message.split(s+) > " + Arrays.toString(message.split("\\s+")));
 		for (String originalWord : message.split("\\s+")) {
-			String removedSpecialCharacters = originalWord.replaceAll("[^a-zA-Z0-9\\s]", "");
+			String removedSpecialCharacters = originalWord.replaceAll("[^a-zA-Zäüö0-9\\s]", "");
 			System.out.println("rsc: " + removedSpecialCharacters);
 			String filter = "";
 			System.out.println("originalWord: " + originalWord + " and wordListContains(removedSpecialCharacters.toLowerCase())" + wordListContains(removedSpecialCharacters.toLowerCase()));
@@ -436,10 +441,30 @@ public class GlobalChatPanel extends JPanel {
 		return result.toString();
 	}
 
-	private boolean wordListContains(String word) {
-		return GameConstant.ABUSIVE_WORDS.contains(base64decode(word));
+	/**
+	 * 
+	 * @param word the word to look up
+	 * @return if the parameter contains any abusive words
+	 * 
+	 * @author Nicolas Wipfler
+	 */
+	private static boolean wordListContains(String word) {
+		for (String abusiveWord : GameConstant.ABUSIVE_WORDS) {
+			if (word.contains(base64decode(abusiveWord))) {
+				return true;
+			}
+		}
+		return false;
 	}
 
+	/**
+	 * 
+	 * @param msg the msg to encode
+	 * @return base64encoded String
+	 * 
+	 * @author Nicolas Wipfler
+	 */
+	@SuppressWarnings("unused")
 	private static String base64encode(String msg) {
 		try {
 			return Base64.getEncoder().encodeToString(msg.getBytes("utf-8"));
@@ -449,6 +474,13 @@ public class GlobalChatPanel extends JPanel {
 		return msg;
 	}
 
+	/**
+	 * 
+	 * @param msg the msg to decode
+	 * @return base64decoded String
+	 * 
+	 * @author Nicolas Wipfler
+	 */
 	private static String base64decode(String msg) {
 		try {
 			return new String(Base64.getDecoder().decode(msg), "utf-8");
@@ -456,22 +488,5 @@ public class GlobalChatPanel extends JPanel {
 			e.printStackTrace();
 		}
 		return msg;
-	}
-
-	// wenn ein wort ein verbotenes wort enthält auch komplett naus
-	public static void main(String[] args) {
-		
-	}
-	
-	private static void abusiveWordCreator() {
-//		ArrayList<String> words = CollectionsUtil.getArrayList("wixer", "arsch", "nutte", "hure", "tunte", "penis", "cock", "dick", "noob", "cunt", "bitch");
-		ArrayList<String> words = CollectionsUtil.getArrayList();
-		StringBuffer sBuf = new StringBuffer();
-		for (String word : words) {
-			String encoding = base64encode(word);
-			sBuf.append("\"" + encoding + "\"" + ", ");
-			System.out.println("Encoding: " + encoding);
-		}
-		System.out.println("result: " + sBuf.toString());
 	}
 }

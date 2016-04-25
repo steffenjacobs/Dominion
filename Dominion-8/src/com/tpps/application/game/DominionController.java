@@ -22,7 +22,6 @@ import com.tpps.technicalServices.network.game.GameClient;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.ui.MainFrame;
 import com.tpps.ui.MainMenuPanel;
-import com.tpps.ui.cardeditor.CardEditor;
 import com.tpps.ui.lobbyscreen.GlobalChatPanel;
 import com.tpps.ui.lobbyscreen.PlayerSettingsPanel;
 import com.tpps.ui.loginscreen.LoginGUIController;
@@ -52,7 +51,7 @@ public final class DominionController {
 	private GlobalChatPanel globalChatPanel;
 	private PlayerSettingsPanel playerSettingsPanel;
 	private StatisticsBoard statisticsBoardPanel;
-	private CardEditor cardEditor;
+//	private CardEditor cardEditor;
 
 	private BufferedImage originalBackground;
 	public static BufferedImage selectedGameImage;
@@ -401,7 +400,7 @@ public final class DominionController {
 	
 	public void openCardeditor(){
 		this.mainFrame.setVisible(false);
-		this.cardEditor = new CardEditor();
+//		this.cardEditor = new CardEditor();
 	}
 
 	public UUID getLobbyID() {
