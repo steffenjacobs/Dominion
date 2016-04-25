@@ -80,7 +80,7 @@ public class LoginGUIController{
 	 */
 	public void getStateOfLoginRequest(int state){
 		if (state ==1) { // logged in successfully
-			JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.INFORMATION_MESSAGE);
+		//	JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.INFORMATION_MESSAGE);
 			this.logingui.dispose();
 			DominionController.getInstance().setUsername(this.loginclient.getUsername());
 			DominionController.getInstance().endLogin();			

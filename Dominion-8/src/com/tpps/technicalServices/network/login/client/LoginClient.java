@@ -32,7 +32,7 @@ public class LoginClient extends PacketHandler {
 	private String username;
 	private SessionClient c_session;
 	private LoginGUIController guicontroller;
-	private boolean semaphor;
+	private boolean packetFlag;
 
 //	private String usernamenewacc;
 	private String plaintext;
@@ -46,7 +46,7 @@ public class LoginClient extends PacketHandler {
 	 *            controlls the overall gui for login
 	 */
 	public LoginClient(LoginGUIController guicontroller) {
-		semaphor = true;
+		packetFlag = true;
 		try {
 			this.guicontroller = guicontroller;
 			c_login = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), 1338), this, false);
@@ -66,20 +66,19 @@ public class LoginClient extends PacketHandler {
 	 *            a String representation of the password in plaintext
 	 */
 	public void handlelogin(String nickname, String plaintext) {
-		if(semaphor){
+		System.out.println("Packetflag: " + packetFlag);
+		if(packetFlag){
+			packetFlag = false;
 			this.username = nickname;
-			Password pw = new Password(plaintext, new String("defsalt")); // defsalt
-																			// is a
-																			// standardsalt
-	
+			Password pw = new Password(plaintext, new String("defsalt")); // defsalt is a standardsalt
 			try {
 				String pwAsString = pw.getHashedPassword();
 				PacketLoginCheckRequest check = new PacketLoginCheckRequest(nickname, pwAsString);
 				c_login.sendMessage(check);
-				semaphor = false;
+				
 				System.out.println("sent accountinformation hashed to the login server");
 			} catch (Exception e) {
-				semaphor = true;
+				packetFlag = true;
 				e.printStackTrace();
 			}
 		}
@@ -95,7 +94,7 @@ public class LoginClient extends PacketHandler {
 	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet answer) {
-		semaphor = true;
+		packetFlag = true;
 		System.out.println("Client received an answer packet");
 		new Thread(() -> {
 			switch (answer.getType()) {
@@ -141,17 +140,17 @@ public class LoginClient extends PacketHandler {
 	 *            a String representation of the desired email adress
 	 */
 	public void handleAccountCreation(String username, String plaintext, String email) {
-		if(semaphor){
+		if(packetFlag){
 			this.username = username;
 			this.plaintext = plaintext;
 			Password pw = new Password(plaintext, new String("defsalt"));
 			PacketRegisterRequest packet = new PacketRegisterRequest(username, pw.getHashedPassword(), email);
 			try {
 				c_login.sendMessage(packet);
-				semaphor = false;
+				packetFlag = false;
 			} catch (IOException e) {
 				e.printStackTrace();
-				semaphor = true;
+				packetFlag = true;
 			}
 			System.out.println("client sent accountinformaion to server to create a new account");
 		}
