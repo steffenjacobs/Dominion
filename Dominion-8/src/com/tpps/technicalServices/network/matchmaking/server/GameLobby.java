@@ -88,8 +88,8 @@ public class GameLobby {
 			this.lobbyScore = this.getLobbyScore() / this.players.size();
 		}
 		if (this.players.size() >= MAX_LOBBY_SIZE) {
-			MatchmakingController.startGame(this);
 			this.startTime = System.currentTimeMillis();
+			MatchmakingController.startGame(this);
 		}
 
 		int aiCounter = 0;
