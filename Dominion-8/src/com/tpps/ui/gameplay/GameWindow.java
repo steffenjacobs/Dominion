@@ -96,7 +96,7 @@ public class GameWindow extends JFrame {
 		this.loggerPane = GameLog.getTextPane();
 		this.chatWindow = new ChatWindowForInGame();
 
-//		this.tabbedComponent();
+		this.tabbedComponent();
 
 		this.setTopGap(Toolkit.getDefaultToolkit().getScreenSize().height / 4);
 		// this.leftGap = Toolkit.getDefaultToolkit().getScreenSize().width / 7;
@@ -190,7 +190,7 @@ public class GameWindow extends JFrame {
 
 		// this.framework.add(this.chatWindow);
 		// this.framework.add(this.loggerPane);
-	//	this.framework.add(this.tabbedWindow);
+		this.framework.add(this.tabbedWindow);
 
 		this.addComponentListener(new MyComponentAdapter());
 		this.setFocusable(true);
@@ -229,7 +229,6 @@ public class GameWindow extends JFrame {
 	}
 
 	private void tabbedComponent() {
-		UIManager.put("TabbedPane.contentOpaque", false);
 		UIManager.put("TabbedPane.tabsOpaque", Boolean.FALSE);
 		this.jTabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		this.jTabbedPane.setBorder(BorderFactory.createEmptyBorder());
