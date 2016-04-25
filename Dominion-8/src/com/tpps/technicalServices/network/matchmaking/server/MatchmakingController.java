@@ -136,6 +136,7 @@ public final class MatchmakingController {
 				/* send AI-register packets */
 				if (pl.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 					try {
+						System.out.println("matchmaking send the message to the GameServer");
 						cl.sendMessage(new PacketRegistratePlayerByServer("AI" + System.identityHashCode(cl),
 								UUID.fromString("00000000-0000-0000-0000-000000000000")));
 						Thread.sleep(100);
