@@ -11,6 +11,7 @@ import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.clientSession.server.SessionServer;
 import com.tpps.technicalServices.network.core.Server;
+import com.tpps.technicalServices.network.core.packet.Packet;
 
 /** @author ladler - Lukas Adler */
 public class GameServer extends Server {
@@ -60,6 +61,14 @@ public class GameServer extends Server {
 
 	public boolean validSession(String username, UUID sessionID) {
 		return this.sessionClient.checkSessionSync(username, sessionID);
+	}
+	
+	@Override
+	public void sendMessage(int port, Packet packet) throws IOException {
+		if (super.clients.contains(port)) {
+			super.sendMessage(port, packet);
+		}
+		
 	}
 
 	/**

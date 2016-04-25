@@ -63,7 +63,7 @@ public class LoginGUIController{
 	 */
 	public void getStateOfAccountCreation(int state, String nickname, String plaintext){
 		if(state == 1) {
-			JOptionPane.showMessageDialog(null, "Account created succesfully", "Create Account", JOptionPane.INFORMATION_MESSAGE);
+		//	JOptionPane.showMessageDialog(null, "Account created succesfully", "Create Account", JOptionPane.INFORMATION_MESSAGE);
 			this.createaccount.dispose();
 			this.logingui = new LogInGUI(this, nickname, plaintext);
 		} else if(state == 2) {
