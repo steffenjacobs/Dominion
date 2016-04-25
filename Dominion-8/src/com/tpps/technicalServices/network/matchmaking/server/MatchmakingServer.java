@@ -157,7 +157,7 @@ public class MatchmakingServer extends Server {
 	 * sends a packet back to the Matchmaker on the client-side if the lobby is
 	 * full and ready to start and the game-server is already set up
 	 * 
-	 * @param receivers
+	 * @param receiver
 	 *            the players to receive the packet
 	 * @param opponents
 	 *            all the players in the lobby
