@@ -54,7 +54,7 @@ public class GameLobby {
 	 *            player to add to the lobby
 	 */
 	public void joinPlayer(MPlayer player) {
-		System.out.println("[" + System.identityHashCode(this) + "] <-" + player.getPlayerName());
+		System.out.println("[" + this.getLobbyID() + "] <-" + player.getPlayerName());
 		for (MPlayer mplayer : players) {
 
 			// send the new player the old player
@@ -150,7 +150,7 @@ public class GameLobby {
 	/** @return a readable representation of the object */
 	@Override
 	public String toString() {
-		String res = "[" + System.identityHashCode(this) + "] ";
+		String res = "[" + this.getLobbyID() + "] ";
 
 		if (this.startTime != 0) {
 			res += " (running since " + sdf.format(this.startTime) + ") ";

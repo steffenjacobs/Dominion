@@ -215,6 +215,7 @@ public final class MatchmakingController {
 			for (; cntAvailableLobbies < 2; cntAvailableLobbies++) {
 				GameLobby lobby = new GameLobby();
 				lobbies.add(lobby);
+				lobbiesByID.put(lobby.getLobbyID(), lobby);
 			}
 		}
 	}
