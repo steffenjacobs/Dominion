@@ -46,7 +46,7 @@ public class LoginListener implements MouseListener {
 		this.cancel = cancel;
 		this.createAccount = createAccount;
 		userinfo.requestFocus();
-		clicked.addKeyListener(new KeyListener() {
+		passwordbox.addKeyListener(new KeyListener() {
 			
 			@Override
 			public void keyTyped(KeyEvent e) {
