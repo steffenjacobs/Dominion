@@ -94,9 +94,7 @@ public class LoginClient extends PacketHandler {
 	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet answer) {
-		packetFlag = true;
 		System.out.println("Client received an answer packet");
-		new Thread(() -> {
 			switch (answer.getType()) {
 			case LOGIN_CHECK_ANSWER:
 				PacketLoginCheckAnswer check = (PacketLoginCheckAnswer) answer;
@@ -106,11 +104,13 @@ public class LoginClient extends PacketHandler {
 					DominionController.getInstance().setSessionID(check.getSessionID());
 					c_session.keepAlive(username, true);
 				}
+				packetFlag = true;
 				System.out.println("enabled");
 				break;
 			case LOGIN_REGISTER_ANSWER:
 				PacketRegisterAnswer check2 = (PacketRegisterAnswer) answer;
 				guicontroller.getStateOfAccountCreation(check2.getState(), this.username, this.plaintext);
+				packetFlag = true;
 				break;
 			case GET_ALL_STATISTICS:
 				this.handleAllStatistics((PacketGetAllStatistics) answer);
@@ -118,7 +118,7 @@ public class LoginClient extends PacketHandler {
 			default:
 				break;
 			}
-		}).start();
+		
 	}
 	
 	private void handleAllStatistics(PacketGetAllStatistics packet){
