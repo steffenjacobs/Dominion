@@ -282,4 +282,9 @@ public class Server {
 		}
 		sct.interrupt();
 	}
+
+	/** @return the port the server is listening on */
+	public int getPort() {
+		return this.serverSocket.getLocalPort();
+	}
 }
