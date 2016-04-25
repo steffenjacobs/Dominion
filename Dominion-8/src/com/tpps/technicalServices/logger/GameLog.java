@@ -22,7 +22,7 @@ public class GameLog {
 	 */
 	private static Color backgroundColor = Color.WHITE;
 	private static Color timestampColor = ColorUtil.EPICBLUE;
-	private static Color msgColor = Color.BLACK;
+	private static Color msgColor = Color.WHITE;
 
 	/**
 	 * @unused, for messageTypeColors see MsgType class

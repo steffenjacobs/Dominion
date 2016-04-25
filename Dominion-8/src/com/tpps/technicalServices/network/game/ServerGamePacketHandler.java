@@ -71,8 +71,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 			switch (packet.getType()) {
 			case REGISTRATE_PLAYER_BY_SERVER:
 				int clientId = GameServer.getCLIENT_ID();
+				System.out.println("clientId: " + clientId);
 				PacketRegistratePlayerByServer packetRegistratePlayerByServer = (PacketRegistratePlayerByServer) packet;
-				if (packetRegistratePlayerByServer.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+
+				if (packetRegistratePlayerByServer.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))){
+					System.out.println("add ai");
+
 					addPlayerAndCheckPlayerCount(port, clientId, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
 				} else if (this.server.validSession(packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID())) {
 					System.out.println("Connect valid Session username: " + packetRegistratePlayerByServer.getUsername() + "sessionID: " + packetRegistratePlayerByServer.getSessionID());
@@ -489,20 +493,21 @@ public class ServerGamePacketHandler extends PacketHandler {
 	
 	private void nextActivePlayer(int port) {
 		try {
-			Player activePlayer = this.server.getGameController().getActivePlayer();
-			String playerName = activePlayer.getPlayerName();
-			Color playerColor = this.chatController.getColorMap().get(playerName);
-			Color playerColorAlternative = activePlayer.getLogColor();
 			
+			
+			Color playerColor = this.chatController.getColorMap().get(this.server.getGameController().getActivePlayerName());
+//			Color playerColorAlternative = this.server.getGameController().getActivePlayer().getLogColor();
+			this.log("  >>>  " + this.server.getGameController().getActivePlayerName() + ": turn ended  <<<  ", playerColor);			
 			this.server.getGameController().organizePilesAndrefreshCardHand();
-			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(activePlayer.getDeck().getCardHand())));
-			this.log("  >>>  " + playerName + ": turn ended  <<<  ", playerColor);
+			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+			this.server.sendMessage(port, new PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(), 
+					this.server.getGameController().getActivePlayer().getBuys(), this.server.getGameController().getActivePlayer().getCoins()));
 			
 			this.server.getGameController().endTurn();
-			this.server.sendMessage(port,new PacketUpdateValues(activePlayer.getActions(), activePlayer.getBuys(), activePlayer.getCoins()));
-			this.server.broadcastMessage(new PacketEnableDisable(activePlayer.getClientID()));
-			this.log("  >>>  " + playerName + ": turn " + activePlayer.getTurnNr() + " started  <<<  ", playerColor);
 			
+			
+			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
+			this.log("  >>>  " + this.server.getGameController().getActivePlayerName() + ": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " started  <<<  ", playerColor);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
