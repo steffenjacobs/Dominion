@@ -133,6 +133,7 @@ public final class DominionController {
 	 */
 	public void startMatch(int port) {
 		try {
+			System.out.println("in DominionController: start Match");
 			selectedGameImage = this.playerSettingsPanel.getSelectedPicture();
 			System.out.println("FIRST: " + selectedGameImage);
 			gameClient = new GameClient(new InetSocketAddress(
