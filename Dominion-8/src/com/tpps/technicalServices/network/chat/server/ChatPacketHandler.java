@@ -1,8 +1,10 @@
 package com.tpps.technicalServices.network.chat.server;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,6 +32,7 @@ public class ChatPacketHandler extends PacketHandler{
 	private ChatServer server;
 	private ArrayList<ChatRoom> chatrooms;
 	private GlobalChat global;
+	private ColorPool pool;
 	
 	/**
 	 * initializes the chathandler object, respectively the list of chatrooms
@@ -37,7 +40,7 @@ public class ChatPacketHandler extends PacketHandler{
 	 * @author jhuhn - Johannes Huhn
 	 */
 	public ChatPacketHandler() {				
-		chatrooms = new ArrayList<ChatRoom>();		
+		chatrooms = new ArrayList<ChatRoom>();	
 	}
 	
 	/**
@@ -124,8 +127,13 @@ public class ChatPacketHandler extends PacketHandler{
 		switch(packet.getCommand()){
 		case "createChatroom":
 			int chatid = this.addChatRoom(packet.getMembers());
-			PacketChatController idPacket = new PacketChatController(chatid);
+			
+			HashMap<String, Color> colorMap = new HashMap<String, Color>();
+			for (int i = 0; i < packet.getMembers().size(); i++) {
+				colorMap.put(packet.getMembers().get(i), this.pool.getUserColor(packet.getMembers().get(i)));
+			}
 			try {
+				PacketChatController idPacket = new PacketChatController(chatid,colorMap);
 				this.server.sendMessage(port, idPacket);
 				System.out.println("send packet for chatid: " + chatid);
 			} catch (IOException e) {
@@ -303,7 +311,8 @@ public class ChatPacketHandler extends PacketHandler{
 	 */
 	public void init(ChatServer server) {
 		this.server = server;
-		this.global = new GlobalChat(server);		
+		this.pool = new ColorPool();
+		this.global = new GlobalChat(server, pool);		
 		this.server.getListenerManager().registerListener(new ConnectAndDisconnectListener());
 	}
 	
@@ -428,6 +437,7 @@ public class ChatPacketHandler extends PacketHandler{
 			for (Entry<String, Integer> entry : ChatPacketHandler.this.global.getClientsByUsername().entrySet()) {
 				if(entry.getValue() == port){
 					ChatPacketHandler.this.global.removeUser(entry.getKey());
+					ChatPacketHandler.this.global.getPool().deleteUserFromGlobalChat_COLOR(entry.getKey());
 					System.out.println("kicked " + entry.getKey() + " from globalchat");
 					return true;
 				}
@@ -436,4 +446,10 @@ public class ChatPacketHandler extends PacketHandler{
 		}
 	}
 	
+	/**
+	 * @return gets the colorpool instance
+	 */
+	public ColorPool getPool() {
+		return pool;
+	}
 }

@@ -7,217 +7,139 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
-import com.tpps.application.storage.CardStorageController;
-import com.tpps.technicalServices.network.game.GameServer;
-import com.tpps.ui.gameplay.GameWindow;
 
+/*
+ * - board anschauen, wenn angriffskarten gekauft werden dann defensiv kaufen 
+ * - wenn es nix bringt, mehr karten zu ziehen, ggf. aktionskarten nicht spielen
+ * - LinkedListMultimap mit "buy" oder "play" und karte als Spielplan aufbauen
+ * - wenn es der potentiell letzte Zug ist, soll die Blacklist ignoriert werden und evtl ein Anwesen gekauft werden
+ */
+
+/**
+ * AI -> computes Move -> Information(Handler) needed -> Move is computed ->
+ * GameHandler needed to execute turn
+ * 
+ * @author Nicolas Wipfler
+ */
 public class ArtificialIntelligence {
 
 	private Player player;
-	private LinkedList<String> blacklist;
-	private ListMultimap<String, Card> nextTurn;
-	private CardStorageController cardStore;
 	private boolean computing;
 
-	// board anschauen, wenn angriffskarten gekauft werden dann defensiv kaufen
-	// wenn es nix bringt, mehr karten zu ziehen, ggf. aktionskarten nicht
-	// spielen
-	// LinkedListMultimap mit "buy" oder "play" und karte als Spielplan aufbauen
-	// Player Konstruktor ohne port?
-	// wenn es der potentiell letzte Zug ist, soll die Blacklist ignoriert werden und evtl ein Anwesen gekauft werden
+	private GameHandler game;
+	private Move move;
+	private InformationHandler information;
 
 	/**
 	 * constructor of the Artificial Intelligence
 	 * 
-	 * CLIENT_ID is managed by the GameServer and AI get's an ID according to it's position in the login queue
-	 * player has the CLIENT_ID and the general startSet of cards (3x Estate, 7x Copper; see GameBoard for more information)
-	 * blacklist basically blacklists all cards the AI should never buy, except special situations
-	 * nextMove determines the steps if it's the AI's turn
-	 * with the cardStore the AI can compare every handcard with the original card 'image' of the backend
-	 * computing is a flag which indicates whether the AI is already computing the next turn or does nothing at the momant
+	 * @param player
+	 *            the player which is controlled by the AI
+	 * @param uuid
+	 *            the sessionID of the AI instance
 	 */
 	public ArtificialIntelligence(Player player, UUID uuid) {
-		int CLIENT_ID = GameServer.getCLIENT_ID();
 		this.player = player;
-		this.blacklist = this.getCardNamesFromStorage("Curse", "Copper", "Estate");
-		this.nextTurn = LinkedListMultimap.create();
-		this.cardStore = new CardStorageController("cards.bin");
+		this.game = new GameHandler(this.player.getGameServer());
+		this.information = new InformationHandler();
 		this.computing = false;
-	}
-
-	/**
-	 * @return the blacklist
-	 */
-	public LinkedList<String> getBlacklist() {
-		return blacklist;
-	}
-
-	/**
-	 * @param blacklist the blacklist to set
-	 */
-	public void setBlacklist(LinkedList<String> blacklist) {
-		this.blacklist = blacklist;
-	}
-
-	/**
-	 * @return the cardStore
-	 */
-	public CardStorageController getCardStore() {
-		return cardStore;
-	}
-
-	/**
-	 * @param cardStore the cardStore to set
-	 */
-	public void setCardStore(CardStorageController cardStore) {
-		this.cardStore = cardStore;
-	}
-
-	/**
-	 * @return the nextTurn
-	 */
-	public ListMultimap<String, Card> getNextTurn() {
-		return nextTurn;
-	}
-
-	/**
-	 * @param nextTurn the nextTurn to set
-	 */
-	public void setNextTurn(ListMultimap<String, Card> nextTurn) {
-		this.nextTurn = nextTurn;
-	}
-
-	/**
-	 * @param player the player to set
-	 */
-	public void setPlayer(Player player) {
-		this.player = player;
 	}
 
 	/**
 	 * @return the player
 	 */
 	public Player getPlayer() {
-		return this.player;
-	}
-	
-	/**
-	 * this method is used to see in the cardStore if there is a card called 'name'
-	 * so it takes the parameter 'names' and adds every cardname (when the card is truly available in cardStore)
-	 * to the return list. 
-	 * 
-	 * @param names the names of all Cards which will be get from the CardStore
-	 * @return a list of names with the names of only the available cards in the game
-	 */
-	private LinkedList<String> getCardNamesFromStorage(String... names) {
-		LinkedList<String> list = new LinkedList<String>();
-		for (String cardname : names) {
-			list.addLast(cardStore.getCard(cardname).getName());
-		}
-		return list;
-	}
-	
-	/**
-	 * 
-	 * @return if its the AIs turn
-	 */
-	private boolean myTurn() {
-		return GameServer.getInstance().getGameController().getActivePlayer().equals(this.player);
+		return player;
 	}
 
 	/**
+	 * @param player
+	 *            the player to set
+	 */
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	/**
+	 * start the AI, method is only called once when the game is initialized it
+	 * then runs until the game is finished
 	 * 
-	 * @return if the game is NOT finished (so when the method returns true, the game is still running)
-	 */
-	private boolean gameNotFinished() {
-		return GameServer.getInstance().getGameController().isGameNotFinished();
-	}
-
-	/**
-	 * end the turn of AI
-	 */
-	private void endTurn() {
-		GameWindow.endTurn.onMouseClick();
-	}
-
-	/**
-	 * play all treasures of AI
-	 */
-	private void playTreasures() {
-		GameWindow.playTreasures.onMouseClick();
-	}
-
-	/**
-	 * start the AI, method is only called once when the game is initialized
-	 * it then runs until the game is finished
-	 * 
-	 * every 500ms the AI checks if it is its turn and if so, it executes the next Turn
-	 * if its not the AIs turn, and if its not already computing the next turn, the AI is going to compute
-	 * the next turn in the computeNextTurn() method
+	 * every 500ms the AI checks if it is its turn and if so, it executes the
+	 * next Turn if its not the AIs turn, and if its not already computing the
+	 * next turn, the AI is going to compute the next turn in the
+	 * computeNextTurn() method
 	 */
 	public void start() {
 		new Thread(new Runnable() {
-			
+
 			public void run() {
-				while (gameNotFinished()) {
+				while (game.notFinished()) {
 					try {
 						Thread.sleep(500);
-						if (myTurn()) {
-							executeTurn();
-						} else {
-							 if (!computing) {
-								 computeNextTurn();
-							 }
-						}
+						handleTurn();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
 			}
-			
+
 		}).start();
 	}
 
+	private void handleTurn() {
+		if (game.myTurn(this.player)) {
+			executeMove();
+		} else {
+			if (!computing) {
+				determineMove();
+			}
+		}
+	}
+	
 	/**
-	 * execute the next turn of AI, which is determined by LinkedListMultimap nextTurn
+	 * execute the next turn of AI, which is determined by LinkedListMultimap
+	 * nextTurn
 	 */
-	public void executeTurn() {
-		// LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
-		playTreasures();
-		endTurn();
-		/** set computing flag false here, because otherwise the AI would compute a new turn before it has even executed the old */
+	public void executeMove() {
+		LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
+		game.playTreasures();
+		game.endTurn();
+		/**
+		 * set computing flag false here, because otherwise the AI would compute
+		 * a new turn before it has even executed the old
+		 */
 		this.computing = false;
-	}
-	
-	/**
-	 * set computing to true so the computing will not be interrupted
-	 * first assign a default turn which should be an alternative solution, if the compution of the next turn of the AI is interrupted
-	 */
-	private void computeNextTurn() {
-		this.computing = true;
-		/** method assigns a default turn as the next turn, if the computeNextTurn() method gets interrupted
-		before something useful is computed */
-		assignDefaultTurn();
-	}
-	
-	/**
-	 * assign a default turn to nextTurn
-	 */
-	private void assignDefaultTurn() {
-		/** availableCoinsAtStartOfTurn has to be checked several times (for example after a 'draw card' action is performed 
-		 *  and if there are enough coins to the desired action (/buy the desired card), don't draw any more cards e.g. */
-		int availableCoinsAtStartOfTurn = getTreasureCardsValue();
-		
 	}
 
 	/**
-	 * 
-	 * @return the value of all treasure cards in the cardHand of the AI
+	 * set computing to true so the computing will not be interrupted first
+	 * assign a default turn which should be an alternative solution, if the
+	 * compution of the next turn of the AI is interrupted
 	 */
-	private int getTreasureCardsValue() {
-		return this.player.getDeck().getTreasureValueOfList(this.player.getDeck().getCardHand());
+	private void determineMove() {
+		this.computing = true;
+		/**
+		 * method assigns a default turn as the next turn, if the
+		 * determineMove() method gets interrupted before something useful is
+		 * computed
+		 */
+		getDefaultMove();
 	}
-	
+
+	/**
+	 * assign a default turn to nextTurn
+	 */
+	private void getDefaultMove() {
+		/**
+		 * availableCoinsAtStartOfTurn has to be checked several times (for
+		 * example after a 'draw card' action is performed and if there are
+		 * enough coins to the desired action (/buy the desired card), don't
+		 * draw any more cards e.g.
+		 */
+		int availableCoinsAtStartOfTurn = information.getTreasureCardsValue(this.player);
+
+	}
+
 	/**
 	 * main for testing purposes of LinkedListMultimap
 	 * 
@@ -241,5 +163,50 @@ public class ArtificialIntelligence {
 		for (Integer i : map.values()) {
 			System.out.println(i);
 		}
+	}
+	
+	/**
+	 * @return the game
+	 */
+	public GameHandler getGame() {
+		return game;
+	}
+
+	/**
+	 * @param game
+	 *            the game to set
+	 */
+	public void setGame(GameHandler game) {
+		this.game = game;
+	}
+
+	/**
+	 * @return the move
+	 */
+	public Move getMove() {
+		return move;
+	}
+
+	/**
+	 * @param move
+	 *            the move to set
+	 */
+	public void setMove(Move move) {
+		this.move = move;
+	}
+
+	/**
+	 * @return the information
+	 */
+	public InformationHandler getInformation() {
+		return information;
+	}
+
+	/**
+	 * @param information
+	 *            the information to set
+	 */
+	public void setInformation(InformationHandler information) {
+		this.information = information;
 	}
 }

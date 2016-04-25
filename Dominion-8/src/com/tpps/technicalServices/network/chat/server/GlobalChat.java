@@ -1,5 +1,6 @@
 package com.tpps.technicalServices.network.chat.server;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,6 +32,7 @@ public class GlobalChat {
 
 	private ChatServer server;
 	private ConcurrentHashMap<String, Integer> clientsByUsername = new ConcurrentHashMap<String, Integer>();
+	private ColorPool pool;
 
 	/**
 	 * initializes the global chat instance
@@ -38,28 +40,36 @@ public class GlobalChat {
 	 * @author jhuhn
 	 * @param server
 	 *            the server object that belongs to the ChatPacketHandler
+	 * @param pool
+	 *            ColorPool instance, manages nickname colors
 	 */
-	public GlobalChat (ChatServer server){
-		this.server =  server;
+	public GlobalChat (ChatServer server, ColorPool pool){
+		this.server =  server;		
+		this.pool = pool;
 	}
+
 	
 	/**
 	 * This method sends a chatmessage to all clients except the client who sent
 	 * the message
-	 * 
+	 *
 	 * @author jhuhn
 	 * @param packet
 	 *            a packet that received from the ChatPacketHandler from a
 	 *            client
 	 */
 	public void sendChatToAllExceptSender(PacketSendChatAll packet){
-		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + packet.getUsername() + ": " + packet.getChatmessage());
+		PacketSendAnswer answer = new PacketSendAnswer(
+				ChatServer.sdf.format(new Date()),
+				packet.getUsername(), packet.getChatmessage(),
+				pool.getUserColor(packet.getUsername()));
+		
 		for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 		    String nickname = entry.getKey();
 		    if(nickname.equals(packet.getUsername())){
 		    	continue;
 		    }  
-		    try {
+		    try {		    	
 				this.server.sendMessage(entry.getValue(), answer);
 			} catch (IOException e) {						
 				e.printStackTrace();
@@ -80,7 +90,10 @@ public class GlobalChat {
 	public void sendPMToClient(PacketSendChatToClient packet){
 		String receiver = packet.getReceiver().trim();
 		if(!this.clientsByUsername.containsKey(receiver)){
-			PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "The User '" + receiver + "' doesn't exist in global chat \n");
+			PacketSendAnswer answer = new PacketSendAnswer(
+					ChatServer.sdf.format(new Date().getTime())
+							+ "No such a user online: ", receiver, "",
+					ColorPool.commandAndErrorColor);
 			try {
 				this.server.sendMessage(this.clientsByUsername.get(packet.getSender()), answer);
 			} catch (IOException e) {			
@@ -106,8 +119,8 @@ public class GlobalChat {
 		String msg = packet.getChatcommand();
 		System.out.println("Chat Command: " + packet);
 		
-		if(!this.evaluateCommands(packet.getChatcommand(), packet.getSender(), port)){
-			PacketSendAnswer answer2 = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "unknown command: " + msg + "\n");
+		if(!this.evaluateCommands(packet.getChatcommand(), packet.getSender(), port)){	
+			PacketSendAnswer answer2 = new PacketSendAnswer("", "BOT", "unknown command: " + msg, Color.RED);
 			try {
 				server.sendMessage(port, answer2);
 			} catch (IOException e) {				
@@ -132,7 +145,9 @@ public class GlobalChat {
 	 *            PM
 	 */
 	private void sendMessageToSpecificClient(String sender, String receiver, String message, int port){
-		PacketSendAnswer answer = new PacketSendAnswer(ChatServer.sdf.format(new Date().getTime()) + "PM from " + sender + ": " + message + "\n");
+		PacketSendAnswer answer = new PacketSendAnswer(
+				ChatServer.sdf.format(new Date()) + "PM from User: ", sender,
+				message, this.pool.getUserColor(sender));
 		try {
 			server.sendMessage(port, answer);
 		} catch (IOException e) {
@@ -157,8 +172,8 @@ public class GlobalChat {
 		switch(command.trim()){
 		case help_servercommand1: //send answer packet back to user, with all comands servercommand1 == /help
 			String allcomands = "Commands: \n/" + help_servercommand1 + "\n/" + showClients_servercommand2 + "\n/"
-			+ showPorts_servercommand3 + "\n/" + showClientsAndPorts_servercommand4 + "\n/" + statistic_servercommand5 + "<nickname> \n";
-			PacketSendAnswer answer = new PacketSendAnswer(allcomands);
+			+ showPorts_servercommand3 + "\n/" + showClientsAndPorts_servercommand4 + "\n/" + statistic_servercommand5 + "<nickname>";			
+			PacketSendAnswer answer = new PacketSendAnswer("", "BOT", allcomands, ColorPool.commandAndErrorColor); 
 			try {
 				server.sendMessage(port, answer);
 			} catch (IOException e) {
@@ -172,7 +187,7 @@ public class GlobalChat {
 				String user = clients.nextElement();				
 				buf.append(user + "\n");												
 			}
-			PacketSendAnswer answer2 = new PacketSendAnswer(buf.toString());
+			PacketSendAnswer answer2 = new PacketSendAnswer("", "BOT", buf.toString(), ColorPool.commandAndErrorColor);
 			try {
 				server.sendMessage(port, answer2);
 			} catch (IOException e) {			
@@ -186,7 +201,7 @@ public class GlobalChat {
 				int port2 = ports.nextElement();
 				buf2.append(port2 + "\n");						
 			}
-			PacketSendAnswer answer3 = new PacketSendAnswer(buf2.toString());
+			PacketSendAnswer answer3 = new PacketSendAnswer("", "BOT", buf2.toString(), ColorPool.commandAndErrorColor); 
 			try {
 				server.sendMessage(port, answer3);
 			} catch (IOException e) {			
@@ -202,7 +217,7 @@ public class GlobalChat {
 				int port3 = ports3.nextElement();
 				buf3.append(user + " : " + port3 + "\n");			
 			}
-			PacketSendAnswer answer4 = new PacketSendAnswer(buf3.toString());
+			PacketSendAnswer answer4 = new PacketSendAnswer("", "BOT", buf3.toString(), ColorPool.commandAndErrorColor);
 			try {
 				server.sendMessage(port, answer4);
 			} catch (IOException e) {			
@@ -232,14 +247,14 @@ public class GlobalChat {
 				line = nickname + ": \n" + "	wins: " + wins + "\n	"
 					+ "losses: " + losses + "\n	" + "ratio: " + ratio
 					+ "\n	" + "total matches: " + totalMatches + "\n	"
-					+ "rank: " + rank + "\n-------------------------\n";
+					+ "rank: " + rank + "\n-------------------------";
 			} catch (SQLException e1) {				
 			//	e1.printStackTrace(); unknown user, resultset is empty
 				line = "unknown  user: " + nickname; 
 			}
 			System.out.println(line);
 
-			PacketSendAnswer answer5 = new PacketSendAnswer("User: " + line);
+			PacketSendAnswer answer5 = new PacketSendAnswer("", "BOT", line, ColorPool.commandAndErrorColor); 
 			try {
 				this.server.sendMessage(port, answer5);
 			} catch (IOException e) {			
@@ -283,5 +298,12 @@ public class GlobalChat {
 	 */
 	public void removeUser(String user){
 		this.clientsByUsername.remove(user);		
+	}
+	
+	/**
+	 * @return the colorpool instance
+	 */
+	public ColorPool getPool() {
+		return pool;
 	}
 }

@@ -15,6 +15,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -23,8 +25,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -37,7 +43,7 @@ import com.tpps.technicalServices.util.GraphicsUtil;
  */
 public class GlobalChatPanel extends JPanel{
 	
-	private JTextArea textbox;
+	private JTextPane textbox;
 	private JScrollPane scrollpane;
 	private JTextField chatInputLine;
 	private BufferedImage blackBeauty;
@@ -50,6 +56,9 @@ public class GlobalChatPanel extends JPanel{
 	private static final float BLACK_TRANSPARENCY = 0.6F;
 	
 	private static final long serialVersionUID = 1L;
+	private static final Color ownColor = new Color(0,255,0);
+	public static final SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]: ");
+	private static final Color whiteColor = new Color(255,255,255);
 	
 	/**
 	 * initializes the object
@@ -235,11 +244,12 @@ public class GlobalChatPanel extends JPanel{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		textbox = new JTextArea();
+		textbox = new JTextPane();
 		textbox.setFocusable(false);
 		textbox.setForeground(Color.WHITE);
+		textbox.setBackground(new Color(100,100,100,100));
 		textbox.setBorder(BorderFactory.createEmptyBorder());
-		textbox.setLineWrap(true);
+//		textbox.setLineWrap(true);
 		textbox.setOpaque(false);
 		textbox.setText("Welcome to our chatserver \n");		
 		font = new Font("Calibri", Font.PLAIN, 20);
@@ -249,8 +259,11 @@ public class GlobalChatPanel extends JPanel{
 				
 				@Override
 				public void paint(Graphics g) {
-					g.drawImage(blackBeauty, 0, 0, null);					
-					super.paint(g);					
+					Graphics2D h = (Graphics2D) g;
+					h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+					
+					h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
+					super.paint(h);								
 				}
 				
 			};
@@ -273,7 +286,9 @@ public class GlobalChatPanel extends JPanel{
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
 		GlobalChatPanel.this.chatInputLine.setText("");
-		this.textbox.append("ME: " + chatmessage.trim() + "\n");
+		this.createChatInputPart(sdf.format(new Date()), whiteColor);
+		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
+		this.createChatInputPart(chatmessage + "\n", whiteColor);
 		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 		try {
 			Thread.sleep(1);
@@ -285,20 +300,45 @@ public class GlobalChatPanel extends JPanel{
 	
 	
 	/**
+	 * This method formats a String with a specific color to a documentobject
+	 * 
+	 * @author jhuhn
+	 * @param chatmessage
+	 *            the string of text that should be shown in the chatarea
+	 * @param color
+	 *            Chatmessage gets that visible color
+	 */
+	public synchronized void createChatInputPart(String chatmessage, Color color){
+		Style style = textbox.addStyle("Style", null);
+		StyleConstants.setForeground(style, color);
+		StyledDocument doc = textbox.getStyledDocument();
+		try {
+			doc.insertString(doc.getLength(), chatmessage, style);
+		} catch (BadLocationException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	/**
 	 * This method appends a chatmessage to the globalchat on the UI. The carret
 	 * will be set to the maximum (last chatmessage)
 	 * 
 	 * @author jhuhn
-	 * @param chatmessage
+	 * @param message
 	 *            a String representation of the chatmessage
+	 * @param user
+	 *            a String representation of the user
+	 * @param timeStamp
+	 *            a String representation of time
+	 * @param color
+	 *            the username should be shown as this given color
 	 */
-	public synchronized void appendChatLocal(String chatmessage){
-		this.textbox.append(chatmessage.trim() + "\n");
-		try {
-			Thread.sleep(1);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+	public synchronized void appendChatLocal(String message, String user, String timeStamp, Color color){
+		this.createChatInputPart(timeStamp, whiteColor);
+		this.createChatInputPart(user + ": ", color);
+		this.createChatInputPart(message + "\n", whiteColor);
+		
+		
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	

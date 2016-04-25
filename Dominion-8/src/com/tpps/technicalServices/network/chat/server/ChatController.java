@@ -1,14 +1,17 @@
 package com.tpps.technicalServices.network.chat.server;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.packets.PacketChatController;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 
 /**
  * This class sends and receives packets that deal with chatroom management
@@ -19,37 +22,25 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 public class ChatController extends PacketHandler{
 	
 	private static Client chatclient;
-	private static ChatController instance;
 	private int chatID;	
+	private HashMap<String, Color> colorMap;
+	private ServerGamePacketHandler handler;
 	
 	/**
 	 * initializes the chatcontroller class
 	 * 
 	 * @author jhuhn
 	 */
-	public void init(){
-		if(ChatController.chatclient == null){
-			try {
-				ChatController.chatclient = new Client(new InetSocketAddress(Addresses.getLocalHost(), 1340), this, false);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+	public ChatController(ServerGamePacketHandler handler){
+		this.handler = handler;
+		try {
+			ChatController.chatclient = new Client(new InetSocketAddress(Addresses.getLocalHost(), 1340), this, false);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}	
 	}
 	
-	/**
-	 * if the chatcontroller instance is null, it gets initialized
-	 * 
-	 * @author jhuhn
-	 * @return the instance of the chatcontroller
-	 */
-	public static ChatController getInstance(){
-		if(instance == null){
-			instance = new ChatController();
-			instance.init();
-		}
-		return instance;
-	}
+
 	
 	/**
 	 * This method sends a packet to create a chatroom with given members
@@ -58,7 +49,7 @@ public class ChatController extends PacketHandler{
 	 * @param members
 	 *            an ArrayList of all members who participate in the chatroom
 	 */
-	public static void createChatRoom(ArrayList<String> members){
+	public void createChatRoom(ArrayList<String> members){
 		PacketChatController packet = new PacketChatController("createChatroom", members);
 		try {
 			ChatController.chatclient.sendMessage(packet);
@@ -79,7 +70,7 @@ public class ChatController extends PacketHandler{
 		for (int i = 0; i < usernames.length; i++) {
 			members.add(usernames[i]);
 		}
-		ChatController.createChatRoom(members);
+		this.createChatRoom(members);
 	}
 	
 	/**
@@ -122,7 +113,9 @@ public class ChatController extends PacketHandler{
 		case CHAT_CONTROLLER:
 			PacketChatController packetID = (PacketChatController) packet;
 			this.chatID = packetID.getChatroomId();
+			this.colorMap = packetID.getColorMap();
 			System.out.println("received chatID: " + chatID);
+			this.handler.startGame();
 			break;
 		default:
 			System.out.println("sth went wrong with received packet");
@@ -136,5 +129,13 @@ public class ChatController extends PacketHandler{
 	 */
 	public int getChatID() {
 		return chatID;
+	}
+	
+	/**
+	 * @author jhuhn
+	 * @return a Hashmap with key user and value Color, used for gamelog
+	 */
+	public HashMap<String, Color> getColorMap() {
+		return colorMap;
 	}
 }

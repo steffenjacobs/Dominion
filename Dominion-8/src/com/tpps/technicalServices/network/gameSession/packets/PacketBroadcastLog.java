@@ -20,6 +20,7 @@ public class PacketBroadcastLog extends Packet {
 	private static final long serialVersionUID = 6438319829526897629L;
 	private final String msg;
 	private final MsgType msgType;
+	
 	/**
 	 * 
 	 * sets the packettype
@@ -31,6 +32,13 @@ public class PacketBroadcastLog extends Packet {
 		this.msg = msg;
 		this.msgType = msgType;
 		GameLog.setMsgColor(color);
+	}
+	
+	public PacketBroadcastLog(MsgType msgType, String msg) {
+		super(PacketType.BROADCAST_LOG);
+		this.msg = msg;
+		this.msgType = msgType;
+		GameLog.setMsgColor(Color.WHITE);
 	}
 	
 	public MsgType getMsgType(){

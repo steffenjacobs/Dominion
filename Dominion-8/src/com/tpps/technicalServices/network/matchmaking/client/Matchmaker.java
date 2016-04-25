@@ -1,5 +1,6 @@
 package com.tpps.technicalServices.network.matchmaking.client;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
@@ -181,23 +182,24 @@ public final class Matchmaker {
 			case 1: // Success
 				// TODO:
 				// save pck.getLobbyID() somewhere (-> DominionController?)
-				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] You joined a lobby successfully");
+
+				DominionController.getInstance().reveiveChatMessageFromChatServer("You joined a lobby successfully", "BOT", "", Color.RED);
 				/*
 				 * :id : " + pck.getLobbyID()
 				 */
 				DominionController.getInstance().setLobbyID(pck.getLobbyID());
 				break;
 			case 2: // Lobby does not exist
-				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] Lobby does not exist");
+				DominionController.getInstance().reveiveChatMessageFromChatServer("Lobby does not exis", "BOT", "", Color.RED);
 				break;
-			case 3: // Lobby is already full
-				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] Lobby is already full");
+			case 3: // Lobby is already full				
+				DominionController.getInstance().reveiveChatMessageFromChatServer("Lobby is already full", "BOT", "", Color.RED);
 				break;
 			case 4: // Lobby already started
-				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] Lobby already started");
+				DominionController.getInstance().reveiveChatMessageFromChatServer("Lobby already started", "BOT", "", Color.RED);
 				break;
 			default: // unknown error
-				DominionController.getInstance().reveiveChatMessageFromChatServer("[BOT] unknown error");
+				DominionController.getInstance().reveiveChatMessageFromChatServer("unknown error", "BOT", "", Color.RED);
 				break;
 			}
 		}

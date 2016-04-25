@@ -7,11 +7,11 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
  * packet is send to the server if the player wants to set aside the drawed card
  * @author Lukas Adler
  */
-public class PacketSetAsideDrawedCard extends Packet {
+public class PacketSetAsideDrewCard extends Packet {
 
 	private static final long serialVersionUID = -7232107467349951828L;
 
-	public PacketSetAsideDrawedCard() {
+	public PacketSetAsideDrewCard() {
 		super(PacketType.SET_ASIDE_DRAWED_CARD);		
 	}
 	
