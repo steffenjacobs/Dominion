@@ -33,6 +33,8 @@ public class MPlayer {
 	 *            a HashMap of the player's stats retrieved from the databse
 	 * @param port
 	 *            the port the player is connected with
+	 * @param ai
+	 *            determines, whether the linked Player is an AI or not
 	 */
 	private MPlayer(String name, UUID uid, HashMap<String, StatisticUnit> stats, int port, boolean ai) {
 		this.playerName = name;

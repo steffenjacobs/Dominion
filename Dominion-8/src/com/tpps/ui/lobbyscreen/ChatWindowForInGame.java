@@ -90,7 +90,7 @@ public class ChatWindowForInGame extends JPanel {
 		textbox.setBorder(BorderFactory.createEmptyBorder());
 	//	textbox.setLineWrap(true);
 		textbox.setOpaque(false);
-		textbox.setText("Welcome to our chatserver \n");
+		textbox.setText("Welcome to our Chat!\nType /help to see all available Commands.\n");
 		font = new Font("Calibri", Font.PLAIN, 12);
 		textbox.setFont(font);
 		scrollpane = new JScrollPane(textbox) {

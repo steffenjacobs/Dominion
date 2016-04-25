@@ -88,74 +88,73 @@ public final class MatchmakingController {
 	 *            the GameLobby to start
 	 */
 	static void startGame(GameLobby lobby) {
-		exec.submit(()->{
-		// removeLobby(lobby);
-		String[] playerNames = new String[lobby.getPlayers().size()];
-		MPlayer player;
+		exec.submit(() -> {
+			// removeLobby(lobby);
+			String[] playerNames = new String[lobby.getPlayers().size()];
+			MPlayer player;
 
-		boolean hasAI = false;
+			boolean hasAI = false;
 
-		for (int i = 0; i < lobby.getPlayers().size(); i++) {
-			player = lobby.getPlayers().get(i);
-			playerNames[i] = player.getPlayerName();
+			for (int i = 0; i < lobby.getPlayers().size(); i++) {
+				player = lobby.getPlayers().get(i);
+				playerNames[i] = player.getPlayerName();
 
-			if (!hasAI && player.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-				hasAI = true;
-			}
-		}
-
-		// reserve port & start game-process
-		try {
-			blockPort.acquire(1);
-			int freePort = getFreePort();
-
-			/* start server */
-			Thread gsThread = new Thread(() -> {
-				try {
-					new GameServer(freePort);
-				} catch (Exception e) {
-					e.printStackTrace();
+				if (!hasAI && player.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+					hasAI = true;
 				}
-			});
-			gameServersByLobby.put(lobby, gsThread);
-			gsThread.start();
-			Thread.sleep(500);
-
-			Client cl = null;
-			if (hasAI) {
-				cl = new Client(new InetSocketAddress(Addresses.getLocalHost(), freePort), new PacketHandler() {
-					@Override
-					public void handleReceivedPacket(int port, Packet packet) {
-						// do nothing - be dummy
-					}
-				}, false);
 			}
 
-			for (MPlayer pl : lobby.getPlayers()) {
+			// reserve port & start game-process
+			try {
+				blockPort.acquire(1);
+				int freePort = getFreePort();
 
-				/* send AI-register packets */
-				if (pl.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+				/* start server */
+				Thread gsThread = new Thread(() -> {
 					try {
-						System.out.println("matchmaking send the message to the GameServer");
-						cl.sendMessage(new PacketRegistratePlayerByServer("AI" + System.identityHashCode(cl),
-								UUID.fromString("00000000-0000-0000-0000-000000000000")));
-						Thread.sleep(100);
-						cl.disconnect();
+						new GameServer(freePort);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				});
+				gameServersByLobby.put(lobby, gsThread);
+				gsThread.start();
+				Thread.sleep(500);
+
+				Client cl = null;
+				if (hasAI) {
+					cl = new Client(new InetSocketAddress(Addresses.getLocalHost(), freePort), new PacketHandler() {
+						@Override
+						public void handleReceivedPacket(int port, Packet packet) {
+							// do nothing - be dummy
+						}
+					}, false);
 				}
 
-				else {
-					/* send success to client */
-					MatchmakingServer.getInstance().sendSuccessPacket(pl, playerNames, freePort);
+				for (MPlayer pl : lobby.getPlayers()) {
+
+					/* send AI-register packets */
+					if (pl.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+						try {
+							cl.sendMessage(new PacketRegistratePlayerByServer("AI" + System.identityHashCode(cl),
+									pl.getPlayerUID()));
+							Thread.sleep(100);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+
+					else {
+						/* send success to client */
+						MatchmakingServer.getInstance().sendSuccessPacket(pl, playerNames, freePort);
+					}
 				}
+				cl.disconnect();
+				blockPort.release(1);
+
+			} catch (InterruptedException | IOException e1) {
+				e1.printStackTrace();
 			}
-			blockPort.release(1);
-
-		} catch (InterruptedException | IOException e1) {
-			e1.printStackTrace();
-		}
 		});
 	}
 
@@ -204,6 +203,22 @@ public final class MatchmakingController {
 		lobbiesByPlayer.put(player, lobby);
 	}
 
+	/** creates new empty lobbies */
+	private static void updateLobbyCount() {
+		int cntAvailableLobbies = 0;
+		for (GameLobby gl : lobbies) {
+			if (gl.isAvailable()) {
+				cntAvailableLobbies++;
+			}
+		}
+		if (cntAvailableLobbies < 2) {
+			for (; cntAvailableLobbies < 2; cntAvailableLobbies++) {
+				GameLobby lobby = new GameLobby();
+				lobbies.add(lobby);
+			}
+		}
+	}
+
 	/**
 	 * finds a lobby best-fitting to the player's matchmaking-score and puts the
 	 * player in
@@ -213,36 +228,39 @@ public final class MatchmakingController {
 	 */
 	private static void findLobbyForPlayer(MPlayer player) {
 		int score = player.getScore();
+		updateLobbyCount();
 
-		if (lobbies.isEmpty()) {
-			GameLobby lobby = new GameLobby();
-			lobbies.add(lobby);
-			lobbiesByID.put(lobby.getLobbyID(), lobby);
-			joinLobby(player, lobby);
-		} else if (lobbies.size() == 1 && !lobbies.get(0).isFull() && !lobbies.get(0).hasStarted()) {
-			GameLobby lobby = lobbies.get(0);
-			joinLobby(player, lobby);
-		} else {
-			Iterator<GameLobby> it = lobbies.iterator();
-			GameLobby gl, bestFitting = null;
-			int minDelta = Integer.MAX_VALUE;
-			while (it.hasNext()) {
-				gl = it.next();
-				if (gl.isFull() || gl.hasStarted()) {
-					continue;
-				}
-				int delta = Math.abs(gl.getLobbyScore() - score);
-				if (minDelta > delta) {
-					minDelta = delta;
-					bestFitting = gl;
-				}
+		// if (lobbies.isEmpty()) {
+		// GameLobby lobby = new GameLobby();
+		// lobbies.add(lobby);
+		// lobbiesByID.put(lobby.getLobbyID(), lobby);
+		// joinLobby(player, lobby);
+		// } else
+		// if (lobbies.size() == 1 && !lobbies.get(0).isFull() &&
+		// !lobbies.get(0).hasStarted()) {
+		// GameLobby lobby = lobbies.get(0);
+		// joinLobby(player, lobby);
+		// } else {
+		Iterator<GameLobby> it = lobbies.iterator();
+		GameLobby gl, bestFitting = null;
+		int minDelta = Integer.MAX_VALUE;
+		while (it.hasNext()) {
+			gl = it.next();
+			if (!gl.isAvailable()) {
+				continue;
 			}
-			if (bestFitting == null) {
-				bestFitting = new GameLobby();
+			int delta = Math.abs(gl.getLobbyScore() - score);
+			if (minDelta > delta) {
+				minDelta = delta;
+				bestFitting = gl;
 			}
-
-			joinLobby(player, bestFitting);
 		}
+		if (bestFitting == null) {
+			bestFitting = new GameLobby();
+		}
+
+		joinLobby(player, bestFitting);
+		// }
 
 	}
 
@@ -270,6 +288,8 @@ public final class MatchmakingController {
 	 *            the player to remove
 	 */
 	private static void removePlayer(MPlayer player) {
+		
+		//remove client
 		GameLog.log(MsgType.NETWORK_INFO, "[-> " + player.getPlayerName() + " @" + player.getConnectionPort());
 		playersByPort.remove(player.getConnectionPort());
 		connectedPortsByPlayer.remove(player);
@@ -318,7 +338,7 @@ public final class MatchmakingController {
 			int port = connectedPortsByPlayer.get(player);
 			MatchmakingServer.getInstance().disconnect(port);
 
-			removePlayer(player);
+//			removePlayer(player);
 
 		}
 		SQLStatisticsHandler.addWinOrLoss(winner, true);

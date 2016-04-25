@@ -251,10 +251,10 @@ public class GlobalChatPanel extends JPanel{
 		textbox.setBorder(BorderFactory.createEmptyBorder());
 //		textbox.setLineWrap(true);
 		textbox.setOpaque(false);
-		textbox.setText("Welcome to our chatserver \n");		
+		textbox.setText("Welcome to our Chat!\nType /help to see all available Commands.\n");		
 		font = new Font("Calibri", Font.PLAIN, 20);
 		textbox.setFont(font);
-		scrollpane =  new JScrollPane(textbox){
+		scrollpane =  new JScrollPane(new JPanel(new BorderLayout()).add(textbox)){
 				private static final long serialVersionUID = 1L;
 				
 				@Override
@@ -267,6 +267,7 @@ public class GlobalChatPanel extends JPanel{
 				}
 				
 			};
+		scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollpane.setOpaque(false);		
 		scrollpane.setBorder(BorderFactory.createEmptyBorder());
 		scrollpane.setFocusable(false);
@@ -290,11 +291,11 @@ public class GlobalChatPanel extends JPanel{
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
 		this.createChatInputPart(chatmessage + "\n", whiteColor);
 		DominionController.getInstance().sendChatMessage(chatmessage.trim());
-		try {
-			Thread.sleep(1);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(1);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	
@@ -340,6 +341,8 @@ public class GlobalChatPanel extends JPanel{
 		
 		
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
+		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
+		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	
 	
@@ -362,7 +365,7 @@ public class GlobalChatPanel extends JPanel{
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if(!GlobalChatPanel.this.chatInputLine.getText().equals("")){
+			if(!GlobalChatPanel.this.chatInputLine.getText().trim().equals("")){
 				GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());				
 			}
 			GlobalChatPanel.this.chatInputLine.requestFocus();
@@ -382,7 +385,7 @@ public class GlobalChatPanel extends JPanel{
 
 		@Override
 		public void keyPressed(KeyEvent e) {			
-			if(e.getKeyCode() == KeyEvent.VK_ENTER && !GlobalChatPanel.this.chatInputLine.getText().equals("")){
+			if(e.getKeyCode() == KeyEvent.VK_ENTER && !GlobalChatPanel.this.chatInputLine.getText().trim().equals("")){
 				GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());
 			}
 		}
