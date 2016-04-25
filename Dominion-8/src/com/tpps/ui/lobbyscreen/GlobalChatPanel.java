@@ -16,7 +16,9 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -286,6 +288,7 @@ public class GlobalChatPanel extends JPanel{
 	 * @author jhuhn
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
+		chatmessage = parseForbiddenWords(chatmessage);
 		GlobalChatPanel.this.chatInputLine.setText("");
 		this.createChatInputPart(sdf.format(new Date()), whiteColor);
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
@@ -395,5 +398,28 @@ public class GlobalChatPanel extends JPanel{
 
 		@Override
 		public void keyTyped(KeyEvent arg0) { }
+	}
+	
+	private String parseForbiddenWords(String msg) {
+		ArrayList<String> forbidden = new ArrayList<String>();
+		forbidden.add("Arsch");
+		StringBuffer parsedMsg = new StringBuffer();
+		String alphabet = "'#!@/()[]{}-_^°´`!#@;.:";
+		for (String word : msg.split("\\s+")) {
+			String filter = "";
+			System.out.println("word:" + word + " and forbidden.contains(word)" + forbidden.contains(word));
+			if (forbidden.contains(word)) {
+				for (int i = 0; i < word.length(); i++) {
+					filter += alphabet.charAt(new Random().nextInt(alphabet.length()));
+				}
+			} else filter = word;
+			parsedMsg.append(filter+" ");
+		}
+		System.out.println("parsedMsg:" + parsedMsg.toString());
+		return parsedMsg.toString();
+	}
+	
+	private ArrayList<String> createWordList(String alphabet) {
+		return new ArrayList<String>();
 	}
 }

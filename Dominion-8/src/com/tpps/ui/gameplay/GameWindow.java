@@ -46,19 +46,21 @@ import com.tpps.ui.lobbyscreen.ChatWindowForInGame;
 public class GameWindow extends JFrame {
 
 	private static final long serialVersionUID = -5389003835573453281L;
-	
+
 	private GraphicFramework framework;
 	private static GameWindow instance;
-	public static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack, takeThiefCards, putBackThiefCards, takeDrawedCard, setAsideDrawedCard;
+	public static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack, takeThiefCards,
+			putBackThiefCards, takeDrawedCard, setAsideDrawedCard;
 
 	private GameBackground table;
-	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage, displayImageBuys, displayImageActions, displayImageTurn, displayImageCoins, buttonGameImage;
+	private BufferedImage closeImage, backgroundImage, tableImage, buttonImage, displayImageBuys, displayImageActions,
+			displayImageTurn, displayImageCoins, buttonGameImage;
 
 	private DisplayValue buy, coin, action, turn;
 	private LinkedList<Card> victoryCards, coinCards, handCards, tableCards, middleCards, extraTableCards;
 	private LinkedList<GFButton> victoryButtons, coinButtons, tableButtons;
 	private ButtonClass stopDiscard, stopTrash, discardDeck, endReactions;
-	
+
 	private JTabbedPane jTabbedPane;
 	private JPanel tabbedWindow;
 	private ChatWindowForInGame chatWindow;
@@ -66,7 +68,7 @@ public class GameWindow extends JFrame {
 	private BufferedImage clickImage;
 	private final int WIDTH, HEIGHT;
 	private int reactionCounter, gameBackgroundCounter, topGap;
-//	private int heightRelative, widthRelative, leftGap;
+	// private int heightRelative, widthRelative, leftGap;
 	public static String coins, buys, actions;
 	private static final double CORRECTION_16TO9 = 16 / (double) 9;
 
@@ -89,26 +91,13 @@ public class GameWindow extends JFrame {
 		GameWindow.instance = this;
 		this.WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
 		this.HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
-		
-		
+
 		GameLog.init();
 		this.loggerPane = GameLog.getTextPane();
 		this.chatWindow = new ChatWindowForInGame();
 
-		UIManager.put("TabbedPane.contentOpaque", false);
-		UIManager.put("TabbedPane.tabsOpaque", Boolean.FALSE);
-		this.jTabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		this.jTabbedPane.setBorder(BorderFactory.createEmptyBorder());
-		this.tabbedWindow.setBorder(BorderFactory.createEmptyBorder());
-		this.jTabbedPane.setOpaque(false);
-		this.jTabbedPane.setForeground(Color.WHITE);
-		this.tabbedWindow = new JPanel();
-		this.tabbedWindow.setOpaque(false);
-		this.tabbedWindow.setBounds(200, 200, 400, 200);
-		jTabbedPane.add("Chat", chatWindow);
-		jTabbedPane.add("Game Log", loggerPane);
-		tabbedWindow.add(jTabbedPane);
-		
+		this.tabbedComponent();
+
 		this.setTopGap(Toolkit.getDefaultToolkit().getScreenSize().height / 4);
 		// this.leftGap = Toolkit.getDefaultToolkit().getScreenSize().width / 7;
 
@@ -136,7 +125,8 @@ public class GameWindow extends JFrame {
 
 		this.add(this.framework);
 
-//		this.backgroundImage = this.loadingImage(backgroundImage, "resources/img/gamePlay/GameBackground.jpg");
+		// this.backgroundImage = this.loadingImage(backgroundImage,
+		// "resources/img/gamePlay/GameBackground.jpg");
 		this.backgroundImage = DominionController.selectedGameImage;
 		System.out.println("THIRD: " + this.backgroundImage);
 		this.closeImage = this.loadingImage(this.closeImage, "resources/img/gameObjects/close.png");
@@ -149,25 +139,43 @@ public class GameWindow extends JFrame {
 		this.buttonGameImage = this.loadingImage(this.buttonGameImage, "resources/img/gameObjects/ButtonsGame.png");
 		this.clickImage = this.loadingImage(this.clickImage, "resources/img/gameObjects/CardGreen.png");
 
-		GameWindow.closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1, this.closeImage, this.framework, "");
-		GameWindow.endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage, this.framework, "End ActionPhase");
-		GameWindow.playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage, this.framework, "Play Treasures");
-		GameWindow.takeCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage, this.framework, "Take Cards");
-		GameWindow.putBack = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage, this.framework, "Put Back");
-		GameWindow.takeThiefCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage, this.framework, "Take Thief Cards");
-		GameWindow.putBackThiefCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage, this.framework, "Put Back Thief Cards");
-		GameWindow.takeDrawedCard = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage, this.framework, "Take Drawed Card");
-		GameWindow.setAsideDrawedCard = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage, this.framework, "Set Aside Drawed Card");
-		GameWindow.endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework, "End Turn");
-		
-		// this. takeCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH, HEIGHT, 1, buttonImage, framework, "Temporary Trash");
-		this.discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework, "Discard Deck");
-		this.endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework, "End Reactions");
-		this.stopDiscard = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage, this.framework, "Stop Discard");
-		this.stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage, this.framework, "Stop Trash");
-		this.action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 20, this.displayImageActions, this.framework, String.valueOf(GameConstant.INIT_ACTIONS));
-		this.coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 20, this.displayImageCoins, this.framework, String.valueOf(GameConstant.INIT_TREASURES));
-		this.buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 20, this.displayImageBuys, this.framework, String.valueOf(GameConstant.INIT_PURCHASES));
+		GameWindow.closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
+				this.closeImage, this.framework, "");
+		GameWindow.endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
+				this.buttonImage, this.framework, "End ActionPhase");
+		GameWindow.playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
+				this.framework, "Play Treasures");
+		GameWindow.takeCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
+				this.framework, "Take Cards");
+		GameWindow.putBack = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
+				this.framework, "Put Back");
+		GameWindow.takeThiefCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
+				this.buttonImage, this.framework, "Take Thief Cards");
+		GameWindow.putBackThiefCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
+				this.buttonImage, this.framework, "Put Back Thief Cards");
+		GameWindow.takeDrawedCard = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
+				this.buttonImage, this.framework, "Take Drawed Card");
+		GameWindow.setAsideDrawedCard = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
+				this.buttonImage, this.framework, "Set Aside Drawed Card");
+		GameWindow.endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
+				"End Turn");
+
+		// this. takeCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, WIDTH,
+		// HEIGHT, 1, buttonImage, framework, "Temporary Trash");
+		this.discardDeck = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
+				"Discard Deck");
+		this.endReactions = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
+				"End Reactions");
+		this.stopDiscard = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
+				this.framework, "Stop Discard");
+		this.stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
+				this.framework, "Stop Trash");
+		this.action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 20, this.displayImageActions, this.framework,
+				String.valueOf(GameConstant.INIT_ACTIONS));
+		this.coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 20, this.displayImageCoins, this.framework,
+				String.valueOf(GameConstant.INIT_TREASURES));
+		this.buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 20, this.displayImageBuys, this.framework,
+				String.valueOf(GameConstant.INIT_PURCHASES));
 		this.turn = new DisplayValue(-0.06, 0.6, 0.20, 0.18, 1, 1, 20, this.displayImageTurn, this.framework, "#");
 
 		this.framework.addComponent(new GameBackground(0, 0, 1, 1, 0, this.backgroundImage, this.framework));
@@ -180,8 +188,8 @@ public class GameWindow extends JFrame {
 		this.framework.addComponent(this.buy);
 		this.framework.addComponent(this.turn);
 
-//		this.framework.add(this.chatWindow);
-//		this.framework.add(this.loggerPane);
+		// this.framework.add(this.chatWindow);
+		// this.framework.add(this.loggerPane);
 		this.framework.add(this.tabbedWindow);
 
 		this.addComponentListener(new MyComponentAdapter());
@@ -220,6 +228,22 @@ public class GameWindow extends JFrame {
 		this.repaint();
 	}
 
+	private void tabbedComponent() {
+		UIManager.put("TabbedPane.contentOpaque", false);
+		UIManager.put("TabbedPane.tabsOpaque", Boolean.FALSE);
+		this.jTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		this.jTabbedPane.setBorder(BorderFactory.createEmptyBorder());
+		this.tabbedWindow.setBorder(BorderFactory.createEmptyBorder());
+		this.jTabbedPane.setOpaque(false);
+		this.jTabbedPane.setForeground(Color.WHITE);
+		this.tabbedWindow = new JPanel();
+		this.tabbedWindow.setOpaque(false);
+		this.jTabbedPane.add("Chat", this.chatWindow);
+		this.jTabbedPane.add("Game Log", this.loggerPane);
+		this.tabbedWindow.add(jTabbedPane);
+
+	}
+
 	/**
 	 * a method to load Image
 	 * 
@@ -249,9 +273,12 @@ public class GameWindow extends JFrame {
 		this.framework.removeComponent(coin);
 		this.framework.removeComponent(buy);
 
-		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageActions, framework, String.valueOf(GameConstant.INIT_ACTIONS));
-		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageCoins, framework, String.valueOf(GameConstant.INIT_TREASURES));
-		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageBuys, framework, String.valueOf(GameConstant.INIT_PURCHASES));
+		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageActions, framework,
+				String.valueOf(GameConstant.INIT_ACTIONS));
+		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageCoins, framework,
+				String.valueOf(GameConstant.INIT_TREASURES));
+		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageBuys, framework,
+				String.valueOf(GameConstant.INIT_PURCHASES));
 
 		this.framework.addComponent(action);
 		this.framework.addComponent(coin);
@@ -313,19 +340,23 @@ public class GameWindow extends JFrame {
 				number = String.valueOf((Integer.parseInt(number) + 1));
 
 				if (i < 5) {
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.06, 0.02, 0.05,
-							0.15, k++, serializedCard.getImage(), framework);
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shift += 0.06,
+							0.02, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 
-					GFButton button = new ButtonClass(shiftCard += 0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number);
+					GFButton button = new ButtonClass(shiftCard += 0.06, 0.02, 0.015, 0.015 * CORRECTION_16TO9,
+							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number);
 
 					framework.addComponent(button);
 					framework.addComponent(card);
 					this.tableCards.add(card);
 					this.tableButtons.add(button);
 				} else {
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), shiftBottom += 0.06, 0.2,
-							0.05, 0.15, k++, serializedCard.getImage(), framework);
-					GFButton button = new ButtonClass(shiftCardBottom += 0.06, 0.2, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number);
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
+							shiftBottom += 0.06, 0.2, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+					GFButton button = new ButtonClass(shiftCardBottom += 0.06, 0.2, 0.015, 0.015 * CORRECTION_16TO9,
+							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number);
 
 					framework.addComponent(button);
 					framework.addComponent(card);
@@ -365,28 +396,33 @@ public class GameWindow extends JFrame {
 				if (i == 0) {
 					SerializedCard serializedCard = cards.get(actionCardlds.get(i));
 
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), start += shift, 0.13, 0.05,
-							0.15, k++, serializedCard.getImage(), framework);
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), start += shift,
+							0.13, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 					framework.addComponent(card);
 					this.extraTableCards.add(card);
 				} else {
 					SerializedCard serializedCard = cards.get(actionCardlds.get(i));
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), start += (shift + 0.05),
-							0.13, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
+							start += (shift + 0.05), 0.13, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 					framework.addComponent(card);
 					this.extraTableCards.add(card);
 				}
 			} else {
 				if (i == 0) {
 					SerializedCard serializedCard = cards.get(actionCardlds.get(i));
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), startsmall += shiftsmall,
-							0.13, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
+							startsmall += shiftsmall, 0.13, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 					framework.addComponent(card);
 					this.extraTableCards.add(card);
 				} else {
 					SerializedCard serializedCard = cards.get(actionCardlds.get(i));
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
-							startsmall += (shiftsmall + 0.05), 0.13, 0.05, 0.15, k++, serializedCard.getImage(), framework);
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
+							startsmall += (shiftsmall + 0.05), 0.13, 0.05, 0.15, k++, serializedCard.getImage(),
+							framework);
 					framework.addComponent(card);
 					this.extraTableCards.add(card);
 				}
@@ -424,10 +460,12 @@ public class GameWindow extends JFrame {
 			number = String.valueOf((Integer.parseInt(number) + 1));
 
 			SerializedCard serializedCard = coins.get(actionCardlds.get(i));
-			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), 0.94, shift += 0.12, 0.1, 0.1, k++,
+			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
+					serializedCard.getCost(), actionCardlds.get(i), 0.94, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 270), framework);
 
-			GFButton button = new ButtonClass(0.935, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number);
+			GFButton button = new ButtonClass(0.935, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
+					getHEIGHT(), l, buttonGameImage, framework, number);
 			framework.addComponent(button);
 			framework.addComponent(card);
 			this.coinCards.add(card);
@@ -463,28 +501,35 @@ public class GameWindow extends JFrame {
 				if (i == 0) {
 					SerializedCard serializedCard = middleCards.get(actionCardlds.get(i));
 
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), start += shift, 0.45, 0.05,
-							0.15, k++, serializedCard.getImage(), framework, "middleCards");
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), start += shift,
+							0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework, "middleCards");
 					framework.addComponent(card);
 					this.middleCards.add(card);
 				} else {
 					SerializedCard serializedCard = middleCards.get(actionCardlds.get(i));
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), start += (shift + 0.05),
-							0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework, "middleCards");
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
+							start += (shift + 0.05), 0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework,
+							"middleCards");
 					framework.addComponent(card);
 					this.middleCards.add(card);
 				}
 			} else {
 				if (i == 0) {
 					SerializedCard serializedCard = middleCards.get(actionCardlds.get(i));
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), startsmall += shiftsmall,
-							0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework, "middleCards");
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
+							startsmall += shiftsmall, 0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework,
+							"middleCards");
 					framework.addComponent(card);
 					this.middleCards.add(card);
 				} else {
 					SerializedCard serializedCard = middleCards.get(actionCardlds.get(i));
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
-							startsmall += (shiftsmall + 0.05), 0.45, 0.05, 0.15, k++, serializedCard.getImage(), framework, "middleCards");
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
+							startsmall += (shiftsmall + 0.05), 0.45, 0.05, 0.15, k++, serializedCard.getImage(),
+							framework, "middleCards");
 					framework.addComponent(card);
 					this.middleCards.add(card);
 				}
@@ -531,25 +576,32 @@ public class GameWindow extends JFrame {
 
 			if (sub > 7) {
 				if (i == 0) {
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), start += shift, 0.65, 0.1,
-							0.3, k++, serializedCard.getImage(), framework, handTrigger);
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), start += shift,
+							0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework, handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				} else {
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), start += (shift + 0.1),
-							0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework, handTrigger);
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
+							start += (shift + 0.1), 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,
+							handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				}
 			} else {
 				if (i == 0) {
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), startsmall += shift, 0.65,
-							0.1, 0.3, k++, serializedCard.getImage(), framework, handTrigger);
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
+							startsmall += shift, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,
+							handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				} else {
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							startsmall += shiftsmall + 0.1, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework, handTrigger);
+					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
+							startsmall += shiftsmall + 0.1, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,
+							handTrigger);
 					framework.addComponent(card);
 					this.handCards.add(card);
 				}
@@ -592,9 +644,11 @@ public class GameWindow extends JFrame {
 			number = String.valueOf((Integer.parseInt(number) + 1));
 
 			SerializedCard serializedCard = victory.get(actionCardlds.get(i));
-			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1, 0.1, k++,
+			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
+					serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 90), framework);
-			GFButton button = new ButtonClass(0.04, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), l, buttonGameImage, framework, number);
+			GFButton button = new ButtonClass(0.04, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
+					getWIDTH(), l, buttonGameImage, framework, number);
 			framework.addComponent(button);
 			framework.addComponent(card);
 
@@ -829,7 +883,8 @@ public class GameWindow extends JFrame {
 			int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 			int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 
-			onResize(width / Double.parseDouble(Integer.toString(maxWidth)), height / Double.parseDouble(Integer.toString(maxHeight)));
+			onResize(width / Double.parseDouble(Integer.toString(maxWidth)),
+					height / Double.parseDouble(Integer.toString(maxHeight)));
 			repaint();
 		}
 
@@ -839,7 +894,15 @@ public class GameWindow extends JFrame {
 		loggerPane.onResize(this.getWidth(), this.getHeight(), relativeWidth, relativeHeight, this);
 		// 1280,720,2/3,2/3
 		chatWindow.onResize(this.getWidth(), this.getHeight(), relativeWidth, relativeHeight, this);
-
+		double width = (relativeWidth * WIDTH) / 4;
+		double height = (relativeHeight * HEIGHT) / 4;
+		//3.84
+		int y = this.getHeight();
+		int x = this.getWidth();
+		this.tabbedWindow.setBounds(x - (int) ((WIDTH/3.5) * relativeWidth), y - (int) ((HEIGHT*(1-0.65)) * relativeHeight), (int) (width),
+				(int) height);
+		repaint();
+		revalidate();
 	}
 
 	public BufferedImage getBackgroundImage() {
@@ -898,7 +961,8 @@ public class GameWindow extends JFrame {
 	}
 
 	/**
-	 * @param topGap the topGap to set
+	 * @param topGap
+	 *            the topGap to set
 	 */
 	public void setTopGap(int topGap) {
 		this.topGap = topGap;
