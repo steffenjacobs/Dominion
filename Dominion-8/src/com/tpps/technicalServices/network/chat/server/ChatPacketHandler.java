@@ -416,6 +416,7 @@ public class ChatPacketHandler extends PacketHandler{
 						System.out.println("hashmap size: " + temp.getClientsByUsername().size());
 						if(temp.getClientsByUsername().size() == 0){
 							ChatPacketHandler.this.deleteChatRoom(entry.getKey());
+							ChatPacketHandler.this.global.getPool().deleteUserFromGlobalChat_COLOR(entry.getKey());
 							System.out.println("Deleted chatroom with user: " + entry.getKey());
 						}
 						return true;
