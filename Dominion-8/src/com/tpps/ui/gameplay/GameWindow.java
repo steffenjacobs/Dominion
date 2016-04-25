@@ -2,6 +2,7 @@ package com.tpps.ui.gameplay;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -229,13 +230,12 @@ public class GameWindow extends JFrame {
 	}
 
 	private void tabbedComponent() {
-		UIManager.put("TabbedPane.tabsOpaque", Boolean.FALSE);
-		UIManager.put("TabbedPane.contentOpaque", false);
+		UIManager.put("TabbedPane.opaque", Boolean.FALSE);
+		UIManager.put("TabbedPane.contentOpaque", Boolean.FALSE);
+		UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
 		this.jTabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		this.jTabbedPane.setBorder(BorderFactory.createLineBorder(Color.BLACK,0));
 
 		this.jTabbedPane.setOpaque(false);
-		this.jTabbedPane.setForeground(Color.WHITE);
 		this.jTabbedPane.add("Chat", this.chatWindow);
 		this.jTabbedPane.add("Game Log", this.loggerPane);
 	}
