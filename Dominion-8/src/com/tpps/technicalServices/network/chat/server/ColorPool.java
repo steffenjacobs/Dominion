@@ -24,9 +24,9 @@ public class ColorPool {
 	 * @return a random Color
 	 */
 	public Color selectRandomColor() {
-		switch (getRandomNumber(8, 1)) {
+		switch (getRandomNumber(17, 1)) {
 		case 1:
-			return Color.BLUE;
+			return new Color(0x6666FF); //blue
 		case 2:
 			return Color.YELLOW;
 		case 3:
@@ -41,7 +41,25 @@ public class ColorPool {
 			return new Color(128, 255, 0); // interesting green
 		case 8:
 			return new Color(192, 192, 192); // lightgrey
-		}
+		case 9:
+			return new Color(255, 102, 102); //light pink
+		case 10:
+			return new Color(204, 229, 255);
+		case 11:
+			return new Color(0x66FFB2); //tuerkis
+		case 12:
+			return new Color(0x66FF66); //light green
+		case 13:
+			return new Color(0x9933FF);
+		case 14:
+			return new Color(0x99FFCC);
+		case 15:
+			return new Color(0x99FF99);
+		case 16:
+			return new Color(0xFFFF99); //FF933
+		case 17:
+			return new Color(0xFF9933);
+		}		
 		return Color.WHITE;
 	}
 

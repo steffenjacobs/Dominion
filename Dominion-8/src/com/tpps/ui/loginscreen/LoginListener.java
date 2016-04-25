@@ -3,6 +3,8 @@ package com.tpps.ui.loginscreen;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -43,6 +45,28 @@ public class LoginListener implements MouseListener {
 		this.guicontroller = guicontroller;
 		this.cancel = cancel;
 		this.createAccount = createAccount;
+		userinfo.requestFocus();
+		passwordbox.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ENTER){
+					guicontroller.createLoginClient(userinfo.getText(), String.valueOf(passwordbox.getPassword()));
+				}	
+			}
+		});
 	}
 
 	/**

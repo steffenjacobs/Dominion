@@ -104,6 +104,11 @@ public class MatchmakingPacketHandler extends PacketHandler {
 		}
 	}
 
+	/**
+	 * adds an AI-Player to a lobby
+	 * @param lobbyID the ID of the lobby to add the AI to
+	 * @param pmr the AI-Add-Request-Packet
+	 */
 	public void addAI(UUID lobbyID, PacketMatchmakingRequest pmr) {
 		MPlayer player = MPlayer.initialize(pmr, -1);		
 		if (lobbyID != null) {

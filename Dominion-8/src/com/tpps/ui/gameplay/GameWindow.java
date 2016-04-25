@@ -1,5 +1,6 @@
 package com.tpps.ui.gameplay;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
@@ -16,7 +17,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.Card;
@@ -54,7 +59,8 @@ public class GameWindow extends JFrame {
 	private LinkedList<GFButton> victoryButtons, coinButtons, tableButtons;
 	private ButtonClass stopDiscard, stopTrash, discardDeck, endReactions;
 	
-//	private JTabbedPane jTabbedPane;
+	private JTabbedPane jTabbedPane;
+	private JPanel tabbedWindow;
 	private ChatWindowForInGame chatWindow;
 	private GameLogTextPane loggerPane;
 	private BufferedImage clickImage;
@@ -83,17 +89,25 @@ public class GameWindow extends JFrame {
 		GameWindow.instance = this;
 		this.WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
 		this.HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
-
-		System.out.println(getWIDTH() + "knlsd");
-		System.out.println(getHEIGHT() + "sdopj");
-
+		
+		
 		GameLog.init();
 		this.loggerPane = GameLog.getTextPane();
 		this.chatWindow = new ChatWindowForInGame();
 
-//		this.jTabbedPane = new JTabbedPane();
-//		jTabbedPane.add("Chat", chatWindow);
-//		jTabbedPane.add("Game Log", loggerPane);
+		UIManager.put("TabbedPane.contentOpaque", false);
+		UIManager.put("TabbedPane.tabsOpaque", Boolean.FALSE);
+		this.jTabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		this.jTabbedPane.setBorder(BorderFactory.createEmptyBorder());
+		this.tabbedWindow.setBorder(BorderFactory.createEmptyBorder());
+		this.jTabbedPane.setOpaque(false);
+		this.jTabbedPane.setForeground(Color.WHITE);
+		this.tabbedWindow = new JPanel();
+		this.tabbedWindow.setOpaque(false);
+		this.tabbedWindow.setBounds(200, 200, 400, 200);
+		jTabbedPane.add("Chat", chatWindow);
+		jTabbedPane.add("Game Log", loggerPane);
+		tabbedWindow.add(jTabbedPane);
 		
 		this.setTopGap(Toolkit.getDefaultToolkit().getScreenSize().height / 4);
 		// this.leftGap = Toolkit.getDefaultToolkit().getScreenSize().width / 7;
@@ -166,9 +180,9 @@ public class GameWindow extends JFrame {
 		this.framework.addComponent(this.buy);
 		this.framework.addComponent(this.turn);
 
-		this.framework.add(this.chatWindow);
-		this.framework.add(this.loggerPane);
-//		this.framework.add(this.jTabbedPane);
+//		this.framework.add(this.chatWindow);
+//		this.framework.add(this.loggerPane);
+		this.framework.add(this.tabbedWindow);
 
 		this.addComponentListener(new MyComponentAdapter());
 		this.setFocusable(true);
