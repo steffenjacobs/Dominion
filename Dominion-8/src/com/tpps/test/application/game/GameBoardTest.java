@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -228,9 +229,54 @@ public class GameBoardTest {
 		for (Iterator<String> iterator = testList.iterator(); iterator.hasNext();) {
 			String string = (String) iterator.next();
 			assertTrue(string.matches(".*(0|[1-9][0-9]*|#)"));
-		}
-		
-		
+		}		
+	}
+	
+	@Test
+	public void setRandomSetTest() {
+		Field field;
+		try {
+			field = this.gameBoard.getClass().getDeclaredField("tableForAllActionCards");
+			if (!field.isAccessible()) {
+				field.setAccessible(true);
+			}
+			
+			@SuppressWarnings("unchecked")
+			LinkedHashMap<String, LinkedList<Card>> tableForAllActionCards = (LinkedHashMap<String, LinkedList<Card>>) field.get(this.gameBoard);
+			int size = tableForAllActionCards.size();
+			
+			this.gameBoard.setRandomSet();
+			
+			assertThat(tableForAllActionCards.size(), is(size));
+			assertThat(this.gameBoard.getTableForActionCards().size(), is(10));
+			
+			
+			
+			String key = new LinkedList<String>(this.gameBoard.getTableForActionCards().keySet()).get(0);
+			this.gameBoard.getTableForActionCards().get(key).removeFirst();
+			assertThat(this.gameBoard.getTableForActionCards().get(key).size(),
+					is(tableForAllActionCards.get(key).size() - 1));
+			
+			this.gameBoard.getTableForActionCards().remove(key);
+			
+			assertThat(tableForAllActionCards.get(key), is(notNullValue()));
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
+	
+	@Test
+	public void setStandardSetTest() {
+		this.gameBoard.setStandardSet();
+		assertThat(this.gameBoard.getTableForActionCards().size(), is(GameConstant.INIT_PILE_SIZE));
 	}
 	
 	
