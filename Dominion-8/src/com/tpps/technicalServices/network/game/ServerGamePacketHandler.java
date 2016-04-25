@@ -497,17 +497,17 @@ public class ServerGamePacketHandler extends PacketHandler {
 			
 			Color playerColor = this.chatController.getColorMap().get(this.server.getGameController().getActivePlayerName());
 //			Color playerColorAlternative = this.server.getGameController().getActivePlayer().getLogColor();
-			
+			this.log("  >>>  " + this.server.getGameController().getActivePlayerName() + ": turn ended  <<<  ", playerColor);			
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 			this.server.sendMessage(port, new PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(), 
 					this.server.getGameController().getActivePlayer().getBuys(), this.server.getGameController().getActivePlayer().getCoins()));
-			this.log("  >>>  " + this.server.getGameController().getActivePlayerName() + ": turn ended  <<<  ", playerColor);			
+			
 			this.server.getGameController().endTurn();
-			this.log("  >>>  " + this.server.getGameController().getActivePlayerName() + ": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " started  <<<  ", playerColor);
+			
 			
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
-			
+			this.log("  >>>  " + this.server.getGameController().getActivePlayerName() + ": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " started  <<<  ", playerColor);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
