@@ -2,6 +2,10 @@ package com.tpps.technicalServices.util;
 
 import jaco.mp3.player.MP3Player;
 
+/**
+ * 
+ *
+ */
 public class MyAudioPlayer {
 
 	private static MP3Player mp3, mp32, mp33;
@@ -10,10 +14,8 @@ public class MyAudioPlayer {
 	/**
 	 * initialisiert die Player und setzt lastVolume und lastSoundVolume
 	 */
-
 	public static void init() {		
 //		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
-		
 		MyAudioPlayer.mp32 = new MP3Player(
 				ClassLoader.getSystemResource("resources/sounds/Click.mp3"));
 //		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource(""));		
@@ -34,7 +36,6 @@ public class MyAudioPlayer {
 	 */
 	public static void pause() {
 		MyAudioPlayer.mp3.pause();
-
 	}
 
 	/**
@@ -46,7 +47,6 @@ public class MyAudioPlayer {
 		// MP3Player(ClassLoader.getSystemResource("resources/music/SovietConnection.mp3"));
 		// mp3.addMP3PlayerListener(new MyMP3PlayerListener());
 		MyAudioPlayer.mp3.setRepeat(true);
-
 	}
 
 	/**
