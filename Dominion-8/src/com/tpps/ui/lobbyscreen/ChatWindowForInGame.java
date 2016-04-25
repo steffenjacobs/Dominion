@@ -186,7 +186,7 @@ public class ChatWindowForInGame extends JPanel {
 		this.createChatInputPart(chatmessage + "\n", whiteColor);
 		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 		try {
-			Thread.sleep(1);
+			Thread.sleep(10);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -231,9 +231,12 @@ public class ChatWindowForInGame extends JPanel {
 	public synchronized void appendChatLocal(String message, String user, String timeStamp, Color color){
 		this.createChatInputPart(timeStamp, whiteColor);
 		this.createChatInputPart(user + ": ", color);
-		this.createChatInputPart(message + "\n", whiteColor);
-		
-		
+		this.createChatInputPart(message + "\n", whiteColor);		
+		try {
+			Thread.sleep(10);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}		
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 	
