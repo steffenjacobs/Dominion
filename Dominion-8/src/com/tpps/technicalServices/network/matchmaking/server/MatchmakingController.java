@@ -36,7 +36,6 @@ public final class MatchmakingController {
 		lobbiesByPlayer = new ConcurrentHashMap<>();
 		playersByName = new ConcurrentHashMap<>();
 		connectedPortsByPlayer = new ConcurrentHashMap<>();
-		gameServersByLobby = new ConcurrentHashMap<>();
 		lobbiesByID = new ConcurrentHashMap<>();
 	}
 
@@ -44,7 +43,6 @@ public final class MatchmakingController {
 	private static ConcurrentHashMap<MPlayer, Integer> connectedPortsByPlayer;
 	private static ConcurrentHashMap<String, MPlayer> playersByName;
 	private static ConcurrentHashMap<MPlayer, GameLobby> lobbiesByPlayer;
-	private static ConcurrentHashMap<GameLobby, Thread> gameServersByLobby;
 
 	private static ConcurrentHashMap<UUID, GameLobby> lobbiesByID;
 
@@ -88,7 +86,9 @@ public final class MatchmakingController {
 	 *            the GameLobby to start
 	 */
 	static void startGame(GameLobby lobby) {
+		GameLog.log(MsgType.INFO, "Starting lobby " + lobby.getLobbyID());
 		exec.submit(() -> {
+			GameLog.log(MsgType.INFO, "Setting up lobby " + lobby.getLobbyID());
 			// removeLobby(lobby);
 			String[] playerNames = new String[lobby.getPlayers().size()];
 			MPlayer player;
@@ -110,16 +110,17 @@ public final class MatchmakingController {
 				int freePort = getFreePort();
 
 				/* start server */
-				Thread gsThread = new Thread(() -> {
+				exec.submit(() -> {
+					GameLog.log(MsgType.INFO, "Started GameServer for lobby " + lobby.getLobbyID());
 					try {
 						new GameServer(freePort);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				});
-				gameServersByLobby.put(lobby, gsThread);
-				gsThread.start();
+				// gameServersByLobby.put(lobby, gsThread);
 				Thread.sleep(500);
+				blockPort.release(1);
 
 				Client cl = null;
 				if (hasAI) {
@@ -150,7 +151,6 @@ public final class MatchmakingController {
 					}
 				}
 				cl.disconnect();
-				blockPort.release(1);
 
 			} catch (InterruptedException | IOException e1) {
 				e1.printStackTrace();
@@ -231,17 +231,6 @@ public final class MatchmakingController {
 		int score = player.getScore();
 		updateLobbyCount();
 
-		// if (lobbies.isEmpty()) {
-		// GameLobby lobby = new GameLobby();
-		// lobbies.add(lobby);
-		// lobbiesByID.put(lobby.getLobbyID(), lobby);
-		// joinLobby(player, lobby);
-		// } else
-		// if (lobbies.size() == 1 && !lobbies.get(0).isFull() &&
-		// !lobbies.get(0).hasStarted()) {
-		// GameLobby lobby = lobbies.get(0);
-		// joinLobby(player, lobby);
-		// } else {
 		Iterator<GameLobby> it = lobbies.iterator();
 		GameLobby gl, bestFitting = null;
 		int minDelta = Integer.MAX_VALUE;
@@ -261,8 +250,6 @@ public final class MatchmakingController {
 		}
 
 		joinLobby(player, bestFitting);
-		// }
-
 	}
 
 	/**
@@ -289,8 +276,8 @@ public final class MatchmakingController {
 	 *            the player to remove
 	 */
 	private static void removePlayer(MPlayer player) {
-		
-		//remove client
+
+		// remove client
 		GameLog.log(MsgType.NETWORK_INFO, "[-> " + player.getPlayerName() + " @" + player.getConnectionPort());
 		playersByPort.remove(player.getConnectionPort());
 		connectedPortsByPlayer.remove(player);
@@ -338,13 +325,8 @@ public final class MatchmakingController {
 			MPlayer player = playersByName.get(p);
 			int port = connectedPortsByPlayer.get(player);
 			MatchmakingServer.getInstance().disconnect(port);
-
-//			removePlayer(player);
-
 		}
 		SQLStatisticsHandler.addWinOrLoss(winner, true);
-
-		gameServersByLobby.remove(lobby);
 	}
 
 	/** @return a readable representation of all active lobbies */

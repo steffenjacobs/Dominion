@@ -7,7 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -19,10 +18,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Random;
-import java.util.UUID;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -39,6 +39,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.util.CollectionsUtil;
+import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.technicalServices.util.GraphicsUtil;
 
 /**
@@ -304,7 +306,8 @@ public class GlobalChatPanel extends JPanel {
 		}
 
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
-	//	this.scrollpane.getViewport().setViewPosition(new Point(this.scrollpane.getWidth(), this.scrollpane.getHeight()));
+		// this.scrollpane.getViewport().setViewPosition(new
+		// Point(this.scrollpane.getWidth(), this.scrollpane.getHeight()));
 	}
 
 	/**
@@ -350,7 +353,7 @@ public class GlobalChatPanel extends JPanel {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}	
+		}
 		this.scrollpane.getVerticalScrollBar().setValue(this.scrollpane.getVerticalScrollBar().getMaximum());
 	}
 
@@ -397,8 +400,7 @@ public class GlobalChatPanel extends JPanel {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_ENTER
-					&& !GlobalChatPanel.this.chatInputLine.getText().trim().equals("")) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER && !GlobalChatPanel.this.chatInputLine.getText().trim().equals("")) {
 				GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());
 			}
 		}
@@ -412,28 +414,30 @@ public class GlobalChatPanel extends JPanel {
 		}
 	}
 
-	private static String parseForbiddenWords(String msg) {
-		ArrayList<String> forbidden = new ArrayList<String>();
-		forbidden.add("Arsch");
-		StringBuffer parsedMsg = new StringBuffer();
-		String alphabet = "'#!@/()[]{}-_^Â°Â´`!#@;.:";
-		for (String word : msg.split("\\s+")) {
+	private String parseForbiddenWords(String message) {
+		StringBuffer result = new StringBuffer();
+		String replaceCharacters = "#+*!?/§$%&_";
+		System.out.println("Message.split(\"\\s+\") > " + Arrays.toString(message.split("\\s+")));
+		for (String originalWord : message.split("\\s+")) {
+			String removedSpecialCharacters = originalWord.replaceAll("[^a-zA-Z0-9\\s]", "");
+			System.out.println("rsc: " + removedSpecialCharacters);
 			String filter = "";
-			System.out.println("word:" + word + " and forbidden.contains(word)" + forbidden.contains(word));
-			if (forbidden.contains(word)) {
-				for (int i = 0; i < word.length(); i++) {
-					filter += alphabet.charAt(new Random().nextInt(alphabet.length()));
+			System.out.println("originalWord: " + originalWord + " and wordListContains(removedSpecialCharacters.toLowerCase())" + wordListContains(removedSpecialCharacters.toLowerCase()));
+			if (wordListContains(removedSpecialCharacters.toLowerCase())) {
+				for (int i = 0; i < originalWord.length(); i++) {
+					filter += Character.isLetterOrDigit(originalWord.charAt(i)) ? replaceCharacters.charAt(new Random().nextInt(replaceCharacters.length())) : originalWord.charAt(i);
 				}
 			} else
-				filter = word;
-			parsedMsg.append(filter + " ");
+				filter = originalWord;
+			System.out.println("and according to that, filter is: " + filter);
+			result.append(filter + " ");
 		}
-		System.out.println("parsedMsg:" + parsedMsg.toString());
-		return parsedMsg.toString();
+		System.out.println("result: " + result.toString());
+		return result.toString();
 	}
 
-	private static ArrayList<String> createWordList(String alphabet) {
-		return new ArrayList<String>();
+	private boolean wordListContains(String word) {
+		return GameConstant.ABUSIVE_WORDS.contains(base64decode(word));
 	}
 
 	private static String base64encode(String msg) {
@@ -454,11 +458,20 @@ public class GlobalChatPanel extends JPanel {
 		return msg;
 	}
 
+	// wenn ein wort ein verbotenes wort enthält auch komplett naus
 	public static void main(String[] args) {
-		String a = "Hallo";
-		String encoded = base64encode(a);
-		String decoded = base64decode(encoded);
-		System.out.println("encoded > " + encoded);
-		System.out.println("decoded > " + decoded);
+		
+	}
+	
+	private static void abusiveWordCreator() {
+//		ArrayList<String> words = CollectionsUtil.getArrayList("wixer", "arsch", "nutte", "hure", "tunte", "penis", "cock", "dick", "noob", "cunt", "bitch");
+		ArrayList<String> words = CollectionsUtil.getArrayList();
+		StringBuffer sBuf = new StringBuffer();
+		for (String word : words) {
+			String encoding = base64encode(word);
+			sBuf.append("\"" + encoding + "\"" + ", ");
+			System.out.println("Encoding: " + encoding);
+		}
+		System.out.println("result: " + sBuf.toString());
 	}
 }
