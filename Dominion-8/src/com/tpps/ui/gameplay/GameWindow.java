@@ -233,10 +233,11 @@ public class GameWindow extends JFrame {
 		UIManager.put("TabbedPane.tabsOpaque", Boolean.FALSE);
 		this.jTabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		this.jTabbedPane.setBorder(BorderFactory.createEmptyBorder());
-		this.tabbedWindow.setBorder(BorderFactory.createEmptyBorder());
+		
 		this.jTabbedPane.setOpaque(false);
 		this.jTabbedPane.setForeground(Color.WHITE);
 		this.tabbedWindow = new JPanel();
+		this.tabbedWindow.setBorder(BorderFactory.createEmptyBorder());
 		this.tabbedWindow.setOpaque(false);
 		this.jTabbedPane.add("Chat", this.chatWindow);
 		this.jTabbedPane.add("Game Log", this.loggerPane);

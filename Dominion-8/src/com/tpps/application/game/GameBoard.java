@@ -408,9 +408,21 @@ public class GameBoard {
 		this.tableForActionCards.put("ThroneRoom", new LinkedList<Card>(this.tableForAllActionCards.get("ThroneRoom")));
 		this.tableForActionCards.put("Mine", new LinkedList<Card>(this.tableForAllActionCards.get("Mine")));
 		this.tableForActionCards.put("Library", new LinkedList<Card>(this.tableForAllActionCards.get("Library")));
-		this.tableForActionCards.put("Remodel", new LinkedList<Card>(this.tableForAllActionCards.get("Remodel")));
-		
-		
+		this.tableForActionCards.put("Remodel", new LinkedList<Card>(this.tableForAllActionCards.get("Remodel")));		
+	}
+	
+	public synchronized void setAttackSet() {
+		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
+		this.tableForActionCards.put("Moat", new LinkedList<Card>(this.tableForAllActionCards.get("Moat")));
+		this.tableForActionCards.put("Militia", new LinkedList<Card>(this.tableForAllActionCards.get("Militia")));
+		this.tableForActionCards.put("Spy", new LinkedList<Card>(this.tableForAllActionCards.get("Spy")));
+		this.tableForActionCards.put("Thief", new LinkedList<Card>(this.tableForAllActionCards.get("Thief")));
+		this.tableForActionCards.put("Witch", new LinkedList<Card>(this.tableForAllActionCards.get("Witch")));
+		this.tableForActionCards.put("Bureaucrat", new LinkedList<Card>(this.tableForAllActionCards.get("Bureaucrat")));
+		this.tableForActionCards.put("Adventurer", new LinkedList<Card>(this.tableForAllActionCards.get("Adventurer")));
+		this.tableForActionCards.put("CouncilRoom", new LinkedList<Card>(this.tableForAllActionCards.get("CouncilRoom")));
+		this.tableForActionCards.put("Chancellor", new LinkedList<Card>(this.tableForAllActionCards.get("Chancellor")));
+		this.tableForActionCards.put("Laboratory", new LinkedList<Card>(this.tableForAllActionCards.get("Chancellor")));
 	}
 	
 	
