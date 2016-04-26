@@ -18,6 +18,7 @@ import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.GameServer;
+import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.game.TooMuchPlayerException;
 import com.tpps.technicalServices.network.game.WrongSyntaxException;
@@ -951,6 +952,9 @@ public class GameController {
 	 * calls the newGame method of the gameServer. 
 	 */
 	public void endGame() {
+		ServerGamePacketHandler gamePacketHandler = (ServerGamePacketHandler) this.gameServer.getHandler();
+		gamePacketHandler.getChatController().deleteChatroom();
+
 		setGameNotFinished(false);
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();

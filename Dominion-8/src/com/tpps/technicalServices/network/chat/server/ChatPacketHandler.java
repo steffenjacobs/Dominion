@@ -411,15 +411,17 @@ public class ChatPacketHandler extends PacketHandler{
 				ConcurrentHashMap<String, Integer> clientsByUsername = temp.getClientsByUsername();
 				for (Entry<String, Integer> entry : clientsByUsername.entrySet()) {
 					if(port == entry.getValue()){
-						temp.removeUser(entry.getKey());
-						System.out.println("kicked " + entry.getKey() + " from chatroom");
-						System.out.println("hashmap size: " + temp.getClientsByUsername().size());
-						if(temp.getClientsByUsername().size() == 0){
-							ChatPacketHandler.this.deleteChatRoom(entry.getKey());
-							ChatPacketHandler.this.global.getPool().deleteUserFromGlobalChat_COLOR(entry.getKey());
+						if(temp.getClientsByUsername().size() == 1){
+							ChatPacketHandler.this.deleteChatRoom(entry.getKey());							
 							System.out.println("Deleted chatroom with user: " + entry.getKey());
+						}else{
+							temp.removeUser(entry.getKey());
+							ChatPacketHandler.this.global.getPool().deleteUserFromGlobalChat_COLOR(entry.getKey());
+							System.out.println("kicked " + entry.getKey() + " from chatroom");
+							System.out.println("hashmap size: " + temp.getClientsByUsername().size());
+							return true;
 						}
-						return true;
+						
 					}
 				}
 			}
