@@ -51,7 +51,7 @@ public class LobbyScreen extends JFrame{
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	
-		right = new PlayerSettingsPanel(new StatisticsBoard());
+		right = new PlayerSettingsPanel();
 		c.add(new GlobalChatPanel());
 		c.add(right);
 		

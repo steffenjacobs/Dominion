@@ -114,8 +114,7 @@ public final class DominionController {
 		mainMenuPanel = new MainMenuPanel(this.mainFrame);
 		globalChatPanel = new GlobalChatPanel();
 		statisticsBoardPanel = new StatisticsBoard();
-		playerSettingsPanel = new PlayerSettingsPanel(statisticsBoardPanel);
-		// this.playerSettingsPanel.insertPlayer(this.username);
+		playerSettingsPanel = new PlayerSettingsPanel();
 		try {
 			this.originalBackground = ImageIO
 					.read(ClassLoader
@@ -315,7 +314,7 @@ public final class DominionController {
 	 * @author jhuhn
 	 * @param player
 	 */
-	public void insertPlayerToGUI(String player){
+	public synchronized void insertPlayerToGUI(String player){
 		this.playerSettingsPanel.insertPlayer(player);
 	}
 	
@@ -323,11 +322,11 @@ public final class DominionController {
 	 * @author jhuhn
 	 * @param player
 	 */
-	public void clearPlayerFromGUI(String player){
+	public synchronized void clearPlayerFromGUI(String player){
 		this.playerSettingsPanel.removePlayer(player);
 	}
 	
-	public void clearAllPlayersFromGUI(){
+	public synchronized void clearAllPlayersFromGUI(){
 		this.playerSettingsPanel.clearAllPlayers();
 	}
 

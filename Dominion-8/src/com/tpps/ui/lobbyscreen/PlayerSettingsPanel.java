@@ -66,20 +66,24 @@ public class PlayerSettingsPanel extends JPanel{
 	private JPanel panel;
 	private JPanel panelMid;
 	
-	/**
-	 * 
-	 * @param statisticsBoardPanel
-	 */
-	public PlayerSettingsPanel(StatisticsBoard statisticsBoardPanel) {
+	
+	public PlayerSettingsPanel() {
 		this.initOriginalBackgroundImages();
 		this.initTransparentBackgroundImages();
-//		this.statisticsBoardPanel = statisticsBoardPanel;
 		this.setOpaque(false);
 		this.setLayout(new GridLayout(3,1, 0, SPACE_PANEL_TO_PANEL));
 
 		this.add(this.upperAreaPanel());
 		this.add(this.middleAreaPanel());
 		this.add(this.bottomAreaPanel());
+	}
+	
+	public PlayerSettingsPanel(boolean junitTest) {
+		connectedPlayers = new SearchingField[4];
+		for (int i = 0; i < connectedPlayers.length; i++) {
+			connectedPlayers[i] = new SearchingField(true);
+			connectedPlayers[i].start();
+		}
 	}
 	
 	private JPanel upperAreaPanel(){
@@ -249,7 +253,7 @@ public class PlayerSettingsPanel extends JPanel{
 		return this.selectedImage;
 	}
 	
-	public boolean insertPlayer(String player){
+	public synchronized boolean insertPlayer(String player){
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if(!connectedPlayers[i].isPlayerFlag()){
 				this.connectedPlayers[i].setPlayer(player);
@@ -260,7 +264,7 @@ public class PlayerSettingsPanel extends JPanel{
 		return false;
 	}
 	
-	public boolean removePlayer(String player){
+	public synchronized boolean removePlayer(String player){
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if(connectedPlayers[i].getText().equals(player)){
 				System.out.println("GUI: removed Player: " + connectedPlayers[i].getText());
@@ -271,7 +275,7 @@ public class PlayerSettingsPanel extends JPanel{
 		return false;
 	}
 	
-	public void clearAllPlayers(){
+	public synchronized void clearAllPlayers(){
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if(!connectedPlayers[i].getText().startsWith("Loading")){
 				System.out.println("GUI: removed Player(all): " + connectedPlayers[i].getText());
@@ -288,6 +292,10 @@ public class PlayerSettingsPanel extends JPanel{
 		return options;
 	}
 	
+	public SearchingField[] getConnectedPlayers() {
+		return connectedPlayers;
+	}
+	
 	private class KiListener implements ActionListener { 
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
@@ -298,8 +306,4 @@ public class PlayerSettingsPanel extends JPanel{
 			DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
 		}
 	}
-	
-//	public void setStatisticsBoardPanel(StatisticsBoard statisticsBoardPanel) {
-//		this.statisticsBoardPanel = statisticsBoardPanel;
-//	}
 }

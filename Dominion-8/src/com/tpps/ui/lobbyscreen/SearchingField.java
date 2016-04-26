@@ -41,6 +41,10 @@ public class SearchingField extends JTextField implements Runnable{
 		}
 	}
 	
+	public SearchingField(boolean junitTest){
+		playerFlag = false;
+	}
+	
 	/**
 	 * overrides the paint method for semitransparend causes
 	 */
@@ -98,12 +102,12 @@ public class SearchingField extends JTextField implements Runnable{
 	 * ends the searching procedure on the UI and sets the playername who joined
 	 * @param playername a String representation of the playername who joined the lobby
 	 */
-	public void setPlayer(String playername) {
+	public synchronized void setPlayer(String playername) {
 		this.playerFlag = true;
 		this.setText(playername);
 	}
 	
-	public void resetSearchingField(){
+	public synchronized void resetSearchingField(){
 		this.playerFlag = false;
 		this.start();
 	}
