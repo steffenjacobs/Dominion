@@ -3,7 +3,6 @@ package com.tpps.test.application.game;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -230,7 +229,7 @@ public class PlayerTest {
 	public void testSetPort() {
 		assertThat(this.player.getPort(), is(0));
 		this.player.setPort(2333);
-		assertThat(this.player.getPort(), is(2334));
+		assertThat(this.player.getPort(), is(2333));
 	}
 
 	@Test
@@ -255,7 +254,7 @@ public class PlayerTest {
 	public void testSetOnHandFalse() {
 		assertThat(this.player.isOnHand(), is(false));
 		this.player.setOnHandFalse();
-		assertTrue(this.player.isOnHand());
+		assertTrue(!this.player.isOnHand());
 	}
 	
 
@@ -271,7 +270,8 @@ public class PlayerTest {
 
 	@Test
 	public void testGetID() {
-		assertThat(this.player.getID(), is(0));
+		
+		assertThat(this.player.getClientID(), is(0));
 	}
 
 	@Test
@@ -339,42 +339,18 @@ public class PlayerTest {
 			
 		}
 		
-	}
-
-	@Test
-	public void testGetTemporaryTrashPile() {
-		fail("Not yet implemented");
-	}
-
-	
-	
-	
-
-	@Test
-	public void testGetDrawedCard() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetSetAsideCards() {
-		fail("Not yet implemented");
-	}
-
-	
+	}	
 
 	@Test
 	public void testTakeRevealedCardsSetRevealModeFalse() {
-		fail("Not yet implemented");
+		assertThat(this.player.getRevealList().size(), is(0));
+		assertTrue(!this.player.isRevealMode());
 	}
 
 	@Test
 	public void testPutBackRevealedCardsSetRevealModeFalse() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testDiscardOrTrashStringLinkedListOfCard() {
-		fail("Not yet implemented");
+		assertThat(this.player.getRevealList().size(), is(0));
+		assertTrue(!this.player.isRevealMode());
 	}
 
 	@Test
@@ -406,7 +382,7 @@ public class PlayerTest {
 	@Test
 	public void testEndTrashMode() {
 		this.player.endTrashMode();
-		assertTrue(this.player.isTrashMode());
+		assertTrue(!this.player.isTrashMode());
 	}
 
 	@Test
@@ -442,21 +418,56 @@ public class PlayerTest {
 
 	@Test
 	public void testGetRelevantCardActions() {
-		fail("Not yet implemented");
+		assertTrue(!this.player.isReactionMode());
+		LinkedList<CardAction> cardAction = new LinkedList<CardAction>();
+		cardAction.add(CardAction.ADD_ACTION_TO_PLAYER);
+		cardAction.add(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND);
+		cardAction.add(CardAction.SEPERATOR);
+		cardAction.add(CardAction.DEFEND);
+		cardAction.add(CardAction.DRAW_CARD_UNTIL);
+		cardAction.add(CardAction.REVEAL_UNTIL_TREASURES);
+		
+		LinkedList<CardAction> firstActions = new LinkedList<CardAction>();
+		firstActions.add(CardAction.ADD_ACTION_TO_PLAYER);
+		firstActions.add(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND);
+		
+		LinkedList<CardAction> secondActions = new LinkedList<CardAction>();	
+		
+		secondActions.add(CardAction.REVEAL_UNTIL_TREASURES);
+		secondActions.add(CardAction.DRAW_CARD_UNTIL);
+		secondActions.add(CardAction.DEFEND);
+		
+		assertThat(firstActions, is(this.player.getRelevantCardActions(cardAction)));
+		assertTrue(!secondActions.equals(this.player.getRelevantCardActions(cardAction)));
+		
+		this.player.setReactionMode();
+		assertTrue(this.player.isReactionMode());
+		assertThat(secondActions, is(this.player.getRelevantCardActions(cardAction)));
+		assertTrue(!firstActions.equals(this.player.getRelevantCardActions(cardAction)));
+		
+		
 	}
 
 	@Test
 	public void testDoAction() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testDrawUntil() {
-		fail("Not yet implemented");
+		Card card = this.player.getDeck().getCardByTypeFromHand(CardType.TREASURE);
+			assertThat(this.player.getCoins(), is(0));
+			Card cardRef;
+			try {
+				cardRef = this.player.doAction(card.getId());
+				assertThat(card, is(cardRef));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			assertThat(this.player.getCoins(), is(Integer.parseInt(new LinkedList<String>(card.getActions().values()).get(0))));
+			
+			
 	}
 
 	@Test
 	public void testDiscardOrTrashCard() {
+	
 		Card card = this.player.getDeck().getCardHand().getFirst();
 		try {
 			
@@ -476,9 +487,23 @@ public class PlayerTest {
 				 }
 				@SuppressWarnings("unchecked")
 				Tuple<CardAction> discardOrTrashAction = (Tuple<CardAction>)(discardOrTrashActionField.get(this.player));
-				System.out.println(discardOrTrashAction.getFirstEntry());
-				System.out.println(discardOrTrashAction.getSecondEntry());
+				
+				
+				assertTrue(!this.player.isGainMode());
+				assertThat(discardOrTrashAction.getSecondEntry(), is(2));
+				
 				this.player.discardOrTrash(card);
+				
+				assertTrue(!this.player.isGainMode());
+				card = this.player.getDeck().getCardHand().getFirst();
+				assertThat(discardOrTrashAction.getSecondEntry(), is(1));
+				assertThat(this.player.getGainValue(), is(0));
+				
+				this.player.discardOrTrash(card);
+				assertThat(discardOrTrashAction.getSecondEntry(), is(0));
+				assertTrue(!this.player.isTrashMode());
+				assertTrue(this.player.isGainMode());
+				assertThat(this.player.getGainValue(), is(card.getCost()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NoSuchFieldException e) {
@@ -500,7 +525,7 @@ public class PlayerTest {
 	@Test
 	public void testResetTemporaryTrashPile() {
 		this.player.resetTemporaryTrashPile();
-		assertThat(this.player.getTemporaryTrashPile(), is(0));
+		assertThat(this.player.getTemporaryTrashPile().size(), is(0));
 	}
 
 }
