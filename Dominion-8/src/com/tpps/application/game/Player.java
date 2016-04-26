@@ -589,6 +589,7 @@ public class Player {
 	 * @throws IOException
 	 */
 	public void playCard(String cardID) throws IOException {
+		
 		Card card = doAction(cardID);
 		if (card != null) {
 			this.playedCards.addLast(card);
@@ -652,17 +653,12 @@ public class Player {
 	 * 
 	 * @author Lukas Adler, Nicolas Wipfler
 	 * @throws IOException
+	 * @throws SynchronisationException 
 	 */
 	public Card doAction(String cardID) throws IOException {
 		boolean dontRemoveFlag = false, trashFlag = false;
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
-		if (serverCard == null) {
-			try {
-				throw new SynchronisationException();
-			} catch (SynchronisationException e) {
-				GameLog.log(MsgType.GAME, "Card was not found on hand.");
-			}
-		}
+
 
 		/* TEST GAME LOG */
 		GameLog.log(MsgType.GAME, "Played: " + serverCard.getName());
