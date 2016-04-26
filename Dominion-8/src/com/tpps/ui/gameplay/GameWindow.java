@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -322,7 +323,7 @@ public class GameWindow extends JFrame {
 		}
 		this.tableButtons = new LinkedList<GFButton>();
 		this.tableCards = new LinkedList<Card>();
-
+		System.out.println(Arrays.toString(actionCardlds.toArray()));
 		for (int i = 0; i < table.size(); i++) {
 			if (actionCardlds.get(i).matches("[A-Z][a-z]+#")) {
 				if (i < 5) {

@@ -65,8 +65,11 @@ public class GameServer extends Server {
 	
 	@Override
 	public void sendMessage(int port, Packet packet) throws IOException {
-		if (super.clients.contains(port)) {
+		if (super.clients.containsKey(port)) {
+			System.out.println("send message.");
 			super.sendMessage(port, packet);
+		}else{
+			System.out.println("send no message");
 		}
 		
 	}

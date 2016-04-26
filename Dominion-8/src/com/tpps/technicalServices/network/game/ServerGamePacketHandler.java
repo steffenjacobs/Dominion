@@ -560,11 +560,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 				// TODO: connect chatroom correctly "without AI"
 				// ChatController chatController = new ChatController();
 				
-				this.chatController.createChatRoom(this.server.getGameController().getPlayerNames());
-				this.chatController.getColorMap();
+//				this.chatController.createChatRoom(this.server.getGameController().getPlayerNames());
+//				this.chatController.getColorMap();
 
-				// this.server.getGameController().startGame();
-				// setUpGui();
+				 this.server.getGameController().startGame();
+				 setUpGui();
 			}
 			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
 		} catch (TooMuchPlayerException tmpe) {

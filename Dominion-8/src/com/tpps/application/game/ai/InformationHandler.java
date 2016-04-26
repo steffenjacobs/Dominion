@@ -22,8 +22,9 @@ public class InformationHandler {
 	private LinkedList<String> blacklist;
 
 	public InformationHandler() {
-		this.blacklist = this.getCardNamesFromStorage("Curse", "Copper", "Estate");
-		this.cardStore = new CardStorageController("cards.bin");
+//		this.cardStore = new CardStorageController("cards.bin");
+//		this.blacklist = this.getCardNamesFromStorage("Curse", "Copper", "Estate");
+		
 	}
 
 	/**
