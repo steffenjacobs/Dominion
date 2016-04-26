@@ -33,33 +33,26 @@ public class GameControllerTest2 {
 		assertThat(activePlayer, is(this.gameController.getActivePlayer()));
 		assertThat(activePlayer.getPlayerName(), is(this.gameController.getActivePlayerName()));
 	}
+	
+	@Test
+	public void testSetCardsDisabled() {
+		assertTrue(this.gameController.isCardsEnabled());
+		this.gameController.setCardsDisabled();
+		assertTrue(!this.gameController.isCardsEnabled());
+		this.gameController.setCardsEnabled();
+		assertTrue(this.gameController.isCardsEnabled());
+	}
+
+
 
 	
-
-	@Test
-	public void testGameController() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsCardsEnabled() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	public void testGetGameNotFinished() {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	public void testSetCardsEnabled() {
-		fail("Not yet implemented");
-	}
 
-	@Test
-	public void testSetCardsDisabled() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	public void testSetGameBoard() {
