@@ -231,7 +231,7 @@ public class Card extends GameObject {
 	public void onMouseEnter() {
 		if (!(handTrigger.equals("handCards") || name.equals("Copper") || name.equals("Silver") || name.equals("Gold")
 				|| name.equals("Curse") || name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
-			gameBackground = new GameBackground(relativeX - 0.025, relativeY + 0.0725, relativeWidth + 0.08,
+			gameBackground = new GameBackground(0.12, 0.01, relativeWidth + 0.08,
 					relativeHeight + 0.24, 110, sourceImage, parent);
 			parent.addComponent(gameBackground);
 		}
