@@ -3,6 +3,7 @@ package com.tpps.application.game;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -947,6 +948,13 @@ public class GameController {
 		} else if (this.gameBoard.checkThreePilesEmpty()) {
 			endGame();
 		}
+	}
+	
+	public LinkedList<String> getPlayerNamesSorted() {
+		LinkedList<String> sortedNames = new LinkedList<String>(Arrays.asList(getPlayerNames()));
+		Collections.sort(sortedNames, (String name1, String name2) -> name1.compareTo(name2));
+		return sortedNames;
+		
 	}
 	
 	/**
