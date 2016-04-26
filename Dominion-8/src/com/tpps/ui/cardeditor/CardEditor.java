@@ -57,6 +57,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	private JPanel obenLinks;
 
 	public CardEditor() {
+		this.setVisible(true);
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		gbc = new GridBagConstraints();
@@ -205,10 +206,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		cancel.addActionListener((new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
-
-				DominionController.getInstance().abortSearching();
 				DominionController.getInstance().joinMainMenu();
-				DominionController.getInstance().clearAllPlayersFromGUI();
 			}
 		}));
 		untenRechts.add(cancel);

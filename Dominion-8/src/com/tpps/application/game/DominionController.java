@@ -22,6 +22,7 @@ import com.tpps.technicalServices.network.game.GameClient;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.ui.MainFrame;
 import com.tpps.ui.MainMenuPanel;
+import com.tpps.ui.cardeditor.CardEditor;
 import com.tpps.ui.lobbyscreen.GlobalChatPanel;
 import com.tpps.ui.lobbyscreen.PlayerSettingsPanel;
 import com.tpps.ui.loginscreen.LoginGUIController;
@@ -58,6 +59,7 @@ public final class DominionController {
 	private boolean turnFlag;
 	
 	private ChatClient chatClient;
+	private CardEditor cardEditor;
 
 	/** main entry point for client application */
 	public static void main(String[] stuff) {
@@ -400,7 +402,7 @@ public final class DominionController {
 	
 	public void openCardeditor(){
 		this.mainFrame.setVisible(false);
-//		this.cardEditor = new CardEditor();
+		this.cardEditor = new CardEditor();
 	}
 
 	public UUID getLobbyID() {
