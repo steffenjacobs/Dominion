@@ -21,7 +21,7 @@ public class GameControllerTest2 {
 		
 		this.gameController = new GameController(null);
 		for (int i = 0; i < GameConstant.PLAYERS; i++){
-			this.gameController.addPlayer(new Player(new Deck(this.gameController.getGameBoard().getStartSet()), i, 80 + i, "test" + i, null, null));
+			this.gameController.addPlayerAndChooseRandomActivePlayer(new Player(new Deck(this.gameController.getGameBoard().getStartSet()), i, 80 + i, "test" + i, null, null));
 		}
 		
 	}

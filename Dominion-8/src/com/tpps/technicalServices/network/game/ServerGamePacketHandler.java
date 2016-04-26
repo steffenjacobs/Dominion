@@ -551,7 +551,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void addPlayerAndCheckPlayerCount(int port, int clientId, String username, UUID sessionID) throws IOException {
 		try {
 			Player player = new Player(clientId, port, this.server.getGameController().getGameBoard().getStartSet(), username, sessionID, this.server);
-			this.server.getGameController().addPlayer(player);
+			this.server.getGameController().addPlayerAndChooseRandomActivePlayer(player);
 			this.server.sendMessage(port, new PacketSendClientId(clientId));
 			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 				new ArtificialIntelligence(player, new InetSocketAddress("127.0.0.1", this.server.getPort()), sessionID).start();

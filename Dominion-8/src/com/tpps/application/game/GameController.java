@@ -860,7 +860,7 @@ public class GameController {
 	 * @throws TooMuchPlayerException
 	 *             if there connects one more player
 	 */
-	public void addPlayer(Player player) throws TooMuchPlayerException {
+	public void addPlayerAndChooseRandomActivePlayer(Player player) throws TooMuchPlayerException {
 		if (this.players.size() < 4) {
 			this.players.addLast(player);
 			if (this.players.size() == 4) {
