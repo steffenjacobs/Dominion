@@ -172,13 +172,13 @@ public class GameWindow extends JFrame {
 				this.framework, "Stop Discard");
 		this.stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
 				this.framework, "Stop Trash");
-		this.action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 20, this.displayImageActions, this.framework,
+		this.action = new DisplayValue(0.1, 0.38, 0.12, 0.12, 1, 1, 20, this.displayImageActions, this.framework,
 				String.valueOf(GameConstant.INIT_ACTIONS));
-		this.coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 20, this.displayImageCoins, this.framework,
+		this.coin = new DisplayValue(0.1, 0.46, 0.12, 0.12, 1, 1, 20, this.displayImageCoins, this.framework,
 				String.valueOf(GameConstant.INIT_TREASURES));
-		this.buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 20, this.displayImageBuys, this.framework,
+		this.buy = new DisplayValue(0.1, 0.54, 0.12, 0.12, 1, 1, 20, this.displayImageBuys, this.framework,
 				String.valueOf(GameConstant.INIT_PURCHASES));
-		this.turn = new DisplayValue(-0.06, 0.6, 0.20, 0.18, 1, 1, 20, this.displayImageTurn, this.framework, "#");
+		this.turn = new DisplayValue(-0.06, 0.62, 0.20, 0.18, 1, 1, 20, this.displayImageTurn, this.framework, "#");
 
 		this.framework.addComponent(new GameBackground(0, 0, 1, 1, 0, this.backgroundImage, this.framework));
 		this.framework.addComponent(new GameBackground(0.31, 0.01, 0.38, 0.38, 2, this.tableImage, this.framework));
@@ -276,11 +276,11 @@ public class GameWindow extends JFrame {
 		this.framework.removeComponent(coin);
 		this.framework.removeComponent(buy);
 
-		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageActions, framework,
+		action = new DisplayValue(0.1, 0.38, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageActions, framework,
 				String.valueOf(GameConstant.INIT_ACTIONS));
-		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageCoins, framework,
+		coin = new DisplayValue(0.1, 0.46, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageCoins, framework,
 				String.valueOf(GameConstant.INIT_TREASURES));
-		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageBuys, framework,
+		buy = new DisplayValue(0.1, 0.54, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageBuys, framework,
 				String.valueOf(GameConstant.INIT_PURCHASES));
 
 		this.framework.addComponent(action);
@@ -669,7 +669,7 @@ public class GameWindow extends JFrame {
 
 	public void setCaptionCoins(String caption) {
 		framework.removeComponent(coin);
-		coin = new DisplayValue(0.1, 0.4, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework, caption);
+		coin = new DisplayValue(0.1, 0.46, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework, caption);
 		framework.addComponent(coin);
 		// coin.renewCaption(caption);
 	}
@@ -683,7 +683,7 @@ public class GameWindow extends JFrame {
 	public void setCaptionActions(String caption) {
 		// action.renewCaption(caption);
 		framework.removeComponent(action);
-		action = new DisplayValue(0.1, 0.3, 0.12, 0.12, 1, 1, 1, displayImageActions, framework, caption);
+		action = new DisplayValue(0.1, 0.38, 0.12, 0.12, 1, 1, 1, displayImageActions, framework, caption);
 		framework.addComponent(action);
 		// action.renewCaption(caption);
 	}
@@ -691,7 +691,7 @@ public class GameWindow extends JFrame {
 	public void setCaptionTurn(String caption) {
 		// turn.renewCaption(caption);
 		framework.removeComponent(turn);
-		turn = new DisplayValue(-0.06, 0.6, 0.20, 0.18, 1, 1, 20, displayImageTurn, framework, caption);
+		turn = new DisplayValue(-0.06, 0.62, 0.20, 0.18, 1, 1, 20, displayImageTurn, framework, caption);
 		framework.addComponent(turn);
 	}
 
@@ -703,7 +703,7 @@ public class GameWindow extends JFrame {
 
 	public void setCaptionBuys(String caption) {
 		framework.removeComponent(buy);
-		buy = new DisplayValue(0.1, 0.5, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework, caption);
+		buy = new DisplayValue(0.1, 0.54, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework, caption);
 		framework.addComponent(buy);
 		// buy.renewCaption(caption);
 	}

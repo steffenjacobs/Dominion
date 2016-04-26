@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.tpps.application.game.card.Card;
@@ -18,6 +19,7 @@ import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.GameServer;
+import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.game.TooMuchPlayerException;
 import com.tpps.technicalServices.network.game.WrongSyntaxException;
@@ -771,6 +773,21 @@ public class GameController {
 		this.setNextActivePlayer();
 		this.setActionPhase();
 	}
+	
+	/**
+	 * 
+	 * @return the users which have a user with a valid session id
+	 */
+	public LinkedList<Player> getHumanPlayers() {
+		LinkedList<Player> humanPlayers =  new LinkedList<Player>();
+		for (Iterator<Player> iterator = this.players.iterator(); iterator.hasNext();) {
+			Player player = iterator.next();
+			if(!player.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))){
+				humanPlayers.add(player);
+			}
+		}
+		return humanPlayers;
+	}
 
 	/**
 	 * @return the player list
@@ -951,6 +968,9 @@ public class GameController {
 	 * calls the newGame method of the gameServer. 
 	 */
 	public void endGame() {
+		ServerGamePacketHandler gamePacketHandler = (ServerGamePacketHandler) this.gameServer.getHandler();
+		gamePacketHandler.getChatController().deleteChatroom();
+
 		setGameNotFinished(false);
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();

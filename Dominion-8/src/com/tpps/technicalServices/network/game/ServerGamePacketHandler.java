@@ -3,6 +3,7 @@ package com.tpps.technicalServices.network.game;
 import java.awt.Color;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
@@ -558,14 +559,20 @@ public class ServerGamePacketHandler extends PacketHandler {
 			}
 			if (server.getGameController().getPlayers().size() == GameConstant.PLAYERS) {
 				// TODO: connect chatroom correctly "without AI"
-				// ChatController chatController = new ChatController();
-				
-//				this.chatController.createChatRoom(this.server.getGameController().getPlayerNames());
-//				this.chatController.getColorMap();
+				LinkedList<Player> serverPlayers = this.server.getGameController().getPlayers();
+				ArrayList<String> chatPlayers = new ArrayList<String>();
+				for (Iterator<Player> iterator = serverPlayers.iterator(); iterator.hasNext();) {
+					Player temp = iterator.next();
+					if(!temp.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))){
+						chatPlayers.add(temp.getPlayerName());
+					}
+				}				
+				System.out.println("chatplayers: " + chatPlayers);
+				this.chatController.createChatRoom(chatPlayers);				
 
-				 this.server.getGameController().startGame();
-				 setUpGui();
-			}
+//				this.server.getGameController().startGame();
+//				setUpGui();
+			}	
 			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
 		} catch (TooMuchPlayerException tmpe) {
 			this.server.sendMessage(port, new PacketClientShouldDisconect());
@@ -602,5 +609,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 		for (int i = 0; i < GameConstant.PLAYERS; i++) {
 			this.server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
 		}
+	}
+	
+	/**
+	 * @return the chancontroller instance to create or delete chatrooms
+	 */
+	public ChatController getChatController() {
+		return chatController;
 	}
 }
