@@ -404,7 +404,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 						for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 							Player player2 = (Player) iterator.next();
 							CollectionsUtil.appendListToList(player2.getTemporaryTrashPile(), allThiefCards);
-						}
+						}						
 						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(allThiefCards)));
 						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketTakeThiefCards());
 						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketPutBackThiefCards());
@@ -590,7 +590,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 		try {
 			setUpGui();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

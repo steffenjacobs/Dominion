@@ -1,20 +1,40 @@
 package com.tpps.test.application.game;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import com.tpps.application.game.Deck;
+import com.tpps.application.game.GameController;
+import com.tpps.application.game.Player;
+import com.tpps.technicalServices.network.game.GameServer;
+import com.tpps.technicalServices.util.GameConstant;
+
 public class GameControllerTest2 {
+	GameController gameController;
+
 
 	@Before
 	public void setUp() throws Exception {
+		
+		this.gameController = new GameController(null);
+		for (int i = 0; i < GameConstant.PLAYERS; i++){
+			this.gameController.addPlayer(new Player(new Deck(this.gameController.getGameBoard().getStartSet()), i, 80 + i, "test" + i, null, null));
+		}
+		
+	}
+	
+	@Test
+	public void testSetActivePlayer() {
+		Player activePlayer = this.gameController.getPlayers().get(0);
+		this.gameController.setActivePlayer(this.gameController.getPlayers().get(0));
+		assertThat(activePlayer, is(this.gameController.getActivePlayer()));
+		assertThat(activePlayer.getPlayerName(), is(this.gameController.getActivePlayerName()));
 	}
 
-	@Test
-	public void testGetActivePlayerName() {
-		fail("Not yet implemented");
-	}
+	
 
 	@Test
 	public void testGameController() {
@@ -196,10 +216,7 @@ public class GameControllerTest2 {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	public void testSetActivePlayer() {
-		fail("Not yet implemented");
-	}
+	
 
 	@Test
 	public void testIsGameNotFinished() {

@@ -30,6 +30,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackCards
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendActiveButtons;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendBoard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendHandCards;
+import com.tpps.technicalServices.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendRevealCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndReactions;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeCards;
@@ -757,7 +758,8 @@ public class GameController {
 		checkBureaucratFinish();
 
 		try {
-			this.gameServer.sendMessage(this.getActivePlayer().getPort(), new PacketEnable());
+			this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
+			this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketEnable());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
