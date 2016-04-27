@@ -183,23 +183,23 @@ public final class Matchmaker {
 				// TODO:
 				// save pck.getLobbyID() somewhere (-> DominionController?)
 
-				DominionController.getInstance().reveiveChatMessageFromChatServer("You joined a lobby successfully", "BOT", "", Color.RED);
+				DominionController.getInstance().receiveChatMessageFromChatServer("You joined a lobby successfully", "BOT", "", Color.RED);
 				/*
 				 * :id : " + pck.getLobbyID()
 				 */
 				DominionController.getInstance().setLobbyID(pck.getLobbyID());
 				break;
 			case 2: // Lobby does not exist
-				DominionController.getInstance().reveiveChatMessageFromChatServer("Lobby does not exis", "BOT", "", Color.RED);
+				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby does not exis", "BOT", "", Color.RED);
 				break;
 			case 3: // Lobby is already full				
-				DominionController.getInstance().reveiveChatMessageFromChatServer("Lobby is already full", "BOT", "", Color.RED);
+				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby is already full", "BOT", "", Color.RED);
 				break;
 			case 4: // Lobby already started
-				DominionController.getInstance().reveiveChatMessageFromChatServer("Lobby already started", "BOT", "", Color.RED);
+				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby already started", "BOT", "", Color.RED);
 				break;
 			default: // unknown error
-				DominionController.getInstance().reveiveChatMessageFromChatServer("unknown error", "BOT", "", Color.RED);
+				DominionController.getInstance().receiveChatMessageFromChatServer("unknown error", "BOT", "", Color.RED);
 				break;
 			}
 		}

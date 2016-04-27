@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.concurrent.Callable;
 
 import javax.swing.JFrame;
 
@@ -16,6 +17,7 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
+import com.tpps.ui.animations.MoveAnimation;
 import com.tpps.ui.components.GameBackground;
 
 /**
@@ -38,6 +40,7 @@ public class Card extends GameObject {
 	private Image sourceImage;
 	private GameBackground gameBackground;
 	private String handTrigger = "";
+
 	// private int mouseReaction = 0;
 	// private ArrayList<GameBackground> cardReaction = new ArrayList<>();
 	// private GameBackground tmp;
@@ -231,9 +234,24 @@ public class Card extends GameObject {
 	public void onMouseEnter() {
 		if (!(handTrigger.equals("handCards") || name.equals("Copper") || name.equals("Silver") || name.equals("Gold")
 				|| name.equals("Curse") || name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
-			gameBackground = new GameBackground(0.12, 0.01, relativeWidth + 0.08,
-					relativeHeight + 0.24, 110, sourceImage, parent);
+			gameBackground = new GameBackground(0.12, 0.01, relativeWidth + 0.08, relativeHeight + 0.24, 110,
+					sourceImage, parent);
 			parent.addComponent(gameBackground);
+		}
+		if (handTrigger.equals("handCards")) {
+			// tempObject=new Card(actions, types, name, cost, id, relativeX,
+			// relativeY-0.05, relativeWidth, relativeHeight, layer,
+			// sourceImage, parent);
+			// parent.removeComponent(this);
+			// parent.addComponent(tempObject);
+			MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					System.out.println("finished here!");
+					return null;
+				}
+			}, relativeX, relativeY - 0.05);
+			anim.play();
 		}
 	}
 
@@ -246,9 +264,23 @@ public class Card extends GameObject {
 				|| name.equals("Curse") || name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
 			parent.removeComponent(gameBackground);
 		}
+		if (handTrigger.equals("handCards")) {
+			MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					System.out.println("finished here!");
+					return null;
+				}
+			}, relativeX, relativeY);
+			anim.play();
+		}
+		// parent.removeComponent(tempObject);
+		// parent.addComponent(this);
+		// parent.repaint();
+		// parent.revalidate();
 	}
-	
-	public<T extends Client> void onAiClick(T client, int clientId) {
+
+	public <T extends Client> void onAiClick(T client, int clientId) {
 		System.out.println("AiClick on Card");
 		try {
 			client.sendMessage(new PacketPlayCard(this.id, clientId));
@@ -347,6 +379,10 @@ public class Card extends GameObject {
 				sBuf.append(" ");
 		}
 		return sBuf.append(">\nCost: " + this.cost).toString();
+	}
+
+	public void setRelativeY(int relativeY) {
+		this.relativeY = relativeY;
 	}
 
 	/**

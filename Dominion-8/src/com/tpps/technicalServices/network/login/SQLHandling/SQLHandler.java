@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import com.tpps.technicalServices.network.Addresses;
+
 /**
  * This class delivers basic functionalities required to handle a MYSQL database
  * like connecting or disconnecting to a specific mysql server
@@ -34,12 +36,13 @@ public class SQLHandler {
 	 * @param database
 	 *            String representation of the specific database
 	 */
-	public static void init(String host, String port, String username, String password, String database){
-		SQLHandler.host = host;
-		SQLHandler.port = port;
-		SQLHandler.username = username;
-		SQLHandler.password = password;
-		SQLHandler.database = database;
+	public static void init(){
+		String[] data = Addresses.getSQLInitialization();
+		SQLHandler.host = data[0];
+		SQLHandler.port = data[1];
+		SQLHandler.username = data[2];
+		SQLHandler.password = data[3];
+		SQLHandler.database = data[4];
 		SQLHandler.connection = null;	
 	}
 	

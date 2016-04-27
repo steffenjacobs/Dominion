@@ -231,7 +231,7 @@ public class GlobalChat {
 			System.out.println(split[2]);
 			String nickname = split[2];
 			
-			SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
+			SQLHandler.init();
 			SQLHandler.connect();
 	
 			String line = "";		
