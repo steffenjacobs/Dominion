@@ -19,6 +19,7 @@ import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.animations.MoveAnimation;
 import com.tpps.ui.components.GameBackground;
+import com.tpps.ui.gameplay.GameWindow;
 
 /**
  * @author Nicolas Wipfler
@@ -238,6 +239,43 @@ public class Card extends GameObject {
 					sourceImage, parent);
 			parent.addComponent(gameBackground);
 		}
+		if(handTrigger.equals("Victory")){
+			for (int i = 0; i < GameWindow.getInstance().getVictoryButtons().size(); i++) {
+				parent.removeComponent(GameWindow.getInstance().getVictoryButtons().get(i));
+			}
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					return null;
+				}
+			}, relativeX+0.05, relativeY);
+			anim.play();
+		}
+		if (handTrigger.equals("Coins")) {
+			for (int i = 0; i < GameWindow.getInstance().getCoinButtons().size(); i++) {
+				parent.removeComponent(GameWindow.getInstance().getCoinButtons().get(i));
+			}
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					return null;
+				}
+			}, relativeX - 0.05, relativeY);
+			anim.play();
+		}
+
 		if (handTrigger.equals("handCards")) {
 			try {
 				Thread.sleep(50);
@@ -248,7 +286,6 @@ public class Card extends GameObject {
 			MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
 				@Override
 				public Void call() throws Exception {
-					System.out.println("finished here!");
 					return null;
 				}
 			}, relativeX, relativeY - 0.05);
@@ -265,9 +302,12 @@ public class Card extends GameObject {
 				|| name.equals("Curse") || name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
 			parent.removeComponent(gameBackground);
 		}
-		if (handTrigger.equals("handCards")) {
+		if(handTrigger.equals("Victory")){
+			for (int i = 0; i < GameWindow.getInstance().getVictoryButtons().size(); i++) {
+				parent.addComponent(GameWindow.getInstance().getVictoryButtons().get(i));
+			}
 			try {
-				Thread.sleep(150);
+				Thread.sleep(100);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -275,7 +315,39 @@ public class Card extends GameObject {
 			MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
 				@Override
 				public Void call() throws Exception {
-					System.out.println("finished here!");
+					return null;
+				}
+			}, relativeX, relativeY);
+			anim.play();
+		}
+		if (handTrigger.equals("Coins")) {
+			for (int i = 0; i < GameWindow.getInstance().getCoinButtons().size(); i++) {
+				parent.addComponent(GameWindow.getInstance().getCoinButtons().get(i));
+			}
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					return null;
+				}
+			}, relativeX, relativeY);
+			anim.play();
+		}
+		if (handTrigger.equals("handCards")) {
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
 					return null;
 				}
 			}, relativeX, relativeY);
