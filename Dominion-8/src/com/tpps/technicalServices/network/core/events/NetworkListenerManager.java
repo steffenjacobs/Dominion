@@ -15,6 +15,11 @@ public class NetworkListenerManager {
 
 	private PortCheckable sender;
 
+	/**
+	 * @param checkable
+	 *            the client or server-instance who this listener-manager is
+	 *            handling the events of
+	 */
 	public NetworkListenerManager(PortCheckable checkable) {
 		this.sender = checkable;
 	}
