@@ -531,7 +531,7 @@ public class SQLStatisticsHandler {
 		String database = "accountmanager";
 		String user = "root";
 		String password = "root";
-		SQLHandler.init(hostname, port, user, password, database);
+		SQLHandler.init();
 		SQLHandler.connect();
 		String name = "name";
 		// SQLOperations.createAccount(name, "rsdgdrgdr", "xxx", "yyyy");

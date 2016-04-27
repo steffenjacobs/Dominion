@@ -798,6 +798,16 @@ public class GameController {
 	public LinkedList<Player> getPlayers() {
 		return this.players;
 	}
+	
+	public Player getPlayerByUserName(String userName) {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.getPlayerName().equals(userName)){
+				return player;
+			}			
+		}
+		return null;
+	}
 
 	/**
 	 * 

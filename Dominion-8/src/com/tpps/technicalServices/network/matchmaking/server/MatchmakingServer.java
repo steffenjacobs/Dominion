@@ -56,7 +56,7 @@ public class MatchmakingServer extends Server {
 		super(address, _handler);
 		super.getListenerManager().registerListener(new MatchmakingListener());
 		instance = this;
-		SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
+		SQLHandler.init();
 		SQLHandler.connect();
 		setupConsoleInput(address.getPort());
 		GameLog.init();

@@ -44,7 +44,7 @@ public class Player {
 	private Tuple<CardAction> discardOrTrashAction;
 	private LinkedList<Card> playedCards, drawList, revealList, temporaryTrashPile, setAsideCards;
 
-	private String name;
+	private String userName;
 	private Color logColor;
 	private final int id;
 	private static int player_ID = 0;
@@ -61,7 +61,7 @@ public class Player {
 	 * @param clientID
 	 * @param port
 	 */
-	public Player(Deck deck, int clientID, int port, String name, UUID uuid, GameServer gameServer) {
+	public Player(Deck deck, int clientID, int port, String userName, UUID uuid, GameServer gameServer) {
 		this.reactionCard = false;
 		this.discardMode = false;
 		this.trashMode = false;
@@ -84,7 +84,7 @@ public class Player {
 		this.client_ID = clientID;
 		this.port = port;
 		this.playedCards = new LinkedList<Card>();
-		this.name = name;
+		this.userName = userName;
 		this.logColor = ColorUtil.playerColors.get(clientID % 4);
 		this.turnNr = 0;
 		this.gameServer = gameServer;
@@ -97,8 +97,8 @@ public class Player {
 	 * @param port
 	 * @param initCards
 	 */
-	public Player(int clientID, int port, LinkedList<Card> initCards, String name, UUID uuid, GameServer gameServer) {
-		this(new Deck(initCards), clientID, port, name, uuid, gameServer);
+	public Player(int clientID, int port, LinkedList<Card> initCards, String userName, UUID uuid, GameServer gameServer) {
+		this(new Deck(initCards), clientID, port, userName, uuid, gameServer);
 	}
 
 	/**
@@ -440,7 +440,7 @@ public class Player {
 	 * @return playerName
 	 */
 	public String getPlayerName() {
-		return this.name;
+		return this.userName;
 	}
 
 	/**
