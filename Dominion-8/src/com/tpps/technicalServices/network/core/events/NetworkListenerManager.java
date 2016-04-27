@@ -2,6 +2,8 @@ package com.tpps.technicalServices.network.core.events;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.tpps.technicalServices.network.core.PortCheckable;
+
 /**
  * This Listener Manager is responsible for managing, adding and removing
  * Network-Listeners. It is also called to fire Disconnect- and Connect-Events,
@@ -10,6 +12,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Steffen Jacobs
  */
 public class NetworkListenerManager {
+
+	private PortCheckable sender;
+
+	public NetworkListenerManager(PortCheckable checkable) {
+		this.sender = checkable;
+	}
 
 	private CopyOnWriteArrayList<NetworkListener> listeners = new CopyOnWriteArrayList<>();
 
@@ -52,8 +60,10 @@ public class NetworkListenerManager {
 	 *            the port where someone disconnected
 	 */
 	public void fireDisconnectEvent(int port) {
-		for (NetworkListener listen : listeners) {
-			listen.onClientDisconnect(port);
+		if (this.sender.hasPortConnected(port)) {
+			for (NetworkListener listen : listeners) {
+				listen.onClientDisconnect(port);
+			}
 		}
 	}
 }

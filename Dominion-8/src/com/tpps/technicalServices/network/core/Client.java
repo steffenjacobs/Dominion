@@ -20,7 +20,7 @@ import com.tpps.technicalServices.network.core.packet.Packet;
  * 
  * @author Steffen Jacobs
  */
-public class Client {
+public class Client implements PortCheckable {
 
 	private boolean connecting = false, connected = false;
 	private Thread tryToConnectThread = null;
@@ -28,7 +28,7 @@ public class Client {
 	private ClientConnectionThread connectionThread;
 	private SocketAddress address;
 
-	private NetworkListenerManager listenerManager = new NetworkListenerManager();
+	private NetworkListenerManager listenerManager = new NetworkListenerManager(this);
 
 	/**
 	 * Tries to connect to the specified server (5sec timeout)
@@ -99,16 +99,15 @@ public class Client {
 					Thread.sleep(CONNECTION_TIMEOUT);
 				}
 			} catch (IOException e) {
-				if (e.getMessage().startsWith("Network is unreachable")){
+				if (e.getMessage().startsWith("Network is unreachable")) {
 					try {
 						GameLog.log(MsgType.NETWORK_ERROR, e.getMessage() + " to " + address.toString());
 						Thread.sleep(CONNECTION_TIMEOUT);
 					} catch (InterruptedException e1) {
 						e1.printStackTrace();
 					}
-				}
-				else
-				e.printStackTrace();
+				} else
+					e.printStackTrace();
 			} catch (InterruptedException e) {
 				// do nothing: this exception is normal when the program
 				// exits.
@@ -256,6 +255,16 @@ public class Client {
 			this.connectionThread.addPacketHandler(handler);
 
 		this.handlers.add(handler);
+	}
+
+	/**
+	 * @return whether this has an open connection on a specific port
+	 * @param port
+	 *            the port to check for a connection
+	 */
+	@Override
+	public boolean hasPortConnected(int port) {
+		return port == this.connectionThread.getRemotePort();
 	}
 
 }

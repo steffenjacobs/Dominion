@@ -20,7 +20,7 @@ import com.tpps.technicalServices.network.core.packet.Packet;
  * 
  * @author Steffen Jacobs
  */
-public class Server {
+public class Server implements PortCheckable {
 	/** DEBUG-Flag */
 	public static final boolean DEBUG = false;
 
@@ -28,7 +28,7 @@ public class Server {
 	private PacketHandler handler;
 	private Thread acceptor, shutdownHook = new Thread(() -> onApplicationExit());
 
-	private NetworkListenerManager listenerManager = new NetworkListenerManager();
+	private NetworkListenerManager listenerManager = new NetworkListenerManager(this);
 
 	/** Integer represents the port */
 	protected ConcurrentHashMap<Integer, ServerConnectionThread> clients = new ConcurrentHashMap<>();
@@ -263,7 +263,7 @@ public class Server {
 			try {
 				client.closeSockets();
 			} catch (IOException e) {
-				//do nothing
+				// do nothing
 				e.printStackTrace();
 			}
 			client.interrupt();
@@ -292,5 +292,15 @@ public class Server {
 	/** @return the port the server is listening on */
 	public int getPort() {
 		return this.serverSocket.getLocalPort();
+	}
+
+	/**
+	 * @return whether this has an open connection through a specific port
+	 * @param port
+	 *            the port to check for a connection
+	 */
+	@Override
+	public boolean hasPortConnected(int port) {
+		return this.getClientThread(port) != null;
 	}
 }

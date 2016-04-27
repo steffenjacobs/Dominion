@@ -44,7 +44,7 @@ public class JUnitReconnectTest {
 		server.disconnectAll();
 
 		// Trying to connect to server
-		Client client = new Client(new InetSocketAddress(Addresses.getLocalHost(), TEST_PORT), new TestPacketHandler());
+		new Client(new InetSocketAddress(Addresses.getLocalHost(), TEST_PORT), new TestPacketHandler());
 
 		Thread.sleep(250);
 
@@ -56,10 +56,7 @@ public class JUnitReconnectTest {
 
 		for (int i = 0; i < COUNT_DISCONNECTS; i++) {
 			server.disconnectAll();
-			Thread.sleep(2500);
-			client.sendMessage(new TestPacket(null));
-			Thread.sleep(1000000);
-//			client.connectAndLoop(false);
+			Thread.sleep(250);
 		}
 
 		assertEquals(COUNT_DISCONNECTS, serverListener.getConnectCount());
