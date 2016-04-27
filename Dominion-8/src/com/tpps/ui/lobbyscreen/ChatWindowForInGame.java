@@ -99,6 +99,7 @@ public class ChatWindowForInGame extends JPanel {
 			}
 
 		};
+		scrollpane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollpane.setOpaque(false);
 		scrollpane.setBorder(BorderFactory.createEmptyBorder());
 		scrollpane.setFocusable(false);

@@ -447,7 +447,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 					}
 				}
 			} catch (SynchronisationException | NoSuchElementException e) {
-				this.log("The card you wanted to buy is not on the board.");
+//				GameLog.log("The card you wanted to buy is not on the board.");
 			} catch (WrongSyntaxException e) {
 				GameLog.log(MsgType.GAME, e.getMessage());
 			}
