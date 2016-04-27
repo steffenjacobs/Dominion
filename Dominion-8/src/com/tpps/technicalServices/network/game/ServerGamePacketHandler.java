@@ -92,6 +92,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 				if (this.server.validSession(packetReconnect.getUsername(), packetReconnect.getSessionID())) {
 					System.out.println("Reconnect valid Session username: " + packetReconnect.getUsername() + "sessionID: " + packetReconnect.getSessionID());
 					updatePortOfPlayer(port, packetReconnect);
+					this.server.getDisconnectedUser().remove(this.server.getGameController().getPlayerByUserName(packetReconnect.getUsername()));
+					server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
 				} else {
 					this.server.disconnect(port);
 				}
@@ -554,7 +556,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().addPlayerAndChooseRandomActivePlayer(player);
 			this.server.sendMessage(port, new PacketSendClientId(clientId));
 			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-				new ArtificialIntelligence(player, new InetSocketAddress("127.0.0.1", this.server.getPort()), sessionID).start();
+				new ArtificialIntelligence(player, new InetSocketAddress("127.0.0.1", this.server.getPort()), sessionID, this).start();
 				System.out.println("created a new artificial intelligence");
 			}
 			if (server.getGameController().getPlayers().size() == GameConstant.PLAYERS) {

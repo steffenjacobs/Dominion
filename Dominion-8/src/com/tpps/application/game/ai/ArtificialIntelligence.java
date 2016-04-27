@@ -9,6 +9,10 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardType;
+import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
+import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
+import com.tpps.technicalServices.network.gameSession.packets.PacketPlayTreasures;
 
 /*
  * - board anschauen, wenn angriffskarten gekauft werden dann defensiv kaufen 
@@ -41,7 +45,7 @@ public class ArtificialIntelligence {
 	 * @param uuid
 	 *            the sessionID of the AI instance
 	 */
-	public ArtificialIntelligence(Player player, SocketAddress _address, UUID uuid) {
+	public ArtificialIntelligence(Player player, SocketAddress _address, UUID uuid, ServerGamePacketHandler packetHandler) {
 		try {
 			this.player = player;
 			this.aiPacketHandler = new AIPacketHandler();
@@ -49,6 +53,7 @@ public class ArtificialIntelligence {
 			this.aiPacketHandler.setAiClient(aiClient);
 			this.information = new InformationHandler();
 			this.computing = false;
+			new Thread(() -> {packetHandler.handleReceivedPacket(player.getPort(), new PacketPlayCard(player.getDeck().getCardByTypeFromHand(CardType.TREASURE).getId(), player.getClientID()));}).start(); 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
