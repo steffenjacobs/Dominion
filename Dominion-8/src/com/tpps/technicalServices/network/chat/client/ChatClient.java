@@ -51,8 +51,8 @@ public class ChatClient extends PacketHandler{
 		case SEND_CHAT_ANSWER:
 			PacketSendAnswer answer = (PacketSendAnswer) packet;
 		//	System.out.println(answer.getAnswer());
-			DominionController.getInstance().reveiveChatMessageFromChatServer(
-					BadWordFilter.parseForbiddenWords(answer.getChatmessage()), answer.getSender(),
+			DominionController.getInstance().receiveChatMessageFromChatServer(
+					answer.getChatmessage(), answer.getSender(),
 					answer.getTimeStamp(), answer.getColor());
 			break;
 		default:System.out.println("sth with answer packet is wrong"); break;

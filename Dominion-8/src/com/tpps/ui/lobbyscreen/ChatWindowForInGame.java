@@ -6,10 +6,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -28,7 +24,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.text.BadLocationException;
@@ -37,6 +32,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.network.chat.client.BadWordFilter;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.gameplay.GameWindow;
 
@@ -183,7 +179,7 @@ public class ChatWindowForInGame extends JPanel {
 		ChatWindowForInGame.this.chatInputLine.setText("");
 		this.createChatInputPart(" " + sdf.format(new Date()), whiteColor);
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
-		this.createChatInputPart(chatmessage + "\n", whiteColor);
+		this.createChatInputPart(BadWordFilter.parseForbiddenWords(chatmessage) + "\n", whiteColor);
 		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 		try {
 			Thread.sleep(10);

@@ -15,12 +15,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.Date;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -37,7 +33,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.tpps.application.game.DominionController;
-import com.tpps.technicalServices.util.GameConstant;
+import com.tpps.technicalServices.network.chat.client.BadWordFilter;
 import com.tpps.technicalServices.util.GraphicsUtil;
 
 /**
@@ -289,7 +285,7 @@ public class GlobalChatPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
-		chatmessage = chatmessage;
+		chatmessage = BadWordFilter.parseForbiddenWords(chatmessage);
 		GlobalChatPanel.this.chatInputLine.setText("");
 		this.createChatInputPart(sdf.format(new Date()), whiteColor);
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);

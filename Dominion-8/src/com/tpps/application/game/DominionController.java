@@ -215,7 +215,7 @@ public final class DominionController {
 	 * @author jhuhn
 	 * @param message
 	 */
-	public void reveiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color){
+	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color){
 		if(this.gameClient == null){	//player is not ingame, player is in globalchat
 			this.globalChatPanel.appendChatLocal(message, user, timeStamp, color);
 		}else{							//player is ingame
