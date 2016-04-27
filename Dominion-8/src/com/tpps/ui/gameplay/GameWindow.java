@@ -465,7 +465,7 @@ public class GameWindow extends JFrame {
 			SerializedCard serializedCard = coins.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
 					serializedCard.getCost(), actionCardlds.get(i), 0.94, shift += 0.12, 0.1, 0.1, k++,
-					GraphicsUtil.rotate(serializedCard.getImage(), 270), framework);
+					GraphicsUtil.rotate(serializedCard.getImage(), 270), framework, "Coins");
 
 			GFButton button = new ButtonClass(0.935, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
 					getHEIGHT(), l, buttonGameImage, framework, number);
@@ -546,67 +546,71 @@ public class GameWindow extends JFrame {
 	 * @param handCards
 	 */
 
-	public synchronized void  handCards(LinkedHashMap<String, SerializedCard> handCards) {
-		LinkedList<String> actionCardIds = new LinkedList<>(handCards.keySet());
+	public synchronized void handCards(LinkedHashMap<String, SerializedCard> handCards) {
+		synchronized (this) {
+			LinkedList<String> actionCardIds = new LinkedList<>(handCards.keySet());
 
-		int k = 14;
-		String handTrigger = "handCards";
-		double sub = handCards.size();
-		double shift = ((0.8 - (sub * 0.1))) / sub;
-		double shiftsmall = ((0.4 - (sub * 0.1))) / sub;
-		double start = 0.1 - shift;
-		double startsmall = 0.2 - shiftsmall;
+			int k = 14;
+			String handTrigger = "handCards";
+			double sub = handCards.size();
+			double shift = ((0.8 - (sub * 0.1))) / sub;
+			double shiftsmall = ((0.4 - (sub * 0.1))) / sub;
+			double start = 0.1 - shift;
+			double startsmall = 0.2 - shiftsmall;
 
-		// double shiftSmall = shift - 0.03;
-		// double shiftOne = shiftSmall - 0.03;
+			// double shiftSmall = shift - 0.03;
+			// double shiftOne = shiftSmall - 0.03;
 
-		for (Iterator<Card> iterator = this.handCards.iterator(); iterator.hasNext();) {
-			Card card = (Card) iterator.next();
-			this.framework.removeComponent(card);
-		}
-		this.handCards = new LinkedList<Card>();
-		for (int i = 0; i < handCards.size(); i++) {
+			for (Iterator<Card> iterator = this.handCards.iterator(); iterator.hasNext();) {
+				Card card = (Card) iterator.next();
+				this.framework.removeComponent(card);
+			}
+			this.handCards = new LinkedList<Card>();
+			for (int i = 0; i < handCards.size(); i++) {
 
-			SerializedCard serializedCard = handCards.get(actionCardIds.get(i));
+				SerializedCard serializedCard = handCards.get(actionCardIds.get(i));
 
-			// Example For nishit
-			// Matcher matcher =
-			// Pattern.compile("\\d+").matcher(actionCardIds.get(i));
-			// matcher.find();
-			// String number = actionCardIds.get(i).substring(matcher.start(),
-			// matcher.end());
+				// Example For nishit
+				// Matcher matcher =
+				// Pattern.compile("\\d+").matcher(actionCardIds.get(i));
+				// matcher.find();
+				// String number =
+				// actionCardIds.get(i).substring(matcher.start(),
+				// matcher.end());
 
-			if (sub > 7) {
-				if (i == 0) {
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
-							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i), start += shift,
-							0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework, handTrigger);
-					framework.addComponent(card);
-					this.handCards.add(card);
+				if (sub > 7) {
+					if (i == 0) {
+						Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+								serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
+								start += shift, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework, handTrigger);
+						framework.addComponent(card);
+						this.handCards.add(card);
+					} else {
+						Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+								serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
+								start += (shift + 0.1), 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,
+								handTrigger);
+						framework.addComponent(card);
+						this.handCards.add(card);
+					}
 				} else {
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
-							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							start += (shift + 0.1), 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,
-							handTrigger);
-					framework.addComponent(card);
-					this.handCards.add(card);
-				}
-			} else {
-				System.out.println("Wie viel handkarten: " + handCards.size());
-				if (i == 0) {
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
-							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							startsmall += shift, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,
-							handTrigger);
-					framework.addComponent(card);
-					this.handCards.add(card);
-				} else {
-					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
-							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
-							startsmall += shiftsmall + 0.1, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,
-							handTrigger);
-					framework.addComponent(card);
-					this.handCards.add(card);
+//					System.out.println("Wie viel handkarten: " + handCards.size() + "serialized Card "
+//							+ serializedCard.getImage());
+					if (i == 0) {
+						Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+								serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
+								startsmall += shift, 0.65, 0.1, 0.3, k++, serializedCard.getImage(), framework,
+								handTrigger);
+						framework.addComponent(card);
+						this.handCards.add(card);
+					} else {
+						Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
+								serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
+								startsmall += shiftsmall + 0.1, 0.65, 0.1, 0.3, k++, serializedCard.getImage(),
+								framework, handTrigger);
+						framework.addComponent(card);
+						this.handCards.add(card);
+					}
 				}
 			}
 		}
@@ -649,7 +653,7 @@ public class GameWindow extends JFrame {
 			SerializedCard serializedCard = victory.get(actionCardlds.get(i));
 			Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(), serializedCard.getName(),
 					serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1, 0.1, k++,
-					GraphicsUtil.rotate(serializedCard.getImage(), 90), framework);
+					GraphicsUtil.rotate(serializedCard.getImage(), 90), framework, "Victory");
 			GFButton button = new ButtonClass(0.04, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
 					getWIDTH(), l, buttonGameImage, framework, number);
 			framework.addComponent(button);
@@ -960,6 +964,14 @@ public class GameWindow extends JFrame {
 	 */
 	public int getTopGap() {
 		return topGap;
+	}
+
+	public LinkedList<GFButton> getCoinButtons() {
+		return coinButtons;
+	}
+
+	public LinkedList<GFButton> getVictoryButtons() {
+		return victoryButtons;
 	}
 
 	/**
