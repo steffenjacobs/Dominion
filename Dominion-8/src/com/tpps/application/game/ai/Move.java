@@ -14,36 +14,36 @@ import com.tpps.application.game.card.Card;
  */
 public class Move {
 
-	private ListMultimap<String, Card> nextTurn;
+	private ListMultimap<ExecutionType, Card> playSequence;
+	private ListMultimap<ExecutionType, String> buySequence;
 
 	public Move() {
-		this.nextTurn = LinkedListMultimap.create();
+		this.playSequence = LinkedListMultimap.create();
+		this.buySequence = LinkedListMultimap.create();
 	}
 	
-	public Move(ListMultimap<String, Card> nextTurn) {
-		this.nextTurn = nextTurn;
+	public Move(ListMultimap<ExecutionType, Card> playSequence, ListMultimap<ExecutionType, String> buySequence) {
+		this.playSequence = playSequence;
+		this.buySequence = buySequence;
 	}
 	
 	public Move clone() {
-		return new Move(nextTurn);
+		return new Move(playSequence, buySequence);
+	}
+	
+	public ListMultimap<ExecutionType, Card> getPlaySequence() {
+		return this.playSequence;
+	}
+	
+	public ListMultimap<ExecutionType, String> getBuySequence() {
+		return this.buySequence;
 	}
 
-	/**
-	 * @return the nextTurn
-	 */
-	public ListMultimap<String, Card> getNextTurn() {
-		return nextTurn;
+	protected void putPlay(Card card) {
+		this.playSequence.put(ExecutionType.PLAY, card);
 	}
-
-	/**
-	 * @param nextTurn
-	 *            the nextTurn to set
-	 */
-	public void setNextTurn(ListMultimap<String, Card> nextTurn) {
-		this.nextTurn = nextTurn;
-	}
-
-	private void put(String name, Card card) {
-		
+	
+	protected void putBuy(String cardname) {
+		this.buySequence.put(ExecutionType.BUY, cardname);
 	}
 }

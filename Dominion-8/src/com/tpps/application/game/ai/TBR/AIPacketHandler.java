@@ -1,4 +1,4 @@
-package com.tpps.application.game.ai;
+package com.tpps.application.game.ai.TBR;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -50,7 +50,6 @@ public class AIPacketHandler extends PacketHandler {
 		}
 		switch (packet.getType()) {
 		case CARD_PLAYED:
-
 			break;
 		case SEND_CLIENT_ID:
 			this.aiClient.setClientId(((PacketSendClientId) packet).getClientId());

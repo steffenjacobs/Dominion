@@ -8,7 +8,7 @@ import java.util.Random;
 import com.tpps.technicalServices.util.CollectionsUtil;
 
 /**
- * The BadWordFilter is a class which handles abusive language in chatmessages
+ * The BadWordFilter is a class which handles abusive language in chat messages
  * It will filter any abusive words like "BadWord", "B.adWord" and
  * "BadWordhuman" (the last example means that the whole word is filtered if it
  * contains an abusive word.
@@ -137,12 +137,12 @@ public class BadWordFilter {
 		for (String word : words) {
 			String encoding = base64encode(word.toLowerCase());
 			sBuf.append("\"" + encoding + "\"" + ", ");
-			System.out.println("Encoding: " + encoding);
+//			System.out.println("Encoding: " + encoding);
 		}
 		System.out.println("result: " + sBuf.toString());
 	}
 
-//	public static void main(String[] args) {
-//		abusiveWordCreator();
-//	}
+	// public static void main(String[] args) {
+	// abusiveWordCreator();
+	// }
 }
