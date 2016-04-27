@@ -207,6 +207,7 @@ public class CardEditor extends JFrame implements ActionListener {
 
 			public void actionPerformed(ActionEvent arg0) {
 				DominionController.getInstance().joinMainMenu();
+				CardEditor.this.dispose();
 			}
 		}));
 		untenRechts.add(cancel);
