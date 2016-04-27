@@ -28,6 +28,8 @@ public class Client implements PortCheckable {
 	private ClientConnectionThread connectionThread;
 	private SocketAddress address;
 
+	private boolean reconnect = true;
+
 	private NetworkListenerManager listenerManager = new NetworkListenerManager(this);
 
 	/**
@@ -71,7 +73,7 @@ public class Client implements PortCheckable {
 	private void connectAndLoopLogic() {
 		int CONNECTION_TIMEOUT = 1500;
 		Socket clientSocket = null;
-		while (!Thread.interrupted()) {
+		while (!Thread.interrupted() && reconnect) {
 			GameLog.log(MsgType.NETWORK_INFO, "Trying to connect to " + address.toString() + "...");
 			this.connected = false;
 			try {
@@ -153,6 +155,10 @@ public class Client implements PortCheckable {
 			// normal when thread is killed
 		}
 		new Thread(() -> connectAndLoop(false)).start();
+	}	
+	
+	public void setAutoReconnectOnDisconnect(boolean value){
+		reconnect = value;
 	}
 
 	/**
@@ -161,6 +167,7 @@ public class Client implements PortCheckable {
 	 */
 	public void disconnect() {
 		this.connected = false;
+		this.reconnect = false;
 
 		if (this.connectionThread != null) {
 			try {
