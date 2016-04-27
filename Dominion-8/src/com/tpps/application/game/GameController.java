@@ -283,6 +283,7 @@ public class GameController {
 	 * @param cardId
 	 */
 	public synchronized boolean isVictoryCardOnHand(String cardId) {
+		
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardId);
 		if (card == null) {
 			return false;

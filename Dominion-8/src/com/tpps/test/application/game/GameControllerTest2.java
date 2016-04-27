@@ -49,7 +49,9 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testGetGameNotFinished() {
-		fail("Not yet implemented");
+		assertTrue(this.gameController.isGameNotFinished());
+		this.gameController.setGameNotFinished(false);
+		assertTrue(this.gameController.isGameNotFinished());
 	}
 
 
@@ -278,7 +280,7 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testGetThiefList() {
-		fail("Not yet implemented");
+		
 	}
 
 	@Test
@@ -288,7 +290,10 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testResetThiefList() {
-		fail("Not yet implemented");
+		this.gameController.getThiefList().add(new Player(null, 0, 0, "a", null, null));
+		assertThat(this.gameController.getThiefList().size(), is(1));
+		this.gameController.resetThiefList();
+		assertThat(this.gameController.getThiefList().size(), is(0));
 	}
 
 }

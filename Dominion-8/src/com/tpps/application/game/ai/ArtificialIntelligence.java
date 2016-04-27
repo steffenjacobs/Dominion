@@ -52,7 +52,7 @@ public class ArtificialIntelligence {
 			this.aiPacketHandler.setAiClient(aiClient);
 			this.information = new InformationHandler();
 			this.computing = false;
-			new Thread(() -> {packetHandler.handleReceivedPacket(player.getPort(), new PacketPlayCard(player.getDeck().getCardByTypeFromHand(CardType.TREASURE).getId(), player.getClientID()));}).start(); 
+			 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
