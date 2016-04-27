@@ -155,9 +155,15 @@ public class Client implements PortCheckable {
 			// normal when thread is killed
 		}
 		new Thread(() -> connectAndLoop(false)).start();
-	}	
-	
-	public void setAutoReconnectOnDisconnect(boolean value){
+	}
+
+	/**
+	 * sets the value for auto-reconnect
+	 * 
+	 * @param value
+	 *            the value to set the auto-reconnect-flag to
+	 */
+	public void setAutoReconnectOnDisconnect(boolean value) {
 		reconnect = value;
 	}
 
