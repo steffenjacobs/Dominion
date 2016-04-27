@@ -183,6 +183,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case BROADCAST_LOG:
 			GameLog.log(((PacketBroadcastLog) packet).getMsgType(), ((PacketBroadcastLog) packet).getMessage());
 			break;
+		case SHOW_END_SCREEN:
+			this.gameClient.disconnect();
+			break;
 		default:
 			System.out.println("unknown packet type: " + packet.getType());
 			break;
