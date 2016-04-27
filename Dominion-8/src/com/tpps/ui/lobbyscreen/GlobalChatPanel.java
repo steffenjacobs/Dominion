@@ -289,7 +289,7 @@ public class GlobalChatPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
-		chatmessage = parseForbiddenWords(chatmessage);
+		chatmessage = chatmessage;
 		GlobalChatPanel.this.chatInputLine.setText("");
 		this.createChatInputPart(sdf.format(new Date()), whiteColor);
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
@@ -409,84 +409,5 @@ public class GlobalChatPanel extends JPanel {
 		@Override
 		public void keyTyped(KeyEvent arg0) {
 		}
-	}
-
-	/**
-	 * This method parses any chat/log message and removes abusive language. Abusive words will be replaced in every position of their length randomly by "#+*!?/§$%&_"
-	 * 
-	 * @param message the message to be parsed
-	 * @return the parsed message without any abusive words.
-	 * 
-	 * @author Nicolas Wipfler
-	 */
-	private static String parseForbiddenWords(String message) {
-		StringBuffer result = new StringBuffer();
-		String replaceCharacters = "#+*!?/§$%&_";
-		System.out.println("Message.split(s+) > " + Arrays.toString(message.split("\\s+")));
-		for (String originalWord : message.split("\\s+")) {
-			String removedSpecialCharacters = originalWord.replaceAll("[^a-zA-Zäüö0-9\\s]", "");
-			System.out.println("rsc: " + removedSpecialCharacters);
-			String filter = "";
-			System.out.println("originalWord: " + originalWord + " and wordListContains(removedSpecialCharacters.toLowerCase())" + wordListContains(removedSpecialCharacters.toLowerCase()));
-			if (wordListContains(removedSpecialCharacters.toLowerCase())) {
-				for (int i = 0; i < originalWord.length(); i++) {
-					filter += Character.isLetterOrDigit(originalWord.charAt(i)) ? replaceCharacters.charAt(new Random().nextInt(replaceCharacters.length())) : originalWord.charAt(i);
-				}
-			} else
-				filter = originalWord;
-			System.out.println("and according to that, filter is: " + filter);
-			result.append(filter + " ");
-		}
-		System.out.println("result: " + result.toString());
-		return result.toString();
-	}
-
-	/**
-	 * 
-	 * @param word the word to look up
-	 * @return if the parameter contains any abusive words
-	 * 
-	 * @author Nicolas Wipfler
-	 */
-	private static boolean wordListContains(String word) {
-		for (String abusiveWord : GameConstant.ABUSIVE_WORDS) {
-			if (word.contains(base64decode(abusiveWord))) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 
-	 * @param msg the msg to encode
-	 * @return base64encoded String
-	 * 
-	 * @author Nicolas Wipfler
-	 */
-	@SuppressWarnings("unused")
-	private static String base64encode(String msg) {
-		try {
-			return Base64.getEncoder().encodeToString(msg.getBytes("utf-8"));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return msg;
-	}
-
-	/**
-	 * 
-	 * @param msg the msg to decode
-	 * @return base64decoded String
-	 * 
-	 * @author Nicolas Wipfler
-	 */
-	private static String base64decode(String msg) {
-		try {
-			return new String(Base64.getDecoder().decode(msg), "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return msg;
 	}
 }

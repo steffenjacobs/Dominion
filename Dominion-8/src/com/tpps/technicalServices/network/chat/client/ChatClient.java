@@ -52,7 +52,7 @@ public class ChatClient extends PacketHandler{
 			PacketSendAnswer answer = (PacketSendAnswer) packet;
 		//	System.out.println(answer.getAnswer());
 			DominionController.getInstance().reveiveChatMessageFromChatServer(
-					answer.getChatmessage(), answer.getSender(),
+					BadWordFilter.parseForbiddenWords(answer.getChatmessage()), answer.getSender(),
 					answer.getTimeStamp(), answer.getColor());
 			break;
 		default:System.out.println("sth with answer packet is wrong"); break;
@@ -135,5 +135,5 @@ public class ChatClient extends PacketHandler{
 //			line = scanInput.nextLine();
 //			c.sendMessage(line);
 //		}
-//	}
+	// }
 }
