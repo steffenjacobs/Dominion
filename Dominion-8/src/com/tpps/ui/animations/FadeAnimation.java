@@ -24,10 +24,18 @@ public class FadeAnimation extends Animation {
 	private final boolean direction, resetImageAfterwards;
 
 	/**
+	 * @param gameObject
+	 *            the game-object to play the animation on
+	 * @param durationMillis
+	 *            the duration of the animation in milliseconds
+	 * @param callWhenDone
+	 *            a callable to call after the animation is finished
 	 * @param alphaStart
 	 *            alpha-start-value [0-255]
 	 * @param alphaEnd
 	 *            alpha-end-value [0-255]
+	 * @param resetImageAfterwards
+	 *            whether to reset the image after the animation
 	 */
 	public FadeAnimation(GameObject gameObject, int durationMillis, Callable<?> callWhenDone, int alphaStart,
 			int alphaEnd, boolean resetImageAfterwards) {
@@ -46,6 +54,11 @@ public class FadeAnimation extends Animation {
 
 	}
 
+	/**
+	 * contains the entire animation-logic
+	 * 
+	 * @return Thread the thread that is running the animation
+	 */
 	private Thread setupLogic() {
 		return new Thread(new Runnable() {
 			float transparency = (float) alphaStart / 255;
@@ -63,11 +76,12 @@ public class FadeAnimation extends Animation {
 					frameCounter++;
 
 					// check if done or skipped
-					if (frameCounter >= maxFrames || (direction ? (transparency > alphaEnd/255f) : (transparency < alphaEnd/255f))
+					if (frameCounter >= maxFrames
+							|| (direction ? (transparency > alphaEnd / 255f) : (transparency < alphaEnd / 255f))
 							|| skip) {
 						System.out.println(frameCounter + "/" + maxFrames);
 						// gameObject.setVisible(false);
-						if (resetImageAfterwards){
+						if (resetImageAfterwards) {
 							gameObject.updatedBufferedImage(this.baseImage);
 						}
 
@@ -102,22 +116,26 @@ public class FadeAnimation extends Animation {
 		});
 	}
 
+	/** @return a readable representation of the object */
 	@Override
 	public String toString() {
 		return "@" + System.identityHashCode(this) + " - " + super.gameObject.toString();
 	}
 
+	/** is called on start */
 	@Override
 	protected void onStart() {
 		this.playAnimationThread.start();
 	}
 
+	/** is called on resume */
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onResume() {
 		this.playAnimationThread.resume();
 	}
 
+	/** is called on pause */
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPause() {
