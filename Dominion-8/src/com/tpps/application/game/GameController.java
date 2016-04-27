@@ -1036,6 +1036,7 @@ public class GameController {
 					
 				}
 			}, false);
+			System.out.println("send message to matchmakingserver");
 			client.sendMessage(new PacketGameEnd(getPlayerNames(), getWinningPlayer().getPlayerName()));
 			this.gameServer.newGame();
 		} catch (IOException e) {
