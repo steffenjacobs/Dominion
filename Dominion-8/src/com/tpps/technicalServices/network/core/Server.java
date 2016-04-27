@@ -260,6 +260,12 @@ public class Server {
 		GameLog.log(MsgType.NETWORK_INFO, "Disconnecting All Clients...");
 		for (ServerConnectionThread client : this.clients.values()) {
 			this.listenerManager.fireDisconnectEvent(client.getPort());
+			try {
+				client.closeSockets();
+			} catch (IOException e) {
+				//do nothing
+				e.printStackTrace();
+			}
 			client.interrupt();
 		}
 		this.clients.clear();

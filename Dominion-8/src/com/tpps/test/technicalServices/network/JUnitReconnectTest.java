@@ -56,8 +56,10 @@ public class JUnitReconnectTest {
 
 		for (int i = 0; i < COUNT_DISCONNECTS; i++) {
 			server.disconnectAll();
-			Thread.sleep(250);
-			client.connectAndLoop(false);
+			Thread.sleep(2500);
+			client.sendMessage(new TestPacket(null));
+			Thread.sleep(1000000);
+//			client.connectAndLoop(false);
 		}
 
 		assertEquals(COUNT_DISCONNECTS, serverListener.getConnectCount());
