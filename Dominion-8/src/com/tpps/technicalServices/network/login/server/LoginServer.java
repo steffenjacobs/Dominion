@@ -151,7 +151,7 @@ public class LoginServer extends Server{
 	 *            a String representation of the database(MySQL) to use
 	 */
 	private void initMySQLServer(String host, String port, String username, String password, String database){
-		SQLHandler.init(host, port, username, password, database);
+		SQLHandler.init();
 		SQLHandler.connect();
 	}
 	
@@ -168,7 +168,7 @@ public class LoginServer extends Server{
 			String database = "accountmanager";
 			String user = "root";
 			String password = "root";
-			SQLHandler.init(hostname, port, user, password, database);
+			SQLHandler.init();
 			SQLHandler.connect();
 			new LoginServer(hostname, port, user, password, database);
 		} catch (IOException e) {		

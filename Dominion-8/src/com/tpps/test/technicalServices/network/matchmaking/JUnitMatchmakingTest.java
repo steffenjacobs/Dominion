@@ -63,7 +63,7 @@ public class JUnitMatchmakingTest {
 
 		// init game-log
 		GameLog.init();
-		SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
+		SQLHandler.init();
 		SQLHandler.connect();
 		if (!SQLOperations.checkTable("accountdetails")) {
 			SQLOperations.createAccountdetailsTable();

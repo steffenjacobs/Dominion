@@ -27,7 +27,7 @@ public class GameClientNetworkListener implements NetworkListener {
 
 	@Override
 	public void onClientDisconnect(int port) {
-
+		DominionController.getInstance().setTurnFlag(false);		
 	}
 
 }

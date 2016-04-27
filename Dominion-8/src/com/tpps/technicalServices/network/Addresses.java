@@ -14,11 +14,18 @@ public final class Addresses {
 	private static AutoCreatingProperties conf;
 
 	private static final String CONFIG_FILE = "addresses.cfg";
+	
+	private static AutoCreatingProperties sqlconf;
 
-	static {
+	private static final String SQL_CONFIG_FILE = "sqladdresses.cfg";
+	
+	
 
+	static {		
 		conf = new AutoCreatingProperties();
 		conf.load(new File(CONFIG_FILE));
+		sqlconf = new AutoCreatingProperties();
+		sqlconf.load(new File(SQL_CONFIG_FILE));		
 	}
 
 	/** @return 127.0.0.1 */
@@ -45,5 +52,23 @@ public final class Addresses {
 	 */
 	public static final void setRemoteHost(String newAddress) {
 		conf.setProperty("REMOTE_HOST", newAddress);
+	}
+	
+	public static final void setSQLInitializiation(String[] data){
+		sqlconf.setProperty("host", data[0]);
+		sqlconf.setProperty("port", data[1]);
+		sqlconf.setProperty("username", data[2]);
+		sqlconf.setProperty("password", data[3]);
+		sqlconf.setProperty("database", data[4]);		
+	}
+	
+	public static final String[] getSQLInitialization(){
+		String[] data = new String[5];
+		data[0] = sqlconf.getProperty("host", "localhost");
+		data[1] = sqlconf.getProperty("port", "3306");
+		data[2] = sqlconf.getProperty("username", "root");
+		data[3] = sqlconf.getProperty("password", "root");
+		data[4] = sqlconf.getProperty("database", "accountmanager");
+		return data;
 	}
 }
