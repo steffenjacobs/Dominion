@@ -240,7 +240,7 @@ public class ChatRoom {
 	 *            the packet that received from the user
 	 */
 	private void evaluateStatisticsCommand(PacketSendChatCommand packet){
-		SQLHandler.init("localhost", "3306", "root", "root", "accountmanager");
+		SQLHandler.init();
 		SQLHandler.connect();
 	
 		String result = "";
