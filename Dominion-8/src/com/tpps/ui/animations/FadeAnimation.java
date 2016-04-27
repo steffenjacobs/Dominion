@@ -6,29 +6,51 @@ import java.util.concurrent.Callable;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 
-public class FadeOutAnimation extends Animation {
+/**
+ * this represents a simple fading animation
+ * 
+ * @author Steffen Jacobs
+ */
+public class FadeAnimation extends Animation {
 	private Thread playAnimationThread;
 	private Callable<?> callOnDone;
 
 	private static final int DELAY_MILLIS = 20;
-	private static final float FADE_LOWER_BOUND = .01f;
 
 	private int frameCounter;
 	private final int maxFrames;
+	private final int alphaStart, alphaEnd;
+	/** true: fade in, false: fade out */
+	private final boolean direction, resetImageAfterwards;
 
-	public FadeOutAnimation(GameObject gameObject, int durationMillis, Callable<?> callWhenDone) {
+	/**
+	 * @param alphaStart
+	 *            alpha-start-value [0-255]
+	 * @param alphaEnd
+	 *            alpha-end-value [0-255]
+	 */
+	public FadeAnimation(GameObject gameObject, int durationMillis, Callable<?> callWhenDone, int alphaStart,
+			int alphaEnd, boolean resetImageAfterwards) {
+
 		super(gameObject, durationMillis);
+
+		this.alphaStart = alphaStart;
+		this.alphaEnd = alphaEnd;
 		this.maxFrames = durationMillis / DELAY_MILLIS;
 		this.frameCounter = 0;
 		this.callOnDone = callWhenDone;
+		this.resetImageAfterwards = resetImageAfterwards;
+
+		this.direction = alphaStart < alphaEnd;
 		this.playAnimationThread = setupLogic();
+
 	}
 
 	private Thread setupLogic() {
 		return new Thread(new Runnable() {
-			float transparency = 1f;
+			float transparency = (float) alphaStart / 255;
 			private BufferedImage baseImage;
-			private float fadePerStep = 1 / (float) maxFrames;
+			private float fadePerStep = Math.abs(alphaStart - alphaEnd) / 255f / maxFrames;
 
 			@Override
 			public void run() {
@@ -41,11 +63,13 @@ public class FadeOutAnimation extends Animation {
 					frameCounter++;
 
 					// check if done or skipped
-					if (frameCounter >= maxFrames || transparency < FADE_LOWER_BOUND || skip) {
+					if (frameCounter >= maxFrames || (direction ? (transparency > alphaEnd/255f) : (transparency < alphaEnd/255f))
+							|| skip) {
 						System.out.println(frameCounter + "/" + maxFrames);
-						gameObject.setVisible(false);
-						gameObject.updatedBufferedImage(this.baseImage);
-						System.out.println("fade-animation finished.");
+						// gameObject.setVisible(false);
+						if (resetImageAfterwards){
+							gameObject.updatedBufferedImage(this.baseImage);
+						}
 
 						try {
 							callOnDone.call();
@@ -61,7 +85,11 @@ public class FadeOutAnimation extends Animation {
 					}
 
 					// update image
-					transparency -= fadePerStep;
+					if (direction) {
+						transparency += fadePerStep;
+					} else {
+						transparency -= fadePerStep;
+					}
 					gameObject.updatedBufferedImage(GraphicsUtil.setAlpha(baseImage, transparency));
 					try {
 						Thread.sleep(DELAY_MILLIS);

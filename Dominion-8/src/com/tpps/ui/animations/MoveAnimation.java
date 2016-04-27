@@ -49,7 +49,6 @@ public class MoveAnimation extends Animation {
 					if (frameCounter >= maxFrames) {
 						System.out.println(frameCounter + "/" + maxFrames);
 						framework.moveGameObjectTo(gameObject, destX, destY);
-						System.out.println("fade-animation finished.");
 
 						try {
 							callOnDone.call();

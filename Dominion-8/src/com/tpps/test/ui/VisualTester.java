@@ -16,7 +16,7 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
-import com.tpps.ui.animations.FadeOutAnimation;
+import com.tpps.ui.animations.FadeAnimation;
 import com.tpps.ui.animations.MoveAnimation;
 import com.tpps.ui.components.GFButton;
 
@@ -118,17 +118,17 @@ public class VisualTester extends JFrame {
 		this.revalidate();
 		this.repaint();
 
-		FadeOutAnimation anim = new FadeOutAnimation(gfb, 1000, new Callable<Void>() {
+		FadeAnimation anim = new FadeAnimation(gfb, 1000, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				System.out.println("finished here!");
+				System.out.println("finished fade!");
 				return null;
 			}
-		});
+		}, 255, 0, false);
 		MoveAnimation anim2 = new MoveAnimation(framework, gfb, 2000, new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
-				System.out.println("finished here!");
+				System.out.println("finished move!");
 				return null;
 			}
 		}, .7, .7);
