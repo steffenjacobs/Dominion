@@ -34,6 +34,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketSendHandCard
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendRevealCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndReactions;
+import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndScreen;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeCards;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketGameEnd;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
@@ -799,12 +800,32 @@ public class GameController {
 		return this.players;
 	}
 	
+	/**
+	 * 
+	 * @param userName
+	 * @return the player with the given userName null if not exists
+	 */
 	public Player getPlayerByUserName(String userName) {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (player.getPlayerName().equals(userName)){
 				return player;
 			}			
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @param userName
+	 * @return the player with the given port null if not exists
+	 */
+	public Player getPlayerPlayerByPort(int port){
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.getPort() == port) {
+				return player;
+			}
 		}
 		return null;
 	}
@@ -899,7 +920,7 @@ public class GameController {
 	/**
 	 * @return one of the four players who is randomly choosen
 	 */
-	private Player getRandomPlayer() {
+	public Player getRandomPlayer() {
 		return this.players.get((int) (Math.random() * 4));
 	}
 
@@ -1001,6 +1022,11 @@ public class GameController {
 				e.printStackTrace();
 			}
 		}		
+		try {
+			this.gameServer.broadcastMessage(new PacketShowEndScreen());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		Client client;
 		try {
 			client = new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.getStandardPort()), new PacketHandler() {
@@ -1014,7 +1040,8 @@ public class GameController {
 			this.gameServer.newGame();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
+		
 		
 	}
 	
@@ -1022,7 +1049,7 @@ public class GameController {
 	 * 
 	 * @return the player who has won the game
 	 */
-	private Player getWinningPlayer() {
+	public Player getWinningPlayer() {
 		int maxVictoryPoints = -1;
 		Player winningPlayer = null;
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {

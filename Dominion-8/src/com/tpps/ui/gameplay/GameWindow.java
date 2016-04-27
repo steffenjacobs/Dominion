@@ -215,10 +215,10 @@ public class GameWindow extends JFrame {
 			 * @param e
 			 */
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_1){
+				if (e.getKeyCode() == KeyEvent.VK_1) {
 					jTabbedPane.setSelectedIndex(0);
 				}
-				if(e.getKeyCode() == KeyEvent.VK_2){
+				if (e.getKeyCode() == KeyEvent.VK_2) {
 					jTabbedPane.setSelectedIndex(1);
 				}
 				if (Character.isSpaceChar(e.getKeyChar())) {
@@ -546,7 +546,7 @@ public class GameWindow extends JFrame {
 	 * @param handCards
 	 */
 
-	public void handCards(LinkedHashMap<String, SerializedCard> handCards) {
+	public synchronized void  handCards(LinkedHashMap<String, SerializedCard> handCards) {
 		LinkedList<String> actionCardIds = new LinkedList<>(handCards.keySet());
 
 		int k = 14;
@@ -565,7 +565,6 @@ public class GameWindow extends JFrame {
 			this.framework.removeComponent(card);
 		}
 		this.handCards = new LinkedList<Card>();
-		System.out.println("Wie viel handkarten: " + handCards.size());
 		for (int i = 0; i < handCards.size(); i++) {
 
 			SerializedCard serializedCard = handCards.get(actionCardIds.get(i));
@@ -593,6 +592,7 @@ public class GameWindow extends JFrame {
 					this.handCards.add(card);
 				}
 			} else {
+				System.out.println("Wie viel handkarten: " + handCards.size());
 				if (i == 0) {
 					Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 							serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
