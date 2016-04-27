@@ -51,7 +51,7 @@ public class ChatClient extends PacketHandler{
 		case SEND_CHAT_ANSWER:
 			PacketSendAnswer answer = (PacketSendAnswer) packet;
 		//	System.out.println(answer.getAnswer());
-			DominionController.getInstance().reveiveChatMessageFromChatServer(
+			DominionController.getInstance().receiveChatMessageFromChatServer(
 					answer.getChatmessage(), answer.getSender(),
 					answer.getTimeStamp(), answer.getColor());
 			break;
@@ -135,5 +135,5 @@ public class ChatClient extends PacketHandler{
 //			line = scanInput.nextLine();
 //			c.sendMessage(line);
 //		}
-//	}
+	// }
 }

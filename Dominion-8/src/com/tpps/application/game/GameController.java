@@ -876,6 +876,7 @@ public class GameController {
 			this.players.addLast(player);
 			if (this.players.size() == 4) {
 				this.activePlayer = getRandomPlayer();
+//				this.gameServer.
 			}
 		} else {
 			throw new TooMuchPlayerException();

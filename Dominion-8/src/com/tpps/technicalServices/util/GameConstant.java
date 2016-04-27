@@ -63,7 +63,4 @@ public final class GameConstant {
 	public static final String NIL = "NIL";
 
 	public static final int EMPTY_PILES = 3;
-
-	public static final ArrayList<String> ABUSIVE_WORDS = CollectionsUtil.getArrayList("d2l4ZXI=", "YXJzY2g=",
-			"bnV0dGU=", "aHVyZQ==", "dHVudGU=", "cGVuaXM=", "Y29jaw==", "ZGljaw==", "bm9vYg==", "Y3VudA==", "Yml0Y2g=");
 }
