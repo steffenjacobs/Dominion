@@ -79,7 +79,7 @@ public class GameLogTextPane extends JPanel {
 		this.textPane.setOpaque(false);
 		this.textPane.setFont(new Font("Calibri", Font.PLAIN, 12));
 		this.textPane.setForeground(Color.WHITE);
-	//	this.textPane.setBackground(new Color(100, 100, 100, 100));
+		// this.textPane.setBackground(new Color(100, 100, 100, 100));
 		this.textPane.setBorder(BorderFactory.createEmptyBorder());
 		// this.textPane.setBackground(GameLog.getBackgroundColor());
 		// this.textPane.setLineWrap(true);
@@ -148,6 +148,18 @@ public class GameLogTextPane extends JPanel {
 		} else {
 			this.updateTextArea(line + "\n", GameLog.getMsgColor());
 		}
+	}
+	
+	/**
+	 * CAUTION: in this method there won't be a + "\n" at the end of the updated line.
+	 * 
+	 * @param line
+	 *            the line update
+	 * @param textColor
+	 *            the color of the line
+	 */
+	public void updateLogger(final String line, Color textColor) {
+		this.updateTextArea(line, textColor);
 	}
 
 	/**

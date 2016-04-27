@@ -20,17 +20,19 @@ public class PacketBroadcastLog extends Packet {
 	private static final long serialVersionUID = 6438319829526897629L;
 	private final String msg;
 	private final MsgType msgType;
+	private final Color color;
 	
 	/**
 	 * 
 	 * sets the packettype
 	 * 
-	 * @author ladler - Lukas Adler
+	 * @author ladler - Lukas Adler, nwipfler - Nicolas Wipfler
 	 */
 	public PacketBroadcastLog(MsgType msgType, String msg, Color color) {
 		super(PacketType.BROADCAST_LOG);
 		this.msg = msg;
 		this.msgType = msgType;
+		this.color = color;
 		GameLog.setMsgColor(color);
 	}
 	
@@ -38,7 +40,21 @@ public class PacketBroadcastLog extends Packet {
 		super(PacketType.BROADCAST_LOG);
 		this.msg = msg;
 		this.msgType = msgType;
-		GameLog.setMsgColor(Color.WHITE);
+		this.color = Color.WHITE;
+		GameLog.setMsgColor(color);
+	}
+	
+	/***
+	 * this will be used in most cases
+	 * 
+	 * @param line the line to update
+	 * @param color the color of the updated line
+	 */
+	public PacketBroadcastLog(String line, Color color) {
+		super(PacketType.BROADCAST_LOG);
+		this.msg = line;
+		this.msgType = MsgType.GAME;
+		this.color = color;
 	}
 	
 	public MsgType getMsgType(){
@@ -47,6 +63,10 @@ public class PacketBroadcastLog extends Packet {
 	
 	public String getMessage(){
 		return this.msg;
+	}
+	
+	public Color getColor() {
+		return this.color;
 	}
 
 	/**

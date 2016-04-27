@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.TreeMap;
 import java.util.UUID;
 
 import com.tpps.application.game.GameBoard;
@@ -258,7 +259,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				server.broadcastMessage(new PacketSendBoard(this.server.getGameController().getGameBoard().getTreasureCardIDs(), this.server.getGameController().getGameBoard().getVictoryCardIDs(),
 						this.server.getGameController().getGameBoard().getActionCardIDs()));
 			} catch (NoSuchElementException e) {
-				GameLog.log(MsgType.GAME, "Not enough curses.\n");
+				GameLog.log(MsgType.EXCEPTION, "Not enough curses.\n");
 			}
 			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 		}
@@ -348,8 +349,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		 * 1. jeder die broadcast und nur ich die log message sehen
 		 * kann bei cardPlayed 
 		 * 2. wo steht cliendID%4 (Konstruktor von Player)
-		 * 3. funktionieren die
-		 * Farben 
+		 * 3. funktionieren die Farben 
 		 * 4. test bei servergamepackethandler removen und color
 		 * übergeben sodass die farben funzen können 
 		 * 5. im GameLog.broadcastMessage die color removen aber das wird automatisch
@@ -359,7 +359,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 		 * 7. man kann ColorHash map von Jojo oder Player.getLogColor benutzen
 		 * 8. turn counter in player als attribut und dann in GameContr. einbauen
 		 */
-		GameLog.log(MsgType.GAME, "nur ich kann das sehen");
+		GameLog.logInGame(MsgType.GAME, "nur ich kann das sehen", GameLog.getMsgColor());
+		
 
 		if (!player.playsReactionCard() && (player.isDiscardMode() || player.isTrashMode())) {
 			System.out.println("im handler discard mode set");
@@ -490,32 +491,42 @@ public class ServerGamePacketHandler extends PacketHandler {
 		} catch (SynchronisationException e) {
 			this.log("The card you wanted to buy is not on the board.");
 		} catch (WrongSyntaxException e) {
-			GameLog.log(MsgType.GAME, e.getMessage());
+			GameLog.log(MsgType.ERROR, e.getMessage());
 		}
 	}
 	
 	private void nextActivePlayer(int port) {
 		try {
-			
-			
 			Color playerColor = this.chatController.getColorMap().get(this.server.getGameController().getActivePlayerName());
-//			Color playerColorAlternative = this.server.getGameController().getActivePlayer().getLogColor();
-			this.log("  >>>  " + this.server.getGameController().getActivePlayerName() + ": turn ended  <<<  ", playerColor);			
+
+			this.server.broadcastMessage(new PacketBroadcastLog("\n", GameLog.getMsgColor()));			
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 			this.server.sendMessage(port, new PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(), 
 					this.server.getGameController().getActivePlayer().getBuys(), this.server.getGameController().getActivePlayer().getCoins()));
-			
 			this.server.getGameController().endTurn();
-			
-			
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
-			this.log("  >>>  " + this.server.getGameController().getActivePlayerName() + ": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " started  <<<  ", playerColor);
+			this.server.broadcastMessage(new PacketBroadcastLog("----- ", GameLog.getMsgColor()));
+			this.server.broadcastMessage(new PacketBroadcastLog(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()));
+			this.server.broadcastMessage(new PacketBroadcastLog(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " started -----\n", GameLog.getMsgColor()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void logPrepText() {
+		for (Integer i : GameLog.getPrepText().keySet()) {
+			TreeMap<String, Color> res = (TreeMap<String, Color>) GameLog.getPrepText().get(i);
+			Color c = res.firstEntry().getValue();
+			String s = res.firstKey();
+			try {
+				this.server.broadcastMessage(new PacketBroadcastLog(s,c));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	private void log(String msg) {
 		try {
 			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, msg));
