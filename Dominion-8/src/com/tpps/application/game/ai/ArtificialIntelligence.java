@@ -12,7 +12,6 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
-import com.tpps.technicalServices.network.gameSession.packets.PacketPlayTreasures;
 
 /*
  * - board anschauen, wenn angriffskarten gekauft werden dann defensiv kaufen 

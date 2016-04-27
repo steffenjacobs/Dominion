@@ -20,8 +20,12 @@ public class Move {
 		this.nextTurn = LinkedListMultimap.create();
 	}
 	
-	public Move(LinkedListMultimap<String, Card> nextTurn) {
+	public Move(ListMultimap<String, Card> nextTurn) {
 		this.nextTurn = nextTurn;
+	}
+	
+	public Move clone() {
+		return new Move(nextTurn);
 	}
 
 	/**
@@ -39,7 +43,7 @@ public class Move {
 		this.nextTurn = nextTurn;
 	}
 
-	private void appendToNextMove() {
-
+	private void put(String name, Card card) {
+		
 	}
 }
