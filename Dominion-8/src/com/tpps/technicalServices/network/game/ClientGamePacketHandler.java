@@ -3,6 +3,8 @@ package com.tpps.technicalServices.network.game;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
+
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.GameStorageInterface;
 import com.tpps.technicalServices.logger.GameLog;
@@ -184,6 +186,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			GameLog.log(((PacketBroadcastLog) packet).getMsgType(), ((PacketBroadcastLog) packet).getMessage());
 			break;
 		case SHOW_END_SCREEN:
+			JOptionPane.showMessageDialog(null, "end game");
 			this.gameClient.disconnect();
 			break;
 		default:
