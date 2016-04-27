@@ -239,11 +239,12 @@ public class Card extends GameObject {
 			parent.addComponent(gameBackground);
 		}
 		if (handTrigger.equals("handCards")) {
-			// tempObject=new Card(actions, types, name, cost, id, relativeX,
-			// relativeY-0.05, relativeWidth, relativeHeight, layer,
-			// sourceImage, parent);
-			// parent.removeComponent(this);
-			// parent.addComponent(tempObject);
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
 				@Override
 				public Void call() throws Exception {
@@ -265,6 +266,12 @@ public class Card extends GameObject {
 			parent.removeComponent(gameBackground);
 		}
 		if (handTrigger.equals("handCards")) {
+			try {
+				Thread.sleep(150);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
 				@Override
 				public Void call() throws Exception {
@@ -274,10 +281,6 @@ public class Card extends GameObject {
 			}, relativeX, relativeY);
 			anim.play();
 		}
-		// parent.removeComponent(tempObject);
-		// parent.addComponent(this);
-		// parent.repaint();
-		// parent.revalidate();
 	}
 
 	public <T extends Client> void onAiClick(T client, int clientId) {
