@@ -1,9 +1,9 @@
 package com.tpps.application.game.ai;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import com.tpps.application.game.Player;
-import com.tpps.application.storage.CardStorageController;
+import com.tpps.technicalServices.util.CollectionsUtil;
 
 /***
  * InformationHandler provides all kind of information about the game and the
@@ -18,18 +18,18 @@ public class InformationHandler {
 	 * with the cardStore the AI can compare every handcard with the 'original
 	 * card' of the backend
 	 */
-	private CardStorageController cardStore;
-	private LinkedList<String> blacklist;
+	// private CardStorageController cardStore;
+	private List<String> blacklist;
 
 	public InformationHandler() {
-//		this.cardStore = new CardStorageController("cards.bin");
-//		this.blacklist = this.getCardNamesFromStorage("Curse", "Copper", "Estate");
+		// this.cardStore = new CardStorageController("cards.bin");
+		this.blacklist = CollectionsUtil.getArrayList("Curse", "Copper", "Estate");
 	}
 
 	/**
 	 * @return the blacklist
 	 */
-	public LinkedList<String> getBlacklist() {
+	public List<String> getBlacklist() {
 		return blacklist;
 	}
 
@@ -37,42 +37,44 @@ public class InformationHandler {
 	 * @param blacklist
 	 *            the blacklist to set
 	 */
-	public void setBlacklist(LinkedList<String> blacklist) {
+	public void setBlacklist(List<String> blacklist) {
 		this.blacklist = blacklist;
 	}
 
-	/**
-	 * @return the cardStore
-	 */
-	public CardStorageController getCardStore() {
-		return cardStore;
-	}
+	// /**
+	// * @return the cardStore
+	// */
+	// public CardStorageController getCardStore() {
+	// return cardStore;
+	// }
+	//
+	// /**
+	// * @param cardStore
+	// * the cardStore to set
+	// */
+	// public void setCardStore(CardStorageController cardStore) {
+	// this.cardStore = cardStore;
+	// }
 
-	/**
-	 * @param cardStore
-	 *            the cardStore to set
-	 */
-	public void setCardStore(CardStorageController cardStore) {
-		this.cardStore = cardStore;
-	}
-
-	/**
-	 * this method is used to check if there is a card called 'name' in the cardStore
-	 * so it takes the parameter 'names' and adds every cardname (when
-	 * the card is truly available in cardStore) to the return list.
-	 * 
-	 * @param names
-	 *            the names of all Cards which will be get from the CardStore
-	 * @return a list of names with the names of only the available cards in the
-	 *         game
-	 */
-	protected LinkedList<String> getCardNamesFromStorage(String... names) {
-		LinkedList<String> list = new LinkedList<String>();
-		for (String cardname : names) {
-			list.addLast(cardStore.getCard(cardname).getName());
-		}
-		return list;
-	}
+	// /**
+	// * this method is used to check if there is a card called 'name' in the
+	// * cardStore so it takes the parameter 'names' and adds every cardname
+	// (when
+	// * the card is truly available in cardStore) to the return list.
+	// *
+	// * @param names
+	// * the names of all Cards which will be get from the CardStore
+	// * @return a list of names with the names of only the available cards in
+	// the
+	// * game
+	// */
+	// protected LinkedList<String> getCardNamesFromStorage(String... names) {
+	// LinkedList<String> list = new LinkedList<String>();
+	// for (String cardname : names) {
+	// list.addLast(cardStore.getCard(cardname).getName());
+	// }
+	// return list;
+	// }
 
 	/**
 	 * 
