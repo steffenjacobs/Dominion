@@ -162,33 +162,9 @@ public class GameControllerTest2 {
 	}
 
 	@Test
-	public void testPlayTreasures() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testOrganizePilesAndrefreshCardHand() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testDiscardOtherDownto() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testRevealAndTakeCardsDiscardOthers() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGainCurseOthers() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testRevealCardOthersPutItOnTopOfDeck() {
-		fail("Not yet implemented");
+		this.gameController.getActivePlayer().getPlayedCards().add(
+				this.g
 	}
 
 	@Test
@@ -208,16 +184,6 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testCheckSpyFinish() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReactOnThief() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testReactOnSpy() {
 		fail("Not yet implemented");
 	}
 
