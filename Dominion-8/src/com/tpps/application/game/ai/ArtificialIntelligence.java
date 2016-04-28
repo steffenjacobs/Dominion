@@ -156,32 +156,32 @@ public class ArtificialIntelligence {
 
 		System.out.println(this + " is executing a turn");
 		// LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
-		try {
+//		try {
 			Move defaultMove = this.getDefaultMove();
-			Thread.sleep(500);
+//			Thread.sleep(500);
 			this.playTreasures();
-			Thread.sleep(500);
+//			Thread.sleep(500);
 			for (Card action : defaultMove.getPlaySequence().get(ExecutionType.PLAY)) {
 				this.playCard(action);
 			}
-			Thread.sleep(250);
+//			Thread.sleep(250);
 			this.setBuyPhase();
-			Thread.sleep(250);
+//			Thread.sleep(250);
 			for (String buy : defaultMove.getBuySequence().get(ExecutionType.BUY)) {
 				if (!information.getBlacklist().contains(buy)) {
 					this.buyCard(this.getCardFromBoard(buy));
 				}
 			}
-			Thread.sleep(500);
+//			Thread.sleep(500);
 			/**
 			 * set computing flag false here, because otherwise the AI would
 			 * compute a new turn before it has even executed the old
 			 */
 			this.computing = false;
 			this.endTurn();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	/**

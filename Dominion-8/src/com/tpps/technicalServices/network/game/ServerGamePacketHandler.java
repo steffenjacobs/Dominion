@@ -489,7 +489,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().buyOneCard(((PacketBuyCard) packet).getCardId());
 			this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
 		} catch (SynchronisationException e) {
-			this.log("The card you wanted to buy is not on the board.");
+//			this.log("The card you wanted to buy is not on the board.");
 		} catch (WrongSyntaxException e) {
 			GameLog.log(MsgType.ERROR, e.getMessage());
 		}
@@ -524,22 +524,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-	}
-	
-	private void log(String msg) {
-		try {
-			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, msg));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void log(String msg, Color color) {
-		try {
-			this.server.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, msg, color));
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
