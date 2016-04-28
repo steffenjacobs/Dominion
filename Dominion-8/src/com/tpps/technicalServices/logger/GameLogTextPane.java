@@ -62,7 +62,7 @@ public class GameLogTextPane extends JPanel {
 	 * constructor for GameLogTextPane() JPanel
 	 */
 	public GameLogTextPane() {
-		MsgType.setGameMode();
+//		MsgType.setGameMode();
 		this.setLayout(new BorderLayout());
 		this.setOpaque(false);
 

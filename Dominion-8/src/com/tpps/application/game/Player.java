@@ -741,7 +741,7 @@ public class Player {
 						getDeck().getDrawPile().addLast(this.gameServer.getGameController().getGameBoard().getTableForTreasureCards().get("Silver").removeLast());
 					}
 				} catch (NoSuchElementException e) {
-					this.gameServer.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, "couldn't gain the card because ther are no more silver card on the board", getLogColor()));
+//					this.gameServer.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, "couldn't gain the card because ther are no more silver card on the board", getLogColor()));
 				}
 				break;
 			case DISCARD_CARD:

@@ -222,7 +222,7 @@ public class GameLog {
 	public static void logInGame(MsgType type, String line, Color color) {
 		writeToConsole(line);
 		if (isInitialized) {
-			if (type.getDisplay() && guiPossible) {
+			if (type.equals(MsgType.GAME) && guiPossible) {
 				writeInGame(line, color);
 			}
 		} else { // prevent Null Pointers

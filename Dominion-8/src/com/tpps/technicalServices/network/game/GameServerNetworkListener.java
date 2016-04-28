@@ -1,5 +1,6 @@
 package com.tpps.technicalServices.network.game;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Iterator;
@@ -7,7 +8,6 @@ import java.util.LinkedList;
 
 import com.tpps.application.game.Player;
 import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
@@ -36,7 +36,7 @@ public class GameServerNetworkListener implements NetworkListener {
 	public void onClientDisconnect(int port) {
 		System.out.println("client disconnected");
 		try {
-			this.gameServer.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, "player disconnected."));
+			this.gameServer.broadcastMessage(new PacketBroadcastLog("player disconnected.", GameLog.getMsgColor()));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -94,7 +94,7 @@ public class GameServerNetworkListener implements NetworkListener {
 				this.gameServer.getGameController().setActivePlayer(this.gameServer.getGameController().getRandomPlayer());
 				try {
 					this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID()));
-					this.gameServer.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, this.gameServer.getGameController().getPlayers().size() + " players left."));
+					this.gameServer.broadcastMessage(new PacketBroadcastLog(this.gameServer.getGameController().getPlayers().size() + " players left.", GameLog.getMsgColor()));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
