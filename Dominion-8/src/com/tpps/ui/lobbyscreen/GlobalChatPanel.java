@@ -33,6 +33,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.client.BadWordFilter;
 import com.tpps.technicalServices.util.GraphicsUtil;
 
@@ -70,6 +72,7 @@ public class GlobalChatPanel extends JPanel {
 	 */
 	public GlobalChatPanel() {
 		this.createComponents();
+		GameLog.log(MsgType.INIT, "GlobalChatPanel");
 	}
 
 	/**

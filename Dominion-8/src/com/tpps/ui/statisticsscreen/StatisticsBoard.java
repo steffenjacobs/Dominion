@@ -21,6 +21,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
 
 public class StatisticsBoard extends JPanel{
@@ -51,6 +53,8 @@ public class StatisticsBoard extends JPanel{
 		this.add(Box.createVerticalStrut(VERTICAL_STRUT), BorderLayout.PAGE_START);
 		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_START);
 		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_END);
+
+		GameLog.log(MsgType.INIT, "StatisticsBoard");
 	}
 	
 	private String[][] initRowData(){

@@ -2,14 +2,11 @@ package com.tpps.technicalServices.logger;
 
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.tpps.application.game.DominionController;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.ColorUtil;
@@ -31,6 +28,7 @@ public class GameLog {
 	/**
 	 * unused for now, see MsgType class for messageTypeColors
 	 */
+	@SuppressWarnings("unused")
 	private static Color msgTypeColor = null;
 
 	/**

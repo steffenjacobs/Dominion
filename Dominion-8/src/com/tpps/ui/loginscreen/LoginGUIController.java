@@ -5,8 +5,9 @@ import java.util.UUID;
 import javax.swing.JOptionPane;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.login.client.LoginClient;
-import com.tpps.ui.MainFrame;
 
 /**
  * Tis class is used as an interface between LoginGUI and 
@@ -25,6 +26,7 @@ public class LoginGUIController{
 	public LoginGUIController(){
 		logingui = new LogInGUI(this);
 		loginclient = new LoginClient(this);
+		GameLog.log(MsgType.INIT, "LoginGUIController");
 	}
 	
 	/**
