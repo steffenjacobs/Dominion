@@ -183,11 +183,12 @@ public class GameLog {
 	 * and after that an INIT message with "GameLogger initialized"
 	 */
 	public static void init() {
+		GameLog.isInitialized = true;
 		if (!guiPossible) 
 			return;
 		GameLog.textPane = new GameLogTextPane();
-		GameLog.isInitialized = true;
-		GameLog.log(MsgType.GAME, "Game Log\n", msgColor);
+		GameLog.log(MsgType.INIT, "Game Log", msgColor);
+		GameLog.appendToPrepText(0,"Game Log\n", msgColor);
 		if (prepText == null)
 			GameLog.prepText = new TreeMap<Integer, Pair<String, Color>>();
 	}
