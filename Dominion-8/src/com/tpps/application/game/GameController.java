@@ -84,14 +84,6 @@ public class GameController {
 	public boolean isCardsEnabled() {
 		return cardsEnabled;
 	}
-	
-	/**
-	 * 
-	 * @return if the game is not finished
-	 */
-	public boolean getGameNotFinished() {
-		return this.gameNotFinished;
-	}
 
 	/**
 	 *cards can be played
@@ -847,14 +839,6 @@ public class GameController {
 	}
 
 	/**
-	 * set the playerList with the given param
-	 * @param players
-	 */
-	public void setPlayers(LinkedList<Player> players) {
-		this.players = players;
-	}
-
-	/**
 	 * @return the activePlayer
 	 */
 	public synchronized Player getActivePlayer() {
@@ -933,13 +917,13 @@ public class GameController {
 		return gameBoard;
 	}
 
-	/**
-	 * sets the discard phase
-	 */
-	public void setDiscardPhase() {
-		System.out.println("DiscardPhaseWasSet");
-		this.gamePhase = "discardPhase";
-	}
+//	/**
+//	 * sets the discard phase
+//	 */
+//	public void setDiscardPhase() {
+//		System.out.println("DiscardPhaseWasSet");
+//		this.gamePhase = "discardPhase";
+//	}
 
 	/**
 	 * sets the action phase

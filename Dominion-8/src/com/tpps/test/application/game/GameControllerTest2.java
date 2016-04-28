@@ -1,7 +1,12 @@
 package com.tpps.test.application.game;
 
 import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +15,8 @@ import com.tpps.application.game.Deck;
 import com.tpps.application.game.GameController;
 import com.tpps.application.game.Player;
 import com.tpps.technicalServices.network.game.GameServer;
+import com.tpps.technicalServices.network.game.SynchronisationException;
+import com.tpps.technicalServices.network.game.WrongSyntaxException;
 import com.tpps.technicalServices.util.GameConstant;
 
 public class GameControllerTest2 {
@@ -42,19 +49,6 @@ public class GameControllerTest2 {
 		this.gameController.setCardsEnabled();
 		assertTrue(this.gameController.isCardsEnabled());
 	}
-
-
-
-	
-
-	@Test
-	public void testGetGameNotFinished() {
-		assertTrue(this.gameController.isGameNotFinished());
-		this.gameController.setGameNotFinished(false);
-		assertTrue(this.gameController.isGameNotFinished());
-	}
-
-
 
 	@Test
 	public void testSetGameBoard() {
@@ -178,114 +172,86 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testDrawOthers() {
-		fail("Not yet implemented");
+//		LinkedList<Player> players = this.gameController.getPlayers();
+//		players.remove(this.gameController.get)
 	}
 
-	@Test
-	public void testCheckReactionModeFinishedAndEnableGuis() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	public void testEndTurn() {
-		fail("Not yet implemented");
+		Player player = this.gameController.getActivePlayer();
+		this.gameController.endTurn();
+		assertThat(player.getActions(), is(1));
+		assertThat(player.getCoins(), is(0));
+		assertThat(player.getBuys(), is(1));
+		assertTrue(!player.equals(this.gameController.getActivePlayer()));
 	}
 
 	@Test
 	public void testGetPlayers() {
-		fail("Not yet implemented");
+		assertThat(this.gameController.getPlayers().size(), is(4));
 	}
 
 	@Test
 	public void testGetClientById() {
-		fail("Not yet implemented");
+		Player player = this.gameController.getClientById(this.gameController.getPlayers().get(0).getClientID());
+		assertThat(player, is(this.gameController.getPlayers().get(0)));
 	}
-
-	@Test
-	public void testSetPlayers() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetActivePlayer() {
-		fail("Not yet implemented");
-	}
-
-	
 
 	@Test
 	public void testIsGameNotFinished() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetGameNotFinished() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testAddPlayer() {
-		fail("Not yet implemented");
+		assertTrue(this.gameController.isGameNotFinished());
+		this.gameController.setGameNotFinished(false);
+		assertTrue(this.gameController.isGameNotFinished());
 	}
 
 	@Test
 	public void testBuyOneCard() {
-		fail("Not yet implemented");
+		try {
+//			this.gameController.setActivePlayer(this.gameController.getPlayers().get(0));
+			int size = this.gameController.getActivePlayer().getDeck().getDiscardPile().size();
+			this.gameController.buyOneCard(this.gameController.getGameBoard().getActionCardIDs().get(0));
+			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size + 1));
+			
+		} catch (SynchronisationException e) {
+			e.printStackTrace();
+		} catch (WrongSyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testGetGameBoard() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetDiscardPhase() {
-		fail("Not yet implemented");
+		assertThat(this.gameController.getGameBoard(), is(notNullValue()));
 	}
 
 	@Test
 	public void testSetActionPhase() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testSetBuyPhase() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetGamePhase() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testStartGame() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testIsGameFinished() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetPlayerNames() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testEndGame() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGetThiefList() {
+		this.gameController.setBuyPhase();
+		assertThat(this.gameController.getGamePhase(), is("buyPhase"));
+		this.gameController.setActionPhase();
+		assertThat(this.gameController.getGamePhase(), is("actionPhase"));
 		
 	}
 
+
+
+	@Test
+	public void testStartGame() {
+		this.gameController.startGame();
+		assertThat(this.gameController.getGamePhase(), is("actionPhase"));
+	}
+
+
+	@Test
+	public void testGetPlayerNames() {
+		assertThat(this.gameController.getPlayerNames(), is(new String[]{"test0", "test1", "test2", "test3"}));
+	}
+	
 	@Test
 	public void testGetSpyList() {
-		fail("Not yet implemented");
+		assertThat(this.gameController.getSpyList().size(), is(0));
+		
 	}
 
 	@Test
