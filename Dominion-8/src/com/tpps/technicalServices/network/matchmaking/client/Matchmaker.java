@@ -140,7 +140,6 @@ public final class Matchmaker {
 				PacketMatchmakingAnswer pma = (PacketMatchmakingAnswer) packet;
 				// is called when the player is put into a matchmaking-lobby
 				processAnswerCode(pma);
-
 				break;
 			case MATCHMAKING_PLAYER_INFO:
 				PacketMatchmakingPlayerInfo pmpi = (PacketMatchmakingPlayerInfo) packet;
@@ -148,10 +147,10 @@ public final class Matchmaker {
 				// TODO: add player and remove one instance of "Waiting for
 				// player..." @LobbyScreen
 				if (pmpi.isStatus()) {
-					GameLog.logInGame(MsgType.GAME, "----- Player " + pmpi.getPlayerName() + " joined the lobby.", GameLog.getMsgColor());
+					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " joined the lobby.", GameLog.getMsgColor());
 					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
 				} else {
-					GameLog.logInGame(MsgType.GAME, "----- Player " + pmpi.getPlayerName() + " left from lobby.", GameLog.getMsgColor());
+					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " left from lobby.", GameLog.getMsgColor());
 					DominionController.getInstance().clearPlayerFromGUI(pmpi.getPlayerName());
 				}
 				break;

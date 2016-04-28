@@ -203,8 +203,7 @@ public class GameController {
 			}
 			if (this.gamePhase.equals("buyPhase")) {
 				if (card.getTypes().contains(CardType.TREASURE)) {
-					// GameLog.log(MsgType.DEBUG, "the card is a Treasure
-					// clicked in the buyphase");
+					 GameLog.log(MsgType.DEBUG, "the card is a Treasure clicked in the buyphase");
 					this.getActivePlayer().playCard(cardID);
 					return true;
 				}

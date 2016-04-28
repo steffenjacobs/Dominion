@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
-import java.util.TreeMap;
 import java.util.UUID;
 
 import com.tpps.application.game.GameBoard;
@@ -16,6 +15,7 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.logger.Pair;
 import com.tpps.technicalServices.network.chat.server.ChatController;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
@@ -24,6 +24,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog
 import com.tpps.technicalServices.network.gameSession.packets.PacketBuyCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
+import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndActionPhase;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndReactions;
@@ -339,23 +340,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		int clientID = ((PacketPlayCard) packet).getClientID();
 		System.out.println(server.getGameController().getGamePhase());
 
-		// Player activePlayer =
-		// this.server.getGameController().getActivePlayer();
 		Player player = this.server.getGameController().getClientById(clientID);
-
-		/**
-		 * Prüfen ob 1. jeder die broadcast und nur ich die log message sehen
-		 * kann bei cardPlayed 2. wo steht cliendID%4 (Konstruktor von Player)
-		 * 3. funktionieren die Farben 4. test bei servergamepackethandler
-		 * removen und color übergeben sodass die farben funzen können 5. im
-		 * GameLog.broadcastMessage die color removen aber das wird automatisch
-		 * passieren wenn der konstruktor vom Packet geändert wird und die farbe
-		 * vom konstruktor auf die GameLog Methode geändert wird 6. Zeile 731 im
-		 * Player überprüfen 7. man kann ColorHash map von Jojo oder
-		 * Player.getLogColor benutzen 8. turn counter in player als attribut
-		 * und dann in GameContr. einbauen
-		 */
-		GameLog.logInGame(MsgType.GAME, "nur ich kann das sehen", GameLog.getMsgColor());
 
 		if (!player.playsReactionCard() && (player.isDiscardMode() || player.isTrashMode())) {
 			System.out.println("im handler discard mode set");
@@ -465,17 +450,21 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.sendMessage(port, new PacketSendActiveButtons(true, false, true));
 		}
 	}
-
-	/*
-	 * private void canActivePlayerContinue() throws IOException { boolean
-	 * activePlayerCanContinue = true; for (Iterator<Player> iterator =
-	 * this.server.getGameController().getPlayers().iterator();
-	 * iterator.hasNext();) { Player p = (Player) iterator.next(); if
-	 * (p.isRevealMode()) { activePlayerCanContinue = false; break; } } if
-	 * (activePlayerCanContinue) {
-	 * server.sendMessage(this.server.getGameController
-	 * ().getActivePlayer().getPort(), new PacketEnable()); } }
-	 */
+	
+	@SuppressWarnings("unused")
+	private void canActivePlayerContinue() throws IOException {
+		boolean activePlayerCanContinue = true;
+		for (Iterator<Player> iterator = this.server.getGameController().getPlayers().iterator(); iterator.hasNext();) {
+			Player p = (Player) iterator.next();
+			if (p.isRevealMode()) {
+				activePlayerCanContinue = false;
+				break;
+			}
+		}
+		if (activePlayerCanContinue) {
+			server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketEnable());
+		}
+	}
 
 	private void buyCardAndUpdateBoards(Packet packet) throws IOException {
 		try {
@@ -483,9 +472,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().buyOneCard(((PacketBuyCard) packet).getCardId());
 			this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
 		} catch (SynchronisationException e) {
-			// this.log("The card you wanted to buy is not on the board.");
+			GameLog.log(MsgType.EXCEPTION, "The card you wanted to buy is not on the board:\n" + e.getMessage());
 		} catch (WrongSyntaxException e) {
-			GameLog.log(MsgType.ERROR, e.getMessage());
+			GameLog.log(MsgType.EXCEPTION, e.getMessage());
 		}
 	}
 
@@ -500,35 +489,62 @@ public class ServerGamePacketHandler extends PacketHandler {
 					this.server.getGameController().getActivePlayer().getCoins()));
 			this.server.getGameController().endTurn();
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
-			// this.server.broadcastMessage(new
-			// PacketBroadcastLogSingleColor("----- #", GameLog.getMsgColor()));
-			// this.server.broadcastMessage(new
-			// PacketBroadcastLogSingleColor(this.server.getGameController().getActivePlayerName(),
-			// this.server.getGameController().getActivePlayer().getLogColor()));
-			// this.server.broadcastMessage(new
-			// PacketBroadcastLogSingleColor(": turn " +
-			// this.server.getGameController().getActivePlayer().getTurnNr() +
-			// " -----\n", GameLog.getMsgColor()));
-			this.server.broadcastMessage(new PacketBroadcastLogMultiColor(
-					CollectionsUtil.getPair("----- #", GameLog.getMsgColor()), 
-					CollectionsUtil.getPair(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()), 
-					CollectionsUtil.getPair(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n", GameLog.getMsgColor())));
-		} catch (IOException e) {
+			
+			/**
+			 * 1. client-side loggen? wie und wann und wo gehts
+			 * 2. Zeile 744 (GAINCARDDRAWPILE) im Player ueberpruefen 
+			 * 3. man kann ColorHash map von Jojo oder Player.getLogColor benutzen
+			 * 4. GameController Z.888 evtl appendPrep?; 
+			 * 5. appendPrepText und PacketBroadcastLog �berall aufrufen(siehe screen), logPrepText() bei SetupGui()
+			 * 6. Log Z.151 Matchmaker funktioniert das so? oder join Lobby auf prepText packen?
+			 * 7. GameLog Backup Uhr 28. April 11 Uhr 04
+			 * 8. Pattern to search: "GameLog.log(" | ".broadcastMessage(new PacketBroadcastLog("
+			 * 9. "Copper" und andere Karten als konstanten machen im ganzen Game
+			 * 10. remove line 50 PacketBroadcastLogSingleColor
+			 * 11. update comments in gameLog
+			 */
+			
+			/**
+			 * 1. das hier machen
+			 * 2. Thread.sleep bei singleColor probieren
+			 * 3. MultiColor anschauen
+			 * 4. errors fixen
+			 * 5. alte GameLogs erg�nzen
+			 * 6. oben erg�nzen und abarbeiten
+			 * 
+			 * */
+			
+			Thread.sleep(100);
+			this.server.broadcastMessage(new PacketBroadcastLogSingleColor("----- "));
+			Thread.sleep(100);
+			this.server.broadcastMessage(new PacketBroadcastLogSingleColor(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()));
+			Thread.sleep(100);
+			this.server.broadcastMessage(new PacketBroadcastLogSingleColor(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n"));
+			Thread.sleep(100);
+			
+			// this.server.broadcastMessage(new PacketBroadcastLogMultiColor(
+			// CollectionsUtil.getPair("----- "),
+			// CollectionsUtil.getPair(this.server.getGameController().getActivePlayerName(),
+			// this.server.getGameController().getActivePlayer().getLogColor()),
+			// CollectionsUtil.getPair(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n")));
+		
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void logPrepText() {
 		for (Integer i : GameLog.getPrepText().keySet()) {
-			TreeMap<String, Color> res = (TreeMap<String, Color>) GameLog.getPrepText().get(i);
-			Color c = res.firstEntry().getValue();
-			String s = res.firstKey();
+			Pair<String, Color> res = GameLog.getPrepText().get(i);
+			Color c = res.getC();
+			String s = res.getS();
 			try {
 				this.server.broadcastMessage(new PacketBroadcastLogSingleColor(s, c));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		GameLog.resetPrepText();
 	}
 
 	private void updatePortOfPlayer(int port, PacketReconnect packetReconnect) {
@@ -554,12 +570,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().addPlayerAndChooseRandomActivePlayer(player);
 			this.server.sendMessage(port, new PacketSendClientId(clientId));
 			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-				new ArtificialIntelligence(player, /*
-													 * new
-													 * InetSocketAddress("127.0.0.1"
-													 * , this.server.getPort())
-													 * ,
-													 */sessionID, this).start();
+				new ArtificialIntelligence(player, /* new InetSocketAddress("127.0.0.1" , this.server.getPort()),*/sessionID, this).start();
 				System.out.println("created a new artificial intelligence");
 			}
 			if (server.getGameController().getPlayers().size() == GameConstant.PLAYERS) {
@@ -613,6 +624,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		for (int i = 0; i < GameConstant.PLAYERS; i++) {
 			this.server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
 		}
+		this.logPrepText();
 	}
 
 	/**

@@ -185,12 +185,12 @@ public class AIPacketHandler extends PacketHandler {
 			// this.gameStorageInterface.loadPlayedCardsAndPassToGameWindow(((PacketSendPlayedCardsToAllClients)
 			// packet).getCardIds());
 			break;
-//		case PLAY_TREASURES:
+		// case PLAY_TREASURES:
 		// gameGui.disableActionCards();
 		// gameGui.enalbeMoney();
-//			break;
+		// break;
 		case BROADCAST_LOG_SINGLE_COLOR:
-			GameLog.log(((PacketBroadcastLogSingleColor) packet).getMsgType(), ((PacketBroadcastLogSingleColor) packet).getMessage());
+//			GameLog.log(((PacketBroadcastLogSingleColor) packet).getMsgType(), ((PacketBroadcastLogSingleColor) packet).getMessage());
 			break;
 		default:
 			System.out.println("Unknown packet type: " + packet.getType());

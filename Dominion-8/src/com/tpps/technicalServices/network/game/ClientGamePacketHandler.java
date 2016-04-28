@@ -186,11 +186,11 @@ public class ClientGamePacketHandler extends PacketHandler {
 		// gameGui.enalbeMoney();
 		// break;
 		case BROADCAST_LOG_SINGLE_COLOR:
-			GameLog.logInGame(((PacketBroadcastLogSingleColor) packet).getMsgType(),((PacketBroadcastLogSingleColor) packet).getMessage(),((PacketBroadcastLogSingleColor) packet).getColor());
+			GameLog.log(((PacketBroadcastLogSingleColor) packet).getMsgType(),((PacketBroadcastLogSingleColor) packet).getMessage(),((PacketBroadcastLogSingleColor) packet).getColor());
 			break;
 		case BROADCAST_LOG_MULTI_COLOR:
 			for (Pair<String, Color> pair : ((PacketBroadcastLogMultiColor) packet).getPair()) {
-				GameLog.logInGame(((PacketBroadcastLogMultiColor) packet).getMsgType(), pair.getS(), pair.getC());
+				GameLog.log(((PacketBroadcastLogMultiColor) packet).getMsgType(), pair.getS(), pair.getC());
 			}
 			break;
 		case SHOW_END_SCREEN:

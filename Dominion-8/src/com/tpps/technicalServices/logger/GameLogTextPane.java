@@ -62,7 +62,7 @@ public class GameLogTextPane extends JPanel {
 	 * constructor for GameLogTextPane() JPanel
 	 */
 	public GameLogTextPane() {
-//		MsgType.setGameMode();
+		// MsgType.setGameMode();
 		this.setLayout(new BorderLayout());
 		this.setOpaque(false);
 
@@ -140,26 +140,17 @@ public class GameLogTextPane extends JPanel {
 	 *            determines whether there is a timestamp written in front of
 	 *            the text line so the line is only parsed if its necessary
 	 */
-	public void updateLogger(final String line, Color textColor, boolean timestamp) {
+	public void updateLogger(final String line, Color textColor, boolean timestamp, boolean newLine) {
 		if (timestamp) {
 			this.updateTextArea(line.split("]")[0] + "]", GameLog.getTimestampColor());
 			this.updateTextArea(line.split("]")[1] + "]", textColor);
-			this.updateTextArea(line.split("]")[2] + "\n", GameLog.getMsgColor());
+			this.updateTextArea(line.split("]")[2], GameLog.getMsgColor());
 		} else {
-			this.updateTextArea(line + "\n", GameLog.getMsgColor());
+			this.updateTextArea(line, textColor);
 		}
-	}
-	
-	/**
-	 * CAUTION: in this method there won't be a + "\n" at the end of the updated line.
-	 * 
-	 * @param line
-	 *            the line update
-	 * @param textColor
-	 *            the color of the line
-	 */
-	public void updateLogger(final String line, Color textColor) {
-		this.updateTextArea(line, textColor);
+		if (newLine) {
+			this.updateTextArea("\n", GameLog.getMsgColor());
+		}
 	}
 
 	/**

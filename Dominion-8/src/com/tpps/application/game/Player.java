@@ -589,7 +589,6 @@ public class Player {
 	 * @throws IOException
 	 */
 	public void playCard(String cardID) throws IOException {
-		
 		Card card = doAction(cardID);
 		if (card != null) {
 			this.playedCards.addLast(card);
@@ -598,7 +597,6 @@ public class Player {
 				doAction(cardID);
 			}
 		}
-
 	}
 
 	/**
@@ -741,7 +739,7 @@ public class Player {
 						getDeck().getDrawPile().addLast(this.gameServer.getGameController().getGameBoard().getTableForTreasureCards().get("Silver").removeLast());
 					}
 				} catch (NoSuchElementException e) {
-//					this.gameServer.broadcastMessage(new PacketBroadcastLog(MsgType.GAME, "couldn't gain the card because ther are no more silver card on the board", getLogColor()));
+					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(MsgType.ERROR, "couldn't gain the card because ther are no more silver card on the board", this.getLogColor()));
 				}
 				break;
 			case DISCARD_CARD:
@@ -767,27 +765,22 @@ public class Player {
 				this.gameServer.getGameController().revealCardOthersPutItOnTopOfDeck();
 				break;
 			case TRASH_CARD:
-
 				if (value.equals("this")) {
 					// trashFlag gesetzt karte trashen null zur�ckgeben
 					trashFlag = true;
-
 				} else {
-
 					this.gameServer.sendMessage(port, new PacketStartTrashMode());
-
 					this.trashMode = true;
 					this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
 				}
 				// return?
 				break;
 			case TRASH_AND_ADD_TEMPORARY_MONEY:
-
 				if (value.split("_")[0].toLowerCase().equals("copper")) {
-
+					
 					Card card = getDeck().getCardByNameFromHand("Copper");
 					if (card != null) {
-
+						
 						getDeck().getCardHand().remove(card);
 						getDeck().trash(card, this.gameServer.getGameController().getGameBoard().getTrashPile());
 						this.coins += Integer.parseInt(value.split("_")[1]);
@@ -809,15 +802,12 @@ public class Player {
 				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN, Integer.parseInt(value.split("_")[0]));
 				this.gainValue = Integer.parseInt(value.split("_")[1]);
 				break;
-
 			case PUT_BACK:
 				this.getDeck().putBack(serverCard);
 				break;
 			case REVEAL_CARD:
-
 				this.revealMode = true;
 				revealList.add(getDeck().removeSaveFromDrawPile());
-
 				this.gameServer.sendMessage(port, new PacketSendRevealCards(CollectionsUtil.getCardIDs(revealList)));
 				// GameServer.getInstance().sendMessage(port,
 				// new PacketSendHandCards(revealList));
@@ -827,7 +817,6 @@ public class Player {
 				break;
 			case CHOOSE_CARD_PLAY_TWICE:
 				this.actions++;
-
 				break;
 			case IS_TREASURE:
 				this.coins += Integer.parseInt(serverCard.getActions().get(CardAction.IS_TREASURE));
@@ -836,13 +825,11 @@ public class Player {
 				// what?
 				break;
 			case DEFEND:
-
 				break;
 			default:
 				break;
 			}
 		}
-
 		if (!dontRemoveFlag) {
 			this.getDeck().getCardHand().remove(serverCard);
 		}
@@ -857,7 +844,6 @@ public class Player {
 			this.gameServer.getGameController().getGameBoard().getTrashPile().add(serverCard);
 			return null;
 		}
-
 		return serverCard;
 	}
 
@@ -871,7 +857,6 @@ public class Player {
 	private void revealUntilTreasures(int value) {
 		LinkedList<Card> treasureList = new LinkedList<Card>();
 		this.revealList = new LinkedList<Card>();
-
 		// int min = getDeck().getTreasureAmountNotOnHand() < value ?
 		// getDeck().getTreasureAmountNotOnHand() : value;
 		try {

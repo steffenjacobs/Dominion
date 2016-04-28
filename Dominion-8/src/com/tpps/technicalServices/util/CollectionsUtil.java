@@ -10,6 +10,7 @@ import java.util.TreeMap;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.Pair;
 
 /**
@@ -58,7 +59,7 @@ public final class CollectionsUtil {
 		}
 		return resultList;
 	}
-	
+
 	/**
 	 * 
 	 * @param color
@@ -172,8 +173,7 @@ public final class CollectionsUtil {
 		}
 		return cardHandIDs;
 	}
-	
-	
+
 	public static ArrayList<String> getArrayList(String... words) {
 		ArrayList<String> returnList = new ArrayList<String>();
 		for (String word : words) {
@@ -181,14 +181,18 @@ public final class CollectionsUtil {
 		}
 		return returnList;
 	}
-	
-	public static Map<String,Color> getTreeMap(String s, Color c) {
-		Map<String,Color> map = new TreeMap<String,Color>();
+
+	public static Map<String, Color> getTreeMap(String s, Color c) {
+		Map<String, Color> map = new TreeMap<String, Color>();
 		map.put(s, c);
 		return map;
 	}
-	
+
 	public static Pair<String, Color> getPair(String s, Color c) {
-		return new Pair<String,Color>(s,c);
+		return new Pair<String, Color>(s, c);
+	}
+
+	public static Pair<String, Color> getPair(String s) {
+		return new Pair<String, Color>(s, GameLog.getMsgColor());
 	}
 }

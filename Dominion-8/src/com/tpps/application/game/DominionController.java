@@ -75,7 +75,6 @@ public final class DominionController {
 		storageController = new CardStorageController();
 		// do nothing else, just init object
 	}
-	
 
 	public DominionController() { }
 
