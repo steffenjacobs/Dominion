@@ -204,21 +204,21 @@ public class Deck {
 		LinkedList<Card> victoryCards = new LinkedList<Card>();
 		for (Iterator<Card> iterator = this.cardHand.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(CardType.VICTORY)){
+			if (card.getTypes().contains(type)){
 				victoryCards.add(card);
 			}
 		}
 		
 		for (Iterator<Card> iterator = this.drawPile.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(CardType.VICTORY)){
+			if (card.getTypes().contains(type)){
 				victoryCards.add(card);
 			}
 		}
 		
 		for (Iterator<Card> iterator = this.discardPile.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(CardType.VICTORY)){
+			if (card.getTypes().contains(type)){
 				victoryCards.add(card);
 			}
 		}
