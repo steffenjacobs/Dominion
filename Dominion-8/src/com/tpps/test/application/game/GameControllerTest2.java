@@ -153,10 +153,14 @@ public class GameControllerTest2 {
 		assertTrue(this.gameController.isVictoryCardOnHand(card.getId()));
 	}
 
-	// @Test
+	@Test
+	public void testOrganizePilesAndrefreshCardHand() {
+
+
 	// public void testOrganizePilesAndrefreshCardHand() {
 	// this.gameController.getActivePlayer().getPlayedCards().add(this.g
-	// }
+	 }
+
 
 	@Test
 	public void testCheckWitchFinish() {
