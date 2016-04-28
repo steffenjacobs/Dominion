@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.tpps.application.game.Deck;
+import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.GameController;
 import com.tpps.application.game.Player;
 import com.tpps.technicalServices.network.game.GameServer;
@@ -28,8 +29,9 @@ public class GameControllerTest2 {
 		
 		this.gameController = new GameController(null);
 		for (int i = 0; i < GameConstant.PLAYERS; i++){
-			this.gameController.addPlayerAndChooseRandomActivePlayer(new Player(new Deck(this.gameController.getGameBoard().getStartSet()), i, 80 + i, "test" + i, null, null));
+			this.gameController.getPlayers().add((new Player(new Deck(this.gameController.getGameBoard().getStartSet()), i, 80 + i, "test" + i, null, null)));
 		}
+		this.gameController.setActivePlayer(this.gameController.getPlayers().get(0));
 		
 	}
 	
@@ -52,17 +54,22 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testSetGameBoard() {
-		fail("Not yet implemented");
+		GameBoard gameBoard = this.gameController.getGameBoard();
+		this.gameController.setGameBoard(new GameBoard());
+		assertTrue(!gameBoard.equals(this.gameController.getGameBoard()));
 	}
 
 	@Test
 	public void testSetGamePhase() {
-		fail("Not yet implemented");
+		this.gameController.setGamePhase("actionPhase");
+		assertThat(this.gameController.getGamePhase(), is("actionPhase"));
+		this.gameController.setGamePhase("buyPhase");
+		assertThat(this.gameController.getGamePhase(), is("buyPhase"));
 	}
 
 	@Test
 	public void testSetThiefList() {
-		fail("Not yet implemented");
+//		this.gameController.setT
 	}
 
 	@Test
@@ -180,6 +187,7 @@ public class GameControllerTest2 {
 	@Test
 	public void testEndTurn() {
 		Player player = this.gameController.getActivePlayer();
+		System.out.println(player);
 		this.gameController.endTurn();
 		assertThat(player.getActions(), is(1));
 		assertThat(player.getCoins(), is(0));
