@@ -659,10 +659,8 @@ public class Player {
 		boolean dontRemoveFlag = false, trashFlag = false;
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 
-
-		/* TEST GAME LOG */
-		GameLog.log(MsgType.GAME, "Played: " + serverCard.getName());
-		/* TEST GAME LOG */
+		this.gameServer.broadcastMessage(new PacketBroadcastLog(this.getPlayerName(), this.getLogColor()));
+		this.gameServer.broadcastMessage(new PacketBroadcastLog(" - plays " + serverCard.getName(), GameLog.getMsgColor()));
 
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
@@ -932,7 +930,7 @@ public class Player {
 				}
 			}
 		} catch (NoSuchElementException e) {
-			GameLog.log(MsgType.GAME, "Not enough");
+			GameLog.log(MsgType.EXCEPTION, "Not enough");
 		}
 		CollectionsUtil.appendListToList(this.setAsideCards, getDeck().getDiscardPile());
 	}

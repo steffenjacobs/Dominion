@@ -39,6 +39,6 @@ public class GameLogUI {
 		new GameLogUI(GameLog.getTextPane());
 		GameLog.log(MsgType.GAME, "abc");
 		GameLog.log(MsgType.NETWORK_ERROR, "def");
-		GameLog.log(MsgType.GAME, "abc");
+		GameLog.log(MsgType.EXCEPTION, "ghi");
 	}
 }

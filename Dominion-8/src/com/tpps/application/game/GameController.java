@@ -24,6 +24,7 @@ import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.game.TooMuchPlayerException;
 import com.tpps.technicalServices.network.game.WrongSyntaxException;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableOthers;
@@ -237,9 +238,9 @@ public class GameController {
 				return true;
 			}
 		}catch (WrongSyntaxException e){
-			GameLog.log(MsgType.GAME, e.getMessage());
+			GameLog.log(MsgType.ERROR, e.getMessage());
 		} catch (SynchronisationException e) {
-			GameLog.log(MsgType.GAME, "Card is not on the board please click on an another card.");
+			GameLog.log(MsgType.ERROR, "Card is not on the board please click on an another card.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -481,7 +482,7 @@ public class GameController {
 					try {
 						player.getDeck().getDiscardPile().add(this.gameBoard.getTableForVictoryCards().get("Curse").removeLast());
 					} catch (NoSuchElementException e) {
-						GameLog.log(MsgType.GAME, "Not enough curses.\n");
+						GameLog.log(MsgType.ERROR, "Not enough curses.\n");
 					}
 					player.setWitchFalse();
 				}
@@ -882,7 +883,11 @@ public class GameController {
 			this.players.addLast(player);
 			if (this.players.size() == 4) {
 				this.activePlayer = getRandomPlayer();
-//				this.gameServer.
+				try {
+					this.gameServer.broadcastMessage(new PacketBroadcastLog(this.activePlayer.getPlayerName(), this.activePlayer.getLogColor()));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		} else {
 			throw new TooMuchPlayerException();

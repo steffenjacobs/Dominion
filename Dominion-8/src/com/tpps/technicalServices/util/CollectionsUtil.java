@@ -1,11 +1,13 @@
 package com.tpps.technicalServices.util;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
 
-import java.awt.Color;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 
@@ -177,5 +179,11 @@ public final class CollectionsUtil {
 			returnList.add(word);
 		}
 		return returnList;
+	}
+	
+	public static Map<String,Color> getTreeMap(String s, Color c) {
+		Map<String,Color> map = new TreeMap<String,Color>();
+		map.put(s, c);
+		return map;
 	}
 }

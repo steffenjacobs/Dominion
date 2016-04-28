@@ -2,10 +2,16 @@ package com.tpps.technicalServices.logger;
 
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Map;
+import java.util.TreeMap;
 
+import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.util.ANSIUtil;
+import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.ColorUtil;
 
 /**
@@ -16,6 +22,7 @@ import com.tpps.technicalServices.util.ColorUtil;
 public class GameLog {
 
 	private static GameLogTextPane textPane;
+	private static Map<Integer, Map<String, Color>> prepText;
 
 	/**
 	 * Colors that can easily be changed for the UI Window
@@ -25,8 +32,9 @@ public class GameLog {
 	private static Color msgColor = Color.WHITE;
 
 	/**
-	 * @unused, for messageTypeColors see MsgType class
+	 * unused for now, see MsgType class for messageTypeColors
 	 */
+	@SuppressWarnings("unused")
 	private static Color msgtypeColor = null;
 
 	/**
@@ -103,12 +111,12 @@ public class GameLog {
 		GameLog.timestampColor = timestampColor;
 	}
 
-	/**
-	 * @return the msgtypeColor
-	 */
-	public static Color getMsgtypeColor() {
-		return msgtypeColor;
-	}
+	// /**
+	// * @return the msgtypeColor
+	// */
+	// public static Color getMsgtypeColor() {
+	// return msgtypeColor;
+	// }
 
 	/**
 	 * @param msgtypeColor
@@ -148,6 +156,10 @@ public class GameLog {
 		GameLog.textPane = textPane;
 	}
 
+	public static Map<Integer, Map<String, Color>> getPrepText() {
+		return GameLog.prepText;
+	}
+
 	/**
 	 * 
 	 * @param type
@@ -168,13 +180,13 @@ public class GameLog {
 		return line.toString();
 	}
 
-//	public static void broadcastMessage(MsgType type, String line) {
-//		try {
-//			DominionController.getInstance().getGameClient().sendMessage(new PacketBroadcastLog(type, line, msgColor));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	public static void broadcastMessage(MsgType type, String line) {
+		try {
+			DominionController.getInstance().getGameClient().sendMessage(new PacketBroadcastLog(type, line, msgColor));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * log the message with message type to the ui (if GameLog.guiPossible is
@@ -190,33 +202,37 @@ public class GameLog {
 		writeToConsole(msg);
 		if (isInitialized) {
 			if (type.getDisplay() && guiPossible) {
-
-				/**
-				 * die folgende Zeile wuerde vor jeden GameLog.log(MsgType.GAME,
-				 * ""); den Namen des aktuellen Spielers setzen da man aber evtl
-				 * schreiben will "--- Nico's Turn ---" und nicht Nico: ---
-				 * Nico's Turn --- denke ich es ist besser das immer von Hand
-				 * davor zu schreiben String msg = type.equals(MsgType.GAME) ?
-				 * GameServer
-				 * .getInstance().getGameController().getActivePlayerName() +
-				 * ": " : "";
-				 * 
-				 * String msg = type.getTimeStamp() ? createTimestamp(type,
-				 * true) + line : line; writeToConsole(msg);
-				 */
-
 				write(msg, type.getColor(), type.getTimeStamp());
 			}
 		} else { // prevent Null Pointers
 			init();
+			log(type, line);
 		}
 	}
 
 	/**
-	 * write to a JPanel
-	 * 
-	 * write with argument false is only intern for GameLogger class to write
-	 * sth into the log without timestamp and user details
+	 * log the message with message type to the ui (if GameLog.guiPossible is
+	 * true) and console
+	 *
+	 * @param type
+	 *            the message type of the message to log
+	 * @param line
+	 *            the line to log
+	 */
+	public static void logInGame(MsgType type, String line, Color color) {
+		writeToConsole(line);
+		if (isInitialized) {
+			if (type.getDisplay() && guiPossible) {
+				writeInGame(line, color);
+			}
+		} else { // prevent Null Pointers
+			init();
+			logInGame(type, line, color);
+		}
+	}
+
+	/**
+	 * write line to a JTextPane with or without a timestamp
 	 * 
 	 * @param line
 	 *            the line to write on the JPanel
@@ -231,6 +247,21 @@ public class GameLog {
 	}
 
 	/**
+	 * write line to a JTextPane without timestamp and custom color
+	 * 
+	 * @param line
+	 *            the line to write on the JPanel
+	 * @param textColor
+	 *            the color of the text
+	 * @param timestamp
+	 *            determines whether the timestamp is written in front of the
+	 *            line
+	 */
+	private static void writeInGame(String line, Color textColor) {
+		GameLog.textPane.updateLogger(line, textColor);
+	}
+
+	/**
 	 * write to the console
 	 * 
 	 * @param line
@@ -238,5 +269,12 @@ public class GameLog {
 	 */
 	private static void writeToConsole(String line) {
 		System.out.println(line);
+	}
+
+	public static void appendToPrepText(int no, String text, Color color) {
+		if (prepText == null) {
+			prepText = new TreeMap<Integer, Map<String, Color>>();
+		}
+		prepText.put(no, CollectionsUtil.getTreeMap(text, color));
 	}
 }
