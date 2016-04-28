@@ -24,48 +24,19 @@ public class GameLog {
 	private static GameLogTextPane textPane;
 	private static Map<Integer, Map<String, Color>> prepText;
 
-	/**
-	 * Colors that can easily be changed for the UI Window
-	 */
 	private static Color backgroundColor = Color.WHITE;
 	private static Color timestampColor = ColorUtil.EPICBLUE;
 	private static Color msgColor = Color.WHITE;
 
-	/**
-	 * unused for now, see MsgType class for messageTypeColors
-	 */
 	@SuppressWarnings("unused")
 	private static Color msgtypeColor = null;
 
-	/**
-	 * if the user has the ANSI plugin installed, set this flag to true so the
-	 * console log will be colored
-	 *
-	 * anyone can install the plugin with the following link:
-	 * https://marketplace.eclipse.org/content/ansi-escape-console
-	 * 
-	 */
 	private static boolean ansiFlag = false;
 
-	/**
-	 * determines if there will be an extra window for the log besides the
-	 * console. guiPossible: is the device is able to display a gui?
-	 * iWantAJFrame: do I want to have an extra JFrame for this?
-	 */
 	private static boolean guiPossible = !GraphicsEnvironment.isHeadless();
 
-	/**
-	 * determines wheter the textPane is already initialized so there won't be a
-	 * Null-Pointer
-	 */
 	private static boolean isInitialized = false;
 
-	/**
-	 * initialization method which is called in the beginning writes the team
-	 * name first: GameLogger4Team++;
-	 * 
-	 * and after that an INIT message with "GameLogger initialized"
-	 */
 	public static void init() {
 		GameLog.isInitialized = true;
 		String team = " Game Log\n";
@@ -77,7 +48,7 @@ public class GameLog {
 		if (ansiFlag)
 			writeToConsole(ANSIUtil.getCyanText(team + " Ready."));
 		else
-			writeToConsole(team + "\n");
+			writeToConsole(" Game Log\n" + "\n");
 		GameLog.log(MsgType.INIT, "GameLogger initialized");
 	}
 

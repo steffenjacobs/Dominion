@@ -883,8 +883,8 @@ public class GameController {
 			this.players.addLast(player);
 			if (this.players.size() == 4) {
 				this.activePlayer = getRandomPlayer();
+				this.activePlayer.incTurnNr();
 				try {
-					this.getActivePlayer().incTurnNr();
 					this.gameServer.broadcastMessage(new PacketBroadcastLog("----- ", GameLog.getMsgColor()));
 					this.gameServer.broadcastMessage(new PacketBroadcastLog(this.activePlayer.getPlayerName(), this.activePlayer.getLogColor()));
 					this.gameServer.broadcastMessage(new PacketBroadcastLog(": turn " + this.activePlayer.getTurnNr() + " -----\n", GameLog.getMsgColor()));
