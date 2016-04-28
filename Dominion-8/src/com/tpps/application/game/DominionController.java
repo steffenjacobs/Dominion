@@ -275,8 +275,7 @@ public final class DominionController {
 	 * @author jhuhn
 	 */
 	public void joinLobbyGui() {
-	//	statisticsBoardPanel = new StatisticsBoard();
-	//	this.playerSettingsPanel.setStatisticsBoardPanel(this.statisticsBoardPanel);
+		this.globalChatPanel.getBackButton().setLobby(true);
 		JPanel panel = new JPanel(){
 			private static final long serialVersionUID = 1L;
 
@@ -379,6 +378,7 @@ public final class DominionController {
 	}
 
 	public void openStatisticsGui() {
+		this.globalChatPanel.getBackButton().setLobby(false);
 		JPanel panel = new JPanel(){
 			private static final long serialVersionUID = 1L;
 
