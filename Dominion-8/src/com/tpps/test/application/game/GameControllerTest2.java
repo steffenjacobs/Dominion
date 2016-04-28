@@ -163,8 +163,8 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testOrganizePilesAndrefreshCardHand() {
-		this.gameController.getActivePlayer().getPlayedCards().add(
-				this.g
+//		this.gameController.getActivePlayer().getPlayedCards().add(
+//				this.g
 	}
 
 	@Test
