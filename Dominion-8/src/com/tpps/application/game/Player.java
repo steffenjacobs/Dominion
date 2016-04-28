@@ -660,7 +660,7 @@ public class Player {
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 
 		this.gameServer.broadcastMessage(new PacketBroadcastLog(this.getPlayerName(), this.getLogColor()));
-		this.gameServer.broadcastMessage(new PacketBroadcastLog(" - plays " + serverCard.getName(), GameLog.getMsgColor()));
+		this.gameServer.broadcastMessage(new PacketBroadcastLog(" - plays " + serverCard.getName() + "\n", GameLog.getMsgColor()));
 
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);

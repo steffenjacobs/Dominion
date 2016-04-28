@@ -447,9 +447,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 					}
 				}
 			} catch (SynchronisationException | NoSuchElementException e) {
-//				GameLog.log("The card you wanted to buy is not on the board.");
+				GameLog.log(MsgType.EXCEPTION, "The card you wanted to buy is not on the board.");
 			} catch (WrongSyntaxException e) {
-				GameLog.log(MsgType.GAME, e.getMessage());
+				GameLog.log(MsgType.EXCEPTION, e.getMessage());
 			}
 			this.server.getGameController().isGameFinished();
 			return;
@@ -508,7 +508,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
 			this.server.broadcastMessage(new PacketBroadcastLog("----- ", GameLog.getMsgColor()));
 			this.server.broadcastMessage(new PacketBroadcastLog(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()));
-			this.server.broadcastMessage(new PacketBroadcastLog(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " started -----\n", GameLog.getMsgColor()));
+			this.server.broadcastMessage(new PacketBroadcastLog(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n", GameLog.getMsgColor()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
