@@ -51,6 +51,8 @@ public class GlobalChatPanel extends JPanel {
 	private Font font;
 	private JButton sendButton;
 
+	private BackButton backButton;
+	
 	private static final int HORIZONTAL_STRUT = 50;
 	private static final int SPACE_FROM_CHATBOX_TO_CHATINPUT = 5;
 	private static final int SPACE_FROM_CHATINPUT_TO_BUTTON = 20;
@@ -76,6 +78,7 @@ public class GlobalChatPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	private void createComponents() {
+		this.backButton = new BackButton();
 		this.setVisible(true);
 		this.setOpaque(false);
 		this.setLayout(new BorderLayout());
@@ -103,7 +106,7 @@ public class GlobalChatPanel extends JPanel {
 		panel.setOpaque(false);
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
-		panel.add(new BackButton());
+		panel.add(this.backButton);
 		return panel;
 	}
 
@@ -407,5 +410,9 @@ public class GlobalChatPanel extends JPanel {
 		@Override
 		public void keyTyped(KeyEvent arg0) {
 		}
+	}
+	
+	public BackButton getBackButton() {
+		return backButton;
 	}
 }

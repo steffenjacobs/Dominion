@@ -20,6 +20,7 @@ public class BackButton extends JButton implements ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	private BufferedImage image;
+	private boolean isLobby;
 	
 	/**
 	 * initializes the object
@@ -64,8 +65,16 @@ public class BackButton extends JButton implements ActionListener{
 	 * @author jhuhn
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		DominionController.getInstance().abortSearching();
-		DominionController.getInstance().joinMainMenu();
-		DominionController.getInstance().clearAllPlayersFromGUI();
+		if(isLobby){
+			DominionController.getInstance().abortSearching();
+			DominionController.getInstance().joinMainMenu();
+			DominionController.getInstance().clearAllPlayersFromGUI();
+		}else{
+			DominionController.getInstance().joinMainMenu();
+		}
+	}
+
+	public void setLobby(boolean isLobby) {
+		this.isLobby = isLobby;
 	}
 }

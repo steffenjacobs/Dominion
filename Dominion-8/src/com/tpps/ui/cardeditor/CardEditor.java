@@ -53,8 +53,9 @@ public class CardEditor extends JFrame implements ActionListener {
 	private int height, gridheight;
 	private Font smallfont;
 	private GridBagLayout gbl;
-	private GridBagConstraints gbc;
+	private GridBagConstraints gbc,gbc2;
 	private JPanel obenLinks;
+	private int priceint = 2;
 
 	public CardEditor() {
 		this.setVisible(true);
@@ -66,7 +67,6 @@ public class CardEditor extends JFrame implements ActionListener {
 		// resizeImage();
 		c = this.getContentPane();
 		c.setLayout(new GridBagLayout());
-		;
 		all = new JLabel(loading);
 		// all.setLayout(new GridLayout(4, 1, 0, 30));
 		// all.setLayout(new GridBagLayout());
@@ -158,27 +158,66 @@ public class CardEditor extends JFrame implements ActionListener {
 		obenLinks.setBackground(Color.green); // temp
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.gridwidth = 2;
-		gbc.gridheight = 2;
+		gbc.gridwidth = 1;
+		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 0.85;
-		gbc.weighty = 0.65;
+		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
+		gbc.weightx = 0.5;
+		gbc.weighty = 0.6;
 		enterName = new JLabel("Geben Sie den Kartennamen ein");
 		obenLinks.add(enterName);
 		c.add(obenLinks, gbc);
 
 		JPanel pnlBuy = new JPanel();
-		gbc.gridx = 2;
+		gbc.gridx = 1;
 		pnlBuy.setBackground(Color.blue); // temp
 		gbc.gridy = 0;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 0.15;
-		gbc.weighty = 0.46;
-		nameField = new JTextField("");
+		gbc.weightx = 0.5;
+		gbc.weighty = 0.6;
+		nameField = new JTextField("                      ");
 		pnlBuy.add(nameField);
 		c.add(pnlBuy, gbc);
+		
+		JPanel mitte = new JPanel();
+		mitte.setBackground(Color.ORANGE);
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		gbc.gridwidth = 2;
+		gbc.gridheight = 1;
+		gbc.weightx = 0.99;
+		gbc.weighty = 0.1;
+		gbc.fill = GridBagConstraints.BOTH;
+		mitte.setLayout(new GridBagLayout());
+		gbc2 = new GridBagConstraints();
+		gbc2.gridx = 1;
+		gbc2.gridy = 0;
+		gbc2.weightx = 0.99;
+		gbc2.gridwidth = 1;
+		gbc2.ipady = 60;
+		gbc2.anchor = GridBagConstraints.NORTH;
+		price = new JLabel(Integer.toString(priceint));;
+		mitte.add(price,gbc2);
+		gbc2.gridx = 0;
+		gbc2.gridy = 1;
+		gbc2.anchor = GridBagConstraints.BELOW_BASELINE;
+		gbc2.ipady = 0;
+//		gbc.anchor = GridBagConstraints.FIRST_LINE_END;
+//		gbc.fill = GridBagConstraints.HORIZONTAL;
+		increasePrice = new JButton("Increase Price");
+		standartPrice = new JButton("Standart Price");
+		decreasePrice = new JButton("Decreace Price");
+		mitte.add(increasePrice,gbc2);
+		gbc2.gridx = 1;
+		gbc2.gridy = 1;
+		mitte.add(standartPrice,gbc2);
+		gbc2.gridx = 2;
+		gbc2.gridy = 1;
+		mitte.add(decreasePrice, gbc2);
+		c.add(mitte,gbc);
+		
 
 		JPanel untenLinks = new JPanel();
 		untenLinks.setBackground(Color.red); // temp
@@ -187,7 +226,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.gridwidth = 1;
 		gbc.gridheight = 2;
 		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 0.61;
+		gbc.weightx = 0.5;
 		gbc.weighty = 0.35;
 		createCard = new JButton("Create Card");
 		untenLinks.add(createCard);
@@ -195,12 +234,12 @@ public class CardEditor extends JFrame implements ActionListener {
 
 		JPanel untenRechts = new JPanel();
 		untenRechts.setBackground(Color.gray); // temp
-		gbc.gridx = 2;
-		gbc.gridy = 3;
+		gbc.gridx = 1;
+		gbc.gridy = 2;
 		gbc.gridwidth = 2;
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 0.38;
+		gbc.weightx = 0.5;
 		gbc.weighty = 0.31;
 		cancel = new JButton("Cancel");
 		cancel.addActionListener((new ActionListener() {
