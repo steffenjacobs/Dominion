@@ -3,6 +3,7 @@ package com.tpps.ui.cardeditor;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -158,33 +159,43 @@ public class CardEditor extends JFrame implements ActionListener {
 		obenLinks.setBackground(Color.green); // temp
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.gridwidth = 1;
+		gbc.gridwidth = 2;
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.FIRST_LINE_START;
 		gbc.weightx = 0.5;
-		gbc.weighty = 0.6;
-		enterName = new JLabel("Geben Sie den Kartennamen ein");
+		gbc.weighty = 0.5;
+		gbc.ipadx = 60;
+		obenLinks.setLayout(new GridLayout(2,2,30,10));
+		enterName = new JLabel("Enter Cardname");
 		obenLinks.add(enterName);
+		nameField = new JTextField(1);
+		obenLinks.add(nameField);
+		cardType = new JLabel("Choose Cardtype");
+		obenLinks.add(cardType);
+		selectCardType = new JComboBox();
+		obenLinks.add(selectCardType);
+		
 		c.add(obenLinks, gbc);
 
 		JPanel pnlBuy = new JPanel();
 		gbc.gridx = 1;
 		pnlBuy.setBackground(Color.blue); // temp
-		gbc.gridy = 0;
+		gbc.gridy = 1;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 0.5;
-		gbc.weighty = 0.6;
-		nameField = new JTextField("                      ");
-		pnlBuy.add(nameField);
+		gbc.weighty = 0.5;
+		gbc.anchor = GridBagConstraints.SOUTH;
+        uploadImage = new JButton("Upload Image");
+        pnlBuy.add(uploadImage,gbc);
 		c.add(pnlBuy, gbc);
 		
 		JPanel mitte = new JPanel();
 		mitte.setBackground(Color.ORANGE);
 		gbc.gridx = 0;
-		gbc.gridy = 1;
+		gbc.gridy = 2;
 		gbc.gridwidth = 2;
 		gbc.gridheight = 1;
 		gbc.weightx = 0.99;
@@ -222,7 +233,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		JPanel untenLinks = new JPanel();
 		untenLinks.setBackground(Color.red); // temp
 		gbc.gridx = 0;
-		gbc.gridy = 2;
+		gbc.gridy = 3;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 2;
 		gbc.fill = GridBagConstraints.BOTH;
@@ -235,7 +246,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		JPanel untenRechts = new JPanel();
 		untenRechts.setBackground(Color.gray); // temp
 		gbc.gridx = 1;
-		gbc.gridy = 2;
+		gbc.gridy = 3;
 		gbc.gridwidth = 2;
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;

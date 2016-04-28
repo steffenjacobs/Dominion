@@ -60,7 +60,7 @@ public class MainMenuPanel extends JPanel {
 	private void createButtons(MainFrame parent) {
 	
 			buttons = new MainMenuButton[4];
-			String[] names = new String[]{"Single Player", "Multi Player", "Cancer", "Community"};
+			String[] names = new String[]{"Single Player", "Multi Player", "Card Editor", "Community"};
 			try {
 				for (int i = 0; i < buttons.length; i++) {
 					buttons[i] = new MainMenuButton((parent.getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1) + topGap,
