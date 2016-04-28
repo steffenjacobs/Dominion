@@ -22,8 +22,9 @@ public class PacketBroadcastLogMultiColor extends Packet {
 	 */
 	@SafeVarargs
 	public PacketBroadcastLogMultiColor(Pair<String, Color>... pairs) {
-		super(PacketType.BROADCAST_LOG_SINGLE_COLOR);
-		for (Pair<String,Color> p : pairs) {
+		super(PacketType.BROADCAST_LOG_MULTI_COLOR);
+		this.pair = new LinkedList<Pair<String, Color>>();
+ 		for (Pair<String,Color> p : pairs) {
 			pair.addLast(p);
 		}
 		this.msgType = MsgType.GAME;
