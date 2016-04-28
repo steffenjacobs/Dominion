@@ -19,7 +19,8 @@ import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.server.ChatController;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogMultiColor;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBuyCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
@@ -76,7 +77,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				System.out.println("clientId: " + clientId);
 				PacketRegistratePlayerByServer packetRegistratePlayerByServer = (PacketRegistratePlayerByServer) packet;
 
-				if (packetRegistratePlayerByServer.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))){
+				if (packetRegistratePlayerByServer.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 					System.out.println("add ai");
 
 					addPlayerAndCheckPlayerCount(port, clientId, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
@@ -174,7 +175,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 						resetGameWindowAfterRevealAction(port, player);
 					}
 				}
-
 				break;
 			case TAKE_THIEF_CARDS:
 				takeThiefCards(port);
@@ -198,9 +198,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				System.out.println("TemporaryTrashCards");
 				clientID = ((PacketTemporaryTrashCards) packet).getClientID();
 				player = server.getGameController().getClientById(clientID);
-
 				break;
-
 			case END_REACTIONS:
 				Player player1 = this.server.getGameController().getClientById(((PacketEndReactions) packet).getClientID());
 				player1.setReactionCard(false);
@@ -212,15 +210,16 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case DISCARD_DECK:
 				this.server.getGameController().getActivePlayer().getDeck().discardDrawPile();
-
 				break;
-			case BROADCAST_LOG:
+			case BROADCAST_LOG_SINGLE_COLOR:
+				this.server.broadcastMessage(packet);
+				break;
+			case BROADCAST_LOG_MULTI_COLOR:
 				this.server.broadcastMessage(packet);
 				break;
 			default:
 				System.out.println("unknown packed type");
 				break;
-
 			}
 		} catch (IOException ie) {
 			ie.printStackTrace();
@@ -345,22 +344,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 		Player player = this.server.getGameController().getClientById(clientID);
 
 		/**
-		 * Prüfen ob 
-		 * 1. jeder die broadcast und nur ich die log message sehen
-		 * kann bei cardPlayed 
-		 * 2. wo steht cliendID%4 (Konstruktor von Player)
-		 * 3. funktionieren die Farben 
-		 * 4. test bei servergamepackethandler removen und color
-		 * übergeben sodass die farben funzen können 
-		 * 5. im GameLog.broadcastMessage die color removen aber das wird automatisch
+		 * Prüfen ob 1. jeder die broadcast und nur ich die log message sehen
+		 * kann bei cardPlayed 2. wo steht cliendID%4 (Konstruktor von Player)
+		 * 3. funktionieren die Farben 4. test bei servergamepackethandler
+		 * removen und color übergeben sodass die farben funzen können 5. im
+		 * GameLog.broadcastMessage die color removen aber das wird automatisch
 		 * passieren wenn der konstruktor vom Packet geändert wird und die farbe
-		 * vom konstruktor auf die GameLog Methode geändert wird
-		 * 6. Zeile 731 im Player überprüfen
-		 * 7. man kann ColorHash map von Jojo oder Player.getLogColor benutzen
-		 * 8. turn counter in player als attribut und dann in GameContr. einbauen
+		 * vom konstruktor auf die GameLog Methode geändert wird 6. Zeile 731 im
+		 * Player überprüfen 7. man kann ColorHash map von Jojo oder
+		 * Player.getLogColor benutzen 8. turn counter in player als attribut
+		 * und dann in GameContr. einbauen
 		 */
 		GameLog.logInGame(MsgType.GAME, "nur ich kann das sehen", GameLog.getMsgColor());
-		
 
 		if (!player.playsReactionCard() && (player.isDiscardMode() || player.isTrashMode())) {
 			System.out.println("im handler discard mode set");
@@ -406,7 +401,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 						for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 							Player player2 = (Player) iterator.next();
 							CollectionsUtil.appendListToList(player2.getTemporaryTrashPile(), allThiefCards);
-						}						
+						}
 						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketSendRevealCards(CollectionsUtil.getCardIDs(allThiefCards)));
 						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketTakeThiefCards());
 						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketPutBackThiefCards());
@@ -420,8 +415,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		if (player.isGainMode()) {
 			if (this.server.getGameController().gain(cardID, player)) {
 				this.server.broadcastMessage(new PacketSendBoard(this.server.getGameController().getGameBoard().getTreasureCardIDs(), this.server.getGameController().getGameBoard()
-						.getVictoryCardIDs(),
-				this.server.getGameController().getGameBoard().getActionCardIDs()));
+						.getVictoryCardIDs(), this.server.getGameController().getGameBoard().getActionCardIDs()));
 				this.server.getGameController().isGameFinished();
 			}
 			return;
@@ -489,26 +483,36 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().buyOneCard(((PacketBuyCard) packet).getCardId());
 			this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
 		} catch (SynchronisationException e) {
-//			this.log("The card you wanted to buy is not on the board.");
+			// this.log("The card you wanted to buy is not on the board.");
 		} catch (WrongSyntaxException e) {
 			GameLog.log(MsgType.ERROR, e.getMessage());
 		}
 	}
-	
+
 	private void nextActivePlayer(int port) {
 		try {
 			Color playerColor = this.chatController.getColorMap().get(this.server.getGameController().getActivePlayerName());
 
-			this.server.broadcastMessage(new PacketBroadcastLog("\n", GameLog.getMsgColor()));			
+			this.server.broadcastMessage(new PacketBroadcastLogSingleColor("\n", GameLog.getMsgColor()));
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-			this.server.sendMessage(port, new PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(), 
-					this.server.getGameController().getActivePlayer().getBuys(), this.server.getGameController().getActivePlayer().getCoins()));
+			this.server.sendMessage(port, new PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(), this.server.getGameController().getActivePlayer().getBuys(),
+					this.server.getGameController().getActivePlayer().getCoins()));
 			this.server.getGameController().endTurn();
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
-			this.server.broadcastMessage(new PacketBroadcastLog("----- ", GameLog.getMsgColor()));
-			this.server.broadcastMessage(new PacketBroadcastLog(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()));
-			this.server.broadcastMessage(new PacketBroadcastLog(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n", GameLog.getMsgColor()));
+			// this.server.broadcastMessage(new
+			// PacketBroadcastLogSingleColor("----- #", GameLog.getMsgColor()));
+			// this.server.broadcastMessage(new
+			// PacketBroadcastLogSingleColor(this.server.getGameController().getActivePlayerName(),
+			// this.server.getGameController().getActivePlayer().getLogColor()));
+			// this.server.broadcastMessage(new
+			// PacketBroadcastLogSingleColor(": turn " +
+			// this.server.getGameController().getActivePlayer().getTurnNr() +
+			// " -----\n", GameLog.getMsgColor()));
+			this.server.broadcastMessage(new PacketBroadcastLogMultiColor(
+					CollectionsUtil.getPair("----- #", GameLog.getMsgColor()), 
+					CollectionsUtil.getPair(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()), 
+					CollectionsUtil.getPair(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n", GameLog.getMsgColor())));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -520,7 +524,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			Color c = res.firstEntry().getValue();
 			String s = res.firstKey();
 			try {
-				this.server.broadcastMessage(new PacketBroadcastLog(s,c));
+				this.server.broadcastMessage(new PacketBroadcastLogSingleColor(s, c));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -550,7 +554,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().addPlayerAndChooseRandomActivePlayer(player);
 			this.server.sendMessage(port, new PacketSendClientId(clientId));
 			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-				new ArtificialIntelligence(player, /* new InetSocketAddress("127.0.0.1", this.server.getPort()) ,*/ sessionID, this).start();
+				new ArtificialIntelligence(player, /*
+													 * new
+													 * InetSocketAddress("127.0.0.1"
+													 * , this.server.getPort())
+													 * ,
+													 */sessionID, this).start();
 				System.out.println("created a new artificial intelligence");
 			}
 			if (server.getGameController().getPlayers().size() == GameConstant.PLAYERS) {
@@ -559,16 +568,16 @@ public class ServerGamePacketHandler extends PacketHandler {
 				ArrayList<String> chatPlayers = new ArrayList<String>();
 				for (Iterator<Player> iterator = serverPlayers.iterator(); iterator.hasNext();) {
 					Player temp = iterator.next();
-					if(!temp.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))){
+					if (!temp.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 						chatPlayers.add(temp.getPlayerName());
 					}
-				}				
+				}
 				System.out.println("chatplayers: " + chatPlayers);
-				this.chatController.createChatRoom(chatPlayers);				
+				this.chatController.createChatRoom(chatPlayers);
 
-//				this.server.getGameController().startGame();
-//				setUpGui();
-			}	
+				// this.server.getGameController().startGame();
+				// setUpGui();
+			}
 			System.out.println("registrate one more client to server with id: " + clientId + "listening on port: " + port);
 		} catch (TooMuchPlayerException tmpe) {
 			this.server.sendMessage(port, new PacketClientShouldDisconect());
@@ -605,7 +614,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.sendMessage(players.get(i).getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(players.get(i).getDeck().getCardHand())));
 		}
 	}
-	
+
 	/**
 	 * @return the chancontroller instance to create or delete chatrooms
 	 */

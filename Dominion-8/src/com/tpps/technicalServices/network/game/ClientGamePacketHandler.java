@@ -1,5 +1,6 @@
 package com.tpps.technicalServices.network.game;
 
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -8,9 +9,11 @@ import javax.swing.JOptionPane;
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.GameStorageInterface;
 import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.Pair;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogMultiColor;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.technicalServices.network.gameSession.packets.PacketOpenGuiAndEnableOne;
@@ -182,8 +185,13 @@ public class ClientGamePacketHandler extends PacketHandler {
 		// gameGui.disableActionCards();
 		// gameGui.enalbeMoney();
 		// break;
-		case BROADCAST_LOG:
-			GameLog.logInGame(((PacketBroadcastLog) packet).getMsgType(),((PacketBroadcastLog) packet).getMessage(),((PacketBroadcastLog) packet).getColor());
+		case BROADCAST_LOG_SINGLE_COLOR:
+			GameLog.logInGame(((PacketBroadcastLogSingleColor) packet).getMsgType(),((PacketBroadcastLogSingleColor) packet).getMessage(),((PacketBroadcastLogSingleColor) packet).getColor());
+			break;
+		case BROADCAST_LOG_MULTI_COLOR:
+			for (Pair<String, Color> pair : ((PacketBroadcastLogMultiColor) packet).getPair()) {
+				GameLog.logInGame(((PacketBroadcastLogMultiColor) packet).getMsgType(), pair.getS(), pair.getC());
+			}
 			break;
 		case SHOW_END_SCREEN:
 			JOptionPane.showMessageDialog(null, "end game");

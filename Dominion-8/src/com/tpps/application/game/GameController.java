@@ -24,7 +24,7 @@ import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.game.TooMuchPlayerException;
 import com.tpps.technicalServices.network.game.WrongSyntaxException;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableOthers;
@@ -885,9 +885,9 @@ public class GameController {
 				this.activePlayer = getRandomPlayer();
 				this.activePlayer.incTurnNr();
 				try {
-					this.gameServer.broadcastMessage(new PacketBroadcastLog("----- ", GameLog.getMsgColor()));
-					this.gameServer.broadcastMessage(new PacketBroadcastLog(this.activePlayer.getPlayerName(), this.activePlayer.getLogColor()));
-					this.gameServer.broadcastMessage(new PacketBroadcastLog(": turn " + this.activePlayer.getTurnNr() + " -----\n", GameLog.getMsgColor()));
+					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor("----- ", GameLog.getMsgColor()));
+					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.activePlayer.getPlayerName(), this.activePlayer.getLogColor()));
+					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(": turn " + this.activePlayer.getTurnNr() + " -----\n", GameLog.getMsgColor()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

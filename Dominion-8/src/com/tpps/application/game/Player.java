@@ -15,7 +15,7 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.game.SynchronisationException;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDontShowEndReactions;
@@ -659,8 +659,8 @@ public class Player {
 		boolean dontRemoveFlag = false, trashFlag = false;
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 
-		this.gameServer.broadcastMessage(new PacketBroadcastLog(this.getPlayerName(), this.getLogColor()));
-		this.gameServer.broadcastMessage(new PacketBroadcastLog(" - plays " + serverCard.getName() + "\n", GameLog.getMsgColor()));
+		this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.getPlayerName(), this.getLogColor()));
+		this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - plays " + serverCard.getName() + "\n", GameLog.getMsgColor()));
 
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);

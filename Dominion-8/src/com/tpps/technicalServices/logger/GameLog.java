@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.tpps.application.game.DominionController;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.ColorUtil;
@@ -153,7 +153,7 @@ public class GameLog {
 
 	public static void broadcastMessage(MsgType type, String line) {
 		try {
-			DominionController.getInstance().getGameClient().sendMessage(new PacketBroadcastLog(type, line, msgColor));
+			DominionController.getInstance().getGameClient().sendMessage(new PacketBroadcastLogSingleColor(type, line, msgColor));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
