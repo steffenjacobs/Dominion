@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -69,22 +70,41 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testSetThiefList() {
-//		this.gameController.setT
+		CopyOnWriteArrayList<Player> cardList = this.gameController.getThiefList();
+		cardList.add(this.gameController.getActivePlayer());
+		this.gameController.setThiefList(new CopyOnWriteArrayList<Player>());
+		assertTrue(!cardList.equals(this.gameController.getThiefList()));
+		this.gameController.resetThiefList();
+		assertTrue(this.gameController.getThiefList().isEmpty());
 	}
 
 	@Test
 	public void testSetSpyList() {
-		fail("Not yet implemented");
+		CopyOnWriteArrayList<Player> cardList =  this.gameController.getSpyList();
+		cardList.add(this.gameController.getActivePlayer());
+		this.gameController.setSpyList(new CopyOnWriteArrayList<Player>());
+		
+		assertTrue(!cardList.equals(this.gameController.getSpyList()));
+		
 	}
 
 	@Test
 	public void testSetNextActivePlayer() {
-		fail("Not yet implemented");
+		this.gameController.setActivePlayer(this.gameController.getPlayers().get(0));
+		for (int i = 0; i < 20; i++) {
+			
+			assertTrue(this.gameController.getActivePlayer().equals(this.gameController.getPlayers().get(i % 4)));
+			this.gameController.setNextActivePlayer();
+		}
 	}
 
 	@Test
 	public void testUpdateTrashPile() {
-		fail("Not yet implemented");
+		int size = this.gameController.getGameBoard().getTrashPile().size();
+		this.gameController.getActivePlayer().getTemporaryTrashPile().add(
+				this.gameController.getGameBoard().getTableForTreasureCards().get("Copper").get(0));
+		this.gameController.updateTrashPile(this.gameController.getActivePlayer().getTemporaryTrashPile());
+		assertThat(size, is(this.gameController.getGameBoard().getTrashPile().size()));
 	}
 
 	@Test
