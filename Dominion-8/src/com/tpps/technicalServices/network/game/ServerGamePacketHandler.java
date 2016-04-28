@@ -15,11 +15,9 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
-import com.tpps.technicalServices.logger.Pair;
 import com.tpps.technicalServices.network.chat.server.ChatController;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogMultiColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBuyCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketClientShouldDisconect;
@@ -48,6 +46,8 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateTreasu
 import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateValues;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
+
+import javafx.util.Pair;
 
 /**
  * @author ladler - Lukas Adler
@@ -469,7 +469,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void buyCardAndUpdateBoards(Packet packet) throws IOException {
 		try {
 			GameBoard gameBoard = this.server.getGameController().getGameBoard();
-			this.server.getGameController().buyOneCard(((PacketBuyCard) packet).getCardId());
+//			this.server.getGameController().buyOneCard(((PacketBuyCard) packet).getCardId());
+			this.server.getGameController().buyOneCard(((PacketPlayCard) packet).getCardID());
 			this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
 		} catch (SynchronisationException e) {
 			GameLog.log(MsgType.EXCEPTION, "The card you wanted to buy is not on the board:\n" + e.getMessage());
@@ -491,6 +492,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
 			
 			/**
+			 * Lukas Fragen:
+			 * -2. wo loggen bei gain curse? gain Methode im GC? also die "gains Silver" fehlt auch noch.
+			 *     in buyOneCard oder in gain Meth?
+			 * -1. LUKAS FRAGEN Z472/473 PacketBuyCard/PacketPlayCard ist das ok so? habs geändert weil deprecated
+			 * 0. organizePilesAndrefreshCardHand in GC checken ob das so richtig(/überhaupt)
+			 *    ausgegeben wird, 
+			 * 0.1 GC 909 buyOneCard funktioniert das also wird immer dort ne karte gekauft?
+			 * 
 			 * 1. client-side loggen? wie und wann und wo gehts
 			 * 2. Zeile 744 (GAINCARDDRAWPILE) im Player ueberpruefen 
 			 * 3. man kann ColorHash map von Jojo oder Player.getLogColor benutzen
@@ -502,18 +511,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * 9. "Copper" und andere Karten als konstanten machen im ganzen Game
 			 * 10. remove line 50 PacketBroadcastLogSingleColor
 			 * 11. update comments in gameLog
+			 * 12. addPlayerAndChooseRandomActivePlayer in GC Z882 mit der schlussendlichen synced. LogMethode abgleichen
 			 */
 			
 			/**
-			 * 1. das hier machen
-			 * 2. Thread.sleep bei singleColor probieren
-			 * 3. MultiColor anschauen
-			 * 4. errors fixen
-			 * 5. alte GameLogs ergänzen
-			 * 6. oben ergänzen und abarbeiten
-			 * 
+			 * 1. Thread.sleep bei singleColor probieren (siehe darunter)
+			 * 2. MultiColor anschauen
 			 * */
-			
 			Thread.sleep(100);
 			this.server.broadcastMessage(new PacketBroadcastLogSingleColor("----- "));
 			Thread.sleep(100);
@@ -533,11 +537,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public void logPrepText() {
 		for (Integer i : GameLog.getPrepText().keySet()) {
 			Pair<String, Color> res = GameLog.getPrepText().get(i);
-			Color c = res.getC();
-			String s = res.getS();
+			Color c = res.getValue();
+			String s = res.getKey();
 			try {
 				this.server.broadcastMessage(new PacketBroadcastLogSingleColor(s, c));
 			} catch (IOException e) {
@@ -547,6 +554,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 		GameLog.resetPrepText();
 	}
 
+	/**
+	 * 
+	 * @param port
+	 * @param packetReconnect
+	 */
 	private void updatePortOfPlayer(int port, PacketReconnect packetReconnect) {
 		LinkedList<Player> disconnectedPlayers = this.server.getDisconnectedUser();
 		for (Iterator<Player> iterator = disconnectedPlayers.iterator(); iterator.hasNext();) {

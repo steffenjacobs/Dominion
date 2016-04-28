@@ -13,6 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
+import com.tpps.technicalServices.logger.DrawAndShuffle;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
@@ -302,12 +303,13 @@ public class GameController {
 	 * calls the refresPlayedCardsList()
 	 */
 	public synchronized void organizePilesAndrefreshCardHand() {
-
 		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
-		this.getActivePlayer().getDeck().refreshCardHand();
+		DrawAndShuffle das = this.getActivePlayer().getDeck().refreshCardHand();
+		if (das.wasShuffled()) GameLog.log(MsgType.GAME, this.getActivePlayerName()+ " - shuffles deck");
+		GameLog.log(MsgType.GAME, this.getActivePlayerName() + " - draws " + das.getDrawAmount() + " cards");
 		this.getActivePlayer().refreshPlayedCardsList();
 	}
-
+	
 	/**
 	 *every player who hasn't a reaction has to discard (cardHandSize - value) cards
 	 *for that purpose the players without reaction card are set into the discardMode
@@ -907,6 +909,7 @@ public class GameController {
 	public void buyOneCard(String cardId) throws SynchronisationException, WrongSyntaxException {
 		Card card = gameBoard.findAndRemoveCardFromBoard(cardId);
 		this.getActivePlayer().getDeck().getDiscardPile().add(card);
+		GameLog.log(MsgType.GAME, this.getActivePlayerName() + " - buys " + card.getName());
 	}
 
 	/**

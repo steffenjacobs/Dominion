@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.GameStorageInterface;
 import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.Pair;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogMultiColor;
@@ -27,6 +26,8 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketSendRevealCa
 import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateTreasures;
 import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateValues;
 import com.tpps.ui.gameplay.GameWindow;
+
+import javafx.util.Pair;
 
 /**
  * 
@@ -190,7 +191,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			break;
 		case BROADCAST_LOG_MULTI_COLOR:
 			for (Pair<String, Color> pair : ((PacketBroadcastLogMultiColor) packet).getPair()) {
-				GameLog.log(((PacketBroadcastLogMultiColor) packet).getMsgType(), pair.getS(), pair.getC());
+				GameLog.log(((PacketBroadcastLogMultiColor) packet).getMsgType(), pair.getKey(), pair.getValue());
 			}
 			break;
 		case SHOW_END_SCREEN:

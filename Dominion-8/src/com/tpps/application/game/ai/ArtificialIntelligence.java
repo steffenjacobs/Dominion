@@ -1,6 +1,8 @@
 package com.tpps.application.game.ai;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 import com.google.common.collect.LinkedListMultimap;
@@ -15,6 +17,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketEndActionPha
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndTurn;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayTreasures;
+import com.tpps.technicalServices.util.CollectionsUtil;
 
 /*
  * - board anschauen, wenn angriffskarten gekauft werden dann defensiv kaufen 
@@ -34,12 +37,10 @@ public class ArtificialIntelligence {
 	private ServerGamePacketHandler packetHandler;
 
 	private Player player;
-	private InformationHandler information;
+	
+	private List<String> blacklist;
 	private boolean computing;
-
-	// private AIPacketHandler aiPacketHandler;
-	// private AIClient aiClient;
-
+	
 	/**
 	 * constructor of the Artificial Intelligence
 	 * 
@@ -48,32 +49,17 @@ public class ArtificialIntelligence {
 	 * @param uuid
 	 *            the sessionID of the AI instance
 	 */
-	public ArtificialIntelligence(Player player, /* SocketAddress _address, */UUID uuid, ServerGamePacketHandler packetHandler) {
-		this.player = player;
-		// this.aiPacketHandler = new AIPacketHandler();
-		// this.aiClient = new AIClient(_address, aiPacketHandler);
-		// this.aiPacketHandler.setAiClient(aiClient);
-		this.information = new InformationHandler();
-		this.computing = false;
+	public ArtificialIntelligence(Player player, UUID uuid, ServerGamePacketHandler packetHandler) {
 		this.packetHandler = packetHandler;
+		this.player = player;
+		this.blacklist = CollectionsUtil.linkedList(new String[] {"Copper","Estate","Curse"});
+		this.computing = false;
 	}
 
 	/*
 	 * keine Probleme mehr, es muss nur genau wie bei myTurn die ReactionPhase
 	 * gehandlet werden
 	 */
-	private boolean myTurn() {
-		return this.player.getGameServer().getGameController().getActivePlayer().equals(player);
-	}
-
-	/**
-	 *
-	 * @return if the game is NOT finished (so when the method returns true, the
-	 *         game is still running)
-	 */
-	protected boolean notFinished() {
-		return this.player.getGameServer().getGameController().isGameNotFinished();
-	}
 
 	private void sendPacket(Packet packet) {
 		new Thread(() -> {
@@ -158,22 +144,22 @@ public class ArtificialIntelligence {
 	public void executeMove() {
 
 		System.out.println(this + " is executing a turn");
-		// LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
+		LinkedList<Card> cardHand = this.getCardHand();
 		try {
 			Move defaultMove = this.getDefaultMove();
-//			System.out.println("before sleep");
+			// System.out.println("before sleep");
 			Thread.sleep(500);
-//			System.out.println("after sleep");
+			// System.out.println("after sleep");
 			this.playTreasures();
 			Thread.sleep(500);
-			for (Card action : defaultMove.getPlaySequence().get(ExecutionType.PLAY)) {
+			for (Card action : defaultMove.getPlaySequence().get(Execute.PLAY)) {
 				this.playCard(action);
 			}
 			Thread.sleep(250);
 			this.setBuyPhase();
 			Thread.sleep(250);
-			for (String buy : defaultMove.getBuySequence().get(ExecutionType.BUY)) {
-				if (!information.getBlacklist().contains(buy)) {
+			for (String buy : defaultMove.getBuySequence().get(Execute.BUY)) {
+				if (!getBlacklist().contains(buy)) {
 					this.buyCard(this.getCardFromBoard(buy));
 				}
 			}
@@ -184,7 +170,7 @@ public class ArtificialIntelligence {
 			 */
 			this.computing = false;
 			Thread.sleep(500);
-			if(myTurn()) {
+			if (myTurn()) {
 				this.player.getGameServer().broadcastMessage(new PacketBroadcastLogSingleColor("endTurn();", GameLog.getMsgColor()));
 				this.endTurn();
 			}
@@ -221,7 +207,7 @@ public class ArtificialIntelligence {
 		 * draw any more cards e.g.
 		 */
 		Move result = new Move();
-		int coins = information.getTreasureCardsValue(this.player);
+		int coins = getTreasureCardsValue();
 		if (coins >= 8) {
 			result.putBuy("Province");
 		} else if (coins >= 6) {
@@ -231,7 +217,42 @@ public class ArtificialIntelligence {
 		}
 		return result;
 	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private boolean myTurn() {
+		return this.player.getGameServer().getGameController().getActivePlayer().equals(player);
+	}
 
+	/**
+	 *
+	 * @return if the game is NOT finished (so when the method returns true, the
+	 *         game is still running)
+	 */
+	protected boolean notFinished() {
+		return this.player.getGameServer().getGameController().isGameNotFinished();
+	}
+	
+	/**
+	 * 
+	 * @param player
+	 *            the player to get the information from
+	 * @return
+	 */
+	protected int getTreasureCardsValue() {
+		return this.player.getDeck().getTreasureValueOfList(this.getCardHand());
+	}
+	
+	/**
+	 * 
+	 * @return the cardHand of the player
+	 */
+	protected LinkedList<Card> getCardHand() {
+		return this.player.getDeck().getCardHand();
+	}
+	
 	/**
 	 * main for testing purposes of LinkedListMultimap
 	 * 
@@ -260,6 +281,20 @@ public class ArtificialIntelligence {
 	}
 
 	/**
+	 * @return the packetHandler
+	 */
+	public ServerGamePacketHandler getPacketHandler() {
+		return packetHandler;
+	}
+
+	/**
+	 * @param packetHandler the packetHandler to set
+	 */
+	public void setPacketHandler(ServerGamePacketHandler packetHandler) {
+		this.packetHandler = packetHandler;
+	}
+
+	/**
 	 * @return the player
 	 */
 	public Player getPlayer() {
@@ -267,55 +302,40 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param player
-	 *            the player to set
+	 * @param player the player to set
 	 */
 	public void setPlayer(Player player) {
 		this.player = player;
 	}
 
 	/**
-	 * @return the information
+	 * @return the blacklist
 	 */
-	public InformationHandler getInformation() {
-		return information;
+	public List<String> getBlacklist() {
+		return blacklist;
 	}
 
 	/**
-	 * @param information
-	 *            the information to set
+	 * @param blacklist the blacklist to set
 	 */
-	public void setInformation(InformationHandler information) {
-		this.information = information;
+	public void setBlacklist(List<String> blacklist) {
+		this.blacklist = blacklist;
 	}
 
-	// /**
-	// * @return the game
-	// */
-	// public AIClient getGame() {
-	// return aiClient;
-	// }
-	//
-	// /**
-	// * @param game
-	// * the game to set
-	// */
-	// public void setGame(AIClient game) {
-	// this.aiClient = game;
-	// }
+	/**
+	 * @return the computing
+	 */
+	public boolean isComputing() {
+		return computing;
+	}
 
-	// /**
-	// * @return the aiPacketHandler
-	// */
-	// public AIPacketHandler getAiPacketHandler() {
-	// return aiPacketHandler;
-	// }
-	//
-	// /**
-	// * @param aiPacketHandler
-	// * the aiPacketHandler to set
-	// */
-	// public void setAiPacketHandler(AIPacketHandler aiPacketHandler) {
-	// this.aiPacketHandler = aiPacketHandler;
-	// }
+	/**
+	 * @param computing the computing to set
+	 */
+	public void setComputing(boolean computing) {
+		this.computing = computing;
+	}
+	
+	/* ---------- getter & setter ---------- */
+
 }

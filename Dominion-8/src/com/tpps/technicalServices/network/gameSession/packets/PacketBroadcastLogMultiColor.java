@@ -4,9 +4,10 @@ import java.awt.Color;
 import java.util.LinkedList;
 
 import com.tpps.technicalServices.logger.MsgType;
-import com.tpps.technicalServices.logger.Pair;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
+
+import javafx.util.Pair;
 
 public class PacketBroadcastLogMultiColor extends Packet {
 

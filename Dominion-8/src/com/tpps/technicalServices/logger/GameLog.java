@@ -11,6 +11,8 @@ import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.ColorUtil;
 
+import javafx.util.Pair;
+
 /**
  * 
  * @author nicolaswipfler

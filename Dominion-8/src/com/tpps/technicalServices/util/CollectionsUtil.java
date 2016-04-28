@@ -11,7 +11,8 @@ import java.util.TreeMap;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.Pair;
+
+import javafx.util.Pair;
 
 /**
  * 
@@ -81,6 +82,8 @@ public final class CollectionsUtil {
 		resultList.add(object);
 		return resultList;
 	}
+	
+	
 
 	/**
 	 *
