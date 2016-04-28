@@ -63,7 +63,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 * checks which packet was sent and reacts on the packet
 	 */
 	@Override
-	public void handleReceivedPacket(int port, Packet packet) {
+	public synchronized void handleReceivedPacket(int port, Packet packet) {
 		// ServerConnectionThread requester = parent.getClientThread(port);
 		if (packet == null) {
 			super.output("<- Empty Packet from (" + port + ")");
