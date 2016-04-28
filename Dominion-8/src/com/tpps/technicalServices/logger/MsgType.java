@@ -17,7 +17,7 @@ public enum MsgType {
 	DEBUG("[BUG]", Color.ORANGE, true, true),
 	EXCEPTION("[EXCEPTION]", Color.RED, true, true),
 	ERROR("[ERROR]", Color.RED, true, true),
-	GAME("[GAME]", Color.GREEN, true, true),
+	GAME("[GAME]", Color.GREEN, true, false),
 	NETWORK_INFO("[NETWORK-INFO]", Color.BLUE, true, true),
 	NETWORK_ERROR("[NETWORK-ERROR]", Color.MAGENTA, true, true);
 

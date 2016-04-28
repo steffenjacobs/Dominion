@@ -183,7 +183,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 		// gameGui.enalbeMoney();
 		// break;
 		case BROADCAST_LOG:
-			GameLog.log(((PacketBroadcastLog) packet).getMsgType(), ((PacketBroadcastLog) packet).getMessage());
+			GameLog.logInGame(((PacketBroadcastLog) packet).getMsgType(),((PacketBroadcastLog) packet).getMessage(),((PacketBroadcastLog) packet).getColor());
 			break;
 		case SHOW_END_SCREEN:
 			JOptionPane.showMessageDialog(null, "end game");
