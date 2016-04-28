@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -16,6 +17,8 @@ import com.tpps.application.game.Deck;
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.GameController;
 import com.tpps.application.game.Player;
+import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.game.WrongSyntaxException;
@@ -104,32 +107,58 @@ public class GameControllerTest2 {
 		this.gameController.getActivePlayer().getTemporaryTrashPile().add(
 				this.gameController.getGameBoard().getTableForTreasureCards().get("Copper").get(0));
 		this.gameController.updateTrashPile(this.gameController.getActivePlayer().getTemporaryTrashPile());
-		assertThat(size, is(this.gameController.getGameBoard().getTrashPile().size()));
-	}
-
-	@Test
-	public void testCheckCardExistsAndDiscardOrTrash() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testValidateTurnAndExecute() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testGain() {
-		fail("Not yet implemented");
+		assertThat(size + 1, is(this.gameController.getGameBoard().getTrashPile().size()));
 	}
 
 	@Test
 	public void testCheckBoardCardExistsAppendToDiscardPile() {
-		fail("Not yet implemented");
+		int size = this.gameController.getActivePlayer().getDeck().getDiscardPile().size();
+		this.gameController.setGamePhase("actionPhase");
+		
+		try {
+			this.gameController.checkBoardCardExistsAppendToDiscardPile(
+					this.gameController.getGameBoard().getActionCardIDs().get(0));
+			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
+			
+			this.gameController.setGamePhase("buyPhase");
+			this.gameController.getActivePlayer().setBuys(0);
+			this.gameController.checkBoardCardExistsAppendToDiscardPile(
+					this.gameController.getGameBoard().getActionCardIDs().get(0));
+			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
+			
+			this.gameController.getActivePlayer().setBuys(1);
+			this.gameController.getActivePlayer().setCoins(-1);
+			
+			this.gameController.checkBoardCardExistsAppendToDiscardPile(
+					this.gameController.getGameBoard().getActionCardIDs().get(0));
+			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
+			
+			LinkedList<Card> cards = this.gameController.getGameBoard().findCardListFromBoard(this.gameController.getGameBoard().getActionCardIDs().get(0));
+			this.gameController.getActivePlayer().setCoins(cards.getLast().getCost());
+			this.gameController.checkBoardCardExistsAppendToDiscardPile(
+					this.gameController.getGameBoard().getActionCardIDs().get(0));
+			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size + 1));
+			
+			
+			
+		} catch (NoSuchElementException e) {
+			e.printStackTrace();
+		} catch (SynchronisationException e) {
+			e.printStackTrace();
+		} catch (WrongSyntaxException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void testIsVictoryCardOnHand() {
-		fail("Not yet implemented");
+		
+		Card card;
+		do {
+			this.gameController.getActivePlayer().getDeck().refreshCardHand();
+			card = this.gameController.getActivePlayer().getDeck().getCardByTypeFromHand(CardType.VICTORY);
+		}while(card == null);
+		assertTrue(this.gameController.isVictoryCardOnHand(card.getId()));
 	}
 
 	@Test
@@ -149,11 +178,6 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testRevealAndTakeCardsDiscardOthers() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testRevealCardAll() {
 		fail("Not yet implemented");
 	}
 

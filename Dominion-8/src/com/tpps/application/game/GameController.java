@@ -256,7 +256,7 @@ public class GameController {
 	 */
 	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException, NoSuchElementException, WrongSyntaxException {
 		System.out.println("checkBoardCardExists");
-		LinkedList<Card> cards = this.getGameBoard().findCardListFromBoard(cardID);
+		LinkedList<Card> cards = this.gameBoard.findCardListFromBoard(cardID);
 		Card card = cards.getLast();
 		Player player = this.getActivePlayer();
 		if (this.gamePhase.equals("buyPhase") && player.getBuys() > 0 && player.getCoins() >= card.getCost()) {
@@ -921,7 +921,7 @@ public class GameController {
 	 * @return the gameBoard
 	 */
 	public synchronized GameBoard getGameBoard() {
-		return gameBoard;
+		return this.gameBoard;
 	}
 
 //	/**
