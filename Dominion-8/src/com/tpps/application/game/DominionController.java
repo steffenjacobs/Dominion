@@ -14,6 +14,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import com.tpps.application.storage.CardStorageController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.client.ChatClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
@@ -199,7 +201,7 @@ public final class DominionController {
 	private void initClients(){
 		this.chatClient = new ChatClient(this.username);
 		this.matchmaker = new Matchmaker();
-		System.out.println(this.username);
+		GameLog.log(MsgType.INFO, "Username: " + this.username);
 	}
 	
 	/**

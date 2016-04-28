@@ -184,10 +184,10 @@ public class GameLog {
 	 */
 	public static void init() {
 		GameLog.isInitialized = true;
-		if (!guiPossible) 
-			return;
-		GameLog.textPane = new GameLogTextPane();
-		GameLog.log(MsgType.INIT, "Game Log", msgColor);
+		if (guiPossible) 
+			GameLog.textPane = new GameLogTextPane();
+		else return;
+		GameLog.log(MsgType.INIT, "Log", msgColor);
 		GameLog.appendToPrepText(0,"Game Log\n", msgColor);
 		if (prepText == null)
 			GameLog.prepText = new TreeMap<Integer, Pair<String, Color>>();
