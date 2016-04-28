@@ -31,6 +31,7 @@ public class GameServerNetworkListener implements NetworkListener {
 	public void onClientConnect(int port) {
 
 	}
+	
 
 	@Override
 	public void onClientDisconnect(int port) {

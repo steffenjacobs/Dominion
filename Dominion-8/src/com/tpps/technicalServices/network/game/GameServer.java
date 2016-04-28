@@ -28,7 +28,7 @@ public class GameServer extends Server {
 		this.sessionClient = new SessionClient(new InetSocketAddress(Addresses.getLocalHost(), SessionServer.getStandardPort()));
 		this.gameController = new GameController(this);
 		instance = this;
-		super.getListenerManager().registerListener(new GameServerNetworkListener(this));
+		this.getListenerManager().registerListener(new GameServerNetworkListener(this));
 		this.disconnectedUser = new LinkedList<Player>();
 		setConsoleInput();
 	}
@@ -53,7 +53,7 @@ public class GameServer extends Server {
 
 	public static void main(String[] args) {
 		try {
-			new GameServer(1339);
+			new GameServer(1340);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

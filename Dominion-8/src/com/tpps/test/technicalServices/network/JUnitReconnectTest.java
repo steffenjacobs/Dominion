@@ -7,6 +7,7 @@ import java.net.InetSocketAddress;
 
 import org.junit.Test;
 
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.Server;
@@ -32,6 +33,7 @@ public class JUnitReconnectTest {
 
 		// Creating the test-listener
 		TestConnectionListener serverListener = new TestConnectionListener();
+		GameLog.init();
 
 		// Creating & Starting Server
 		final Server server = new Server(new InetSocketAddress(Addresses.getAllInterfaces(), TEST_PORT),
