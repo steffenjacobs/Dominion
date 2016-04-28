@@ -10,6 +10,7 @@ import java.util.TreeMap;
 
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
+import com.tpps.technicalServices.logger.Pair;
 
 /**
  * 
@@ -185,5 +186,9 @@ public final class CollectionsUtil {
 		Map<String,Color> map = new TreeMap<String,Color>();
 		map.put(s, c);
 		return map;
+	}
+	
+	public static Pair<String, Color> getPair(String s, Color c) {
+		return new Pair<String,Color>(s,c);
 	}
 }

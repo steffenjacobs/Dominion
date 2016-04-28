@@ -215,7 +215,9 @@ public class GlobalChatPanel extends JPanel {
 		chatInputLine.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				chatInputLine.setText("");
+				if(chatInputLine.getText().startsWith("Type in /help for commands")){
+					chatInputLine.setText("");
+				}
 			}
 		});
 		chatInputLine.setFont(font);

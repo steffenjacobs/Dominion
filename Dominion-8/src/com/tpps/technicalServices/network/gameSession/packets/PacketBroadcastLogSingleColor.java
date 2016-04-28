@@ -1,7 +1,5 @@
 package com.tpps.technicalServices.network.gameSession.packets;
 
-
-
 import java.awt.Color;
 
 import com.tpps.technicalServices.logger.GameLog;
@@ -15,12 +13,25 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketBroadcastLog extends Packet {
+public class PacketBroadcastLogSingleColor extends Packet {
 
 	private static final long serialVersionUID = 6438319829526897629L;
 	private final String msg;
 	private final MsgType msgType;
 	private final Color color;
+
+	/***
+	 * this will be used in most cases
+	 * 
+	 * @param line the line to update
+	 * @param color the color of the updated line
+	 */
+	public PacketBroadcastLogSingleColor(String line, Color color) {
+		super(PacketType.BROADCAST_LOG_SINGLE_COLOR);
+		this.msg = line;
+		this.msgType = MsgType.GAME;
+		this.color = color;
+	}
 	
 	/**
 	 * 
@@ -28,33 +39,25 @@ public class PacketBroadcastLog extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler, nwipfler - Nicolas Wipfler
 	 */
-	public PacketBroadcastLog(MsgType msgType, String msg, Color color) {
-		super(PacketType.BROADCAST_LOG);
+	public PacketBroadcastLogSingleColor(MsgType msgType, String msg, Color color) {
+		super(PacketType.BROADCAST_LOG_SINGLE_COLOR);
 		this.msg = msg;
 		this.msgType = msgType;
 		this.color = color;
 		GameLog.setMsgColor(color);
 	}
 	
-	public PacketBroadcastLog(MsgType msgType, String msg) {
-		super(PacketType.BROADCAST_LOG);
+	/**
+	 * 
+	 * @param msgType
+	 * @param msg
+	 */
+	public PacketBroadcastLogSingleColor(MsgType msgType, String msg) {
+		super(PacketType.BROADCAST_LOG_SINGLE_COLOR);
 		this.msg = msg;
 		this.msgType = msgType;
 		this.color = Color.WHITE;
 		GameLog.setMsgColor(color);
-	}
-	
-	/***
-	 * this will be used in most cases
-	 * 
-	 * @param line the line to update
-	 * @param color the color of the updated line
-	 */
-	public PacketBroadcastLog(String line, Color color) {
-		super(PacketType.BROADCAST_LOG);
-		this.msg = line;
-		this.msgType = MsgType.GAME;
-		this.color = color;
 	}
 	
 	public MsgType getMsgType(){

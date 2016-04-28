@@ -7,7 +7,7 @@ import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendActiveButtons;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendBoard;
@@ -189,8 +189,8 @@ public class AIPacketHandler extends PacketHandler {
 		// gameGui.disableActionCards();
 		// gameGui.enalbeMoney();
 //			break;
-		case BROADCAST_LOG:
-			GameLog.log(((PacketBroadcastLog) packet).getMsgType(), ((PacketBroadcastLog) packet).getMessage());
+		case BROADCAST_LOG_SINGLE_COLOR:
+			GameLog.log(((PacketBroadcastLogSingleColor) packet).getMsgType(), ((PacketBroadcastLogSingleColor) packet).getMessage());
 			break;
 		default:
 			System.out.println("Unknown packet type: " + packet.getType());

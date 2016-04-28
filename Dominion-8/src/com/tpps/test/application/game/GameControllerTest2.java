@@ -27,18 +27,17 @@ import com.tpps.technicalServices.util.GameConstant;
 public class GameControllerTest2 {
 	GameController gameController;
 
-
 	@Before
 	public void setUp() throws Exception {
-		
+
 		this.gameController = new GameController(null);
-		for (int i = 0; i < GameConstant.PLAYERS; i++){
+		for (int i = 0; i < GameConstant.PLAYERS; i++) {
 			this.gameController.getPlayers().add((new Player(new Deck(this.gameController.getGameBoard().getStartSet()), i, 80 + i, "test" + i, null, null)));
 		}
 		this.gameController.setActivePlayer(this.gameController.getPlayers().get(0));
-		
+
 	}
-	
+
 	@Test
 	public void testSetActivePlayer() {
 		Player activePlayer = this.gameController.getPlayers().get(0);
@@ -46,7 +45,7 @@ public class GameControllerTest2 {
 		assertThat(activePlayer, is(this.gameController.getActivePlayer()));
 		assertThat(activePlayer.getPlayerName(), is(this.gameController.getActivePlayerName()));
 	}
-	
+
 	@Test
 	public void testSetCardsDisabled() {
 		assertTrue(this.gameController.isCardsEnabled());
@@ -83,19 +82,19 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testSetSpyList() {
-		CopyOnWriteArrayList<Player> cardList =  this.gameController.getSpyList();
+		CopyOnWriteArrayList<Player> cardList = this.gameController.getSpyList();
 		cardList.add(this.gameController.getActivePlayer());
 		this.gameController.setSpyList(new CopyOnWriteArrayList<Player>());
-		
+
 		assertTrue(!cardList.equals(this.gameController.getSpyList()));
-		
+
 	}
 
 	@Test
 	public void testSetNextActivePlayer() {
 		this.gameController.setActivePlayer(this.gameController.getPlayers().get(0));
 		for (int i = 0; i < 20; i++) {
-			
+
 			assertTrue(this.gameController.getActivePlayer().equals(this.gameController.getPlayers().get(i % 4)));
 			this.gameController.setNextActivePlayer();
 		}
@@ -104,8 +103,7 @@ public class GameControllerTest2 {
 	@Test
 	public void testUpdateTrashPile() {
 		int size = this.gameController.getGameBoard().getTrashPile().size();
-		this.gameController.getActivePlayer().getTemporaryTrashPile().add(
-				this.gameController.getGameBoard().getTableForTreasureCards().get("Copper").get(0));
+		this.gameController.getActivePlayer().getTemporaryTrashPile().add(this.gameController.getGameBoard().getTableForTreasureCards().get("Copper").get(0));
 		this.gameController.updateTrashPile(this.gameController.getActivePlayer().getTemporaryTrashPile());
 		assertThat(size + 1, is(this.gameController.getGameBoard().getTrashPile().size()));
 	}
@@ -114,33 +112,27 @@ public class GameControllerTest2 {
 	public void testCheckBoardCardExistsAppendToDiscardPile() {
 		int size = this.gameController.getActivePlayer().getDeck().getDiscardPile().size();
 		this.gameController.setGamePhase("actionPhase");
-		
+
 		try {
-			this.gameController.checkBoardCardExistsAppendToDiscardPile(
-					this.gameController.getGameBoard().getActionCardIDs().get(0));
+			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
 			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
-			
+
 			this.gameController.setGamePhase("buyPhase");
 			this.gameController.getActivePlayer().setBuys(0);
-			this.gameController.checkBoardCardExistsAppendToDiscardPile(
-					this.gameController.getGameBoard().getActionCardIDs().get(0));
+			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
 			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
-			
+
 			this.gameController.getActivePlayer().setBuys(1);
 			this.gameController.getActivePlayer().setCoins(-1);
-			
-			this.gameController.checkBoardCardExistsAppendToDiscardPile(
-					this.gameController.getGameBoard().getActionCardIDs().get(0));
+
+			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
 			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
-			
+
 			LinkedList<Card> cards = this.gameController.getGameBoard().findCardListFromBoard(this.gameController.getGameBoard().getActionCardIDs().get(0));
 			this.gameController.getActivePlayer().setCoins(cards.getLast().getCost());
-			this.gameController.checkBoardCardExistsAppendToDiscardPile(
-					this.gameController.getGameBoard().getActionCardIDs().get(0));
+			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
 			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size + 1));
-			
-			
-			
+
 		} catch (NoSuchElementException e) {
 			e.printStackTrace();
 		} catch (SynchronisationException e) {
@@ -152,20 +144,23 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testIsVictoryCardOnHand() {
-		
+
 		Card card;
 		do {
 			this.gameController.getActivePlayer().getDeck().refreshCardHand();
 			card = this.gameController.getActivePlayer().getDeck().getCardByTypeFromHand(CardType.VICTORY);
-		}while(card == null);
+		} while (card == null);
 		assertTrue(this.gameController.isVictoryCardOnHand(card.getId()));
 	}
 
 	@Test
 	public void testOrganizePilesAndrefreshCardHand() {
-//		this.gameController.getActivePlayer().getPlayedCards().add(
-//				this.g
-	}
+
+
+	// public void testOrganizePilesAndrefreshCardHand() {
+	// this.gameController.getActivePlayer().getPlayedCards().add(this.g
+	 }
+
 
 	@Test
 	public void testCheckWitchFinish() {
@@ -189,10 +184,9 @@ public class GameControllerTest2 {
 
 	@Test
 	public void testDrawOthers() {
-//		LinkedList<Player> players = this.gameController.getPlayers();
-//		players.remove(this.gameController.get)
+		// LinkedList<Player> players = this.gameController.getPlayers();
+		// players.remove(this.gameController.get)
 	}
-
 
 	@Test
 	public void testEndTurn() {
@@ -226,11 +220,11 @@ public class GameControllerTest2 {
 	@Test
 	public void testBuyOneCard() {
 		try {
-//			this.gameController.setActivePlayer(this.gameController.getPlayers().get(0));
+			// this.gameController.setActivePlayer(this.gameController.getPlayers().get(0));
 			int size = this.gameController.getActivePlayer().getDeck().getDiscardPile().size();
 			this.gameController.buyOneCard(this.gameController.getGameBoard().getActionCardIDs().get(0));
 			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size + 1));
-			
+
 		} catch (SynchronisationException e) {
 			e.printStackTrace();
 		} catch (WrongSyntaxException e) {
@@ -249,10 +243,8 @@ public class GameControllerTest2 {
 		assertThat(this.gameController.getGamePhase(), is("buyPhase"));
 		this.gameController.setActionPhase();
 		assertThat(this.gameController.getGamePhase(), is("actionPhase"));
-		
+
 	}
-
-
 
 	@Test
 	public void testStartGame() {
@@ -260,16 +252,15 @@ public class GameControllerTest2 {
 		assertThat(this.gameController.getGamePhase(), is("actionPhase"));
 	}
 
-
 	@Test
 	public void testGetPlayerNames() {
-		assertThat(this.gameController.getPlayerNames(), is(new String[]{"test0", "test1", "test2", "test3"}));
+		assertThat(this.gameController.getPlayerNames(), is(new String[] { "test0", "test1", "test2", "test3" }));
 	}
-	
+
 	@Test
 	public void testGetSpyList() {
 		assertThat(this.gameController.getSpyList().size(), is(0));
-		
+
 	}
 
 	@Test
