@@ -156,9 +156,11 @@ public class ArtificialIntelligence {
 
 		System.out.println(this + " is executing a turn");
 		// LinkedList<Card> cardHand = this.player.getDeck().getCardHand();
-//		try {
+		try {
 			Move defaultMove = this.getDefaultMove();
-//			Thread.sleep(500);
+			System.out.println("before sleep");
+			Thread.sleep(500);
+			System.out.println("after sleep");
 			this.playTreasures();
 //			Thread.sleep(500);
 			for (Card action : defaultMove.getPlaySequence().get(ExecutionType.PLAY)) {
@@ -179,9 +181,9 @@ public class ArtificialIntelligence {
 			 */
 			this.computing = false;
 			this.endTurn();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
