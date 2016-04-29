@@ -184,11 +184,11 @@ public class CardStorageController {
 
 	/** lists all stored cards in the console */
 	public void listCards() {
-		GameLog.log(MsgType.INFO, "--- Cards in storage (" + getCardCount() + "): ---");
+		System.out.println("--- Cards in storage (" + getCardCount() + "): ---");
 		for (SerializedCard card : storedCards.values()) {
-			GameLog.log(MsgType.INFO, card.toString());
+			System.out.println(card.toString());
 		}
-		GameLog.log(MsgType.INFO, "---       (" + getCardCount() + ")         ---");
+		System.out.println("---       (" + getCardCount() + ")         ---");
 	}
 
 	/**
