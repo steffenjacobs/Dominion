@@ -11,6 +11,7 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
 public class PacketGameEnd extends Packet {
 	private static final long serialVersionUID = 1304847662526789376L;
 
+	private final int port;
 	private final String[] players;
 	private final String winner;
 
@@ -21,11 +22,14 @@ public class PacketGameEnd extends Packet {
 	 *            the player participating in the match and ending the match
 	 * @param winner
 	 *            the player who won
+	 * @param serverPort
+	 *            the port the gameserver was running on
 	 */
-	public PacketGameEnd(String[] players, String winner) {
+	public PacketGameEnd(String[] players, String winner, int serverPort) {
 		super(PacketType.GAME_END);
 		this.winner = winner;
 		this.players = players;
+		this.port = serverPort;
 	}
 
 	/** @return a representation of the packet as a String */
@@ -46,5 +50,10 @@ public class PacketGameEnd extends Packet {
 	/** @return the participating players in the match who ended the match */
 	public String[] getPlayers() {
 		return players;
+	}
+
+	/** @return the port the server was running on */
+	public int getPort() {
+		return port;
 	}
 }

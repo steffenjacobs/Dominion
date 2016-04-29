@@ -202,6 +202,12 @@ public class Server implements PortCheckable {
 	 */
 	private void onApplicationExit() {
 		stopServer();
+		Runtime.getRuntime().removeShutdownHook(shutdownHook);
+	}
+
+	/** acts, as if the application was closed. */
+	public void stopSrv() {
+		this.onApplicationExit();
 	}
 
 	/**

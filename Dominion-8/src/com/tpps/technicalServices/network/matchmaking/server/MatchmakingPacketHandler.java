@@ -60,7 +60,7 @@ public class MatchmakingPacketHandler extends PacketHandler {
 			break;
 		case GAME_END:
 			PacketGameEnd endPacket = (PacketGameEnd) packet;
-			MatchmakingController.onGameEnd(endPacket.getWinner(), endPacket.getPlayers());
+			MatchmakingController.onGameEnd(endPacket);
 			// called when the game ends
 			break;
 		case MATCHMAKING_JOIN_LOBBY:
