@@ -361,6 +361,10 @@ public class GameWindow extends JFrame {
 			Card card = (Card) iterator.next();
 			this.framework.removeComponent(card);
 		}
+		for (int i = 0; i < tableButtons.size(); i++) {
+			this.framework.removeComponent(tableButtons.get(i));
+		}
+		
 		this.extraTableCards = new LinkedList<Card>();
 		for (int i = 0; i < cards.size(); i++) {
 			if (sub > 4) {
@@ -664,6 +668,7 @@ public class GameWindow extends JFrame {
 		framework.removeComponent(table);
 		for (int i = 0; i < extraTableCards.size(); i++) {
 			framework.removeComponent(extraTableCards.get(i));
+			framework.removeComponent(tableButtons.get(i));
 		}
 		framework.removeComponent(table);
 	}
