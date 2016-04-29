@@ -12,7 +12,8 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
 public class PacketUpdateValues extends Packet {
 
 	private static final long serialVersionUID = 4833326642942479357L;
-	private int actions, buys, coins;
+	private final int actions, buys, coins;
+	private final boolean shouldBeEnabled;
 
 	/**
 	 * initializes the Packet with the id of the card which had been played and
@@ -20,13 +21,22 @@ public class PacketUpdateValues extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketUpdateValues(int actions, int buys, int coins) {
+	public PacketUpdateValues(int actions, int buys, int coins, boolean shouldBeEnabled) {
 		super(PacketType.UPDATE_VALUES);
 		this.actions = actions;
 		this.buys = buys;
 		this.coins = coins;
+		this.shouldBeEnabled = shouldBeEnabled;
+		
 	}
 	
+	/**
+	 * 
+	 * @return if the gameWindow should be enabled again
+	 */
+	public boolean shouldBeEnabled() {
+		return this.shouldBeEnabled;
+	}
 	
 	/**
 	 * 

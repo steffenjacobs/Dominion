@@ -54,7 +54,7 @@ public class GameServerNetworkListener implements NetworkListener {
 				}
 			}		
 		try {
-			this.gameServer.broadcastMessage(new PacketDisable());
+			this.gameServer.broadcastMessage(new PacketDisable("user disconnected"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

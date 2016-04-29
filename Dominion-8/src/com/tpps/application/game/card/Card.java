@@ -374,6 +374,8 @@ public class Card extends GameObject {
 			try {
 				DominionController.getInstance().getGameClient().sendMessage(
 						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
+				DominionController.getInstance().setTurnFlag(false);
+				DominionController.getInstance().getGameClient().getGameWindow().setCaptionTurn("execute");
 			} catch (IOException e) {
 
 				e.printStackTrace();

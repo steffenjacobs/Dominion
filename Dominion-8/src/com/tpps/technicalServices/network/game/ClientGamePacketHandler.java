@@ -13,6 +13,8 @@ import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogMultiColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
+import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
+import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.technicalServices.network.gameSession.packets.PacketOpenGuiAndEnableOne;
@@ -66,23 +68,24 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case ENABLE:
 			// this.gameWindow.setEnabled(true);
 			DominionController.getInstance().setTurnFlag(true);
-			this.gameWindow.setCaptionTurn("E");
+			this.gameWindow.setCaptionTurn(((PacketEnable)packet).getCaption());
 			break;
 		case ENABLE_OTHERS:
 			if (((PacketEnableOthers) packet).getClientID() == this.gameClient.getClientId()) {
 				// this.gameWindow.setEnabled(false);
 				DominionController.getInstance().setTurnFlag(false);
-				this.gameWindow.setCaptionTurn("D");
+				this.gameWindow.setCaptionTurn("wait on reaction");
 			} else {
 				// this.gameWindow.setEnabled(true);
 				DominionController.getInstance().setTurnFlag(true);
-				this.gameWindow.setCaptionTurn("E");
+				this.gameWindow.setCaptionTurn("react");
 			}
 			break;
 		case DISABLE:
 			// this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
-			this.gameWindow.setCaptionTurn("D");
+			this.gameWindow.setCaptionTurn(((PacketDisable)packet).getCaption());
+			this.gameWindow.setCaptionTurn("waiting on reaction");
 			break;
 		case SEND_BOARD:
 			PacketSendBoard packetSendBoard = (PacketSendBoard) packet;
@@ -196,6 +199,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			break;
 		case SHOW_END_SCREEN:
 			JOptionPane.showMessageDialog(null, "end game");
+			DominionController.getInstance().setTurnFlag(false);
 			this.gameClient.disconnect();
 			break;
 		default:
@@ -252,6 +256,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameWindow.setCaptionTurn(packetOpenGuiAndEnableOne.getUserName() + "'s turn");
 			System.out.println("my gameWindo is disabled");
 		}
+		System.out.println("open gui");
 		this.gameWindow.setVisible(true);
 	}
 

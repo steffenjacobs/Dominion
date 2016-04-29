@@ -12,6 +12,7 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
 public class PacketDisable extends Packet {
 
 	private static final long serialVersionUID = 3025276399757464287L;
+	private final String caption;
 
 	/**
 	 * 
@@ -19,8 +20,17 @@ public class PacketDisable extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketDisable() {
-		super(PacketType.DISABLE);	
+	public PacketDisable(String caption) {
+		super(PacketType.DISABLE);
+		this.caption = caption;
+	}
+	
+	/**
+	 * 
+	 * @return the userName of the active player
+	 */
+	public String getCaption() {
+		return this.caption;
 	}
 
 	/**
@@ -29,6 +39,6 @@ public class PacketDisable extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName();
+		return this.getClass().getSimpleName() + "username: " + this.caption;
 	}
 }
