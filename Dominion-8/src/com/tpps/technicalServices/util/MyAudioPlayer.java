@@ -10,7 +10,8 @@ public class MyAudioPlayer {
 
 	private static MP3Player mp3, mp32, mp33;
 	private static int lastVolume, lastSoundVolume;
-
+	private static MP3Player mainMusicPlayer;
+	
 	/**
 	 * initialisiert die Player und setzt lastVolume und lastSoundVolume
 	 */
@@ -18,7 +19,9 @@ public class MyAudioPlayer {
 //		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
 		MyAudioPlayer.mp32 = new MP3Player(
 				ClassLoader.getSystemResource("resources/sounds/Click.mp3"));
-//		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource(""));		
+//		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource(""));
+		MyAudioPlayer.mainMusicPlayer = new MP3Player(
+				ClassLoader.getSystemResource("resources/sounds/lobby.mp3"));
 	}
 	
 	/**
@@ -47,6 +50,20 @@ public class MyAudioPlayer {
 		// MP3Player(ClassLoader.getSystemResource("resources/music/SovietConnection.mp3"));
 		// mp3.addMP3PlayerListener(new MyMP3PlayerListener());
 		MyAudioPlayer.mp3.setRepeat(true);
+	}
+	
+	/**
+	 * @author jhuhn
+	 * @param play
+	 *            true: play lobby music, false: stop lobby music
+	 */
+	public static void handleMainMusic(boolean play){
+		if(play){
+			MyAudioPlayer.mainMusicPlayer.play();
+			MyAudioPlayer.mainMusicPlayer.setRepeat(true);
+		}else{
+			MyAudioPlayer.mainMusicPlayer.stop();
+		}
 	}
 
 	/**
