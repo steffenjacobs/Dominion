@@ -212,15 +212,16 @@ public class ClientGamePacketHandler extends PacketHandler {
 		// if (this.gameClient.getClientId() == -1){
 		// System.out.println();
 		// }
-		if (((PacketEnableDisable) packet).getClientId() == this.gameClient.getClientId()) {
+		PacketEnableDisable packetEnableDisable = (PacketEnableDisable)packet;
+		if (packetEnableDisable.getClientId() == this.gameClient.getClientId()) {
 			// this.gameWindow.setEnabled(true);
 			DominionController.getInstance().setTurnFlag(true);
-			this.gameWindow.setCaptionTurn("E");
+			this.gameWindow.setCaptionTurn("my turn");
 			System.out.println("my gameWindow is enabled");
 		} else {
 			// this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
-			this.gameWindow.setCaptionTurn("D");
+			this.gameWindow.setCaptionTurn(packetEnableDisable.getUserName() + "' turn");
 			System.out.println("my gameWindo is disabled");
 		}
 	}
@@ -239,16 +240,16 @@ public class ClientGamePacketHandler extends PacketHandler {
 			}
 			System.out.println("clientId not set. please wait a moment");
 		}
-
-		if (((PacketOpenGuiAndEnableOne) packet).getClientId() == this.gameClient.getClientId()) {
+		PacketOpenGuiAndEnableOne packetOpenGuiAndEnableOne = (PacketOpenGuiAndEnableOne)packet;
+		if (packetOpenGuiAndEnableOne.getClientId() == this.gameClient.getClientId()) {
 			// this.gameWindow.setEnabled(true);
 			DominionController.getInstance().setTurnFlag(true);
-			this.gameWindow.setCaptionTurn("E");
+			this.gameWindow.setCaptionTurn("my turn");
 			System.out.println("my gameWindow is enabled");
 		} else {
 			// this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
-			this.gameWindow.setCaptionTurn("D");
+			this.gameWindow.setCaptionTurn(packetOpenGuiAndEnableOne.getUserName() + "'s turn");
 			System.out.println("my gameWindo is disabled");
 		}
 		this.gameWindow.setVisible(true);

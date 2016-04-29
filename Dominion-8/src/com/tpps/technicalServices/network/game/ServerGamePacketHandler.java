@@ -95,7 +95,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 					System.out.println("Reconnect valid Session username: " + packetReconnect.getUsername() + "sessionID: " + packetReconnect.getSessionID());
 					updatePortOfPlayer(port, packetReconnect);
 					this.server.getDisconnectedUser().remove(this.server.getGameController().getPlayerByUserName(packetReconnect.getUsername()));
-					server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
+					server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
+							this.server.getGameController().getActivePlayerName()));
 				} else {
 					this.server.disconnect(port);
 				}
@@ -489,7 +490,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.sendMessage(port, new PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(), this.server.getGameController().getActivePlayer().getBuys(),
 					this.server.getGameController().getActivePlayer().getCoins()));
 			this.server.getGameController().endTurn();
-			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
+			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
+					this.server.getGameController().getActivePlayerName()));
 			
 			/**
 			 * Lukas Fragen:
@@ -518,13 +520,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * 1. Thread.sleep bei singleColor probieren (siehe darunter)
 			 * 2. MultiColor anschauen
 			 * */
-			Thread.sleep(100);
+//			Thread.sleep(100);
 			this.server.broadcastMessage(new PacketBroadcastLogSingleColor("----- "));
-			Thread.sleep(100);
+//			Thread.sleep(100);
 			this.server.broadcastMessage(new PacketBroadcastLogSingleColor(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()));
-			Thread.sleep(100);
+//			Thread.sleep(100);
 			this.server.broadcastMessage(new PacketBroadcastLogSingleColor(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n"));
-			Thread.sleep(100);
+//			Thread.sleep(100);
+			
 			
 			// this.server.broadcastMessage(new PacketBroadcastLogMultiColor(
 			// CollectionsUtil.getPair("----- "),
@@ -532,7 +535,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			// this.server.getGameController().getActivePlayer().getLogColor()),
 			// CollectionsUtil.getPair(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n")));
 		
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -630,7 +633,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 */
 	private void setUpGui() throws IOException {
 		GameBoard gameBoard = this.server.getGameController().getGameBoard();
-		this.server.broadcastMessage(new PacketOpenGuiAndEnableOne(this.server.getGameController().getActivePlayer().getClientID()));
+		this.server.broadcastMessage(new PacketOpenGuiAndEnableOne(this.server.getGameController().getActivePlayer().getClientID(),
+				this.server.getGameController().getActivePlayerName()));
 		this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
 		LinkedList<Player> players = this.server.getGameController().getPlayers();
 		for (int i = 0; i < GameConstant.PLAYERS; i++) {

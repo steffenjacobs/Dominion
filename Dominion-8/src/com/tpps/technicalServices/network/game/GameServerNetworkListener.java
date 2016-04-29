@@ -1,6 +1,5 @@
 package com.tpps.technicalServices.network.game;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Iterator;
@@ -94,7 +93,8 @@ public class GameServerNetworkListener implements NetworkListener {
 				this.gameServer.getDisconnectedUser().remove(player);
 				this.gameServer.getGameController().setActivePlayer(this.gameServer.getGameController().getRandomPlayer());
 				try {
-					this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID()));
+					this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
+							this.gameServer.getGameController().getActivePlayerName()));
 					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.gameServer.getGameController().getPlayers().size() + " players left.", GameLog.getMsgColor()));
 				} catch (Exception e) {
 					e.printStackTrace();

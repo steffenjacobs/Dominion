@@ -14,15 +14,21 @@ public class PacketEnableDisable extends Packet {
 
 	private static final long serialVersionUID = 1397382952533953158L;
 	private final int clientId;
+	private final String userName;
 	/**
 	 * 
 	 * sets the packettype
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketEnableDisable(int clientId) {		
+	public PacketEnableDisable(int clientId, String userName) {		
 		super(PacketType.ENABLE_DISABLE);
 		this.clientId = clientId;
+		this.userName = userName;
+	}
+	
+	public String getUserName() {
+		return this.userName;
 	}
 	
 	/**
@@ -39,6 +45,6 @@ public class PacketEnableDisable extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + "-" + this.clientId;
+		return this.getClass().getSimpleName() + "- clientId: " + this.clientId + "- username: " + this.userName;
 	}
 }
