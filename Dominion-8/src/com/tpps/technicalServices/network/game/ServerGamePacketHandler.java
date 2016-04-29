@@ -18,8 +18,8 @@ import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.server.ChatController;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogMultiColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBuyCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
@@ -549,11 +549,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 //			Thread.sleep(100);
 			
 			
-			// this.server.broadcastMessage(new PacketBroadcastLogMultiColor(
-			// CollectionsUtil.getPair("----- "),
-			// CollectionsUtil.getPair(this.server.getGameController().getActivePlayerName(),
-			// this.server.getGameController().getActivePlayer().getLogColor()),
-			// CollectionsUtil.getPair(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n")));
+//			this.server.broadcastMessage(new PacketBroadcastLogMultiColor(CollectionsUtil.getPair("----- "),
+//					CollectionsUtil.getPair(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()),
+//					CollectionsUtil.getPair(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n")));
 		
 		} catch (IOException e) {
 			e.printStackTrace();
