@@ -230,7 +230,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			ie.printStackTrace();
 		}
 		
-		if (activePlayer.equals(this.server.getGameController().getActivePlayer())) {
+		if (activePlayer != null && activePlayer.equals(this.server.getGameController().getActivePlayer())) {
 			try {
 				if (this.server.getGameController().allReactionCardsPlayed()) {
 					this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
