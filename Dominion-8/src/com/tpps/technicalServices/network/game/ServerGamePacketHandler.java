@@ -520,13 +520,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * 1. Thread.sleep bei singleColor probieren (siehe darunter)
 			 * 2. MultiColor anschauen
 			 * */
-			Thread.sleep(100);
+//			Thread.sleep(100);
 			this.server.broadcastMessage(new PacketBroadcastLogSingleColor("----- "));
-			Thread.sleep(100);
+//			Thread.sleep(100);
 			this.server.broadcastMessage(new PacketBroadcastLogSingleColor(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()));
-			Thread.sleep(100);
+//			Thread.sleep(100);
 			this.server.broadcastMessage(new PacketBroadcastLogSingleColor(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n"));
-			Thread.sleep(100);
+//			Thread.sleep(100);
 			
 			
 			// this.server.broadcastMessage(new PacketBroadcastLogMultiColor(
@@ -535,7 +535,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			// this.server.getGameController().getActivePlayer().getLogColor()),
 			// CollectionsUtil.getPair(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n")));
 		
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
