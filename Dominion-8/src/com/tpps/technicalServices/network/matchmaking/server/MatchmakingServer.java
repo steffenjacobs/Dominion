@@ -82,29 +82,34 @@ public class MatchmakingServer extends Server {
 				if (line.equals("exit") || line.equals("stop")) {
 					System.exit(0);
 					break;
-				} else if (line.startsWith("countplayers")) {
-					System.out.println(MatchmakingController.getPlayers().length);
-				} else if (line.startsWith("listlobbies")) {
+				} else if (line.startsWith("lobbies")) {
 					int cnt = 0;
+					System.out.println("Lobbies (" + MatchmakingController.getLobbies().length + "): ");
 					for (String lobb : MatchmakingController.getLobbies()) {
 						System.out.println(lobb);
 						cnt++;
 					}
-					if (cnt == 0)
+					if (cnt == 0) {
 						System.out.println("(empty)");
-				} else if (line.startsWith("listusers")) {
+					}
+
+				} else if (line.startsWith("players")) {
+					System.out.println("Online Players (" + MatchmakingController.getPlayers().length + "): ");
+
 					int cnt = 0;
 					for (String player : MatchmakingController.getPlayers()) {
 						System.out.println(player);
 						cnt++;
 					}
-					if (cnt == 0)
+					if (cnt == 0) {
 						System.out.println("(empty)");
+					}
+
 				} else if (line.startsWith("help")) {
 					System.out.println("-------- Available Commands --------");
 					System.out.println("exit");
-					System.out.println("listlobbies");
-					System.out.println("listusers");
+					System.out.println("lobbies");
+					System.out.println("players");
 					System.out.println("help");
 					System.out.println("------------------------------------");
 				} else {
