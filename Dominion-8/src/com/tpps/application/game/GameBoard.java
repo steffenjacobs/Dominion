@@ -40,7 +40,7 @@ public class GameBoard {
 		this.tableForAllActionCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.trashPile = new LinkedList<Card>();
 		init();
-		setRandomSet();
+		setAttackSet();
 	}
 
 	/**

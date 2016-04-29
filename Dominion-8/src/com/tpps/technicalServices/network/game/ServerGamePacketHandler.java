@@ -71,6 +71,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			super.output("<- Empty Packet from (" + port + ")");
 			return;
 		}
+		
+		Player activePlayer = this.server.getGameController().getActivePlayer();
+		
 		try {
 			switch (packet.getType()) {
 			case REGISTRATE_PLAYER_BY_SERVER:
@@ -226,13 +229,24 @@ public class ServerGamePacketHandler extends PacketHandler {
 		} catch (IOException ie) {
 			ie.printStackTrace();
 		}
+		
+		if (activePlayer.equals(this.server.getGameController().getActivePlayer())) {
+			try {
+				if (this.server.getGameController().allReactionCardsPlayed()) {
+					this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
+						new PacketEnable("my turn"));
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 	}
 
 	private void reactionFinishedTriggeredThroughThief(Player player1) throws IOException {
 		if (this.server.getGameController().getActivePlayer().isThief()) {
 			player1.setReactionModeFalse();
-			this.server.sendMessage(player1.getPort(), new PacketDisable());
+			this.server.sendMessage(player1.getPort(), new PacketDisable("wait on reaction"));
 
 			this.server.getGameController().reactOnThief(player1);
 			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
@@ -242,7 +256,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void reactionFinishedTriggerdThroughSpy(Player player1) throws IOException {
 		if (this.server.getGameController().getActivePlayer().isSpy()) {
 			player1.setReactionModeFalse();
-			this.server.sendMessage(player1.getPort(), new PacketDisable());
+			this.server.sendMessage(player1.getPort(), new PacketDisable("wait on reaction"));
 
 			this.server.getGameController().reactOnSpy(player1);
 			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
@@ -253,7 +267,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void reactionFinishedTriggeredThroughWitch(Player player1) throws IOException {
 		if (this.server.getGameController().getActivePlayer().isWitch()) {
 			player1.setReactionModeFalse();
-			this.server.sendMessage(player1.getPort(), new PacketDisable());
+			this.server.sendMessage(player1.getPort(), new PacketDisable("wait on reaction"));
 			try {
 				player1.getDeck().getDiscardPile().add(this.server.getGameController().getGameBoard().getTableForVictoryCards().get("Curse").removeLast());
 
@@ -269,7 +283,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void reactionFinishedTriggeredThroughBureaucrat(Player player) throws IOException {
 		if (this.server.getGameController().getActivePlayer().isBureaucrat()) {
 			player.setReactionModeFalse();
-			this.server.sendMessage(player.getPort(), new PacketDisable());
+			this.server.sendMessage(player.getPort(), new PacketDisable("wait on reaction"));
 
 			Card card = player.getDeck().getCardByTypeFromHand(CardType.VICTORY);
 			if (card != null) {
@@ -342,6 +356,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 		System.out.println(server.getGameController().getGamePhase());
 
 		Player player = this.server.getGameController().getClientById(clientID);
+		if (!player.equals(this.server.getGameController().getActivePlayer())){
+			System.out.println("nicht der aktive Player");
+			return;
+		}
 
 		if (!player.playsReactionCard() && (player.isDiscardMode() || player.isTrashMode())) {
 			System.out.println("im handler discard mode set");
@@ -409,7 +427,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		if (this.server.getGameController().validateTurnAndExecute(cardID, player)) {
 			System.out.println("validate turn: " + player.getActions() + "buys: " + player.getBuys() + "coins: " + player.getCoins());
 
-			this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
+			this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins(), true));
 			if (player.getActions() == 0 && !player.isThief()) {
 				server.sendMessage(port, new PacketEndActionPhase());
 			}
@@ -421,7 +439,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 				if (this.server.getGameController().checkBoardCardExistsAppendToDiscardPile(cardID)) {
 					GameBoard gameBoard = this.server.getGameController().getGameBoard();
 					this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
-					this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins()));
+					this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins(),
+							player.getBuys() == 0 ? false : true));
 					if (player.getBuys() == 0) {
 						nextActivePlayer(port);
 					}
@@ -463,7 +482,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			}
 		}
 		if (activePlayerCanContinue) {
-			server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketEnable());
+			server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketEnable("react"));
 		}
 	}
 
@@ -487,8 +506,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.broadcastMessage(new PacketBroadcastLogSingleColor("\n", GameLog.getMsgColor()));
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-			this.server.sendMessage(port, new PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(), this.server.getGameController().getActivePlayer().getBuys(),
-					this.server.getGameController().getActivePlayer().getCoins()));
+//			i think it's not used
+//			this.server.sendMessage(port, new PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(), this.server.getGameController().getActivePlayer().getBuys(),
+//					this.server.getGameController().getActivePlayer().getCoins()));
 			this.server.getGameController().endTurn();
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
 					this.server.getGameController().getActivePlayerName()));

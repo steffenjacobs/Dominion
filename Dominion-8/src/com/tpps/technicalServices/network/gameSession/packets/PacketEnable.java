@@ -12,6 +12,7 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
 public class PacketEnable extends Packet {
 
 	private static final long serialVersionUID = 2897016123058493933L;
+	private final String caption;
 
 
 	/**
@@ -20,8 +21,13 @@ public class PacketEnable extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketEnable() {		
+	public PacketEnable(String caption) {		
 		super(PacketType.ENABLE);
+		this.caption = caption;
+	}
+	
+	public String getCaption() {
+		return this.caption;
 	}
 
 
@@ -31,6 +37,6 @@ public class PacketEnable extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName();
+		return this.getClass().getSimpleName() + "caption: " + this.caption;
 	}
 }

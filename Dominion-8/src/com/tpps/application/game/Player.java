@@ -836,7 +836,7 @@ public class Player {
 		if (this.reactionMode) {
 			this.gameServer.sendMessage(port, new PacketDontShowEndReactions());
 			setModesFalse();
-			this.gameServer.sendMessage(port, new PacketDisable());
+			this.gameServer.sendMessage(port, new PacketDisable("wait on reactions"));
 			this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 		}
 		if (trashFlag) {
@@ -974,7 +974,7 @@ public class Player {
 				this.discardMode = false;
 				if (this.reactionMode) {
 					setModesFalse();
-					this.gameServer.sendMessage(port, new PacketDisable());
+					this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
 					this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 				}
 			}
