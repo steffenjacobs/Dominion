@@ -108,6 +108,14 @@ public class Server implements PortCheckable {
 				e.printStackTrace();
 			}
 		}
+		try {
+			Runtime.getRuntime().removeShutdownHook(shutdownHook);
+		} catch (IllegalStateException ise) {
+			if (!ise.getMessage().startsWith("Shutdown in progress")) {
+				ise.printStackTrace();
+			}
+
+		}
 	}
 
 	/**
@@ -202,7 +210,6 @@ public class Server implements PortCheckable {
 	 */
 	private void onApplicationExit() {
 		stopServer();
-		Runtime.getRuntime().removeShutdownHook(shutdownHook);
 	}
 
 	/** acts, as if the application was closed. */
