@@ -285,6 +285,7 @@ public final class DominionController {
 				Graphics2D h = (Graphics2D) g;
 				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 				
+				
 				h.drawImage(originalBackground, 0, 0,this.getWidth(), this.getHeight(), null);
 				super.paint(h);
 			}

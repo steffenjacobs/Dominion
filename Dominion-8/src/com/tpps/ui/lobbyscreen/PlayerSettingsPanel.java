@@ -6,10 +6,12 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -76,7 +78,9 @@ public class PlayerSettingsPanel extends JPanel {
 	private JPanel panelMid;
 	private JPanel panelWest;
 	private JPanel panelEast;
-	private BufferedImage blackBeauty;
+	private BufferedImage blackBeauty, temp;
+	private BufferedImage brainCrossed;
+	private BufferedImage brain;
 
 	public PlayerSettingsPanel() {
 		this.initOriginalBackgroundImages();
@@ -113,8 +117,10 @@ public class PlayerSettingsPanel extends JPanel {
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(blackBeauty, 0, 0, null);
-				super.paint(g);
+				Graphics2D h = (Graphics2D) g;
+				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+				h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
+				super.paint(h);
 			}
 		};
 		plusKI.setOpaque(false);
@@ -128,8 +134,10 @@ public class PlayerSettingsPanel extends JPanel {
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(blackBeauty, 0, 0, null);
-				super.paint(g);
+				Graphics2D h = (Graphics2D) g;
+				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+				h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
+				super.paint(h);
 			}
 		};
 		minusKi.setOpaque(false);
@@ -176,8 +184,8 @@ public class PlayerSettingsPanel extends JPanel {
 		panel.add(header, BorderLayout.NORTH);
 		panel.add(Box.createVerticalStrut(SPACE_FIRSTPANEL_TO_SECONDPANEL), BorderLayout.PAGE_END);
 
-		plusKI.addActionListener(new KiListener());
-		minusKi.addActionListener(new KiListener());
+		plusKI.addMouseListener(new KiListener());
+		minusKi.addMouseListener(new KiListener());
 		return panel;
 	}
 
@@ -282,6 +290,9 @@ public class PlayerSettingsPanel extends JPanel {
 	public void loadingImage() {
 		try {
 			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
+			this.brain = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/brain.png"));
+			this.brainCrossed = ImageIO
+					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/braincrossed.png"));
 			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -364,14 +375,59 @@ public class PlayerSettingsPanel extends JPanel {
 		return connectedPlayers;
 	}
 
-	private class KiListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			System.out.println("click");
+	private class KiListener implements MouseListener {
 
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
 			// ??
 			// ArtificialIntelligence ai1 = new ArtificialIntelligence();
 			DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
+
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			if(e.getSource().equals(minusKi)){
+//				minusKi.setText("");
+//				temp=blackBeauty;
+//				blackBeauty = brainCrossed;
+			}
+			if(e.getSource().equals(plusKI)){
+//				plusKI.setText("");
+//				temp=blackBeauty;
+//				blackBeauty = brain;
+
+			}
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+//			if(e.getSource().equals(minusKi)){
+//				blackBeauty = temp;
+//				minusKi.setText("- KI");
+//			}
+//			if(e.getSource().equals(plusKI)){
+//				blackBeauty = temp;
+//				plusKI.setText("+ KI");
+//			}
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			// ??
+			// ArtificialIntelligence ai1 = new ArtificialIntelligence();
+			DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
+
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+
 		}
 	}
 }
