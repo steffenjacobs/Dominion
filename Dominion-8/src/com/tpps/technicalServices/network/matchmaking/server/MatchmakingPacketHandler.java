@@ -69,8 +69,8 @@ public class MatchmakingPacketHandler extends PacketHandler {
 
 				try {
 					if (pjl.getLobbyID() == null) {
-						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 2, null));
-						GameLog.log(MsgType.NETWORK_ERROR, "No such lobby as " + pjl.getLobbyID());
+						//UI-Bug: ignore...
+						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 2, null));;
 						return;
 					}
 
