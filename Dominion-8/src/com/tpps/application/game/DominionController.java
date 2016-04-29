@@ -168,6 +168,11 @@ public final class DominionController {
 		}
 	}
 	
+	/**
+	 * stops searching a match
+	 * 
+	 * @author jhuhn
+	 */
 	public void abortSearching(){
 		try {
 			this.matchmaker.abort(this.username, this.sessionID);
@@ -207,6 +212,7 @@ public final class DominionController {
 	/**
 	 * @author jhuhn
 	 * @param message
+	 *            String representation of the chat message to send
 	 */
 	public void sendChatMessage(String message){
 		this.chatClient.sendMessage(message);
@@ -215,6 +221,13 @@ public final class DominionController {
 	/**
 	 * @author jhuhn
 	 * @param message
+	 *            String representation of the chat message to send
+	 * @param user
+	 *            String representation of the user who sent the message
+	 * @param timeStamp
+	 *            String representation of the timestamp
+	 * @param color
+	 *            color of the user
 	 */
 	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color){
 		if(this.gameClient == null){	//player is not ingame, player is in globalchat
@@ -225,6 +238,8 @@ public final class DominionController {
 	}
 	
 	/**
+	 * this method initializes clients and ui components and loads the main menu
+	 * 
 	 * @author jhuhn
 	 */
 	public void endLogin(){
@@ -259,6 +274,10 @@ public final class DominionController {
 		return storageController;
 	}
 
+	/**
+	 * @author jhuhn
+	 * @return the selected image instance of thelobby
+	 */
 	public BufferedImage getLobbyBackground(){
 		return this.playerSettingsPanel.getSelectedPicture();
 	}
@@ -322,11 +341,16 @@ public final class DominionController {
 	/**
 	 * @author jhuhn
 	 * @param player
+	 *            String representation of the user who left the lobby
 	 */
 	public synchronized void clearPlayerFromGUI(String player){
 		this.playerSettingsPanel.removePlayer(player);
 	}
 	
+	/**
+	 * cleares all players in the lobby
+	 * @author jhuhn
+	 */
 	public synchronized void clearAllPlayersFromGUI(){
 		this.playerSettingsPanel.clearAllPlayers();
 	}
@@ -379,6 +403,9 @@ public final class DominionController {
 		this.email = email;
 	}
 
+	/**
+	 * opens the community gui
+	 */
 	public void openStatisticsGui() {
 		this.globalChatPanel.getBackButton().setLobby(false);
 		JPanel panel = new JPanel(){
@@ -401,6 +428,10 @@ public final class DominionController {
 		this.mainFrame.setPanel(panel);		
 	}
 	
+	/**
+	 * opens the cardeditor
+	 * @author jhuhn
+	 */
 	public void openCardeditor(){
 		this.mainFrame.setVisible(false);
 		this.cardEditor = new CardEditor();
