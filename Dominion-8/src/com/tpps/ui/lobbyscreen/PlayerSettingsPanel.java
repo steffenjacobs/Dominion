@@ -2,7 +2,6 @@ package com.tpps.ui.lobbyscreen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -12,8 +11,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.font.TextAttribute;
@@ -24,10 +21,8 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -36,7 +31,6 @@ import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.ui.statisticsscreen.StatisticsBoard;
 
 /**
  * This class creates a JPanel with all gui components, that are shown on the
@@ -56,7 +50,6 @@ public class PlayerSettingsPanel extends JPanel {
 	private JLabel[] labelImages;
 
 	private SearchingField[] connectedPlayers;
-	private JCheckBox[] options;
 
 	private static final int SPACE_PANEL_TO_PANEL = 25;
 	private static final int SPACE_PLAYER_TO_PLAYER = 5;
@@ -71,9 +64,6 @@ public class PlayerSettingsPanel extends JPanel {
 
 	private JButton plusKI, minusKi;
 
-	// TODO Statistics einkommentieren
-	private StatisticsBoard statisticsBoardPanel;
-
 	private JPanel panel;
 	private JPanel panelMid;
 	private JPanel panelWest;
@@ -82,6 +72,11 @@ public class PlayerSettingsPanel extends JPanel {
 	private BufferedImage brainCrossed;
 	private BufferedImage brain;
 
+	/**
+	 * constructor, initializes the lobby
+	 * 
+	 * @author jhuhn
+	 */
 	public PlayerSettingsPanel() {
 		this.initOriginalBackgroundImages();
 		this.initTransparentBackgroundImages();
@@ -96,6 +91,13 @@ public class PlayerSettingsPanel extends JPanel {
 		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
 	}
 
+	/**
+	 * This constructor is only needed to handle a junit test
+	 * 
+	 * @author jhuhn
+	 * @param junitTest
+	 *            just to overload the constructor
+	 */
 	public PlayerSettingsPanel(boolean junitTest) {
 		connectedPlayers = new SearchingField[4];
 		for (int i = 0; i < connectedPlayers.length; i++) {
@@ -104,6 +106,11 @@ public class PlayerSettingsPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * @author jhuhn
+	 * @return a JPanel with all components on the upperpanel, includind all
+	 *         joined players, and add or remove AI buttons
+	 */
 	private JPanel upperAreaPanel() {
 		this.panel = new JPanel(new BorderLayout());
 		panelWest = new JPanel(new GridBagLayout());
@@ -189,6 +196,10 @@ public class PlayerSettingsPanel extends JPanel {
 		return panel;
 	}
 
+	/**
+	 * @author jhuhn
+	 * @return a JPanel to select cardsets
+	 */
 	private JPanel middleAreaPanel() {
 		// panelMid = new JPanel(new BorderLayout());
 		panelMid = new JPanel(new FlowLayout());
@@ -201,6 +212,10 @@ public class PlayerSettingsPanel extends JPanel {
 		return panelMid;
 	}
 
+	/**
+	 * @author jhuhn
+	 * @return a JPanel to select a nice gamewindow background
+	 */
 	private JPanel bottomAreaPanel() {
 		JPanel overhead = new JPanel(new BorderLayout());
 		overhead.setOpaque(false);
@@ -234,6 +249,12 @@ public class PlayerSettingsPanel extends JPanel {
 		return overhead;
 	}
 
+	/**
+	 * handles the selcted picture logic
+	 * 
+	 * @author jhuhn
+	 *
+	 */
 	private class ImageListener implements MouseListener {
 
 		@Override
@@ -266,6 +287,11 @@ public class PlayerSettingsPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * This method loads all backgroundimages
+	 * 
+	 * @author jhuhn
+	 */
 	public void initOriginalBackgroundImages() {
 		try {
 			this.originalImages[0] = ImageIO
@@ -280,6 +306,11 @@ public class PlayerSettingsPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * This method sets all alpha values to all backgrounds
+	 * 
+	 * @author jhuhn
+	 */
 	public void initTransparentBackgroundImages() {
 		this.transparentImages[0] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[0], 0.5F);
 		this.transparentImages[1] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[1], 0.5F);
@@ -287,6 +318,11 @@ public class PlayerSettingsPanel extends JPanel {
 		this.transparentImages[3] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[3], 0.5F);
 	}
 
+	/**
+	 * loads inital images to modify ui components in a good looking way
+	 * 
+	 * @author jhuhn
+	 */
 	public void loadingImage() {
 		try {
 			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
@@ -299,6 +335,13 @@ public class PlayerSettingsPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * This method handles a backgroundselection vote
+	 * 
+	 * @author jhuhn
+	 * @param index
+	 *            integer representation of the selected background
+	 */
 	public void changeSelectedPicture(int index) {
 		for (int i = 0; i < originalImages.length; i++) {
 			if (i == index) {
@@ -312,6 +355,12 @@ public class PlayerSettingsPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * @author jhuhn
+	 * @param text
+	 *            String representation of header text
+	 * @return a JTextField object with a nice underlined header
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public JTextField createHeader(String text) {
 		JTextField header = new JTextField(text);
@@ -327,11 +376,21 @@ public class PlayerSettingsPanel extends JPanel {
 		return header;
 	}
 
+	/**
+	 * @author jhuhn
+	 * @return the selected picture
+	 */
 	public BufferedImage getSelectedPicture() {
 		System.out.println("ZERO: " + this.selectedImage);
 		return this.selectedImage;
 	}
 
+	/**
+	 * @author jhuhn
+	 * @param player
+	 *            String representation of the joined user
+	 * @return true, if the user joined correctly on the UI, false else
+	 */
 	public synchronized boolean insertPlayer(String player) {
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if (!connectedPlayers[i].isPlayerFlag()) {
@@ -343,6 +402,12 @@ public class PlayerSettingsPanel extends JPanel {
 		return false;
 	}
 
+	/**
+	 * @author jhuhn
+	 * @param player
+	 *            String representation of the joined user
+	 * @return true, if the user removed correctly on the UI, false else
+	 */
 	public synchronized boolean removePlayer(String player) {
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if (connectedPlayers[i].getText().equals(player)) {
@@ -354,6 +419,12 @@ public class PlayerSettingsPanel extends JPanel {
 		return false;
 	}
 
+	/**
+	 * 
+	 * This method cleares all joined users from the gui
+	 * 
+	 * @author jhuhn
+	 */
 	public synchronized void clearAllPlayers() {
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if (!connectedPlayers[i].getText().startsWith("Loading")) {
@@ -363,14 +434,19 @@ public class PlayerSettingsPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * this method initializes a standard background
+	 * 
+	 * @author jhuhn
+	 */
 	public void initStandardBackground() {
 		this.changeSelectedPicture(0);
 	}
 
-	public JCheckBox[] getOptions() {
-		return options;
-	}
-
+	/**
+	 * @return a SearchingField array with connected players on the gui
+	 * @author jhuhn
+	 */
 	public SearchingField[] getConnectedPlayers() {
 		return connectedPlayers;
 	}

@@ -11,8 +11,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import com.tpps.ui.statisticsscreen.StatisticsBoard;
-
 /**
  * This class is created mainly for gui testing purposes
  * 

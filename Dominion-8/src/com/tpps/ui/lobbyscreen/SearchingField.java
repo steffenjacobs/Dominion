@@ -12,6 +12,13 @@ import javax.swing.JTextField;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 
+/**
+ * An instance of this class handles one joined (or not) player in the lobby
+ * only on the UI
+ * 
+ * @author jhuhn
+ *
+ */
 public class SearchingField extends JTextField implements Runnable{
 
 	private static final long serialVersionUID = 1L;
@@ -22,6 +29,8 @@ public class SearchingField extends JTextField implements Runnable{
 	
 	/**
 	 * initializes the object, load image
+	 * 
+	 * @author jhuhn
 	 */
 	public SearchingField() {
 		playerFlag = false;
@@ -41,12 +50,19 @@ public class SearchingField extends JTextField implements Runnable{
 		}
 	}
 	
+	/**
+	 * @param junitTest
+	 *            just to overload the constructor for a junit test
+	 * @author jhuhn
+	 */
 	public SearchingField(boolean junitTest){
 		playerFlag = false;
 	}
 	
 	/**
 	 * overrides the paint method for semitransparend causes
+	 * 
+	 * @author jhuhn
 	 */
 	@Override
 	public void paint(Graphics g) {							
@@ -56,16 +72,18 @@ public class SearchingField extends JTextField implements Runnable{
 	
 	/**
 	 * starts the thread, searching procedure on UI starts
+	 * 
+	 * @author jhuhn
 	 */
 	public void start(){
 		new Thread(this).start();
 	}
 
 	/**
-	 * executes the searching procedure on the GUI. possible states:
-	 * 	-> Loading .
-	 *  -> Loading ..
-	 *  -> Loading ...
+	 * executes the searching procedure on the GUI. possible states: ->
+	 * Searching . -> Searching .. -> Searching ...
+	 * 
+	 * @author jhuhn
 	 */
 	@Override
 	public void run() {
@@ -75,7 +93,7 @@ public class SearchingField extends JTextField implements Runnable{
 			for (int j = 0; j < points; j++) {
 				appender += ".";
 			}
-			this.setText("Loading " + appender);
+			this.setText("Searching " + appender);
 			points++;
 			if(points == 4){
 				points = 1;
@@ -90,9 +108,10 @@ public class SearchingField extends JTextField implements Runnable{
 	}
 
 	/**
-	 * @return a boolean which shows if a player already joined
-	 * 	true, a player already joined the lobby
-	 *  false, no player joined for this searchingfield 
+	 * @author jhuhn
+	 * @return a boolean which shows if a player already joined true, a player
+	 *         already joined the lobby false, no player joined for this
+	 *         searchingfield
 	 */
 	public boolean isPlayerFlag() {
 		return playerFlag;
@@ -100,13 +119,21 @@ public class SearchingField extends JTextField implements Runnable{
 
 	/**
 	 * ends the searching procedure on the UI and sets the playername who joined
-	 * @param playername a String representation of the playername who joined the lobby
+	 * 
+	 * @author jhuhn
+	 * @param playername
+	 *            a String representation of the playername who joined the lobby
 	 */
 	public synchronized void setPlayer(String playername) {
 		this.playerFlag = true;
 		this.setText(playername);
 	}
 	
+	/**
+	 * resets the searchingfield instance
+	 * 
+	 * @author jhuhn
+	 */
 	public synchronized void resetSearchingField(){
 		this.playerFlag = false;
 		this.start();

@@ -74,6 +74,12 @@ public class BackButton extends JButton implements ActionListener{
 		}
 	}
 
+	/**
+	 * @author jhuhn
+	 * @param isLobby
+	 *            boolean representation if the instance is used in the lobby or
+	 *            the communityscreen
+	 */
 	public void setLobby(boolean isLobby) {
 		this.isLobby = isLobby;
 	}
