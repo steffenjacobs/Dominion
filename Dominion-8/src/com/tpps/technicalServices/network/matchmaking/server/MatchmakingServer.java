@@ -187,7 +187,7 @@ public class MatchmakingServer extends Server {
 		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(quittedPlayer, false);
 		try {
 			super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
-		} catch (NullPointerException | IOException npe) {
+		} catch (NullPointerException | IOException | IllegalArgumentException e) {
 			// if one this player is already disconnected, too
 		}
 	}
