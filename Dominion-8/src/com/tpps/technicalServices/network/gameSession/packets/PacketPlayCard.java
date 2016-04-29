@@ -13,8 +13,6 @@ public class PacketPlayCard extends Packet {
 	private static final long serialVersionUID = -8763060018038893429L;
 	private final String playedCardID;
 	private final int clientID;
-	
-
 
 	/**
 	 * @return the playedCard
@@ -27,7 +25,6 @@ public class PacketPlayCard extends Packet {
 	public int getClientID() {
 		return this.clientID;
 	}
-	
 
 	/**
 	 * initializes the Packet with the id of the card which had been played and

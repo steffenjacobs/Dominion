@@ -14,15 +14,15 @@ import com.tpps.application.game.card.Card;
  */
 public class Move {
 
-	private ListMultimap<ExecutionType, Card> playSequence;
-	private ListMultimap<ExecutionType, String> buySequence;
+	private ListMultimap<Execute, Card> playSequence;
+	private ListMultimap<Execute, String> buySequence;
 
 	public Move() {
 		this.playSequence = LinkedListMultimap.create();
 		this.buySequence = LinkedListMultimap.create();
 	}
 	
-	public Move(ListMultimap<ExecutionType, Card> playSequence, ListMultimap<ExecutionType, String> buySequence) {
+	public Move(ListMultimap<Execute, Card> playSequence, ListMultimap<Execute, String> buySequence) {
 		this.playSequence = playSequence;
 		this.buySequence = buySequence;
 	}
@@ -31,19 +31,19 @@ public class Move {
 		return new Move(playSequence, buySequence);
 	}
 	
-	public ListMultimap<ExecutionType, Card> getPlaySequence() {
+	public ListMultimap<Execute, Card> getPlaySequence() {
 		return this.playSequence;
 	}
 	
-	public ListMultimap<ExecutionType, String> getBuySequence() {
+	public ListMultimap<Execute, String> getBuySequence() {
 		return this.buySequence;
 	}
 
 	protected void putPlay(Card card) {
-		this.playSequence.put(ExecutionType.PLAY, card);
+		this.playSequence.put(Execute.PLAY, card);
 	}
 	
 	protected void putBuy(String cardname) {
-		this.buySequence.put(ExecutionType.BUY, cardname);
+		this.buySequence.put(Execute.BUY, cardname);
 	}
 }

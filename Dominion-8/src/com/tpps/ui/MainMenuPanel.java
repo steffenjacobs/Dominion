@@ -15,6 +15,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.components.MainMenuButton;
@@ -51,6 +53,7 @@ public class MainMenuPanel extends JPanel {
 		registrateMouseListener();
 		this.addComponentListener(new MyComponentAdapter());
 		repaint();
+		GameLog.log(MsgType.INIT, "MainMenuPanel");
 	}
 
 	/**

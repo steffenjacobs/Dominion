@@ -25,6 +25,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.statisticsscreen.StatisticsBoard;
 
@@ -76,6 +78,8 @@ public class PlayerSettingsPanel extends JPanel{
 		this.add(this.upperAreaPanel());
 		this.add(this.middleAreaPanel());
 		this.add(this.bottomAreaPanel());
+
+		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
 	}
 	
 	public PlayerSettingsPanel(boolean junitTest) {

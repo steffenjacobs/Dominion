@@ -5,6 +5,8 @@ import java.net.SocketAddress;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.GameStorageInterface;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.gameSession.packets.PacketRegistratePlayerByServer;
 import com.tpps.ui.gameplay.GameWindow;
@@ -23,6 +25,7 @@ public class GameClient extends Client {
 		super(_address, _handler, false);
 		_handler.setGameClient(this);
 		this.clientId = -1;
+		GameLog.log(MsgType.INIT, "GameClient");
 		this.gameWindow = new GameWindow();
 		_handler.setGameWindow(gameWindow);
 		_handler.setGameStorageInterface(new GameStorageInterface(gameWindow));

@@ -9,6 +9,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
+
 /**
  * 
  * @author ladler - Lukas Adler
@@ -35,8 +38,9 @@ public class MainFrame extends JFrame {
 		int height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		 this.fullscreenmode();
+		this.fullscreenmode();
 		this.setMinimumSize(new Dimension(1280, 720));
+		GameLog.log(MsgType.INIT, "MainFrame");
 	}
 
 	private void fullscreenmode() {

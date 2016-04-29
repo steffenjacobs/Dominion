@@ -5,6 +5,8 @@ import java.net.InetSocketAddress;
 import java.util.UUID;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.clientSession.server.SessionServer;
@@ -66,7 +68,7 @@ public class LoginClient extends PacketHandler {
 	 *            a String representation of the password in plaintext
 	 */
 	public void handlelogin(String nickname, String plaintext) {
-		System.out.println("Packetflag: " + packetFlag);
+		GameLog.log(MsgType.INFO, "Packetflag: " + packetFlag);
 		if(packetFlag){
 			packetFlag = false;
 			this.username = nickname;
@@ -76,7 +78,7 @@ public class LoginClient extends PacketHandler {
 				PacketLoginCheckRequest check = new PacketLoginCheckRequest(nickname, pwAsString);
 				c_login.sendMessage(check);
 				
-				System.out.println("sent accountinformation hashed to the login server");
+				GameLog.log(MsgType.INFO, "Sent accountinformation hashed to the login server");
 			} catch (Exception e) {
 				packetFlag = true;
 				e.printStackTrace();
@@ -94,7 +96,7 @@ public class LoginClient extends PacketHandler {
 	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet answer) {
-		System.out.println("Client received an answer packet");
+		GameLog.log(MsgType.NETWORK_INFO, "Client received an answer packet");
 			switch (answer.getType()) {
 			case LOGIN_CHECK_ANSWER:
 				PacketLoginCheckAnswer check = (PacketLoginCheckAnswer) answer;
@@ -105,7 +107,7 @@ public class LoginClient extends PacketHandler {
 					c_session.keepAlive(username, true);
 				}
 				packetFlag = true;
-				System.out.println("enabled");
+				GameLog.log(MsgType.INFO, "enabled");
 				break;
 			case LOGIN_REGISTER_ANSWER:
 				PacketRegisterAnswer check2 = (PacketRegisterAnswer) answer;
@@ -123,7 +125,7 @@ public class LoginClient extends PacketHandler {
 	
 	private void handleAllStatistics(PacketGetAllStatistics packet){
 		String[][] allStatistics = packet.getAllStatistics();
-		System.out.println("received all statistics");
+		GameLog.log(MsgType.STATISTICS,"received all statistics");
 		DominionController.getInstance().loadStatisticsToGui(allStatistics);
 	}
 

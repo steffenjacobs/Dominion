@@ -32,6 +32,8 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.client.BadWordFilter;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.gameplay.GameWindow;
@@ -62,6 +64,7 @@ public class ChatWindowForInGame extends JPanel {
 
 		this.createMiddlePanel();
 		this.createComponents();
+		GameLog.log(MsgType.INIT, "ChatWindowForInGame");
 	}
 
 	private void createComponents() {

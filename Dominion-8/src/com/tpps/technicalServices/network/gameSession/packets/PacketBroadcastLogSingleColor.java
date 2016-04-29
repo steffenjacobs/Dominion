@@ -20,6 +20,8 @@ public class PacketBroadcastLogSingleColor extends Packet {
 	private final MsgType msgType;
 	private final Color color;
 
+	// ersten beiden mit MsgType.GAME
+	
 	/***
 	 * this will be used in most cases
 	 * 
@@ -32,6 +34,20 @@ public class PacketBroadcastLogSingleColor extends Packet {
 		this.msgType = MsgType.GAME;
 		this.color = color;
 	}
+	
+	/**
+	 * this will also be used in most cases
+	 * 
+	 * @param line the line to update
+	 */
+	public PacketBroadcastLogSingleColor(String line) {
+		super(PacketType.BROADCAST_LOG_SINGLE_COLOR);
+		this.msg = line;
+		this.msgType = MsgType.GAME;
+		this.color = GameLog.getMsgColor();
+	}
+	
+	// letzten beiden mit übergebenem MsgType (color also der erste Konstr. ist hier eigntlich nicht benötigt)
 	
 	/**
 	 * 
@@ -56,8 +72,7 @@ public class PacketBroadcastLogSingleColor extends Packet {
 		super(PacketType.BROADCAST_LOG_SINGLE_COLOR);
 		this.msg = msg;
 		this.msgType = msgType;
-		this.color = Color.WHITE;
-		GameLog.setMsgColor(color);
+		this.color = GameLog.getMsgColor();
 	}
 	
 	public MsgType getMsgType(){

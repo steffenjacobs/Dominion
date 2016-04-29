@@ -2,17 +2,16 @@ package com.tpps.technicalServices.logger;
 
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.tpps.application.game.DominionController;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.ColorUtil;
+
+import javafx.util.Pair;
 
 /**
  * 
@@ -22,35 +21,40 @@ import com.tpps.technicalServices.util.ColorUtil;
 public class GameLog {
 
 	private static GameLogTextPane textPane;
-	private static Map<Integer, Map<String, Color>> prepText;
+	private static Map<Integer, Pair<String, Color>> prepText;
 
 	private static Color backgroundColor = Color.WHITE;
 	private static Color timestampColor = ColorUtil.EPICBLUE;
 	private static Color msgColor = Color.WHITE;
 
+	/**
+	 * unused for now, see MsgType class for messageTypeColors
+	 */
 	@SuppressWarnings("unused")
-	private static Color msgtypeColor = null;
+	private static Color msgTypeColor = null;
 
-	private static boolean ansiFlag = false;
-
+	/**
+	 * if the user has the ANSI plugin installed, set this flag to true so the
+	 * console log will be colored
+	 *
+	 * anyone can install the plugin with the following link:
+	 * https://marketplace.eclipse.org/content/ansi-escape-console
+	 * 
+	 */
+	private static boolean ansiFlag = true;
+	
+	/**
+	 * determines if there will be an extra window for the log besides the
+	 * console. guiPossible: is the device is able to display a gui?
+	 * iWantAJFrame: do I want to have an extra JFrame for this?
+	 */
 	private static boolean guiPossible = !GraphicsEnvironment.isHeadless();
-
+	
+	/**
+	 * determines wheter the textPane is already initialized so there won't be a
+	 * Null-Pointer
+	 */
 	private static boolean isInitialized = false;
-
-	public static void init() {
-		GameLog.isInitialized = true;
-		String team = " Game Log\n";
-		if (guiPossible) {
-			GameLog.textPane = new GameLogTextPane();
-		} else
-			return;
-		write(team, timestampColor, false);
-		if (ansiFlag)
-			writeToConsole(ANSIUtil.getCyanText(team + " Ready."));
-		else
-			writeToConsole(" Game Log\n" + "\n");
-		GameLog.log(MsgType.INIT, "GameLogger initialized");
-	}
 
 	/**
 	 * @return the backgroundColor
@@ -60,53 +64,91 @@ public class GameLog {
 	}
 
 	/**
-	 * @param backgroundColor
-	 *            the backgroundColor to set
+	 * @param backgroundColor the backgroundColor to set
 	 */
 	public static void setBackgroundColor(Color backgroundColor) {
 		GameLog.backgroundColor = backgroundColor;
 	}
 
 	/**
-	 * @return the timestampColor
+	 * @param msgtypeColor the msgtypeColor to set
 	 */
-	public static Color getTimestampColor() {
-		return timestampColor;
+	public static void setMsgtypeColor(Color msgtypeColor) {
+		GameLog.msgTypeColor = msgtypeColor;
 	}
 
 	/**
-	 * @param timestampColor
-	 *            the timestampColor to set
+	 * @return the ansiFlag
+	 */
+	public static boolean isAnsiFlag() {
+		return ansiFlag;
+	}
+
+	/**
+	 * @param ansiFlag the ansiFlag to set
+	 */
+	public static void setAnsiFlag(boolean ansiFlag) {
+		GameLog.ansiFlag = ansiFlag;
+	}
+
+	/**
+	 * @return the guiPossible
+	 */
+	public static boolean isGuiPossible() {
+		return guiPossible;
+	}
+
+	/**
+	 * @param guiPossible the guiPossible to set
+	 */
+	public static void setGuiPossible(boolean guiPossible) {
+		GameLog.guiPossible = guiPossible;
+	}
+
+	/**
+	 * @return the isInitialized
+	 */
+	public static boolean isInitialized() {
+		return isInitialized;
+	}
+
+	/**
+	 * @param isInitialized the isInitialized to set
+	 */
+	public static void setInitialized(boolean isInitialized) {
+		GameLog.isInitialized = isInitialized;
+	}
+
+	/**
+	 * @param textPane the textPane to set
+	 */
+	public static void setTextPane(GameLogTextPane textPane) {
+		GameLog.textPane = textPane;
+	}
+
+	/**
+	 * @param prepText the prepText to set
+	 */
+	public static void setPrepText(Map<Integer, Pair<String, Color>> prepText) {
+		GameLog.prepText = prepText;
+	}
+
+	/**
+	 * @param timestampColor the timestampColor to set
 	 */
 	public static void setTimestampColor(Color timestampColor) {
 		GameLog.timestampColor = timestampColor;
 	}
-
-	// /**
-	// * @return the msgtypeColor
-	// */
-	// public static Color getMsgtypeColor() {
-	// return msgtypeColor;
-	// }
-
-	/**
-	 * @param msgtypeColor
-	 *            the msgtypeColor to set
-	 */
-	public static void setMsgtypeColor(Color msgtypeColor) {
-		GameLog.msgtypeColor = msgtypeColor;
-	}
-
+	
 	/**
 	 * @return the msgColor
 	 */
 	public static Color getMsgColor() {
-		return GameLog.msgColor;
+		return msgColor;
 	}
 
 	/**
-	 * @param msgColor
-	 *            the msgColor to set
+	 * @param msgColor the msgColor to set
 	 */
 	public static void setMsgColor(Color msgColor) {
 		GameLog.msgColor = msgColor;
@@ -120,17 +162,37 @@ public class GameLog {
 	}
 
 	/**
-	 * @param textPane
-	 *            the textPane to set
+	 * @return the prepText
 	 */
-	public static void setTextPane(GameLogTextPane textPane) {
-		GameLog.textPane = textPane;
+	public static Map<Integer, Pair<String, Color>> getPrepText() {
+		return prepText;
 	}
 
-	public static Map<Integer, Map<String, Color>> getPrepText() {
-		return GameLog.prepText;
+	/**
+	 * @return the timestampColor
+	 */
+	public static Color getTimestampColor() {
+		return timestampColor;
 	}
 
+	/* ---------- !new Logic ---------- */
+	/**
+	 * initialization method which is called in the beginning writes the team
+	 * name first: GameLogger4Team++;
+	 * 
+	 * and after that an INIT message with "GameLogger initialized"
+	 */
+	public static void init() {
+		GameLog.isInitialized = true;
+		if (guiPossible) 
+			GameLog.textPane = new GameLogTextPane();
+		else return;
+		GameLog.log(MsgType.INIT, "Log", msgColor);
+		GameLog.appendToPrepText(0,"Game Log\n", msgColor);
+		if (prepText == null)
+			GameLog.prepText = new TreeMap<Integer, Pair<String, Color>>();
+	}
+	
 	/**
 	 * 
 	 * @param type
@@ -140,112 +202,76 @@ public class GameLog {
 	 * @return the created line with hostname, username, timestamp, messagetype
 	 *         and the actual message with(out) ANSI codes;
 	 */
-	private static String createTimestamp(MsgType type, boolean ansi) {
+	private static String createTimestamp(MsgType type) {
 		StringBuffer line = new StringBuffer();
 		String timestamp = "[" + new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()) + "]";
-		String msgtype = type.getMessage();
-		if (ansiFlag && ansi)
-			line.append(ANSIUtil.getCyanText(timestamp) + " " + ANSIUtil.getRedText(msgtype) + " > ");
+		String msg = type.getMessage();
+		if (ansiFlag)
+			line.append(ANSIUtil.getCyanText(timestamp) + " " + ANSIUtil.getRedText(msg) + " > ");
 		else
-			line.append(timestamp + " " + msgtype + " > ");
+			line.append(timestamp + " " + msg + " > ");
 		return line.toString();
 	}
 
-	public static void broadcastMessage(MsgType type, String line) {
-		try {
-			DominionController.getInstance().getGameClient().sendMessage(new PacketBroadcastLogSingleColor(type, line, msgColor));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * log the message with message type to the ui (if GameLog.guiPossible is
-	 * true) and console
-	 *
-	 * @param type
-	 *            the message type of the message to log
-	 * @param line
-	 *            the line to log
+	/** Weder MsgType.getDisplay() noch MsgType.getTimeStamp() wird benutzt;
+	 *  MsgType.setGameMode() ist auch überflüssig.
+	 *  
+	 *  Es wird nur .GAME auf das textPane gelogt ohne timeStamp
+	 *  Es wird alles     in die Konsole gelogt mit timeStamp (und egal ob irgendwo steht type.getDisplay() ist false) 
+	 *  
+	 *  Die übergebene Farbe ist nur relevant bei .GAME 
+	 *  (ansonsten einfach MsgColor verwenden, ist in der Konsole eh schwarz
+	 *  
+	 *  newLines bei .GAME:         hinzufügen wann desired
+	 *  newLines bei allen anderen: nicht hinzufügen, da es nicht auf das LogPane kommt und durch Syso eh eine newLine hat
+	 * 
+	 * 
+	 * @param type the message type of the log message
+	 * @param line the line to write
+	 * @param color the color in which the line is displayed
 	 */
-	public static void log(MsgType type, String line) {
-		String msg = type.getTimeStamp() ? createTimestamp(type, true) + line : line;
-		writeToConsole(msg);
-		if (isInitialized) {
-			if (type.getDisplay() && guiPossible) {
-				write(msg, type.getColor(), type.getTimeStamp());
-			}
-		} else { // prevent Null Pointers
-			init();
-			log(type, line);
-		}
-	}
-
-	/**
-	 * log the message with message type to the ui (if GameLog.guiPossible is
-	 * true) and console
-	 *
-	 * @param type
-	 *            the message type of the message to log
-	 * @param line
-	 *            the line to log
-	 */
-	public static void logInGame(MsgType type, String line, Color color) {
-		writeToConsole(line);
+	public static void log(MsgType type, String line, Color color) {
 		if (isInitialized) {
 			if (type.equals(MsgType.GAME) && guiPossible) {
-				writeInGame(line, color);
+				GameLog.textPane.updateTextArea(line, color);
 			}
-		} else { // prevent Null Pointers
+			System.out.println(createTimestamp(type) + line);
+		} else {
 			init();
-			logInGame(type, line, color);
+			log(type, line, color);
 		}
 	}
-
+	
 	/**
-	 * write line to a JTextPane with or without a timestamp
+	 * log a message with default color GameLog.getMsgColor()
 	 * 
-	 * @param line
-	 *            the line to write on the JPanel
-	 * @param textColor
-	 *            the color of the text
-	 * @param timestamp
-	 *            determines whether the timestamp is written in front of the
-	 *            line
+	 * @param type the message type of the log message
+	 * @param color the color in which the line is displayed
 	 */
-	private static void write(String line, Color textColor, boolean timestamp) {
-		GameLog.textPane.updateLogger(line, textColor, timestamp);
+	public static void log(MsgType type, String line) {
+		GameLog.log(type, line, GameLog.getMsgColor());
 	}
 
 	/**
-	 * write line to a JTextPane without timestamp and custom color
+	 * append text in a specific Color to a TreeMap called "prepText" to collect 
+	 * information about the game settings and log it (by calling logPrepText() in SGPH) as soon as the
+	 * GameLogTextPane is ready.
 	 * 
-	 * @param line
-	 *            the line to write on the JPanel
-	 * @param textColor
-	 *            the color of the text
-	 * @param timestamp
-	 *            determines whether the timestamp is written in front of the
-	 *            line
+	 * @param no position in which the text will be put in the log
+	 * @param text the text to log
+	 * @param color the color in which the text will be displayed
 	 */
-	private static void writeInGame(String line, Color textColor) {
-		GameLog.textPane.updateLogger(line, textColor);
-	}
-
-	/**
-	 * write to the console
-	 * 
-	 * @param line
-	 *            the line to write to the console
-	 */
-	private static void writeToConsole(String line) {
-		System.out.println(line);
-	}
-
 	public static void appendToPrepText(int no, String text, Color color) {
 		if (prepText == null) {
-			prepText = new TreeMap<Integer, Map<String, Color>>();
+			GameLog.prepText = new TreeMap<Integer, Pair<String, Color>>();
 		}
-		prepText.put(no, CollectionsUtil.getTreeMap(text, color));
+		GameLog.prepText.put(no, CollectionsUtil.getPair(text, color));
+	}
+	
+	/**
+	 * reset the prepText to a new instance of TreeMap<etc..>
+	 */
+	public static void resetPrepText() {
+		GameLog.prepText = new TreeMap<Integer, Pair<String, Color>>();
 	}
 }

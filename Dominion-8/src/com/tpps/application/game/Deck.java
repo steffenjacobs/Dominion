@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
+import com.tpps.technicalServices.logger.DrawAndShuffle;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
@@ -277,9 +278,9 @@ public class Deck {
 	 * calls discardCardHand() and draw(INIT_CARD_HAND_SIZE) 
 	 * (discards the cardHand and redraws 5 cards for the new turn)
 	 */
-	public void refreshCardHand() {
+	public DrawAndShuffle refreshCardHand() {
 		this.discardCardHand();
-		this.draw(GameConstant.INIT_CARD_HAND_SIZE);
+		return this.draw(GameConstant.INIT_CARD_HAND_SIZE);
 	}
 	
 	/**
@@ -287,11 +288,13 @@ public class Deck {
 	 * the method shuffles the discard pile and appends it "below" the draw pile
 	 * @param drawAmount the amount which determines if the piles will be shuffled
 	 */	
-	private void shuffleIfLessThan(int drawAmount) {
+	private boolean shuffleIfLessThan(int drawAmount) {
 		LinkedList<Card> cards = this.discardPile;
+		boolean wasShuffled = false;
 		if (drawAmount < (this.drawPile.size() + this.discardPile.size())) {
 			if (this.drawPile.size() < drawAmount) {
 				Collections.shuffle(cards);
+				wasShuffled = true;
 				for (Card card : this.drawPile) {
 					cards.addLast(card);
 				}
@@ -300,12 +303,14 @@ public class Deck {
 			}
 		} else {
 			Collections.shuffle(cards);
+			wasShuffled = true;
 			for (Card card : this.drawPile) {
 				cards.addLast(card);
 			}
 			this.discardPile = new LinkedList<Card>();
 			this.drawPile = cards;
 		}
+		return wasShuffled;
 	}
 	
 	/**
@@ -357,9 +362,11 @@ public class Deck {
 	 * if the drawPile is not empty, the method adds one card from drawPile to cardHand 
 	 * and removes this card from drawPile
 	 */
-	public void draw() {
-		if (!this.drawPile.isEmpty())
+	public int draw() {
+		if (!this.drawPile.isEmpty()) {
 			this.cardHand.addLast(this.drawPile.removeLast());
+			return 1;
+		} else return 0;
 	}
 	
 	/**
@@ -367,11 +374,13 @@ public class Deck {
 	 * this card from drawPile
 	 * @param amount the amount of cards to draw
 	 */
-	public void draw(int amount) {
-		this.shuffleIfLessThan(amount);
+	public DrawAndShuffle draw(int amount) {
+		boolean wasShuffled = this.shuffleIfLessThan(amount);
+		int drawAmount = 0;
 		for (int i = 0; i < amount; i++) {
-			this.draw();
+			drawAmount += this.draw();
 		}
+		return new DrawAndShuffle(wasShuffled, drawAmount);
 	}
 	
 	/**
@@ -380,8 +389,7 @@ public class Deck {
 	 */
 	public Card removeSaveFromDrawPile() throws NoSuchElementException{
 		this.shuffleIfLessThan(1);		
-		return this.drawPile.removeLast();		
-		
+		return this.drawPile.removeLast();
 	}
 	
 	/**

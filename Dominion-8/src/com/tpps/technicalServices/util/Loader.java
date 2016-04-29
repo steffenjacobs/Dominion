@@ -8,6 +8,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
+
 public class Loader {
 
 	private static Loader instance = new Loader();
@@ -40,7 +43,7 @@ public class Loader {
 	 */
 
 	public Font importFont() throws FontFormatException, IOException {
-		System.out.println("im gameWindow" + ClassLoader.getSystemResource("resources/font/xenippa1.ttf"));
+		GameLog.log(MsgType.INFO,"in gameWindow: " + ClassLoader.getSystemResource("resources/font/xenippa1.ttf"));
 
 		Font customFont = Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.ttf"));
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
