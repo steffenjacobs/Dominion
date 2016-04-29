@@ -82,7 +82,7 @@ public class GameServerNetworkListener implements NetworkListener {
 								}
 							}, false);
 					client.sendMessage(new PacketGameEnd(this.gameServer.getGameController().getPlayerNames(),
-							this.gameServer.getGameController().getWinningPlayer().getPlayerName()));
+							this.gameServer.getGameController().getWinningPlayer().getPlayerName(), gameServer.getPort()));
 					this.gameServer.getGameController().endGame();
 				} catch (IOException e) {
 					e.printStackTrace();
