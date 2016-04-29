@@ -389,14 +389,14 @@ public class PlayerSettingsPanel extends JPanel {
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			if(e.getSource().equals(minusKi)){
-//				minusKi.setText("");
-//				temp=blackBeauty;
-//				blackBeauty = brainCrossed;
+				minusKi.setText("");
+				temp=blackBeauty;
+				blackBeauty = brainCrossed;
 			}
 			if(e.getSource().equals(plusKI)){
-//				plusKI.setText("");
-//				temp=blackBeauty;
-//				blackBeauty = brain;
+				plusKI.setText("");
+				temp=blackBeauty;
+				blackBeauty = brain;
 
 			}
 			
@@ -404,14 +404,14 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-//			if(e.getSource().equals(minusKi)){
-//				blackBeauty = temp;
-//				minusKi.setText("- KI");
-//			}
-//			if(e.getSource().equals(plusKI)){
-//				blackBeauty = temp;
-//				plusKI.setText("+ KI");
-//			}
+			if(e.getSource().equals(minusKi)){
+				blackBeauty = temp;
+				minusKi.setText("- KI");
+			}
+			if(e.getSource().equals(plusKI)){
+				blackBeauty = temp;
+				plusKI.setText("+ KI");
+			}
 
 		}
 
