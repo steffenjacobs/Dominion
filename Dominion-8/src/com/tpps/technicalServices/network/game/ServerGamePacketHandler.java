@@ -90,11 +90,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case RECONNECT:
 				PacketReconnect packetReconnect = (PacketReconnect) packet;
-				if (this.server.validSession(packetReconnect.getUsername(), packetReconnect.getSessionID())) {
+				if (this.server.getGameController().getPlayerByUserName(packetReconnect.getUsername()) != null && this.server.validSession(packetReconnect.getUsername(), packetReconnect.getSessionID())) {
 					System.out.println("Reconnect valid Session username: " + packetReconnect.getUsername() + "sessionID: " + packetReconnect.getSessionID());
 					updatePortOfPlayer(port, packetReconnect);
 					this.server.getDisconnectedUser().remove(this.server.getGameController().getPlayerByUserName(packetReconnect.getUsername()));
-					server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
+					server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(), 
+							this.server.getGameController().getActivePlayerName()));
 				} else {
 					this.server.disconnect(port);
 				}
@@ -499,7 +500,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.sendMessage(port, new PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(), this.server.getGameController().getActivePlayer().getBuys(),
 					this.server.getGameController().getActivePlayer().getCoins()));
 			this.server.getGameController().endTurn();
-			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID()));
+			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
+					this.server.getGameController().getActivePlayerName()));
 			// this.server.broadcastMessage(new
 			// PacketBroadcastLogSingleColor("----- #", GameLog.getMsgColor()));
 			// this.server.broadcastMessage(new
@@ -607,7 +609,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 */
 	private void setUpGui() throws IOException {
 		GameBoard gameBoard = this.server.getGameController().getGameBoard();
-		this.server.broadcastMessage(new PacketOpenGuiAndEnableOne(this.server.getGameController().getActivePlayer().getClientID()));
+		this.server.broadcastMessage(new PacketOpenGuiAndEnableOne(this.server.getGameController().getActivePlayer().getClientID(),
+				this.server.getGameController().getActivePlayerName()));
 		this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
 		LinkedList<Player> players = this.server.getGameController().getPlayers();
 		for (int i = 0; i < GameConstant.PLAYERS; i++) {
