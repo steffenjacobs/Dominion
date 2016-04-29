@@ -87,6 +87,10 @@ public class ButtonClass extends GFButton {
 			if (this.getCaption().equals("")) {
 				System.exit(0);
 			}
+			
+			DominionController.getInstance().setTurnFlag(false);
+			DominionController.getInstance().getGameClient().getGameWindow().setCaptionTurn("execute");
+			
 			if (this.getCaption().equals("End ActionPhase")) {
 				try {
 					System.out.println("EndActionPhase");

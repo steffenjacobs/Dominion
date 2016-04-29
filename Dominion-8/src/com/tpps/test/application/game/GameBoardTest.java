@@ -279,6 +279,12 @@ public class GameBoardTest {
 		assertThat(this.gameBoard.getTableForActionCards().size(), is(GameConstant.INIT_PILE_SIZE));
 	}
 	
+	@Test
+	public void setAttackSetTest() {
+		this.gameBoard.setAttackSet();
+		assertThat(this.gameBoard.getTableForActionCards().size(), is(GameConstant.INIT_PILE_SIZE));
+	}
+	
 	
 
 }

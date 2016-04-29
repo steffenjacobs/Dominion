@@ -28,6 +28,7 @@ import com.tpps.technicalServices.network.game.WrongSyntaxException;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
+import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendActiveButtons;
@@ -359,7 +360,7 @@ public class GameController {
 					reactivePlayer = true;
 					player.setThiefFalse();
 					try {
-						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable());
+						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable("wait on reaction"));
 					} catch (IOException e1) {
 
 						e1.printStackTrace();
@@ -368,7 +369,7 @@ public class GameController {
 					player.setReactionMode();
 					try {
 						this.gameServer.sendMessage(player.getPort(), new PacketShowEndReactions());
-						this.gameServer.sendMessage(player.getPort(), new PacketEnable());
+						this.gameServer.sendMessage(player.getPort(), new PacketEnable("react"));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -416,7 +417,7 @@ public class GameController {
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setSpyFalse();
 					try {
-						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable());
+						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable("wait on reaction"));
 					} catch (IOException e1) {
 						e1.printStackTrace();
 					}
@@ -424,7 +425,7 @@ public class GameController {
 					player.setReactionMode();
 					try {
 						this.gameServer.sendMessage(player.getPort(), new PacketShowEndReactions());
-						this.gameServer.sendMessage(player.getPort(), new PacketEnable());
+						this.gameServer.sendMessage(player.getPort(), new PacketEnable("react"));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -465,7 +466,7 @@ public class GameController {
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setWitchFalse();
 					try {
-						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable());
+						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable("wait on reaction"));
 					} catch (IOException e1) {
 
 						e1.printStackTrace();
@@ -474,7 +475,7 @@ public class GameController {
 					player.setReactionMode();
 					try {
 						this.gameServer.sendMessage(player.getPort(), new PacketShowEndReactions());
-						this.gameServer.sendMessage(player.getPort(), new PacketEnable());
+						this.gameServer.sendMessage(player.getPort(), new PacketEnable("react"));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -515,7 +516,7 @@ public class GameController {
 					if (sendPacketDisable) {
 						sendPacketDisable = false;
 						try {
-							this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable());
+							this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable("wait on reaction"));
 						} catch (IOException e1) {
 
 							e1.printStackTrace();
@@ -525,7 +526,7 @@ public class GameController {
 					player.setReactionMode();
 					try {
 						this.gameServer.sendMessage(player.getPort(), new PacketShowEndReactions());
-						this.gameServer.sendMessage(player.getPort(), new PacketEnable());
+						this.gameServer.sendMessage(player.getPort(), new PacketEnable("react"));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -710,12 +711,12 @@ public class GameController {
 	 * 
 	 * @return if all player have played his/ her reactionCards
 	 */
-	private boolean allReactionCardsPlayed() {
+	public boolean allReactionCardsPlayed() {
 		boolean allReactionCardsPlayedFlag = true;
 
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			if (player.playsReactionCard()) {
+			if (player.playsReactionCard() || player.isReactionMode()) {
 				allReactionCardsPlayedFlag = false;
 				break;
 			}
@@ -756,7 +757,8 @@ public class GameController {
 
 		try {
 			this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
-			this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketEnable());
+			this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
+					this.gameServer.getGameController().getActivePlayerName()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -1008,15 +1010,7 @@ public class GameController {
 		ServerGamePacketHandler gamePacketHandler = (ServerGamePacketHandler) this.gameServer.getHandler();
 		gamePacketHandler.getChatController().deleteChatroom();
 
-		setGameNotFinished(false);
-		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
-			Player player = (Player) iterator.next();
-			try {
-				this.gameServer.sendMessage(player.getPort(), new PacketDisable());				
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}		
+		setGameNotFinished(false);	
 		try {
 			this.gameServer.broadcastMessage(new PacketShowEndScreen());
 		} catch (IOException e1) {
