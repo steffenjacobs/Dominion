@@ -46,9 +46,7 @@ public class PacketBroadcastLogSingleColor extends Packet {
 		this.msgType = MsgType.GAME;
 		this.color = GameLog.getMsgColor();
 	}
-	
-	// letzten beiden mit übergebenem MsgType (color also der erste Konstr. ist hier eigntlich nicht benötigt)
-	
+		
 	/**
 	 * 
 	 * sets the packettype

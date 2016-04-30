@@ -304,11 +304,19 @@ public class GameController {
 	 * calls the refresPlayedCardsList()
 	 */
 	public synchronized void organizePilesAndrefreshCardHand() {
-		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
-		DrawAndShuffle das = this.getActivePlayer().getDeck().refreshCardHand();
-		if (das.wasShuffled()) GameLog.log(MsgType.GAME, this.getActivePlayerName()+ " - shuffles deck");
-		GameLog.log(MsgType.GAME, this.getActivePlayerName() + " - draws " + das.getDrawAmount() + " cards");
-		this.getActivePlayer().refreshPlayedCardsList();
+		try {
+			CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
+			DrawAndShuffle das = this.getActivePlayer().getDeck().refreshCardHand();
+			if (das.wasShuffled()) {
+				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.getActivePlayerName(), this.getActivePlayer().getLogColor()));
+				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - shuffles deck"));
+			}
+			this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.getActivePlayerName(), this.getActivePlayer().getLogColor()));
+			this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - draws " + das.getDrawAmount() + " cards"));
+			this.getActivePlayer().refreshPlayedCardsList();
+		} catch (IOException e) {
+			GameLog.log(MsgType.EXCEPTION, e.getMessage());
+		}
 	}
 	
 	/**
