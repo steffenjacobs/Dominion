@@ -54,7 +54,6 @@ public final class DominionController {
 	private GlobalChatPanel globalChatPanel;
 	private PlayerSettingsPanel playerSettingsPanel;
 	private StatisticsBoard statisticsBoardPanel;
-//	private CardEditor cardEditor;
 
 	private BufferedImage originalBackground;
 	public static BufferedImage selectedGameImage;

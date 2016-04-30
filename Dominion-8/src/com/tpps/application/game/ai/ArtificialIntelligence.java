@@ -9,10 +9,9 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
-import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndActionPhase;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndTurn;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
@@ -170,7 +169,7 @@ public class ArtificialIntelligence {
 			this.computing = false;
 			Thread.sleep(500);
 			if (myTurn()) {
-				this.player.getGameServer().broadcastMessage(new PacketBroadcastLogSingleColor("endTurn();", GameLog.getMsgColor()));
+				this.player.getGameServer().broadcastMessage(new PacketBroadcastLog("endTurn();"));
 				this.endTurn();
 			}
 		} catch (InterruptedException e) {

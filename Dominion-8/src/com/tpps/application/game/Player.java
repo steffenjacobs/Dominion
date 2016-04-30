@@ -16,7 +16,7 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.game.SynchronisationException;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDontShowEndReactions;
@@ -658,8 +658,7 @@ public class Player {
 		boolean dontRemoveFlag = false, trashFlag = false;
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 
-		this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.getPlayerName(), this.getLogColor()));
-		this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - plays " + serverCard.getName() + "\n", GameLog.getMsgColor()));
+		this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getPlayerName()," - plays " + serverCard.getName(), this.getLogColor()));
 
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
@@ -692,11 +691,9 @@ public class Player {
 			case DRAW_CARD:
 				DrawAndShuffle das = this.getDeck().draw(Integer.parseInt(value));
 				if (das.wasShuffled()) {
-					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.getPlayerName(), this.getLogColor()));
-					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - shuffles deck\n"));
+					this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - shuffles deck", this.getLogColor()));
 				}
-				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.getPlayerName(), this.getLogColor()));
-				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - draws " + das.getDrawAmount() + " cards\n"));
+				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - draws " + das.getDrawAmount() + " cards", this.getLogColor()));
 				break;
 			case DRAW_CARD_UNTIL:
 				String[] values = value.split("_");
@@ -746,7 +743,7 @@ public class Player {
 						getDeck().getDrawPile().addLast(this.gameServer.getGameController().getGameBoard().getTableForTreasureCards().get("Silver").removeLast());
 					}
 				} catch (NoSuchElementException e) {
-					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(MsgType.ERROR, "couldn't gain the card because ther are no more silver card on the board", this.getLogColor()));
+					GameLog.log(MsgType.ERROR, "couldn't gain the card because ther are no more silver card on the board", this.getLogColor());
 				}
 				break;
 			case DISCARD_CARD:

@@ -18,7 +18,7 @@ import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.server.ChatController;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
@@ -215,7 +215,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case DISCARD_DECK:
 				this.server.getGameController().getActivePlayer().getDeck().discardDrawPile();
 				break;
-			case BROADCAST_LOG_SINGLE_COLOR:
+			case BROADCAST_LOG:
 				this.server.broadcastMessage(packet);
 				break;
 			case BROADCAST_LOG_MULTI_COLOR:
@@ -497,14 +497,17 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void nextActivePlayer(int port) {
 		try {
 			// hier wurde Nullpointer geworfen?
-			// Color playerColor = this.chatController.getColorMap().get(this.server.getGameController().getActivePlayerName());
+			 Color playerColor = this.chatController.getColorMap().get(this.server.getGameController().getActivePlayerName());
 
-			this.server.broadcastMessage(new PacketBroadcastLogSingleColor("\n", GameLog.getMsgColor()));
+			this.server.broadcastMessage(new PacketBroadcastLog(""));
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-//			i think it's not used
-//			this.server.sendMessage(port, new PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(), this.server.getGameController().getActivePlayer().getBuys(),
-//					this.server.getGameController().getActivePlayer().getCoins()));
+			
+			// i think it's not used
+			// this.server.sendMessage(port, new
+			// PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(),
+			// this.server.getGameController().getActivePlayer().getBuys(),
+			// this.server.getGameController().getActivePlayer().getCoins()));
 			this.server.getGameController().endTurn();
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
 					this.server.getGameController().getActivePlayerName()));
@@ -532,40 +535,33 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * 12. addPlayerAndChooseRandomActivePlayer in GC Z882 mit der schlussendlichen synced. LogMethode abgleichen
 			 * 13. case DRAW_CARD in doACtion bei Player nachschauen mit DrawAndShuffle
 			 * 14. für die init in Deck irgendwo für jeden Player (- shuffles Deck - draws 5 cards) zum prepText appenden
+			 * 15. if singlecolor works, remove multicolorPacket
+			 * 16. remove cardSSSSS bei 1 card in log messages (ternärer Ausdruck)
+			 * 17. searchFile new PacketBroadcastLog( überprüfen ob das alles auch so gelogt werden soll (zB GameServerNetworkListener)
 			 */
-			
-			/**
-			 * 1. Thread.sleep bei singleColor probieren (siehe darunter)
-			 * 2. MultiColor anschauen
-			 * */
-//			Thread.sleep(100);
-			this.server.broadcastMessage(new PacketBroadcastLogSingleColor("----- "));
-//			Thread.sleep(100);
-			this.server.broadcastMessage(new PacketBroadcastLogSingleColor(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()));
-//			Thread.sleep(100);
-			this.server.broadcastMessage(new PacketBroadcastLogSingleColor(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n"));
-//			Thread.sleep(100);
-			
-			
-//			this.server.broadcastMessage(new PacketBroadcastLogMultiColor(CollectionsUtil.getPair("----- "),
-//					CollectionsUtil.getPair(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()),
-//					CollectionsUtil.getPair(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n")));
+
+			/** change LOG PREP TEXT */
+			this.server.broadcastMessage(
+					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName()," -----\n",this.server.getGameController().getActivePlayer().getLogColor()));
+
+			// this.server.broadcastMessage(new
+			// PacketBroadcastLogMultiColor(CollectionsUtil.getPair("----- "),
+			// CollectionsUtil.getPair(this.server.getGameController().getActivePlayerName(),
+			// this.server.getGameController().getActivePlayer().getLogColor()),
+			//		CollectionsUtil.getPair(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n")));
 		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * 
-	 */
+	
 	public void logPrepText() {
 		for (Integer i : GameLog.getPrepText().keySet()) {
 			Pair<String, Color> res = GameLog.getPrepText().get(i);
 			Color c = res.getValue();
 			String s = res.getKey();
 			try {
-				this.server.broadcastMessage(new PacketBroadcastLogSingleColor(s, c));
+				this.server.broadcastMessage(new PacketBroadcastLog(s));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
