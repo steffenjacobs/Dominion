@@ -15,6 +15,7 @@ import com.tpps.technicalServices.logger.DrawAndShuffle;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
+import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
@@ -658,6 +659,7 @@ public class Player {
 		boolean dontRemoveFlag = false, trashFlag = false;
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 
+//		this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getPlayerName()," - plays " + serverCard.getName(), ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 		this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getPlayerName()," - plays " + serverCard.getName(), this.getLogColor()));
 
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
@@ -692,8 +694,10 @@ public class Player {
 				DrawAndShuffle das = this.getDeck().draw(Integer.parseInt(value));
 				if (das.wasShuffled()) {
 					this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - shuffles deck", this.getLogColor()));
+//					this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - shuffles deck", ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 				}
 				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - draws " + das.getDrawAmount() + " cards", this.getLogColor()));
+//				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - draws " + das.getDrawAmount() + " cards", ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 				break;
 			case DRAW_CARD_UNTIL:
 				String[] values = value.split("_");

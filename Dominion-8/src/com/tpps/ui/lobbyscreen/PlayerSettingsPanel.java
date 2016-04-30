@@ -62,7 +62,9 @@ public class PlayerSettingsPanel extends JPanel {
 	private static int IMG_TO_BOTTOM = 15;
 	private static final int IMG_TO_EDGE = 30;
 
-	private JButton plusKI, minusKi;
+	private static final float ALPHA = 0.4F;
+	
+	private JButton plusKI, minusKI;
 
 	private JPanel panel;
 	private JPanel panelMid;
@@ -118,7 +120,7 @@ public class PlayerSettingsPanel extends JPanel {
 		GridBagConstraints gbc = new GridBagConstraints();
 		panel.setOpaque(false);
 
-		plusKI = new JButton("+ KI") {
+		plusKI = new JButton("Add AI") {
 
 			private static final long serialVersionUID = 1L;
 
@@ -130,12 +132,13 @@ public class PlayerSettingsPanel extends JPanel {
 				super.paint(h);
 			}
 		};
+		plusKI.setFont(new Font("Arial", Font.PLAIN, 22));
 		plusKI.setOpaque(false);
 		plusKI.setForeground(Color.WHITE);
 		plusKI.setBorderPainted(true);
 		plusKI.setContentAreaFilled(false);
 
-		minusKi = new JButton("- KI") {
+		minusKI = new JButton("Remove AI") {
 
 			private static final long serialVersionUID = 1L;
 
@@ -147,10 +150,11 @@ public class PlayerSettingsPanel extends JPanel {
 				super.paint(h);
 			}
 		};
-		minusKi.setOpaque(false);
-		minusKi.setForeground(Color.WHITE);
-		minusKi.setBorderPainted(true);
-		minusKi.setContentAreaFilled(false);
+		minusKI.setFont(new Font("Arial", Font.PLAIN, 22));
+		minusKI.setOpaque(false);
+		minusKI.setForeground(Color.WHITE);
+		minusKI.setBorderPainted(true);
+		minusKI.setContentAreaFilled(false);
 
 		gbc.insets = new Insets(SPACE_PANEL_TO_PANEL, H_SPACE_EDGE_TO_FIRSTPANEL, 0, VERTICAL_GAP_KI);
 		gbc.ipady = WEIGHT_BUTTON_KI;
@@ -159,7 +163,7 @@ public class PlayerSettingsPanel extends JPanel {
 		panelEast.setOpaque(false);
 
 		gbc.insets = new Insets(SPACE_PANEL_TO_PANEL, VERTICAL_GAP_KI, 0, H_SPACE_EDGE_TO_FIRSTPANEL);
-		panelWest.add(minusKi, gbc);
+		panelWest.add(minusKI, gbc);
 		panelWest.setOpaque(false);
 
 		connectedPlayers = new SearchingField[4];
@@ -192,7 +196,7 @@ public class PlayerSettingsPanel extends JPanel {
 		panel.add(Box.createVerticalStrut(SPACE_FIRSTPANEL_TO_SECONDPANEL), BorderLayout.PAGE_END);
 
 		plusKI.addMouseListener(new KiListener());
-		minusKi.addMouseListener(new KiListener());
+		minusKI.addMouseListener(new KiListener());
 		return panel;
 	}
 
@@ -325,12 +329,12 @@ public class PlayerSettingsPanel extends JPanel {
 			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
 			this.brain = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/brain.png"));
 			this.brainCrossed = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/braincrossed.png"));
-			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
+			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, PlayerSettingsPanel.ALPHA);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	/**
 	 * This method handles a backgroundselection vote
 	 * 
@@ -438,6 +442,10 @@ public class PlayerSettingsPanel extends JPanel {
 	public void initStandardBackground() {
 		this.changeSelectedPicture(0);
 	}
+	
+	protected static void setAlpha(BufferedImage image, float alpha) {
+		image = (BufferedImage) GraphicsUtil.setAlpha(image, alpha);
+	}
 
 	/**
 	 * @return a SearchingField array with connected players on the gui
@@ -457,30 +465,139 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			if (e.getSource().equals(minusKi)) {
-				minusKi.setText("");
-				temp = blackBeauty;
+			if(e.getSource().equals(minusKI)){
+				minusKI.setText("");
+				temp=blackBeauty;
 				blackBeauty = brainCrossed;
 			}
-			if (e.getSource().equals(plusKI)) {
+			if(e.getSource().equals(plusKI)){
 				plusKI.setText("");
-				temp = blackBeauty;
+				temp=blackBeauty;
 				blackBeauty = brain;
-			}
 
+			}
+			
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			if (e.getSource().equals(minusKi)) {
+			if(e.getSource().equals(minusKI)){
 				blackBeauty = temp;
-				minusKi.setText("- KI");
+				minusKI.setText("Remove AI");
 			}
-			if (e.getSource().equals(plusKI)) {
+			if(e.getSource().equals(plusKI)){
 				blackBeauty = temp;
-				plusKI.setText("+ KI");
+				plusKI.setText("Add AI");
 			}
+
 		}
+		
+		// @Override
+		// public void mouseEntered(MouseEvent e) {
+		// if (e.getSource().equals(minusKI)) {
+		// PlayerSettingsPanel.setAlpha(blackBeauty, 0);
+		// minusKI = new JButton("") {
+		//
+		// private static final long serialVersionUID = 1L;
+		//
+		// @Override
+		// public void paint(Graphics g) {
+		// Graphics2D h = (Graphics2D) g;
+		// h.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+		// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		// h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(),
+		// null);
+		// super.paint(h);
+		// }
+		// };
+		// minusKI.setFont(new Font("Arial", Font.PLAIN, 22));
+		// minusKI.setOpaque(false);
+		// minusKI.setForeground(Color.WHITE);
+		// minusKI.setBorderPainted(true);
+		// minusKI.setContentAreaFilled(false);
+		// minusKI.setText("");
+		// temp = blackBeauty;
+		// blackBeauty = brainCrossed;
+		// }
+		// if (e.getSource().equals(plusKI)) {
+		// PlayerSettingsPanel.setAlpha(blackBeauty, 0);
+		// plusKI = new JButton("") {
+		//
+		// private static final long serialVersionUID = 1L;
+		//
+		// @Override
+		// public void paint(Graphics g) {
+		// Graphics2D h = (Graphics2D) g;
+		// h.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+		// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		// h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(),
+		// null);
+		// super.paint(h);
+		// }
+		// };
+		// plusKI.setFont(new Font("Arial", Font.PLAIN, 22));
+		// plusKI.setOpaque(false);
+		// plusKI.setForeground(Color.WHITE);
+		// plusKI.setBorderPainted(true);
+		// plusKI.setContentAreaFilled(false);
+		// plusKI.setText("");
+		// temp = blackBeauty;
+		// blackBeauty = brain;
+		// }
+		//
+		// }
+		//
+		// @Override
+		// public void mouseExited(MouseEvent e) {
+		// if (e.getSource().equals(minusKI)) {
+		// PlayerSettingsPanel.setAlpha(blackBeauty,PlayerSettingsPanel.ALPHA);
+		// minusKI = new JButton("Remove AI") {
+		//
+		// private static final long serialVersionUID = 1L;
+		//
+		// @Override
+		// public void paint(Graphics g) {
+		// Graphics2D h = (Graphics2D) g;
+		// h.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+		// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		// h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(),
+		// null);
+		// super.paint(h);
+		// }
+		// };
+		// minusKI.setFont(new Font("Arial", Font.PLAIN, 22));
+		// minusKI.setOpaque(false);
+		// minusKI.setForeground(Color.WHITE);
+		// minusKI.setBorderPainted(true);
+		// minusKI.setContentAreaFilled(false);
+		// minusKI.setText("Remove AI");
+		// brainCrossed = blackBeauty;
+		// }
+		// if (e.getSource().equals(plusKI)) {
+		// PlayerSettingsPanel.setAlpha(blackBeauty,PlayerSettingsPanel.ALPHA);
+		// plusKI = new JButton("") {
+		//
+		// private static final long serialVersionUID = 1L;
+		//
+		// @Override
+		// public void paint(Graphics g) {
+		// Graphics2D h = (Graphics2D) g;
+		// h.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+		// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		// h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(),
+		// null);
+		// super.paint(h);
+		// }
+		// };
+		// plusKI.setFont(new Font("Arial", Font.PLAIN, 22));
+		// plusKI.setOpaque(false);
+		// plusKI.setForeground(Color.WHITE);
+		// plusKI.setBorderPainted(true);
+		// plusKI.setContentAreaFilled(false);
+		// plusKI.setText("Add AI");
+		// brain = blackBeauty;
+		// }
+		// }
 
 		@Override
 		public void mousePressed(MouseEvent e) {
