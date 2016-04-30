@@ -102,6 +102,14 @@ public final class DominionController {
 			}
 		}
 	}
+	
+	/**
+	 * @author jhuhn
+	 * @return an int representation of the selected cardset
+	 */
+	public int getSelection(){
+		return this.playerSettingsPanel.getSelection();
+	}
 
 	/**
 	 * This method is responsible to load all GUI components that are needed for: 

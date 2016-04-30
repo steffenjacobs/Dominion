@@ -1,6 +1,7 @@
 package com.tpps.ui.lobbyscreen;
 
 import java.awt.BorderLayout;
+import java.awt.CheckboxGroup;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -21,10 +22,13 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import com.tpps.application.game.DominionController;
@@ -43,7 +47,8 @@ public class PlayerSettingsPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private final Font head = new Font("Arial Black", Font.BOLD, 20);
-
+	private final Font optionFont = new Font("Arial Black", Font.BOLD, 15);
+	
 	private BufferedImage[] originalImages = new BufferedImage[4];
 	private BufferedImage[] transparentImages = new BufferedImage[4];
 	private BufferedImage selectedImage;
@@ -65,6 +70,7 @@ public class PlayerSettingsPanel extends JPanel {
 	private static final float ALPHA = 0.4F;
 	
 	private JButton plusKI, minusKI;
+	private ButtonGroup group = new ButtonGroup();
 
 	private JPanel panel;
 	private JPanel panelMid;
@@ -73,6 +79,13 @@ public class PlayerSettingsPanel extends JPanel {
 	private BufferedImage blackBeauty, temp;
 	private BufferedImage brainCrossed;
 	private BufferedImage brain;
+	
+	private JRadioButton attack;
+	private JRadioButton reaction;
+	private JRadioButton defense;
+	private JRadioButton balance1;
+	private JRadioButton balance2;
+	private JRadioButton random;
 
 	/**
 	 * constructor, initializes the lobby
@@ -121,7 +134,6 @@ public class PlayerSettingsPanel extends JPanel {
 		panel.setOpaque(false);
 
 		plusKI = new JButton("Add AI") {
-
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -139,7 +151,6 @@ public class PlayerSettingsPanel extends JPanel {
 		plusKI.setContentAreaFilled(false);
 
 		minusKI = new JButton("Remove AI") {
-
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -206,14 +217,84 @@ public class PlayerSettingsPanel extends JPanel {
 	 */
 	private JPanel middleAreaPanel() {
 		// panelMid = new JPanel(new BorderLayout());
-		panelMid = new JPanel(new FlowLayout());
-		JTextField header = this.createHeader("Statistics: ");
+		JPanel cardpanel = new JPanel(new GridLayout(3,2)){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				Graphics2D h = (Graphics2D) g;
+				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+				h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
+				super.paint(h);
+			}
+		};
+		cardpanel.setOpaque(false);
+		
+		attack = this.cards("Attack");
+		reaction = this.cards("Reaction");
+		defense = this.cards("Defense");
+		balance1= this.cards("Balance 1");
+		balance2 = this.cards("Balance 2");
+		random = this.cards("Random");
+		
+		cardpanel.add(attack);
+		cardpanel.add(reaction);
+		cardpanel.add(defense);
+		cardpanel.add(balance1);
+		cardpanel.add(balance2);
+		cardpanel.add(random);	
+		
+		panelMid = new JPanel();
+		BorderLayout borderlayout = new BorderLayout();
+		borderlayout.setHgap(20);
+		panelMid.setLayout(borderlayout);
+		JTextField header = this.createHeader("Cardsets: ");
 		panelMid.setOpaque(false);
-		panelMid.add(header, BorderLayout.PAGE_START);
-		// panelMid.add(this.statisticsBoardPanel, BorderLayout.CENTER);
-		panelMid.add(Box.createHorizontalStrut(10), BorderLayout.LINE_START);
-		panelMid.add(Box.createHorizontalStrut(10), BorderLayout.LINE_END);
+		panelMid.add(header, BorderLayout.PAGE_START);	
+		panelMid.add(Box.createHorizontalStrut(50), BorderLayout.LINE_START);
+		panelMid.add(Box.createHorizontalStrut(50), BorderLayout.LINE_END);
+		panelMid.add(cardpanel, BorderLayout.CENTER);
 		return panelMid;
+	}
+	
+	/**
+	 * @author jhuhn
+	 * @return an int representation of the selected cardset
+	 */
+	public int getSelection(){		
+		if(attack.isSelected()){
+			System.out.println("1");
+			return 1;
+		}else if(reaction.isSelected()){
+			return 2;
+		}else if((defense.isSelected())){
+			return 3;
+		}else if((balance1.isSelected())){
+			return 4;
+		}else if((balance2.isSelected())){
+			return 5;
+		}else if((random.isSelected())){
+			return 6;
+		}
+		return 6;
+	}
+	
+	private JRadioButton cards(String text){
+		JRadioButton option = new JRadioButton(text){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(blackBeauty, 0, 0, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		option.setOpaque(false);
+		option.setHorizontalAlignment(JRadioButton.CENTER);
+		option.setForeground(Color.WHITE);
+		option.setFont(optionFont);
+		group.add(option);
+		return option;		
 	}
 
 	/**
