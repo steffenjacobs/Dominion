@@ -115,7 +115,7 @@ public class ChatController extends PacketHandler{
 			this.chatID = packetID.getChatroomId();
 			this.colorMap = packetID.getColorMap();
 			System.out.println("received chatID: " + chatID);
-			this.handler.startGame();
+			this.handler.startGame(colorMap);
 			break;
 		default:
 			System.out.println("sth went wrong with received packet");
