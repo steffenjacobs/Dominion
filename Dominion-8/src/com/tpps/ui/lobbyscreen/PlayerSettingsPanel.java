@@ -451,7 +451,8 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-//			DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
+			// DominionController.getInstance().sendAIPacket("AI_" +
+			// System.identityHashCode(e), false);
 		}
 
 		@Override
@@ -465,7 +466,6 @@ public class PlayerSettingsPanel extends JPanel {
 				plusKI.setText("");
 				temp = blackBeauty;
 				blackBeauty = brain;
-
 			}
 
 		}
