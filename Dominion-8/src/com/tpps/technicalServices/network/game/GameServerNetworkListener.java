@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.tpps.application.game.Player;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
@@ -35,7 +36,7 @@ public class GameServerNetworkListener implements NetworkListener {
 	public void onClientDisconnect(int port) {
 		System.out.println("client disconnected");
 		try {
-			this.gameServer.broadcastMessage(new PacketBroadcastLog("INFO: player disconnected."));
+			this.gameServer.broadcastMessage(new PacketBroadcastLog(MsgType.INFO, "player disconnected."));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}

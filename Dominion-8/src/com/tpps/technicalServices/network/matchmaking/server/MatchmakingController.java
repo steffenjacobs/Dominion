@@ -208,13 +208,16 @@ public final class MatchmakingController {
 	/** creates new empty lobbies */
 	private static void updateLobbyCount() {
 		int cntAvailableLobbies = 0;
+		int availableLobbyShould = getPlayers().length / 3;
+		availableLobbyShould = availableLobbyShould < 2 ? 2 : availableLobbyShould;
+
 		for (GameLobby gl : lobbies) {
 			if (gl.isAvailable()) {
 				cntAvailableLobbies++;
 			}
 		}
-		if (cntAvailableLobbies < 2) {
-			for (; cntAvailableLobbies < 2; cntAvailableLobbies++) {
+		if (cntAvailableLobbies < availableLobbyShould) {
+			for (; cntAvailableLobbies < availableLobbyShould; cntAvailableLobbies++) {
 				GameLobby lobby = new GameLobby();
 				lobbies.add(lobby);
 				lobbiesByID.put(lobby.getLobbyID(), lobby);
