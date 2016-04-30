@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.tpps.application.game.Player;
-import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
@@ -94,7 +93,7 @@ public class GameServerNetworkListener implements NetworkListener {
 				this.gameServer.getGameController().setActivePlayer(this.gameServer.getGameController().getRandomPlayer());
 				try {
 					this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
-							this.gameServer.getGameController().getActivePlayerName()));
+							this.gameServer.getGameController().getActivePlayerName(), false));
 					this.gameServer.broadcastMessage(new PacketBroadcastLog(this.gameServer.getGameController().getPlayers().size() + " players left."));
 				} catch (Exception e) {
 					e.printStackTrace();

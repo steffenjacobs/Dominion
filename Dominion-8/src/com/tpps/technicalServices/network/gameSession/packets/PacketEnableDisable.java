@@ -15,18 +15,32 @@ public class PacketEnableDisable extends Packet {
 	private static final long serialVersionUID = 1397382952533953158L;
 	private final int clientId;
 	private final String userName;
+	private final boolean resetGameWindow;
 	/**
 	 * 
 	 * sets the packettype
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketEnableDisable(int clientId, String userName) {		
+	public PacketEnableDisable(int clientId, String userName, boolean resetGameWindow) {		
 		super(PacketType.ENABLE_DISABLE);
 		this.clientId = clientId;
 		this.userName = userName;
+		this.resetGameWindow = resetGameWindow;
 	}
 	
+	/**
+	 * 
+	 * @return if the gameWindow should be reseted
+	 */
+	public boolean resetGameWindow() {
+		return resetGameWindow;
+	}
+	
+	/**
+	 * 
+	 * @return the userName 
+	 */
 	public String getUserName() {
 		return this.userName;
 	}
@@ -45,6 +59,7 @@ public class PacketEnableDisable extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + "- clientId: " + this.clientId + "- username: " + this.userName;
+		return this.getClass().getSimpleName() + "- clientId: " + 
+	this.clientId + "- username: " + this.userName + "- resetGameWindow: " + this.resetGameWindow;
 	}
 }
