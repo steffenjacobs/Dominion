@@ -65,6 +65,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 		this.colorMap = new ConcurrentHashMap<String, Color>();
 	}
 
+	public Color getActivePlayerColor() {
+		return this.colorMap.get(this.server.getGameController().getActivePlayerName());
+	}
 	/**
 	 * checks which packet was sent and reacts on the packet
 	 */
@@ -545,13 +548,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 			/** change LOG PREP TEXT */
 			this.server.broadcastMessage(
-					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.server.getGameController().getActivePlayer().getLogColor()));
-
-			// this.server.broadcastMessage(new
-			// PacketBroadcastLogMultiColor(CollectionsUtil.getPair("----- "),
-			// CollectionsUtil.getPair(this.server.getGameController().getActivePlayerName(),
-			// this.server.getGameController().getActivePlayer().getLogColor()),
-			//		CollectionsUtil.getPair(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n")));
+					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.getActivePlayerColor()));
 		
 		} catch (IOException e) {
 			e.printStackTrace();

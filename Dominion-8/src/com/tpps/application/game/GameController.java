@@ -308,9 +308,9 @@ public class GameController {
 			CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
 			DrawAndShuffle das = this.getActivePlayer().getDeck().refreshCardHand();
 			if (das.wasShuffled()) {
-				this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getActivePlayerName(), " - shuffles deck",this.getActivePlayer().getLogColor()));
+				this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getActivePlayerName(), " - shuffles deck",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 			}
-			this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getActivePlayerName()," - draws " + das.getDrawAmount() + " cards",this.getActivePlayer().getLogColor()));
+			this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getActivePlayerName()," - draws " + das.getDrawAmount() + " cards",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 			this.getActivePlayer().refreshPlayedCardsList();
 		} catch (IOException e) {
 			GameLog.log(MsgType.EXCEPTION, e.getMessage());
@@ -895,7 +895,7 @@ public class GameController {
 				this.activePlayer.incTurnNr();
 				try {
 					this.gameServer.broadcastMessage(
-							new PacketBroadcastLog("----- ", this.activePlayer.getPlayerName(), ": turn " + this.activePlayer.getTurnNr() + " -----", this.activePlayer.getLogColor()));
+							new PacketBroadcastLog("----- ", this.activePlayer.getPlayerName(), ": turn " + this.activePlayer.getTurnNr() + " -----", ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
