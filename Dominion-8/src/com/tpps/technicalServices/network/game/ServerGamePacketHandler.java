@@ -499,7 +499,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 			// hier wurde Nullpointer geworfen?
 			// Color playerColor = this.chatController.getColorMap().get(this.server.getGameController().getActivePlayerName());
 
-			this.server.broadcastMessage(new PacketBroadcastLog(""));
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 			
@@ -511,7 +510,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().endTurn();
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
 					this.server.getGameController().getActivePlayerName()));
-			
+			this.server.broadcastMessage(new PacketBroadcastLog(""));
 			/**
 			 * Lukas Fragen:
 			 * -2. wo loggen bei gain curse? gain Methode im GC? also die "gains Silver" fehlt auch noch.
@@ -538,11 +537,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * 15. if singlecolor works, remove multicolorPacket
 			 * 16. remove cardSSSSS bei 1 card in log messages (ternärer Ausdruck)
 			 * 17. searchFile new PacketBroadcastLog( überprüfen ob das alles auch so gelogt werden soll (zB GameServerNetworkListener)
+			 * 
+			 * 18. @nishit playTreasures nicht mehr klickbar wenn spieler keine geldkarten mehr auf der hand hat
 			 */
 
 			/** change LOG PREP TEXT */
 			this.server.broadcastMessage(
-					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName()," -----\n",this.server.getGameController().getActivePlayer().getLogColor()));
+					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.server.getGameController().getActivePlayer().getLogColor()));
 
 			// this.server.broadcastMessage(new
 			// PacketBroadcastLogMultiColor(CollectionsUtil.getPair("----- "),
