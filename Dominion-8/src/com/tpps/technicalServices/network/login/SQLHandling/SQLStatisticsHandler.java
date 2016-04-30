@@ -401,6 +401,15 @@ public class SQLStatisticsHandler {
 		return stmt.executeQuery();
 	}
 
+	/**
+	 * add an array of last time played stamps to the database
+	 * 
+	 * @author jhuhn
+	 * @param nickname
+	 *            String representation of the account name
+	 * @param playtime
+	 *            long array of the exactly dates the user played
+	 */
 	public static void addPlaytimeArray(String nickname, long[] playtime) {
 		PreparedStatement stmt;
 		String text = "";
@@ -418,6 +427,15 @@ public class SQLStatisticsHandler {
 		}
 	}
 
+	/**
+	 * add an array of last wins and losses to the database
+	 * 
+	 * @author jhuhn
+	 * @param nickname
+	 *            String representation of the account name
+	 * @param winsAndLosses
+	 *            boolean array of the last 10 wins and losses
+	 */
 	public static void addLastWinOrLossArray(String nickname, boolean[] winsAndLosses) {
 		PreparedStatement stmt;
 		String text = "";
@@ -435,6 +453,14 @@ public class SQLStatisticsHandler {
 		}
 	}
 
+	/**
+	 * parses the line of the database column LAST_TIME_PLAYED
+	 * 
+	 * @author jhuhn
+	 * @param line
+	 *            String of LAST_TIME_PLAYED row out of the database
+	 * @return long array of the exactly dates the user played
+	 */
 	public static long[] getPlaytimeDatesParsed(String line) {
 		if (!line.contains("\\|+"))
 			return new long[0];
@@ -446,6 +472,14 @@ public class SQLStatisticsHandler {
 		return dates;
 	}
 
+	/**
+	 * parses the line of the database column LAST_TIME_WINS
+	 * 
+	 * @author jhuhn
+	 * @param line
+	 *            String of LAST_TIME_WINS row out of the database
+	 * @return boolean array of the exactly wins and losses the user played
+	 */
 	public static boolean[] getLastTimeWinsParsed(String line) {
 		if (!line.contains("\\|+"))
 			return new boolean[0];
@@ -464,6 +498,12 @@ public class SQLStatisticsHandler {
 		return winOrLosses;
 	}
 
+	/**
+	 * @author jhuhn
+	 * @param nickname
+	 *            String representation of the account name
+	 * @return long array of the exactly dates the user played
+	 */
 	public static long[] getPlaytimeDatesAsLongArray(String nickname) {
 		try {
 			PreparedStatement stmt = SQLHandler.getConnection()
@@ -483,7 +523,40 @@ public class SQLStatisticsHandler {
 		}
 		return new long[] {};
 	}
+	
+	/**
+	 * @param nickname String representation of the account name
+	 * @return boolean array of the exactly wins and losses the user played
+	 */
+	public static boolean[] getLastWinsAndLossesAsBooleanArray(String nickname){
+		PreparedStatement stmt;
+		try {
+			stmt = SQLHandler.getConnection()
+					.prepareStatement("SELECT LAST_TIME_WINS FROM statistics WHERE nickname = ?");
+			stmt.setString(1, nickname);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			String text = rs.getString("LAST_TIME_PLAYED");
+			//String[] values = text.split("\\|+");
+			boolean[] lastWinsAndLosses = SQLStatisticsHandler.getLastTimeWinsParsed(text);
+			return lastWinsAndLosses;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new boolean[0];
+	}
+	
 
+	/**
+	 * method to insert a new playtime date stamp to db
+	 * 
+	 * @author jhuhn
+	 * @param nickname
+	 *            String representation of the account name
+	 * @param playtime
+	 *            a long value that represents the last playtime
+	 */
 	public static void insertPlaytimeDateToDB(String nickname, long playtime) {
 		try {
 			PreparedStatement stmt = SQLHandler.getConnection()
@@ -507,7 +580,53 @@ public class SQLStatisticsHandler {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	/**
+	 * inserts a last win or loss to the "LAST_TIME_WINS" column for a given
+	 * user
+	 * 
+	 * @author jhuhn
+	 * @param nickname
+	 *            String representation of the account name
+	 * @param winOrLoss
+	 *            true: win, false: loss
+	 */
+	public static void insertPlaytimeDateToDB(String nickname, boolean winOrLoss) {
+		try {
+			PreparedStatement stmt = SQLHandler.getConnection()
+					.prepareStatement("SELECT LAST_TIME_WINS FROM statistics WHERE nickname = ?");
+			stmt.setString(1, nickname);
+			ResultSet rs = stmt.executeQuery();
+			rs.next();
+			String text = rs.getString("LAST_TIME_WINS");
+			System.out.println(text);
+			String[] array = text.split("\\|+");
+			for (int i = 0; i < array.length; i++) {
+				System.out.print(array[i] + " ");
+			}
+			boolean[] newArray = new boolean[10];
+			newArray[0] = winOrLoss;
+			for (int i = 1; i < newArray.length; i++) {
+				newArray[i] = Boolean.valueOf(array[i]);
+			}
+			SQLStatisticsHandler.addLastTimeWinsArray(nickname, newArray);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 
+	/**
+	 * adds an array of last 10 wins or losses to the db for a given user
+	 * 
+	 * @author jhuhn
+	 * @param nickname
+	 *            String representation of the account name
+	 * @param playtime
+	 *            boolean array of the exactly wins and losses the user played
+	 */
 	public static void addLastTimeWinsArray(String nickname, boolean[] playtime) {
 		PreparedStatement stmt;
 		String text = "";
@@ -525,12 +644,18 @@ public class SQLStatisticsHandler {
 		}
 	}
 
+	/**
+	 * testing
+	 * 
+	 * @param args
+	 *            not used
+	 */
 	public static void main(String[] args) {
-		String hostname = "localhost";
-		String port = "3306";
-		String database = "accountmanager";
-		String user = "root";
-		String password = "root";
+//		String hostname = "localhost";
+//		String port = "3306";
+//		String database = "accountmanager";
+//		String user = "root";
+//		String password = "root";
 		SQLHandler.init();
 		SQLHandler.connect();
 		String name = "name";
