@@ -46,7 +46,7 @@ public class GameLobby {
 
 	/** @return whether the game has started yet */
 	public boolean hasStarted() {
-		return this.runningServer == null && this.startTime != 0;
+		return this.runningServer != null && this.startTime != 0;
 	}
 
 	/** sets the instance of the game-server that is running this game */
