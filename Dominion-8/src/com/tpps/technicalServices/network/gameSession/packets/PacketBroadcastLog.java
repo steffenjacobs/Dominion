@@ -54,31 +54,34 @@ public class PacketBroadcastLog extends Packet {
 		this.color = GameLog.getMsgColor();
 	}
 
-	// /**
-	// *
-	// * sets the packettype
-	// *
-	// * @author ladler - Lukas Adler, nwipfler - Nicolas Wipfler
-	// */
-	// public PacketBroadcastLog(MsgType msgType, String msg, Color color) {
-	// super(PacketType.BROADCAST_LOG);
-	// this.msg = msg;
-	// this.msgType = msgType;
-	// this.color = color;
-	// GameLog.setMsgColor(color);
-	// }
+//	 /**
+//	 *
+//	 * sets the packettype
+//	 *
+//	 * @author ladler - Lukas Adler, nwipfler - Nicolas Wipfler
+//	 */
+//	public PacketBroadcastLog(MsgType msgType, String right, Color color) {
+//		super(PacketType.BROADCAST_LOG);
+//		this.left = "";
+//		this.username = "";
+//		this.right = right;
+//		this.msgType = msgType;
+//		this.color = color;
+//	}
 
-	// /**
-	// *
-	// * @param msgType
-	// * @param msg
-	// */
-	// public PacketBroadcastLog(MsgType msgType, String msg) {
-	// super(PacketType.BROADCAST_LOG);
-	// this.msg = msg;
-	// this.msgType = msgType;
-	// this.color = GameLog.getMsgColor();
-	// }
+	/**
+	 *
+	 * @param msgType
+	 * @param msg
+	 */
+	public PacketBroadcastLog(MsgType msgType, String right) {
+		super(PacketType.BROADCAST_LOG);
+		this.left = "";
+		this.username = "";
+		this.right = right;
+		this.msgType = msgType;
+		this.color = GameLog.getMsgColor();
+	}
 
 	public MsgType getMsgType() {
 		return this.msgType;
