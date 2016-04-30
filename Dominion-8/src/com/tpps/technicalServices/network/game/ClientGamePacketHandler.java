@@ -225,7 +225,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 		} else {
 			// this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
-			this.gameWindow.setCaptionTurn(packetEnableDisable.getUserName() + "' turn");
+			this.gameWindow.setCaptionTurn(packetEnableDisable.getUserName() + "'s turn");
 			System.out.println("my gameWindo is disabled");
 		}
 	}
