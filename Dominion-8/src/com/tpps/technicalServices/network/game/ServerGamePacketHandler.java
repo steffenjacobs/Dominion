@@ -501,9 +501,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 	private void nextActivePlayer(int port) {
 		try {
-			// hier wurde Nullpointer geworfen?
-			// Color playerColor = this.chatController.getColorMap().get(this.server.getGameController().getActivePlayerName());
-
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 			
