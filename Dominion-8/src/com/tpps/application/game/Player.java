@@ -24,6 +24,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketDontShowEndR
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendHandCards;
+import com.tpps.technicalServices.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendRevealCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSetAsideDrewCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketStartDiscardMode;
@@ -842,10 +843,7 @@ public class Player {
 			this.getDeck().getCardHand().remove(serverCard);
 		}
 		if (this.reactionMode) {
-			this.gameServer.sendMessage(port, new PacketDontShowEndReactions());
-			setModesFalse();
-			this.gameServer.sendMessage(port, new PacketDisable("wait on reactions"));
-			this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
+			finishReactionModeForThisPlayer();
 		}
 		if (trashFlag) {
 			trashFlag = false;
@@ -853,6 +851,32 @@ public class Player {
 			return null;
 		}
 		return serverCard;
+	}
+
+	private void finishReactionModeForThisPlayer() throws IOException {
+		this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.getPlayedCards())));
+		
+		boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
+
+		if (allReactionCarsPlayedFlag) {
+			this.gameServer.sendMessage(port,
+					new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
+		} else {
+			this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
+		}			
+		
+		
+		this.gameServer.sendMessage(port, new PacketDontShowEndReactions());
+		setModesFalse();
+		
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 	}
 
 	/**

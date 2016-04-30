@@ -452,7 +452,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 				server.sendMessage(port, new PacketEndActionPhase());
 			}
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
-			this.server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(player.getPlayedCards())));
+			
+			if (this.server.getGameController().getPlayerPlayerByPort(port).equals(this.server.getGameController().getActivePlayer())){
+				this.server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(player.getPlayedCards())));
+			}
+			
+			
 			this.server.getGameController().isGameFinished();
 		} else {
 			try {
