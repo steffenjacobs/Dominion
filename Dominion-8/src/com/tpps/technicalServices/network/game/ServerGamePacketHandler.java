@@ -565,9 +565,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 */
 
 			/** change LOG PREP TEXT */
+			// this.server.broadcastMessage(
+			// new PacketBroadcastLog("-----
+			// ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.getActivePlayerColor()));
 			this.server.broadcastMessage(
-					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.getActivePlayerColor()));
-		
+					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.server.getGameController().getActivePlayer().getLogColor()));
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
