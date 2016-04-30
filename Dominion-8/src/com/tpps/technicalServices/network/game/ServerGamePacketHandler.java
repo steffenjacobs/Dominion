@@ -3,10 +3,13 @@ package com.tpps.technicalServices.network.game;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
@@ -54,10 +57,12 @@ import javafx.util.Pair;
 public class ServerGamePacketHandler extends PacketHandler {
 	private GameServer server;
 	ChatController chatController;
+	private ConcurrentHashMap<String, Color> colorMap;
 
 	public void setServer(GameServer server) {
 		this.server = server;
 		chatController = new ChatController(this);
+		this.colorMap = new ConcurrentHashMap<String, Color>();
 	}
 
 	/**
@@ -598,6 +603,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.sendMessage(port, new PacketSendClientId(clientId));
 			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 				new ArtificialIntelligence(player, /* new InetSocketAddress("127.0.0.1" , this.server.getPort()),*/sessionID, this).start();
+				this.colorMap.put(username, new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
 				System.out.println("created a new artificial intelligence");
 			}
 			if (server.getGameController().getPlayers().size() == GameConstant.PLAYERS) {
@@ -627,8 +633,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 * 
 	 * 
 	 * @author jhuhn
+	 * @param colorMap user colors
 	 */
-	public void startGame() {
+	public void startGame(HashMap<String, Color> colorMap) {
+		this.colorMap.putAll(colorMap);
 		server.getGameController().startGame();
 		try {
 			setUpGui();
