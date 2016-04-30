@@ -34,6 +34,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackCards
 import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackThiefCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketReconnect;
 import com.tpps.technicalServices.network.gameSession.packets.PacketRegistratePlayerByServer;
+import com.tpps.technicalServices.network.gameSession.packets.PacketRemoveExtraTable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendActiveButtons;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendBoard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendClientId;
@@ -488,6 +489,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		} else {
 			this.server.sendMessage(port, new PacketSendActiveButtons(true, false, true));
 		}
+		this.server.sendMessage(port, new PacketRemoveExtraTable());
 	}
 	
 	@SuppressWarnings("unused")

@@ -171,6 +171,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case END_TRASH_MODE:
 			this.gameWindow.removeStopTrashButton();
 			break;
+		case REMOVE_EXTRA_TABLE:
+			this.gameWindow.removeTableComponents();
+			break;
 		case SHOW_END_REACTION_MODE:
 			this.gameWindow.addEndReactionModeButton();
 			this.gameWindow.removeEndActionPhaseButton();

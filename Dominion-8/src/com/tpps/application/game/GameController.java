@@ -764,6 +764,7 @@ public class GameController {
 		checkBureaucratFinish();
 
 		try {
+			System.out.println("reaktion beendet gespielte karten");
 			this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
 			this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
 					this.gameServer.getGameController().getActivePlayerName(), false));

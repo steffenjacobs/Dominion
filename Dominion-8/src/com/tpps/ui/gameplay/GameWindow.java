@@ -351,6 +351,7 @@ public class GameWindow extends JFrame {
 //			framework.removeComponent(tableButtons.get(i));
 		}
 		if (table != null) {
+			System.out.println("remove table");
 			framework.removeComponent(table);
 		}
 		extraTableCards = new LinkedList<Card>();
@@ -674,12 +675,10 @@ public class GameWindow extends JFrame {
 	 * clearing the extra table if needed.
 	 * 
 	 */
-	@Deprecated
 	public void removeTableComponents() {
 		framework.removeComponent(table);
 		for (int i = 0; i < extraTableCards.size(); i++) {
 			framework.removeComponent(extraTableCards.get(i));
-			framework.removeComponent(tableButtons.get(i));
 		}
 		framework.removeComponent(table);
 	}
