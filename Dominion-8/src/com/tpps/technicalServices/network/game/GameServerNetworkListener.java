@@ -12,7 +12,7 @@ import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.events.NetworkListener;
 import com.tpps.technicalServices.network.core.packet.Packet;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketGameEnd;
@@ -36,7 +36,7 @@ public class GameServerNetworkListener implements NetworkListener {
 	public void onClientDisconnect(int port) {
 		System.out.println("client disconnected");
 		try {
-			this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor("player disconnected.", GameLog.getMsgColor()));
+			this.gameServer.broadcastMessage(new PacketBroadcastLog("INFO: player disconnected."));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -95,7 +95,7 @@ public class GameServerNetworkListener implements NetworkListener {
 				try {
 					this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
 							this.gameServer.getGameController().getActivePlayerName()));
-					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.gameServer.getGameController().getPlayers().size() + " players left.", GameLog.getMsgColor()));
+					this.gameServer.broadcastMessage(new PacketBroadcastLog(this.gameServer.getGameController().getPlayers().size() + " players left."));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -353,7 +353,9 @@ public class GlobalChatPanel extends JPanel {
 		this.createChatInputPart(timeStamp, whiteColor);
 		this.createChatInputPart(user + ": ", color);
 		this.createChatInputPart(message + "\n", whiteColor);
-
+		//"--- # - turn 1 ---"
+		//"nico"
+		
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {

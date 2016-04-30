@@ -25,7 +25,7 @@ import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.game.TooMuchPlayerException;
 import com.tpps.technicalServices.network.game.WrongSyntaxException;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
@@ -304,11 +304,17 @@ public class GameController {
 	 * calls the refresPlayedCardsList()
 	 */
 	public synchronized void organizePilesAndrefreshCardHand() {
-		CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
-		DrawAndShuffle das = this.getActivePlayer().getDeck().refreshCardHand();
-		if (das.wasShuffled()) GameLog.log(MsgType.GAME, this.getActivePlayerName()+ " - shuffles deck");
-		GameLog.log(MsgType.GAME, this.getActivePlayerName() + " - draws " + das.getDrawAmount() + " cards");
-		this.getActivePlayer().refreshPlayedCardsList();
+		try {
+			CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
+			DrawAndShuffle das = this.getActivePlayer().getDeck().refreshCardHand();
+			if (das.wasShuffled()) {
+				this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getActivePlayerName(), " - shuffles deck",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
+			}
+			this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getActivePlayerName()," - draws " + das.getDrawAmount() + " cards",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
+			this.getActivePlayer().refreshPlayedCardsList();
+		} catch (IOException e) {
+			GameLog.log(MsgType.EXCEPTION, e.getMessage());
+		}
 	}
 	
 	/**
@@ -888,9 +894,8 @@ public class GameController {
 				this.activePlayer = getRandomPlayer();
 				this.activePlayer.incTurnNr();
 				try {
-					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor("----- ", GameLog.getMsgColor()));
-					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.activePlayer.getPlayerName(), this.activePlayer.getLogColor()));
-					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(": turn " + this.activePlayer.getTurnNr() + " -----\n", GameLog.getMsgColor()));
+					this.gameServer.broadcastMessage(
+							new PacketBroadcastLog("----- ", this.activePlayer.getPlayerName(), ": turn " + this.activePlayer.getTurnNr() + " -----", ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

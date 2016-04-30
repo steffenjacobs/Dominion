@@ -3,10 +3,13 @@ package com.tpps.technicalServices.network.game;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
@@ -18,7 +21,7 @@ import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.server.ChatController;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
@@ -54,12 +57,17 @@ import javafx.util.Pair;
 public class ServerGamePacketHandler extends PacketHandler {
 	private GameServer server;
 	ChatController chatController;
+	private ConcurrentHashMap<String, Color> colorMap;
 
 	public void setServer(GameServer server) {
 		this.server = server;
 		chatController = new ChatController(this);
+		this.colorMap = new ConcurrentHashMap<String, Color>();
 	}
 
+	public Color getActivePlayerColor() {
+		return this.colorMap.get(this.server.getGameController().getActivePlayerName());
+	}
 	/**
 	 * checks which packet was sent and reacts on the packet
 	 */
@@ -215,7 +223,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case DISCARD_DECK:
 				this.server.getGameController().getActivePlayer().getDeck().discardDrawPile();
 				break;
-			case BROADCAST_LOG_SINGLE_COLOR:
+			case BROADCAST_LOG:
 				this.server.broadcastMessage(packet);
 				break;
 			case BROADCAST_LOG_MULTI_COLOR:
@@ -505,18 +513,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 	private void nextActivePlayer(int port) {
 		try {
-			Color playerColor = this.chatController.getColorMap().get(this.server.getGameController().getActivePlayerName());
-
-			this.server.broadcastMessage(new PacketBroadcastLogSingleColor("\n", GameLog.getMsgColor()));
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-//			i think it's not used
-//			this.server.sendMessage(port, new PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(), this.server.getGameController().getActivePlayer().getBuys(),
-//					this.server.getGameController().getActivePlayer().getCoins()));
+			
+			// i think it's not used
+			// this.server.sendMessage(port, new
+			// PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(),
+			// this.server.getGameController().getActivePlayer().getBuys(),
+			// this.server.getGameController().getActivePlayer().getCoins()));
 			this.server.getGameController().endTurn();
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
 					this.server.getGameController().getActivePlayerName()));
-			
+			this.server.broadcastMessage(new PacketBroadcastLog(""));
 			/**
 			 * Lukas Fragen:
 			 * -2. wo loggen bei gain curse? gain Methode im GC? also die "gains Silver" fehlt auch noch.
@@ -538,40 +546,31 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * 10. remove line 50 PacketBroadcastLogSingleColor
 			 * 11. update comments in gameLog
 			 * 12. addPlayerAndChooseRandomActivePlayer in GC Z882 mit der schlussendlichen synced. LogMethode abgleichen
+			 * 13. case DRAW_CARD in doACtion bei Player nachschauen mit DrawAndShuffle
+			 * 14. für die init in Deck irgendwo für jeden Player (- shuffles Deck - draws 5 cards) zum prepText appenden
+			 * 15. if singlecolor works, remove multicolorPacket
+			 * 16. remove cardSSSSS bei 1 card in log messages (ternärer Ausdruck)
+			 * 17. searchFile new PacketBroadcastLog( überprüfen ob das alles auch so gelogt werden soll (zB GameServerNetworkListener)
+			 * 
+			 * 18. @nishit playTreasures nicht mehr klickbar wenn spieler keine geldkarten mehr auf der hand hat
 			 */
-			
-			/**
-			 * 1. Thread.sleep bei singleColor probieren (siehe darunter)
-			 * 2. MultiColor anschauen
-			 * */
-//			Thread.sleep(100);
-			this.server.broadcastMessage(new PacketBroadcastLogSingleColor("----- "));
-//			Thread.sleep(100);
-			this.server.broadcastMessage(new PacketBroadcastLogSingleColor(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()));
-//			Thread.sleep(100);
-			this.server.broadcastMessage(new PacketBroadcastLogSingleColor(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n"));
-//			Thread.sleep(100);
-			
-			
-//			this.server.broadcastMessage(new PacketBroadcastLogMultiColor(CollectionsUtil.getPair("----- "),
-//					CollectionsUtil.getPair(this.server.getGameController().getActivePlayerName(), this.server.getGameController().getActivePlayer().getLogColor()),
-//					CollectionsUtil.getPair(": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----\n")));
+
+			/** change LOG PREP TEXT */
+			this.server.broadcastMessage(
+					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.getActivePlayerColor()));
 		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * 
-	 */
+	
 	public void logPrepText() {
 		for (Integer i : GameLog.getPrepText().keySet()) {
 			Pair<String, Color> res = GameLog.getPrepText().get(i);
 			Color c = res.getValue();
 			String s = res.getKey();
 			try {
-				this.server.broadcastMessage(new PacketBroadcastLogSingleColor(s, c));
+				this.server.broadcastMessage(new PacketBroadcastLog(s));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -608,6 +607,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.sendMessage(port, new PacketSendClientId(clientId));
 			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 				new ArtificialIntelligence(player, /* new InetSocketAddress("127.0.0.1" , this.server.getPort()),*/sessionID, this).start();
+				this.colorMap.put(username, new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
 				System.out.println("created a new artificial intelligence");
 			}
 			if (server.getGameController().getPlayers().size() == GameConstant.PLAYERS) {
@@ -637,8 +637,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 * 
 	 * 
 	 * @author jhuhn
+	 * @param colorMap user colors
 	 */
-	public void startGame() {
+	public void startGame(HashMap<String, Color> colorMap) {
+		this.colorMap.putAll(colorMap);
 		server.getGameController().startGame();
 		try {
 			setUpGui();

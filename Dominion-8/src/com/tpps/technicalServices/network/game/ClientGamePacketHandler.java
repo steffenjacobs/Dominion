@@ -9,10 +9,11 @@ import javax.swing.JOptionPane;
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.GameStorageInterface;
 import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
+import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogMultiColor;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
@@ -189,8 +190,18 @@ public class ClientGamePacketHandler extends PacketHandler {
 		// gameGui.disableActionCards();
 		// gameGui.enalbeMoney();
 		// break;
-		case BROADCAST_LOG_SINGLE_COLOR:
-			GameLog.log(((PacketBroadcastLogSingleColor) packet).getMsgType(),((PacketBroadcastLogSingleColor) packet).getMessage(),((PacketBroadcastLogSingleColor) packet).getColor());
+		case BROADCAST_LOG:
+			PacketBroadcastLog pck = (PacketBroadcastLog) packet;
+			
+			String left = pck.getLeft();
+			String username = pck.getUsername();
+			String right = pck.getRight();
+			Color usercolor = pck.getColor();
+			MsgType type = pck.getMsgType();
+
+			GameLog.log(type, left, GameLog.getMsgColor());
+			GameLog.log(type, username, usercolor);
+			GameLog.log(type, right + "\n", GameLog.getMsgColor());
 			break;
 		case BROADCAST_LOG_MULTI_COLOR:
 			for (Pair<String, Color> pair : ((PacketBroadcastLogMultiColor) packet).getPair()) {
