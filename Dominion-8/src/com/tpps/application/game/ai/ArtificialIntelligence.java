@@ -72,7 +72,6 @@ public class ArtificialIntelligence {
 			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
 		} else {
 			System.out.println("AI played 'null' card");
-
 		}
 	}
 
@@ -193,6 +192,24 @@ public class ArtificialIntelligence {
 		 * determineMove() method gets interrupted before something useful is
 		 * computed
 		 */
+		
+		
+		
+		
+		
+		
+		
+		// https://dominionstrategy.com/big-money/
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		getDefaultMove();
 	}
 

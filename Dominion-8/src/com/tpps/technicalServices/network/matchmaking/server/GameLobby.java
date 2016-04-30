@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.tpps.technicalServices.network.game.GameServer;
+
 /**
  * represents a game-lobby with players waiting in it to start the game
  * 
@@ -11,16 +13,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class GameLobby {
 
-	private static SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
-
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 	private static final int MAX_LOBBY_SIZE = 4;
 
-	private int lobbyScore = 0;
+	private final UUID lobbyID;
 
 	private CopyOnWriteArrayList<MPlayer> players = new CopyOnWriteArrayList<>();
-	private long startTime = 0;
+	private int lobbyScore = 0;
 
-	private final UUID lobbyID;
+	private long startTime = 0;
+	private GameServer runningServer;
 
 	/** constructor, generating its unique lobbyID */
 	public GameLobby() {
@@ -42,9 +44,19 @@ public class GameLobby {
 		return this.players.size() == 4;
 	}
 
-	/** @return wether the game has started yet */
+	/** @return whether the game has started yet */
 	public boolean hasStarted() {
-		return this.startTime != 0;
+		return this.runningServer == null && this.startTime != 0;
+	}
+
+	/** sets the instance of the game-server that is running this game */
+	public void setServer(GameServer gs) {
+		this.runningServer = gs;
+	}
+
+	/** @return the instance of the game-server that is running this game */
+	public GameServer getServer() {
+		return this.runningServer;
 	}
 
 	/**
@@ -100,10 +112,9 @@ public class GameLobby {
 		}
 
 		if (aiCounter > 0) {
-			try{
-			this.lobbyScore = this.lobbyScore / (this.getPlayers().size() - aiCounter) * this.getPlayers().size();
-			}
-			catch(ArithmeticException divByZero){
+			try {
+				this.lobbyScore = this.lobbyScore / (this.getPlayers().size() - aiCounter) * this.getPlayers().size();
+			} catch (ArithmeticException divByZero) {
 				this.lobbyScore = 0;
 			}
 		}
@@ -136,9 +147,9 @@ public class GameLobby {
 	public int getLobbyScore() {
 		return lobbyScore;
 	}
-	
-	/**@return whether this lobby could support more players*/
-	public boolean isAvailable(){
+
+	/** @return whether this lobby could support more players */
+	public boolean isAvailable() {
 		return !this.hasStarted() && !this.isFull();
 	}
 

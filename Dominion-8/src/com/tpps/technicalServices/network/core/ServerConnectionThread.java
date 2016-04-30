@@ -87,16 +87,16 @@ public class ServerConnectionThread extends Thread {
 				} catch (IOException e) {
 					parent.getHandler().output("Connection Lost with " + this.clientSocket.getInetAddress() + ":"
 							+ this.clientSocket.getPort());
-					parent.removeClientThread(this.clientSocket.getPort());
 					parent.getListenerManager().fireDisconnectEvent(this.clientSocket.getPort());
+					parent.removeClientThread(this.clientSocket.getPort());
 					interrupt();
 				}
 			}
 		} catch (IOException e) {
 			parent.getHandler().output(
 					"Connection Lost with " + this.clientSocket.getInetAddress() + ":" + this.clientSocket.getPort());
-			parent.removeClientThread(this.clientSocket.getPort());
 			parent.getListenerManager().fireDisconnectEvent(this.clientSocket.getPort());
+			parent.removeClientThread(this.clientSocket.getPort());
 			interrupt();
 		}
 

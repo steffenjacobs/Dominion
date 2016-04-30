@@ -49,6 +49,12 @@ public class LoginGUIController{
 		createaccount = new CreateAccount(this);
 	}
 	
+	/**
+	 * cerates an account
+	 * @param username String representation of the username
+	 * @param plaintext String representation of the password
+	 * @param email String representation of the email
+	 */
 	public void createAccountWithServer(String username, String plaintext, String email){		
 		loginclient.handleAccountCreation(username, plaintext, email);
 	}
@@ -95,14 +101,19 @@ public class LoginGUIController{
 		}
 	}
 	
-	public static void main(String[] args) {
-		new LoginGUIController();
-	}
 	
+	/**
+	 * @author jhuhn
+	 * @return the loginclient instance
+	 */
 	public LoginClient getLoginclient() {
 		return loginclient;
 	}
 	
+	/**
+	 * @author jhuhn
+	 * @return the uuid of the session
+	 */
 	public UUID getUUID(){
 		return this.loginclient.getSessionid();
 	}

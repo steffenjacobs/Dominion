@@ -163,9 +163,9 @@ public class ClientConnectionThread extends Thread {
 				outStream.flush();
 				countSent++;
 			} catch (SocketException | NullPointerException e) {
-				parent.setDisconnected();
 				GameLog.log(MsgType.NETWORK_ERROR, "Connection to Server lost! Reconnecting...");
 				parent.getListenerManager().fireDisconnectEvent(this.getRemotePort());
+				parent.setDisconnected();
 				parent.connectAndLoop(true);
 			}
 		} else {

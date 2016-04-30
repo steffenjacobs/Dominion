@@ -21,6 +21,7 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.GameServer;
 import com.tpps.technicalServices.network.gameSession.packets.PacketRegistratePlayerByServer;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketGameEnd;
 
 /**
  * this represents the main controller managing all the lobbies and putting the
@@ -113,7 +114,8 @@ public final class MatchmakingController {
 				exec.submit(() -> {
 					GameLog.log(MsgType.INFO, "Started GameServer for lobby " + lobby.getLobbyID());
 					try {
-						new GameServer(freePort);
+						GameServer gs = new GameServer(freePort);
+						lobby.setServer(gs);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -314,11 +316,11 @@ public final class MatchmakingController {
 	 * @param players
 	 *            all participants in the game that stayed until it ended
 	 */
-	public static void onGameEnd(String winner, String[] players) {
-		GameLobby lobby = lobbiesByPlayer.get(winner);
-		for (String p : players) {
+	public static void onGameEnd(PacketGameEnd endPacket) {
+		GameLobby lobby = lobbiesByPlayer.get(endPacket.getWinner());
+		for (String p : endPacket.getPlayers()) {
 			SQLStatisticsHandler.addOverallPlaytime(p, System.currentTimeMillis() - lobby.getStartTime());
-			if (!p.equals(winner)) {
+			if (!p.equals(endPacket.getWinner())) {
 				SQLStatisticsHandler.addWinOrLoss(p, false);
 
 			}
@@ -326,7 +328,12 @@ public final class MatchmakingController {
 			int port = connectedPortsByPlayer.get(player);
 			MatchmakingServer.getInstance().disconnect(port);
 		}
-		SQLStatisticsHandler.addWinOrLoss(winner, true);
+		SQLStatisticsHandler.addWinOrLoss(endPacket.getWinner(), true);
+
+		lobby.getServer().stopSrv();
+
+		lobbiesByID.remove(lobby.getLobbyID());
+		lobbies.remove(lobby);
 	}
 
 	/** @return a readable representation of all active lobbies */

@@ -42,7 +42,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 	private GameStorageInterface gameStorageInterface;
 
 	@Override
-	public void handleReceivedPacket(int port, Packet packet) {
+	public synchronized void handleReceivedPacket(int port, Packet packet) {
 		if (packet == null) {
 			super.output("<- Empty Packet from (" + port + ")");
 			return;

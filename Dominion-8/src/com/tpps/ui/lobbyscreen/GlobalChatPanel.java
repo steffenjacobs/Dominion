@@ -62,6 +62,10 @@ public class GlobalChatPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static final Color ownColor = new Color(0, 255, 0);
+	/**
+	 * just a simpledateformat instnce to add a timestamp, when a chatmessage
+	 * receives
+	 */
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]: ");
 	private static final Color whiteColor = new Color(255, 255, 255);
 
@@ -415,6 +419,10 @@ public class GlobalChatPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * @author jhuhn
+	 * @return the backButton instance
+	 */
 	public BackButton getBackButton() {
 		return backButton;
 	}
