@@ -35,7 +35,7 @@ import com.tpps.ui.statisticsscreen.StatisticsBoard;
  * 
  * @author Steffen Jacobs, Johannes Huhn
  */
-public final class aaa {
+public final class DominionController {
 
 	private static DominionController instance;
 	private UUID lobbyID;
