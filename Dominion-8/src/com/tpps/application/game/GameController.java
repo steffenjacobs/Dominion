@@ -341,12 +341,13 @@ public class GameController {
 				player.setDiscardOrTrashAction(CardAction.DISCARD_CARD, player.getDeck().getCardHand().size() - Integer.parseInt(value));
 
 				player.setReactionMode();
-				try {
-					this.gameServer.broadcastMessage(player.getPort(), new PacketEnableOthers(this.activePlayer.getClientID()));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				
 			}
+		}
+		try {
+			this.gameServer.broadcastMessage(new PacketEnableOthers(this.activePlayer.getClientID()));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -764,7 +765,7 @@ public class GameController {
 		checkBureaucratFinish();
 
 		try {
-			System.out.println("reaktion beendet gespielte karten");
+			System.out.println("reaktion beendet gespielte karten" + Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));
 			this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
 			this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
 					this.gameServer.getGameController().getActivePlayerName(), false));
