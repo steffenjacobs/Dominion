@@ -696,7 +696,7 @@ public class Player {
 					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - shuffles deck\n"));
 				}
 				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.getPlayerName(), this.getLogColor()));
-				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - draws " + das.getDrawAmount() + " cards"));
+				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - draws " + das.getDrawAmount() + " cards\n"));
 				break;
 			case DRAW_CARD_UNTIL:
 				String[] values = value.split("_");

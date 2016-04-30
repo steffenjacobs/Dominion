@@ -309,10 +309,10 @@ public class GameController {
 			DrawAndShuffle das = this.getActivePlayer().getDeck().refreshCardHand();
 			if (das.wasShuffled()) {
 				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.getActivePlayerName(), this.getActivePlayer().getLogColor()));
-				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - shuffles deck"));
+				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - shuffles deck\n"));
 			}
 			this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.getActivePlayerName(), this.getActivePlayer().getLogColor()));
-			this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - draws " + das.getDrawAmount() + " cards"));
+			this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - draws " + das.getDrawAmount() + " cards\n"));
 			this.getActivePlayer().refreshPlayedCardsList();
 		} catch (IOException e) {
 			GameLog.log(MsgType.EXCEPTION, e.getMessage());
