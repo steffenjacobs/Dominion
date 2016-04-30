@@ -674,7 +674,7 @@ public class GameWindow extends JFrame {
 	 * clearing the extra table if needed.
 	 * 
 	 */
-
+	@Deprecated
 	public void removeTableComponents() {
 		framework.removeComponent(table);
 		for (int i = 0; i < extraTableCards.size(); i++) {
