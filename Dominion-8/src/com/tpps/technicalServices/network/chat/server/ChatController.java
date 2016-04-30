@@ -30,6 +30,8 @@ public class ChatController extends PacketHandler{
 	 * initializes the chatcontroller class
 	 * 
 	 * @author jhuhn
+	 * @param handler
+	 *            the servergamepackethandler instance to start the match
 	 */
 	public ChatController(ServerGamePacketHandler handler){
 		this.handler = handler;
