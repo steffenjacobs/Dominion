@@ -11,6 +11,7 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.game.card.Tuple;
+import com.tpps.technicalServices.logger.DrawAndShuffle;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
@@ -689,7 +690,13 @@ public class Player {
 				this.coins += Integer.parseInt(value);
 				break;
 			case DRAW_CARD:
-				this.getDeck().draw(Integer.parseInt(value));
+				DrawAndShuffle das = this.getDeck().draw(Integer.parseInt(value));
+				if (das.wasShuffled()) {
+					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.getPlayerName(), this.getLogColor()));
+					this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - shuffles deck\n"));
+				}
+				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(this.getPlayerName(), this.getLogColor()));
+				this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor(" - draws " + das.getDrawAmount() + " cards"));
 				break;
 			case DRAW_CARD_UNTIL:
 				String[] values = value.split("_");

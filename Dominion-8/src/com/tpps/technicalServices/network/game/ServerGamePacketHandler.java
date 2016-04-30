@@ -531,6 +531,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * 10. remove line 50 PacketBroadcastLogSingleColor
 			 * 11. update comments in gameLog
 			 * 12. addPlayerAndChooseRandomActivePlayer in GC Z882 mit der schlussendlichen synced. LogMethode abgleichen
+			 * 13. case DRAW_CARD in doACtion bei Player nachschauen mit DrawAndShuffle
+			 * 14. für die init in Deck irgendwo für jeden Player (- shuffles Deck - draws 5 cards) zum prepText appenden
 			 */
 			
 			/**

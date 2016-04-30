@@ -126,7 +126,7 @@ public class PlayerSettingsPanel extends JPanel {
 			public void paint(Graphics g) {
 				Graphics2D h = (Graphics2D) g;
 				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
+				h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
 				super.paint(h);
 			}
 		};
@@ -143,7 +143,7 @@ public class PlayerSettingsPanel extends JPanel {
 			public void paint(Graphics g) {
 				Graphics2D h = (Graphics2D) g;
 				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				h.drawImage(blackBeauty, 0, 0,this.getWidth(), this.getHeight(), null);
+				h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
 				super.paint(h);
 			}
 		};
@@ -294,13 +294,10 @@ public class PlayerSettingsPanel extends JPanel {
 	 */
 	public void initOriginalBackgroundImages() {
 		try {
-			this.originalImages[0] = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/spring.jpg"));
-			this.originalImages[1] = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/summer.jpg"));
+			this.originalImages[0] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/spring.jpg"));
+			this.originalImages[1] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/summer.jpg"));
 			this.originalImages[2] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/fall.jpg"));
-			this.originalImages[3] = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/winter.jpg"));
+			this.originalImages[3] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/winter.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -327,8 +324,7 @@ public class PlayerSettingsPanel extends JPanel {
 		try {
 			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
 			this.brain = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/brain.png"));
-			this.brainCrossed = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/braincrossed.png"));
+			this.brainCrossed = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/braincrossed.png"));
 			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -455,55 +451,44 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// TODO Auto-generated method stub
-			// ??
-			// ArtificialIntelligence ai1 = new ArtificialIntelligence();
-			DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
-
+//			DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			if(e.getSource().equals(minusKi)){
+			if (e.getSource().equals(minusKi)) {
 				minusKi.setText("");
-				temp=blackBeauty;
+				temp = blackBeauty;
 				blackBeauty = brainCrossed;
 			}
-			if(e.getSource().equals(plusKI)){
+			if (e.getSource().equals(plusKI)) {
 				plusKI.setText("");
-				temp=blackBeauty;
+				temp = blackBeauty;
 				blackBeauty = brain;
 
 			}
-			
+
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			if(e.getSource().equals(minusKi)){
+			if (e.getSource().equals(minusKi)) {
 				blackBeauty = temp;
 				minusKi.setText("- KI");
 			}
-			if(e.getSource().equals(plusKI)){
+			if (e.getSource().equals(plusKI)) {
 				blackBeauty = temp;
 				plusKI.setText("+ KI");
 			}
-
 		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-			// ??
-			// ArtificialIntelligence ai1 = new ArtificialIntelligence();
 			DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
-
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 	}
 }
