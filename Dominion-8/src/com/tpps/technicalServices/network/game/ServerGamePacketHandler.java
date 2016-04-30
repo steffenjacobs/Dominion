@@ -237,7 +237,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			ie.printStackTrace();
 		}
 		
-		if (activePlayer != null && activePlayer.equals(this.server.getGameController().getActivePlayer())) {
+		if (activePlayer != null && 
+				this.server.getGameController().getPlayerPlayerByPort(port).equals(this.server.getGameController().getActivePlayer()) &&
+				activePlayer.equals(this.server.getGameController().getActivePlayer())) {
 			try {
 				if (this.server.getGameController().allReactionCardsPlayed()) {
 					this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
@@ -246,6 +248,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}else if (this.server.getGameController().getPlayerPlayerByPort(port).isReactionMode()
+				&& this.server.getGameController().getPlayerPlayerByPort(port).isDiscardMode()) {
+				try {
+					this.server.sendMessage(port, new PacketEnable("react"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 		}
 
 	}
