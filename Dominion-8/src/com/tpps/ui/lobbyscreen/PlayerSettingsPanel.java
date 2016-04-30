@@ -496,7 +496,7 @@ public class PlayerSettingsPanel extends JPanel {
 			// TODO Auto-generated method stub
 			// ??
 			// ArtificialIntelligence ai1 = new ArtificialIntelligence();
-			DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
+//			DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
 
 		}
 
