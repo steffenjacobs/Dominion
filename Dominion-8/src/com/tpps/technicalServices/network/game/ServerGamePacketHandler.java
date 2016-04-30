@@ -356,10 +356,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 		System.out.println(server.getGameController().getGamePhase());
 
 		Player player = this.server.getGameController().getClientById(clientID);
-		if (!player.equals(this.server.getGameController().getActivePlayer())){
-			System.out.println("nicht der aktive Player");
-			return;
-		}
 
 		if (!player.playsReactionCard() && (player.isDiscardMode() || player.isTrashMode())) {
 			System.out.println("im handler discard mode set");
