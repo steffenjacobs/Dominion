@@ -79,7 +79,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			return;
 		}
 		
-		Player activePlayer = this.server.getGameController().getActivePlayer();
+		Player refActivePlayer = this.server.getGameController().getActivePlayer();
 		
 		try {
 			switch (packet.getType()) {
@@ -106,7 +106,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 					updatePortOfPlayer(port, packetReconnect);
 					this.server.getDisconnectedUser().remove(this.server.getGameController().getPlayerByUserName(packetReconnect.getUsername()));
 					server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
-							this.server.getGameController().getActivePlayerName()));
+							this.server.getGameController().getActivePlayerName(), false));
 				} else {
 					this.server.disconnect(port);
 				}
@@ -237,9 +237,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			ie.printStackTrace();
 		}
 		
-		if (activePlayer != null && 
+		if (refActivePlayer != null && 
 				this.server.getGameController().getPlayerPlayerByPort(port).equals(this.server.getGameController().getActivePlayer()) &&
-				activePlayer.equals(this.server.getGameController().getActivePlayer())) {
+				refActivePlayer.equals(this.server.getGameController().getActivePlayer())) {
 			try {
 				if (this.server.getGameController().allReactionCardsPlayed()) {
 					this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
@@ -272,7 +272,15 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void reactionFinishedTriggerdThroughSpy(Player player1) throws IOException {
 		if (this.server.getGameController().getActivePlayer().isSpy()) {
 			player1.setReactionModeFalse();
-			this.server.sendMessage(player1.getPort(), new PacketDisable("wait on reaction"));
+			
+			boolean allReactionCarsPlayedFlag = this.server.getGameController().allReactionCardsPlayed();
+			
+			if (allReactionCarsPlayedFlag) {
+				this.server.sendMessage(player1.getPort(), new PacketDisable(
+						this.server.getGameController().getActivePlayerName() + "'s turn"));
+			}else {
+				this.server.sendMessage(player1.getPort(), new PacketDisable("wait on reaction"));
+			}
 
 			this.server.getGameController().reactOnSpy(player1);
 			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
@@ -523,7 +531,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			// this.server.getGameController().getActivePlayer().getCoins()));
 			this.server.getGameController().endTurn();
 			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
-					this.server.getGameController().getActivePlayerName()));
+					this.server.getGameController().getActivePlayerName(), true));
 			this.server.broadcastMessage(new PacketBroadcastLog(""));
 			/**
 			 * Lukas Fragen:

@@ -766,7 +766,7 @@ public class GameController {
 		try {
 			this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
 			this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
-					this.gameServer.getGameController().getActivePlayerName()));
+					this.gameServer.getGameController().getActivePlayerName(), false));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
