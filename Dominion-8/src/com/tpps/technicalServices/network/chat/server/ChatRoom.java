@@ -1,6 +1,5 @@
 package com.tpps.technicalServices.network.chat.server;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
