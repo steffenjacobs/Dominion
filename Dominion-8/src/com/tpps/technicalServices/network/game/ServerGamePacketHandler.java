@@ -18,7 +18,6 @@ import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.server.ChatController;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogMultiColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLogSingleColor;
 import com.tpps.technicalServices.network.gameSession.packets.PacketClientShouldDisconect;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
@@ -498,7 +497,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void nextActivePlayer(int port) {
 		try {
 			// hier wurde Nullpointer geworfen?
-			Color playerColor = this.chatController.getColorMap().get(this.server.getGameController().getActivePlayerName());
+			// Color playerColor = this.chatController.getColorMap().get(this.server.getGameController().getActivePlayerName());
 
 			this.server.broadcastMessage(new PacketBroadcastLogSingleColor("\n", GameLog.getMsgColor()));
 			this.server.getGameController().organizePilesAndrefreshCardHand();
