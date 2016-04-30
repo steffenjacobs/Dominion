@@ -560,12 +560,16 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * 17. searchFile new PacketBroadcastLog( überprüfen ob das alles auch so gelogt werden soll (zB GameServerNetworkListener)
 			 * 
 			 * 18. @nishit playTreasures nicht mehr klickbar wenn spieler keine geldkarten mehr auf der hand hat
+			 * 19. @nishit tried to fix Add/Remove AI Button with horrible attempt, but didn't work
 			 */
 
 			/** change LOG PREP TEXT */
+			// this.server.broadcastMessage(
+			// new PacketBroadcastLog("-----
+			// ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.getActivePlayerColor()));
 			this.server.broadcastMessage(
-					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.getActivePlayerColor()));
-		
+					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.server.getGameController().getActivePlayer().getLogColor()));
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
