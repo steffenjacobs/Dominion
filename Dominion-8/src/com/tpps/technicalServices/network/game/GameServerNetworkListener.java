@@ -36,7 +36,7 @@ public class GameServerNetworkListener implements NetworkListener {
 	public void onClientDisconnect(int port) {
 		System.out.println("client disconnected");
 		try {
-			this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor("player disconnected.", GameLog.getMsgColor()));
+			this.gameServer.broadcastMessage(new PacketBroadcastLogSingleColor("INFO: player disconnected.\n"));
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
