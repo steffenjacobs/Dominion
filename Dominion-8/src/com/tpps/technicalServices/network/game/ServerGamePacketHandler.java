@@ -34,7 +34,6 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackCards
 import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackThiefCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketReconnect;
 import com.tpps.technicalServices.network.gameSession.packets.PacketRegistratePlayerByServer;
-import com.tpps.technicalServices.network.gameSession.packets.PacketRemoveExtraTable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendActiveButtons;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendBoard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendClientId;
@@ -149,7 +148,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				reactivePlayer.setSpyFalse();
 				this.server.getGameController().getSpyList().remove(reactivePlayer);
 				System.out.println("spyList size take cards: " + this.server.getGameController().getSpyList().size());
-				this.server.sendMessage(port, new PacketRemoveExtraTable());
+//				this.server.sendMessage(port, new PacketRemoveExtraTable());
 				if (!this.server.getGameController().getSpyList().isEmpty()) {
 					try {
 						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
@@ -172,7 +171,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				reactivePlayer.putBackRevealedCardsSetRevealModeFalse();
 				reactivePlayer.setSpyFalse();
 				this.server.getGameController().getSpyList().remove(reactivePlayer);
-				this.server.sendMessage(port, new PacketRemoveExtraTable());
+//				this.server.sendMessage(port, new PacketRemoveExtraTable());
 				if (!this.server.getGameController().getSpyList().isEmpty()) {
 					try {
 						server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketTakeCards(this.server.getGameController().getActivePlayer().getClientID()));
@@ -349,11 +348,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 			System.out.println("discardPile size danach: " + player.getDeck().getDiscardPile().size());
 			player.resetTemporaryTrashPile();
 		}
-		try {
-			this.server.sendMessage(port, new PacketRemoveExtraTable());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			this.server.sendMessage(port, new PacketRemoveExtraTable());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	private void takeThiefCards(int port) {
@@ -366,11 +365,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 			System.out.println("discardPile size danach: " + this.server.getGameController().getActivePlayer().getDeck().getDiscardPile().size());
 			player.resetTemporaryTrashPile();
 		}
-		try {
-			this.server.sendMessage(port, new PacketRemoveExtraTable());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			this.server.sendMessage(port, new PacketRemoveExtraTable());
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
 	}
 
@@ -404,7 +403,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				CollectionsUtil.appendListToList(reactivePlayer.getRevealList(), reactivePlayer.getDeck().getDiscardPile());
 				this.server.getGameController().getThiefList().remove(reactivePlayer);
 				reactivePlayer.resetThiefMode();
-				this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketRemoveExtraTable());
+//				this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketRemoveExtraTable());
 				if (!this.server.getGameController().getThiefList().isEmpty()) {
 					System.out.println("new Reactive player");
 					reactivePlayer = this.server.getGameController().getThiefList().get(0);

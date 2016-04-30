@@ -346,6 +346,17 @@ public class GameWindow extends JFrame {
 	 */
 
 	public void extraTable(HashMap<String, SerializedCard> cards) {
+		for (int i = 0; i < extraTableCards.size(); i++) {
+			framework.removeComponent(extraTableCards.get(i));
+//			framework.removeComponent(tableButtons.get(i));
+		}
+		if (table != null) {
+			framework.removeComponent(table);
+		}
+		extraTableCards = new LinkedList<Card>();
+		
+		
+		
 		table = new GameBackground(0.31, 0.01, 0.38, 0.38, 15, tableImage, framework);
 		framework.addComponent(table);
 
