@@ -223,6 +223,10 @@ public final class DominionController {
 		this.matchmaker = new Matchmaker();
 		GameLog.log(MsgType.INFO, "Username: " + this.username);
 	}
+	
+	public Matchmaker getMatchmaker(){
+		return this.matchmaker;
+	}
 
 	/**
 	 * @author jhuhn

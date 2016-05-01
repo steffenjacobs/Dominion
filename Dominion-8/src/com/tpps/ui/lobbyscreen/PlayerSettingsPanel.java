@@ -27,7 +27,6 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -85,12 +84,12 @@ public class PlayerSettingsPanel extends JPanel {
 	private JPanel panelWest;
 	private JPanel panelEast;
 	private BufferedImage blackBeauty;
-	
+
 	private JScrollPane midScroller;
 	private JPanel bottomAreaPanel;
-	
+
 	private StartButton startButton;
-	
+
 	// private BufferedImage brainCrossed;
 	// private BufferedImage brain;
 
@@ -107,9 +106,9 @@ public class PlayerSettingsPanel extends JPanel {
 		this.setLayout(new GridLayout(3, 1, 0, SPACE_PANEL_TO_PANEL));
 
 		this.add(this.upperAreaPanel());
-//		this.midScroller = this.middleAreaPanel();
-//		this.add(midScroller);
-//		this.add(this.bottomAreaPanel());
+		// this.midScroller = this.middleAreaPanel();
+		// this.add(midScroller);
+		// this.add(this.bottomAreaPanel());
 		this.bottomAreaPanel = this.bottomAreaPanel();
 
 		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
@@ -176,13 +175,12 @@ public class PlayerSettingsPanel extends JPanel {
 		minusKI.setBorderPainted(true);
 		minusKI.setContentAreaFilled(false);
 
-		gbc.insets = new Insets(SPACE_PANEL_TO_PANEL, H_SPACE_EDGE_TO_FIRSTPANEL, 0, VERTICAL_GAP_KI);		
+		gbc.insets = new Insets(SPACE_PANEL_TO_PANEL, H_SPACE_EDGE_TO_FIRSTPANEL, 0, VERTICAL_GAP_KI);
 		gbc.ipady = WEIGHT_BUTTON_KI;
 		gbc.ipadx = WEIGHT_BUTTON_KI;
 		this.startButton = new StartButton();
 		panelEast.add(this.startButton, gbc);
 		panelEast.setOpaque(false);
-		
 
 		gbc.insets = new Insets(SPACE_PANEL_TO_PANEL, VERTICAL_GAP_KI, 0, H_SPACE_EDGE_TO_FIRSTPANEL);
 		gbc.gridy = 0;
@@ -224,10 +222,10 @@ public class PlayerSettingsPanel extends JPanel {
 		minusKI.addMouseListener(new KiListener());
 		return panel;
 	}
-	
-	private class StartButton extends JButton implements MouseListener{
+
+	private class StartButton extends JButton implements MouseListener {
 		private static final long serialVersionUID = 1L;
-		
+
 		public StartButton() {
 			this.setText("Start");
 			this.setOpaque(false);
@@ -237,7 +235,7 @@ public class PlayerSettingsPanel extends JPanel {
 			this.setHorizontalTextPosition(SwingConstants.CENTER);
 			this.addMouseListener(this);
 		}
-		
+
 		@Override
 		public void paint(Graphics g) {
 			Graphics2D h = (Graphics2D) g;
@@ -245,7 +243,6 @@ public class PlayerSettingsPanel extends JPanel {
 			h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
 			super.paint(h);
 		}
-		
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
@@ -253,28 +250,40 @@ public class PlayerSettingsPanel extends JPanel {
 		}
 
 		@Override
-		public void mouseEntered(MouseEvent e) { }
+		public void mouseEntered(MouseEvent e) {
+		}
 
 		@Override
-		public void mouseExited(MouseEvent e) { }
+		public void mouseExited(MouseEvent e) {
+		}
 
 		@Override
-		public void mousePressed(MouseEvent e) { }
+		public void mousePressed(MouseEvent e) {
+		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO HALLO STEFFEN 
-			System.out.println("HALLO STEFFEN LULULULUL");
+			String[] selCards = new String[cardNamesSelected.size()];
+			cardNamesSelected.toArray(selCards);
+
+			try {
+				DominionController.getInstance().getMatchmaker().sendStartPacket(
+						DominionController.getInstance().getUsername(), DominionController.getInstance().getSessionID(),
+						DominionController.getInstance().getLobbyID(), selCards);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			System.out.println("Starting game...");
 		}
-		
+
 	}
-	
-	public void setStartButtonEnable(boolean enable){
+
+	public void setStartButtonEnable(boolean enable) {
 		this.startButton.setEnabled(enable);
 	}
-	
-	public PlayerSettingsPanel updateCards(){
-		if(this.midScroller!=null){
+
+	public PlayerSettingsPanel updateCards() {
+		if (this.midScroller != null) {
 			this.remove(midScroller);
 			this.remove(bottomAreaPanel);
 		}
@@ -594,10 +603,10 @@ public class PlayerSettingsPanel extends JPanel {
 	 */
 	public JTextField createHeader(String text) {
 		JTextField header = new JTextField(text);
-		
+
 		@SuppressWarnings("unchecked")
 		Map<TextAttribute, Integer> attributes = (Map<TextAttribute, Integer>) head.getAttributes();
-		
+
 		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 		header.setFont(head.deriveFont(attributes));
 
@@ -679,8 +688,10 @@ public class PlayerSettingsPanel extends JPanel {
 	/**
 	 * changes the alpha value of a new BufferedImage
 	 * 
-	 * @param image the image to edit
-	 * @param alpha the new alpha value
+	 * @param image
+	 *            the image to edit
+	 * @param alpha
+	 *            the new alpha value
 	 */
 	protected static void setAlpha(BufferedImage image, float alpha) {
 		image = (BufferedImage) GraphicsUtil.setAlpha(image, alpha);
@@ -733,16 +744,18 @@ public class PlayerSettingsPanel extends JPanel {
 		public void mousePressed(MouseEvent e) {
 		}
 
-//		@Override
-//		public void mouseReleased(MouseEvent e) {
-//			if (e.getSource() == plusKI) {
-//				aiNames.add("" + System.identityHashCode(e));
-//				DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
-//			} else if (e.getSource() == minusKI && aiNames.size() > 0) {
-//				DominionController.getInstance().sendAIPacket("AI_" + aiNames.remove(aiNames.size() - 1), true);
-//			}
-//		}
-		
+		// @Override
+		// public void mouseReleased(MouseEvent e) {
+		// if (e.getSource() == plusKI) {
+		// aiNames.add("" + System.identityHashCode(e));
+		// DominionController.getInstance().sendAIPacket("AI_" +
+		// System.identityHashCode(e), false);
+		// } else if (e.getSource() == minusKI && aiNames.size() > 0) {
+		// DominionController.getInstance().sendAIPacket("AI_" +
+		// aiNames.remove(aiNames.size() - 1), true);
+		// }
+		// }
+
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			if (e.getSource() == plusKI) {
