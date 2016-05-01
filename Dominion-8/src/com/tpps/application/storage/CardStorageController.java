@@ -32,7 +32,7 @@ public class CardStorageController {
 	 */
 	public CardStorageController() {
 		this.storageFile = DEFAULT_STORAGE_FILE;
-		GameLog.log(MsgType.INIT, "CardStorageController");
+//		GameLog.log(MsgType.INIT, "CardStorageController");
 	}
 
 	/**

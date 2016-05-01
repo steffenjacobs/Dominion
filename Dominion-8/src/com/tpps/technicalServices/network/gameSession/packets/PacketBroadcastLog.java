@@ -8,10 +8,9 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
 /**
- * This packet is send from a server to the client every time there are already
- * too much player on the server
+ * This packet is send from a server to the client to broadcast a Log message
  * 
- * @author ladler - Lukas Adler
+ * @author ladler - Lukas Adler, nwipfler - Nicolas Wipfler
  */
 public class PacketBroadcastLog extends Packet {
 
@@ -21,6 +20,8 @@ public class PacketBroadcastLog extends Packet {
 	private final String right;
 	private final MsgType msgType;
 	private final Color color;
+
+	private final int logNr;
 
 	/***
 	 * this will be used in most cases
@@ -37,6 +38,7 @@ public class PacketBroadcastLog extends Packet {
 		this.right = right;
 		this.msgType = MsgType.GAME;
 		this.color = color;
+		this.logNr = GameLog.getCount();
 	}
 
 	/**
@@ -52,22 +54,24 @@ public class PacketBroadcastLog extends Packet {
 		this.right = right;
 		this.msgType = MsgType.GAME;
 		this.color = GameLog.getMsgColor();
+		this.logNr = GameLog.getCount();
 	}
 
-//	 /**
-//	 *
-//	 * sets the packettype
-//	 *
-//	 * @author ladler - Lukas Adler, nwipfler - Nicolas Wipfler
-//	 */
-//	public PacketBroadcastLog(MsgType msgType, String right, Color color) {
-//		super(PacketType.BROADCAST_LOG);
-//		this.left = "";
-//		this.username = "";
-//		this.right = right;
-//		this.msgType = msgType;
-//		this.color = color;
-//	}
+	// /**
+	// *
+	// * sets the packettype
+	// *
+	// * @author ladler - Lukas Adler, nwipfler - Nicolas Wipfler
+	// */
+	// public PacketBroadcastLog(MsgType msgType, String right, Color color) {
+	// super(PacketType.BROADCAST_LOG);
+	// this.left = "";
+	// this.username = "";
+	// this.right = right;
+	// this.msgType = msgType;
+	// this.color = color;
+	// this.logNr = GameLog.getCount();
+	// }
 
 	/**
 	 *
@@ -81,6 +85,7 @@ public class PacketBroadcastLog extends Packet {
 		this.right = right;
 		this.msgType = msgType;
 		this.color = GameLog.getMsgColor();
+		this.logNr = GameLog.getCount();
 	}
 
 	public MsgType getMsgType() {
@@ -101,6 +106,10 @@ public class PacketBroadcastLog extends Packet {
 
 	public Color getColor() {
 		return this.color;
+	}
+
+	public int getLogNr() {
+		return this.logNr;
 	}
 
 	/**

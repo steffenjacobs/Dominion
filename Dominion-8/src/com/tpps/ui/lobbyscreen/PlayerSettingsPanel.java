@@ -608,6 +608,12 @@ public class PlayerSettingsPanel extends JPanel {
 		this.changeSelectedPicture(0);
 	}
 
+	/**
+	 * changes the alpha value of a new BufferedImage
+	 * 
+	 * @param image the image to edit
+	 * @param alpha the new alpha value
+	 */
 	protected static void setAlpha(BufferedImage image, float alpha) {
 		image = (BufferedImage) GraphicsUtil.setAlpha(image, alpha);
 	}
@@ -659,6 +665,16 @@ public class PlayerSettingsPanel extends JPanel {
 		public void mousePressed(MouseEvent e) {
 		}
 
+//		@Override
+//		public void mouseReleased(MouseEvent e) {
+//			if (e.getSource() == plusKI) {
+//				aiNames.add("" + System.identityHashCode(e));
+//				DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
+//			} else if (e.getSource() == minusKI && aiNames.size() > 0) {
+//				DominionController.getInstance().sendAIPacket("AI_" + aiNames.remove(aiNames.size() - 1), true);
+//			}
+//		}
+		
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			if (e.getSource() == plusKI) {
@@ -666,7 +682,6 @@ public class PlayerSettingsPanel extends JPanel {
 				DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
 			} else if (e.getSource() == minusKI && aiNames.size() > 0) {
 				DominionController.getInstance().sendAIPacket("AI_" + aiNames.remove(aiNames.size() - 1), true);
-
 			}
 		}
 	}
