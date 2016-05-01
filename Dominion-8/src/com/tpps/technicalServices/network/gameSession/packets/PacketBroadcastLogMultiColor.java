@@ -22,7 +22,7 @@ public class PacketBroadcastLogMultiColor extends Packet {
 	private static final long serialVersionUID = -2014159824106961056L;
 	private final LinkedList<Pair<String, Color>> pair;
 	private final MsgType msgType;
-	private final int logNr;
+//	private final int logNr;
 
 	/***
 	 * this will be used in most cases
@@ -40,7 +40,7 @@ public class PacketBroadcastLogMultiColor extends Packet {
 			pair.addLast(p);
 		}
 		this.msgType = MsgType.GAME;
-		this.logNr = GameLog.getCount();
+//		this.logNr = GameLog.getCountAndInc();
 	}
 
 	/**
@@ -57,13 +57,13 @@ public class PacketBroadcastLogMultiColor extends Packet {
 		return msgType;
 	}
 
-	/**
-	 * 
-	 * @return the logNr
-	 */
-	public int getLogNr() {
-		return this.logNr;
-	}
+//	/**
+//	 * 
+//	 * @return the logNr
+//	 */
+//	public int getLogNr() {
+//		return this.logNr;
+//	}
 
 	/**
 	 * 

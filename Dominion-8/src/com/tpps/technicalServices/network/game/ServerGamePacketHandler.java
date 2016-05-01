@@ -11,6 +11,8 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javafx.util.Pair;
+
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.ai.ArtificialIntelligence;
@@ -48,8 +50,6 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateTreasu
 import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateValues;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
-
-import javafx.util.Pair;
 
 /**
  * @author ladler - Lukas Adler
@@ -617,8 +617,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * Lukas Fragen:
 			 * -2. wo loggen bei gain curse? gain Methode im GC? also die "gains Silver" fehlt auch noch.
 			 *     in buyOneCard oder in gain Meth?
-			 * -1. LUKAS FRAGEN Z472/473 PacketBuyCard/PacketPlayCard ist das ok so? habs geändert weil deprecated
-			 * 0. organizePilesAndrefreshCardHand in GC checken ob das so richtig(/überhaupt)
+			 * -1. LUKAS FRAGEN Z472/473 PacketBuyCard/PacketPlayCard ist das ok so? habs geï¿½ndert weil deprecated
+			 * 0. organizePilesAndrefreshCardHand in GC checken ob das so richtig(/ï¿½berhaupt)
 			 *    ausgegeben wird, 
 			 * 0.1 GC 909 buyOneCard funktioniert das also wird immer dort ne karte gekauft?
 			 * 
@@ -626,7 +626,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * 2. Zeile 744 (GAINCARDDRAWPILE) im Player ueberpruefen 
 			 * 3. man kann ColorHash map von Jojo oder Player.getLogColor benutzen
 			 * 4. GameController Z.888 evtl appendPrep?; 
-			 * 5. appendPrepText und PacketBroadcastLog überall aufrufen(siehe screen), logPrepText() bei SetupGui()
+			 * 5. appendPrepText und PacketBroadcastLog ï¿½berall aufrufen(siehe screen), logPrepText() bei SetupGui()
 			 * 6. Log Z.151 Matchmaker funktioniert das so? oder join Lobby auf prepText packen?
 			 * 7. GameLog Backup Uhr 28. April 11 Uhr 04
 			 * 8. Pattern to search: "GameLog.log(" | ".broadcastMessage(new PacketBroadcastLog("
@@ -635,10 +635,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * 11. update comments in gameLog
 			 * 12. addPlayerAndChooseRandomActivePlayer in GC Z882 mit der schlussendlichen synced. LogMethode abgleichen
 			 * 13. case DRAW_CARD in doACtion bei Player nachschauen mit DrawAndShuffle
-			 * 14. für die init in Deck irgendwo für jeden Player (- shuffles Deck - draws 5 cards) zum prepText appenden
+			 * 14. fï¿½r die init in Deck irgendwo fï¿½r jeden Player (- shuffles Deck - draws 5 cards) zum prepText appenden
 			 * 15. if singlecolor works, remove multicolorPacket
-			 * 16. remove cardSSSSS bei 1 card in log messages (ternärer Ausdruck)
-			 * 17. searchFile new PacketBroadcastLog( überprüfen ob das alles auch so gelogt werden soll (zB GameServerNetworkListener)
+			 * 16. remove cardSSSSS bei 1 card in log messages (ternï¿½rer Ausdruck)
+			 * 17. searchFile new PacketBroadcastLog( ï¿½berprï¿½fen ob das alles auch so gelogt werden soll (zB GameServerNetworkListener)
+			 * 17.1 GameLogTest JUnit
+			 * 17.2 GameLog entweder queue oder count um die richtige Reihenfolge sicherzustellen
+			 * 17.3 AI hat immer den selben Namen im Log?
+			 * 
+			 * Next Steps:
+			 * - Entwickeln & Test AI ohne CheapCardCreator davor laufen zu lassen (dann geht Log (vom Stand 1.5. 13 Uhr, s. Bitbucket))
+			 * - Lukas/Steffen fragen wg Packet Reihenfolge & nummern beim Schicken Ã¼bergeben
+			 * - je nachdem client oder serverseitig (17.2) einbauen
 			 * 
 			 * 18. @nishit playTreasures nicht mehr klickbar wenn spieler keine geldkarten mehr auf der hand hat
 			 * 19. @nishit tried to fix Add/Remove AI Button with horrible attempt, but didn't work
