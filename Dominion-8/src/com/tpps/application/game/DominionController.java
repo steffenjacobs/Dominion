@@ -150,6 +150,14 @@ public final class DominionController {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * @author jhuhn
+	 * @param enable boolean that tells the startbutton if it is enabled
+	 */
+	public void setStartButton(boolean enable){
+		this.playerSettingsPanel.setStartButtonEnable(enable);
+	}
 
 	public void finishMatch() {
 		this.playerSettingsPanel.initStandardBackground();

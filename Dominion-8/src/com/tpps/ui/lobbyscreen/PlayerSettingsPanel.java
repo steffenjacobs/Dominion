@@ -235,6 +235,7 @@ public class PlayerSettingsPanel extends JPanel {
 			this.setBorderPainted(false);
 			this.setForeground(Color.WHITE);
 			this.setHorizontalTextPosition(SwingConstants.CENTER);
+			this.addMouseListener(this);
 		}
 		
 		@Override
@@ -245,12 +246,11 @@ public class PlayerSettingsPanel extends JPanel {
 			super.paint(h);
 		}
 		
-		public void setEnable(boolean enable){
-			this.setEnabled(enable);
-		}
 
 		@Override
-		public void mouseClicked(MouseEvent e) { }
+		public void mouseClicked(MouseEvent e) {
+			System.out.println("I AM " + this.isEnabled());
+		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) { }
@@ -267,6 +267,10 @@ public class PlayerSettingsPanel extends JPanel {
 			System.out.println("HALLO STEFFEN LULULULUL");
 		}
 		
+	}
+	
+	public void setStartButtonEnable(boolean enable){
+		this.startButton.setEnabled(enable);
 	}
 	
 	public PlayerSettingsPanel updateCards(){

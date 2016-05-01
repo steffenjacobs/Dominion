@@ -159,6 +159,13 @@ public final class Matchmaker {
 				if (pmpi.isStatus()) {
 					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " joined the lobby.");
 					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
+					if(pmpi.getPlayerName() == DominionController.getInstance().getUsername()){
+						if(pmpi.isLobbyAdmin()){
+							DominionController.getInstance().setStartButton(true);
+						}else{
+							DominionController.getInstance().setStartButton(false);
+						}
+					}
 				} else {
 					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " left from lobby.");
 					DominionController.getInstance().clearPlayerFromGUI(pmpi.getPlayerName());
