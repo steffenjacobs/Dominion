@@ -212,13 +212,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				player = server.getGameController().getClientById(clientID);
 				break;
 			case END_REACTIONS:
-				Player player1 = this.server.getGameController().getClientById(((PacketEndReactions) packet).getClientID());
-				player1.setReactionCard(false);
-				reactionFinishedTriggeredThroughThief(player1);
-				reactionFinishedTriggerdThroughSpy(player1);
-				reactionFinishedTriggeredThroughWitch(player1);
-				reactionFinishedTriggeredThroughBureaucrat(player1);
-				this.server.getGameController().isGameFinished();
+				endReactions(port, packet);
 				break;
 			case DISCARD_DECK:
 				this.server.getGameController().getActivePlayer().getDeck().discardDrawPile();
@@ -257,6 +251,36 @@ public class ServerGamePacketHandler extends PacketHandler {
 				}
 		}
 
+	}
+
+	/**
+	 * executes the action when the end reaction button is pressed
+	 * @param port
+	 * @param packet
+	 * @throws IOException
+	 */
+	private void endReactions(int port, Packet packet) throws IOException {
+		Player player1 = this.server.getGameController().getClientById(((PacketEndReactions) packet).getClientID());
+		player1.setReactionCard(false);
+		reactionFinishedTriggeredThroughThief(player1);
+		reactionFinishedTriggerdThroughSpy(player1);
+		reactionFinishedTriggeredThroughWitch(player1);
+		reactionFinishedTriggeredThroughBureaucrat(player1);
+		this.server.getGameController().isGameFinished();
+		if (player1.isReactionMode()) {
+			if (player1.getDeck().getCardHand().size() <= 3) {
+				player1.setReactionModeFalse();
+				
+				boolean allReactionCarsPlayedFlag = this.server.getGameController().allReactionCardsPlayed();
+
+				if (allReactionCarsPlayedFlag) {
+					this.server.sendMessage(port,
+							new PacketDisable(this.server.getGameController().getActivePlayerName() + "'s turn"));
+				} else {
+					this.server.sendMessage(port, new PacketDisable("wait on reaction"));
+				}	
+			}
+		}
 	}
 
 	private void reactionFinishedTriggeredThroughThief(Player player1) throws IOException {
