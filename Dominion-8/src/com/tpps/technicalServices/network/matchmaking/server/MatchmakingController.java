@@ -42,7 +42,10 @@ public final class MatchmakingController {
 
 	private static ConcurrentHashMap<Integer, MPlayer> playersByPort;
 	private static ConcurrentHashMap<MPlayer, Integer> connectedPortsByPlayer;
+
+	/*** also contains AI-names */
 	private static ConcurrentHashMap<String, MPlayer> playersByName;
+
 	private static ConcurrentHashMap<MPlayer, GameLobby> lobbiesByPlayer;
 
 	private static ConcurrentHashMap<UUID, GameLobby> lobbiesByID;
@@ -78,6 +81,14 @@ public final class MatchmakingController {
 	 */
 	static GameLobby getLobbyFromPlayer(MPlayer player) {
 		return lobbiesByPlayer.get(player);
+	}
+
+	static void addAIPlayer(MPlayer player) {
+		playersByName.put(player.getPlayerName(), player);
+	}
+
+	static MPlayer getPlayerByName(String name) {
+		return playersByName.get(name);
 	}
 
 	/**

@@ -626,12 +626,13 @@ public class PlayerSettingsPanel extends JPanel {
 		return connectedPlayers;
 	}
 
+
+	private ArrayList<String> aiNames = new ArrayList<>();
+	
 	private class KiListener implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			// DominionController.getInstance().sendAIPacket("AI_" +
-			// System.identityHashCode(e), false);
 		}
 
 		@Override
@@ -647,7 +648,6 @@ public class PlayerSettingsPanel extends JPanel {
 			//// blackBeauty = brain;
 			//
 			// }
-
 		}
 
 		@Override
@@ -660,128 +660,24 @@ public class PlayerSettingsPanel extends JPanel {
 			// blackBeauty = temp;
 			// plusKI.setText("Add AI");
 			// }
-
 		}
 
-		// @Override
-		// public void mouseEntered(MouseEvent e) {
-		// if (e.getSource().equals(minusKI)) {
-		// PlayerSettingsPanel.setAlpha(blackBeauty, 0);
-		// minusKI = new JButton("") {
-		//
-		// private static final long serialVersionUID = 1L;
-		//
-		// @Override
-		// public void paint(Graphics g) {
-		// Graphics2D h = (Graphics2D) g;
-		// h.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-		// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		// h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(),
-		// null);
-		// super.paint(h);
-		// }
-		// };
-		// minusKI.setFont(new Font("Arial", Font.PLAIN, 22));
-		// minusKI.setOpaque(false);
-		// minusKI.setForeground(Color.WHITE);
-		// minusKI.setBorderPainted(true);
-		// minusKI.setContentAreaFilled(false);
-		// minusKI.setText("");
-		// temp = blackBeauty;
-		// blackBeauty = brainCrossed;
-		// }
-		// if (e.getSource().equals(plusKI)) {
-		// PlayerSettingsPanel.setAlpha(blackBeauty, 0);
-		// plusKI = new JButton("") {
-		//
-		// private static final long serialVersionUID = 1L;
-		//
-		// @Override
-		// public void paint(Graphics g) {
-		// Graphics2D h = (Graphics2D) g;
-		// h.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-		// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		// h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(),
-		// null);
-		// super.paint(h);
-		// }
-		// };
-		// plusKI.setFont(new Font("Arial", Font.PLAIN, 22));
-		// plusKI.setOpaque(false);
-		// plusKI.setForeground(Color.WHITE);
-		// plusKI.setBorderPainted(true);
-		// plusKI.setContentAreaFilled(false);
-		// plusKI.setText("");
-		// temp = blackBeauty;
-		// blackBeauty = brain;
-		// }
-		//
-		// }
-		//
-		// @Override
-		// public void mouseExited(MouseEvent e) {
-		// if (e.getSource().equals(minusKI)) {
-		// PlayerSettingsPanel.setAlpha(blackBeauty,PlayerSettingsPanel.ALPHA);
-		// minusKI = new JButton("Remove AI") {
-		//
-		// private static final long serialVersionUID = 1L;
-		//
-		// @Override
-		// public void paint(Graphics g) {
-		// Graphics2D h = (Graphics2D) g;
-		// h.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-		// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		// h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(),
-		// null);
-		// super.paint(h);
-		// }
-		// };
-		// minusKI.setFont(new Font("Arial", Font.PLAIN, 22));
-		// minusKI.setOpaque(false);
-		// minusKI.setForeground(Color.WHITE);
-		// minusKI.setBorderPainted(true);
-		// minusKI.setContentAreaFilled(false);
-		// minusKI.setText("Remove AI");
-		// brainCrossed = blackBeauty;
-		// }
-		// if (e.getSource().equals(plusKI)) {
-		// PlayerSettingsPanel.setAlpha(blackBeauty,PlayerSettingsPanel.ALPHA);
-		// plusKI = new JButton("") {
-		//
-		// private static final long serialVersionUID = 1L;
-		//
-		// @Override
-		// public void paint(Graphics g) {
-		// Graphics2D h = (Graphics2D) g;
-		// h.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-		// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		// h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(),
-		// null);
-		// super.paint(h);
-		// }
-		// };
-		// plusKI.setFont(new Font("Arial", Font.PLAIN, 22));
-		// plusKI.setOpaque(false);
-		// plusKI.setForeground(Color.WHITE);
-		// plusKI.setBorderPainted(true);
-		// plusKI.setContentAreaFilled(false);
-		// plusKI.setText("Add AI");
-		// brain = blackBeauty;
-		// }
-		// }
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (e.getSource() == plusKI) {
-				DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
-			} else if (e.getSource() == minusKI) {
-				DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), true);
-
-			}
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			System.out.println("klick");
+			if (e.getSource() == plusKI) {
+				aiNames.add("" + System.identityHashCode(e));
+				DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
+			} else if (e.getSource() == minusKI && aiNames.size() > 0) {
+				DominionController.getInstance().sendAIPacket("AI_" + aiNames.remove(0), true);
+				System.out.println("minus");
+
+			}
 		}
 	}
 }

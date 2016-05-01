@@ -36,7 +36,9 @@ public final class Matchmaker {
 	private void checkAndCreateClient() throws IOException {
 		if (client == null || !client.isConnected()) {
 			handler = new MatchmakingHandler();
-			client = new Client(new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.getStandardPort()), handler, false);
+			client = new Client(
+					new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.getStandardPort()), handler,
+					false);
 		}
 	}
 
@@ -48,15 +50,16 @@ public final class Matchmaker {
 	 * @param lobbyID
 	 *            UUID of the lobby
 	 * @param abort
-	 *            whether to join or quit an ai
+	 *            whether to join or quit an AI
 	 * @throws IOException
 	 *             if there is no network connection available or the server is
 	 *             unreachable
 	 */
 	public void sendAIPacket(String name, UUID lobbyID, boolean abort) throws IOException {
 		checkAndCreateClient();
-		client.sendMessage(new PacketJoinLobby(name, UUID.fromString("00000000-0000-0000-0000-000000000000"), lobbyID, abort));
-		System.out.println("Sent request to join lobby " + lobbyID.toString());
+		client.sendMessage(
+				new PacketJoinLobby(name, UUID.fromString("00000000-0000-0000-0000-000000000000"), lobbyID, abort));
+		System.out.println("Sent request to " + (abort ? "quit" : "join") + "lobby " + lobbyID.toString());
 	}
 
 	/**
@@ -147,10 +150,12 @@ public final class Matchmaker {
 				// TODO: add player and remove one instance of "Waiting for
 				// player..." @LobbyScreen
 				if (pmpi.isStatus()) {
-					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " joined the lobby.", GameLog.getMsgColor());
+					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " joined the lobby.",
+							GameLog.getMsgColor());
 					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
 				} else {
-					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " left from lobby.", GameLog.getMsgColor());
+					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " left from lobby.",
+							GameLog.getMsgColor());
 					DominionController.getInstance().clearPlayerFromGUI(pmpi.getPlayerName());
 				}
 				break;
@@ -182,23 +187,28 @@ public final class Matchmaker {
 				// TODO:
 				// save pck.getLobbyID() somewhere (-> DominionController?)
 
-				DominionController.getInstance().receiveChatMessageFromChatServer("You joined a lobby successfully", "BOT", "", Color.RED);
+				DominionController.getInstance().receiveChatMessageFromChatServer("You joined a lobby successfully",
+						"BOT", "", Color.RED);
 				/*
 				 * :id : " + pck.getLobbyID()
 				 */
 				DominionController.getInstance().setLobbyID(pck.getLobbyID());
 				break;
 			case 2: // Lobby does not exist
-				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby does not exis", "BOT", "", Color.RED);
+				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby does not exis", "BOT", "",
+						Color.RED);
 				break;
-			case 3: // Lobby is already full				
-				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby is already full", "BOT", "", Color.RED);
+			case 3: // Lobby is already full
+				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby is already full", "BOT", "",
+						Color.RED);
 				break;
 			case 4: // Lobby already started
-				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby already started", "BOT", "", Color.RED);
+				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby already started", "BOT", "",
+						Color.RED);
 				break;
 			default: // unknown error
-				DominionController.getInstance().receiveChatMessageFromChatServer("unknown error", "BOT", "", Color.RED);
+				DominionController.getInstance().receiveChatMessageFromChatServer("unknown error", "BOT", "",
+						Color.RED);
 				break;
 			}
 		}

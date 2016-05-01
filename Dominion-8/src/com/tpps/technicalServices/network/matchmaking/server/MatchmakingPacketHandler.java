@@ -69,8 +69,9 @@ public class MatchmakingPacketHandler extends PacketHandler {
 
 				try {
 					if (pjl.getLobbyID() == null) {
-						//UI-Bug: ignore...
-						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 2, null));;
+						// UI-Bug: ignore...
+						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 2, null));
+						;
 						return;
 					}
 
@@ -113,6 +114,13 @@ public class MatchmakingPacketHandler extends PacketHandler {
 				} catch (IOException ex) {
 
 				}
+			} else {
+				if (pjl.getPlayerID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+					// quitted player is an ai
+					removeAI(pjl.getLobbyID(), pjl);
+					GameLog.log(MsgType.NETWORK_INFO, "Removed AI " + pjl.getPlayerName() + " to " + pjl.getLobbyID());
+					return;
+				}
 			}
 			break;
 
@@ -132,9 +140,18 @@ public class MatchmakingPacketHandler extends PacketHandler {
 	public void addAI(UUID lobbyID, PacketMatchmakingRequest pmr) {
 		MPlayer player = MPlayer.initialize(pmr, -1);
 		if (lobbyID != null) {
+			MatchmakingController.addAIPlayer(player);
 			MatchmakingController.getLobbyByID(lobbyID).joinPlayer(player);
 		}
 		GameLog.log(MsgType.NETWORK_INFO, "<- AI " + player.getPlayerName());
+	}
+
+	public void removeAI(UUID lobbyID, PacketMatchmakingRequest pmr) {
+		MPlayer player = MatchmakingController.getPlayerByName(pmr.getPlayerName());
+		if (lobbyID != null && player != null) {
+			MatchmakingController.getLobbyByID(lobbyID).quitPlayer(player);
+			GameLog.log(MsgType.NETWORK_INFO, "-> AI " + player.getPlayerName());
+		}
 	}
 
 	/**
