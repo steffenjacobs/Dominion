@@ -261,6 +261,7 @@ public class PlayerSettingsPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(enabledFlag){
+				this.enabledFlag = false;
 				String[] selCards = new String[cardNamesSelected.size()];
 				cardNamesSelected.toArray(selCards);
 	
