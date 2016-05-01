@@ -1,6 +1,7 @@
 package com.tpps.technicalServices.network.matchmaking.server;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -155,31 +156,33 @@ public class GameLobby {
 		}
 		if (isAdmin(player)) {
 			// find new lobby-admin
-			for (MPlayer pl : this.players) {
-				if (pl.isAI())
-					continue;
-				else {
-					for (MPlayer mpl : this.players) {
-						if (mpl.isAI() || mpl == pl)
-							continue;
+			ArrayList<MPlayer> removeAI = new ArrayList<>();
+			for(MPlayer pl : this.players){
 
-						MatchmakingServer.getInstance().sendQuitPacket(mpl, pl.getPlayerName(), false);
-						MatchmakingServer.getInstance().sendJoinPacket(mpl, pl.getPlayerName(), true);
+				// remove added AIs
+				if (pl.isAI()) {
+					removeAI.add(pl);
+				}
+
+				else {
+					if (this.admin == null) {
+						this.admin = pl;
 					}
-					this.admin = pl;
-					break;
 				}
 			}
+			
+			//clear marked AIs
+			for(MPlayer p : removeAI){
+				this.players.remove(p);
+				MatchmakingController.removeAiPlayer(p.getPlayerName());
+			}
 
-			if (this.admin == null) {
-				// only AIs left in the lobby -> remove all recursively
-				for (MPlayer aiPlayer : this.players) {
-					MatchmakingController.removeAiPlayer(aiPlayer.getPlayerName());
-				}
-				this.players.clear();
+			//tell everyone who is admin
+			for (MPlayer mpl : this.players) {
+				MatchmakingServer.getInstance().sendQuitPacket(mpl, this.admin.getPlayerName(), false);
+				MatchmakingServer.getInstance().sendJoinPacket(mpl, this.admin.getPlayerName(), true);
 			}
 		}
-
 	}
 
 	/** @return if the lobby is empty */

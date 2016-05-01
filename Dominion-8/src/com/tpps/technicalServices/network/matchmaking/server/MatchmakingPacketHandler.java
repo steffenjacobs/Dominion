@@ -135,8 +135,12 @@ public class MatchmakingPacketHandler extends PacketHandler {
 
 			// check lobby
 			GameLobby toStart = MatchmakingController.getLobbyByID(pms.getLobbyID());
-			if (toStart == null)
+			if (toStart == null) {
 				break;
+			}
+			if (toStart.hasStarted()) {
+				break;
+			}
 
 			// check player
 			MPlayer player = MatchmakingController.getPlayerFromName(pms.getSenderName());
@@ -144,7 +148,7 @@ public class MatchmakingPacketHandler extends PacketHandler {
 				break;
 
 			MatchmakingController.startGame(toStart, pms.getSelectedActionCards());
-			
+
 			break;
 
 		default:
