@@ -95,6 +95,7 @@ public class PlayerSettingsPanel extends JPanel {
 	private StartButton startButton;
 	private BufferedImage greenLanton;
 	private BufferedImage redHead;
+	private JPanel midpanel;
 
 	// private BufferedImage brainCrossed;
 	// private BufferedImage brain;
@@ -190,10 +191,10 @@ public class PlayerSettingsPanel extends JPanel {
 		panelEast.setOpaque(false);
 
 		gbc.insets = new Insets(SPACE_PANEL_TO_PANEL, VERTICAL_GAP_KI, 0, H_SPACE_EDGE_TO_FIRSTPANEL);
-		gbc.gridy = 0;
-		panelWest.add(minusKI, gbc);
-		gbc.gridy = 1;
+		gbc.gridy = 0;		
 		panelWest.add(plusKI, gbc);
+		gbc.gridy = 1;
+		panelWest.add(minusKI, gbc);
 		panelWest.setOpaque(false);
 
 		connectedPlayers = new SearchingField[4];
@@ -336,12 +337,19 @@ public class PlayerSettingsPanel extends JPanel {
 	}
 
 	public PlayerSettingsPanel updateCards() {
-		if (this.midScroller != null) {
-			this.remove(midScroller);
+		if (this.midpanel != null) {
+			this.remove(midpanel);
 			this.remove(bottomAreaPanel);
 		}
 		this.midScroller = middleAreaPanel();
-		this.add(midScroller);
+		
+		midpanel = new JPanel(new BorderLayout());
+		midpanel.setOpaque(false);
+		midpanel.add(midScroller, BorderLayout.CENTER);
+		midpanel.add(Box.createHorizontalStrut(IMG_TO_EDGE), BorderLayout.WEST);
+		midpanel.add(Box.createHorizontalStrut(IMG_TO_EDGE), BorderLayout.EAST);
+		
+		this.add(midpanel);
 		this.add(bottomAreaPanel);
 		return this;
 	}
@@ -449,7 +457,9 @@ public class PlayerSettingsPanel extends JPanel {
 		scrollMid.getHorizontalScrollBar().setOpaque(false);
 		scrollMid.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollMid.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		scrollMid.setBorder(BorderFactory.createEmptyBorder());
+		
+		scrollMid.setBorder(BorderFactory.createMatteBorder(0, 5, 5, 5, new Color(0, 0, 0, 50)));
+		
 
 		Iterator<SerializedCard> it = DominionController.getInstance().getCardRegistry().getAllCards().iterator();
 
