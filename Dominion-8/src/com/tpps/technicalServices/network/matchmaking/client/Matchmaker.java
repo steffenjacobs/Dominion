@@ -75,7 +75,7 @@ public final class Matchmaker {
 			throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingStart(lobbyID, senderUID, senderName, selectedActionCards));
-		System.out.println("Sent request to start lobby " + lobbyID.toString());
+		GameLog.log(MsgType.INFO, "Sent request to start lobby " + lobbyID.toString());
 	}
 
 	/**
@@ -95,7 +95,7 @@ public final class Matchmaker {
 		checkAndCreateClient();
 		client.sendMessage(
 				new PacketJoinLobby(name, UUID.fromString("00000000-0000-0000-0000-000000000000"), lobbyID, abort));
-		System.out.println("Sent request to " + (abort ? "quit" : "join") + "lobby " + lobbyID.toString());
+		GameLog.log(MsgType.INFO, "Sent request to " + (abort ? "quit" : "join") + "AI: " + name + " lobby " + lobbyID.toString());
 	}
 
 	/**
@@ -114,7 +114,7 @@ public final class Matchmaker {
 	public void tryJoinLobby(String username, UUID uid, UUID lobbyID) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketJoinLobby(username, uid, lobbyID, true));
-		System.out.println("Sent request to join lobby " + lobbyID.toString());
+		GameLog.log(MsgType.INFO, "Sent request to join lobby " + lobbyID.toString());
 	}
 
 	/**
@@ -131,7 +131,7 @@ public final class Matchmaker {
 	public void findMatch(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingRequest(username, uid, false));
-		System.out.println("Start searching a match");
+		GameLog.log(MsgType.INFO, "Start searching a match");
 	}
 
 	/**
@@ -146,7 +146,7 @@ public final class Matchmaker {
 	public void abort(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingRequest(username, uid, true));
-		System.out.println("Aborted to search a match");
+		GameLog.log(MsgType.INFO, "Aborted to search a match");
 	}
 
 	/** @return the actual network-client connected to the matchmaking-system */
@@ -202,9 +202,9 @@ public final class Matchmaker {
 			case MATCHMAKING_SUCCESSFUL:
 				PacketMatchmakingSuccessful pms = (PacketMatchmakingSuccessful) packet;
 				// is called, when the lobby is full and the game starts
-				System.out.println("Downloading Cards...");
+				GameLog.log(MsgType.INFO, "Downloading Cards...");
 				DominionController.getInstance().getCardRegistry().checkAndDownloadCards(pms.getSelectedActionCards());
-				System.out.println("starting match!");
+				GameLog.log(MsgType.INFO, "starting match!");
 				DominionController.getInstance().startMatch(pms.getGameserverPort());
 				break;
 			default:
