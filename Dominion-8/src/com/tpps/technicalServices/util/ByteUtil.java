@@ -21,7 +21,7 @@ public class ByteUtil {
 	 * native-serialization-techniques
 	 * 
 	 * @return serialized object
-	 * @author Steffen Jacobs
+	 * @param packet the object to serialized
 	 */
 	public static byte[] getBytes(Object packet) {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -47,9 +47,9 @@ public class ByteUtil {
 
 	/**
 	 * converts a byte-array to an object
+	 * @param bytes the bytes to deserialize
 	 * 
 	 * @return deserialized object
-	 * @author Steffen Jacobs
 	 */
 	public static Object getObject(byte[] bytes) {
 		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);

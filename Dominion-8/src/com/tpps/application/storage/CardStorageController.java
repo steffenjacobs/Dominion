@@ -149,9 +149,12 @@ public class CardStorageController {
 		storedCards.putIfAbsent(card.getName(), card);
 	}
 
+	/**
+	 * checks if the standard-card set exists & downloads it if necessary
+	 */
 	public void checkStandardCardsAsync() {
 		new Thread(() -> {
-			System.out.println("Checking standard cards...");
+			GameLog.log(MsgType.INFO, "Checking standard cards...");
 			boolean missing = false;
 
 			for (String card : this.standardCards) {
@@ -161,13 +164,16 @@ public class CardStorageController {
 				}
 			}
 			if (missing) {
-				System.out.println("Downloading missing cards...");
+				GameLog.log(MsgType.INFO, "Downloading missing cards...");
 				this.checkAndDownloadCards(this.standardCards);
 			}
-			System.out.println("Check for standard cards finished.");
+			GameLog.log(MsgType.INFO, "Check for standard cards finished.");
 		}).start();
 	}
 
+	/**
+	 * @param cardNames the names of the cards to check
+	 */
 	public void checkAndDownloadCards(String[] cardNames) {
 
 		CardPacketHandlerClient cHandler = new CardPacketHandlerClient();
@@ -176,7 +182,8 @@ public class CardStorageController {
 		try {
 			client = new CardClient(new InetSocketAddress(Addresses.getRemoteAddress(), CardServer.getStandardPort()),
 					cHandler, true, DominionController.getInstance());
-			System.out.println(DominionController.getInstance().getUsername() + " - " + DominionController.getInstance().getSessionID());
+			System.out.println(DominionController.getInstance().getUsername() + " - "
+					+ DominionController.getInstance().getSessionID());
 			cHandler.setCardClient(client);
 			Thread.sleep(1000);
 
@@ -189,7 +196,6 @@ public class CardStorageController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			if (client != null)
