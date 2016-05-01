@@ -254,7 +254,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 		
 		
-		if (this.server.getGameController().getActivePlayer().isPlayTwice()) {
+		if (this.server.getGameController().getActivePlayer()!= null && this.server.getGameController().getActivePlayer().isPlayTwice()) {
 			
 			
 			Player playTwiceActivePlayer = this.server.getGameController().getActivePlayer();
