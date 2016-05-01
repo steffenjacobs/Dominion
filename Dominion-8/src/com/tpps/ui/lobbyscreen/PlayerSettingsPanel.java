@@ -233,8 +233,8 @@ public class PlayerSettingsPanel extends JPanel {
 
 		public StartButton() {
 			this.setText("Start");
-		//	this.setOpaque(false);
-		//	this.setContentAreaFilled(false);
+			this.setOpaque(false);
+			this.setContentAreaFilled(false);
 			this.setBorderPainted(false);
 			this.setForeground(Color.WHITE);
 			this.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -243,10 +243,10 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void paint(Graphics g) {
-//			Graphics2D h = (Graphics2D) g;
-//			h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-//			h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
-//			super.paint(h);
+			Graphics2D h = (Graphics2D) g;
+			h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
+			super.paint(h);
 			super.paint(g);
 		}
 
@@ -266,26 +266,26 @@ public class PlayerSettingsPanel extends JPanel {
 			System.out.println("Starting game...");
 		}
 	}
-
-	public void setStartButtonEnable(boolean enable) {
-		this.startButton.setEnabled(enable);
-	}
 	
+	/**
+	 * handles the start button logic
+	 */
 	public void handleStartButton(){
-		System.out.println("Yo listsize: " + this.cardNamesSelected.size());
-		System.out.println("AM I HOST ?: " + DominionController.getInstance().isHost());
-		System.out.println("der button ist: " + this.validateStartButton());
-		System.out.println("connectedplayers: " + this.connectedPlayersAsInt);
+//		System.out.println("listsize: " + this.cardNamesSelected.size());
+//		System.out.println("players: " + this.connectedPlayersAsInt);
+//		System.out.println("HOST: " + DominionController.getInstance().isHost());
 		this.startButton.setEnabled(this.validateStartButton());
 	}
 	
+	/**
+	 * @param enable true: host can select gamesettings, false: no host no power
+	 */
 	public void enableOrDisableEverything(boolean enable){
 		this.minusKI.setEnabled(enable);
 		this.plusKI.setEnabled(enable);
 		this.startButton.setEnabled(enable);
 		this.midScroller.setEnabled(enable);
 		this.panelMid.setEnabled(enable);
-		System.out.println("disables everything, see? " + plusKI.isEnabled());
 		
 		for (Iterator<CardDisplayButton> iterator = allCards.iterator(); iterator.hasNext();) {
 			((CardDisplayButton) iterator.next()).setEnabled(enable);;
@@ -293,23 +293,19 @@ public class PlayerSettingsPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * @return validates the startbutton logic
+	 */
 	public boolean validateStartButton(){
 		if(!DominionController.getInstance().isHost()){
 			return false;
 		}
 		if(this.cardNamesSelected.size() != 10){
 			return false;
-		}
-//		for (int i = 0; i < connectedPlayers.length; i++) {
-//			if(!connectedPlayers[i].isPlayerFlag()){
-//				System.out.println("Connected Player ? " + connectedPlayers[i].isPlayerFlag());
-//				return false;
-//			}
-		
+		}		
 		if(this.connectedPlayersAsInt != 4){
 			return false;
 		}
-//		}
 		return true;
 	}
 
@@ -405,7 +401,7 @@ public class PlayerSettingsPanel extends JPanel {
 	}
 
 	/**
-	 * @author jhuhn
+	 * @author jhuhn, sjacobs
 	 * @return a JPanel to select cardsets
 	 */
 	private JScrollPane middleAreaPanel() {

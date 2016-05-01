@@ -148,15 +148,6 @@ public final class DominionController {
 	}
 
 	/**
-	 * @author jhuhn
-	 * @param enable
-	 *            boolean that tells the startbutton if it is enabled
-	 */
-	public void setStartButton(boolean enable) {
-		this.playerSettingsPanel.setStartButtonEnable(enable);
-	}
-
-	/**
 	 * is called when the match ends
 	 */
 	public void finishMatch() {
