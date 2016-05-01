@@ -117,8 +117,10 @@ public class Player {
 		this.buys = 1;
 		this.actions = 1;
 		this.playTwice = false;
-		this.secondTimePlayed = false;
+		this.playTwiceEnabled = false;
+		this.secondTimePlayed = false;		
 		this.playTwiceCounter = 0;
+		
 	}
 
 	/**
@@ -729,6 +731,7 @@ public class Player {
 		if (this.playTwice) {
 			if (!this.secondTimePlayed){
 			System.out.println("playTwice: " + this.playTwice);
+			this.actions++;
 			this.playTwiceCard = serverCard;
 				dontRemoveFlag = true;
 			}
@@ -1152,6 +1155,7 @@ public class Player {
 	 */
 	public void endActionPhase() {
 		this.playTwice = false;
+		this.playTwiceEnabled = false;
 		this.secondTimePlayed = false;
 		this.playTwiceCounter = 0;
 		

@@ -29,7 +29,6 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
-import com.tpps.technicalServices.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendActiveButtons;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendBoard;
@@ -366,10 +365,12 @@ public class GameController {
 							player.getDeck().getCardHand().size() - Integer.parseInt(value));
 					try {
 						if (sendEnableFlag) {
+							System.out.println("send packet react");
 							this.gameServer.sendMessage(player.getPort(), new PacketEnable("react"));
 						}
 						if (sendPacketDisable) {
 							sendPacketDisable = false;
+							System.out.println("sendpacket disable");
 							this.gameServer.sendMessage(this.activePlayer.getPort(),
 									new PacketDisable("wait on reaction"));
 
@@ -774,6 +775,11 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			if (!player.equals(activePlayer)) {
 				player.getDeck().draw();
+				try {
+					this.gameServer.sendMessage(player.getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -860,7 +866,7 @@ public class GameController {
 	 * @param userName
 	 * @return the player with the given port null if not exists
 	 */
-	public Player getPlayerPlayerByPort(int port){
+	public Player getPlayerByPort(int port){
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (player.getPort() == port) {

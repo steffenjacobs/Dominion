@@ -233,18 +233,19 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 		
 		if (refActivePlayer != null && 
-				this.server.getGameController().getPlayerPlayerByPort(port).equals(this.server.getGameController().getActivePlayer()) &&
+				this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer()) &&
 				refActivePlayer.equals(this.server.getGameController().getActivePlayer())) {
 			try {
 				if (this.server.getGameController().allReactionCardsPlayed()) {
+					System.out.println("enable the aktive player again");
 					this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
 						new PacketEnable("my turn"));
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}else if (this.server.getGameController().getPlayerPlayerByPort(port).isReactionMode()
-				&& this.server.getGameController().getPlayerPlayerByPort(port).isDiscardMode()) {
+		}else if (this.server.getGameController().getPlayerByPort(port).isReactionMode()
+				&& this.server.getGameController().getPlayerByPort(port).isDiscardMode()) {
 				try {
 					this.server.sendMessage(port, new PacketEnable("react"));
 				} catch (IOException e) {
@@ -286,7 +287,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 						}
 						
 						playTwiceActivePlayer.setSecondTimePlayed();
-						playTwiceActivePlayer.playCard(playTwiceActivePlayer.getPlayTwiceCard().getId());
+						
+						cardPlayed(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
+//						this.server.getGameController().validateTurnAndExecute(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer);
+						
+						
+//						afterCardWasPlayed(playTwiceActivePlayer.getPort(), playTwiceActivePlayer);
+						
+						
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -519,20 +527,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			return;
 		}
 		if (this.server.getGameController().validateTurnAndExecute(cardID, player)) {
-			System.out.println("validate turn: " + player.getActions() + "buys: " + player.getBuys() + "coins: " + player.getCoins());
-
-			this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins(), true));
-			if (player.getActions() == 0 && !player.isThief()) {
-				server.sendMessage(port, new PacketEndActionPhase());
-			}
-			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
-			
-			if (this.server.getGameController().getPlayerPlayerByPort(port).equals(this.server.getGameController().getActivePlayer())){
-				this.server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(player.getPlayedCards())));
-			}
-			
-			
-			this.server.getGameController().isGameFinished();
+			afterCardWasPlayed(port, player);
 		} else {
 			try {
 				if (this.server.getGameController().checkBoardCardExistsAppendToDiscardPile(cardID)) {
@@ -552,6 +547,26 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().isGameFinished();
 			return;
 		}
+	}
+
+	private void afterCardWasPlayed(int port, Player player) throws IOException {
+		System.out.println("validate turn: " + player.getActions() + "buys: " + player.getBuys() + "coins: " + player.getCoins());
+
+		
+		
+		
+		this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins(), true));
+		if (player.getActions() == 0 && !player.isThief()) {
+			server.sendMessage(port, new PacketEndActionPhase());
+		}
+		this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
+		
+		if (this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer())){
+			this.server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(player.getPlayedCards())));
+		}
+		
+		
+		this.server.getGameController().isGameFinished();
 	}
 
 	/**
