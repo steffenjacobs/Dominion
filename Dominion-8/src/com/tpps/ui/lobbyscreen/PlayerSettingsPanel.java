@@ -83,6 +83,9 @@ public class PlayerSettingsPanel extends JPanel {
 	private JPanel panelWest;
 	private JPanel panelEast;
 	private BufferedImage blackBeauty;
+	
+	private JScrollPane midScroller;
+	
 	// private BufferedImage brainCrossed;
 	// private BufferedImage brain;
 
@@ -99,7 +102,8 @@ public class PlayerSettingsPanel extends JPanel {
 		this.setLayout(new GridLayout(3, 1, 0, SPACE_PANEL_TO_PANEL));
 
 		this.add(this.upperAreaPanel());
-		this.add(this.middleAreaPanel());
+//		this.midScroller = this.middleAreaPanel();
+//		this.add(midScroller);
 		this.add(this.bottomAreaPanel());
 
 		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
@@ -208,6 +212,15 @@ public class PlayerSettingsPanel extends JPanel {
 		plusKI.addMouseListener(new KiListener());
 		minusKI.addMouseListener(new KiListener());
 		return panel;
+	}
+	
+	public PlayerSettingsPanel updateCards(){
+		if(this.midScroller!=null){
+			this.remove(midScroller);
+		}
+		this.midScroller = middleAreaPanel();
+		this.add(midScroller);
+		return this;
 	}
 
 	private Dimension getCardSize(int wdt, int hght) {
@@ -354,8 +367,6 @@ public class PlayerSettingsPanel extends JPanel {
 
 			CardDisplayButton displayedCard = new CardDisplayButton(card);
 			displayedCard.setContentAreaFilled(false);
-
-			System.out.println();
 
 			displayedCard.setPreferredSize(getCardSize(card.getImage().getWidth(), card.getImage().getHeight()));
 

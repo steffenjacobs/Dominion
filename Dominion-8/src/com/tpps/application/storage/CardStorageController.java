@@ -32,6 +32,10 @@ public class CardStorageController {
 	private static final String DEFAULT_STORAGE_FILE = "cards.bin";
 	private String storageFile;
 	private static final boolean DEBUG = false;
+	private String[] standardCards = { "Copper", "Silver", "Gold", "Estate", "Duchy", "Province", "Cellar", "Chapel",
+			"Chancellor", "Militia", "Moat", "Village", "Woodcutter", "Workshop", "Feast", "Moneylender", "Remodel",
+			"Smithy", "Spy", "ThroneRoom", "CouncilRoom", "Thief", "Festival", "Laboratory", "Library", "Market",
+			"Mine", "Witch", "Curse", "Adventurer", "Bureaucrat" };
 
 	/**
 	 * sets storage-file-name to default name
@@ -62,8 +66,7 @@ public class CardStorageController {
 				GameLog.log(MsgType.INIT, "Loading storage from: " + Paths.get(storageFile));
 			byte[] bytes = Files.readAllBytes(Paths.get(storageFile));
 			if (bytes.length == 0) {
-				GameLog.log(MsgType.ERROR, "ERROR: Storage-Container is empty!");
-				Files.copy(Paths.get(storageFile), Paths.get(storageFile + "_old_" + System.currentTimeMillis()));
+				GameLog.log(MsgType.INFO, "Info: Storage-Container is empty!");
 				return;
 			}
 			if (DEBUG)
@@ -146,24 +149,53 @@ public class CardStorageController {
 		storedCards.putIfAbsent(card.getName(), card);
 	}
 
+	public void checkStandardCardsAsync() {
+		new Thread(() -> {
+			System.out.println("Checking standard cards...");
+			boolean missing = false;
+
+			for (String card : this.standardCards) {
+				if (!this.hasCard(card)) {
+					missing = true;
+					break;
+				}
+			}
+			if (missing) {
+				System.out.println("Downloading missing cards...");
+				this.checkAndDownloadCards(this.standardCards);
+			}
+			System.out.println("Check for standard cards finished.");
+		}).start();
+	}
+
 	public void checkAndDownloadCards(String[] cardNames) {
 
 		CardPacketHandlerClient cHandler = new CardPacketHandlerClient();
 
-		CardClient client;
+		CardClient client = null;
 		try {
 			client = new CardClient(new InetSocketAddress(Addresses.getRemoteAddress(), CardServer.getStandardPort()),
-					cHandler, false, DominionController.getInstance());
+					cHandler, true, DominionController.getInstance());
+			System.out.println(DominionController.getInstance().getUsername() + " - " + DominionController.getInstance().getSessionID());
 			cHandler.setCardClient(client);
+			Thread.sleep(1000);
 
 			for (String name : cardNames) {
 				if (!this.hasCard(name)) {
+					GameLog.log(MsgType.INFO, "Started download of " + name);
 					client.requestCardFromServer(name, false);
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if (client != null)
+				client.disconnect();
 		}
+		this.saveCards();
 	}
 
 	/**

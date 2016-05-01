@@ -7,6 +7,8 @@ import java.util.concurrent.Semaphore;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.card.packets.PacketAddCard;
 import com.tpps.technicalServices.network.card.packets.PacketCheckIfCardExistsRequest;
 import com.tpps.technicalServices.network.card.packets.PacketGetCardRequest;
@@ -116,7 +118,8 @@ public class CardClient extends Client {
 
 				@Override
 				public SerializedCard callMeMaybe(SerializedCard object) {
-					parent.getStorageController().addCard(object);
+					GameLog.log(MsgType.INFO, "Received card " + object.getName());
+					parent.getCardRegistry().addCard(object);
 					return null;
 				}
 
@@ -150,7 +153,8 @@ public class CardClient extends Client {
 
 				@Override
 				public SerializedCard callMeMaybe(SerializedCard object) {
-					parent.getStorageController().addCard(object);
+					System.out.println("Received card from server: " + object.getName());
+					parent.getCardRegistry().addCard(object);
 					sem.release();
 					return null;
 				}
