@@ -16,6 +16,7 @@ import com.tpps.technicalServices.network.matchmaking.packets.PacketGameEnd;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketJoinLobby;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingAnswer;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingRequest;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingStart;
 
 /**
  * PacketHandler for the MatchmakingServer
@@ -124,6 +125,28 @@ public class MatchmakingPacketHandler extends PacketHandler {
 			}
 			break;
 
+		case MATCHMAKING_START_GAME:
+			PacketMatchmakingStart pms = (PacketMatchmakingStart) packet;
+
+			// ignore invalid UUID
+			if (pms.getSenderID() == null
+					|| pms.getSenderID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000")))
+				break;
+
+			// check lobby
+			GameLobby toStart = MatchmakingController.getLobbyByID(pms.getLobbyID());
+			if (toStart == null)
+				break;
+
+			// check player
+			MPlayer player = MatchmakingController.getPlayerFromName(pms.getSenderName());
+			if (player == null || !player.getPlayerUID().equals(pms.getSenderID()) || !toStart.isAdmin(player))
+				break;
+
+			MatchmakingController.startGame(toStart, pms.getSelectedActionCards());
+			
+			break;
+
 		default:
 			GameLog.log(MsgType.NETWORK_ERROR, "Bad packet received: " + packet);
 		}
@@ -154,8 +177,8 @@ public class MatchmakingPacketHandler extends PacketHandler {
 	 * @param pmr
 	 *            the AI-remove-request
 	 */
-	public void removeAI(UUID lobbyID, PacketMatchmakingRequest pmr) {
-		MPlayer player = MatchmakingController.getPlayerByName(pmr.getPlayerName());
+	public static void removeAI(UUID lobbyID, PacketMatchmakingRequest pmr) {
+		MPlayer player = MatchmakingController.removeAiPlayer(pmr.getPlayerName());
 		if (lobbyID != null && player != null) {
 			MatchmakingController.getLobbyByID(lobbyID).quitPlayer(player);
 			GameLog.log(MsgType.NETWORK_INFO, "-> AI " + player.getPlayerName());

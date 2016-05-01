@@ -16,6 +16,7 @@ import com.tpps.technicalServices.network.matchmaking.packets.PacketJoinLobby;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingAnswer;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingPlayerInfo;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingRequest;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingStart;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingSuccessful;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 
@@ -40,6 +41,12 @@ public final class Matchmaker {
 					new InetSocketAddress(Addresses.getRemoteAddress(), MatchmakingServer.getStandardPort()), handler,
 					false);
 		}
+	}
+	
+	public void sendStartPacket(String senderName, UUID senderUID, UUID lobbyID, String[] selectedActionCards) throws IOException{
+		checkAndCreateClient();
+		client.sendMessage(new PacketMatchmakingStart(lobbyID, senderUID, senderName, selectedActionCards));
+		System.out.println("Sent request to start lobby " + lobbyID.toString());
 	}
 
 	/**

@@ -24,6 +24,8 @@ public class GameLobby {
 	private long startTime = 0;
 	private GameServer runningServer;
 
+	private MPlayer admin;
+
 	/** constructor, generating its unique lobbyID */
 	public GameLobby() {
 		this.lobbyID = MatchmakingController.generateLobbyID();
@@ -41,7 +43,7 @@ public class GameLobby {
 
 	/** @return whether there are 4 players in the lobby */
 	public boolean isFull() {
-		return this.players.size() == 4;
+		return this.players.size() >= 4;
 	}
 
 	/** @return whether the game has started yet */
@@ -64,6 +66,12 @@ public class GameLobby {
 		return this.runningServer;
 	}
 
+	public boolean isAdmin(MPlayer player) {
+		if (this.admin == null || player == null || player.isAI())
+			return false;
+		return this.admin == player;
+	}
+
 	/**
 	 * adds a player to the lobby
 	 * 
@@ -71,23 +79,26 @@ public class GameLobby {
 	 *            player to add to the lobby
 	 */
 	public void joinPlayer(MPlayer player) {
+		if (!player.isAI() && admin == null) {
+			admin = player;
+		}
 		System.out.println("[" + this.getLobbyID() + "] <-" + player.getPlayerName());
 		for (MPlayer mplayer : players) {
 
 			// send the new player the old player
 			if (!player.isAI()) {
-				MatchmakingServer.getInstance().sendJoinPacket(player, mplayer.getPlayerName());
+				MatchmakingServer.getInstance().sendJoinPacket(player, mplayer.getPlayerName(), isAdmin(mplayer));
 			}
 
 			// send the old player the new player
 			if (!mplayer.isAI()) {
-				MatchmakingServer.getInstance().sendJoinPacket(mplayer, player.getPlayerName());
+				MatchmakingServer.getInstance().sendJoinPacket(mplayer, player.getPlayerName(), isAdmin(player));
 			}
 		}
 
 		// send the new player himself
 		if (!player.isAI()) {
-			MatchmakingServer.getInstance().sendJoinPacket(player, player.getPlayerName());
+			MatchmakingServer.getInstance().sendJoinPacket(player, player.getPlayerName(), isAdmin(player));
 		}
 
 		this.players.add(player);
@@ -105,8 +116,9 @@ public class GameLobby {
 			this.lobbyScore = this.getLobbyScore() / this.players.size();
 		}
 		if (this.players.size() >= MAX_LOBBY_SIZE) {
-			this.startTime = System.currentTimeMillis();
-			MatchmakingController.startGame(this);
+			// Do nothing -> Lobby is full and waits to start
+			// this.startTime = System.currentTimeMillis();
+			// MatchmakingController.startGame(this);
 		}
 
 		int aiCounter = 0;
@@ -136,8 +148,35 @@ public class GameLobby {
 		this.updateLobbyScore();
 
 		for (MPlayer mplayer : this.players) {
+			// say everyone goodbye
 			if (!mplayer.isAI()) {
-				MatchmakingServer.getInstance().sendQuitPacket(mplayer, player.getPlayerName());
+				MatchmakingServer.getInstance().sendQuitPacket(mplayer, player.getPlayerName(), isAdmin(player));
+			}
+		}
+		if (isAdmin(player)) {
+			// find new lobby-admin
+			for (MPlayer pl : this.players) {
+				if (pl.isAI())
+					continue;
+				else {
+					for (MPlayer mpl : this.players) {
+						if (mpl.isAI() || mpl == pl)
+							continue;
+
+						MatchmakingServer.getInstance().sendQuitPacket(mpl, pl.getPlayerName(), false);
+						MatchmakingServer.getInstance().sendJoinPacket(mpl, pl.getPlayerName(), true);
+					}
+					this.admin = pl;
+					break;
+				}
+			}
+
+			if (this.admin == null) {
+				// only AIs left in the lobby -> remove all recursively
+				for (MPlayer aiPlayer : this.players) {
+					MatchmakingController.removeAiPlayer(aiPlayer.getPlayerName());
+				}
+				this.players.clear();
 			}
 		}
 

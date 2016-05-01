@@ -14,6 +14,7 @@ public class PacketMatchmakingPlayerInfo extends Packet {
 
 	private final String playerNameInfo;
 	private final boolean status;
+	private final boolean lobbyAdmin;
 
 	/**
 	 * constructor to initialize the packet
@@ -23,10 +24,16 @@ public class PacketMatchmakingPlayerInfo extends Packet {
 	 * @param joined
 	 *            true if joined, false if quit
 	 */
-	public PacketMatchmakingPlayerInfo(String playerName, boolean joined) {
+	public PacketMatchmakingPlayerInfo(String playerName, boolean joined, boolean isAdmin) {
 		super(PacketType.MATCHMAKING_PLAYER_INFO);
 		this.playerNameInfo = playerName;
 		this.status = joined;
+		this.lobbyAdmin = isAdmin;
+	}
+
+	/** @return whether the containing player has superior permissions */
+	public boolean isLobbyAdmin() {
+		return lobbyAdmin;
 	}
 
 	/** @return a representation of the packet as a String */

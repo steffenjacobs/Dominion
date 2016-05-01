@@ -131,10 +131,10 @@ public class MatchmakingServer extends Server {
 	 * @param joinedPlayer
 	 *            the player who joined
 	 */
-	public void sendJoinPacket(MPlayer receiver, String joinedPlayer) {
+	public void sendJoinPacket(MPlayer receiver, String joinedPlayer, boolean adm) {
 		ArrayList<MPlayer> tmp = new ArrayList<>();
 		tmp.add(receiver);
-		sendJoinPacket(tmp, joinedPlayer);
+		sendJoinPacket(tmp, joinedPlayer, adm);
 	}
 
 	/**
@@ -146,9 +146,9 @@ public class MatchmakingServer extends Server {
 	 * @param joinedPlayer
 	 *            the player who joined
 	 */
-	public void sendJoinPacket(Collection<MPlayer> receivers, String joinedPlayer) {
+	public void sendJoinPacket(Collection<MPlayer> receivers, String joinedPlayer, boolean adm) {
 
-		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(joinedPlayer, true);
+		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(joinedPlayer, true, adm);
 		try {
 			for (MPlayer receiver : receivers) {
 				super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
@@ -188,8 +188,8 @@ public class MatchmakingServer extends Server {
 	 * @param quittedPlayer
 	 *            the player who quitted
 	 */
-	public void sendQuitPacket(MPlayer receiver, String quittedPlayer) {
-		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(quittedPlayer, false);
+	public void sendQuitPacket(MPlayer receiver, String quittedPlayer, boolean adm) {
+		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(quittedPlayer, false, adm);
 		try {
 			super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
 		} catch (NullPointerException | IOException | IllegalArgumentException e) {
