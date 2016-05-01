@@ -302,7 +302,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			}
 		}
 		
-		if (this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()){
+		if (this.server.getGameController().getActivePlayer() != null && this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()){
 			this.server.getGameController().getActivePlayer().setPlayTwice();
 			this.server.getGameController().getActivePlayer().setPlayTwiceEnabledFalse();
 		}
