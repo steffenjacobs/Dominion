@@ -59,13 +59,14 @@ public final class DominionController {
 	 */
 	public static BufferedImage selectedGameImage;
 	private boolean turnFlag;
-
+	private boolean isHost;
 	private ChatClient chatClient;
 	
 	@SuppressWarnings("unused")
 	private CardEditor cardEditor;
 
 	private Semaphore waitForSession = new Semaphore(1);
+	
 
 	/** main entry point for client application 
 	 * @param stuff */
@@ -497,4 +498,19 @@ public final class DominionController {
 	public LoginGUIController getLoginGuiController() {
 		return loginGuiController;
 	}
+	
+	public boolean isHost() {
+		return isHost;
+	}
+
+	public void setHost(boolean isHost) {
+		if(isHost){
+			playerSettingsPanel.enableOrDisableEverything(true);
+		}else{
+			playerSettingsPanel.enableOrDisableEverything(false);
+		}
+		this.isHost = isHost;
+		System.out.println("AM I a host ? " + isHost);
+	}
+	
 }

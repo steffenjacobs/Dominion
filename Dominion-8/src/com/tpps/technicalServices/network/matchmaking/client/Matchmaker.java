@@ -182,16 +182,26 @@ public final class Matchmaker {
 				break;
 			case MATCHMAKING_PLAYER_INFO:
 				PacketMatchmakingPlayerInfo pmpi = (PacketMatchmakingPlayerInfo) packet;
-				// is called when a player joined or quitthe lobby
-				// player..." @LobbyScreen
+				if(pmpi.isLobbyAdmin()){
+					DominionController.getInstance().receiveChatMessageFromChatServer("This is the lobbyhost: " + pmpi.getPlayerName(),
+							"BOT", "", Color.YELLOW);
+				}else if(pmpi.isStatus()){
+					DominionController.getInstance().receiveChatMessageFromChatServer("A Player joined the lobby " + pmpi.getPlayerName(),
+							"BOT", "", Color.YELLOW);
+				}else if(!pmpi.isStatus()){
+					DominionController.getInstance().receiveChatMessageFromChatServer("A Player quitted from the lobby " + pmpi.getPlayerName(),
+							"BOT", "", Color.YELLOW);
+				}
+				
 				if (pmpi.isStatus()) {
 					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " joined the lobby.");
 					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
-					if (pmpi.getPlayerName() == DominionController.getInstance().getUsername()) {
-						if (pmpi.isLobbyAdmin()) {
-							DominionController.getInstance().setStartButton(true);
-						} else {
-							DominionController.getInstance().setStartButton(false);
+					if(pmpi.getPlayerName().equals(DominionController.getInstance().getUsername())){
+						if(pmpi.isLobbyAdmin()){
+							System.out.println(pmpi.getPlayerName() + "is a fucking host");
+							DominionController.getInstance().setHost(true);							
+						}else{
+							DominionController.getInstance().setHost(false);
 						}
 					}
 				} else {
@@ -227,7 +237,7 @@ public final class Matchmaker {
 			case 1: // Success
 
 				DominionController.getInstance().receiveChatMessageFromChatServer("You joined a lobby successfully",
-						"BOT", "", Color.RED);
+						"BOT", "", Color.YELLOW);
 				/*
 				 * :id : " + pck.getLobbyID()
 				 */
@@ -235,19 +245,19 @@ public final class Matchmaker {
 				break;
 			case 2: // Lobby does not exist
 				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby does not exis", "BOT", "",
-						Color.RED);
+						Color.YELLOW);
 				break;
 			case 3: // Lobby is already full
 				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby is already full", "BOT", "",
-						Color.RED);
+						Color.YELLOW);
 				break;
 			case 4: // Lobby already started
 				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby already started", "BOT", "",
-						Color.RED);
+						Color.YELLOW);
 				break;
 			default: // unknown error
 				DominionController.getInstance().receiveChatMessageFromChatServer("unknown error", "BOT", "",
-						Color.RED);
+						Color.YELLOW);
 				break;
 			}
 		}
