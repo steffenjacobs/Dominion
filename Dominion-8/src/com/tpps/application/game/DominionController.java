@@ -319,6 +319,7 @@ public final class DominionController {
 	 */
 	public void joinLobbyGui() {
 		this.globalChatPanel.getBackButton().setLobby(true);
+		this.playerSettingsPanel.getStartButton().setEnabled(true);
 		JPanel panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 

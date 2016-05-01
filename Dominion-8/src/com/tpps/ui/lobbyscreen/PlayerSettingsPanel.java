@@ -229,8 +229,12 @@ public class PlayerSettingsPanel extends JPanel {
 		minusKI.addActionListener(new KiListener());
 		return panel;
 	}
+	
+	public StartButton getStartButton() {
+		return startButton;
+	}
 
-	private class StartButton extends JButton implements ActionListener {
+	public class StartButton extends JButton implements ActionListener {
 		
 		private static final long serialVersionUID = 1L;
 		private boolean enabledFlag;
@@ -261,6 +265,7 @@ public class PlayerSettingsPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(enabledFlag){
+				this.setEnabled(false);
 				this.enabledFlag = false;
 				String[] selCards = new String[cardNamesSelected.size()];
 				cardNamesSelected.toArray(selCards);
@@ -755,6 +760,9 @@ public class PlayerSettingsPanel extends JPanel {
 		return connectedPlayers;
 	}
 	
+	/**
+	 * @return an arraylist of all selected cards
+	 */
 	public ArrayList<String> getCardNamesSelected() {
 		return cardNamesSelected;
 	}
