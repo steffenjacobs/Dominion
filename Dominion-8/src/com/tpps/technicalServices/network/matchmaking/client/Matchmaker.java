@@ -28,12 +28,11 @@ import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 public final class Matchmaker {
 	private Client client;
 	private PacketHandler handler;
+	private static Matchmaker INSTANCE;
 
 	private Matchmaker() {
 		// singleton
 	}
-
-	private static Matchmaker INSTANCE;
 
 	/**
 	 * @return the only instance of the Matchmaker

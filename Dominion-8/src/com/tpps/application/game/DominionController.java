@@ -37,7 +37,7 @@ import com.tpps.ui.statisticsscreen.StatisticsBoard;
  */
 public final class DominionController {
 
-	private static DominionController instance;
+	private static DominionController INSTANCE;
 	private UUID lobbyID;
 
 	private String username;
@@ -77,8 +77,8 @@ public final class DominionController {
 	 * trivial
 	 */
 	private DominionController() {
-		DominionController.instance = this;
-		DominionController.instance.init();
+		DominionController.INSTANCE = this;
+		DominionController.INSTANCE.init();
 	}
 
 	/**
@@ -422,9 +422,9 @@ public final class DominionController {
 	 * @return the current instance of the game
 	 */
 	public static DominionController getInstance() {
-		if (instance == null)
-			instance = new DominionController();
-		return instance;
+		if (INSTANCE == null)
+			INSTANCE = new DominionController();
+		return INSTANCE;
 	}
 
 	/**
