@@ -326,9 +326,8 @@ public class CheapCardCreator {
 				(LinkedList<CardType>) types.clone(), 0, "Bureaucrat", getImg("Bureaucrat")));
 
 		// setup Dummy-DominionController
-		DominionController dom = new DominionController(true);
-		dom.setCredentials("testname", "test@test.test");
-	//	dom.setUsername("testname");
+		DominionController dom = DominionController.getInstance();
+		dom.setUsername("testname");
 
 		// get valid session
 		if (DEBUG)

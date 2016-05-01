@@ -45,7 +45,9 @@ public class JUnitNetworkTest {
 	private static ArrayList<Serializable> toSend;
 	private static Packet sentTestPacket;
 
-	/** sets up the client and the server and connects them */
+	/** sets up the client and the server and connects them 
+	 * @throws IOException 
+	 * @throws InterruptedException */
 	@BeforeClass
 	public static void setupNetwork() throws IOException, InterruptedException {
 		// initialize variables
@@ -82,14 +84,16 @@ public class JUnitNetworkTest {
 		assertNotNull(sentTestPacket);
 	}
 
-	/** closes all open connections */
+	/** closes all open connections 
+	 * @throws InterruptedException */
 	@AfterClass
 	public static void cleanupNetwork() throws InterruptedException {
 		client.disconnect();
 		server.disconnectAll();
 	}
 
-	/** checks, if the client is connected to the server via the correct port */
+	/** checks, if the client is connected to the server via the correct port 
+	 * @throws InterruptedException */
 	@Test
 	public void testIfConnected() throws InterruptedException {
 		System.out.println("Doing test: TestIfConnected");
@@ -110,6 +114,8 @@ public class JUnitNetworkTest {
 	/**
 	 * checks if data can be sent from the client to the server and are received
 	 * correctly
+	 * @throws IOException 
+	 * @throws InterruptedException 
 	 */
 	@Test
 	public void checkClientToServer() throws IOException, InterruptedException {
@@ -137,6 +143,8 @@ public class JUnitNetworkTest {
 	/**
 	 * checks if data can be sent from the server to the client and are received
 	 * correctly
+	 * @throws IOException 
+	 * @throws InterruptedException 
 	 */
 	@Test
 	public void checkServerToClient() throws IOException, InterruptedException {
@@ -165,6 +173,8 @@ public class JUnitNetworkTest {
 
 	/**
 	 * does a bulk-test with sending 10k Packets from the server to the client
+	 * @throws IOException 
+	 * @throws InterruptedException 
 	 */
 	@Test
 	public void doBulkTest() throws IOException, InterruptedException {

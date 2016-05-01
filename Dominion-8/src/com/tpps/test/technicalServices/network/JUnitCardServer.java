@@ -52,7 +52,9 @@ public class JUnitCardServer {
 	private static DominionController dom;
 	private static CardClient client;
 
-	/** sets up the network */
+	/** sets up the network 
+	 * @throws InterruptedException 
+	 * @throws IOException */
 	@BeforeClass
 	public static void setup() throws InterruptedException, IOException {
 		createTestCard();
@@ -61,7 +63,8 @@ public class JUnitCardServer {
 		setupNetwork();
 	}
 
-	/** creates a test-card */
+	/** creates a test-card 
+	 * @throws IOException */
 	public static void createTestCard() throws IOException {
 		System.out.println("Creating Test-Card...");
 		// create test-card
@@ -90,11 +93,13 @@ public class JUnitCardServer {
 		serverStorage.saveCards();
 	}
 
-	/** gets a valid sessionID */
+	/** gets a valid sessionID 
+	 * @throws InterruptedException 
+	 * @throws IOException */
 	public static void getValidSession() throws InterruptedException, IOException {
 		System.out.println("Retrieving valid session...");
 		// setup Dummy-DominionController
-		dom = new DominionController(true);
+		dom = DominionController.getInstance();
 		dom.setUsername("testname");
 
 		// setup session-server
@@ -124,7 +129,9 @@ public class JUnitCardServer {
 		halt.release();
 	}
 
-	/** sets up the cardclient/cardserver connection */
+	/** sets up the cardclient/cardserver connection 
+	 * @throws IOException 
+	 * @throws InterruptedException */
 	public static void setupNetwork() throws IOException, InterruptedException {
 		System.out.println("Setting up network...");
 
@@ -141,7 +148,9 @@ public class JUnitCardServer {
 		assertNotNull(client);
 	}
 
-	/** pushes a card to the card-server */
+	/** pushes a card to the card-server 
+	 * @throws IOException 
+	 * @throws InterruptedException */
 	@Test
 	public void testCardPush() throws IOException, InterruptedException {
 		System.out.println("Testing Card-Push...");
@@ -202,6 +211,7 @@ public class JUnitCardServer {
 	/**
 	 * retrieves the pushed card from the server - ATTENTION: must be called
 	 * after testCardPush
+	 * @throws InterruptedException 
 	 */
 	@Test
 	public void testCardRetrieve() throws InterruptedException {
