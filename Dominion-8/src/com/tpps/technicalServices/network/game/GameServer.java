@@ -13,6 +13,8 @@ import com.tpps.technicalServices.network.clientSession.server.SessionServer;
 import com.tpps.technicalServices.network.core.Server;
 import com.tpps.technicalServices.network.core.packet.Packet;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 /** @author ladler - Lukas Adler */
 public class GameServer extends Server {
 
@@ -22,10 +24,12 @@ public class GameServer extends Server {
 	private SessionClient sessionClient;
 	private LinkedList<Player> disconnectedUser;
 
-	public GameServer(int port) throws IOException {
+	public GameServer(int port, String[] selectedActionCards) throws IOException {
+		// TODO: implement selectedActionCards
 		super(new InetSocketAddress("0.0.0.0", port), new ServerGamePacketHandler());
 		((ServerGamePacketHandler) super.getHandler()).setServer(this);
-		this.sessionClient = new SessionClient(new InetSocketAddress(Addresses.getLocalHost(), SessionServer.getStandardPort()));
+		this.sessionClient = new SessionClient(
+				new InetSocketAddress(Addresses.getLocalHost(), SessionServer.getStandardPort()));
 		this.gameController = new GameController(this);
 		instance = this;
 		this.getListenerManager().registerListener(new GameServerNetworkListener(this));
@@ -51,9 +55,12 @@ public class GameServer extends Server {
 		return CLIENT_ID++;
 	}
 
+	@Deprecated
 	public static void main(String[] args) {
+		if (args.length != 10)
+			throw new NotImplementedException();
 		try {
-			new GameServer(1340);
+			new GameServer(1340, args);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -62,16 +69,16 @@ public class GameServer extends Server {
 	public boolean validSession(String username, UUID sessionID) {
 		return this.sessionClient.checkSessionSync(username, sessionID);
 	}
-	
+
 	@Override
 	public void sendMessage(int port, Packet packet) throws IOException {
 		if (super.clients.containsKey(port)) {
 			System.out.println("send message.");
 			super.sendMessage(port, packet);
-		}else{
+		} else {
 			System.out.println("send no message");
 		}
-		
+
 	}
 
 	/**

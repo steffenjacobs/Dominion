@@ -98,7 +98,11 @@ public final class MatchmakingController {
 	 *            the name of the player to get
 	 * @return a player by its name (including AIs)
 	 */
-	static MPlayer getPlayerByName(String name) {
+	static MPlayer removeAiPlayer(String name) {
+		return playersByName.remove(name);
+	}
+	
+	static MPlayer getPlayerFromName(String name){
 		return playersByName.get(name);
 	}
 
@@ -108,7 +112,7 @@ public final class MatchmakingController {
 	 * @param lobby
 	 *            the GameLobby to start
 	 */
-	static void startGame(GameLobby lobby) {
+	static void startGame(GameLobby lobby, String[] selectedActionCards) {
 		GameLog.log(MsgType.INFO, "Starting lobby " + lobby.getLobbyID());
 		exec.submit(() -> {
 			GameLog.log(MsgType.INFO, "Setting up lobby " + lobby.getLobbyID());
@@ -136,7 +140,7 @@ public final class MatchmakingController {
 				exec.submit(() -> {
 					GameLog.log(MsgType.INFO, "Started GameServer for lobby " + lobby.getLobbyID());
 					try {
-						GameServer gs = new GameServer(freePort);
+						GameServer gs = new GameServer(freePort, selectedActionCards);
 						lobby.setServer(gs);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -171,7 +175,7 @@ public final class MatchmakingController {
 
 					else {
 						/* send success to client */
-						MatchmakingServer.getInstance().sendSuccessPacket(pl, playerNames, freePort);
+						MatchmakingServer.getInstance().sendSuccessPacket(pl, playerNames, freePort, selectedActionCards);
 					}
 				}
 				cl.disconnect();

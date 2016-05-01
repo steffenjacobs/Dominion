@@ -14,7 +14,7 @@ public class GameServerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.gameServer = new GameServer(1339);
+		this.gameServer = new GameServer(1339, new String[10]);
 	}
 
 	@Test

@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -61,6 +62,8 @@ public final class DominionController {
 
 	private ChatClient chatClient;
 	private CardEditor cardEditor;
+
+	private Semaphore waitForSession = new Semaphore(1);
 
 	/** main entry point for client application */
 	public static void main(String[] stuff) {
@@ -116,7 +119,7 @@ public final class DominionController {
 		mainMenuPanel = new MainMenuPanel(this.mainFrame);
 		globalChatPanel = new GlobalChatPanel();
 		statisticsBoardPanel = new StatisticsBoard();
-		playerSettingsPanel = new PlayerSettingsPanel();
+		playerSettingsPanel = new PlayerSettingsPanel().updateCards();
 		try {
 			this.originalBackground = ImageIO
 					.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
@@ -248,6 +251,9 @@ public final class DominionController {
 	 * @author jhuhn
 	 */
 	public void endLogin() {
+
+		storageController.checkStandardCardsAsync();
+
 		this.loadPanels();
 		this.initClients();
 
@@ -269,14 +275,6 @@ public final class DominionController {
 
 	public void setUsername(String name) {
 		this.username = name;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public CardStorageController getStorageController() {
-		return storageController;
 	}
 
 	/**
@@ -318,11 +316,11 @@ public final class DominionController {
 		panel.setVisible(true);
 		panel.setOpaque(false);
 		panel.add(this.globalChatPanel);
-		panel.add(this.playerSettingsPanel);
+		panel.add(this.playerSettingsPanel.updateCards());
 		// this.playerSettingsPanel.setStatisticsBoardPanel(this.statisticsBoardPanel);
 		this.mainFrame.setPanel(panel);
 	}
-	
+
 	public MainFrame getMainFrame() {
 		return mainFrame;
 	}
@@ -372,6 +370,7 @@ public final class DominionController {
 	 */
 	public void setSessionID(UUID sessionID) {
 		this.sessionID = sessionID;
+		waitForSession.release();
 	}
 
 	/**
@@ -399,6 +398,12 @@ public final class DominionController {
 	 * @return the current Session-ID
 	 */
 	public UUID getSessionID() {
+		if (sessionID == null)
+			try {
+				waitForSession.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		return sessionID;
 	}
 

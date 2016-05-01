@@ -83,6 +83,10 @@ public class PlayerSettingsPanel extends JPanel {
 	private JPanel panelWest;
 	private JPanel panelEast;
 	private BufferedImage blackBeauty;
+	
+	private JScrollPane midScroller;
+	private JPanel bottomAreaPanel;
+	
 	// private BufferedImage brainCrossed;
 	// private BufferedImage brain;
 
@@ -99,8 +103,10 @@ public class PlayerSettingsPanel extends JPanel {
 		this.setLayout(new GridLayout(3, 1, 0, SPACE_PANEL_TO_PANEL));
 
 		this.add(this.upperAreaPanel());
-		this.add(this.middleAreaPanel());
-		this.add(this.bottomAreaPanel());
+//		this.midScroller = this.middleAreaPanel();
+//		this.add(midScroller);
+//		this.add(this.bottomAreaPanel());
+		this.bottomAreaPanel = this.bottomAreaPanel();
 
 		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
 	}
@@ -209,6 +215,17 @@ public class PlayerSettingsPanel extends JPanel {
 		minusKI.addMouseListener(new KiListener());
 		return panel;
 	}
+	
+	public PlayerSettingsPanel updateCards(){
+		if(this.midScroller!=null){
+			this.remove(midScroller);
+			this.remove(bottomAreaPanel);
+		}
+		this.midScroller = middleAreaPanel();
+		this.add(midScroller);
+		this.add(bottomAreaPanel);
+		return this;
+	}
 
 	private Dimension getCardSize(int wdt, int hght) {
 
@@ -284,13 +301,9 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void componentResized(ComponentEvent e) {
-			System.out.println("resize");
-			System.out.println(panelMid.getComponentCount() + " - " + panelMid.getComponents());
-
 			Component comp;
 			for (int i = 0; i < panelMid.getComponentCount(); i++) {
 				comp = panelMid.getComponent(i);
-				System.out.println(getCardSize(card.getImage().getWidth(), card.getImage().getHeight()));
 				comp.setPreferredSize(getCardSize(card.getImage().getWidth(), card.getImage().getHeight()));
 				comp.revalidate();
 			}
@@ -354,8 +367,6 @@ public class PlayerSettingsPanel extends JPanel {
 
 			CardDisplayButton displayedCard = new CardDisplayButton(card);
 			displayedCard.setContentAreaFilled(false);
-
-			System.out.println();
 
 			displayedCard.setPreferredSize(getCardSize(card.getImage().getWidth(), card.getImage().getHeight()));
 
