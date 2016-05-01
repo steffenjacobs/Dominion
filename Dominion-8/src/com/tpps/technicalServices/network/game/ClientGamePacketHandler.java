@@ -88,7 +88,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			// this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameWindow.setCaptionTurn(((PacketDisable)packet).getCaption());
-			this.gameWindow.setCaptionTurn("waiting on reaction");
+			
 			break;
 		case SEND_BOARD:
 			PacketSendBoard packetSendBoard = (PacketSendBoard) packet;

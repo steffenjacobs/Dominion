@@ -326,28 +326,53 @@ public class GameController {
 	 * @param value
 	 */
 	public synchronized void discardOtherDownto(String value) {
+		boolean sendPacketDisable = true;
+		boolean sendEnableFlag = true;
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			if (!player.equals(activePlayer)) {
+			
+			if (!player.equals(activePlayer)) {		
+				sendEnableFlag = true;
+
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setReactionCard(true);
+					player.setReactionMode();
+
+					if (sendPacketDisable) {
+						sendPacketDisable = false;
+						try {
+							this.gameServer.sendMessage(this.activePlayer.getPort(),
+									new PacketDisable("wait on reaction"));
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+
 					try {
 						this.gameServer.sendMessage(player.getPort(), new PacketShowEndReactions());
+						this.gameServer.sendMessage(player.getPort(), new PacketEnable("react"));
+						sendEnableFlag = false;
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				}
-				player.setDiscardMode();
-				player.setDiscardOrTrashAction(CardAction.DISCARD_CARD, player.getDeck().getCardHand().size() - Integer.parseInt(value));
-
-				player.setReactionMode();
+				} 
 				
+				if (player.getDeck().getCardHand().size() > Integer.parseInt(value)) {
+					System.out.println("mehr als 3 karten");
+					player.setReactionMode();
+					player.setDiscardMode();
+					player.setDiscardOrTrashAction(CardAction.DISCARD_CARD,
+							player.getDeck().getCardHand().size() - Integer.parseInt(value));
+					if (sendEnableFlag) {
+						try {
+							this.gameServer.sendMessage(player.getPort(), new PacketEnable("react"));
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+
 			}
-		}
-		try {
-			this.gameServer.broadcastMessage(new PacketEnableOthers(this.activePlayer.getClientID()));
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -984,8 +1009,10 @@ public class GameController {
 	 */
 	public void isGameFinished() {
 		if (this.gameBoard.getTableForVictoryCards().get("Province").isEmpty()) {
+			System.out.println("province empty");
 			endGame();
 		} else if (this.gameBoard.checkThreePilesEmpty()) {
+			System.out.println("three piles empty");
 			endGame();
 		}
 	}

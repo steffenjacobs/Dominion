@@ -565,14 +565,17 @@ public class GameBoard {
 		int counter = 0;
 		counter += amountOfPilesEmpty(this.tableForActionCards);
 		if (counter >= GameConstant.EMPTY_PILES) {
+			System.out.println("table action cards empty piles: " + counter);
 			return true;
 		}
 		counter += amountOfPilesEmpty(this.tableForTreasureCards);
 		if (counter >= GameConstant.EMPTY_PILES) {
+			System.out.println("table for treasure cards: " +  counter);
 			return true;
 		}
 		counter += amountOfPilesEmpty(this.tableForVictoryCards);
 		if (counter >= GameConstant.EMPTY_PILES) {
+			System.out.println("table for victory cards " + counter);
 			return true;
 		}
 		return false;
@@ -585,7 +588,7 @@ public class GameBoard {
 	 */
 	public int amountOfPilesEmpty(LinkedHashMap<String, LinkedList<Card>> table) {
 		int counter = 0;
-		LinkedList<String> keys = new LinkedList<>(table.keySet());
+		LinkedList<String> keys = new LinkedList<String>(table.keySet());
 		for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			if (table.get(key).isEmpty()) {
@@ -595,6 +598,7 @@ public class GameBoard {
 				}
 			}
 		}
+		
 		return counter;
 	}
 	

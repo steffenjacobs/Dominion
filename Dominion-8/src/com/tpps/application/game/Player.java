@@ -995,13 +995,23 @@ public class Player {
 		case DISCARD_CARD:
 			if (this.discardOrTrashAction.getSecondEntry() > 0) {
 				this.discardOrTrashAction.decrementSecondEntry();
+				this.getDeck().getCardHand().remove(card);
 			}
-			this.getDeck().getCardHand().remove(card);
+			
 			if (this.discardOrTrashAction.getSecondEntry() == 0) {
 				this.discardMode = false;
 				if (this.reactionMode) {
 					setModesFalse();
-					this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
+					
+					boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
+
+					if (allReactionCarsPlayedFlag) {
+						this.gameServer.sendMessage(port,
+								new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
+					} else {
+						this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
+					}					
+					
 					this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 				}
 			}
