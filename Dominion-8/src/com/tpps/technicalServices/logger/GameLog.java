@@ -214,16 +214,16 @@ public class GameLog {
 	}
 
 	/** Weder MsgType.getDisplay() noch MsgType.getTimeStamp() wird benutzt;
-	 *  MsgType.setGameMode() ist auch überflüssig.
+	 *  MsgType.setGameMode() ist auch ï¿½berflï¿½ssig.
 	 *  
 	 *  Es wird nur .GAME auf das textPane gelogt ohne timeStamp
-	 *  Es wird alles     in die Konsole gelogt mit timeStamp (und egal ob irgendwo steht type.getDisplay() ist false) 
+	 *  Es wird nur !GAME in die Konsole gelogt mit timeStamp (und egal ob irgendwo steht type.getDisplay() ist false) 
 	 *  
-	 *  Die übergebene Farbe ist nur relevant bei .GAME 
+	 *  Die ï¿½bergebene Farbe ist nur relevant bei .GAME 
 	 *  (ansonsten einfach MsgColor verwenden, ist in der Konsole eh schwarz
 	 *  
-	 *  newLines bei .GAME:         hinzufügen wann desired
-	 *  newLines bei allen anderen: nicht hinzufügen, da es nicht auf das LogPane kommt und durch Syso eh eine newLine hat
+	 *  newLines bei .GAME:         hinzufï¿½gen wann desired
+	 *  newLines bei allen anderen: nicht hinzufï¿½gen, da es nicht auf das LogPane kommt und durch Syso eh eine newLine hat
 	 * 
 	 * 
 	 * @param type the message type of the log message
@@ -235,7 +235,8 @@ public class GameLog {
 			if (type.equals(MsgType.GAME) && guiPossible) {
 				GameLog.textPane.updateTextArea(line, color);
 			}
-			System.out.println(createTimestamp(type) + line);
+			if (!type.equals(MsgType.GAME)) 
+				System.out.println(createTimestamp(type) + line);
 		} else {
 			init();
 			log(type, line, color);
