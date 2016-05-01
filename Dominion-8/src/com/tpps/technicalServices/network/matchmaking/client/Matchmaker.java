@@ -29,6 +29,22 @@ public final class Matchmaker {
 	private Client client;
 	private PacketHandler handler;
 
+	private Matchmaker() {
+		// singleton
+	}
+
+	private static Matchmaker INSTANCE;
+
+	/**
+	 * @return the only instance of the Matchmaker
+	 */
+	public static Matchmaker getInstance() {
+		if (INSTANCE == null) {
+			INSTANCE = new Matchmaker();
+		}
+		return INSTANCE;
+	}
+
 	/**
 	 * creates & opens a new connection to the matchmaking-server if necessary
 	 * 
@@ -167,8 +183,7 @@ public final class Matchmaker {
 				break;
 			case MATCHMAKING_PLAYER_INFO:
 				PacketMatchmakingPlayerInfo pmpi = (PacketMatchmakingPlayerInfo) packet;
-				// is called when a player joined or quitted the lobby
-				// TODO: add player and remove one instance of "Waiting for
+				// is called when a player joined or quitthe lobby
 				// player..." @LobbyScreen
 				if (pmpi.isStatus()) {
 					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " joined the lobby.");
@@ -188,7 +203,6 @@ public final class Matchmaker {
 			case MATCHMAKING_SUCCESSFUL:
 				PacketMatchmakingSuccessful pms = (PacketMatchmakingSuccessful) packet;
 				// is called, when the lobby is full and the game starts
-				// TODO: connect to the gameServer & start the round
 				System.out.println("Downloading Cards...");
 				DominionController.getInstance().getCardRegistry().checkAndDownloadCards(pms.getSelectedActionCards());
 				System.out.println("starting match!");
@@ -212,8 +226,6 @@ public final class Matchmaker {
 				// system.exit();
 				break;
 			case 1: // Success
-				// TODO:
-				// save pck.getLobbyID() somewhere (-> DominionController?)
 
 				DominionController.getInstance().receiveChatMessageFromChatServer("You joined a lobby successfully",
 						"BOT", "", Color.RED);

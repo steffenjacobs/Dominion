@@ -219,7 +219,7 @@ public final class DominionController {
 	 */
 	private void initClients() {
 		this.chatClient = new ChatClient(this.username);
-		this.matchmaker = new Matchmaker();
+		this.matchmaker = Matchmaker.getInstance();
 		GameLog.log(MsgType.INFO, "Username: " + this.username);
 	}
 
