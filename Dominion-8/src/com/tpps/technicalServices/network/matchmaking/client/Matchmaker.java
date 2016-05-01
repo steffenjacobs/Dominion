@@ -42,8 +42,22 @@ public final class Matchmaker {
 					false);
 		}
 	}
-	
-	public void sendStartPacket(String senderName, UUID senderUID, UUID lobbyID, String[] selectedActionCards) throws IOException{
+
+	/**
+	 * send the start-packet to the matchmaking-server
+	 * 
+	 * @param senderName
+	 *            name of the lobby-admin
+	 * @param senderUID
+	 *            sessionID of the lobby-admin
+	 * @param lobbyID
+	 *            UUID of the lobby
+	 * @param selectedActionCards
+	 *            the names of the cards to play with
+	 * @throws IOException
+	 */
+	public void sendStartPacket(String senderName, UUID senderUID, UUID lobbyID, String[] selectedActionCards)
+			throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingStart(lobbyID, senderUID, senderName, selectedActionCards));
 		System.out.println("Sent request to start lobby " + lobbyID.toString());
@@ -159,10 +173,10 @@ public final class Matchmaker {
 				if (pmpi.isStatus()) {
 					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " joined the lobby.");
 					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
-					if(pmpi.getPlayerName() == DominionController.getInstance().getUsername()){
-						if(pmpi.isLobbyAdmin()){
+					if (pmpi.getPlayerName() == DominionController.getInstance().getUsername()) {
+						if (pmpi.isLobbyAdmin()) {
 							DominionController.getInstance().setStartButton(true);
-						}else{
+						} else {
 							DominionController.getInstance().setStartButton(false);
 						}
 					}

@@ -23,6 +23,8 @@ public class PacketMatchmakingPlayerInfo extends Packet {
 	 *            the name of the player joining or quitting
 	 * @param joined
 	 *            true if joined, false if quit
+	 * @param isAdmin
+	 *            true, if the containing player is the lobby-admin
 	 */
 	public PacketMatchmakingPlayerInfo(String playerName, boolean joined, boolean isAdmin) {
 		super(PacketType.MATCHMAKING_PLAYER_INFO);

@@ -69,12 +69,23 @@ public class GameLobby {
 		return this.runningServer;
 	}
 
+	/**
+	 * @param player
+	 *            the player to check admin for
+	 * @return if a player is lobby-admin
+	 */
 	public boolean isAdmin(MPlayer player) {
 		if (this.admin == null || player == null || player.isAI())
 			return false;
 		return this.admin == player;
 	}
 
+	/**
+	 * updates the lobby-admin
+	 * 
+	 * @param player
+	 *            the new lobby-admin
+	 */
 	private void setAdmin(MPlayer player) {
 		this.admin = player;
 	}
