@@ -15,7 +15,6 @@ import com.tpps.technicalServices.logger.DrawAndShuffle;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
-import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
@@ -854,7 +853,9 @@ public class Player {
 	}
 
 	private void finishReactionModeForThisPlayer() throws IOException {
-		this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.getPlayedCards())));
+		
+		
+		this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.playedCards)));
 		
 		boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
 
@@ -868,13 +869,6 @@ public class Player {
 		
 		this.gameServer.sendMessage(port, new PacketDontShowEndReactions());
 		setModesFalse();
-		
-		
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		
 		this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 	}

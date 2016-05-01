@@ -990,6 +990,15 @@ public class GameController {
 		}
 	}
 	
+	public LinkedList<Card> getAllPlayedCards(Player... players) {
+		LinkedList<Card> playedCards = new LinkedList<Card>();
+		for (Iterator<Player> iterator = this.players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			playedCards.addAll(player.getPlayedCards());			
+		}
+		return playedCards;
+	}
+	
 	public LinkedList<String> getPlayerNamesSorted() {
 		LinkedList<String> sortedNames = new LinkedList<String>(Arrays.asList(getPlayerNames()));
 		Collections.sort(sortedNames, (String name1, String name2) -> name1.compareTo(name2));
@@ -1038,7 +1047,7 @@ public class GameController {
 			}, false);
 			System.out.println("send message to matchmakingserver");
 			client.sendMessage(new PacketGameEnd(getPlayerNames(), getWinningPlayer().getPlayerName(), this.gameServer.getPort()));
-			this.gameServer.newGame();
+//			this.gameServer.newGame();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
