@@ -189,4 +189,13 @@ public final class GraphicsUtil {
 	public static boolean compareImages(BufferedImage image1, BufferedImage image2) {
 		return compareImages(image1, image2, false);
 	}
+
+	public static BufferedImage colorScale(Color color, BufferedImage bim, float scale) {
+		BufferedImage copy = new BufferedImage(bim.getWidth(), bim.getHeight(), bim.getType());
+		Graphics2D g = copy.createGraphics();
+		g.setPaint(color);
+		g.fillRect(0, 0, bim.getWidth(), bim.getHeight());
+		g.drawImage(setAlpha(bim, scale), 0, 0, null);
+		return copy;
+	}
 }
