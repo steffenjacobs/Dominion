@@ -695,6 +695,7 @@ public class Player {
 
 //		this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getPlayerName()," - plays " + serverCard.getName(), ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 		this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getPlayerName()," - plays " + serverCard.getName(), this.getLogColor()));
+		System.out.println("The Playername is: " + this.getPlayerName());
 
 		if (this.playTwice) {
 			System.out.println("playTwice: " + this.playTwice);
@@ -787,7 +788,7 @@ public class Player {
 						getDeck().getDrawPile().addLast(this.gameServer.getGameController().getGameBoard().getTableForTreasureCards().get("Silver").removeLast());
 					}
 				} catch (NoSuchElementException e) {
-					GameLog.log(MsgType.ERROR, "couldn't gain the card because ther are no more silver card on the board", this.getLogColor());
+					GameLog.log(MsgType.ERROR, "No more Silver cards on the board.");
 				}
 				break;
 			case DISCARD_CARD:

@@ -4,14 +4,15 @@ import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javafx.util.Pair;
 
 import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.ColorUtil;
-
-import javafx.util.Pair;
 
 /**
  * 
@@ -27,6 +28,28 @@ public class GameLog {
 	private static Color timestampColor = ColorUtil.EPICBLUE;
 	private static Color msgColor = Color.WHITE;
 
+	private static int alreadyLogged;
+	private static int count;
+	
+	private static HashMap<Integer, LogObject> waitingLogs;
+	
+	public static int getCount() {
+		return GameLog.count++;
+	}
+	
+	public static void log(MsgType type, String line, int count, Color color) {
+		if (count - 1 == GameLog.alreadyLogged) {
+			GameLog.log(type, line, color);
+			GameLog.alreadyLogged++;
+		} else if (GameLog.waitingLogs.get(count) != null) {
+			GameLog.log(GameLog.waitingLogs.get(count).getType(), GameLog.waitingLogs.get(count).getLine(), GameLog.waitingLogs.get(count).getColor());
+			GameLog.alreadyLogged++;
+			GameLog.waitingLogs.remove(count);
+		} else {
+			GameLog.waitingLogs.put(count, new LogObject(type, line, color));
+		}
+	}
+	
 	/**
 	 * unused for now, see MsgType class for messageTypeColors
 	 */
@@ -184,6 +207,9 @@ public class GameLog {
 	 */
 	public static void init() {
 		GameLog.isInitialized = true;
+		GameLog.count = 1;
+		GameLog.alreadyLogged = 0;
+		GameLog.waitingLogs = new HashMap<Integer, LogObject>();
 		if (guiPossible) 
 			GameLog.textPane = new GameLogTextPane();
 		else return;
@@ -230,12 +256,12 @@ public class GameLog {
 	 * @param line the line to write
 	 * @param color the color in which the line is displayed
 	 */
-	public static void log(MsgType type, String line, Color color) {
+	private static void log(MsgType type, String line, Color color) {
 		if (isInitialized) {
 			if (type.equals(MsgType.GAME) && guiPossible) {
 				GameLog.textPane.updateTextArea(line, color);
 			}
-			if (!type.equals(MsgType.GAME)) 
+			if (!type.equals(MsgType.GAME))
 				System.out.println(createTimestamp(type) + line);
 		} else {
 			init();

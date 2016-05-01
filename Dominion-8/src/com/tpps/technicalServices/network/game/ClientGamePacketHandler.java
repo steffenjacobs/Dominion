@@ -200,14 +200,16 @@ public class ClientGamePacketHandler extends PacketHandler {
 			String right = pck.getRight();
 			Color usercolor = pck.getColor();
 			MsgType type = pck.getMsgType();
+			
+			int logNr = pck.getLogNr();
 
-			GameLog.log(type, left, GameLog.getMsgColor());
-			GameLog.log(type, username, usercolor);
-			GameLog.log(type, right + "\n", GameLog.getMsgColor());
+			GameLog.log(type, left,logNr, GameLog.getMsgColor());
+			GameLog.log(type, username, logNr,usercolor);
+			GameLog.log(type, right + "\n",logNr, GameLog.getMsgColor());
 			break;
 		case BROADCAST_LOG_MULTI_COLOR:
 			for (Pair<String, Color> pair : ((PacketBroadcastLogMultiColor) packet).getPair()) {
-				GameLog.log(((PacketBroadcastLogMultiColor) packet).getMsgType(), pair.getKey(), pair.getValue());
+				GameLog.log(((PacketBroadcastLogMultiColor) packet).getMsgType(), pair.getKey(),((PacketBroadcastLogMultiColor) packet).getLogNr(), pair.getValue());
 			}
 			break;
 		case SHOW_END_SCREEN:
