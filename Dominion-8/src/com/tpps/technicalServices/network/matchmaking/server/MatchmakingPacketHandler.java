@@ -216,7 +216,7 @@ public class MatchmakingPacketHandler extends PacketHandler {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				GameLog.log(MsgType.NETWORK_INFO, "-> " + player.getScore());
+				GameLog.log(MsgType.INFO, player.getPlayerName() + " entered Matchmaking with score " + player.getScore() + ". ");
 			} else {
 				try {
 					super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 0, null));
