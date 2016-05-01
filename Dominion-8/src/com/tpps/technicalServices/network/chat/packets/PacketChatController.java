@@ -93,6 +93,9 @@ public class PacketChatController extends Packet{
 		this.colorMap =  colorMap;
 	}
 
+	/**
+	 * @see com.tpps.technicalServices.network.core.packet.Packet#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Command: '" + this.command + "' , Member of ChatRoom: '" + this.memberOfChatRoom + "' ,  Members: " + this.members.toString();

@@ -8,13 +8,13 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
  * 
  * @author jhuhn
  */
-public class PacketSendChatToClient extends Packet{
+public class PacketSendChatToClient extends Packet {
 
 	private static final long serialVersionUID = 1L;
 	private String sender;
 	private String message;
 	private String receiver;
-	
+
 	/**
 	 * initializes the PM packet
 	 * 
@@ -33,11 +33,14 @@ public class PacketSendChatToClient extends Packet{
 		this.receiver = receiver;
 	}
 
+	/**
+	 * @see com.tpps.technicalServices.network.core.packet.Packet#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Sender: " + this.sender + " to Receiver: " + this.receiver + "   Message: " + this.message;
 	}
-	
+
 	/**
 	 * @author jhuhn
 	 * @return String representation of the sender
@@ -45,7 +48,7 @@ public class PacketSendChatToClient extends Packet{
 	public String getSender() {
 		return sender;
 	}
-	
+
 	/**
 	 * @author jhuhn
 	 * @return String representation of the message
@@ -53,7 +56,7 @@ public class PacketSendChatToClient extends Packet{
 	public String getMessage() {
 		return message;
 	}
-	
+
 	/**
 	 * @author jhuhn
 	 * @return String representation of the receiver
