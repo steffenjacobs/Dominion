@@ -617,6 +617,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 			 * 17.2 GameLog entweder queue oder count um die richtige Reihenfolge sicherzustellen
 			 * 17.3 AI hat immer den selben Namen im Log?
 			 * 
+			 * Next Steps:
+			 * - Entwickeln & Test AI ohne CheapCardCreator davor laufen zu lassen (dann geht Log (vom Stand 1.5. 13 Uhr, s. Bitbucket))
+			 * - Lukas/Steffen fragen wg Packet Reihenfolge & nummern beim Schicken übergeben
+			 * - je nachdem client oder serverseitig (17.2) einbauen
+			 * 
 			 * 18. @nishit playTreasures nicht mehr klickbar wenn spieler keine geldkarten mehr auf der hand hat
 			 * 19. @nishit tried to fix Add/Remove AI Button with horrible attempt, but didn't work
 			 */
