@@ -250,7 +250,6 @@ public class PlayerSettingsPanel extends JPanel {
 			super.paint(g);
 		}
 
-
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			String[] selCards = new String[cardNamesSelected.size()];
@@ -266,44 +265,47 @@ public class PlayerSettingsPanel extends JPanel {
 			System.out.println("Starting game...");
 		}
 	}
-	
+
 	/**
 	 * handles the start button logic
 	 */
-	public void handleStartButton(){
-//		System.out.println("listsize: " + this.cardNamesSelected.size());
-//		System.out.println("players: " + this.connectedPlayersAsInt);
-//		System.out.println("HOST: " + DominionController.getInstance().isHost());
+	public void handleStartButton() {
+		// System.out.println("listsize: " + this.cardNamesSelected.size());
+		// System.out.println("players: " + this.connectedPlayersAsInt);
+		// System.out.println("HOST: " +
+		// DominionController.getInstance().isHost());
 		this.startButton.setEnabled(this.validateStartButton());
 	}
-	
+
 	/**
-	 * @param enable true: host can select gamesettings, false: no host no power
+	 * @param enable
+	 *            true: host can select gamesettings, false: no host no power
 	 */
-	public void enableOrDisableEverything(boolean enable){
+	public void enableOrDisableEverything(boolean enable) {
 		this.minusKI.setEnabled(enable);
 		this.plusKI.setEnabled(enable);
 		this.startButton.setEnabled(enable);
 		this.midScroller.setEnabled(enable);
 		this.panelMid.setEnabled(enable);
-		
+
 		for (Iterator<CardDisplayButton> iterator = allCards.iterator(); iterator.hasNext();) {
-			((CardDisplayButton) iterator.next()).setEnabled(enable);;
-			
+			((CardDisplayButton) iterator.next()).setEnabled(enable);
+			;
+
 		}
 	}
-	
+
 	/**
 	 * @return validates the startbutton logic
 	 */
-	public boolean validateStartButton(){
-		if(!DominionController.getInstance().isHost()){
+	public boolean validateStartButton() {
+		if (!DominionController.getInstance().isHost()) {
 			return false;
 		}
-		if(this.cardNamesSelected.size() != 10){
+		if (this.cardNamesSelected.size() != 10) {
 			return false;
-		}		
-		if(this.connectedPlayersAsInt != 4){
+		}
+		if (this.connectedPlayersAsInt != 4) {
 			return false;
 		}
 		return true;
@@ -443,7 +445,7 @@ public class PlayerSettingsPanel extends JPanel {
 			CardDisplayButton displayedCard = new CardDisplayButton(card);
 			displayedCard.setContentAreaFilled(false);
 			allCards.add(displayedCard);
-			
+
 			displayedCard.setPreferredSize(getCardSize(card.getImage().getWidth(), card.getImage().getHeight()));
 
 			displayedCard.setBorderPainted(false);
@@ -459,7 +461,7 @@ public class PlayerSettingsPanel extends JPanel {
 		}
 		scrollBarHeight = scrollMid.getHorizontalScrollBar().getHeight();
 		return scrollMid;
-	}	
+	}
 
 	/**
 	 * @author jhuhn
@@ -723,17 +725,28 @@ public class PlayerSettingsPanel extends JPanel {
 	private ArrayList<String> aiNames = new ArrayList<>();
 
 	private class KiListener implements ActionListener {
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == plusKI) {
 				aiNames.add("" + System.identityHashCode(e));
-				DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
+				try {
+					DominionController.getInstance().getMatchmaker().sendAIPacket("AI_" + System.identityHashCode(e),
+							DominionController.getInstance().getLobbyID(), false);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				PlayerSettingsPanel.this.handleStartButton();
 			} else if (e.getSource() == minusKI && aiNames.size() > 0) {
-				DominionController.getInstance().sendAIPacket("AI_" + aiNames.remove(aiNames.size() - 1), true);
+				try {
+					DominionController.getInstance().getMatchmaker().sendAIPacket(
+							"AI_" + aiNames.remove(aiNames.size() - 1), DominionController.getInstance().getLobbyID(),
+							true);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				PlayerSettingsPanel.this.handleStartButton();
-			}			
+			}
 		}
 	}
 }

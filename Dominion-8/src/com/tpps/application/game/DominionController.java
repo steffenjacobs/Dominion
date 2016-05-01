@@ -468,21 +468,7 @@ public final class DominionController {
 	public void setLobbyID(UUID lobbyID) {
 		this.lobbyID = lobbyID;
 	}
-
-	//TODO: remove this method
-	/**
-	 * sends an AI-packet (join and quit)
-	 * @param name the name of the AI
-	 * @param abort true: quit, else join
-	 */
-	public void sendAIPacket(String name, boolean abort) {
-		try {
-			this.matchmaker.sendAIPacket(name, this.lobbyID, abort);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
+	
 	/**
 	 * @return the login-GUI-controller
 	 */
