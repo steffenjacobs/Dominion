@@ -274,7 +274,16 @@ public class PlayerSettingsPanel extends JPanel {
 		// System.out.println("players: " + this.connectedPlayersAsInt);
 		// System.out.println("HOST: " +
 		// DominionController.getInstance().isHost());
-		this.startButton.setEnabled(this.validateStartButton());
+		boolean validate = this.validateStartButton();
+		this.startButton.setEnabled(validate);
+		if(validate){
+			DominionController.getInstance().receiveChatMessageFromChatServer("startbutton is enabled","BOT", "", Color.YELLOW);
+		}else{
+			DominionController.getInstance().receiveChatMessageFromChatServer("startbutton is desabled \n "
+					+ "listsize: " + String.valueOf(this.cardNamesSelected.size()) + "\n"
+					+ "connectedplayers: " + String.valueOf(this.connectedPlayersAsInt) 
+					 , "BOT", "", Color.YELLOW);
+		}
 	}
 
 	/**
