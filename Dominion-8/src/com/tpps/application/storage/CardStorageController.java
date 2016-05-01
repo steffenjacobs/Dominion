@@ -7,6 +7,7 @@ import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.game.card.Card;
@@ -198,5 +199,10 @@ public class CardStorageController {
 	 */
 	public int getCardCount() {
 		return this.storedCards.size();
+	}
+
+	/** @return all stored cards */
+	public Collection<SerializedCard> getAllCards() {
+		return this.storedCards.values();
 	}
 }

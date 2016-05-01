@@ -1,8 +1,9 @@
 package com.tpps.ui.lobbyscreen;
 
 import java.awt.BorderLayout;
-import java.awt.CheckboxGroup;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -12,26 +13,31 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.RenderingHints;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.application.game.card.CardType;
+import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -47,8 +53,7 @@ public class PlayerSettingsPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private final Font head = new Font("Arial Black", Font.BOLD, 20);
-	private final Font optionFont = new Font("Arial Black", Font.BOLD, 15);
-	
+
 	private BufferedImage[] originalImages = new BufferedImage[4];
 	private BufferedImage[] transparentImages = new BufferedImage[4];
 	private BufferedImage selectedImage;
@@ -67,25 +72,19 @@ public class PlayerSettingsPanel extends JPanel {
 	private static int IMG_TO_BOTTOM = 15;
 	private static final int IMG_TO_EDGE = 30;
 
-	private static final float ALPHA = 0.4F;
-	
+	private int scrollBarHeight;
+
+	private static final float ALPHA = 0.6F;
+
 	private JButton plusKI, minusKI;
-	private ButtonGroup group = new ButtonGroup();
 
 	private JPanel panel;
 	private JPanel panelMid;
 	private JPanel panelWest;
 	private JPanel panelEast;
 	private BufferedImage blackBeauty, temp;
-	private BufferedImage brainCrossed;
-	private BufferedImage brain;
-	
-	private JRadioButton attack;
-	private JRadioButton reaction;
-	private JRadioButton defense;
-	private JRadioButton balance1;
-	private JRadioButton balance2;
-	private JRadioButton random;
+	// private BufferedImage brainCrossed;
+	// private BufferedImage brain;
 
 	/**
 	 * constructor, initializes the lobby
@@ -211,90 +210,176 @@ public class PlayerSettingsPanel extends JPanel {
 		return panel;
 	}
 
+	private Dimension getCardSize(int wdt, int hght) {
+
+		return new Dimension((int) (DominionController.getInstance().getMainFrame().getHeight() / 3d / hght * wdt),
+				DominionController.getInstance().getMainFrame().getHeight() / 3 - SPACE_PANEL_TO_PANEL * 2
+						- scrollBarHeight);
+	}
+
+	class CardDisplayButton extends JButton implements MouseListener {
+
+		private SerializedCard card;
+
+		private BufferedImage imgSelected = null;
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 2289556894288934256L;
+
+		public CardDisplayButton(SerializedCard originalCard) {
+			this.card = originalCard;
+			this.addMouseListener(this);
+		}
+
+		@Override
+		public void paintComponent(Graphics g) {
+			super.paintComponent(g);
+			Graphics2D h = (Graphics2D) g;
+			h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+			if (imgSelected == null) {
+				h.drawImage(card.getImage(), 0, 0, this.getWidth(), this.getHeight(), null);
+			} else {
+				h.drawImage(imgSelected, 0, 0, this.getWidth(), this.getHeight(), null);
+			}
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			if (imgSelected == null) {
+				cardNamesSelected.add(this.card.getName());
+				imgSelected = GraphicsUtil.colorScale(new Color(0, 0, 6), card.getImage(), .4f);
+			} else {
+				cardNamesSelected.remove(this.card.getName());
+				imgSelected = null;
+			}
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO
+		}
+	}
+
+	private class CardResizeListener implements ComponentListener {
+
+		SerializedCard card;
+
+		public CardResizeListener(SerializedCard card) {
+			this.card = card;
+		}
+
+		@Override
+		public void componentResized(ComponentEvent e) {
+			System.out.println("resize");
+			System.out.println(panelMid.getComponentCount() + " - " + panelMid.getComponents());
+
+			Component comp;
+			for (int i = 0; i < panelMid.getComponentCount(); i++) {
+				comp = panelMid.getComponent(i);
+				System.out.println(getCardSize(card.getImage().getWidth(), card.getImage().getHeight()));
+				comp.setPreferredSize(getCardSize(card.getImage().getWidth(), card.getImage().getHeight()));
+				comp.revalidate();
+			}
+		}
+
+		@Override
+		public void componentMoved(ComponentEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void componentShown(ComponentEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void componentHidden(ComponentEvent e) {
+			// TODO Auto-generated method stub
+
+		}
+	}
+
+	ArrayList<String> cardNamesSelected = new ArrayList<>();
+
 	/**
 	 * @author jhuhn
 	 * @return a JPanel to select cardsets
 	 */
-	private JPanel middleAreaPanel() {
-		// panelMid = new JPanel(new BorderLayout());
-		JPanel cardpanel = new JPanel(new GridLayout(3,2)){
-			private static final long serialVersionUID = 1L;
+	private JScrollPane middleAreaPanel() {
 
-			@Override
-			public void paint(Graphics g) {
-				Graphics2D h = (Graphics2D) g;
-				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
-				super.paint(h);
-			}
-		};
-		cardpanel.setOpaque(false);
-		
-		attack = this.cards("Attack");
-		reaction = this.cards("Reaction");
-		defense = this.cards("Defense");
-		balance1= this.cards("Balance 1");
-		balance2 = this.cards("Balance 2");
-		random = this.cards("Random");
-		
-		cardpanel.add(attack);
-		cardpanel.add(reaction);
-		cardpanel.add(defense);
-		cardpanel.add(balance1);
-		cardpanel.add(balance2);
-		cardpanel.add(random);	
-		
 		panelMid = new JPanel();
-		BorderLayout borderlayout = new BorderLayout();
-		borderlayout.setHgap(20);
-		panelMid.setLayout(borderlayout);
-		JTextField header = this.createHeader("Cardsets: ");
 		panelMid.setOpaque(false);
-		panelMid.add(header, BorderLayout.PAGE_START);	
-		panelMid.add(Box.createHorizontalStrut(50), BorderLayout.LINE_START);
-		panelMid.add(Box.createHorizontalStrut(50), BorderLayout.LINE_END);
-		panelMid.add(cardpanel, BorderLayout.CENTER);
-		return panelMid;
-	}
-	
-	/**
-	 * @author jhuhn
-	 * @return an int representation of the selected cardset
-	 */
-	public int getSelection(){		
-		if(attack.isSelected()){
-			System.out.println("1");
-			return 1;
-		}else if(reaction.isSelected()){
-			return 2;
-		}else if((defense.isSelected())){
-			return 3;
-		}else if((balance1.isSelected())){
-			return 4;
-		}else if((balance2.isSelected())){
-			return 5;
-		}else if((random.isSelected())){
-			return 6;
-		}
-		return 6;
-	}
-	
-	private JRadioButton cards(String text){
-		JRadioButton option = new JRadioButton(text){
-			private static final long serialVersionUID = 1L;
+		JScrollPane scrollMid = new JScrollPane(panelMid) {
+
+			private static final long serialVersionUID = 7571416654753384462L;
 
 			@Override
-			public void paint(Graphics g) {
-				g.drawImage(blackBeauty, 0, 0, 0, 0, null);
-				super.paint(g);
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(blackBeauty, 0, 0, null);
 			}
 		};
-		option.setOpaque(false);
-		option.setHorizontalAlignment(JRadioButton.CENTER);
-		option.setForeground(Color.WHITE);
-		option.setFont(optionFont);
-		group.add(option);
-		return option;		
+		scrollMid.setOpaque(false);
+		scrollMid.getViewport().setOpaque(false);
+		scrollMid.getHorizontalScrollBar().setOpaque(false);
+		scrollMid.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+		scrollMid.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		scrollMid.setBorder(BorderFactory.createEmptyBorder());
+
+		Iterator<SerializedCard> it = DominionController.getInstance().getCardRegistry().getAllCards().iterator();
+
+		panelMid.setLayout(new FlowLayout());
+
+		SerializedCard firstCard = null;
+		while (it.hasNext()) {
+			SerializedCard card = it.next();
+			if (firstCard == null) {
+				firstCard = card;
+			}
+
+			if (!card.getTypes().contains(CardType.ACTION)) {
+				continue;
+			}
+
+			CardDisplayButton displayedCard = new CardDisplayButton(card);
+			displayedCard.setContentAreaFilled(false);
+
+			System.out.println();
+
+			displayedCard.setPreferredSize(getCardSize(card.getImage().getWidth(), card.getImage().getHeight()));
+
+			displayedCard.setBorderPainted(false);
+			displayedCard.setToolTipText(card.getName());
+			displayedCard.setVisible(true);
+
+			panelMid.add(displayedCard);
+		}
+		if (firstCard != null)
+
+		{
+			scrollMid.addComponentListener(new CardResizeListener(firstCard));
+		}
+		scrollBarHeight = scrollMid.getHorizontalScrollBar().getHeight();
+		return scrollMid;
 	}
 
 	/**
@@ -379,10 +464,13 @@ public class PlayerSettingsPanel extends JPanel {
 	 */
 	public void initOriginalBackgroundImages() {
 		try {
-			this.originalImages[0] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/spring.jpg"));
-			this.originalImages[1] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/summer.jpg"));
+			this.originalImages[0] = ImageIO
+					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/spring.jpg"));
+			this.originalImages[1] = ImageIO
+					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/summer.jpg"));
 			this.originalImages[2] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/fall.jpg"));
-			this.originalImages[3] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/winter.jpg"));
+			this.originalImages[3] = ImageIO
+					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/winter.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -408,14 +496,16 @@ public class PlayerSettingsPanel extends JPanel {
 	public void loadingImage() {
 		try {
 			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			this.brain = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/brain.png"));
-			this.brainCrossed = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/braincrossed.png"));
+			// this.brain =
+			// ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/brain.png"));
+			// this.brainCrossed = ImageIO
+			// .read(ClassLoader.getSystemResource("resources/img/lobbyScreen/braincrossed.png"));
 			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, PlayerSettingsPanel.ALPHA);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * This method handles a backgroundselection vote
 	 * 
@@ -523,7 +613,7 @@ public class PlayerSettingsPanel extends JPanel {
 	public void initStandardBackground() {
 		this.changeSelectedPicture(0);
 	}
-	
+
 	protected static void setAlpha(BufferedImage image, float alpha) {
 		image = (BufferedImage) GraphicsUtil.setAlpha(image, alpha);
 	}
@@ -546,33 +636,33 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			if(e.getSource().equals(minusKI)){
-				minusKI.setText("");
-				temp=blackBeauty;
-				blackBeauty = brainCrossed;
-			}
-			if(e.getSource().equals(plusKI)){
-				plusKI.setText("");
-				temp=blackBeauty;
-				blackBeauty = brain;
+			// if (e.getSource().equals(minusKI)) {
+			// minusKI.setText("");
+			// temp = blackBeauty;
+			//// blackBeauty = brainCrossed;
+			// }
+			// if (e.getSource().equals(plusKI)) {
+			// plusKI.setText("");
+			// temp = blackBeauty;
+			//// blackBeauty = brain;
+			//
+			// }
 
-			}
-			
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			if(e.getSource().equals(minusKI)){
-				blackBeauty = temp;
-				minusKI.setText("Remove AI");
-			}
-			if(e.getSource().equals(plusKI)){
-				blackBeauty = temp;
-				plusKI.setText("Add AI");
-			}
+			// if (e.getSource().equals(minusKI)) {
+			// blackBeauty = temp;
+			// minusKI.setText("Remove AI");
+			// }
+			// if (e.getSource().equals(plusKI)) {
+			// blackBeauty = temp;
+			// plusKI.setText("Add AI");
+			// }
 
 		}
-		
+
 		// @Override
 		// public void mouseEntered(MouseEvent e) {
 		// if (e.getSource().equals(minusKI)) {
@@ -682,7 +772,12 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
+			if (e.getSource() == plusKI) {
+				DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
+			} else if (e.getSource() == minusKI) {
+				DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), true);
+
+			}
 		}
 
 		@Override
