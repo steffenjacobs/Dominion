@@ -40,7 +40,7 @@ public class PacketBroadcastLogMultiColor extends Packet {
 			pair.addLast(p);
 		}
 		this.msgType = MsgType.GAME;
-		this.logNr = GameLog.getCount();
+		this.logNr = GameLog.getCountAndInc();
 	}
 
 	/**

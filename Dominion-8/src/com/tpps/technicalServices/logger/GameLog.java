@@ -20,6 +20,8 @@ import com.tpps.technicalServices.util.ColorUtil;
  *
  */
 public class GameLog {
+	
+	private static final boolean DEBUG_FLAG = false;
 
 	private static GameLogTextPane textPane;
 	private static Map<Integer, Pair<String, Color>> prepText;
@@ -33,22 +35,37 @@ public class GameLog {
 	
 	private static HashMap<Integer, LogObject> waitingLogs;
 	
-	public static int getCount() {
+	public static int getCountAndInc() {
+		System.out.println(ANSIUtil.getRedText("<<<<<<<<<<< COUNT CALLED, value: " + GameLog.count));
 		return GameLog.count++;
 	}
 	
-	public static void log(MsgType type, String line, int count, Color color) {
-		if (count - 1 == GameLog.alreadyLogged) {
-			GameLog.log(type, line, color);
-			GameLog.alreadyLogged++;
-		} else if (GameLog.waitingLogs.get(count) != null) {
-			GameLog.log(GameLog.waitingLogs.get(count).getType(), GameLog.waitingLogs.get(count).getLine(), GameLog.waitingLogs.get(count).getColor());
-			GameLog.alreadyLogged++;
-			GameLog.waitingLogs.remove(count);
-		} else {
-			GameLog.waitingLogs.put(count, new LogObject(type, line, color));
-		}
+	public static int getAlreadyLogged() {
+		return GameLog.alreadyLogged;
 	}
+	
+	public static HashMap<Integer,LogObject> getWaitingLogs() {
+		return GameLog.waitingLogs;
+	}
+	
+//	public static void log(MsgType type, String line, int count, Color color) {
+//		System.out.println(">>>> in the countLogMethod");
+//		System.out.println(">>>> alreadyLogged: " + alreadyLogged);
+//		System.out.println(">>>> count: " + count + ", GameLog.count: " + GameLog.count);
+//		if (count - 1 == GameLog.alreadyLogged) {
+//			System.out.println(">>>> in the if");
+//			GameLog.log(type, line, color);
+//			GameLog.alreadyLogged++;
+//		} else if (GameLog.waitingLogs.get(count) != null) {
+//			System.out.println(">>>> in the elseIf");
+//			GameLog.log(GameLog.waitingLogs.get(count).getType(), GameLog.waitingLogs.get(count).getLine(), GameLog.waitingLogs.get(count).getColor());
+//			GameLog.alreadyLogged++;
+//			GameLog.waitingLogs.remove(count);
+//		} else {
+//			System.out.println(">>>> in the else");
+//			GameLog.waitingLogs.put(count, new LogObject(type, line, color));
+//		}
+//	}
 	
 	/**
 	 * unused for now, see MsgType class for messageTypeColors
@@ -256,17 +273,19 @@ public class GameLog {
 	 * @param line the line to write
 	 * @param color the color in which the line is displayed
 	 */
-	private static void log(MsgType type, String line, Color color) {
-		if (isInitialized) {
-			if (type.equals(MsgType.GAME) && guiPossible) {
-				GameLog.textPane.updateTextArea(line, color);
+	public static void log(MsgType type, String line, Color color) {
+//		if (!DEBUG_FLAG) {
+			if (isInitialized) {
+				if (type.equals(MsgType.GAME) && guiPossible) {
+					GameLog.textPane.updateTextArea(line, color);
+				}
+				if (!type.equals(MsgType.GAME))
+					System.out.println(createTimestamp(type) + line);
+			} else {
+				init();
+				log(type, line, color);
 			}
-			if (!type.equals(MsgType.GAME))
-				System.out.println(createTimestamp(type) + line);
-		} else {
-			init();
-			log(type, line, color);
-		}
+//		}
 	}
 	
 	/**

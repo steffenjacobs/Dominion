@@ -21,8 +21,6 @@ public class PacketBroadcastLog extends Packet {
 	private final MsgType msgType;
 	private final Color color;
 
-	private final int logNr;
-
 	/***
 	 * this will be used in most cases
 	 * 
@@ -38,7 +36,6 @@ public class PacketBroadcastLog extends Packet {
 		this.right = right;
 		this.msgType = MsgType.GAME;
 		this.color = color;
-		this.logNr = GameLog.getCount();
 	}
 
 	/**
@@ -54,7 +51,6 @@ public class PacketBroadcastLog extends Packet {
 		this.right = right;
 		this.msgType = MsgType.GAME;
 		this.color = GameLog.getMsgColor();
-		this.logNr = GameLog.getCount();
 	}
 
 	// /**
@@ -85,7 +81,6 @@ public class PacketBroadcastLog extends Packet {
 		this.right = right;
 		this.msgType = msgType;
 		this.color = GameLog.getMsgColor();
-		this.logNr = GameLog.getCount();
 	}
 
 	public MsgType getMsgType() {
@@ -106,10 +101,6 @@ public class PacketBroadcastLog extends Packet {
 
 	public Color getColor() {
 		return this.color;
-	}
-
-	public int getLogNr() {
-		return this.logNr;
 	}
 
 	/**
