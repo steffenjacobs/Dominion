@@ -27,12 +27,14 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.CardType;
@@ -87,6 +89,8 @@ public class PlayerSettingsPanel extends JPanel {
 	private JScrollPane midScroller;
 	private JPanel bottomAreaPanel;
 	
+	private StartButton startButton;
+	
 	// private BufferedImage brainCrossed;
 	// private BufferedImage brain;
 
@@ -138,7 +142,7 @@ public class PlayerSettingsPanel extends JPanel {
 		GridBagConstraints gbc = new GridBagConstraints();
 		panel.setOpaque(false);
 
-		plusKI = new JButton("Add AI") {
+		plusKI = new JButton("+ AI") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -155,7 +159,7 @@ public class PlayerSettingsPanel extends JPanel {
 		plusKI.setBorderPainted(true);
 		plusKI.setContentAreaFilled(false);
 
-		minusKI = new JButton("Remove AI") {
+		minusKI = new JButton("- AI") {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -172,14 +176,19 @@ public class PlayerSettingsPanel extends JPanel {
 		minusKI.setBorderPainted(true);
 		minusKI.setContentAreaFilled(false);
 
-		gbc.insets = new Insets(SPACE_PANEL_TO_PANEL, H_SPACE_EDGE_TO_FIRSTPANEL, 0, VERTICAL_GAP_KI);
+		gbc.insets = new Insets(SPACE_PANEL_TO_PANEL, H_SPACE_EDGE_TO_FIRSTPANEL, 0, VERTICAL_GAP_KI);		
 		gbc.ipady = WEIGHT_BUTTON_KI;
 		gbc.ipadx = WEIGHT_BUTTON_KI;
-		panelEast.add(plusKI, gbc);
+		this.startButton = new StartButton();
+		panelEast.add(this.startButton, gbc);
 		panelEast.setOpaque(false);
+		
 
 		gbc.insets = new Insets(SPACE_PANEL_TO_PANEL, VERTICAL_GAP_KI, 0, H_SPACE_EDGE_TO_FIRSTPANEL);
+		gbc.gridy = 0;
 		panelWest.add(minusKI, gbc);
+		gbc.gridy = 1;
+		panelWest.add(plusKI, gbc);
 		panelWest.setOpaque(false);
 
 		connectedPlayers = new SearchingField[4];
@@ -214,6 +223,50 @@ public class PlayerSettingsPanel extends JPanel {
 		plusKI.addMouseListener(new KiListener());
 		minusKI.addMouseListener(new KiListener());
 		return panel;
+	}
+	
+	private class StartButton extends JButton implements MouseListener{
+		private static final long serialVersionUID = 1L;
+		
+		public StartButton() {
+			this.setText("Start");
+			this.setOpaque(false);
+			this.setContentAreaFilled(false);
+			this.setBorderPainted(false);
+			this.setForeground(Color.WHITE);
+			this.setHorizontalTextPosition(SwingConstants.CENTER);
+		}
+		
+		@Override
+		public void paint(Graphics g) {
+			Graphics2D h = (Graphics2D) g;
+			h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
+			super.paint(h);
+		}
+		
+		public void setEnable(boolean enable){
+			this.setEnabled(enable);
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) { }
+
+		@Override
+		public void mouseEntered(MouseEvent e) { }
+
+		@Override
+		public void mouseExited(MouseEvent e) { }
+
+		@Override
+		public void mousePressed(MouseEvent e) { }
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO HALLO STEFFEN 
+			System.out.println("HALLO STEFFEN LULULULUL");
+		}
+		
 	}
 	
 	public PlayerSettingsPanel updateCards(){
