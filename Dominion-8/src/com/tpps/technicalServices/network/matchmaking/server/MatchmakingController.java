@@ -83,10 +83,21 @@ public final class MatchmakingController {
 		return lobbiesByPlayer.get(player);
 	}
 
+	/**
+	 * adds an ai player to the game
+	 * 
+	 * @param player
+	 *            the ai to add
+	 */
 	static void addAIPlayer(MPlayer player) {
 		playersByName.put(player.getPlayerName(), player);
 	}
 
+	/**
+	 * @param name
+	 *            the name of the player to get
+	 * @return a player by its name (including AIs)
+	 */
 	static MPlayer getPlayerByName(String name) {
 		return playersByName.get(name);
 	}
@@ -325,10 +336,9 @@ public final class MatchmakingController {
 	 * is called when the game-end-packet was received from the game-server,
 	 * adds all statistics to the database
 	 * 
-	 * @param winner
-	 *            the player who won the game
-	 * @param players
-	 *            all participants in the game that stayed until it ended
+	 * @param endPacket
+	 *            the packet with the winner and all participants in the game
+	 *            that stayed until it ended
 	 */
 	public static void onGameEnd(PacketGameEnd endPacket) {
 		GameLobby lobby = lobbiesByPlayer.get(endPacket.getWinner());

@@ -17,7 +17,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -77,12 +76,13 @@ public class PlayerSettingsPanel extends JPanel {
 	private static final float ALPHA = 0.6F;
 
 	private JButton plusKI, minusKI;
+	private ArrayList<String> cardNamesSelected = new ArrayList<>();
 
 	private JPanel panel;
 	private JPanel panelMid;
 	private JPanel panelWest;
 	private JPanel panelEast;
-	private BufferedImage blackBeauty, temp;
+	private BufferedImage blackBeauty;
 	// private BufferedImage brainCrossed;
 	// private BufferedImage brain;
 
@@ -217,15 +217,12 @@ public class PlayerSettingsPanel extends JPanel {
 						- scrollBarHeight);
 	}
 
-	class CardDisplayButton extends JButton implements MouseListener {
+	private class CardDisplayButton extends JButton implements MouseListener {
 
 		private SerializedCard card;
 
 		private BufferedImage imgSelected = null;
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 2289556894288934256L;
 
 		public CardDisplayButton(SerializedCard originalCard) {
@@ -301,24 +298,19 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void componentMoved(ComponentEvent e) {
-			// TODO Auto-generated method stub
 
 		}
 
 		@Override
 		public void componentShown(ComponentEvent e) {
-			// TODO Auto-generated method stub
 
 		}
 
 		@Override
 		public void componentHidden(ComponentEvent e) {
-			// TODO Auto-generated method stub
 
 		}
 	}
-
-	ArrayList<String> cardNamesSelected = new ArrayList<>();
 
 	/**
 	 * @author jhuhn
@@ -532,10 +524,12 @@ public class PlayerSettingsPanel extends JPanel {
 	 *            String representation of header text
 	 * @return a JTextField object with a nice underlined header
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public JTextField createHeader(String text) {
 		JTextField header = new JTextField(text);
-		Map attributes = head.getAttributes();
+		
+		@SuppressWarnings("unchecked")
+		Map<TextAttribute, Integer> attributes = (Map<TextAttribute, Integer>) head.getAttributes();
+		
 		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 		header.setFont(head.deriveFont(attributes));
 

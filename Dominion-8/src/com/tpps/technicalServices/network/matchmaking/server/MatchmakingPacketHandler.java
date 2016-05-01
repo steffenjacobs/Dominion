@@ -146,6 +146,14 @@ public class MatchmakingPacketHandler extends PacketHandler {
 		GameLog.log(MsgType.NETWORK_INFO, "<- AI " + player.getPlayerName());
 	}
 
+	/**
+	 * removes an AI
+	 * 
+	 * @param lobbyID
+	 *            the ID of the lobby to remove the AI from
+	 * @param pmr
+	 *            the AI-remove-request
+	 */
 	public void removeAI(UUID lobbyID, PacketMatchmakingRequest pmr) {
 		MPlayer player = MatchmakingController.getPlayerByName(pmr.getPlayerName());
 		if (lobbyID != null && player != null) {

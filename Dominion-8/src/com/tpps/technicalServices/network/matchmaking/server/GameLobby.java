@@ -49,7 +49,12 @@ public class GameLobby {
 		return this.runningServer != null && this.startTime != 0;
 	}
 
-	/** sets the instance of the game-server that is running this game */
+	/**
+	 * sets the instance of the game-server that is running this game
+	 * 
+	 * @param gs
+	 *            the instanceo of the game-server this lobby is running on
+	 */
 	public void setServer(GameServer gs) {
 		this.runningServer = gs;
 	}
