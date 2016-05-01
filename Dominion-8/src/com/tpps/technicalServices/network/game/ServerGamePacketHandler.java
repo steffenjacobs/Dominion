@@ -122,6 +122,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				buyCardAndUpdateBoards(packet);
 				break;
 			case END_ACTION_PHASE:
+				this.server.getGameController().getActivePlayer().endActionPhase();
 				this.server.getGameController().setBuyPhase();
 				break;
 			case PLAY_TREASURES:
@@ -251,8 +252,24 @@ public class ServerGamePacketHandler extends PacketHandler {
 				}
 		}
 		
+		
 		if (this.server.getGameController().getActivePlayer().isPlayTwice()) {
+			
+			
 			Player playTwiceActivePlayer = this.server.getGameController().getActivePlayer();
+			System.out.println("is play twice" + playTwiceActivePlayer.isPlayTwice());
+			System.out.println("isDiscardMode: " + playTwiceActivePlayer.isDiscardMode());
+			System.out.println("isTrashMode: " + playTwiceActivePlayer.isTrashMode());
+			System.out.println("isDREactionMode: " + playTwiceActivePlayer.isReactionMode());
+			System.out.println("playsReactionCard: " + playTwiceActivePlayer.playsReactionCard());
+			System.out.println("isGainMOde: " + playTwiceActivePlayer.isGainMode());
+			System.out.println("isREvealMode: " + playTwiceActivePlayer.isRevealMode());
+			System.out.println("isThief: " + playTwiceActivePlayer.isThief());
+			System.out.println("isWitch: " + playTwiceActivePlayer.isWitch());
+			System.out.println("isBureaucrat: " + playTwiceActivePlayer.isBureaucrat());
+			System.out.println("isSpy: " + playTwiceActivePlayer.isSpy());
+			System.out.println("isSecondTimePlayed: " + playTwiceActivePlayer.isSecondTimePlayed());
+			System.out.println("allReactionCardsPlayed: " + this.server.getGameController().allReactionCardsPlayed());
 			if (!playTwiceActivePlayer.isDiscardMode() && !playTwiceActivePlayer.isTrashMode()
 					&& !playTwiceActivePlayer.isReactionMode() && !playTwiceActivePlayer.playsReactionCard()
 					&& !playTwiceActivePlayer.isGainMode() && !playTwiceActivePlayer.isRevealMode()
@@ -263,7 +280,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 				if (this.server.getGameController().allReactionCardsPlayed()) {
 					try {
 						System.out.println("playTwice");
-						playTwiceActivePlayer.setPlayTwiceFalse();
+						playTwiceActivePlayer.decrementPlayTwiceCounter();
+						if (playTwiceActivePlayer.getPlayTwiceCounter() == 0) {
+							playTwiceActivePlayer.setPlayTwiceFalse();
+						}
+						
 						playTwiceActivePlayer.setSecondTimePlayed();
 						playTwiceActivePlayer.playCard(playTwiceActivePlayer.getPlayTwiceCard().getId());
 					} catch (IOException e) {
@@ -271,6 +292,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 					}
 				}
 			}
+		}
+		
+		if (this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()){
+			this.server.getGameController().getActivePlayer().setPlayTwice();
+			this.server.getGameController().getActivePlayer().setPlayTwiceEnabledFalse();
 		}
 
 	}

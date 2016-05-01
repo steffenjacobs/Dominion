@@ -406,14 +406,15 @@ public class Deck {
 		return false;		
 	}
 	
-	public boolean cardHandContainsActionCard() {
+	public int amountHandActionCard() {
+		int counter = 0; 
 		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
 			if (card.getTypes().contains(CardType.ACTION)){
-				return true;
+				counter++;
 			}			
 		}
-		return false;		
+		return counter;	
 	}
 
 	/**

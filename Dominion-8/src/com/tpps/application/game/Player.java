@@ -53,8 +53,10 @@ public class Player {
 	private UUID session_ID;
 	private final int client_ID;
 
-	private int port, actions, buys, coins, gainValue, drawUntil, turnNr;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand, secondTimePlayed;
+	private int port, actions, buys, coins, gainValue, drawUntil, turnNr, playTwiceCounter;
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand, secondTimePlayed,
+	playTwiceEnabled;;
+	
 
 	/**
 	 * creates the player sets all the initial values
@@ -74,6 +76,7 @@ public class Player {
 		this.witch = false;
 		this.spy = false;
 		this.playTwice = false;
+		this.playTwiceEnabled = false;
 		this.secondTimePlayed = false;
 		this.drawList = new LinkedList<Card>();
 		this.revealList = new LinkedList<Card>();
@@ -113,6 +116,9 @@ public class Player {
 		this.coins = 0;
 		this.buys = 1;
 		this.actions = 1;
+		this.playTwice = false;
+		this.secondTimePlayed = false;
+		this.playTwiceCounter = 0;
 	}
 
 	/**
@@ -189,8 +195,31 @@ public class Player {
 		return this.playTwice;
 	}
 	
+	public void setPlayTwice() {
+		this.playTwice = true;
+	}
+	
 	public void setPlayTwiceFalse() {
 		this.playTwice = false;
+	}
+	
+	public void setPlayTwiceEnabledFalse() {
+		this.playTwiceEnabled = false;
+	}
+	
+	public boolean isPlayTwiceEnabled() {
+		return this.playTwiceEnabled;
+	}
+	
+	public void decrementPlayTwiceCounter() {
+		if (this.playTwiceCounter > 0) {
+			this.playTwiceCounter--;
+		}
+		
+	}
+	
+	public int getPlayTwiceCounter() {
+		return this.playTwiceCounter;
 	}
 	
 	/**
@@ -698,9 +727,11 @@ public class Player {
 		System.out.println("The Playername is: " + this.getPlayerName());
 
 		if (this.playTwice) {
+			if (!this.secondTimePlayed){
 			System.out.println("playTwice: " + this.playTwice);
 			this.playTwiceCard = serverCard;
-			dontRemoveFlag = true;
+				dontRemoveFlag = true;
+			}
 		}
 		
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
@@ -866,8 +897,9 @@ public class Player {
 				break;
 			case CHOOSE_CARD_PLAY_TWICE:
 				this.actions++;
-				if (getDeck().cardHandContainsActionCard()){
-					this.playTwice = true;
+				if (playTwiceCounter < getDeck().amountHandActionCard() - 1){
+					this.playTwiceEnabled = true;
+					this.playTwiceCounter++;
 				}
 				break;
 			case IS_TREASURE:
@@ -1113,6 +1145,16 @@ public class Player {
 	 */
 	public void resetTemporaryTrashPile() {
 		this.temporaryTrashPile = new LinkedList<Card>();
+	}
+
+	/**
+	 * sets playTwice false
+	 */
+	public void endActionPhase() {
+		this.playTwice = false;
+		this.secondTimePlayed = false;
+		this.playTwiceCounter = 0;
+		
 	}
 
 }

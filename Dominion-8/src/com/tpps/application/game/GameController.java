@@ -198,6 +198,7 @@ public class GameController {
 				if (card.getTypes().contains(CardType.ACTION) && this.getActivePlayer().getActions() > 0) {
 					this.getActivePlayer().playCard(cardID);
 					if (this.getActivePlayer().getActions() == 0) {
+						this.getActivePlayer().endActionPhase();
 						this.setBuyPhase();
 					}
 					return true;
