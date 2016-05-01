@@ -330,8 +330,8 @@ public class GameController {
 		boolean sendEnableFlag = true;
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			
-			if (!player.equals(activePlayer)) {		
+
+			if (!player.equals(activePlayer)) {
 				sendEnableFlag = true;
 
 				if (player.getDeck().cardHandContainsReactionCard()) {
@@ -355,20 +355,26 @@ public class GameController {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-				} 
-				
+				}
+
 				if (player.getDeck().getCardHand().size() > Integer.parseInt(value)) {
 					System.out.println("mehr als 3 karten");
 					player.setReactionMode();
 					player.setDiscardMode();
 					player.setDiscardOrTrashAction(CardAction.DISCARD_CARD,
 							player.getDeck().getCardHand().size() - Integer.parseInt(value));
-					if (sendEnableFlag) {
-						try {
+					try {
+						if (sendEnableFlag) {
 							this.gameServer.sendMessage(player.getPort(), new PacketEnable("react"));
-						} catch (IOException e) {
-							e.printStackTrace();
 						}
+						if (sendPacketDisable) {
+							sendPacketDisable = false;
+							this.gameServer.sendMessage(this.activePlayer.getPort(),
+									new PacketDisable("wait on reaction"));
+
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 				}
 
@@ -755,6 +761,7 @@ public class GameController {
 				break;
 			}
 		}
+		System.out.println("alle reaktionskarten gespielt? :" + allReactionCardsPlayedFlag);
 		return allReactionCardsPlayedFlag;
 	}
 

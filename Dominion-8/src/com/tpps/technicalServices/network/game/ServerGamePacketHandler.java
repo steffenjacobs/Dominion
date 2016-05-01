@@ -250,6 +250,28 @@ public class ServerGamePacketHandler extends PacketHandler {
 					e.printStackTrace();
 				}
 		}
+		
+		if (this.server.getGameController().getActivePlayer().isPlayTwice()) {
+			Player playTwiceActivePlayer = this.server.getGameController().getActivePlayer();
+			if (!playTwiceActivePlayer.isDiscardMode() && !playTwiceActivePlayer.isTrashMode()
+					&& !playTwiceActivePlayer.isReactionMode() && !playTwiceActivePlayer.playsReactionCard()
+					&& !playTwiceActivePlayer.isGainMode() && !playTwiceActivePlayer.isRevealMode()
+					&& !playTwiceActivePlayer.isThief() && !playTwiceActivePlayer.isWitch()
+					&& !playTwiceActivePlayer.isBureaucrat() && !playTwiceActivePlayer.isSpy()
+					&& !playTwiceActivePlayer.isSecondTimePlayed()
+					&& playTwiceActivePlayer.getPlayTwiceCard() != null) {
+				if (this.server.getGameController().allReactionCardsPlayed()) {
+					try {
+						System.out.println("playTwice");
+						playTwiceActivePlayer.setPlayTwiceFalse();
+						playTwiceActivePlayer.setSecondTimePlayed();
+						playTwiceActivePlayer.playCard(playTwiceActivePlayer.getPlayTwiceCard().getId());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 
 	}
 
@@ -266,7 +288,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		reactionFinishedTriggerdThroughSpy(player1);
 		reactionFinishedTriggeredThroughWitch(player1);
 		reactionFinishedTriggeredThroughBureaucrat(player1);
-		this.server.getGameController().isGameFinished();
+		
 		if (player1.isReactionMode()) {
 			if (player1.getDeck().getCardHand().size() <= 3) {
 				player1.setReactionModeFalse();
@@ -279,8 +301,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 				} else {
 					this.server.sendMessage(port, new PacketDisable("wait on reaction"));
 				}	
+				this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 			}
 		}
+		this.server.getGameController().isGameFinished();
 	}
 
 	private void reactionFinishedTriggeredThroughThief(Player player1) throws IOException {

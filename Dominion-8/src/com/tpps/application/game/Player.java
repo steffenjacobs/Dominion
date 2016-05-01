@@ -41,7 +41,7 @@ public class Player {
 	private GameServer gameServer;
 	private Deck deck;
 
-	private Card drewCard;
+	private Card drewCard, playTwiceCard;
 	private CardType setAside;
 	private Tuple<CardAction> discardOrTrashAction;
 	private LinkedList<Card> playedCards, drawList, revealList, temporaryTrashPile, setAsideCards;
@@ -54,7 +54,7 @@ public class Player {
 	private final int client_ID;
 
 	private int port, actions, buys, coins, gainValue, drawUntil, turnNr;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand;
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand, secondTimePlayed;
 
 	/**
 	 * creates the player sets all the initial values
@@ -73,10 +73,13 @@ public class Player {
 		this.bureaucrat = false;
 		this.witch = false;
 		this.spy = false;
+		this.playTwice = false;
+		this.secondTimePlayed = false;
 		this.drawList = new LinkedList<Card>();
 		this.revealList = new LinkedList<Card>();
 		this.temporaryTrashPile = new LinkedList<Card>();
 		this.setAsideCards = new LinkedList<Card>();
+		this.playTwiceCard = null;
 		this.deck = deck;
 		this.id = player_ID++;
 		this.session_ID = uuid;
@@ -164,6 +167,38 @@ public class Player {
 
 	public void updateSessionID(UUID sessionID) {
 		this.session_ID = sessionID;
+	}
+	
+	/**
+	 * 
+	 * @return if the card is played for the second time
+	 */
+	public boolean isSecondTimePlayed() {
+		return this.secondTimePlayed;
+	}
+	
+	public void setSecondTimePlayed() {
+		this.secondTimePlayed = true;
+	}
+	
+	/**
+	 * 
+	 * @return if the card should be played twice
+	 */
+	public boolean isPlayTwice() {
+		return this.playTwice;
+	}
+	
+	public void setPlayTwiceFalse() {
+		this.playTwice = false;
+	}
+	
+	/**
+	 * 
+	 * @return the card which should be played twice
+	 */
+	public Card getPlayTwiceCard() {
+		return playTwiceCard;
 	}
 
 	/**
@@ -586,18 +621,17 @@ public class Player {
 	 * called whenever a card is played calls the doAction method appends the
 	 * played card to the played card list sets the play twice flag if a card
 	 * should be played twice
-	 * 
 	 * @param cardID
 	 * @throws IOException
 	 */
 	public void playCard(String cardID) throws IOException {
 		Card card = doAction(cardID);
+		if (this.secondTimePlayed) {
+			this.secondTimePlayed = false;
+			return;
+		}
 		if (card != null) {
 			this.playedCards.addLast(card);
-			if (playTwice) {
-				playTwice = false;
-				doAction(cardID);
-			}
 		}
 	}
 
@@ -663,6 +697,12 @@ public class Player {
 		this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getPlayerName()," - plays " + serverCard.getName(), this.getLogColor()));
 		System.out.println("The Playername is: " + this.getPlayerName());
 
+		if (this.playTwice) {
+			System.out.println("playTwice: " + this.playTwice);
+			this.playTwiceCard = serverCard;
+			dontRemoveFlag = true;
+		}
+		
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
 			return serverCard;
@@ -826,6 +866,9 @@ public class Player {
 				break;
 			case CHOOSE_CARD_PLAY_TWICE:
 				this.actions++;
+				if (getDeck().cardHandContainsActionCard()){
+					this.playTwice = true;
+				}
 				break;
 			case IS_TREASURE:
 				this.coins += Integer.parseInt(serverCard.getActions().get(CardAction.IS_TREASURE));
@@ -841,6 +884,8 @@ public class Player {
 		}
 		if (!dontRemoveFlag) {
 			this.getDeck().getCardHand().remove(serverCard);
+		}else {
+			dontRemoveFlag = false;
 		}
 		if (this.reactionMode) {
 			finishReactionModeForThisPlayer();
@@ -855,7 +900,7 @@ public class Player {
 
 	private void finishReactionModeForThisPlayer() throws IOException {
 		
-		
+		setModesFalse();
 		this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.playedCards)));
 		
 		boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
@@ -869,7 +914,7 @@ public class Player {
 		
 		
 		this.gameServer.sendMessage(port, new PacketDontShowEndReactions());
-		setModesFalse();
+		
 		
 		this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 	}
