@@ -626,9 +626,8 @@ public class PlayerSettingsPanel extends JPanel {
 		return connectedPlayers;
 	}
 
-
 	private ArrayList<String> aiNames = new ArrayList<>();
-	
+
 	private class KiListener implements MouseListener {
 
 		@Override
@@ -662,20 +661,17 @@ public class PlayerSettingsPanel extends JPanel {
 			// }
 		}
 
-
 		@Override
 		public void mousePressed(MouseEvent e) {
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			System.out.println("klick");
 			if (e.getSource() == plusKI) {
 				aiNames.add("" + System.identityHashCode(e));
 				DominionController.getInstance().sendAIPacket("AI_" + System.identityHashCode(e), false);
 			} else if (e.getSource() == minusKI && aiNames.size() > 0) {
-				DominionController.getInstance().sendAIPacket("AI_" + aiNames.remove(0), true);
-				System.out.println("minus");
+				DominionController.getInstance().sendAIPacket("AI_" + aiNames.remove(aiNames.size() - 1), true);
 
 			}
 		}
