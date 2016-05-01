@@ -175,7 +175,7 @@ public final class MatchmakingController {
 
 					else {
 						/* send success to client */
-						MatchmakingServer.getInstance().sendSuccessPacket(pl, playerNames, freePort);
+						MatchmakingServer.getInstance().sendSuccessPacket(pl, playerNames, freePort, selectedActionCards);
 					}
 				}
 				cl.disconnect();

@@ -168,6 +168,8 @@ public final class Matchmaker {
 				PacketMatchmakingSuccessful pms = (PacketMatchmakingSuccessful) packet;
 				// is called, when the lobby is full and the game starts
 				// TODO: connect to the gameServer & start the round
+				System.out.println("Downloading Cards...");
+				DominionController.getInstance().getCardRegistry().checkAndDownloadCards(pms.getSelectedActionCards());
 				System.out.println("starting match!");
 				DominionController.getInstance().startMatch(pms.getGameserverPort());
 				break;

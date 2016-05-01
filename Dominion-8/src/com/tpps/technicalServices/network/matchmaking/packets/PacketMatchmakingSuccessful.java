@@ -12,7 +12,7 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
 public class PacketMatchmakingSuccessful extends Packet {
 	private static final long serialVersionUID = 8824882326543059050L;
 
-	private final String[] joinedPlayers;
+	private final String[] joinedPlayers, selectedActionCards;
 	private final int gameserverPort;
 
 	/**
@@ -23,10 +23,11 @@ public class PacketMatchmakingSuccessful extends Packet {
 	 * @param gameserverPort
 	 *            the port of the gameserver that was started for the game
 	 */
-	public PacketMatchmakingSuccessful(String[] joinedPlayers, int gameserverPort) {
+	public PacketMatchmakingSuccessful(String[] joinedPlayers, int gameserverPort, String[] selectedActionCards) {
 		super(PacketType.MATCHMAKING_SUCCESSFUL);
 		this.joinedPlayers = joinedPlayers;
 		this.gameserverPort = gameserverPort;
+		this.selectedActionCards = selectedActionCards;
 	}
 
 	/** @return a representation of the packet as a String */
@@ -36,6 +37,7 @@ public class PacketMatchmakingSuccessful extends Packet {
 		for (String pl : this.getJoinedPlayers()) {
 			res += pl + " ";
 		}
+		res += selectedActionCards.toString();
 		return res;
 	}
 
@@ -47,6 +49,10 @@ public class PacketMatchmakingSuccessful extends Packet {
 	/** @return the port of the gameserver for this lobby */
 	public int getGameserverPort() {
 		return gameserverPort;
+	}
+	
+	public String[] getSelectedActionCards() {
+		return selectedActionCards;
 	}
 
 }

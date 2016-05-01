@@ -169,9 +169,9 @@ public class MatchmakingServer extends Server {
 	 * @param port
 	 *            the port the new game-server is waiting
 	 */
-	public void sendSuccessPacket(MPlayer receiver, String[] opponents, int port) {
+	public void sendSuccessPacket(MPlayer receiver, String[] opponents, int port, String[] selectedActionCards) {
 
-		PacketMatchmakingSuccessful pms = new PacketMatchmakingSuccessful(opponents, port);
+		PacketMatchmakingSuccessful pms = new PacketMatchmakingSuccessful(opponents, port, selectedActionCards);
 		try {
 			super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pms);
 		} catch (IOException e) {

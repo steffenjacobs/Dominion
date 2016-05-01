@@ -3,6 +3,7 @@ package com.tpps.application.storage;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
@@ -10,9 +11,14 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.Card;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.Addresses;
+import com.tpps.technicalServices.network.card.CardClient;
+import com.tpps.technicalServices.network.card.CardPacketHandlerClient;
+import com.tpps.technicalServices.network.card.CardServer;
 import com.tpps.technicalServices.util.ByteUtil;
 
 /**
@@ -32,7 +38,7 @@ public class CardStorageController {
 	 */
 	public CardStorageController() {
 		this.storageFile = DEFAULT_STORAGE_FILE;
-//		GameLog.log(MsgType.INIT, "CardStorageController");
+		// GameLog.log(MsgType.INIT, "CardStorageController");
 	}
 
 	/**
@@ -138,6 +144,26 @@ public class CardStorageController {
 	 */
 	public void addCard(SerializedCard card) {
 		storedCards.putIfAbsent(card.getName(), card);
+	}
+
+	public void checkAndDownloadCards(String[] cardNames) {
+
+		CardPacketHandlerClient cHandler = new CardPacketHandlerClient();
+
+		CardClient client;
+		try {
+			client = new CardClient(new InetSocketAddress(Addresses.getRemoteAddress(), CardServer.getStandardPort()),
+					cHandler, false, DominionController.getInstance());
+			cHandler.setCardClient(client);
+
+			for (String name : cardNames) {
+				if (!this.hasCard(name)) {
+					client.requestCardFromServer(name, false);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
