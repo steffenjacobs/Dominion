@@ -335,6 +335,7 @@ public final class DominionController {
 		panel.setVisible(true);
 		panel.setOpaque(false);
 		panel.add(this.globalChatPanel);
+		this.playerSettingsPanel.getCardNamesSelected().clear();
 		panel.add(this.playerSettingsPanel.updateCards());
 		// this.playerSettingsPanel.setStatisticsBoardPanel(this.statisticsBoardPanel);
 		this.mainFrame.setPanel(panel);

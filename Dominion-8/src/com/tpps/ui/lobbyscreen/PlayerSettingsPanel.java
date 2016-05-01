@@ -98,6 +98,7 @@ public class PlayerSettingsPanel extends JPanel {
 
 	// private BufferedImage brainCrossed;
 	// private BufferedImage brain;
+	
 
 	/**
 	 * constructor, initializes the lobby
@@ -107,7 +108,7 @@ public class PlayerSettingsPanel extends JPanel {
 	public PlayerSettingsPanel() {
 		this.initOriginalBackgroundImages();
 		this.initTransparentBackgroundImages();
-		loadingImage();
+		this.loadingImage();
 		this.setOpaque(false);
 		this.setLayout(new GridLayout(3, 1, 0, SPACE_PANEL_TO_PANEL));
 
@@ -245,6 +246,7 @@ public class PlayerSettingsPanel extends JPanel {
 			this.setForeground(Color.WHITE);
 			this.setHorizontalTextPosition(SwingConstants.CENTER);
 			this.addActionListener(this);
+			this.setFont(head);
 		}
 
 		@Override
@@ -471,7 +473,6 @@ public class PlayerSettingsPanel extends JPanel {
 			panelMid.add(displayedCard);
 		}
 		if (firstCard != null)
-
 		{
 			scrollMid.addComponentListener(new CardResizeListener(firstCard));
 		}
@@ -751,6 +752,10 @@ public class PlayerSettingsPanel extends JPanel {
 	 */
 	public SearchingField[] getConnectedPlayers() {
 		return connectedPlayers;
+	}
+	
+	public ArrayList<String> getCardNamesSelected() {
+		return cardNamesSelected;
 	}
 
 	private ArrayList<String> aiNames = new ArrayList<>();
