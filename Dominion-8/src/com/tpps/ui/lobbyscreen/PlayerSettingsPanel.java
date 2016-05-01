@@ -63,7 +63,6 @@ public class PlayerSettingsPanel extends JPanel {
 	private JLabel[] labelImages;
 
 	private SearchingField[] connectedPlayers;
-	private int connectedPlayersAsInt;
 
 	private static final int SPACE_PANEL_TO_PANEL = 25;
 	private static final int SPACE_PLAYER_TO_PLAYER = 5;
@@ -94,6 +93,8 @@ public class PlayerSettingsPanel extends JPanel {
 	private JPanel bottomAreaPanel;
 
 	private StartButton startButton;
+	private BufferedImage greenLanton;
+	private BufferedImage redHead;
 
 	// private BufferedImage brainCrossed;
 	// private BufferedImage brain;
@@ -104,7 +105,6 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	public PlayerSettingsPanel() {
-		this.connectedPlayersAsInt = 0;
 		this.initOriginalBackgroundImages();
 		this.initTransparentBackgroundImages();
 		loadingImage();
@@ -233,8 +233,10 @@ public class PlayerSettingsPanel extends JPanel {
 		
 		private static final long serialVersionUID = 1L;
 		private boolean enabledFlag;
+		private BufferedImage switchimage;
 
 		public StartButton() {
+			switchimage = PlayerSettingsPanel.this.redHead;
 			this.enabledFlag = false;
 			this.setText("Start");
 			this.setOpaque(false);
@@ -249,7 +251,7 @@ public class PlayerSettingsPanel extends JPanel {
 		public void paint(Graphics g) {
 			Graphics2D h = (Graphics2D) g;
 			h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-			h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
+			h.drawImage(switchimage, 0, 0, this.getWidth(), this.getHeight(), null);
 			super.paint(h);
 			super.paint(g);
 		}
@@ -283,6 +285,13 @@ public class PlayerSettingsPanel extends JPanel {
 	public void handleStartButton() {
 		boolean validate = this.validateStartButton();
 		this.startButton.enabledFlag = validate;
+		if(validate){
+			this.startButton.switchimage = greenLanton;
+		}else{
+			this.startButton.switchimage = redHead;
+		}
+		this.startButton.revalidate();
+		this.startButton.repaint();
 	}
 
 	/**
@@ -298,8 +307,6 @@ public class PlayerSettingsPanel extends JPanel {
 
 		for (Iterator<CardDisplayButton> iterator = allCards.iterator(); iterator.hasNext();) {
 			((CardDisplayButton) iterator.next()).setEnabled(enable);
-			;
-
 		}
 	}
 
@@ -586,6 +593,10 @@ public class PlayerSettingsPanel extends JPanel {
 	public void loadingImage() {
 		try {
 			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
+			this.greenLanton = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/greenlanton.png"));
+			this.greenLanton = (BufferedImage) GraphicsUtil.setAlpha(greenLanton, 0.6F);
+			this.redHead = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/redhead.png"));
+			this.redHead = (BufferedImage) GraphicsUtil.setAlpha(redHead, 0.6F);
 			// this.brain =
 			// ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/brain.png"));
 			// this.brainCrossed = ImageIO
@@ -659,7 +670,6 @@ public class PlayerSettingsPanel extends JPanel {
 			if (!connectedPlayers[i].isPlayerFlag()) {
 				this.connectedPlayers[i].setPlayer(player);
 				System.out.println("GUI: inserted Player: " + connectedPlayers[i].getText());
-				++this.connectedPlayersAsInt;
 				this.handleStartButton();
 				return true;
 			}
@@ -678,7 +688,6 @@ public class PlayerSettingsPanel extends JPanel {
 			if (connectedPlayers[i].getText().equals(player)) {
 				System.out.println("GUI: removed Player: " + connectedPlayers[i].getText());
 				connectedPlayers[i].resetSearchingField();
-				--this.connectedPlayersAsInt;
 				this.handleStartButton();
 				return true;
 			}
@@ -697,7 +706,6 @@ public class PlayerSettingsPanel extends JPanel {
 			if (!connectedPlayers[i].getText().startsWith("Loading")) {
 				System.out.println("GUI: removed Player(all): " + connectedPlayers[i].getText());
 				connectedPlayers[i].resetSearchingField();
-				this.connectedPlayersAsInt = 1;
 			}
 		}
 	}
