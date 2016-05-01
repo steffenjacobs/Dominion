@@ -471,7 +471,7 @@ public class GameBoard {
 		this.tableForActionCards.put("Adventurer", new LinkedList<Card>(this.tableForAllActionCards.get("Adventurer")));
 		this.tableForActionCards.put("CouncilRoom", new LinkedList<Card>(this.tableForAllActionCards.get("CouncilRoom")));
 		this.tableForActionCards.put("Chancellor", new LinkedList<Card>(this.tableForAllActionCards.get("Chancellor")));
-		this.tableForActionCards.put("Laboratory", new LinkedList<Card>(this.tableForAllActionCards.get("Laboratory")));
+		this.tableForActionCards.put("ThroneRoom", new LinkedList<Card>(this.tableForAllActionCards.get("ThroneRoom")));
 	}
 
 	/**

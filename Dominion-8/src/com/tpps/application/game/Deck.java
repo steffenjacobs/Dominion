@@ -405,6 +405,16 @@ public class Deck {
 		}
 		return false;		
 	}
+	
+	public boolean cardHandContainsActionCard() {
+		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(CardType.ACTION)){
+				return true;
+			}			
+		}
+		return false;		
+	}
 
 	/**
 	 * @param card which will be put back on top of the drawPile
