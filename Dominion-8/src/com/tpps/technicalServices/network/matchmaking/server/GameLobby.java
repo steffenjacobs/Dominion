@@ -185,7 +185,6 @@ public class GameLobby {
 					// find new lobby-admin
 					if (this.admin == null) {
 						setAdmin(pl);
-						;
 					}
 				}
 			}
@@ -204,7 +203,7 @@ public class GameLobby {
 				}
 
 				// tell everyone who is new admin
-				MatchmakingServer.getInstance().sendQuitPacket(mpl, this.admin.getPlayerName(), false);
+				MatchmakingServer.getInstance().sendQuitPacket(mpl,  this.admin.getPlayerName(), false);
 				MatchmakingServer.getInstance().sendJoinPacket(mpl, this.admin.getPlayerName(), true);
 			}
 		}

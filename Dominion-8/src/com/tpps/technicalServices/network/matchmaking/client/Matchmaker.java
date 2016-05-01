@@ -95,7 +95,8 @@ public final class Matchmaker {
 		checkAndCreateClient();
 		client.sendMessage(
 				new PacketJoinLobby(name, UUID.fromString("00000000-0000-0000-0000-000000000000"), lobbyID, abort));
-		GameLog.log(MsgType.INFO, "Sent request to " + (abort ? "quit" : "join") + "AI: " + name + " lobby " + lobbyID.toString());
+		GameLog.log(MsgType.INFO,
+				"Sent request to " + (abort ? "quit" : "join") + "AI: " + name + " lobby " + lobbyID.toString());
 	}
 
 	/**
@@ -181,26 +182,24 @@ public final class Matchmaker {
 				processAnswerCode(pma);
 				break;
 			case MATCHMAKING_PLAYER_INFO:
+				//is called when a player joins or quits
 				PacketMatchmakingPlayerInfo pmpi = (PacketMatchmakingPlayerInfo) packet;
-				if(pmpi.isLobbyAdmin()){
-					DominionController.getInstance().receiveChatMessageFromChatServer("This is the lobbyhost: " + pmpi.getPlayerName(),
-							"BOT", "", Color.YELLOW);
-				}else if(pmpi.isStatus()){
-					DominionController.getInstance().receiveChatMessageFromChatServer("A Player joined the lobby " + pmpi.getPlayerName(),
-							"BOT", "", Color.YELLOW);
-				}else if(!pmpi.isStatus()){
-					DominionController.getInstance().receiveChatMessageFromChatServer("A Player quitted from the lobby " + pmpi.getPlayerName(),
-							"BOT", "", Color.YELLOW);
+				if (pmpi.isStatus()) {
+					DominionController.getInstance().receiveChatMessageFromChatServer("A Player joined the lobby "
+							+ pmpi.getPlayerName() + (pmpi.isLobbyAdmin() ? " (Admin)" : ""), "BOT", "", Color.YELLOW);
+				} else if (!pmpi.isStatus()) {
+					DominionController.getInstance().receiveChatMessageFromChatServer(
+							"A Player quitted from the lobby " + pmpi.getPlayerName(), "BOT", "", Color.YELLOW);
 				}
-				
+
 				if (pmpi.isStatus()) {
 					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " joined the lobby.");
 					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
-					if(pmpi.getPlayerName().equals(DominionController.getInstance().getUsername())){
-						if(pmpi.isLobbyAdmin()){
+					if (pmpi.getPlayerName().equals(DominionController.getInstance().getUsername())) {
+						if (pmpi.isLobbyAdmin()) {
 							System.out.println(pmpi.getPlayerName() + "is a fucking host");
-							DominionController.getInstance().setHost(true);							
-						}else{
+							DominionController.getInstance().setHost(true);
+						} else {
 							DominionController.getInstance().setHost(false);
 						}
 					}
