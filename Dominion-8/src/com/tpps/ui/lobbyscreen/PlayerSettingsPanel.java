@@ -37,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.sun.swing.internal.plaf.synth.resources.synth;
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.storage.SerializedCard;
@@ -229,9 +230,12 @@ public class PlayerSettingsPanel extends JPanel {
 	}
 
 	private class StartButton extends JButton implements ActionListener {
+		
 		private static final long serialVersionUID = 1L;
+		private boolean enabledFlag;
 
 		public StartButton() {
+			this.enabledFlag = false;
 			this.setText("Start");
 			this.setOpaque(false);
 			this.setContentAreaFilled(false);
@@ -252,17 +256,24 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String[] selCards = new String[cardNamesSelected.size()];
-			cardNamesSelected.toArray(selCards);
-
-			try {
-				DominionController.getInstance().getMatchmaker().sendStartPacket(
-						DominionController.getInstance().getUsername(), DominionController.getInstance().getSessionID(),
-						DominionController.getInstance().getLobbyID(), selCards);
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			if(enabledFlag){
+				String[] selCards = new String[cardNamesSelected.size()];
+				cardNamesSelected.toArray(selCards);
+	
+				try {
+					DominionController.getInstance().getMatchmaker().sendStartPacket(
+							DominionController.getInstance().getUsername(), DominionController.getInstance().getSessionID(),
+							DominionController.getInstance().getLobbyID(), selCards);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				System.out.println("Starting game...");
+			}else{
+				DominionController.getInstance().receiveChatMessageFromChatServer("You are not ready to start the match \n "
+						+ "selected cards: " + PlayerSettingsPanel.this.cardNamesSelected.size() + "\n"
+						+ "connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers()
+						 , "BOT", "", Color.YELLOW);
 			}
-			System.out.println("Starting game...");
 		}
 	}
 
@@ -270,20 +281,8 @@ public class PlayerSettingsPanel extends JPanel {
 	 * handles the start button logic
 	 */
 	public void handleStartButton() {
-		// System.out.println("listsize: " + this.cardNamesSelected.size());
-		// System.out.println("players: " + this.connectedPlayersAsInt);
-		// System.out.println("HOST: " +
-		// DominionController.getInstance().isHost());
 		boolean validate = this.validateStartButton();
-		this.startButton.setEnabled(validate);
-		if(validate){
-			DominionController.getInstance().receiveChatMessageFromChatServer("startbutton is enabled","BOT", "", Color.YELLOW);
-		}else{
-			DominionController.getInstance().receiveChatMessageFromChatServer("startbutton is desabled \n "
-					+ "listsize: " + String.valueOf(this.cardNamesSelected.size()) + "\n"
-					+ "connectedplayers: " + String.valueOf(this.connectedPlayersAsInt) 
-					 , "BOT", "", Color.YELLOW);
-		}
+		this.startButton.enabledFlag = validate;
 	}
 
 	/**
@@ -314,7 +313,8 @@ public class PlayerSettingsPanel extends JPanel {
 		if (this.cardNamesSelected.size() != 10) {
 			return false;
 		}
-		if (this.connectedPlayersAsInt != 4) {
+		System.out.println("connectedplayers: " + this.connectedPlayers());
+		if (this.connectedPlayers() != 4) {
 			return false;
 		}
 		return true;
@@ -700,6 +700,20 @@ public class PlayerSettingsPanel extends JPanel {
 				this.connectedPlayersAsInt = 1;
 			}
 		}
+	}
+	
+	/**
+	 * @return an Integer that represents the number of connectedplayers in th
+	 *         gui
+	 */
+	public synchronized int connectedPlayers(){
+		int players  = 0;
+		for (int i = 0; i < connectedPlayers.length; i++) {
+			if (connectedPlayers[i].isPlayerFlag()) {
+				players++;
+			}
+		}
+		return players;
 	}
 
 	/**
