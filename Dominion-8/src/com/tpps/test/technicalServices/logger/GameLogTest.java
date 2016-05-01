@@ -20,7 +20,7 @@ public class GameLogTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.server = new GameServer(1340);
+		this.server = new GameServer(1340, new String[10]);
 		GameLog.init();
 	}
 
