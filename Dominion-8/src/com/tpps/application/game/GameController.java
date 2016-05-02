@@ -802,14 +802,18 @@ public class GameController {
 		checkSpyFinish();
 		checkWitchFinish();
 		checkBureaucratFinish();
-
-		try {
-			System.out.println("reaktion beendet gespielte karten" + Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));
-			this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
-			this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
-					this.gameServer.getGameController().getActivePlayerName(), false));
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (!this.gameServer.getGameController().getActivePlayer().isPlayTwice()) {
+			try {
+				System.out.println("reaktion beendet gespielte karten"
+						+ Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));
+				this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(
+						CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
+				this.gameServer.broadcastMessage(
+						new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
+								this.gameServer.getGameController().getActivePlayerName(), false));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -1135,5 +1139,17 @@ public class GameController {
 	 */
 	public void resetThiefList() {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
+	}
+
+	public boolean allPlayerDiscarded() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isDiscardMode()){
+				return false;
+			}
+			return true;
+			
+		}
+		return false;
 	}
 }

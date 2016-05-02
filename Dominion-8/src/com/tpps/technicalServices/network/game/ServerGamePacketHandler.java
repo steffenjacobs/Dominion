@@ -234,7 +234,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 		
 		if (refActivePlayer != null && 
 				this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer()) &&
-				refActivePlayer.equals(this.server.getGameController().getActivePlayer())) {
+				refActivePlayer.equals(this.server.getGameController().getActivePlayer())
+				&& !this.server.getGameController().getActivePlayer().isPlayTwice()) {
 			try {
 				if (this.server.getGameController().allReactionCardsPlayed()) {
 					System.out.println("enable the aktive player again");
@@ -271,35 +272,47 @@ public class ServerGamePacketHandler extends PacketHandler {
 			System.out.println("isSpy: " + playTwiceActivePlayer.isSpy());
 			System.out.println("isSecondTimePlayed: " + playTwiceActivePlayer.isSecondTimePlayed());
 			System.out.println("allReactionCardsPlayed: " + this.server.getGameController().allReactionCardsPlayed());
-			if (!playTwiceActivePlayer.isDiscardMode() && !playTwiceActivePlayer.isTrashMode()
+			/*if (!playTwiceActivePlayer.isDiscardMode() && !playTwiceActivePlayer.isTrashMode()
 					&& !playTwiceActivePlayer.isReactionMode() && !playTwiceActivePlayer.playsReactionCard()
 					&& !playTwiceActivePlayer.isGainMode() && !playTwiceActivePlayer.isRevealMode()
 					&& !playTwiceActivePlayer.isThief() && !playTwiceActivePlayer.isWitch()
 					&& !playTwiceActivePlayer.isBureaucrat() && !playTwiceActivePlayer.isSpy()
 					&& !playTwiceActivePlayer.isSecondTimePlayed()
-					&& playTwiceActivePlayer.getPlayTwiceCard() != null) {
+					&& playTwiceActivePlayer.getPlayTwiceCard() != null) {*/
+			if (this.server.getGameController().allPlayerDiscarded()){
 				if (this.server.getGameController().allReactionCardsPlayed()) {
-					try {
+//					try {
 						System.out.println("playTwice");
+						playTwiceActivePlayer.setPlayTwiceFalse();
+						playTwiceActivePlayer.setPlayTwiceEnabled();
 						playTwiceActivePlayer.decrementPlayTwiceCounter();
 						if (playTwiceActivePlayer.getPlayTwiceCounter() == 0) {
-							playTwiceActivePlayer.setPlayTwiceFalse();
+							playTwiceActivePlayer.setPlayTwiceEnabledFalse();
 						}
 						
 						playTwiceActivePlayer.setSecondTimePlayed();
+//						try {
+//							Thread.sleep(10000);
+//						} catch (InterruptedException e) {
+//							e.printStackTrace();
+//						}
+						new Thread(() -> {
+							handleReceivedPacket(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
+						}).start();
 						
-						cardPlayed(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
+//						cardPlayed(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
 //						this.server.getGameController().validateTurnAndExecute(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer);
 						
 						
 //						afterCardWasPlayed(playTwiceActivePlayer.getPort(), playTwiceActivePlayer);
 						
 						
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
 				}
 			}
+			
 		}
 		
 		if (this.server.getGameController().getActivePlayer() != null && this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()){

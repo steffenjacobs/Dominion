@@ -941,8 +941,10 @@ public class Player {
 		boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
 
 		if (allReactionCarsPlayedFlag) {
+			if (!this.gameServer.getGameController().getActivePlayer().isPlayTwice()) {
 			this.gameServer.sendMessage(port,
 					new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
+			}
 		} else {
 			this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
 		}			
@@ -1086,8 +1088,10 @@ public class Player {
 					boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
 
 					if (allReactionCarsPlayedFlag) {
+						if (!this.gameServer.getGameController().getActivePlayer().isPlayTwice()) {
 						this.gameServer.sendMessage(port,
 								new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
+						}
 					} else {
 						this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
 					}					
@@ -1158,6 +1162,11 @@ public class Player {
 		this.playTwiceEnabled = false;
 		this.secondTimePlayed = false;
 		this.playTwiceCounter = 0;
+		
+	}
+
+	public void setPlayTwiceEnabled() {
+		this.playTwiceEnabled = true;
 		
 	}
 
