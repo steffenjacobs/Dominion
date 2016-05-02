@@ -234,11 +234,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 		
 		if (refActivePlayer != null && 
 				this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer()) &&
-				refActivePlayer.equals(this.server.getGameController().getActivePlayer())
-				&& !this.server.getGameController().getActivePlayer().isPlayTwice()) {
+				refActivePlayer.equals(this.server.getGameController().getActivePlayer())) {
 			try {
 				if (this.server.getGameController().allReactionCardsPlayed()) {
 					System.out.println("enable the aktive player again");
+					if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null ||
+							!this.server.getGameController().getActivePlayer().getPlayTwiceCard().equals("Militia"))
 					this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
 						new PacketEnable("my turn"));
 				}

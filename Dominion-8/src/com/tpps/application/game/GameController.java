@@ -802,7 +802,8 @@ public class GameController {
 		checkSpyFinish();
 		checkWitchFinish();
 		checkBureaucratFinish();
-		if (!this.gameServer.getGameController().getActivePlayer().isPlayTwice()) {
+		if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null ||
+				!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
 			try {
 				System.out.println("reaktion beendet gespielte karten"
 						+ Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));

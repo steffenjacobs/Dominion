@@ -117,6 +117,7 @@ public class Player {
 		this.buys = 1;
 		this.actions = 1;
 		this.playTwice = false;
+		this.playTwiceCard = null;
 		this.playTwiceEnabled = false;
 		this.secondTimePlayed = false;		
 		this.playTwiceCounter = 0;
@@ -656,6 +657,7 @@ public class Player {
 	 * @throws IOException
 	 */
 	public void playCard(String cardID) throws IOException {
+		this.playTwiceCard = null;
 		Card card = doAction(cardID);
 		if (this.secondTimePlayed) {
 			this.secondTimePlayed = false;
@@ -917,14 +919,19 @@ public class Player {
 				break;
 			}
 		}
+		
+		if (this.reactionMode) {
+			dontRemoveFlag = true;
+			serverCard = null;
+			finishReactionModeForThisPlayer();
+		}
+		
 		if (!dontRemoveFlag) {
 			this.getDeck().getCardHand().remove(serverCard);
 		}else {
 			dontRemoveFlag = false;
 		}
-		if (this.reactionMode) {
-			finishReactionModeForThisPlayer();
-		}
+		
 		if (trashFlag) {
 			trashFlag = false;
 			this.gameServer.getGameController().getGameBoard().getTrashPile().add(serverCard);
@@ -941,7 +948,8 @@ public class Player {
 		boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
 
 		if (allReactionCarsPlayedFlag) {
-			if (!this.gameServer.getGameController().getActivePlayer().isPlayTwice()) {
+			if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null || 
+					!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
 			this.gameServer.sendMessage(port,
 					new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
 			}
@@ -1088,7 +1096,7 @@ public class Player {
 					boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
 
 					if (allReactionCarsPlayedFlag) {
-						if (!this.gameServer.getGameController().getActivePlayer().isPlayTwice()) {
+						if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard()== null || !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
 						this.gameServer.sendMessage(port,
 								new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
 						}
@@ -1161,6 +1169,7 @@ public class Player {
 		this.playTwice = false;
 		this.playTwiceEnabled = false;
 		this.secondTimePlayed = false;
+		this.playTwiceCard = null;
 		this.playTwiceCounter = 0;
 		
 	}
