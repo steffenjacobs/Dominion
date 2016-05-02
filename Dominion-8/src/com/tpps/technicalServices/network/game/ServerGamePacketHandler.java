@@ -113,9 +113,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case CARD_PLAYED:
 				if (this.server.getGameController().isCardsEnabled()) {
-					if (this.server.getGameController().getActivePlayer().equals(this.server.getGameController().getPlayerByPort(port))) {
-						skipflag = true;
-					}
+//					if (this.server.getGameController().getActivePlayer().equals(this.server.getGameController().getPlayerByPort(port))){
+//						skipflag = true;
+//					}
 					if (this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()) {
 						if (!this.server.getGameController().getActivePlayer().getDeck().getCardFromHand(((PacketPlayCard) packet).getCardID()).getTypes().contains(CardType.ACTION)) {
 							skipflag = true;
