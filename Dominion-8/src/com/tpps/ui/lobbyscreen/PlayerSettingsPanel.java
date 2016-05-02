@@ -37,7 +37,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import com.sun.swing.internal.plaf.synth.resources.synth;
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.storage.SerializedCard;
@@ -458,7 +457,7 @@ public class PlayerSettingsPanel extends JPanel {
 		scrollMid.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollMid.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		
-		scrollMid.setBorder(BorderFactory.createMatteBorder(0, 5, 5, 5, new Color(0, 0, 0, 50)));
+		scrollMid.setBorder(BorderFactory.createMatteBorder(0, 5, 5, 5, new Color(0, 0, 0, 20)));
 		
 
 		Iterator<SerializedCard> it = DominionController.getInstance().getCardRegistry().getAllCards().iterator();
