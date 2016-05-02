@@ -78,7 +78,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			super.output("<- Empty Packet from (" + port + ")");
 			return;
 		}
-		
+		boolean skipflag = false;
 		Player refActivePlayer = this.server.getGameController().getActivePlayer();
 		
 		try {
@@ -114,6 +114,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 			case CARD_PLAYED:
 				if (this.server.getGameController().isCardsEnabled()) {
 					cardPlayed(port, packet);
+					if (this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()) {
+					if (!this.server.getGameController().getActivePlayer().getDeck().getCardFromHand(((PacketPlayCard)packet).getCardID()).getTypes().contains(CardType.ACTION)){
+						skipflag = true;
+						}
+					}
 				} else {
 					System.out.println("no cards enabled");
 				}
@@ -319,12 +324,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 			
 			
 		}
-		
-		if (this.server.getGameController().getActivePlayer() != null && this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()){
-			if (packet instanceof PacketPlayCard && this.server.getGameController().getActivePlayer().getDeck().getCardFromHand(((PacketPlayCard)packet).getCardID()).getTypes().contains(CardType.ACTION)){
+		if (!skipflag){
+		if (this.server.getGameController().getActivePlayer() != null && this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()){			
 				System.out.println("richtige karte gespielt");
 			this.server.getGameController().getActivePlayer().setPlayTwice();
 			this.server.getGameController().getActivePlayer().setPlayTwiceEnabledFalse();
+
 			}
 		}
 
