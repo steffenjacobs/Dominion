@@ -599,10 +599,10 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	public void initTransparentBackgroundImages() {
-		this.transparentImages[0] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[0], 0.5F);
-		this.transparentImages[1] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[1], 0.5F);
-		this.transparentImages[2] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[2], 0.5F);
-		this.transparentImages[3] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[3], 0.5F);
+		this.transparentImages[0] = GraphicsUtil.colorScale(Color.BLACK, originalImages[0], 0.2F);
+		this.transparentImages[1] = GraphicsUtil.colorScale(Color.BLACK, originalImages[1], 0.2F);
+		this.transparentImages[2] = GraphicsUtil.colorScale(Color.BLACK, originalImages[2], 0.2F);
+		this.transparentImages[3] = GraphicsUtil.colorScale(Color.BLACK, originalImages[3], 0.2F);
 	}
 
 	/**
