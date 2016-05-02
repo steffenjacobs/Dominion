@@ -1140,6 +1140,16 @@ public class GameController {
 	public void resetThiefList() {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
 	}
+	
+	public boolean allPlayerTrashed() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isTrashMode()) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	public boolean allPlayerDiscarded() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {

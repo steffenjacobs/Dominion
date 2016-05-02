@@ -279,8 +279,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 					&& !playTwiceActivePlayer.isBureaucrat() && !playTwiceActivePlayer.isSpy()
 					&& !playTwiceActivePlayer.isSecondTimePlayed()
 					&& playTwiceActivePlayer.getPlayTwiceCard() != null) {*/
-			if (this.server.getGameController().allPlayerDiscarded()){
-				if (this.server.getGameController().allReactionCardsPlayed()) {
+			if (this.server.getGameController().allReactionCardsPlayed() && this.server.getGameController().allPlayerDiscarded()
+					&& this.server.getGameController().allPlayerTrashed()){
+				
 //					try {
 						System.out.println("playTwice");
 						playTwiceActivePlayer.setPlayTwiceFalse();
@@ -311,7 +312,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 //						e.printStackTrace();
 //					}
 				}
-			}
+			
 			
 		}
 		
