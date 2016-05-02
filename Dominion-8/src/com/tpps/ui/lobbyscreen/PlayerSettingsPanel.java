@@ -97,8 +97,8 @@ public class PlayerSettingsPanel extends JPanel {
 	private BufferedImage redHead;
 	private JPanel midpanel;
 
-	// private BufferedImage brainCrossed;
-	// private BufferedImage brain;
+	 private BufferedImage brainCrossed;
+	 private BufferedImage brain;
 	
 
 	/**
@@ -148,40 +148,9 @@ public class PlayerSettingsPanel extends JPanel {
 		panelEast = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		panel.setOpaque(false);
-
-		plusKI = new JButton("+ AI") {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void paint(Graphics g) {
-				Graphics2D h = (Graphics2D) g;
-				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
-				super.paint(h);
-			}
-		};
-		plusKI.setFont(new Font("Arial", Font.PLAIN, 22));
-		plusKI.setOpaque(false);
-		plusKI.setForeground(Color.WHITE);
-		plusKI.setBorderPainted(true);
-		plusKI.setContentAreaFilled(false);
-
-		minusKI = new JButton("- AI") {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			public void paint(Graphics g) {
-				Graphics2D h = (Graphics2D) g;
-				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
-				super.paint(h);
-			}
-		};
-		minusKI.setFont(new Font("Arial", Font.PLAIN, 22));
-		minusKI.setOpaque(false);
-		minusKI.setForeground(Color.WHITE);
-		minusKI.setBorderPainted(true);
-		minusKI.setContentAreaFilled(false);
+		
+		this.plusKI = new KIButton(brain, true, this);
+		this.minusKI = new KIButton(brainCrossed, false, this);
 
 		gbc.insets = new Insets(SPACE_PANEL_TO_PANEL, H_SPACE_EDGE_TO_FIRSTPANEL, 0, VERTICAL_GAP_KI);
 		gbc.ipady = WEIGHT_BUTTON_KI;
@@ -226,8 +195,6 @@ public class PlayerSettingsPanel extends JPanel {
 		panel.add(header, BorderLayout.NORTH);
 		panel.add(Box.createVerticalStrut(SPACE_FIRSTPANEL_TO_SECONDPANEL), BorderLayout.PAGE_END);
 
-		plusKI.addActionListener(new KiListener());
-		minusKI.addActionListener(new KiListener());
 		return panel;
 	}
 	
@@ -632,10 +599,10 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	public void initTransparentBackgroundImages() {
-		this.transparentImages[0] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[0], 0.5F);
-		this.transparentImages[1] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[1], 0.5F);
-		this.transparentImages[2] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[2], 0.5F);
-		this.transparentImages[3] = (BufferedImage) GraphicsUtil.setAlpha(originalImages[3], 0.5F);
+		this.transparentImages[0] = GraphicsUtil.colorScale(Color.BLACK, originalImages[0], 0.2F);
+		this.transparentImages[1] = GraphicsUtil.colorScale(Color.BLACK, originalImages[1], 0.2F);
+		this.transparentImages[2] = GraphicsUtil.colorScale(Color.BLACK, originalImages[2], 0.2F);
+		this.transparentImages[3] = GraphicsUtil.colorScale(Color.BLACK, originalImages[3], 0.2F);
 	}
 
 	/**
@@ -650,10 +617,10 @@ public class PlayerSettingsPanel extends JPanel {
 			this.greenLanton = (BufferedImage) GraphicsUtil.setAlpha(greenLanton, 0.6F);
 			this.redHead = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/redhead.png"));
 			this.redHead = (BufferedImage) GraphicsUtil.setAlpha(redHead, 0.6F);
-			// this.brain =
-			// ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/brain.png"));
-			// this.brainCrossed = ImageIO
-			// .read(ClassLoader.getSystemResource("resources/img/lobbyScreen/braincrossed.png"));
+			 this.brain =
+			 ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/brain.png"));
+			 this.brainCrossed = ImageIO
+			 .read(ClassLoader.getSystemResource("resources/img/lobbyScreen/braincrossed.png"));
 			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, PlayerSettingsPanel.ALPHA);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -814,30 +781,9 @@ public class PlayerSettingsPanel extends JPanel {
 	}
 
 	private ArrayList<String> aiNames = new ArrayList<>();
-
-	private class KiListener implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == plusKI) {
-				aiNames.add("" + System.identityHashCode(e));
-				try {
-					DominionController.getInstance().getMatchmaker().sendAIPacket("AI_" + System.identityHashCode(e),
-							DominionController.getInstance().getLobbyID(), false);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				PlayerSettingsPanel.this.handleStartButton();
-			} else if (e.getSource() == minusKI && aiNames.size() > 0) {
-				try {
-					DominionController.getInstance().getMatchmaker().sendAIPacket(
-							"AI_" + aiNames.remove(aiNames.size() - 1), DominionController.getInstance().getLobbyID(),
-							true);
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				PlayerSettingsPanel.this.handleStartButton();
-			}
-		}
+	
+	public ArrayList<String> getAiNames() {
+		return aiNames;
 	}
+
 }
