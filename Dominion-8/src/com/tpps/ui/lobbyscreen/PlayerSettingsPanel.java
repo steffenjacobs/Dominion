@@ -19,6 +19,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -234,14 +235,17 @@ public class PlayerSettingsPanel extends JPanel {
 		return startButton;
 	}
 
-	public class StartButton extends JButton implements ActionListener {
+	public class StartButton extends JButton implements ActionListener, MouseListener{
 		
 		private static final long serialVersionUID = 1L;
 		private boolean enabledFlag;
 		private BufferedImage switchimage;
+		private BufferedImage greenHover;
 
 		public StartButton() {
 			switchimage = PlayerSettingsPanel.this.redHead;
+			this.greenHover = greenLanton;
+			this.greenHover = GraphicsUtil.colorScale(Color.BLACK, greenHover,  0.75F);
 			this.enabledFlag = false;
 			this.setText("Start");
 			this.setOpaque(false);
@@ -250,6 +254,7 @@ public class PlayerSettingsPanel extends JPanel {
 			this.setForeground(Color.WHITE);
 			this.setHorizontalTextPosition(SwingConstants.CENTER);
 			this.addActionListener(this);
+			this.addMouseListener(this);
 			this.setFont(head);
 		}
 
@@ -284,6 +289,38 @@ public class PlayerSettingsPanel extends JPanel {
 						+ "connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers()
 						 , "BOT", "", Color.YELLOW);
 			}
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			if(enabledFlag){
+				this.switchimage = greenHover;
+			}
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			if(enabledFlag){
+				this.switchimage = PlayerSettingsPanel.this.greenLanton;
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
 		}
 	}
 
