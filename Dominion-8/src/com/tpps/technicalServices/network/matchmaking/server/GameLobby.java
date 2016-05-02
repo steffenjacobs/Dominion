@@ -1,9 +1,12 @@
 package com.tpps.technicalServices.network.matchmaking.server;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
 
 /**
@@ -24,6 +27,8 @@ public class GameLobby {
 	private long startTime = 0;
 	private GameServer runningServer;
 
+	private MPlayer admin;
+
 	/** constructor, generating its unique lobbyID */
 	public GameLobby() {
 		this.lobbyID = MatchmakingController.generateLobbyID();
@@ -41,7 +46,7 @@ public class GameLobby {
 
 	/** @return whether there are 4 players in the lobby */
 	public boolean isFull() {
-		return this.players.size() == 4;
+		return this.players.size() >= 4;
 	}
 
 	/** @return whether the game has started yet */
@@ -49,7 +54,12 @@ public class GameLobby {
 		return this.runningServer != null && this.startTime != 0;
 	}
 
-	/** sets the instance of the game-server that is running this game */
+	/**
+	 * sets the instance of the game-server that is running this game
+	 * 
+	 * @param gs
+	 *            the instanceo of the game-server this lobby is running on
+	 */
 	public void setServer(GameServer gs) {
 		this.runningServer = gs;
 	}
@@ -60,29 +70,53 @@ public class GameLobby {
 	}
 
 	/**
+	 * @param player
+	 *            the player to check admin for
+	 * @return if a player is lobby-admin
+	 */
+	public boolean isAdmin(MPlayer player) {
+		if (this.admin == null || player == null || player.isAI())
+			return false;
+		return this.admin == player;
+	}
+
+	/**
+	 * updates the lobby-admin
+	 * 
+	 * @param player
+	 *            the new lobby-admin
+	 */
+	private void setAdmin(MPlayer player) {
+		this.admin = player;
+	}
+
+	/**
 	 * adds a player to the lobby
 	 * 
 	 * @param player
 	 *            player to add to the lobby
 	 */
 	public void joinPlayer(MPlayer player) {
-		System.out.println("[" + this.getLobbyID() + "] <-" + player.getPlayerName());
+		if (!player.isAI() && admin == null) {
+			setAdmin(player);
+		}
+		GameLog.log(MsgType.INFO, "[" + this.getLobbyID() + "] <-" + player.getPlayerName());
 		for (MPlayer mplayer : players) {
 
 			// send the new player the old player
 			if (!player.isAI()) {
-				MatchmakingServer.getInstance().sendJoinPacket(player, mplayer.getPlayerName());
+				MatchmakingServer.getInstance().sendJoinPacket(player, mplayer.getPlayerName(), isAdmin(mplayer));
 			}
 
 			// send the old player the new player
 			if (!mplayer.isAI()) {
-				MatchmakingServer.getInstance().sendJoinPacket(mplayer, player.getPlayerName());
+				MatchmakingServer.getInstance().sendJoinPacket(mplayer, player.getPlayerName(), isAdmin(player));
 			}
 		}
 
 		// send the new player himself
 		if (!player.isAI()) {
-			MatchmakingServer.getInstance().sendJoinPacket(player, player.getPlayerName());
+			MatchmakingServer.getInstance().sendJoinPacket(player, player.getPlayerName(), isAdmin(player));
 		}
 
 		this.players.add(player);
@@ -100,8 +134,9 @@ public class GameLobby {
 			this.lobbyScore = this.getLobbyScore() / this.players.size();
 		}
 		if (this.players.size() >= MAX_LOBBY_SIZE) {
-			this.startTime = System.currentTimeMillis();
-			MatchmakingController.startGame(this);
+			// Do nothing -> Lobby is full and waits to start
+			// this.startTime = System.currentTimeMillis();
+			// MatchmakingController.startGame(this);
 		}
 
 		int aiCounter = 0;
@@ -131,11 +166,47 @@ public class GameLobby {
 		this.updateLobbyScore();
 
 		for (MPlayer mplayer : this.players) {
+			// say everyone goodbye
 			if (!mplayer.isAI()) {
-				MatchmakingServer.getInstance().sendQuitPacket(mplayer, player.getPlayerName());
+				MatchmakingServer.getInstance().sendQuitPacket(mplayer, player.getPlayerName(), isAdmin(player));
 			}
 		}
+		if (isAdmin(player)) {
+			this.admin = null;
+			ArrayList<MPlayer> removeAI = new ArrayList<>();
+			for (MPlayer pl : this.players) {
 
+				// remove added AIs
+				if (pl.isAI()) {
+					removeAI.add(pl);
+				}
+
+				else {
+					// find new lobby-admin
+					if (this.admin == null) {
+						setAdmin(pl);
+					}
+				}
+			}
+
+			// clear marked AIs
+			for (MPlayer p : removeAI) {
+				this.players.remove(p);
+				MatchmakingController.removeAiPlayer(p.getPlayerName());
+			}
+
+			for (MPlayer mpl : this.players) {
+
+				for (MPlayer ai : removeAI) {
+					// send AI-Quit-Packet to everyone
+					MatchmakingServer.getInstance().sendQuitPacket(mpl, ai.getPlayerName(), false);
+				}
+
+				// tell everyone who is new admin
+				MatchmakingServer.getInstance().sendQuitPacket(mpl,  this.admin.getPlayerName(), false);
+				MatchmakingServer.getInstance().sendJoinPacket(mpl, this.admin.getPlayerName(), true);
+			}
+		}
 	}
 
 	/** @return if the lobby is empty */

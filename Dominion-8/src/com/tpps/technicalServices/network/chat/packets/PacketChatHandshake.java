@@ -24,7 +24,9 @@ public class PacketChatHandshake extends Packet{
 		super(PacketType.CHAT_HANDSHAKE);
 		this.sender = sender;
 	}	
-
+	/**
+	 * @see com.tpps.technicalServices.network.core.packet.Packet#toString()
+	 */
 	@Override
 	public String toString() {
 		return sender;

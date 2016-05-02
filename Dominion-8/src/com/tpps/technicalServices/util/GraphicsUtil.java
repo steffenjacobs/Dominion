@@ -18,8 +18,10 @@ import java.awt.image.DataBuffer;
 public final class GraphicsUtil {
 
 	/**
-	 * @author Steffen Jacobs, Johannes Huhn sets the alpha-value for an image
-	 *         synchronously
+	 * sets the alpha-value for an image synchronously
+	 * 
+	 * @author Steffen Jacobs, Johannes Huhn
+	 * 
 	 * @param transparency
 	 *            new Alpha-Value for desired image
 	 * @param img
@@ -37,20 +39,19 @@ public final class GraphicsUtil {
 	/**
 	 * draws a String centered on top of an image
 	 * 
-	 * @param img:
+	 * @param img
 	 *            Image to draw on top of
-	 * @param caption:
+	 * @param caption
 	 *            text to draw
-	 * @param font:
+	 * @param font
 	 *            font to draw text with
-	 * @param fontColor:
+	 * @param fontColor
 	 *            color of the font
-	 * @param offsetX:
+	 * @param offsetX
 	 *            offset left and right
-	 * @param offsetY:
+	 * @param offsetY
 	 *            offset up and down
 	 * @return a new rendered image with the caption on top of the old image
-	 * @author Steffen Jacobs
 	 */
 	public static Image drawStringCentered(Image img, String caption, Font font, Color fontColor, int offsetX,
 			int offsetY) {
@@ -72,16 +73,15 @@ public final class GraphicsUtil {
 	/**
 	 * draws a String centered on top of an image
 	 * 
-	 * @param img:
+	 * @param img
 	 *            Image to draw on top of
-	 * @param caption:
+	 * @param caption
 	 *            text to draw
-	 * @param font:
+	 * @param font
 	 *            font to draw text with
-	 * @param fontColor:
+	 * @param fontColor
 	 *            color of the font
 	 * @return a new rendered image with the caption on top of the old image
-	 * @author Steffen Jacobs
 	 */
 	public static Image drawStringCentered(Image img, String caption, Font font, Color fontColor) {
 		return drawStringCentered(img, caption, font, fontColor, 0, 0);
@@ -97,7 +97,6 @@ public final class GraphicsUtil {
 	 * @param newHeight
 	 *            new height to resize to
 	 * @return the resized image
-	 * @author Steffen Jacobs
 	 */
 	public static BufferedImage resize(BufferedImage buffImg, int newWidth, int newHeight) {
 		if (newWidth <= 0)
@@ -121,7 +120,6 @@ public final class GraphicsUtil {
 	 *            whether to output debug-messages
 	 * @return whether all RGBA-values for all pixel were identical in both
 	 *         images
-	 * @author Steffen Jacobs
 	 */
 	public static boolean compareImages(BufferedImage image1, BufferedImage image2, boolean debug) {
 
@@ -151,7 +149,8 @@ public final class GraphicsUtil {
 	 * 
 	 * @param img
 	 *            the image to rotate
-	 * @angle angle of rotation (degree)
+	 * @param angle
+	 *            angle of rotation (degree)
 	 * @return a new image which is the old image rotated by the angle
 	 * 
 	 */
@@ -184,9 +183,48 @@ public final class GraphicsUtil {
 	 *            second image to compare
 	 * @return wheter all RGBA-values for all pixel were identical in both
 	 *         images
-	 * @author Steffen Jacobs
 	 */
 	public static boolean compareImages(BufferedImage image1, BufferedImage image2) {
 		return compareImages(image1, image2, false);
+	}
+
+	/**
+	 * colors the image in a specified color
+	 * 
+	 * @param color
+	 *            the color to color the image to
+	 * @param bim
+	 *            the image to color
+	 * @param scale
+	 *            the scale of coloring
+	 * @return the colored image
+	 */
+	public static BufferedImage colorScale(Color color, BufferedImage bim, float scale) {
+		BufferedImage copy = new BufferedImage(bim.getWidth(), bim.getHeight(), bim.getType());
+		Graphics2D g = copy.createGraphics();
+		g.setPaint(color);
+		g.fillRect(0, 0, bim.getWidth(), bim.getHeight());
+		g.drawImage(setAlpha(bim, scale), 0, 0, null);
+		return copy;
+	}
+	
+	/**
+	 * colors the rounded-rectangular shape in a specified color
+	 * 
+	 * @param color
+	 *            the color to color the image to
+	 * @param bim
+	 *            the image to color
+	 * @param scale
+	 *            the scale of coloring
+	 * @return the colored image
+	 */
+	public static BufferedImage colorScaleRounded(Color color, BufferedImage bim, float scale, int arcSize){
+		BufferedImage copy = new BufferedImage(bim.getWidth(), bim.getHeight(), bim.getType());
+		Graphics2D g = copy.createGraphics();
+		g.setPaint(color);
+		g.fillRoundRect(0, 0, bim.getWidth(), bim.getHeight(), arcSize, arcSize);
+		g.drawImage(setAlpha(bim, scale), 0, 0, null);
+		return copy;
 	}
 }

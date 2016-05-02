@@ -38,7 +38,9 @@ public class PacketSendAnswer extends Packet{
 		this.chatmessage = chatmessage;
 		this.color = color;
 	}
-	
+	/**
+	 * @see com.tpps.technicalServices.network.core.packet.Packet#toString()
+	 */
 	@Override
 	public String toString() {		
 		return null;

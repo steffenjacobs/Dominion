@@ -11,6 +11,9 @@ public final class PhysicsUtil {
 
 	/**
 	 * checks whether two 2D rectangular areas overlap
+	 * @param area1 the first area
+	 * @param area2 the second are
+	 * @return whether both areas collide
 	 */
 	public static boolean collides(Rectangle area1, Rectangle area2) {
 		return area1.x < area2.x + area2.width && area1.x + area1.width > area2.x && area1.y < area2.y + area2.height

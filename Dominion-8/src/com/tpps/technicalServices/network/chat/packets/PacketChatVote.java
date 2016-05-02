@@ -44,7 +44,9 @@ public class PacketChatVote extends Packet{
 	public boolean getVoted(){
 		return this.voted;
 	}
-	
+	/**
+	 * @see com.tpps.technicalServices.network.core.packet.Packet#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Vote by: " + this.sender + " : " + this.voted;

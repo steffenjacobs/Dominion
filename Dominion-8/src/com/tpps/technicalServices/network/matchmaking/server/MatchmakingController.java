@@ -42,7 +42,10 @@ public final class MatchmakingController {
 
 	private static ConcurrentHashMap<Integer, MPlayer> playersByPort;
 	private static ConcurrentHashMap<MPlayer, Integer> connectedPortsByPlayer;
+
+	/*** also contains AI-names */
 	private static ConcurrentHashMap<String, MPlayer> playersByName;
+
 	private static ConcurrentHashMap<MPlayer, GameLobby> lobbiesByPlayer;
 
 	private static ConcurrentHashMap<UUID, GameLobby> lobbiesByID;
@@ -81,12 +84,43 @@ public final class MatchmakingController {
 	}
 
 	/**
+	 * adds an ai player to the game
+	 * 
+	 * @param player
+	 *            the ai to add
+	 */
+	static void addAIPlayer(MPlayer player) {
+		playersByName.put(player.getPlayerName(), player);
+	}
+
+	/**
+	 * @param name
+	 *            the name of the player to get
+	 * @return a player by its name (including AIs)
+	 */
+	static MPlayer removeAiPlayer(String name) {
+		return playersByName.remove(name);
+	}
+
+	/**
+	 * @param name
+	 *            the name of the player to get the corresponding MPlayer-Object
+	 *            from
+	 * @return the MPlayer-object mapped to the name
+	 */
+	static MPlayer getPlayerFromName(String name) {
+		return playersByName.get(name);
+	}
+
+	/**
 	 * starts a game, if the lobby is full
 	 * 
 	 * @param lobby
 	 *            the GameLobby to start
+	 * @param selectedActionCards
+	 *            the cards to play with
 	 */
-	static void startGame(GameLobby lobby) {
+	static void startGame(GameLobby lobby, String[] selectedActionCards) {
 		GameLog.log(MsgType.INFO, "Starting lobby " + lobby.getLobbyID());
 		exec.submit(() -> {
 			GameLog.log(MsgType.INFO, "Setting up lobby " + lobby.getLobbyID());
@@ -114,7 +148,7 @@ public final class MatchmakingController {
 				exec.submit(() -> {
 					GameLog.log(MsgType.INFO, "Started GameServer for lobby " + lobby.getLobbyID());
 					try {
-						GameServer gs = new GameServer(freePort);
+						GameServer gs = new GameServer(freePort, selectedActionCards);
 						lobby.setServer(gs);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -149,7 +183,8 @@ public final class MatchmakingController {
 
 					else {
 						/* send success to client */
-						MatchmakingServer.getInstance().sendSuccessPacket(pl, playerNames, freePort);
+						MatchmakingServer.getInstance().sendSuccessPacket(pl, playerNames, freePort,
+								selectedActionCards);
 					}
 				}
 				cl.disconnect();
@@ -208,13 +243,16 @@ public final class MatchmakingController {
 	/** creates new empty lobbies */
 	private static void updateLobbyCount() {
 		int cntAvailableLobbies = 0;
+		int availableLobbyShould = getPlayers().length / 3;
+		availableLobbyShould = availableLobbyShould < 2 ? 2 : availableLobbyShould;
+
 		for (GameLobby gl : lobbies) {
 			if (gl.isAvailable()) {
 				cntAvailableLobbies++;
 			}
 		}
-		if (cntAvailableLobbies < 2) {
-			for (; cntAvailableLobbies < 2; cntAvailableLobbies++) {
+		if (cntAvailableLobbies < availableLobbyShould) {
+			for (; cntAvailableLobbies < availableLobbyShould; cntAvailableLobbies++) {
 				GameLobby lobby = new GameLobby();
 				lobbies.add(lobby);
 				lobbiesByID.put(lobby.getLobbyID(), lobby);
@@ -311,10 +349,9 @@ public final class MatchmakingController {
 	 * is called when the game-end-packet was received from the game-server,
 	 * adds all statistics to the database
 	 * 
-	 * @param winner
-	 *            the player who won the game
-	 * @param players
-	 *            all participants in the game that stayed until it ended
+	 * @param endPacket
+	 *            the packet with the winner and all participants in the game
+	 *            that stayed until it ended
 	 */
 	public static void onGameEnd(PacketGameEnd endPacket) {
 		GameLobby lobby = lobbiesByPlayer.get(endPacket.getWinner());

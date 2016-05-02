@@ -15,7 +15,6 @@ import com.tpps.technicalServices.logger.DrawAndShuffle;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
-import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
@@ -24,6 +23,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketDontShowEndR
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendHandCards;
+import com.tpps.technicalServices.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendRevealCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSetAsideDrewCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketStartDiscardMode;
@@ -41,7 +41,7 @@ public class Player {
 	private GameServer gameServer;
 	private Deck deck;
 
-	private Card drewCard;
+	private Card drewCard, playTwiceCard;
 	private CardType setAside;
 	private Tuple<CardAction> discardOrTrashAction;
 	private LinkedList<Card> playedCards, drawList, revealList, temporaryTrashPile, setAsideCards;
@@ -53,8 +53,10 @@ public class Player {
 	private UUID session_ID;
 	private final int client_ID;
 
-	private int port, actions, buys, coins, gainValue, drawUntil, turnNr;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand;
+	private int port, actions, buys, coins, gainValue, drawUntil, turnNr, playTwiceCounter;
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand, secondTimePlayed,
+	playTwiceEnabled;;
+	
 
 	/**
 	 * creates the player sets all the initial values
@@ -73,10 +75,14 @@ public class Player {
 		this.bureaucrat = false;
 		this.witch = false;
 		this.spy = false;
+		this.playTwice = false;
+		this.playTwiceEnabled = false;
+		this.secondTimePlayed = false;
 		this.drawList = new LinkedList<Card>();
 		this.revealList = new LinkedList<Card>();
 		this.temporaryTrashPile = new LinkedList<Card>();
 		this.setAsideCards = new LinkedList<Card>();
+		this.playTwiceCard = null;
 		this.deck = deck;
 		this.id = player_ID++;
 		this.session_ID = uuid;
@@ -110,6 +116,12 @@ public class Player {
 		this.coins = 0;
 		this.buys = 1;
 		this.actions = 1;
+		this.playTwice = false;
+		this.playTwiceCard = null;
+		this.playTwiceEnabled = false;
+		this.secondTimePlayed = false;		
+		this.playTwiceCounter = 0;
+		
 	}
 
 	/**
@@ -164,6 +176,61 @@ public class Player {
 
 	public void updateSessionID(UUID sessionID) {
 		this.session_ID = sessionID;
+	}
+	
+	/**
+	 * 
+	 * @return if the card is played for the second time
+	 */
+	public boolean isSecondTimePlayed() {
+		return this.secondTimePlayed;
+	}
+	
+	public void setSecondTimePlayed() {
+		this.secondTimePlayed = true;
+	}
+	
+	/**
+	 * 
+	 * @return if the card should be played twice
+	 */
+	public boolean isPlayTwice() {
+		return this.playTwice;
+	}
+	
+	public void setPlayTwice() {
+		this.playTwice = true;
+	}
+	
+	public void setPlayTwiceFalse() {
+		this.playTwice = false;
+	}
+	
+	public void setPlayTwiceEnabledFalse() {
+		this.playTwiceEnabled = false;
+	}
+	
+	public boolean isPlayTwiceEnabled() {
+		return this.playTwiceEnabled;
+	}
+	
+	public void decrementPlayTwiceCounter() {
+		if (this.playTwiceCounter > 0) {
+			this.playTwiceCounter--;
+		}
+		
+	}
+	
+	public int getPlayTwiceCounter() {
+		return this.playTwiceCounter;
+	}
+	
+	/**
+	 * 
+	 * @return the card which should be played twice
+	 */
+	public Card getPlayTwiceCard() {
+		return playTwiceCard;
 	}
 
 	/**
@@ -586,18 +653,18 @@ public class Player {
 	 * called whenever a card is played calls the doAction method appends the
 	 * played card to the played card list sets the play twice flag if a card
 	 * should be played twice
-	 * 
 	 * @param cardID
 	 * @throws IOException
 	 */
 	public void playCard(String cardID) throws IOException {
+		this.playTwiceCard = null;
 		Card card = doAction(cardID);
+		if (this.secondTimePlayed) {
+			this.secondTimePlayed = false;
+			return;
+		}
 		if (card != null) {
 			this.playedCards.addLast(card);
-			if (playTwice) {
-				playTwice = false;
-				doAction(cardID);
-			}
 		}
 	}
 
@@ -661,7 +728,17 @@ public class Player {
 
 //		this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getPlayerName()," - plays " + serverCard.getName(), ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 		this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getPlayerName()," - plays " + serverCard.getName(), this.getLogColor()));
+		System.out.println("The Playername is: " + this.getPlayerName());
 
+		if (this.playTwice) {
+			if (!this.secondTimePlayed){
+			System.out.println("playTwice: " + this.playTwice);
+			this.actions++;
+			this.playTwiceCard = serverCard;
+				dontRemoveFlag = true;
+			}
+		}
+		
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
 			return serverCard;
@@ -747,7 +824,7 @@ public class Player {
 						getDeck().getDrawPile().addLast(this.gameServer.getGameController().getGameBoard().getTableForTreasureCards().get("Silver").removeLast());
 					}
 				} catch (NoSuchElementException e) {
-					GameLog.log(MsgType.ERROR, "couldn't gain the card because ther are no more silver card on the board", this.getLogColor());
+					GameLog.log(MsgType.ERROR, "No more Silver cards on the board.");
 				}
 				break;
 			case DISCARD_CARD:
@@ -825,6 +902,10 @@ public class Player {
 				break;
 			case CHOOSE_CARD_PLAY_TWICE:
 				this.actions++;
+				if (playTwiceCounter < getDeck().amountHandActionCard() - 1){
+					this.playTwiceEnabled = true;
+					this.playTwiceCounter++;
+				}
 				break;
 			case IS_TREASURE:
 				this.coins += Integer.parseInt(serverCard.getActions().get(CardAction.IS_TREASURE));
@@ -838,21 +919,50 @@ public class Player {
 				break;
 			}
 		}
+		
+		if (this.reactionMode) {
+			dontRemoveFlag = true;
+			serverCard = null;
+			finishReactionModeForThisPlayer();
+		}
+		
 		if (!dontRemoveFlag) {
 			this.getDeck().getCardHand().remove(serverCard);
+		}else {
+			dontRemoveFlag = false;
 		}
-		if (this.reactionMode) {
-			this.gameServer.sendMessage(port, new PacketDontShowEndReactions());
-			setModesFalse();
-			this.gameServer.sendMessage(port, new PacketDisable("wait on reactions"));
-			this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
-		}
+		
 		if (trashFlag) {
 			trashFlag = false;
 			this.gameServer.getGameController().getGameBoard().getTrashPile().add(serverCard);
 			return null;
 		}
 		return serverCard;
+	}
+
+	private void finishReactionModeForThisPlayer() throws IOException {
+		
+		setModesFalse();
+		this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.playedCards)));
+		
+		boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
+
+		if (allReactionCarsPlayedFlag) {
+			if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null || 
+					!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
+//			this.gameServer.sendMessage(port,
+//					new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
+				this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
+			}
+		} else {
+			this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
+		}			
+		
+		
+		this.gameServer.sendMessage(port, new PacketDontShowEndReactions());
+		
+		
+		
 	}
 
 	/**
@@ -976,14 +1086,27 @@ public class Player {
 		case DISCARD_CARD:
 			if (this.discardOrTrashAction.getSecondEntry() > 0) {
 				this.discardOrTrashAction.decrementSecondEntry();
+				this.getDeck().getCardHand().remove(card);
 			}
-			this.getDeck().getCardHand().remove(card);
+			
 			if (this.discardOrTrashAction.getSecondEntry() == 0) {
 				this.discardMode = false;
 				if (this.reactionMode) {
 					setModesFalse();
-					this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
-					this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
+					
+					boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
+
+					if (allReactionCarsPlayedFlag) {
+						if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard()== null || !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
+//						this.gameServer.sendMessage(port,
+//								new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
+						this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
+						}
+					} else {
+						this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
+					}					
+					
+					
 				}
 			}
 			break;
@@ -1039,6 +1162,23 @@ public class Player {
 	 */
 	public void resetTemporaryTrashPile() {
 		this.temporaryTrashPile = new LinkedList<Card>();
+	}
+
+	/**
+	 * sets playTwice false
+	 */
+	public void endActionPhase() {
+		this.playTwice = false;
+		this.playTwiceEnabled = false;
+		this.secondTimePlayed = false;
+		this.playTwiceCard = null;
+		this.playTwiceCounter = 0;
+		
+	}
+
+	public void setPlayTwiceEnabled() {
+		this.playTwiceEnabled = true;
+		
 	}
 
 }

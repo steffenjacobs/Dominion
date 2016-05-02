@@ -29,7 +29,6 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
-import com.tpps.technicalServices.network.gameSession.packets.PacketEnableOthers;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPutBackCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendActiveButtons;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendBoard;
@@ -190,7 +189,13 @@ public class GameController {
 			if (player.isReactionMode() && card.getTypes().contains(CardType.REACTION)) {
 				System.out.println("spielt reaktionskarte");
 				player.playCard(cardID);
-				this.gameServer.sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
+				if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null || 
+						(!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")
+								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")
+								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Bureaucrat")
+								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Thief"))){
+					this.gameServer.sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
+				}
 				return true;
 			}
 			if (this.gamePhase.equals("actionPhase")) {
@@ -198,6 +203,7 @@ public class GameController {
 				if (card.getTypes().contains(CardType.ACTION) && this.getActivePlayer().getActions() > 0) {
 					this.getActivePlayer().playCard(cardID);
 					if (this.getActivePlayer().getActions() == 0) {
+						this.getActivePlayer().endActionPhase();
 						this.setBuyPhase();
 					}
 					return true;
@@ -326,26 +332,60 @@ public class GameController {
 	 * @param value
 	 */
 	public synchronized void discardOtherDownto(String value) {
+		boolean sendPacketDisable = true;
+		boolean sendEnableFlag = true;
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
+
 			if (!player.equals(activePlayer)) {
+				sendEnableFlag = true;
+
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setReactionCard(true);
+					player.setReactionMode();
+
+					if (sendPacketDisable) {
+						sendPacketDisable = false;
+						try {
+							this.gameServer.sendMessage(this.activePlayer.getPort(),
+									new PacketDisable("wait on reaction"));
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+
 					try {
 						this.gameServer.sendMessage(player.getPort(), new PacketShowEndReactions());
+						this.gameServer.sendMessage(player.getPort(), new PacketEnable("react"));
+						sendEnableFlag = false;
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				}
-				player.setDiscardMode();
-				player.setDiscardOrTrashAction(CardAction.DISCARD_CARD, player.getDeck().getCardHand().size() - Integer.parseInt(value));
 
-				player.setReactionMode();
-				try {
-					this.gameServer.broadcastMessage(player.getPort(), new PacketEnableOthers(this.activePlayer.getClientID()));
-				} catch (IOException e) {
-					e.printStackTrace();
+				if (player.getDeck().getCardHand().size() > Integer.parseInt(value)) {
+					System.out.println("mehr als 3 karten");
+					player.setReactionMode();
+					player.setDiscardMode();
+					player.setDiscardOrTrashAction(CardAction.DISCARD_CARD,
+							player.getDeck().getCardHand().size() - Integer.parseInt(value));
+					try {
+						if (sendEnableFlag) {
+							System.out.println("send packet react");
+							this.gameServer.sendMessage(player.getPort(), new PacketEnable("react"));
+						}
+						if (sendPacketDisable) {
+							sendPacketDisable = false;
+							System.out.println("sendpacket disable");
+							this.gameServer.sendMessage(this.activePlayer.getPort(),
+									new PacketDisable("wait on reaction"));
+
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
+
 			}
 		}
 	}
@@ -726,9 +766,12 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			if (player.playsReactionCard() || player.isReactionMode()) {
 				allReactionCardsPlayedFlag = false;
+				System.out.println(player.getPlayerName() + "spielt reaktionskarte: " +
+				player.playsReactionCard() + "player ist reaktionsmodues: " + player.isReactionMode());
 				break;
 			}
 		}
+		System.out.println("alle reaktionskarten gespielt? :" + allReactionCardsPlayedFlag);
 		return allReactionCardsPlayedFlag;
 	}
 
@@ -740,6 +783,11 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			if (!player.equals(activePlayer)) {
 				player.getDeck().draw();
+				try {
+					this.gameServer.sendMessage(player.getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -762,13 +810,22 @@ public class GameController {
 		checkSpyFinish();
 		checkWitchFinish();
 		checkBureaucratFinish();
-
-		try {
-			this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
-			this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
-					this.gameServer.getGameController().getActivePlayerName(), false));
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null ||
+				(!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")
+					&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")
+					&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Bureaucrat")
+					&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Thief"))) {
+			try {
+				System.out.println("reaktion beendet gespielte karten"
+						+ Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));
+				this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(
+						CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
+				this.gameServer.broadcastMessage(
+						new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
+								this.gameServer.getGameController().getActivePlayerName(), false));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -825,7 +882,7 @@ public class GameController {
 	 * @param userName
 	 * @return the player with the given port null if not exists
 	 */
-	public Player getPlayerPlayerByPort(int port){
+	public Player getPlayerByPort(int port){
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (player.getPort() == port) {
@@ -982,10 +1039,21 @@ public class GameController {
 	 */
 	public void isGameFinished() {
 		if (this.gameBoard.getTableForVictoryCards().get("Province").isEmpty()) {
+			System.out.println("province empty");
 			endGame();
 		} else if (this.gameBoard.checkThreePilesEmpty()) {
+			System.out.println("three piles empty");
 			endGame();
 		}
+	}
+	
+	public LinkedList<Card> getAllPlayedCards(Player... players) {
+		LinkedList<Card> playedCards = new LinkedList<Card>();
+		for (Iterator<Player> iterator = this.players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			playedCards.addAll(player.getPlayedCards());			
+		}
+		return playedCards;
 	}
 	
 	public LinkedList<String> getPlayerNamesSorted() {
@@ -1036,7 +1104,7 @@ public class GameController {
 			}, false);
 			System.out.println("send message to matchmakingserver");
 			client.sendMessage(new PacketGameEnd(getPlayerNames(), getWinningPlayer().getPlayerName(), this.gameServer.getPort()));
-			this.gameServer.newGame();
+//			this.gameServer.newGame();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -1083,5 +1151,67 @@ public class GameController {
 	 */
 	public void resetThiefList() {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
+	}
+	
+	public boolean allReveaListsEmpty() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (!player.getRevealList().isEmpty()){
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean allTemporaryTrashPilesEmpty() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (!player.getTemporaryTrashPile().isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean allPlayersRevealed() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isRevealMode()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean allPlayerGained() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isGainMode()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean allPlayerTrashed() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isTrashMode()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean allPlayerDiscarded() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isDiscardMode()){
+				return false;
+			}
+			return true;
+			
+		}
+		return false;
 	}
 }

@@ -88,7 +88,7 @@ public class GameServerNetworkListener implements NetworkListener {
 					e.printStackTrace();
 				}
 			}else if (this.gameServer.getDisconnectedUser().size() >= 1) {
-				Player player = this.gameServer.getGameController().getPlayerPlayerByPort(port);
+				Player player = this.gameServer.getGameController().getPlayerByPort(port);
 				this.gameServer.getGameController().getPlayers().remove(player);
 				this.gameServer.getDisconnectedUser().remove(player);
 				this.gameServer.getGameController().setActivePlayer(this.gameServer.getGameController().getRandomPlayer());

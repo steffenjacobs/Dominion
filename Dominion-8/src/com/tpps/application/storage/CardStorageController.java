@@ -3,15 +3,22 @@ package com.tpps.application.storage;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.Card;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.Addresses;
+import com.tpps.technicalServices.network.card.CardClient;
+import com.tpps.technicalServices.network.card.CardPacketHandlerClient;
+import com.tpps.technicalServices.network.card.CardServer;
 import com.tpps.technicalServices.util.ByteUtil;
 
 /**
@@ -25,13 +32,17 @@ public class CardStorageController {
 	private static final String DEFAULT_STORAGE_FILE = "cards.bin";
 	private String storageFile;
 	private static final boolean DEBUG = false;
+	private String[] standardCards = { "Copper", "Silver", "Gold", "Estate", "Duchy", "Province", "Cellar", "Chapel",
+			"Chancellor", "Militia", "Moat", "Village", "Woodcutter", "Workshop", "Feast", "Moneylender", "Remodel",
+			"Smithy", "Spy", "ThroneRoom", "CouncilRoom", "Thief", "Festival", "Laboratory", "Library", "Market",
+			"Mine", "Witch", "Curse", "Adventurer", "Bureaucrat" };
 
 	/**
 	 * sets storage-file-name to default name
 	 */
 	public CardStorageController() {
 		this.storageFile = DEFAULT_STORAGE_FILE;
-		GameLog.log(MsgType.INIT, "CardStorageController");
+		// GameLog.log(MsgType.INIT, "CardStorageController");
 	}
 
 	/**
@@ -55,8 +66,7 @@ public class CardStorageController {
 				GameLog.log(MsgType.INIT, "Loading storage from: " + Paths.get(storageFile));
 			byte[] bytes = Files.readAllBytes(Paths.get(storageFile));
 			if (bytes.length == 0) {
-				GameLog.log(MsgType.ERROR, "ERROR: Storage-Container is empty!");
-				Files.copy(Paths.get(storageFile), Paths.get(storageFile + "_old_" + System.currentTimeMillis()));
+				GameLog.log(MsgType.INFO, "Info: Storage-Container is empty!");
 				return;
 			}
 			if (DEBUG)
@@ -140,6 +150,61 @@ public class CardStorageController {
 	}
 
 	/**
+	 * checks if the standard-card set exists & downloads it if necessary
+	 */
+	public void checkStandardCardsAsync() {
+		new Thread(() -> {
+			GameLog.log(MsgType.INFO, "Checking standard cards...");
+			boolean missing = false;
+
+			for (String card : this.standardCards) {
+				if (!this.hasCard(card)) {
+					missing = true;
+					break;
+				}
+			}
+			if (missing) {
+				GameLog.log(MsgType.INFO, "Downloading missing cards...");
+				this.checkAndDownloadCards(this.standardCards);
+			}
+			GameLog.log(MsgType.INFO, "Check for standard cards finished.");
+		}).start();
+	}
+
+	/**
+	 * @param cardNames the names of the cards to check
+	 */
+	public void checkAndDownloadCards(String[] cardNames) {
+
+		CardPacketHandlerClient cHandler = new CardPacketHandlerClient();
+
+		CardClient client = null;
+		try {
+			client = new CardClient(new InetSocketAddress(Addresses.getRemoteAddress(), CardServer.getStandardPort()),
+					cHandler, true, DominionController.getInstance());
+			System.out.println(DominionController.getInstance().getUsername() + " - "
+					+ DominionController.getInstance().getSessionID());
+			cHandler.setCardClient(client);
+			Thread.sleep(1000);
+
+			for (String name : cardNames) {
+				if (!this.hasCard(name)) {
+					GameLog.log(MsgType.INFO, "Started download of " + name);
+					client.requestCardFromServer(name, false);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			if (client != null)
+				client.disconnect();
+		}
+		this.saveCards();
+	}
+
+	/**
 	 * removes a card from the storage Note: Removes the card from the file
 	 * after calling save().
 	 * 
@@ -198,5 +263,10 @@ public class CardStorageController {
 	 */
 	public int getCardCount() {
 		return this.storedCards.size();
+	}
+
+	/** @return all stored cards */
+	public Collection<SerializedCard> getAllCards() {
+		return this.storedCards.values();
 	}
 }

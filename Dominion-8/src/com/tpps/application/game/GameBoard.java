@@ -254,7 +254,7 @@ public class GameBoard {
 		LinkedList<Card> militiaList = new LinkedList<Card>();
 		CollectionsUtil.cloneCardToList(
 				new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, CardAction.DISCARD_OTHER_DOWNTO }),
-						CollectionsUtil.linkedList(new String[] { "2", "3" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION, CardType.ATTACK }), "Militia", 4),
+						CollectionsUtil.linkedList(new String[] { "2", "3" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION, CardType.ATTACK }), "Militia", 0),
 				GameConstant.INIT_PILE_SIZE, militiaList);
 		this.tableForAllActionCards.put("Militia", militiaList);
 		Card.resetClassID();
@@ -471,7 +471,7 @@ public class GameBoard {
 		this.tableForActionCards.put("Adventurer", new LinkedList<Card>(this.tableForAllActionCards.get("Adventurer")));
 		this.tableForActionCards.put("CouncilRoom", new LinkedList<Card>(this.tableForAllActionCards.get("CouncilRoom")));
 		this.tableForActionCards.put("Chancellor", new LinkedList<Card>(this.tableForAllActionCards.get("Chancellor")));
-		this.tableForActionCards.put("Laboratory", new LinkedList<Card>(this.tableForAllActionCards.get("Chancellor")));
+		this.tableForActionCards.put("ThroneRoom", new LinkedList<Card>(this.tableForAllActionCards.get("ThroneRoom")));
 	}
 
 	/**
@@ -565,14 +565,17 @@ public class GameBoard {
 		int counter = 0;
 		counter += amountOfPilesEmpty(this.tableForActionCards);
 		if (counter >= GameConstant.EMPTY_PILES) {
+			System.out.println("table action cards empty piles: " + counter);
 			return true;
 		}
 		counter += amountOfPilesEmpty(this.tableForTreasureCards);
 		if (counter >= GameConstant.EMPTY_PILES) {
+			System.out.println("table for treasure cards: " +  counter);
 			return true;
 		}
 		counter += amountOfPilesEmpty(this.tableForVictoryCards);
 		if (counter >= GameConstant.EMPTY_PILES) {
+			System.out.println("table for victory cards " + counter);
 			return true;
 		}
 		return false;
@@ -585,7 +588,7 @@ public class GameBoard {
 	 */
 	public int amountOfPilesEmpty(LinkedHashMap<String, LinkedList<Card>> table) {
 		int counter = 0;
-		LinkedList<String> keys = new LinkedList<>(table.keySet());
+		LinkedList<String> keys = new LinkedList<String>(table.keySet());
 		for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
 			if (table.get(key).isEmpty()) {
@@ -595,6 +598,7 @@ public class GameBoard {
 				}
 			}
 		}
+		
 		return counter;
 	}
 	

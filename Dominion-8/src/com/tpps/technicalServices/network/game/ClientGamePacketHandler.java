@@ -60,7 +60,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameClient.disconnect();
 			break;
 		case OPEN_GUI_AND_ENABLE_ONE:
-			openGuiAndEnableOne(packet);
+			new Thread(() -> {openGuiAndEnableOne(packet);}).start();			
 			break;
 		case ENABLE_DISABLE:
 			enableDisable(packet);
@@ -88,7 +88,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			// this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameWindow.setCaptionTurn(((PacketDisable)packet).getCaption());
-			this.gameWindow.setCaptionTurn("waiting on reaction");
+			
 			break;
 		case SEND_BOARD:
 			PacketSendBoard packetSendBoard = (PacketSendBoard) packet;
@@ -171,6 +171,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case END_TRASH_MODE:
 			this.gameWindow.removeStopTrashButton();
 			break;
+		case REMOVE_EXTRA_TABLE:
+			this.gameWindow.removeTableComponents();
+			break;
 		case SHOW_END_REACTION_MODE:
 			this.gameWindow.addEndReactionModeButton();
 			this.gameWindow.removeEndActionPhaseButton();
@@ -197,20 +200,23 @@ public class ClientGamePacketHandler extends PacketHandler {
 			String right = pck.getRight();
 			Color usercolor = pck.getColor();
 			MsgType type = pck.getMsgType();
+			
+//			int logNr = GameLog.getCountAndInc();
 
-			GameLog.log(type, left, GameLog.getMsgColor());
-			GameLog.log(type, username, usercolor);
-			GameLog.log(type, right + "\n", GameLog.getMsgColor());
+			GameLog.log(type, left,/*logNr,*/ GameLog.getMsgColor());
+			GameLog.log(type, username, /*logNr,*/usercolor);
+			GameLog.log(type, right + "\n",/*logNr,*/ GameLog.getMsgColor());
 			break;
 		case BROADCAST_LOG_MULTI_COLOR:
 			for (Pair<String, Color> pair : ((PacketBroadcastLogMultiColor) packet).getPair()) {
-				GameLog.log(((PacketBroadcastLogMultiColor) packet).getMsgType(), pair.getKey(), pair.getValue());
+				GameLog.log(((PacketBroadcastLogMultiColor) packet).getMsgType(), pair.getKey(),/*((PacketBroadcastLogMultiColor) packet).getLogNr(),*/ pair.getValue());
 			}
 			break;
 		case SHOW_END_SCREEN:
 			JOptionPane.showMessageDialog(null, "end game");
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameClient.disconnect();
+			DominionController.getInstance().finishMatch();
 			break;
 		default:
 			System.out.println("unknown packet type: " + packet.getType());

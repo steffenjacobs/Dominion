@@ -26,6 +26,7 @@ public class AutoCreatingProperties extends Properties {
 	}
 
 	/**
+	 * @param is
 	 * @throws NotImplementedException
 	 */
 	public void load(InputStream is) {
@@ -33,13 +34,18 @@ public class AutoCreatingProperties extends Properties {
 	}
 
 	/**
+	 * @param reader
 	 * @throws NotImplementedException
 	 */
 	public void load(Reader reader) {
 		throw new NotImplementedException();
 	}
 
-	/** loads the config from a file */
+	/**
+	 * loads the config from a file
+	 * 
+	 * @param file
+	 */
 	public void load(File file) {
 		try {
 			if (!file.exists()) {
@@ -53,7 +59,13 @@ public class AutoCreatingProperties extends Properties {
 		}
 	}
 
-	/** sets or creates a property and saves afterwards */
+	/**
+	 * sets or creates a property and saves afterwards
+	 * 
+	 * @param key
+	 * @param value
+	 * @return parent
+	 */
 	public Object setProperty(String key, String value) {
 		Object obj = super.setProperty(key, value);
 		try {
@@ -64,7 +76,11 @@ public class AutoCreatingProperties extends Properties {
 		return obj;
 	}
 
-	/** @return the key to a property-name & saves afterwards */
+	/**
+	 * @param name
+	 * @param def
+	 * @return the key to a property-name & saves afterwards
+	 */
 	public String getProperty(String name, String def) {
 		if (super.containsKey(name)) {
 			return super.getProperty(name);

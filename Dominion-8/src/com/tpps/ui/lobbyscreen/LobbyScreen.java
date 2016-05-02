@@ -20,8 +20,8 @@ import javax.swing.JLabel;
 public class LobbyScreen extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private int width = 1280;
-	private int height = 720;
+	private int width = 2560;
+	private int height = 1440;
 	private Container c;
 	private BufferedImage originalBackground;
 	
@@ -49,7 +49,7 @@ public class LobbyScreen extends JFrame{
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	
-		right = new PlayerSettingsPanel();
+		right = new PlayerSettingsPanel().updateCards();
 		c.add(new GlobalChatPanel());
 		c.add(right);
 		

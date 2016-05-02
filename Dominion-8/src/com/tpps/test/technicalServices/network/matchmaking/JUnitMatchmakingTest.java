@@ -112,7 +112,8 @@ public class JUnitMatchmakingTest {
 		for (int i = 0; i < 4; i++) {
 
 			// Setup match-makers
-			Matchmaker mm = new Matchmaker();
+			//TODO: fix test
+			Matchmaker mm = Matchmaker.getInstance();
 			matchmakers.put(username + i, mm);
 
 			Field client = Matchmaker.class.getDeclaredField("client");

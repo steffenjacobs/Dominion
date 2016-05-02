@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -18,13 +19,13 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.client.ChatClient;
-import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
 import com.tpps.technicalServices.network.game.GameClient;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.ui.MainFrame;
 import com.tpps.ui.MainMenuPanel;
 import com.tpps.ui.cardeditor.CardEditor;
+import com.tpps.ui.endscreen.EndPanel;
 import com.tpps.ui.lobbyscreen.GlobalChatPanel;
 import com.tpps.ui.lobbyscreen.PlayerSettingsPanel;
 import com.tpps.ui.loginscreen.LoginGUIController;
@@ -37,47 +38,51 @@ import com.tpps.ui.statisticsscreen.StatisticsBoard;
  */
 public final class DominionController {
 
-	private static DominionController instance;
+	private static DominionController INSTANCE;
 	private UUID lobbyID;
 
-	private String username, email;
+	private String username;
 	private UUID sessionID;
-	private SessionClient sessionClient;
 	private GameClient gameClient;
-//	private CardClient cardClient;
 	private Matchmaker matchmaker;
 	private CardStorageController storageController;
 	private MainFrame mainFrame;
 	private LoginGUIController loginGuiController;
-	
+
 	private MainMenuPanel mainMenuPanel;
 	private GlobalChatPanel globalChatPanel;
 	private PlayerSettingsPanel playerSettingsPanel;
 	private StatisticsBoard statisticsBoardPanel;
+	private EndPanel endPanel;
 
 	private BufferedImage originalBackground;
+	/**
+	 * the background-image
+	 */
 	public static BufferedImage selectedGameImage;
 	private boolean turnFlag;
-	
+	private boolean isHost;
 	private ChatClient chatClient;
+	
+	@SuppressWarnings("unused")
 	private CardEditor cardEditor;
 
-	/** main entry point for client application */
-	public static void main(String[] stuff) {
-		instance = new DominionController();
-		DominionController.instance.init();
-	}
+	private Semaphore waitForSession = new Semaphore(1);
 	
-	/**
-	 * 
-	 * @param test
-	 */
-	public DominionController(boolean test) {
-		storageController = new CardStorageController();
-		// do nothing else, just init object
+
+	/** main entry point for client application 
+	 * @param stuff */
+	public static void main(String[] stuff) {
+		new DominionController();
 	}
 
-	public DominionController() { }
+	/**
+	 * trivial
+	 */
+	private DominionController() {
+		DominionController.INSTANCE = this;
+		DominionController.INSTANCE.init();
+	}
 
 	/**
 	 * This method is called, when the user starts the .jar File, important
@@ -86,44 +91,32 @@ public final class DominionController {
 	 * @author jhuhn
 	 */
 	private void init() {
-		boolean login = true;
-		if (login) {
-			storageController = new CardStorageController();
-			mainFrame = new MainFrame();
-			loginGuiController = new LoginGUIController();
-		} else {
-			this.turnFlag = false;
-			try {
-				gameClient = new GameClient(new InetSocketAddress(
-						Addresses.getRemoteAddress(), 1339),
-						new ClientGamePacketHandler());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		storageController = new CardStorageController();
+		storageController.loadCards();
+		mainFrame = new MainFrame();
+		loginGuiController = new LoginGUIController();
 	}
 
 	/**
-	 * This method is responsible to load all GUI components that are needed for: 
-	 * - MainMenu 
-	 * - CommunityBoard 
-	 * - Lobby
+	 * This method is responsible to load all GUI components that are needed
+	 * for: - MainMenu - CommunityBoard - Lobby
+	 * 
 	 * @author jhuhn
 	 */
 	private void loadPanels() {
 		mainMenuPanel = new MainMenuPanel(this.mainFrame);
 		globalChatPanel = new GlobalChatPanel();
 		statisticsBoardPanel = new StatisticsBoard();
-		playerSettingsPanel = new PlayerSettingsPanel();
+		playerSettingsPanel = new PlayerSettingsPanel().updateCards();
+		this.endPanel = new EndPanel();
 		try {
 			this.originalBackground = ImageIO
-					.read(ClassLoader
-							.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+					.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * This Method starts the Match
 	 * 
@@ -136,10 +129,8 @@ public final class DominionController {
 			System.out.println("in DominionController: start Match");
 			selectedGameImage = this.playerSettingsPanel.getSelectedPicture();
 			System.out.println("FIRST: " + selectedGameImage);
-			gameClient = new GameClient(new InetSocketAddress(
-					Addresses.getRemoteAddress(), port),
+			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), port),
 					new ClientGamePacketHandler());
-			// this.gameClient.getGameWindow().setBackgroundImage(this.getLobbyBackground());
 			this.clearAllPlayersFromGUI();
 			this.joinMainMenu();
 			this.mainFrame.setVisible(false);
@@ -147,76 +138,94 @@ public final class DominionController {
 			e.printStackTrace();
 		}
 	}
-	
-	public void finishMatch(){
+
+	/**
+	 * is called when the match ends
+	 */
+	public void finishMatch() {
+		this.gameClient.getGameWindow().dispose();
+		this.gameClient = null;
 		this.playerSettingsPanel.initStandardBackground();
-		this.joinMainMenu();
+		this.mainFrame.setPanel(this.endPanel);
+		this.mainFrame.setVisible(true);
 	}
-	
+
 	/**
 	 * This method starts the to search a lobby. It is called, when the user
 	 * joins the lobby gui
 	 * 
 	 * @author jhuhn
 	 */
-	public void findMatch(){
+	public void findMatch() {
 		try {
 			this.matchmaker.findMatch(this.username, this.sessionID);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * stops searching a match
 	 * 
 	 * @author jhuhn
 	 */
-	public void abortSearching(){
+	public void abortSearching() {
 		try {
 			this.matchmaker.abort(this.username, this.sessionID);
-		} catch (IOException e) {		
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * This method is called to set the statistics data on the gui
+	 * 
 	 * @author jhuhn
-	 * @param statistics a twodimensional Array that is filled with all statistics from the database
+	 * @param statistics
+	 *            a twodimensional Array that is filled with all statistics from
+	 *            the database
 	 */
-	public void loadStatisticsToGui(String[][] statistics){
+	public void loadStatisticsToGui(String[][] statistics) {
 		this.statisticsBoardPanel.setTableData(statistics);
 	}
-	
+
 	/**
 	 * This method is called to send a packet to the LoginServer (like a push
 	 * notification) to receive all statistics
+	 * 
 	 * @author jhuhn
 	 */
-	public void sendPacketToGetStatistics(){
+	public void sendPacketToGetStatistics() {
 		this.loginGuiController.getLoginclient().sendPacketForAllStatistics();
 	}
-	
+
 	/**
 	 * This method initializes client instances
+	 * 
 	 * @author jhuhn
 	 */
-	private void initClients(){
+	private void initClients() {
 		this.chatClient = new ChatClient(this.username);
-		this.matchmaker = new Matchmaker();
+		this.matchmaker = Matchmaker.getInstance();
 		GameLog.log(MsgType.INFO, "Username: " + this.username);
 	}
-	
+
+	/**
+	 * @return the instance of the matchmaker
+	 */
+	public Matchmaker getMatchmaker() {
+		return this.matchmaker;
+	}
+
 	/**
 	 * @author jhuhn
 	 * @param message
 	 *            String representation of the chat message to send
 	 */
-	public void sendChatMessage(String message){
+	public void sendChatMessage(String message) {
 		this.chatClient.sendMessage(message);
 	}
-	
+
 	/**
 	 * @author jhuhn
 	 * @param message
@@ -228,142 +237,151 @@ public final class DominionController {
 	 * @param color
 	 *            color of the user
 	 */
-	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color){
-		if(this.gameClient == null){	//player is not ingame, player is in globalchat
+	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color) {
+		if (this.gameClient == null) { // player is not ingame, player is in
+										// globalchat
 			this.globalChatPanel.appendChatLocal(message, user, timeStamp, color);
-		}else{							//player is ingame
+		} else { // player is ingame
 			this.gameClient.getGameWindow().getChatWindow().appendChatLocal(message, user, timeStamp, color);
 		}
 	}
-	
+
 	/**
 	 * this method initializes clients and ui components and loads the main menu
 	 * 
 	 * @author jhuhn
 	 */
-	public void endLogin(){
+	public void endLogin() {
+		this.mainFrame.setTitle(this.username);
+		storageController.checkStandardCardsAsync();
+
 		this.loadPanels();
 		this.initClients();
-		
+
 		this.joinMainMenu();
 	}
-	
-	public void joinMainMenu(){
+
+	/**
+	 * opens the main-menu
+	 */
+	public void joinMainMenu() {
 		mainFrame.setPanel(mainMenuPanel);
 		mainFrame.setVisible(true);
 	}
-	
+
+	/**
+	 * @return whether it is your turn
+	 */
 	public boolean isTurnFlag() {
 		return turnFlag;
 	}
 
+	
+	/**
+	 * @param turnFlag set whether it is your turn
+	 */
 	public void setTurnFlag(boolean turnFlag) {
 		this.turnFlag = turnFlag;
 	}
-	
-	public void setUsername(String name){
-		this.username = name;
-	}
 
 	/**
-	 * 
-	 * @return
+	 * @param name the new username
 	 */
-	public CardStorageController getStorageController() {
-		return storageController;
+	public void setUsername(String name) {
+		this.username = name;
 	}
 
 	/**
 	 * @author jhuhn
 	 * @return the selected image instance of thelobby
 	 */
-	public BufferedImage getLobbyBackground(){
+	public BufferedImage getLobbyBackground() {
 		return this.playerSettingsPanel.getSelectedPicture();
 	}
-	
+
 	/**
 	 * 
-	 * @return
+	 * @return the card-storage controller
 	 */
 	public CardStorageController getCardRegistry() {
 		return storageController;
 	}
-	
+
 	/**
-	 * opens the LobbyGui 
+	 * opens the LobbyGui
+	 * 
 	 * @author jhuhn
 	 */
 	public void joinLobbyGui() {
 		this.globalChatPanel.getBackButton().setLobby(true);
-		JPanel panel = new JPanel(){
+		this.playerSettingsPanel.getStartButton().setEnabled(true);
+		JPanel panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-			public void paint(Graphics g) {				
+			public void paint(Graphics g) {
 				Graphics2D h = (Graphics2D) g;
 				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				
-				
-				h.drawImage(originalBackground, 0, 0,this.getWidth(), this.getHeight(), null);
+
+				h.drawImage(originalBackground, 0, 0, this.getWidth(), this.getHeight(), null);
 				super.paint(h);
 			}
 		};
 		panel.setLayout(new GridLayout(1, 2));
 		panel.setVisible(true);
 		panel.setOpaque(false);
-		panel.add(this.globalChatPanel);		
-		panel.add(this.playerSettingsPanel);
-		//this.playerSettingsPanel.setStatisticsBoardPanel(this.statisticsBoardPanel);
+		panel.add(this.globalChatPanel);
+		this.playerSettingsPanel.getCardNamesSelected().clear();
+		panel.add(this.playerSettingsPanel.updateCards());
+		// this.playerSettingsPanel.setStatisticsBoardPanel(this.statisticsBoardPanel);
 		this.mainFrame.setPanel(panel);
 	}
 
 	/**
-	 * sets the session-client instance and starts keep-alive 
+	 * @return the main application-frame
 	 */
-	public void setSessionClient(SessionClient sc) {
-		if (this.sessionClient != null) {
-			this.sessionClient.keepAlive(username, false);
-			this.sessionClient.disconnect();
-		}
-		this.sessionClient = sc;
-		this.sessionClient.keepAlive(username, true);
+	public MainFrame getMainFrame() {
+		return mainFrame;
 	}
-	
+
 	/**
 	 * @author jhuhn
 	 * @param player
 	 */
-	public synchronized void insertPlayerToGUI(String player){
+	public synchronized void insertPlayerToGUI(String player) {
 		this.playerSettingsPanel.insertPlayer(player);
 	}
-	
+
 	/**
 	 * @author jhuhn
 	 * @param player
 	 *            String representation of the user who left the lobby
 	 */
-	public synchronized void clearPlayerFromGUI(String player){
+	public synchronized void clearPlayerFromGUI(String player) {
 		this.playerSettingsPanel.removePlayer(player);
 	}
-	
+
 	/**
 	 * cleares all players in the lobby
+	 * 
 	 * @author jhuhn
 	 */
-	public synchronized void clearAllPlayersFromGUI(){
+	public synchronized void clearAllPlayersFromGUI() {
 		this.playerSettingsPanel.clearAllPlayers();
 	}
 
 	/* getters and setters */
 	/**
-	 * @param sessionID new session-id
+	 * @param sessionID
+	 *            new session-id
 	 */
 	public void setSessionID(UUID sessionID) {
 		this.sessionID = sessionID;
+		waitForSession.release();
 	}
 
-	/** 
-	 * @return the users username 
+	/**
+	 * @return the users username
 	 */
 	public String getUsername() {
 		return username;
@@ -377,29 +395,25 @@ public final class DominionController {
 	}
 
 	/**
-	 * @return the users email-address 
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
 	 * @return the current Session-ID
 	 */
 	public UUID getSessionID() {
+		if (sessionID == null)
+			try {
+				waitForSession.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		return sessionID;
 	}
 
 	/**
-	 * @return the current instance of the game 
+	 * @return the current instance of the game
 	 */
 	public static DominionController getInstance() {
-		return instance;
-	}
-	
-	public void setCredentials(String username, String email){
-		this.username = username;
-		this.email = email;
+		if (INSTANCE == null)
+			INSTANCE = new DominionController();
+		return INSTANCE;
 	}
 
 	/**
@@ -407,15 +421,15 @@ public final class DominionController {
 	 */
 	public void openStatisticsGui() {
 		this.globalChatPanel.getBackButton().setLobby(false);
-		JPanel panel = new JPanel(){
+		JPanel panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void paint(Graphics g) {
 				Graphics2D h = (Graphics2D) g;
 				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-				
-				h.drawImage(originalBackground, 0, 0,this.getWidth(), this.getHeight(), null);
+
+				h.drawImage(originalBackground, 0, 0, this.getWidth(), this.getHeight(), null);
 				super.paint(h);
 			}
 		};
@@ -424,35 +438,53 @@ public final class DominionController {
 		panel.setOpaque(false);
 		panel.add(this.globalChatPanel);
 		panel.add(this.statisticsBoardPanel);
-		this.mainFrame.setPanel(panel);		
+		this.mainFrame.setPanel(panel);
 	}
-	
+
 	/**
 	 * opens the cardeditor
+	 * 
 	 * @author jhuhn
 	 */
-	public void openCardeditor(){
+	public void openCardeditor() {
 		this.mainFrame.setVisible(false);
 		this.cardEditor = new CardEditor();
 	}
 
+	/**
+	 * @return the id of the lobby the player is in
+	 */
 	public UUID getLobbyID() {
 		return lobbyID;
 	}
 
+	/**
+	 * sets the lobby the player is in
+	 * @param lobbyID the Id of the lobby the player is in
+	 */
 	public void setLobbyID(UUID lobbyID) {
 		this.lobbyID = lobbyID;
 	}
 	
-	public void sendAIPacket(String name, boolean abort) {
-		try {
-			this.matchmaker.sendAIPacket(name, this.lobbyID, abort);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
+	/**
+	 * @return the login-GUI-controller
+	 */
 	public LoginGUIController getLoginGuiController() {
 		return loginGuiController;
 	}
+	
+	public boolean isHost() {
+		return isHost;
+	}
+
+	public void setHost(boolean isHost) {
+		if(isHost){
+			playerSettingsPanel.enableOrDisableEverything(true);
+		}else{
+			playerSettingsPanel.enableOrDisableEverything(false);
+		}
+		this.isHost = isHost;
+		System.out.println("AM I a host ? " + isHost);
+	}
+	
 }

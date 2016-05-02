@@ -27,7 +27,9 @@ public class PacketSendChatCommand extends Packet{
 		this.sender = sender;
 		this.chatcommand = chatcommand;
 	}
-
+	/**
+	 * @see com.tpps.technicalServices.network.core.packet.Packet#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Message from '" + getSender() + "' Command: /" + getChatcommand();

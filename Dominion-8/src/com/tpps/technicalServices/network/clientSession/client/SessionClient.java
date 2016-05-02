@@ -81,7 +81,7 @@ public class SessionClient extends Client {
 				public void run() {
 					SessionPacketSenderAPI.sendKeepAlive(instance, username);
 				}
-			}, 0, SessionManager.getExpiration() / 3);
+			}, 0, SessionManager.getExpiration() / 3 * 1000);
 		} else {
 			if (scheduler != null) {
 				scheduler.cancel();

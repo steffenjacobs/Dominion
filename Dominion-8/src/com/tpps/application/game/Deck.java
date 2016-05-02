@@ -405,6 +405,17 @@ public class Deck {
 		}
 		return false;		
 	}
+	
+	public int amountHandActionCard() {
+		int counter = 0; 
+		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(CardType.ACTION)){
+				counter++;
+			}			
+		}
+		return counter;	
+	}
 
 	/**
 	 * @param card which will be put back on top of the drawPile

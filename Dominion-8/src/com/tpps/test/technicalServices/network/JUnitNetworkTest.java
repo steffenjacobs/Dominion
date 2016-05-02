@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.tpps.technicalServices.network.Addresses;
@@ -34,37 +36,71 @@ import com.tpps.technicalServices.network.core.packet.Packet;
  * @author Steffen Jacobs
  */
 public class JUnitNetworkTest {
-	/**
-	 * main-entry
-	 * 
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	@Test
-	public void test() throws IOException, InterruptedException {
-		// initialize variables
-		TestPacketHandler serverPacketHandler = new TestPacketHandler();
-		TestPacketHandler clientPacketHandler = new TestPacketHandler();
-		TestPacketHandler clientPacketHandler2 = new TestPacketHandler();
 
-		int port = 2222;
-		String testString = "test-string";
-		Integer testInt = 2;
+	private static TestPacketHandler serverPacketHandler, clientPacketHandler, clientPacketHandler2;
+	private static int port, localPort;
+	private static Client client;
+	private static Server server;
+
+	private static ArrayList<Serializable> toSend;
+	private static Packet sentTestPacket;
+
+	/** sets up the client and the server and connects them 
+	 * @throws IOException 
+	 * @throws InterruptedException */
+	@BeforeClass
+	public static void setupNetwork() throws IOException, InterruptedException {
+		// initialize variables
+		serverPacketHandler = new TestPacketHandler();
+		clientPacketHandler = new TestPacketHandler();
+		clientPacketHandler2 = new TestPacketHandler();
+
+		port = 2222;
 
 		// test server startup
-		Server server = new Server(new InetSocketAddress(Addresses.getLocalHost(), port), serverPacketHandler);
+		server = new Server(new InetSocketAddress(Addresses.getLocalHost(), port), serverPacketHandler);
 		serverPacketHandler.setParent(server);
 		assertNotNull(server);
 
 		// test client startup
-		Client client = new Client(new InetSocketAddress(Addresses.getLocalHost(), port), clientPacketHandler);
+		client = new Client(new InetSocketAddress(Addresses.getLocalHost(), port), clientPacketHandler);
 		client.addPacketHandler(clientPacketHandler2);
 		assertNotNull(client);
 
-		// wait to connect.
-		Thread.sleep(20);
+		System.out.println("Prepared Network");
+		Thread.sleep(100);
+	}
 
-		int localPort = client.getConnectionThread().getLocalPort();
+	/** creates a test-packet to send around later */
+	@BeforeClass
+	public static void prepareTestData() {
+		String testString = "test-string";
+		Integer testInt = 2;
+
+		toSend = new ArrayList<>();
+		toSend.add(testInt);
+		toSend.add(testString);
+		sentTestPacket = new TestPacket(toSend);
+		assertNotNull(sentTestPacket);
+	}
+
+	/** closes all open connections 
+	 * @throws InterruptedException */
+	@AfterClass
+	public static void cleanupNetwork() throws InterruptedException {
+		client.disconnect();
+		server.disconnectAll();
+	}
+
+	/** checks, if the client is connected to the server via the correct port 
+	 * @throws InterruptedException */
+	@Test
+	public void testIfConnected() throws InterruptedException {
+		System.out.println("Doing test: TestIfConnected");
+		// wait to connect.
+		Thread.sleep(200);
+
+		localPort = client.getConnectionThread().getLocalPort();
 
 		// check if connection established
 		assertTrue(client.isConnected());
@@ -73,12 +109,17 @@ public class JUnitNetworkTest {
 		assertEquals(port, client.getConnectionThread().getRemotePort());
 		ServerConnectionThread connectedClient = server.getClientThread(localPort);
 		assertNotNull(connectedClient);
+	}
 
-		// create test-packet
-		ArrayList<Serializable> toSend = new ArrayList<>();
-		toSend.add(testInt);
-		toSend.add(testString);
-		Packet sentTestPacket = new TestPacket(toSend);
+	/**
+	 * checks if data can be sent from the client to the server and are received
+	 * correctly
+	 * @throws IOException 
+	 * @throws InterruptedException 
+	 */
+	@Test
+	public void checkClientToServer() throws IOException, InterruptedException {
+		System.out.println("Doing test: ClientToServer");
 
 		/* check client-to-server */
 		// send test-packet
@@ -97,17 +138,28 @@ public class JUnitNetworkTest {
 		// check if test-packet lost no data
 		TestPacket receivedTestPacket = (TestPacket) receivedPacket;
 		assertEquals(receivedTestPacket.getData(), toSend);
+	}
+
+	/**
+	 * checks if data can be sent from the server to the client and are received
+	 * correctly
+	 * @throws IOException 
+	 * @throws InterruptedException 
+	 */
+	@Test
+	public void checkServerToClient() throws IOException, InterruptedException {
+		System.out.println("Doing test: ServerToClient");
 
 		/* check server-to-client */
 
 		// send test-packet
+		assertNotNull(sentTestPacket);
 		server.sendMessage(localPort, sentTestPacket);
 
 		// wait to send & receive
 		Thread.sleep(10);
 
 		// check if test-packet was received
-		// int localPort = client.getConnectionThread().getLocalPort();
 		Packet receivedPacket2 = clientPacketHandler.getLastReceived(localPort);
 		assertNotNull(receivedPacket2);
 
@@ -117,6 +169,16 @@ public class JUnitNetworkTest {
 		// check if test-packet lost no data
 		TestPacket receivedTestPacket2 = (TestPacket) receivedPacket2;
 		assertEquals(receivedTestPacket2.getData(), toSend);
+	}
+
+	/**
+	 * does a bulk-test with sending 10k Packets from the server to the client
+	 * @throws IOException 
+	 * @throws InterruptedException 
+	 */
+	@Test
+	public void doBulkTest() throws IOException, InterruptedException {
+		System.out.println("Doing test: Bulk-Test");
 
 		// prepare for bulk-test
 		final int PACKET_COUNT = 10000;
@@ -132,9 +194,9 @@ public class JUnitNetworkTest {
 
 		assertEquals(PACKET_COUNT, ((TestPacketHandler) client.getHandlers().get(0)).countPackets());
 		assertEquals(PACKET_COUNT, ((TestPacketHandler) client.getHandlers().get(1)).countPackets());
-		
-		System.out.println("[SUCCESS] " + ((TestPacketHandler) client.getHandlers().get(1)).countPackets() + "/" + PACKET_COUNT
-				+ " packets sent & received!");
+
+		System.out.println("[SUCCESS] " + ((TestPacketHandler) client.getHandlers().get(1)).countPackets() + "/"
+				+ PACKET_COUNT + " packets sent & received!");
 
 	}
 }

@@ -24,6 +24,8 @@ public class ChatClient extends PacketHandler{
 	private Client chatclient;
 	private String sender;
 	
+	private String lastmessage;
+	
 	/**
 	 * initializes the chat client object, sends a handshake packet to the chatserver
 	 * @author jhuhn - Johannes Huhn
@@ -50,6 +52,7 @@ public class ChatClient extends PacketHandler{
 		switch(packet.getType()){
 		case SEND_CHAT_ANSWER:
 			PacketSendAnswer answer = (PacketSendAnswer) packet;
+			this.lastmessage = answer.getChatmessage();
 		//	System.out.println(answer.getAnswer());
 			DominionController.getInstance().receiveChatMessageFromChatServer(
 					answer.getChatmessage(), answer.getSender(),
@@ -125,15 +128,13 @@ public class ChatClient extends PacketHandler{
 			e.printStackTrace();
 		}
 	}
+
 	
-//	public static void main(String[] args) {
-//		ChatClient c = new ChatClient("kevin");
-//		System.out.println("I am: " + c.sender);
-//		Scanner scanInput = new Scanner(System.in);
-//		String line = null;
-//		while(true){
-//			line = scanInput.nextLine();
-//			c.sendMessage(line);
-//		}
-	// }
+	/**
+	 * @author jhuhn
+	 * @return the last message that the client received
+	 */
+	public String getLastmessage() {
+		return lastmessage;
+	}
 }

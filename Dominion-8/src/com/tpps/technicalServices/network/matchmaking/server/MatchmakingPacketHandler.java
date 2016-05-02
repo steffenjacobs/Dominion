@@ -16,6 +16,7 @@ import com.tpps.technicalServices.network.matchmaking.packets.PacketGameEnd;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketJoinLobby;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingAnswer;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingRequest;
+import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingStart;
 
 /**
  * PacketHandler for the MatchmakingServer
@@ -69,8 +70,9 @@ public class MatchmakingPacketHandler extends PacketHandler {
 
 				try {
 					if (pjl.getLobbyID() == null) {
-						//UI-Bug: ignore...
-						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 2, null));;
+						// UI-Bug: ignore...
+						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pjl, 2, null));
+						;
 						return;
 					}
 
@@ -113,7 +115,40 @@ public class MatchmakingPacketHandler extends PacketHandler {
 				} catch (IOException ex) {
 
 				}
+			} else {
+				if (pjl.getPlayerID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+					// quitted player is an ai
+					removeAI(pjl.getLobbyID(), pjl);
+					GameLog.log(MsgType.NETWORK_INFO, "Removed AI " + pjl.getPlayerName() + " to " + pjl.getLobbyID());
+					return;
+				}
 			}
+			break;
+
+		case MATCHMAKING_START_GAME:
+			PacketMatchmakingStart pms = (PacketMatchmakingStart) packet;
+
+			// ignore invalid UUID
+			if (pms.getSenderID() == null
+					|| pms.getSenderID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000")))
+				break;
+
+			// check lobby
+			GameLobby toStart = MatchmakingController.getLobbyByID(pms.getLobbyID());
+			if (toStart == null) {
+				break;
+			}
+			if (toStart.hasStarted()) {
+				break;
+			}
+
+			// check player
+			MPlayer player = MatchmakingController.getPlayerFromName(pms.getSenderName());
+			if (player == null || !player.getPlayerUID().equals(pms.getSenderID()) || !toStart.isAdmin(player))
+				break;
+
+			MatchmakingController.startGame(toStart, pms.getSelectedActionCards());
+
 			break;
 
 		default:
@@ -132,9 +167,26 @@ public class MatchmakingPacketHandler extends PacketHandler {
 	public void addAI(UUID lobbyID, PacketMatchmakingRequest pmr) {
 		MPlayer player = MPlayer.initialize(pmr, -1);
 		if (lobbyID != null) {
+			MatchmakingController.addAIPlayer(player);
 			MatchmakingController.getLobbyByID(lobbyID).joinPlayer(player);
 		}
 		GameLog.log(MsgType.NETWORK_INFO, "<- AI " + player.getPlayerName());
+	}
+
+	/**
+	 * removes an AI
+	 * 
+	 * @param lobbyID
+	 *            the ID of the lobby to remove the AI from
+	 * @param pmr
+	 *            the AI-remove-request
+	 */
+	public static void removeAI(UUID lobbyID, PacketMatchmakingRequest pmr) {
+		MPlayer player = MatchmakingController.removeAiPlayer(pmr.getPlayerName());
+		if (lobbyID != null && player != null) {
+			MatchmakingController.getLobbyByID(lobbyID).quitPlayer(player);
+			GameLog.log(MsgType.NETWORK_INFO, "-> AI " + player.getPlayerName());
+		}
 	}
 
 	/**
@@ -164,7 +216,7 @@ public class MatchmakingPacketHandler extends PacketHandler {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				GameLog.log(MsgType.NETWORK_INFO, "-> " + player.getScore());
+				GameLog.log(MsgType.INFO, player.getPlayerName() + " entered Matchmaking with score " + player.getScore() + ". ");
 			} else {
 				try {
 					super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 0, null));

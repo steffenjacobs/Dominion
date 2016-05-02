@@ -30,6 +30,8 @@ public class ChatController extends PacketHandler{
 	 * initializes the chatcontroller class
 	 * 
 	 * @author jhuhn
+	 * @param handler
+	 *            the servergamepackethandler instance to start the match
 	 */
 	public ChatController(ServerGamePacketHandler handler){
 		this.handler = handler;
@@ -107,6 +109,9 @@ public class ChatController extends PacketHandler{
 		System.out.println("sent packet to add a user");
 	}
 
+	/**
+	 * @see com.tpps.technicalServices.network.core.PacketHandler#handleReceivedPacket(int, com.tpps.technicalServices.network.core.packet.Packet)
+	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) { 
 		switch(packet.getType()){
