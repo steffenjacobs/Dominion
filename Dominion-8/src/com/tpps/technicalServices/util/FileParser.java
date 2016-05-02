@@ -6,13 +6,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/*** @author Steffen Jacobs */
+/***
+ * basic file operations
+ * 
+ * @author Steffen Jacobs
+ */
 public class FileParser {
 	/**
 	 * 
 	 * loads UTF-8-Text from a file (line by line)
 	 * 
-	 * @author Steffen Jacobs
+	 * @param file
+	 *            the file to load the lines from
+	 * @return the loaded lines
 	 */
 	public static ArrayList<String> loadLines(String file) {
 		ArrayList<String> res = new ArrayList<>();
@@ -38,9 +44,10 @@ public class FileParser {
 	}
 
 	/**
-	 * creates a direcory-tree safely
+	 * creates a directory-tree safely
 	 * 
-	 * @author Steffen Jacobs
+	 * @param f
+	 *            the recursive directory-tree to create
 	 */
 	public static void createDirectoryTree(File f) {
 		File parent = f.getParentFile();

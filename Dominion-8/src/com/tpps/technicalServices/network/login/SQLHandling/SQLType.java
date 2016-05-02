@@ -16,6 +16,7 @@ public enum SQLType {
 	/**
 	 * @author jhuhn - Johannes Huhn
 	 * overrides the toString() method to get the name of the enumtype
+	 * @return the name
 	 */
 	public String toString(){
 		return name();

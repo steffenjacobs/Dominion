@@ -46,10 +46,11 @@ public class PacketGetAllStatistics extends Packet{
 		this.allStatistics = allStatistics;
 	}
 
-	@Override
 	/**
 	 * overrides the toString method, mainly for debug purposes
+	 * @return a readable representation of the object
 	 */
+	@Override
 	public String toString() {
 		return "all Statistics are in this packet";
 	}

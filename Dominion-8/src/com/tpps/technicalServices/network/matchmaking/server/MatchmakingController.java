@@ -101,8 +101,14 @@ public final class MatchmakingController {
 	static MPlayer removeAiPlayer(String name) {
 		return playersByName.remove(name);
 	}
-	
-	static MPlayer getPlayerFromName(String name){
+
+	/**
+	 * @param name
+	 *            the name of the player to get the corresponding MPlayer-Object
+	 *            from
+	 * @return the MPlayer-object mapped to the name
+	 */
+	static MPlayer getPlayerFromName(String name) {
 		return playersByName.get(name);
 	}
 
@@ -111,6 +117,8 @@ public final class MatchmakingController {
 	 * 
 	 * @param lobby
 	 *            the GameLobby to start
+	 * @param selectedActionCards
+	 *            the cards to play with
 	 */
 	static void startGame(GameLobby lobby, String[] selectedActionCards) {
 		GameLog.log(MsgType.INFO, "Starting lobby " + lobby.getLobbyID());
@@ -175,7 +183,8 @@ public final class MatchmakingController {
 
 					else {
 						/* send success to client */
-						MatchmakingServer.getInstance().sendSuccessPacket(pl, playerNames, freePort, selectedActionCards);
+						MatchmakingServer.getInstance().sendSuccessPacket(pl, playerNames, freePort,
+								selectedActionCards);
 					}
 				}
 				cl.disconnect();

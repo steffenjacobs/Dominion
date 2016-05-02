@@ -62,6 +62,12 @@ public class MatchmakingServer extends Server {
 		GameLog.init();
 	}
 
+	/**
+	 * sets up the console-output
+	 * 
+	 * @param port
+	 *            the port the server is running on
+	 */
 	private void setupConsoleInput(int port) {
 
 		System.out.println("            * * * * * * * * * * * * * *      ");
@@ -130,6 +136,8 @@ public class MatchmakingServer extends Server {
 	 *            the player to receive the packet
 	 * @param joinedPlayer
 	 *            the player who joined
+	 * @param adm
+	 *            wether joinedPlayer is admin
 	 */
 	public void sendJoinPacket(MPlayer receiver, String joinedPlayer, boolean adm) {
 		ArrayList<MPlayer> tmp = new ArrayList<>();
@@ -145,6 +153,8 @@ public class MatchmakingServer extends Server {
 	 *            the players to receive the packet
 	 * @param joinedPlayer
 	 *            the player who joined
+	 * @param adm
+	 *            whether joinedPlayer is admin
 	 */
 	public void sendJoinPacket(Collection<MPlayer> receivers, String joinedPlayer, boolean adm) {
 
@@ -168,6 +178,8 @@ public class MatchmakingServer extends Server {
 	 *            all the players in the lobby
 	 * @param port
 	 *            the port the new game-server is waiting
+	 * @param selectedActionCards
+	 *            the names of the cards to play with
 	 */
 	public void sendSuccessPacket(MPlayer receiver, String[] opponents, int port, String[] selectedActionCards) {
 
@@ -185,11 +197,13 @@ public class MatchmakingServer extends Server {
 	 * 
 	 * @param receiver
 	 *            the player to receive the packet
-	 * @param quittedPlayer
-	 *            the player who quitted
+	 * @param quitPlayer
+	 *            the player who quit
+	 * @param adm
+	 *            whether the player who quit was admin
 	 */
-	public void sendQuitPacket(MPlayer receiver, String quittedPlayer, boolean adm) {
-		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(quittedPlayer, false, adm);
+	public void sendQuitPacket(MPlayer receiver, String quitPlayer, boolean adm) {
+		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(quitPlayer, false, adm);
 		try {
 			super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
 		} catch (NullPointerException | IOException | IllegalArgumentException e) {

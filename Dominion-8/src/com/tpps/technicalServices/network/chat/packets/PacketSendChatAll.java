@@ -27,7 +27,9 @@ public class PacketSendChatAll extends Packet{
 		this.chatmessage  = chatmessage;
 		this.username = username;
 	}	
-
+	/**
+	 * @see com.tpps.technicalServices.network.core.packet.Packet#toString()
+	 */
 	@Override
 	public String toString() {
 		return "Sender: " + getUsername() + " Message to all: " + getChatmessage();

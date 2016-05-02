@@ -19,7 +19,6 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.client.ChatClient;
-import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
 import com.tpps.technicalServices.network.game.GameClient;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
@@ -38,14 +37,12 @@ import com.tpps.ui.statisticsscreen.StatisticsBoard;
  */
 public final class DominionController {
 
-	private static DominionController instance;
+	private static DominionController INSTANCE;
 	private UUID lobbyID;
 
-	private String username, email;
+	private String username;
 	private UUID sessionID;
-	private SessionClient sessionClient;
 	private GameClient gameClient;
-	// private CardClient cardClient;
 	private Matchmaker matchmaker;
 	private CardStorageController storageController;
 	private MainFrame mainFrame;
@@ -57,32 +54,32 @@ public final class DominionController {
 	private StatisticsBoard statisticsBoardPanel;
 
 	private BufferedImage originalBackground;
+	/**
+	 * the background-image
+	 */
 	public static BufferedImage selectedGameImage;
 	private boolean turnFlag;
-
+	private boolean isHost;
 	private ChatClient chatClient;
+	
+	@SuppressWarnings("unused")
 	private CardEditor cardEditor;
 
 	private Semaphore waitForSession = new Semaphore(1);
+	
 
-	/** main entry point for client application */
+	/** main entry point for client application 
+	 * @param stuff */
 	public static void main(String[] stuff) {
 		new DominionController();
 	}
 
 	/**
-	 * 
-	 * @param test
+	 * trivial
 	 */
-	public DominionController(boolean test) {
-		storageController = new CardStorageController();
-		storageController.loadCards();
-		// do nothing else, just init object
-	}
-
-	public DominionController() {
-		DominionController.instance = this;
-		DominionController.instance.init();
+	private DominionController() {
+		DominionController.INSTANCE = this;
+		DominionController.INSTANCE.init();
 	}
 
 	/**
@@ -142,7 +139,6 @@ public final class DominionController {
 			System.out.println("FIRST: " + selectedGameImage);
 			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), port),
 					new ClientGamePacketHandler());
-			// this.gameClient.getGameWindow().setBackgroundImage(this.getLobbyBackground());
 			this.clearAllPlayersFromGUI();
 			this.joinMainMenu();
 			this.mainFrame.setVisible(false);
@@ -150,15 +146,10 @@ public final class DominionController {
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * @author jhuhn
-	 * @param enable boolean that tells the startbutton if it is enabled
-	 */
-	public void setStartButton(boolean enable){
-		this.playerSettingsPanel.setStartButtonEnable(enable);
-	}
 
+	/**
+	 * is called when the match ends
+	 */
 	public void finishMatch() {
 		this.playerSettingsPanel.initStandardBackground();
 		this.joinMainMenu();
@@ -220,11 +211,14 @@ public final class DominionController {
 	 */
 	private void initClients() {
 		this.chatClient = new ChatClient(this.username);
-		this.matchmaker = new Matchmaker();
+		this.matchmaker = Matchmaker.getInstance();
 		GameLog.log(MsgType.INFO, "Username: " + this.username);
 	}
-	
-	public Matchmaker getMatchmaker(){
+
+	/**
+	 * @return the instance of the matchmaker
+	 */
+	public Matchmaker getMatchmaker() {
 		return this.matchmaker;
 	}
 
@@ -272,19 +266,32 @@ public final class DominionController {
 		this.joinMainMenu();
 	}
 
+	/**
+	 * opens the main-menu
+	 */
 	public void joinMainMenu() {
 		mainFrame.setPanel(mainMenuPanel);
 		mainFrame.setVisible(true);
 	}
 
+	/**
+	 * @return whether it is your turn
+	 */
 	public boolean isTurnFlag() {
 		return turnFlag;
 	}
 
+	
+	/**
+	 * @param turnFlag set whether it is your turn
+	 */
 	public void setTurnFlag(boolean turnFlag) {
 		this.turnFlag = turnFlag;
 	}
 
+	/**
+	 * @param name the new username
+	 */
 	public void setUsername(String name) {
 		this.username = name;
 	}
@@ -299,7 +306,7 @@ public final class DominionController {
 
 	/**
 	 * 
-	 * @return
+	 * @return the card-storage controller
 	 */
 	public CardStorageController getCardRegistry() {
 		return storageController;
@@ -312,6 +319,7 @@ public final class DominionController {
 	 */
 	public void joinLobbyGui() {
 		this.globalChatPanel.getBackButton().setLobby(true);
+		this.playerSettingsPanel.getStartButton().setEnabled(true);
 		JPanel panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -328,25 +336,17 @@ public final class DominionController {
 		panel.setVisible(true);
 		panel.setOpaque(false);
 		panel.add(this.globalChatPanel);
+		this.playerSettingsPanel.getCardNamesSelected().clear();
 		panel.add(this.playerSettingsPanel.updateCards());
 		// this.playerSettingsPanel.setStatisticsBoardPanel(this.statisticsBoardPanel);
 		this.mainFrame.setPanel(panel);
 	}
 
+	/**
+	 * @return the main application-frame
+	 */
 	public MainFrame getMainFrame() {
 		return mainFrame;
-	}
-
-	/**
-	 * sets the session-client instance and starts keep-alive
-	 */
-	public void setSessionClient(SessionClient sc) {
-		if (this.sessionClient != null) {
-			this.sessionClient.keepAlive(username, false);
-			this.sessionClient.disconnect();
-		}
-		this.sessionClient = sc;
-		this.sessionClient.keepAlive(username, true);
 	}
 
 	/**
@@ -400,13 +400,6 @@ public final class DominionController {
 	}
 
 	/**
-	 * @return the users email-address
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
 	 * @return the current Session-ID
 	 */
 	public UUID getSessionID() {
@@ -423,14 +416,9 @@ public final class DominionController {
 	 * @return the current instance of the game
 	 */
 	public static DominionController getInstance() {
-		if (instance == null)
-			instance = new DominionController();
-		return instance;
-	}
-
-	public void setCredentials(String username, String email) {
-		this.username = username;
-		this.email = email;
+		if (INSTANCE == null)
+			INSTANCE = new DominionController();
+		return INSTANCE;
 	}
 
 	/**
@@ -468,23 +456,40 @@ public final class DominionController {
 		this.cardEditor = new CardEditor();
 	}
 
+	/**
+	 * @return the id of the lobby the player is in
+	 */
 	public UUID getLobbyID() {
 		return lobbyID;
 	}
 
+	/**
+	 * sets the lobby the player is in
+	 * @param lobbyID the Id of the lobby the player is in
+	 */
 	public void setLobbyID(UUID lobbyID) {
 		this.lobbyID = lobbyID;
 	}
-
-	public void sendAIPacket(String name, boolean abort) {
-		try {
-			this.matchmaker.sendAIPacket(name, this.lobbyID, abort);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
+	
+	/**
+	 * @return the login-GUI-controller
+	 */
 	public LoginGUIController getLoginGuiController() {
 		return loginGuiController;
 	}
+	
+	public boolean isHost() {
+		return isHost;
+	}
+
+	public void setHost(boolean isHost) {
+		if(isHost){
+			playerSettingsPanel.enableOrDisableEverything(true);
+		}else{
+			playerSettingsPanel.enableOrDisableEverything(false);
+		}
+		this.isHost = isHost;
+		System.out.println("AM I a host ? " + isHost);
+	}
+	
 }

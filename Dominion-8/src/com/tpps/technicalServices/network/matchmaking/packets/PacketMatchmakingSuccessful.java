@@ -21,7 +21,9 @@ public class PacketMatchmakingSuccessful extends Packet {
 	 * @param joinedPlayers
 	 *            the players in the lobby
 	 * @param gameserverPort
-	 *            the port of the gameserver that was started for the game
+	 *            the port of the game-server that was started for the game
+	 * @param selectedActionCards
+	 *            the cards to play with
 	 */
 	public PacketMatchmakingSuccessful(String[] joinedPlayers, int gameserverPort, String[] selectedActionCards) {
 		super(PacketType.MATCHMAKING_SUCCESSFUL);
@@ -50,7 +52,10 @@ public class PacketMatchmakingSuccessful extends Packet {
 	public int getGameserverPort() {
 		return gameserverPort;
 	}
-	
+
+	/**
+	 * @return the names of the cards to play with
+	 */
 	public String[] getSelectedActionCards() {
 		return selectedActionCards;
 	}

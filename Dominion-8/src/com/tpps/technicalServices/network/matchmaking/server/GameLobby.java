@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
 
 /**
@@ -67,10 +69,25 @@ public class GameLobby {
 		return this.runningServer;
 	}
 
+	/**
+	 * @param player
+	 *            the player to check admin for
+	 * @return if a player is lobby-admin
+	 */
 	public boolean isAdmin(MPlayer player) {
 		if (this.admin == null || player == null || player.isAI())
 			return false;
 		return this.admin == player;
+	}
+
+	/**
+	 * updates the lobby-admin
+	 * 
+	 * @param player
+	 *            the new lobby-admin
+	 */
+	private void setAdmin(MPlayer player) {
+		this.admin = player;
 	}
 
 	/**
@@ -81,9 +98,9 @@ public class GameLobby {
 	 */
 	public void joinPlayer(MPlayer player) {
 		if (!player.isAI() && admin == null) {
-			admin = player;
+			setAdmin(player);
 		}
-		System.out.println("[" + this.getLobbyID() + "] <-" + player.getPlayerName());
+		GameLog.log(MsgType.INFO, "[" + this.getLobbyID() + "] <-" + player.getPlayerName());
 		for (MPlayer mplayer : players) {
 
 			// send the new player the old player
@@ -155,9 +172,9 @@ public class GameLobby {
 			}
 		}
 		if (isAdmin(player)) {
-			// find new lobby-admin
+			this.admin = null;
 			ArrayList<MPlayer> removeAI = new ArrayList<>();
-			for(MPlayer pl : this.players){
+			for (MPlayer pl : this.players) {
 
 				// remove added AIs
 				if (pl.isAI()) {
@@ -165,21 +182,28 @@ public class GameLobby {
 				}
 
 				else {
+					// find new lobby-admin
 					if (this.admin == null) {
-						this.admin = pl;
+						setAdmin(pl);
 					}
 				}
 			}
-			
-			//clear marked AIs
-			for(MPlayer p : removeAI){
+
+			// clear marked AIs
+			for (MPlayer p : removeAI) {
 				this.players.remove(p);
 				MatchmakingController.removeAiPlayer(p.getPlayerName());
 			}
 
-			//tell everyone who is admin
 			for (MPlayer mpl : this.players) {
-				MatchmakingServer.getInstance().sendQuitPacket(mpl, this.admin.getPlayerName(), false);
+
+				for (MPlayer ai : removeAI) {
+					// send AI-Quit-Packet to everyone
+					MatchmakingServer.getInstance().sendQuitPacket(mpl, ai.getPlayerName(), false);
+				}
+
+				// tell everyone who is new admin
+				MatchmakingServer.getInstance().sendQuitPacket(mpl,  this.admin.getPlayerName(), false);
 				MatchmakingServer.getInstance().sendJoinPacket(mpl, this.admin.getPlayerName(), true);
 			}
 		}

@@ -109,6 +109,9 @@ public class ChatController extends PacketHandler{
 		System.out.println("sent packet to add a user");
 	}
 
+	/**
+	 * @see com.tpps.technicalServices.network.core.PacketHandler#handleReceivedPacket(int, com.tpps.technicalServices.network.core.packet.Packet)
+	 */
 	@Override
 	public void handleReceivedPacket(int port, Packet packet) { 
 		switch(packet.getType()){
