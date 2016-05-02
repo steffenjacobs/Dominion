@@ -16,19 +16,22 @@ public class Move {
 
 	private ListMultimap<Execute, Card> playSequence;
 	private ListMultimap<Execute, String> buySequence;
+	private boolean ready;
 
 	public Move() {
 		this.playSequence = LinkedListMultimap.create();
 		this.buySequence = LinkedListMultimap.create();
+		this.ready = false;
 	}
 	
-	public Move(ListMultimap<Execute, Card> playSequence, ListMultimap<Execute, String> buySequence) {
+	public Move(ListMultimap<Execute, Card> playSequence, ListMultimap<Execute, String> buySequence, boolean ready) {
 		this.playSequence = playSequence;
 		this.buySequence = buySequence;
+		this.ready = ready;
 	}
 	
 	public Move clone() {
-		return new Move(playSequence, buySequence);
+		return new Move(playSequence, buySequence, ready);
 	}
 	
 	public ListMultimap<Execute, Card> getPlaySequence() {
@@ -38,7 +41,15 @@ public class Move {
 	public ListMultimap<Execute, String> getBuySequence() {
 		return this.buySequence;
 	}
+	
+	public boolean getReady() {
+		return this.ready;
+	}
 
+	public void setReady(boolean ready) {
+		this.ready = ready;
+	}
+	
 	protected void putPlay(Card card) {
 		this.playSequence.put(Execute.PLAY, card);
 	}

@@ -20,7 +20,8 @@ public enum MsgType {
 	GAME("[GAME]", Color.GREEN, true, true),
 	NETWORK_INFO("[NETWORK-INFO]", Color.BLUE, true, true),
 	NETWORK_ERROR("[NETWORK-ERROR]", Color.MAGENTA, true, true),
-	STATISTICS("[STATS]",Color.YELLOW,true,true);
+	STATISTICS("[STATS]",Color.YELLOW,true,true),
+	AI("[AI]",Color.ORANGE, true, true);
 
 	/**
 	 * message is the String which shows the type of the log in GameLog (in front of every message)

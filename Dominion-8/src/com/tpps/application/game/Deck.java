@@ -385,7 +385,7 @@ public class Deck {
 	
 	/**
 	 * if the discardPile contains not enough card the shuffleIfLessThan(1) method is called. 
-	 * @return one Card from the discardPile
+	 * @return one Card from the drawPile
 	 */
 	public Card removeSaveFromDrawPile() throws NoSuchElementException{
 		this.shuffleIfLessThan(1);		

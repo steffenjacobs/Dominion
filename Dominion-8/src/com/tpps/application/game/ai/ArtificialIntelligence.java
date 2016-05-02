@@ -9,6 +9,9 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardType;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
@@ -26,8 +29,7 @@ import com.tpps.technicalServices.util.CollectionsUtil;
  */
 
 /**
- * AI -> computes Move -> Information(Handler) needed -> Move is computed ->
- * GameHandler needed to execute turn
+ * Global AI class. If you get stomped, don't worry.
  * 
  * @author Nicolas Wipfler
  */
@@ -36,9 +38,10 @@ public class ArtificialIntelligence {
 	private ServerGamePacketHandler packetHandler;
 
 	private Player player;
+	private Move move;
 	
 	private List<String> blacklist;
-	private boolean computing;
+//	private boolean computing;
 	
 	/**
 	 * constructor of the Artificial Intelligence
@@ -51,8 +54,9 @@ public class ArtificialIntelligence {
 	public ArtificialIntelligence(Player player, UUID uuid, ServerGamePacketHandler packetHandler) {
 		this.packetHandler = packetHandler;
 		this.player = player;
+		this.move = new Move();
 		this.blacklist = CollectionsUtil.linkedList(new String[] {"Copper","Estate","Curse"});
-		this.computing = false;
+//		this.computing = false;
 	}
 
 	/*
@@ -70,31 +74,33 @@ public class ArtificialIntelligence {
 		if (card != null) {
 			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
 		} else {
-			System.out.println("AI played 'null' card");
+			GameLog.log(MsgType.AI," played 'null' card");
 		}
 	}
-
-	private Card getCardFromBoard(String cardname) {
-		return this.player.getGameServer().getGameController().getGameBoard().getCardToBuyFromBoardWithName(cardname);
-	}
-
-	public void buyCard(Card card) {
-		if (card != null) {
-			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
-		} else {
-			System.out.println("AI bought 'null' card");
-		}
-	}
-
-	private void setBuyPhase() {
-		sendPacket(new PacketEndActionPhase());
-	}
-
+	
 	private void playTreasures() {
 		sendPacket(new PacketPlayTreasures());
 	}
 
-	protected void endTurn() {
+	private void playTreasures(int amountNeeded) {}
+	
+	private void setBuyPhase() {
+		sendPacket(new PacketEndActionPhase());
+	}
+	
+	private Card getCardFromBoard(String cardname) {
+		return this.player.getGameServer().getGameController().getGameBoard().getCardToBuyFromBoardWithName(cardname);
+	}
+
+	private void buyCard(Card card) {
+		if (card != null) {
+			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
+		} else {
+			GameLog.log(MsgType.AI," bought 'null' card");
+		}
+	}	
+
+	private void endTurn() {
 		sendPacket(new PacketEndTurn());
 	}
 
@@ -126,28 +132,22 @@ public class ArtificialIntelligence {
 
 	private void handleTurn() {
 		if (myTurn()) {
-			System.out.println(this + " is handling a turn");
+			determineMove();
+			GameLog.log(MsgType.AI, this + " is handling a turn");
 			executeMove();
-		} else {
-			// if (!computing) {
-			// determineMove();
-			// }
-		}
+			if move ready execute, sonst defaultmove
+//		}
 	}
 
 	/**
 	 * execute the next turn of AI, which is determined by LinkedListMultimap
 	 * nextTurn
 	 */
-	public void executeMove() {
-
-		System.out.println(this + " is executing a turn");
-		LinkedList<Card> cardHand = this.getCardHand();
+	private void executeMove() {
+		GameLog.log(MsgType.AI, this + " is executing a turn");
+		// LinkedList<Card> cardHand = this.getCardHand();
 		try {
-			Move defaultMove = this.getDefaultMove();
-			// System.out.println("before sleep");
 			Thread.sleep(500);
-			// System.out.println("after sleep");
 			this.playTreasures();
 			Thread.sleep(500);
 			for (Card action : defaultMove.getPlaySequence().get(Execute.PLAY)) {
@@ -166,10 +166,10 @@ public class ArtificialIntelligence {
 			 * set computing flag false here, because otherwise the AI would
 			 * compute a new turn before it has even executed the old
 			 */
-			this.computing = false;
+//			this.computing = false;
 			Thread.sleep(500);
 			if (myTurn()) {
-				this.player.getGameServer().broadcastMessage(new PacketBroadcastLog("endTurn();"));
+				this.player.getGameServer().broadcastMessage(new PacketBroadcastLog("AI end[ed]Turn() by itself"));
 				this.endTurn();
 			}
 		} catch (InterruptedException e) {
@@ -184,31 +184,14 @@ public class ArtificialIntelligence {
 	 * assign a default turn which should be an alternative solution, if the
 	 * compution of the next turn of the AI is interrupted
 	 */
-	protected void determineMove() {
-		this.computing = true;
+	private void determineMove() {
+//		this.computing = true;
 		/**
 		 * method assigns a default turn as the next turn, if the
 		 * determineMove() method gets interrupted before something useful is
 		 * computed
 		 */
-		
-		
-		
-		
-		
-		
-		
 		// https://dominionstrategy.com/big-money/
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		getDefaultMove();
 	}
 
@@ -234,6 +217,8 @@ public class ArtificialIntelligence {
 		return result;
 	}
 	
+	/* ---------- game information ---------- */
+	
 	/**
 	 * 
 	 * @return
@@ -247,7 +232,7 @@ public class ArtificialIntelligence {
 	 * @return if the game is NOT finished (so when the method returns true, the
 	 *         game is still running)
 	 */
-	protected boolean notFinished() {
+	private boolean notFinished() {
 		return this.player.getGameServer().getGameController().isGameNotFinished();
 	}
 	
@@ -257,17 +242,35 @@ public class ArtificialIntelligence {
 	 *            the player to get the information from
 	 * @return
 	 */
-	protected int getTreasureCardsValue() {
+	private int getTreasureCardsValue() {
 		return this.player.getDeck().getTreasureValueOfList(this.getCardHand());
+	}
+	
+	private LinkedList<Card> getAllActionCards() {
+		return this.player.getDeck().getCardsByTypeFromHand(CardType.ACTION);
 	}
 	
 	/**
 	 * 
 	 * @return the cardHand of the player
 	 */
-	protected LinkedList<Card> getCardHand() {
+	private LinkedList<Card> getCardHand() {
 		return this.player.getDeck().getCardHand();
 	}
+	
+	// private int getPlayerActions() {
+	// return this.player.getActions();
+	// }
+	//
+	// private int getPlayerBuys() {
+	// return this.player.getBuys();
+	// }
+	//
+	// private int getPlayerCoins() {
+	// return this.player.getCoins();
+	// }
+	
+	/* ----------      main       ---------- */
 	
 	/**
 	 * main for testing purposes of LinkedListMultimap
@@ -295,6 +298,8 @@ public class ArtificialIntelligence {
 		}
 		System.out.println(map.get("a"));
 	}
+
+	/* ---------- getter & setter ---------- */
 
 	/**
 	 * @return the packetHandler
@@ -339,19 +344,16 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @return the computing
-	 */
-	public boolean isComputing() {
-		return computing;
-	}
-
-	/**
-	 * @param computing the computing to set
-	 */
-	public void setComputing(boolean computing) {
-		this.computing = computing;
-	}
-	
-	/* ---------- getter & setter ---------- */
-
+//	 * @return the computing
+//	 */
+//	public boolean isComputing() {
+//		return computing;
+//	}
+//
+//	/**
+//	 * @param computing the computing to set
+//	 */
+//	public void setComputing(boolean computing) {
+	// this.computing = computing;
+	// }
 }
