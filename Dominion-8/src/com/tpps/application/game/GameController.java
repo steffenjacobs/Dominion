@@ -189,7 +189,10 @@ public class GameController {
 			if (player.isReactionMode() && card.getTypes().contains(CardType.REACTION)) {
 				System.out.println("spielt reaktionskarte");
 				player.playCard(cardID);
-				this.gameServer.sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
+				if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null || 
+						!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")){
+					this.gameServer.sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
+				}
 				return true;
 			}
 			if (this.gamePhase.equals("actionPhase")) {

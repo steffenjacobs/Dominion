@@ -950,8 +950,9 @@ public class Player {
 		if (allReactionCarsPlayedFlag) {
 			if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null || 
 					!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
-			this.gameServer.sendMessage(port,
-					new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
+//			this.gameServer.sendMessage(port,
+//					new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
+				this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 			}
 		} else {
 			this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
@@ -961,7 +962,7 @@ public class Player {
 		this.gameServer.sendMessage(port, new PacketDontShowEndReactions());
 		
 		
-		this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
+		
 	}
 
 	/**
@@ -1097,14 +1098,15 @@ public class Player {
 
 					if (allReactionCarsPlayedFlag) {
 						if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard()== null || !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
-						this.gameServer.sendMessage(port,
-								new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
+//						this.gameServer.sendMessage(port,
+//								new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
+						this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 						}
 					} else {
 						this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
 					}					
 					
-					this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
+					
 				}
 			}
 			break;
