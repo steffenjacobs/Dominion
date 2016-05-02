@@ -19,6 +19,7 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.client.ChatClient;
+import com.tpps.technicalServices.network.engscreen.EndPanel;
 import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
 import com.tpps.technicalServices.network.game.GameClient;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
@@ -52,6 +53,7 @@ public final class DominionController {
 	private GlobalChatPanel globalChatPanel;
 	private PlayerSettingsPanel playerSettingsPanel;
 	private StatisticsBoard statisticsBoardPanel;
+	private EndPanel endPanel;
 
 	private BufferedImage originalBackground;
 	/**
@@ -89,21 +91,10 @@ public final class DominionController {
 	 * @author jhuhn
 	 */
 	private void init() {
-		boolean login = true;
-		if (login) {
-			storageController = new CardStorageController();
-			storageController.loadCards();
-			mainFrame = new MainFrame();
-			loginGuiController = new LoginGUIController();
-		} else {
-			this.turnFlag = false;
-			try {
-				gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), 1339),
-						new ClientGamePacketHandler());
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		storageController = new CardStorageController();
+		storageController.loadCards();
+		mainFrame = new MainFrame();
+		loginGuiController = new LoginGUIController();
 	}
 
 	/**
@@ -117,6 +108,7 @@ public final class DominionController {
 		globalChatPanel = new GlobalChatPanel();
 		statisticsBoardPanel = new StatisticsBoard();
 		playerSettingsPanel = new PlayerSettingsPanel().updateCards();
+		this.endPanel = new EndPanel();
 		try {
 			this.originalBackground = ImageIO
 					.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
@@ -151,8 +143,11 @@ public final class DominionController {
 	 * is called when the match ends
 	 */
 	public void finishMatch() {
+		this.gameClient.getGameWindow().dispose();
+		this.gameClient = null;
 		this.playerSettingsPanel.initStandardBackground();
-		this.joinMainMenu();
+		this.mainFrame.setPanel(this.endPanel);
+		this.mainFrame.setVisible(true);
 	}
 
 	/**
@@ -257,7 +252,7 @@ public final class DominionController {
 	 * @author jhuhn
 	 */
 	public void endLogin() {
-
+		this.mainFrame.setTitle(this.username);
 		storageController.checkStandardCardsAsync();
 
 		this.loadPanels();
