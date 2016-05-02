@@ -190,7 +190,10 @@ public class GameController {
 				System.out.println("spielt reaktionskarte");
 				player.playCard(cardID);
 				if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null || 
-						!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")){
+						(!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")
+								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")
+								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Bureaucrat")
+								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Thief"))){
 					this.gameServer.sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
 				}
 				return true;
@@ -1147,6 +1150,16 @@ public class GameController {
 	 */
 	public void resetThiefList() {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
+	}
+	
+	public boolean allReveaListsEmpty() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (!player.getRevealList().isEmpty()){
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public boolean allTemporaryTrashPilesEmpty() {

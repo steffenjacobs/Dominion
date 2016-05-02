@@ -261,6 +261,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 		
 		
+		System.out.println("is play twice " + this.server.getGameController().getActivePlayer().isPlayTwice() + 
+				" play twice enabled: " + this.server.getGameController().getActivePlayer().isPlayTwiceEnabled() + 
+				" secondTimePlayed " + this.server.getGameController().getActivePlayer().isSecondTimePlayed() +
+				" counter " + this.server.getGameController().getActivePlayer().getPlayTwiceCounter());
 		if (this.server.getGameController().getActivePlayer()!= null && this.server.getGameController().getActivePlayer().isPlayTwice()) {
 			
 			
@@ -273,6 +277,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			System.out.println("all temporary trashpiles empty: " + this.server.getGameController().allTemporaryTrashPilesEmpty());
 			System.out.println("isWitch: " + !playTwiceActivePlayer.isWitch());
 			System.out.println("isBureaucrat: " + !playTwiceActivePlayer.isBureaucrat());
+			System.out.println("revealListEmpty: " + this.server.getGameController().getSpyList().isEmpty());
 			
 			
 			
@@ -287,9 +292,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 					&& playTwiceActivePlayer.getPlayTwiceCard() != null) {*/
 			if (this.server.getGameController().allReactionCardsPlayed() && this.server.getGameController().allPlayerDiscarded()
 					&& this.server.getGameController().allPlayerTrashed() && this.server.getGameController().allPlayerGained()
-					&& this.server.getGameController().allPlayersRevealed() && this.server.getGameController().getSpyList().isEmpty()
-					&& this.server.getGameController().allTemporaryTrashPilesEmpty() && !playTwiceActivePlayer.isWitch()
-					&& !playTwiceActivePlayer.isBureaucrat()){
+					&& this.server.getGameController().allPlayersRevealed() && this.server.getGameController().allReveaListsEmpty()
+					&& this.server.getGameController().getSpyList().isEmpty()	&& this.server.getGameController().allTemporaryTrashPilesEmpty() && 
+					!playTwiceActivePlayer.isWitch() && !playTwiceActivePlayer.isBureaucrat()){
 				
 //					try {
 						System.out.println("playTwice");
@@ -324,7 +329,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				}
 			
 			
-		}
+		}else{
 		if (!skipflag){
 		if (this.server.getGameController().getActivePlayer() != null && this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()){			
 				System.out.println("richtige karte gespielt");
@@ -332,6 +337,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().getActivePlayer().setPlayTwiceEnabledFalse();
 
 			}
+		}
 		}
 
 	}
@@ -657,8 +663,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 			// this.server.getGameController().getActivePlayer().getBuys(),
 			// this.server.getGameController().getActivePlayer().getCoins()));
 			this.server.getGameController().endTurn();
-			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
-					this.server.getGameController().getActivePlayerName(), true));
+			
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			this.server.broadcastMessage(new PacketBroadcastLog(""));
 			/**
 			 * Lukas Fragen:
@@ -705,7 +715,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 			// ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.getActivePlayerColor()));
 			this.server.broadcastMessage(
 					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.server.getGameController().getActivePlayer().getLogColor()));
-			
+			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
+					this.server.getGameController().getActivePlayerName(), true));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
