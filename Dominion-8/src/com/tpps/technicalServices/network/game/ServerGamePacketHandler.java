@@ -280,7 +280,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 					&& !playTwiceActivePlayer.isSecondTimePlayed()
 					&& playTwiceActivePlayer.getPlayTwiceCard() != null) {*/
 			if (this.server.getGameController().allReactionCardsPlayed() && this.server.getGameController().allPlayerDiscarded()
-					&& this.server.getGameController().allPlayerTrashed()){
+					&& this.server.getGameController().allPlayerTrashed() && this.server.getGameController().allPlayerGained()
+					&& this.server.getGameController().allPlayersRevealed() && this.server.getGameController().getSpyList().isEmpty()
+					&& this.server.getGameController().allTemporaryTrashPilesEmpty() && !playTwiceActivePlayer.isWitch()
+					&& !playTwiceActivePlayer.isBureaucrat()){
 				
 //					try {
 						System.out.println("playTwice");

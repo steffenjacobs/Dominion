@@ -1141,6 +1141,36 @@ public class GameController {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
 	}
 	
+	public boolean allTemporaryTrashPilesEmpty() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (!player.getTemporaryTrashPile().isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean allPlayersRevealed() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isRevealMode()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean allPlayerGained() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isGainMode()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	public boolean allPlayerTrashed() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();

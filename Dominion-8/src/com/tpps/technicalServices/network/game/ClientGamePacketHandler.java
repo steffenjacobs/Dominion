@@ -60,7 +60,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameClient.disconnect();
 			break;
 		case OPEN_GUI_AND_ENABLE_ONE:
-			openGuiAndEnableOne(packet);
+			new Thread(() -> {openGuiAndEnableOne(packet);}).start();			
 			break;
 		case ENABLE_DISABLE:
 			enableDisable(packet);
