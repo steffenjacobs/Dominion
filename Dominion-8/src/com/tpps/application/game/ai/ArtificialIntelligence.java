@@ -84,6 +84,7 @@ public class ArtificialIntelligence {
 		} else {
 			LinkedList<Card> allActionCards = this.getAllCardsFromType(CardType.TREASURE);
 			for (Card card : allActionCards) {
+				// hier
 				
 			}
 //			LinkedList<Card> coppers = ;
@@ -94,6 +95,7 @@ public class ArtificialIntelligence {
 
 	private void playAllActionCards() {
 		LinkedList<Card> allActionCards = this.getAllCardsFromType(CardType.ACTION);
+		// hier
 		// handle mit unterschiedlichen +Karten typen usw
 		
 	}
@@ -149,20 +151,27 @@ public class ArtificialIntelligence {
 	private void handleTurn() {
 		if (myTurn()) {
 			GameLog.log(MsgType.AI, this + " is handling a turn");
-
-			determineMove();
-			if (this.move.isReady()) {
-				executeMove(this.move);
-			} else {
-				/**
-				 * method assigns a default turn as the next turn, if the
-				 * determineMove() method gets interrupted before something
-				 * useful is computed
-				 */
-				executeMove(getDefaultMove());
-			}
+			Move tbe = determineMove();
+			executeMove(tbe);
+			
+			// hier
+			// überlegen ob das mit isReady so gut ist und sonst entfernen
+			
+			// determineMove();
+			// if (this.move.isReady()) {
+			// executeMove(this.move);
+			// } else {
+			// /**
+			// * method assigns a default turn as the next turn, if the
+			// * determineMove() method gets interrupted before something
+			// * useful is computed
+			// */
+			// executeMove(getDefaultMove());
+			// }
+			
 		} else if (this.player.isReactionMode()) {
 			if (this.player.playsReactionCard()) {
+				// hier
 				// handle den und auch alle anderen Modes
 				
 			}
@@ -207,13 +216,15 @@ public class ArtificialIntelligence {
 	 * assign a default turn which should be an alternative solution, if the
 	 * compution of the next turn of the AI is interrupted
 	 */
-	private void determineMove() {
+	private Move determineMove() {
 		// this.computing = true;
 		// https://dominionstrategy.com/big-money/
 
+		Move result = new Move();
 		// LinkedList<Card> cardHand = this.getCardHand();
-
+		// hier
 		
+		return result;
 	}
 
 	/**
@@ -227,7 +238,7 @@ public class ArtificialIntelligence {
 	private Move getDefaultMove() {
 		Move result = new Move();
 		// LinkedList<Card> cardHand = this.getCardHand();
-
+		// hier
 		
 		int coins = getTreasureCardsValue();
 		if (coins >= 8) {
