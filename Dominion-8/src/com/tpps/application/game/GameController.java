@@ -813,7 +813,8 @@ public class GameController {
 		if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null ||
 				(!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")
 					&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")
-					&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Bureaucrat"))) {
+					&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Bureaucrat")
+					&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Thief"))) {
 			try {
 				System.out.println("reaktion beendet gespielte karten"
 						+ Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));
