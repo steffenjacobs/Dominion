@@ -239,7 +239,8 @@ public class ArtificialIntelligence {
 	 * @return
 	 */
 	private boolean myTurn() {
-		return this.player.getGameServer().getGameController().getActivePlayer().equals(player);
+		Player activePlayer = this.player.getGameServer().getGameController().getActivePlayer();
+		return activePlayer != null ? activePlayer.equals(this.player) : false;
 	}
 
 	/**
