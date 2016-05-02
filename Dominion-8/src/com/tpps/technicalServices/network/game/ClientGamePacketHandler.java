@@ -216,6 +216,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			JOptionPane.showMessageDialog(null, "end game");
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameClient.disconnect();
+			DominionController.getInstance().finishMatch();
 			break;
 		default:
 			System.out.println("unknown packet type: " + packet.getType());
