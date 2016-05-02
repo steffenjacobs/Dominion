@@ -121,20 +121,12 @@ public class CardEditor extends JFrame implements ActionListener {
 
 	}
 
-	private void createPanels() {
 
-	}
-
-	// TODO set Positions etc
 	private void createLabels() {
 		enterName = new JLabel("Geben Sie den Kartennamen ein");
-		// enterName.setBounds(x, y, width, height);
 		price = new JLabel("");
-		// price.setBounds(x, y, width, height);
 		cardType = new JLabel("Cardtype");
-		// cardType.setBounds(x, y, width, height);
 		testImage = new JLabel("");
-		// testImage.setBounds(x,y,width,height);
 	}
 
 	// TODO : Dokumentation
@@ -153,10 +145,17 @@ public class CardEditor extends JFrame implements ActionListener {
 		cancel = new JButton("cancel");
 	}
 
+	
+	//TODO : Ungefähres Layout vollenden
+	//TODO : Layout an relative Positionen anpassen
+	//TODO : Layout ans Design anpassen
+	//TODO : Komponenten ans Design anpassen
+	//TODO : Listener der Komponenten
+	
 	private void iniateLayout() {
 
-		JPanel obenLinks = new JPanel();
-		obenLinks.setBackground(Color.green); // temp
+		JPanel obenLinks = new JPanel();      //Panel für Karteninitation
+		obenLinks.setBackground(Color.green); 
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.gridwidth = 2;
@@ -178,9 +177,9 @@ public class CardEditor extends JFrame implements ActionListener {
 		
 		c.add(obenLinks, gbc);
 
-		JPanel pnlBuy = new JPanel();
+		JPanel pnlBuy = new JPanel();        //Panel für das Bildhochladen
 		gbc.gridx = 1;
-		pnlBuy.setBackground(Color.blue); // temp
+		pnlBuy.setBackground(Color.blue); 
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;
@@ -192,7 +191,7 @@ public class CardEditor extends JFrame implements ActionListener {
         pnlBuy.add(uploadImage,gbc);
 		c.add(pnlBuy, gbc);
 		
-		JPanel mitte = new JPanel();
+		JPanel mitte = new JPanel();           //Panel für den Preis
 		mitte.setBackground(Color.ORANGE);
 		gbc.gridx = 0;
 		gbc.gridy = 2;
@@ -229,11 +228,61 @@ public class CardEditor extends JFrame implements ActionListener {
 		mitte.add(decreasePrice, gbc2);
 		c.add(mitte,gbc);
 		
-
-		JPanel untenLinks = new JPanel();
-		untenLinks.setBackground(Color.red); // temp
+		
+		JPanel radio = new JPanel();            //Panel für die RadioButtons
+		radio.setBackground(Color.YELLOW);
 		gbc.gridx = 0;
 		gbc.gridy = 3;
+		gbc.gridwidth = 2;
+		gbc.gridheight = 1;
+		gbc.weightx = 0.99;
+		gbc.weighty = 0.5;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.anchor = GridBagConstraints.CENTER;
+		actionSelect = new ButtonGroup();		
+		addAction = new JRadioButton("Add Action");
+		addMoney = new JRadioButton("Add Money");
+		addPurchase = new JRadioButton("Add Purchase");
+		drawCard= new JRadioButton("Draw Card");
+		drawCardUntil= new JRadioButton("Draw Card Until");
+		putBack = new JRadioButton("Put Back");
+		gainCard = new JRadioButton("Gain Card");
+		discardCard= new JRadioButton("Discard Card");
+		trashCard= new JRadioButton("Trash Card");
+		revealCard = new JRadioButton("Reveal Card");
+		isTreasure = new JRadioButton("Is Treasure");
+		isVictory= new JRadioButton("Is Victory");
+		actionSelect.add(addAction);
+		actionSelect.add(addMoney);
+		actionSelect.add(addPurchase);
+		actionSelect.add(drawCard);
+		actionSelect.add(drawCardUntil); 
+		actionSelect.add(putBack);
+		actionSelect.add(gainCard);
+		actionSelect.add(discardCard);
+		actionSelect.add(trashCard);
+		actionSelect.add(revealCard);
+		actionSelect.add(isTreasure);
+		actionSelect.add(isVictory);
+		radio.add(addAction);
+		radio.add(addMoney);
+		radio.add(addPurchase);
+		radio.add(drawCard);
+		radio.add(drawCardUntil);
+		radio.add(putBack);
+		radio.add(gainCard);
+		radio.add(discardCard);
+		radio.add(trashCard);
+		radio.add(revealCard);
+		radio.add(isTreasure);
+		radio.add(isVictory);
+		c.add(radio,gbc);
+		
+
+		JPanel untenLinks = new JPanel();		//Karte erstellen
+		untenLinks.setBackground(Color.red); 
+		gbc.gridx = 0;
+		gbc.gridy = 4;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 2;
 		gbc.fill = GridBagConstraints.BOTH;
@@ -243,10 +292,10 @@ public class CardEditor extends JFrame implements ActionListener {
 		untenLinks.add(createCard);
 		c.add(untenLinks, gbc);
 
-		JPanel untenRechts = new JPanel();
-		untenRechts.setBackground(Color.gray); // temp
+		JPanel untenRechts = new JPanel();		//Zurück ins Menü
+		untenRechts.setBackground(Color.gray);
 		gbc.gridx = 1;
-		gbc.gridy = 3;
+		gbc.gridy = 4;
 		gbc.gridwidth = 2;
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;
