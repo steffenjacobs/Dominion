@@ -1,4 +1,4 @@
-package com.tpps.technicalServices.network.engscreen;
+package com.tpps.ui.endscreen;
 
 import java.awt.Color;
 
