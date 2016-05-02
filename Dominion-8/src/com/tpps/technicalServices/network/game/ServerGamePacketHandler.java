@@ -302,10 +302,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 						
 						playTwiceActivePlayer.setSecondTimePlayed();
 //						try {
-//							Thread.sleep(10000);
+//							Thread.sleep(5000);
 //						} catch (InterruptedException e) {
 //							e.printStackTrace();
 //						}
+						
 						new Thread(() -> {
 							handleReceivedPacket(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
 						}).start();
@@ -587,7 +588,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 		if (player.getActions() == 0 && !player.isThief()) {
 			server.sendMessage(port, new PacketEndActionPhase());
 		}
+		if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null || 
+				!this.server.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")){
 		this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
+		}
 		
 		if (this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer())){
 			this.server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(player.getPlayedCards())));

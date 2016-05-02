@@ -763,6 +763,8 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			if (player.playsReactionCard() || player.isReactionMode()) {
 				allReactionCardsPlayedFlag = false;
+				System.out.println(player.getPlayerName() + "spielt reaktionskarte: " +
+				player.playsReactionCard() + "player ist reaktionsmodues: " + player.isReactionMode());
 				break;
 			}
 		}
@@ -806,7 +808,9 @@ public class GameController {
 		checkWitchFinish();
 		checkBureaucratFinish();
 		if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null ||
-				!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
+				(!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")
+					&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")
+					&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Bureaucrat"))) {
 			try {
 				System.out.println("reaktion beendet gespielte karten"
 						+ Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));
