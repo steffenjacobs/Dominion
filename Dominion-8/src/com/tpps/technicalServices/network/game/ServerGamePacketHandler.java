@@ -234,11 +234,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 		
 		if (refActivePlayer != null && 
 				this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer()) &&
-				refActivePlayer.equals(this.server.getGameController().getActivePlayer())
-				&& !this.server.getGameController().getActivePlayer().isPlayTwice()) {
+				refActivePlayer.equals(this.server.getGameController().getActivePlayer())) {
 			try {
 				if (this.server.getGameController().allReactionCardsPlayed()) {
 					System.out.println("enable the aktive player again");
+					if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null ||
+							!this.server.getGameController().getActivePlayer().getPlayTwiceCard().equals("Militia"))
 					this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
 						new PacketEnable("my turn"));
 				}
@@ -259,19 +260,19 @@ public class ServerGamePacketHandler extends PacketHandler {
 			
 			
 			Player playTwiceActivePlayer = this.server.getGameController().getActivePlayer();
-			System.out.println("is play twice" + playTwiceActivePlayer.isPlayTwice());
-			System.out.println("isDiscardMode: " + playTwiceActivePlayer.isDiscardMode());
-			System.out.println("isTrashMode: " + playTwiceActivePlayer.isTrashMode());
-			System.out.println("isDREactionMode: " + playTwiceActivePlayer.isReactionMode());
-			System.out.println("playsReactionCard: " + playTwiceActivePlayer.playsReactionCard());
-			System.out.println("isGainMOde: " + playTwiceActivePlayer.isGainMode());
-			System.out.println("isREvealMode: " + playTwiceActivePlayer.isRevealMode());
-			System.out.println("isThief: " + playTwiceActivePlayer.isThief());
-			System.out.println("isWitch: " + playTwiceActivePlayer.isWitch());
-			System.out.println("isBureaucrat: " + playTwiceActivePlayer.isBureaucrat());
-			System.out.println("isSpy: " + playTwiceActivePlayer.isSpy());
-			System.out.println("isSecondTimePlayed: " + playTwiceActivePlayer.isSecondTimePlayed());
-			System.out.println("allReactionCardsPlayed: " + this.server.getGameController().allReactionCardsPlayed());
+			System.out.println("all player discarded" + this.server.getGameController().allPlayerDiscarded());
+			System.out.println("all players trashed: " + this.server.getGameController().allPlayerTrashed());
+			System.out.println("all players gained: " + this.server.getGameController().allPlayerGained());
+			System.out.println("all players revealed: " + this.server.getGameController().allPlayersRevealed());
+			System.out.println("spylist empty: " + this.server.getGameController().getSpyList().isEmpty());
+			System.out.println("all temporary trashpiles empty: " + this.server.getGameController().allTemporaryTrashPilesEmpty());
+			System.out.println("isWitch: " + !playTwiceActivePlayer.isWitch());
+			System.out.println("isBureaucrat: " + !playTwiceActivePlayer.isBureaucrat());
+			
+			
+			
+			
+			
 			/*if (!playTwiceActivePlayer.isDiscardMode() && !playTwiceActivePlayer.isTrashMode()
 					&& !playTwiceActivePlayer.isReactionMode() && !playTwiceActivePlayer.playsReactionCard()
 					&& !playTwiceActivePlayer.isGainMode() && !playTwiceActivePlayer.isRevealMode()
@@ -280,7 +281,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 					&& !playTwiceActivePlayer.isSecondTimePlayed()
 					&& playTwiceActivePlayer.getPlayTwiceCard() != null) {*/
 			if (this.server.getGameController().allReactionCardsPlayed() && this.server.getGameController().allPlayerDiscarded()
-					&& this.server.getGameController().allPlayerTrashed()){
+					&& this.server.getGameController().allPlayerTrashed() && this.server.getGameController().allPlayerGained()
+					&& this.server.getGameController().allPlayersRevealed() && this.server.getGameController().getSpyList().isEmpty()
+					&& this.server.getGameController().allTemporaryTrashPilesEmpty() && !playTwiceActivePlayer.isWitch()
+					&& !playTwiceActivePlayer.isBureaucrat()){
 				
 //					try {
 						System.out.println("playTwice");
@@ -317,8 +321,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 		
 		if (this.server.getGameController().getActivePlayer() != null && this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()){
+			if (packet instanceof PacketPlayCard && this.server.getGameController().getActivePlayer().getDeck().getCardFromHand(((PacketPlayCard)packet).getCardID()).getTypes().contains(CardType.ACTION)){
+				System.out.println("richtige karte gespielt");
 			this.server.getGameController().getActivePlayer().setPlayTwice();
 			this.server.getGameController().getActivePlayer().setPlayTwiceEnabledFalse();
+			}
 		}
 
 	}
@@ -344,12 +351,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 				boolean allReactionCarsPlayedFlag = this.server.getGameController().allReactionCardsPlayed();
 
 				if (allReactionCarsPlayedFlag) {
-					this.server.sendMessage(port,
-							new PacketDisable(this.server.getGameController().getActivePlayerName() + "'s turn"));
+//					this.server.sendMessage(port,
+//							new PacketDisable(this.server.getGameController().getActivePlayerName() + "'s turn"));
+					this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 				} else {
 					this.server.sendMessage(port, new PacketDisable("wait on reaction"));
 				}	
-				this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
+//				this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 			}
 		}
 		this.server.getGameController().isGameFinished();
@@ -372,14 +380,15 @@ public class ServerGamePacketHandler extends PacketHandler {
 			boolean allReactionCarsPlayedFlag = this.server.getGameController().allReactionCardsPlayed();
 			
 			if (allReactionCarsPlayedFlag) {
-				this.server.sendMessage(player1.getPort(), new PacketDisable(
-						this.server.getGameController().getActivePlayerName() + "'s turn"));
+//				this.server.sendMessage(player1.getPort(), new PacketDisable(
+//						this.server.getGameController().getActivePlayerName() + "'s turn"));
+				this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 			}else {
 				this.server.sendMessage(player1.getPort(), new PacketDisable("wait on reaction"));
 			}
 
 			this.server.getGameController().reactOnSpy(player1);
-			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
+			
 		}
 
 	}

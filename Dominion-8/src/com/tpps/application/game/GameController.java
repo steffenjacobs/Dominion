@@ -189,7 +189,10 @@ public class GameController {
 			if (player.isReactionMode() && card.getTypes().contains(CardType.REACTION)) {
 				System.out.println("spielt reaktionskarte");
 				player.playCard(cardID);
-				this.gameServer.sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
+				if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null || 
+						!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")){
+					this.gameServer.sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
+				}
 				return true;
 			}
 			if (this.gamePhase.equals("actionPhase")) {
@@ -802,7 +805,8 @@ public class GameController {
 		checkSpyFinish();
 		checkWitchFinish();
 		checkBureaucratFinish();
-		if (!this.gameServer.getGameController().getActivePlayer().isPlayTwice()) {
+		if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null ||
+				!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
 			try {
 				System.out.println("reaktion beendet gespielte karten"
 						+ Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));
@@ -1139,6 +1143,36 @@ public class GameController {
 	 */
 	public void resetThiefList() {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
+	}
+	
+	public boolean allTemporaryTrashPilesEmpty() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (!player.getTemporaryTrashPile().isEmpty()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean allPlayersRevealed() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isRevealMode()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public boolean allPlayerGained() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isGainMode()) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public boolean allPlayerTrashed() {
