@@ -11,8 +11,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javafx.util.Pair;
-
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.ai.ArtificialIntelligence;
@@ -51,6 +49,8 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateValues
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GameConstant;
 
+import javafx.util.Pair;
+
 /**
  * @author ladler - Lukas Adler
  */
@@ -68,6 +68,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	public Color getActivePlayerColor() {
 		return this.colorMap.get(this.server.getGameController().getActivePlayerName());
 	}
+
 	/**
 	 * checks which packet was sent and reacts on the packet
 	 */
@@ -80,7 +81,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 		boolean skipflag = false;
 		Player refActivePlayer = this.server.getGameController().getActivePlayer();
-		
+
 		try {
 			switch (packet.getType()) {
 			case REGISTRATE_PLAYER_BY_SERVER:
@@ -105,21 +106,20 @@ public class ServerGamePacketHandler extends PacketHandler {
 					System.out.println("Reconnect valid Session username: " + packetReconnect.getUsername() + "sessionID: " + packetReconnect.getSessionID());
 					updatePortOfPlayer(port, packetReconnect);
 					this.server.getDisconnectedUser().remove(this.server.getGameController().getPlayerByUserName(packetReconnect.getUsername()));
-					server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
-							this.server.getGameController().getActivePlayerName(), false));
+					server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(), this.server.getGameController().getActivePlayerName(), false));
 				} else {
 					this.server.disconnect(port);
 				}
 				break;
 			case CARD_PLAYED:
 				if (this.server.getGameController().isCardsEnabled()) {
-					if (this.server.getGameController().getActivePlayer().equals(this.server.getGameController().getPlayerByPort(port))){
+					if (this.server.getGameController().getActivePlayer().equals(this.server.getGameController().getPlayerByPort(port))) {
 						skipflag = true;
 					}
 					if (this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()) {
-						if (!this.server.getGameController().getActivePlayer().getDeck().getCardFromHand(((PacketPlayCard)packet).getCardID()).getTypes().contains(CardType.ACTION)){
+						if (!this.server.getGameController().getActivePlayer().getDeck().getCardFromHand(((PacketPlayCard) packet).getCardID()).getTypes().contains(CardType.ACTION)) {
 							skipflag = true;
-							}										
+						}
 					}
 					cardPlayed(port, packet);
 				} else {
@@ -158,7 +158,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				reactivePlayer.setSpyFalse();
 				this.server.getGameController().getSpyList().remove(reactivePlayer);
 				System.out.println("spyList size take cards: " + this.server.getGameController().getSpyList().size());
-//				this.server.sendMessage(port, new PacketRemoveExtraTable());
+				// this.server.sendMessage(port, new PacketRemoveExtraTable());
 				if (!this.server.getGameController().getSpyList().isEmpty()) {
 					try {
 						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
@@ -181,7 +181,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				reactivePlayer.putBackRevealedCardsSetRevealModeFalse();
 				reactivePlayer.setSpyFalse();
 				this.server.getGameController().getSpyList().remove(reactivePlayer);
-//				this.server.sendMessage(port, new PacketRemoveExtraTable());
+				// this.server.sendMessage(port, new PacketRemoveExtraTable());
 				if (!this.server.getGameController().getSpyList().isEmpty()) {
 					try {
 						server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketTakeCards(this.server.getGameController().getActivePlayer().getClientID()));
@@ -239,39 +239,32 @@ public class ServerGamePacketHandler extends PacketHandler {
 		} catch (IOException ie) {
 			ie.printStackTrace();
 		}
-		
-		if (refActivePlayer != null && 
-				this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer()) &&
-				refActivePlayer.equals(this.server.getGameController().getActivePlayer())) {
+
+		if (refActivePlayer != null && this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer())
+				&& refActivePlayer.equals(this.server.getGameController().getActivePlayer())) {
 			try {
 				if (this.server.getGameController().allReactionCardsPlayed()) {
 					System.out.println("enable the aktive player again");
-					if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null ||
-							!this.server.getGameController().getActivePlayer().getPlayTwiceCard().equals("Militia"))
-					this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
-						new PacketEnable("my turn"));
+					if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null || !this.server.getGameController().getActivePlayer().getPlayTwiceCard().equals("Militia"))
+						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketEnable("my turn"));
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}else if (this.server.getGameController().getPlayerByPort(port).isReactionMode()
-				&& this.server.getGameController().getPlayerByPort(port).isDiscardMode()) {
-				try {
-					this.server.sendMessage(port, new PacketEnable("react"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+		} else if (this.server.getGameController().getPlayerByPort(port).isReactionMode() && this.server.getGameController().getPlayerByPort(port).isDiscardMode()) {
+			try {
+				this.server.sendMessage(port, new PacketEnable("react"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		
-		
-		System.out.println("is play twice " + this.server.getGameController().getActivePlayer().isPlayTwice() + 
-				" play twice enabled: " + this.server.getGameController().getActivePlayer().isPlayTwiceEnabled() + 
-				" secondTimePlayed " + this.server.getGameController().getActivePlayer().isSecondTimePlayed() +
-				" counter " + this.server.getGameController().getActivePlayer().getPlayTwiceCounter());
-		if (this.server.getGameController().getActivePlayer()!= null && this.server.getGameController().getActivePlayer().getPlayTwiceCard() != null
-				&&this.server.getGameController().getActivePlayer().isPlayTwice()) {
-			
-			
+
+		System.out.println("is play twice " + this.server.getGameController().getActivePlayer().isPlayTwice() + " play twice enabled: "
+				+ this.server.getGameController().getActivePlayer().isPlayTwiceEnabled() + " secondTimePlayed " + this.server.getGameController().getActivePlayer().isSecondTimePlayed() + " counter "
+				+ this.server.getGameController().getActivePlayer().getPlayTwiceCounter());
+		if (this.server.getGameController().getActivePlayer() != null && this.server.getGameController().getActivePlayer().getPlayTwiceCard() != null
+				&& this.server.getGameController().getActivePlayer().isPlayTwice()) {
+
 			Player playTwiceActivePlayer = this.server.getGameController().getActivePlayer();
 			System.out.println("all player discarded" + this.server.getGameController().allPlayerDiscarded());
 			System.out.println("all players trashed: " + this.server.getGameController().allPlayerTrashed());
@@ -282,72 +275,76 @@ public class ServerGamePacketHandler extends PacketHandler {
 			System.out.println("isWitch: " + !playTwiceActivePlayer.isWitch());
 			System.out.println("isBureaucrat: " + !playTwiceActivePlayer.isBureaucrat());
 			System.out.println("revealListEmpty: " + this.server.getGameController().getSpyList().isEmpty());
-			
-			
-			
-			
-			
-			/*if (!playTwiceActivePlayer.isDiscardMode() && !playTwiceActivePlayer.isTrashMode()
-					&& !playTwiceActivePlayer.isReactionMode() && !playTwiceActivePlayer.playsReactionCard()
-					&& !playTwiceActivePlayer.isGainMode() && !playTwiceActivePlayer.isRevealMode()
-					&& !playTwiceActivePlayer.isThief() && !playTwiceActivePlayer.isWitch()
-					&& !playTwiceActivePlayer.isBureaucrat() && !playTwiceActivePlayer.isSpy()
-					&& !playTwiceActivePlayer.isSecondTimePlayed()
-					&& playTwiceActivePlayer.getPlayTwiceCard() != null) {*/
-			if (this.server.getGameController().allReactionCardsPlayed() && this.server.getGameController().allPlayerDiscarded()
-					&& this.server.getGameController().allPlayerTrashed() && this.server.getGameController().allPlayerGained()
-					&& this.server.getGameController().allPlayersRevealed() && this.server.getGameController().allReveaListsEmpty()
-					&& this.server.getGameController().getSpyList().isEmpty()	&& this.server.getGameController().allTemporaryTrashPilesEmpty() && 
-					!playTwiceActivePlayer.isWitch() && !playTwiceActivePlayer.isBureaucrat()){
-				
-//					try {
-						System.out.println("playTwice");
-						playTwiceActivePlayer.setPlayTwiceFalse();
-						playTwiceActivePlayer.setPlayTwiceEnabled();
-						playTwiceActivePlayer.decrementPlayTwiceCounter();
-						if (playTwiceActivePlayer.getPlayTwiceCounter() == 0) {
-							playTwiceActivePlayer.setPlayTwiceEnabledFalse();
-						}
-						
-						playTwiceActivePlayer.setSecondTimePlayed();
-//						try {
-//							Thread.sleep(5000);
-//						} catch (InterruptedException e) {
-//							e.printStackTrace();
-//						}
-						
-						new Thread(() -> {
-							handleReceivedPacket(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
-						}).start();
-						
-//						cardPlayed(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
-//						this.server.getGameController().validateTurnAndExecute(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer);
-						
-						
-//						afterCardWasPlayed(playTwiceActivePlayer.getPort(), playTwiceActivePlayer);
-						
-						
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-				}
-			
-			
-		}else{
-		if (!skipflag){
-		if (this.server.getGameController().getActivePlayer() != null && this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()){			
-				System.out.println("richtige karte gespielt");
-			this.server.getGameController().getActivePlayer().setPlayTwice();
-			this.server.getGameController().getActivePlayer().setPlayTwiceEnabledFalse();
 
+			/*
+			 * if (!playTwiceActivePlayer.isDiscardMode() &&
+			 * !playTwiceActivePlayer.isTrashMode() &&
+			 * !playTwiceActivePlayer.isReactionMode() &&
+			 * !playTwiceActivePlayer.playsReactionCard() &&
+			 * !playTwiceActivePlayer.isGainMode() &&
+			 * !playTwiceActivePlayer.isRevealMode() &&
+			 * !playTwiceActivePlayer.isThief() &&
+			 * !playTwiceActivePlayer.isWitch() &&
+			 * !playTwiceActivePlayer.isBureaucrat() &&
+			 * !playTwiceActivePlayer.isSpy() &&
+			 * !playTwiceActivePlayer.isSecondTimePlayed() &&
+			 * playTwiceActivePlayer.getPlayTwiceCard() != null) {
+			 */
+			if (this.server.getGameController().allReactionCardsPlayed() && this.server.getGameController().allPlayerDiscarded() && this.server.getGameController().allPlayerTrashed()
+					&& this.server.getGameController().allPlayerGained() && this.server.getGameController().allPlayersRevealed() && this.server.getGameController().allReveaListsEmpty()
+					&& this.server.getGameController().getSpyList().isEmpty() && this.server.getGameController().allTemporaryTrashPilesEmpty() && !playTwiceActivePlayer.isWitch()
+					&& !playTwiceActivePlayer.isBureaucrat()) {
+
+				// try {
+				System.out.println("playTwice");
+				playTwiceActivePlayer.setPlayTwiceFalse();
+				playTwiceActivePlayer.setPlayTwiceEnabled();
+				playTwiceActivePlayer.decrementPlayTwiceCounter();
+				if (playTwiceActivePlayer.getPlayTwiceCounter() == 0) {
+					playTwiceActivePlayer.setPlayTwiceEnabledFalse();
+				}
+
+				playTwiceActivePlayer.setSecondTimePlayed();
+				// try {
+				// Thread.sleep(5000);
+				// } catch (InterruptedException e) {
+				// e.printStackTrace();
+				// }
+
+				new Thread(() -> {
+					handleReceivedPacket(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
+				}).start();
+
+				// cardPlayed(playTwiceActivePlayer.getPort(), new
+				// PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(),
+				// playTwiceActivePlayer.getClientID()));
+				// this.server.getGameController().validateTurnAndExecute(playTwiceActivePlayer.getPlayTwiceCard().getId(),
+				// playTwiceActivePlayer);
+
+				// afterCardWasPlayed(playTwiceActivePlayer.getPort(),
+				// playTwiceActivePlayer);
+
+				// } catch (IOException e) {
+				// e.printStackTrace();
+				// }
 			}
-		}
+
+		} else {
+			if (!skipflag) {
+				if (this.server.getGameController().getActivePlayer() != null && this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()) {
+					System.out.println("richtige karte gespielt");
+					this.server.getGameController().getActivePlayer().setPlayTwice();
+					this.server.getGameController().getActivePlayer().setPlayTwiceEnabledFalse();
+
+				}
+			}
 		}
 
 	}
 
 	/**
 	 * executes the action when the end reaction button is pressed
+	 * 
 	 * @param port
 	 * @param packet
 	 * @throws IOException
@@ -359,21 +356,23 @@ public class ServerGamePacketHandler extends PacketHandler {
 		reactionFinishedTriggerdThroughSpy(player1);
 		reactionFinishedTriggeredThroughWitch(player1);
 		reactionFinishedTriggeredThroughBureaucrat(player1);
-		
+
 		if (player1.isReactionMode()) {
 			if (player1.getDeck().getCardHand().size() <= 3) {
 				player1.setReactionModeFalse();
-				
+
 				boolean allReactionCarsPlayedFlag = this.server.getGameController().allReactionCardsPlayed();
 
 				if (allReactionCarsPlayedFlag) {
-//					this.server.sendMessage(port,
-//							new PacketDisable(this.server.getGameController().getActivePlayerName() + "'s turn"));
+					// this.server.sendMessage(port,
+					// new
+					// PacketDisable(this.server.getGameController().getActivePlayerName()
+					// + "'s turn"));
 					this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 				} else {
 					this.server.sendMessage(port, new PacketDisable("wait on reaction"));
-				}	
-//				this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
+				}
+				// this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 			}
 		}
 		this.server.getGameController().isGameFinished();
@@ -392,19 +391,20 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void reactionFinishedTriggerdThroughSpy(Player player1) throws IOException {
 		if (this.server.getGameController().getActivePlayer().isSpy()) {
 			player1.setReactionModeFalse();
-			
+
 			boolean allReactionCarsPlayedFlag = this.server.getGameController().allReactionCardsPlayed();
-			
+
 			if (allReactionCarsPlayedFlag) {
-//				this.server.sendMessage(player1.getPort(), new PacketDisable(
-//						this.server.getGameController().getActivePlayerName() + "'s turn"));
+				// this.server.sendMessage(player1.getPort(), new PacketDisable(
+				// this.server.getGameController().getActivePlayerName() + "'s
+				// turn"));
 				this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
-			}else {
+			} else {
 				this.server.sendMessage(player1.getPort(), new PacketDisable("wait on reaction"));
 			}
 
 			this.server.getGameController().reactOnSpy(player1);
-			
+
 		}
 
 	}
@@ -470,11 +470,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 			System.out.println("discardPile size danach: " + player.getDeck().getDiscardPile().size());
 			player.resetTemporaryTrashPile();
 		}
-//		try {
-//			this.server.sendMessage(port, new PacketRemoveExtraTable());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		// try {
+		// this.server.sendMessage(port, new PacketRemoveExtraTable());
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	private void takeThiefCards(int port) {
@@ -487,11 +487,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 			System.out.println("discardPile size danach: " + this.server.getGameController().getActivePlayer().getDeck().getDiscardPile().size());
 			player.resetTemporaryTrashPile();
 		}
-//		try {
-//			this.server.sendMessage(port, new PacketRemoveExtraTable());
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		// try {
+		// this.server.sendMessage(port, new PacketRemoveExtraTable());
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 
 	}
 
@@ -510,8 +510,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 			return;
 		}
 
-		if (this.server.getGameController().isVictoryCardOnHand(cardID) && !player.isDiscardMode() && !player.isTrashMode() || player.isReactionMode()
-				&& !player.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.REACTION) || player.isRevealMode()) {
+		if (this.server.getGameController().isVictoryCardOnHand(cardID) && !player.isDiscardMode() && !player.isTrashMode()
+				|| player.isReactionMode() && !player.getDeck().getCardFromHand(cardID).getTypes().contains(CardType.REACTION) || player.isRevealMode()) {
 			System.out.println("nur returnen");
 			return;
 		}
@@ -525,7 +525,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 				CollectionsUtil.appendListToList(reactivePlayer.getRevealList(), reactivePlayer.getDeck().getDiscardPile());
 				this.server.getGameController().getThiefList().remove(reactivePlayer);
 				reactivePlayer.resetThiefMode();
-//				this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(), new PacketRemoveExtraTable());
+				// this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
+				// new PacketRemoveExtraTable());
 				if (!this.server.getGameController().getThiefList().isEmpty()) {
 					System.out.println("new Reactive player");
 					reactivePlayer = this.server.getGameController().getThiefList().get(0);
@@ -559,8 +560,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 		if (player.isGainMode()) {
 			if (this.server.getGameController().gain(cardID, player)) {
-				this.server.broadcastMessage(new PacketSendBoard(this.server.getGameController().getGameBoard().getTreasureCardIDs(), this.server.getGameController().getGameBoard()
-						.getVictoryCardIDs(), this.server.getGameController().getGameBoard().getActionCardIDs()));
+				this.server.broadcastMessage(new PacketSendBoard(this.server.getGameController().getGameBoard().getTreasureCardIDs(),
+						this.server.getGameController().getGameBoard().getVictoryCardIDs(), this.server.getGameController().getGameBoard().getActionCardIDs()));
 				this.server.getGameController().isGameFinished();
 			}
 			return;
@@ -572,8 +573,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				if (this.server.getGameController().checkBoardCardExistsAppendToDiscardPile(cardID)) {
 					GameBoard gameBoard = this.server.getGameController().getGameBoard();
 					this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
-					this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins(),
-							player.getBuys() == 0 ? false : true));
+					this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins(), player.getBuys() == 0 ? false : true));
 					if (player.getBuys() == 0) {
 						nextActivePlayer(port);
 					}
@@ -591,23 +591,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void afterCardWasPlayed(int port, Player player) throws IOException {
 		System.out.println("validate turn: " + player.getActions() + "buys: " + player.getBuys() + "coins: " + player.getCoins());
 
-		
-		
-		
 		this.server.sendMessage(port, new PacketUpdateValues(player.getActions(), player.getBuys(), player.getCoins(), true));
 		if (player.getActions() == 0 && !player.isThief()) {
 			server.sendMessage(port, new PacketEndActionPhase());
 		}
-		if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null || 
-				!this.server.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")){
-		this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
+		if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null || !this.server.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")) {
+			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
 		}
-		
-		if (this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer())){
+
+		if (this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer())) {
 			this.server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(player.getPlayedCards())));
 		}
-		
-		
+
 		this.server.getGameController().isGameFinished();
 	}
 
@@ -627,7 +622,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 		this.server.sendMessage(port, new PacketRemoveExtraTable());
 	}
-	
+
 	@SuppressWarnings("unused")
 	private void canActivePlayerContinue() throws IOException {
 		boolean activePlayerCanContinue = true;
@@ -646,7 +641,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void buyCardAndUpdateBoards(Packet packet) throws IOException {
 		try {
 			GameBoard gameBoard = this.server.getGameController().getGameBoard();
-//			this.server.getGameController().buyOneCard(((PacketBuyCard) packet).getCardId());
+			// this.server.getGameController().buyOneCard(((PacketBuyCard)
+			// packet).getCardId());
 			this.server.getGameController().buyOneCard(((PacketPlayCard) packet).getCardID());
 			this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
 		} catch (SynchronisationException e) {
@@ -660,76 +656,37 @@ public class ServerGamePacketHandler extends PacketHandler {
 		try {
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-			
 			// i think it's not used
 			// this.server.sendMessage(port, new
 			// PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(),
 			// this.server.getGameController().getActivePlayer().getBuys(),
 			// this.server.getGameController().getActivePlayer().getCoins()));
 			this.server.getGameController().endTurn();
-			
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			this.server.broadcastMessage(new PacketBroadcastLog(""));
-			/**
-			 * Lukas Fragen:
-			 * -2. wo loggen bei gain curse? gain Methode im GC? also die "gains Silver" fehlt auch noch.
-			 *     in buyOneCard oder in gain Meth?
-			 * -1. LUKAS FRAGEN Z472/473 PacketBuyCard/PacketPlayCard ist das ok so? habs ge�ndert weil deprecated
-			 * 0. organizePilesAndrefreshCardHand in GC checken ob das so richtig(/�berhaupt)
-			 *    ausgegeben wird, 
-			 * 0.1 GC 909 buyOneCard funktioniert das also wird immer dort ne karte gekauft?
-			 * 
-			 * 1. client-side loggen? wie und wann und wo gehts
-			 * 2. Zeile 744 (GAINCARDDRAWPILE) im Player ueberpruefen 
-			 * 3. man kann ColorHash map von Jojo oder Player.getLogColor benutzen
-			 * 4. GameController Z.888 evtl appendPrep?; 
-			 * 5. appendPrepText und PacketBroadcastLog �berall aufrufen(siehe screen), logPrepText() bei SetupGui()
-			 * 6. Log Z.151 Matchmaker funktioniert das so? oder join Lobby auf prepText packen?
-			 * 7. GameLog Backup Uhr 28. April 11 Uhr 04
-			 * 8. Pattern to search: "GameLog.log(" | ".broadcastMessage(new PacketBroadcastLog("
-			 * 9. "Copper" und andere Karten als konstanten machen im ganzen Game
-			 * 10. remove line 50 PacketBroadcastLogSingleColor
-			 * 11. update comments in gameLog
-			 * 12. addPlayerAndChooseRandomActivePlayer in GC Z882 mit der schlussendlichen synced. LogMethode abgleichen
-			 * 13. case DRAW_CARD in doACtion bei Player nachschauen mit DrawAndShuffle
-			 * 14. f�r die init in Deck irgendwo f�r jeden Player (- shuffles Deck - draws 5 cards) zum prepText appenden
-			 * 15. if singlecolor works, remove multicolorPacket
-			 * 16. remove cardSSSSS bei 1 card in log messages (tern�rer Ausdruck)
-			 * 17. searchFile new PacketBroadcastLog( �berpr�fen ob das alles auch so gelogt werden soll (zB GameServerNetworkListener)
-			 * 17.1 GameLogTest JUnit
-			 * 17.2 GameLog entweder queue oder count um die richtige Reihenfolge sicherzustellen
-			 * 17.3 AI hat immer den selben Namen im Log?
-			 * 
-			 * Next Steps:
-			 * - Entwickeln & Test AI ohne CheapCardCreator davor laufen zu lassen (dann geht Log (vom Stand 1.5. 13 Uhr, s. Bitbucket))
-			 * - Lukas/Steffen fragen wg Packet Reihenfolge & nummern beim Schicken übergeben
-			 * - je nachdem client oder serverseitig (17.2) einbauen
-			 * 
-			 * 18. @nishit playTreasures nicht mehr klickbar wenn spieler keine geldkarten mehr auf der hand hat
-			 * 19. @nishit tried to fix Add/Remove AI Button with horrible attempt, but didn't work
-			 */
-
+			// this.server.broadcastMessage(new PacketBroadcastLog(""));
+			
 			/** change LOG PREP TEXT */
 			// this.server.broadcastMessage(
 			// new PacketBroadcastLog("-----
-			// ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.getActivePlayerColor()));
-			this.server.broadcastMessage(
-					new PacketBroadcastLog("----- ",this.server.getGameController().getActivePlayerName(),": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----",this.server.getGameController().getActivePlayer().getLogColor()));
-			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
-					this.server.getGameController().getActivePlayerName(), true));
+			// ",this.server.getGameController().getActivePlayerName(),": turn "
+			// + this.server.getGameController().getActivePlayer().getTurnNr() +
+			// " -----",this.getActivePlayerColor()));
+			this.server.broadcastMessage(new PacketBroadcastLog("----- ", this.server.getGameController().getActivePlayerName(),
+					": turn " + this.server.getGameController().getActivePlayer().getTurnNr() + " -----", this.server.getGameController().getActivePlayer().getLogColor()));
+			this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(), this.server.getGameController().getActivePlayerName(), true));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void logPrepText() {
 		for (Integer i : GameLog.getPrepText().keySet()) {
 			Pair<String, Color> res = GameLog.getPrepText().get(i);
-			Color c = res.getValue();
+			// Color c = res.getValue();
 			String s = res.getKey();
 			try {
 				this.server.broadcastMessage(new PacketBroadcastLog(s));
@@ -768,7 +725,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().addPlayerAndChooseRandomActivePlayer(player);
 			this.server.sendMessage(port, new PacketSendClientId(clientId));
 			if (sessionID.equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-				new ArtificialIntelligence(player, /* new InetSocketAddress("127.0.0.1" , this.server.getPort()),*/sessionID, this).start();
+				new ArtificialIntelligence(player,
+						/*
+						 * new InetSocketAddress("127.0.0.1" ,
+						 * this.server.getPort()),
+						 */sessionID, this).start();
 				this.colorMap.put(username, new Color(new Random().nextInt(255), new Random().nextInt(255), new Random().nextInt(255)));
 				System.out.println("created a new artificial intelligence");
 			}
@@ -799,7 +760,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 * 
 	 * 
 	 * @author jhuhn
-	 * @param colorMap user colors
+	 * @param colorMap
+	 *            user colors
 	 */
 	public void startGame(HashMap<String, Color> colorMap) {
 		this.colorMap.putAll(colorMap);
@@ -819,8 +781,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 */
 	private void setUpGui() throws IOException {
 		GameBoard gameBoard = this.server.getGameController().getGameBoard();
-		this.server.broadcastMessage(new PacketOpenGuiAndEnableOne(this.server.getGameController().getActivePlayer().getClientID(),
-				this.server.getGameController().getActivePlayerName()));
+		this.server.broadcastMessage(new PacketOpenGuiAndEnableOne(this.server.getGameController().getActivePlayer().getClientID(), this.server.getGameController().getActivePlayerName()));
 		this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
 		LinkedList<Player> players = this.server.getGameController().getPlayers();
 		for (int i = 0; i < GameConstant.PLAYERS; i++) {

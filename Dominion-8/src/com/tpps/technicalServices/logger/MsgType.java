@@ -2,6 +2,7 @@ package com.tpps.technicalServices.logger;
 
 import java.awt.Color;
 
+import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.ColorUtil;
 
 /**
@@ -12,16 +13,16 @@ import com.tpps.technicalServices.util.ColorUtil;
  */
 public enum MsgType {
 
-	INIT("[INITIALIZED]", ColorUtil.MEDIUMGRAY, true, true),
-	INFO("[INFO]", ColorUtil.MEDIUMGRAY, true, true),
-	DEBUG("[BUG]", Color.ORANGE, true, true),
-	EXCEPTION("[EXCEPTION]", Color.RED, true, true),
-	ERROR("[ERROR]", Color.RED, true, true),
-	GAME("[GAME]", Color.GREEN, true, true),
-	NETWORK_INFO("[NETWORK-INFO]", Color.BLUE, true, true),
-	NETWORK_ERROR("[NETWORK-ERROR]", Color.MAGENTA, true, true),
-	STATISTICS("[STATS]",Color.YELLOW,true,true),
-	AI("[AI]",Color.ORANGE, true, true);
+	INIT("[INITIALIZED]", ColorUtil.MEDIUMGRAY, true, true, ANSIUtil.ANSI_GREEN),
+	INFO("[INFO]", ColorUtil.MEDIUMGRAY, true, true, ANSIUtil.ANSI_CYAN),
+	DEBUG("[BUG]", Color.ORANGE, true, true, ANSIUtil.ANSI_RED),
+	EXCEPTION("[EXCEPTION]", Color.RED, true, true, ANSIUtil.ANSI_RED),
+	ERROR("[ERROR]", Color.RED, true, true, ANSIUtil.ANSI_RED),
+	GAME("[GAME]", Color.GREEN, true, true, ANSIUtil.ANSI_GREEN),
+	AI("[AI]",Color.ORANGE, true, true, ANSIUtil.ANSI_GREEN),
+	NETWORK_INFO("[NETWORK-INFO]", Color.BLUE, true, true, ANSIUtil.ANSI_BLUE),
+	NETWORK_ERROR("[NETWORK-ERROR]", Color.MAGENTA, true, true, ANSIUtil.ANSI_MAGENTA),
+	STATISTICS("[STATS]",Color.YELLOW,true,true, ANSIUtil.ANSI_YELLOW);
 
 	/**
 	 * message is the String which shows the type of the log in GameLog (in front of every message)
@@ -40,6 +41,8 @@ public enum MsgType {
 	 */
 	private boolean timestamp;
 
+	private String ansiColor;
+	
 	/**
 	 * 
 	 * @param message
@@ -47,11 +50,12 @@ public enum MsgType {
 	 * @param display
 	 * @param timestamp
 	 */
-	private MsgType(String message, Color awtColor, boolean display, boolean timestamp) {
+	private MsgType(String message, Color awtColor, boolean display, boolean timestamp, String ansiColor) {
 		this.message = message;
 		this.color = awtColor;
 		this.display = display;
 		this.timestamp = timestamp;
+		this.ansiColor = ansiColor;
 	}
 
 	/**
@@ -123,18 +127,30 @@ public enum MsgType {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return the timestamp
 	 */
-	public boolean getTimeStamp(){
-		return this.timestamp;
+	public boolean isTimestamp() {
+		return timestamp;
 	}
 
 	/**
-	 * 
-	 * @param timestamp
+	 * @param timestamp the timestamp to set
 	 */
-	public void setTimeStamp(boolean timestamp) {
+	public void setTimestamp(boolean timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	/**
+	 * @return the ansiColor
+	 */
+	public String getAnsiColor() {
+		return ansiColor;
+	}
+
+	/**
+	 * @param ansiColor the ansiColor to set
+	 */
+	public void setAnsiColor(String ansiColor) {
+		this.ansiColor = ansiColor;
 	}
 }

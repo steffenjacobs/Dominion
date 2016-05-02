@@ -7,11 +7,11 @@ import java.util.Calendar;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javafx.util.Pair;
-
 import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.ColorUtil;
+
+import javafx.util.Pair;
 
 /**
  * 
@@ -25,8 +25,9 @@ public class GameLog {
 	private static GameLogTextPane textPane;
 	private static Map<Integer, Pair<String, Color>> prepText;
 
-	private static Color backgroundColor = Color.WHITE;
-	private static Color timestampColor = ColorUtil.EPICBLUE;
+	private static Color backgroundColor = Color.BLACK;
+	private static Color timestampPanelColor = ColorUtil.EPICBLUE;
+	private static String timestampConsoleColor = ANSIUtil.ANSI_WHITE;
 	private static Color msgColor = Color.WHITE;
 
 	// private static int alreadyLogged;
@@ -185,14 +186,6 @@ public class GameLog {
 	}
 
 	/**
-	 * @param timestampColor
-	 *            the timestampColor to set
-	 */
-	public static void setTimestampColor(Color timestampColor) {
-		GameLog.timestampColor = timestampColor;
-	}
-
-	/**
 	 * @return the msgColor
 	 */
 	public static Color getMsgColor() {
@@ -220,15 +213,51 @@ public class GameLog {
 	public static Map<Integer, Pair<String, Color>> getPrepText() {
 		return prepText;
 	}
+	
+	/**
+	 * @return the timestampPanelColor
+	 */
+	public static Color getTimestampPanelColor() {
+		return timestampPanelColor;
+	}
 
 	/**
-	 * @return the timestampColor
+	 * @param timestampPanelColor the timestampPanelColor to set
 	 */
-	public static Color getTimestampColor() {
-		return timestampColor;
+	public static void setTimestampPanelColor(Color timestampPanelColor) {
+		GameLog.timestampPanelColor = timestampPanelColor;
+	}
+
+	/**
+	 * @return the timestampConsoleColor
+	 */
+	public static String getTimestampConsoleColor() {
+		return timestampConsoleColor;
+	}
+
+	/**
+	 * @param timestampConsoleColor the timestampConsoleColor to set
+	 */
+	public static void setTimestampConsoleColor(String timestampConsoleColor) {
+		GameLog.timestampConsoleColor = timestampConsoleColor;
+	}
+
+	/**
+	 * @return the msgTypeColor
+	 */
+	public static Color getMsgTypeColor() {
+		return msgTypeColor;
+	}
+
+	/**
+	 * @param msgTypeColor the msgTypeColor to set
+	 */
+	public static void setMsgTypeColor(Color msgTypeColor) {
+		GameLog.msgTypeColor = msgTypeColor;
 	}
 
 	/* ---------- !new Logic ---------- */
+	
 	/**
 	 * initialization method which is called in the beginning writes the team
 	 * name first: GameLogger4Team++;
@@ -263,10 +292,9 @@ public class GameLog {
 		StringBuffer line = new StringBuffer();
 		String timestamp = "[" + new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()) + "]";
 		String msg = type.getMessage();
-		if (ansiFlag)
-			line.append(ANSIUtil.getCyanText(timestamp) + " " + ANSIUtil.getRedText(msg) + " > ");
-		else
-			line.append(timestamp + " " + msg + " > ");
+		line.append((ansiFlag ? ANSIUtil.getAnsiColoredText(timestamp, GameLog.timestampConsoleColor) 
+				+ " " + ANSIUtil.getAnsiColoredText(msg, type.getAnsiColor()) 
+				: timestamp + " " + msg) + " > ");
 		return line.toString();
 	}
 

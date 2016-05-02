@@ -142,7 +142,7 @@ public class GameLogTextPane extends JPanel {
 	 */
 	public void updateLogger(final String line, Color textColor, boolean timestamp, boolean newLine) {
 		if (timestamp) {
-			this.updateTextArea(line.split("]")[0] + "]", GameLog.getTimestampColor());
+			this.updateTextArea(line.split("]")[0] + "]", GameLog.getTimestampPanelColor());
 			this.updateTextArea(line.split("]")[1] + "]", textColor);
 			this.updateTextArea(line.split("]")[2], GameLog.getMsgColor());
 		} else {

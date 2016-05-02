@@ -8,6 +8,10 @@ import java.util.List;
  * class converts JAVAFX colors to JAVA AWT colors, but does not work correctly so far and I'm not sure if
  * it is supposed to work anyways because we shouldn't use fxColors in Swing. 
  * The use of the methods is discouraged. 
+ * 
+ * The colors are in use though.
+ * 
+ * @author nwipfler - Nicolas Wipfler
  */
 public class ColorUtil {
 

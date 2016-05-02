@@ -42,7 +42,7 @@ public class Move {
 		return this.buySequence;
 	}
 	
-	public boolean getReady() {
+	public boolean isReady() {
 		return this.ready;
 	}
 

@@ -54,9 +54,7 @@ public class Player {
 	private final int client_ID;
 
 	private int port, actions, buys, coins, gainValue, drawUntil, turnNr, playTwiceCounter;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand, secondTimePlayed,
-	playTwiceEnabled;;
-	
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand, secondTimePlayed, playTwiceEnabled;;
 
 	/**
 	 * creates the player sets all the initial values
@@ -119,9 +117,9 @@ public class Player {
 		this.playTwice = false;
 		this.playTwiceCard = null;
 		this.playTwiceEnabled = false;
-		this.secondTimePlayed = false;		
+		this.secondTimePlayed = false;
 		this.playTwiceCounter = 0;
-		
+
 	}
 
 	/**
@@ -156,12 +154,13 @@ public class Player {
 	}
 
 	/**
-	 * @param turnNr the turnNr to set
+	 * @param turnNr
+	 *            the turnNr to set
 	 */
 	public void setTurnNr(int turnNr) {
 		this.turnNr = turnNr;
 	}
-	
+
 	public void incTurnNr() {
 		this.turnNr++;
 	}
@@ -177,7 +176,7 @@ public class Player {
 	public void updateSessionID(UUID sessionID) {
 		this.session_ID = sessionID;
 	}
-	
+
 	/**
 	 * 
 	 * @return if the card is played for the second time
@@ -185,11 +184,11 @@ public class Player {
 	public boolean isSecondTimePlayed() {
 		return this.secondTimePlayed;
 	}
-	
+
 	public void setSecondTimePlayed() {
 		this.secondTimePlayed = true;
 	}
-	
+
 	/**
 	 * 
 	 * @return if the card should be played twice
@@ -197,34 +196,34 @@ public class Player {
 	public boolean isPlayTwice() {
 		return this.playTwice;
 	}
-	
+
 	public void setPlayTwice() {
 		this.playTwice = true;
 	}
-	
+
 	public void setPlayTwiceFalse() {
 		this.playTwice = false;
 	}
-	
+
 	public void setPlayTwiceEnabledFalse() {
 		this.playTwiceEnabled = false;
 	}
-	
+
 	public boolean isPlayTwiceEnabled() {
 		return this.playTwiceEnabled;
 	}
-	
+
 	public void decrementPlayTwiceCounter() {
 		if (this.playTwiceCounter > 0) {
 			this.playTwiceCounter--;
 		}
-		
+
 	}
-	
+
 	public int getPlayTwiceCounter() {
 		return this.playTwiceCounter;
 	}
-	
+
 	/**
 	 * 
 	 * @return the card which should be played twice
@@ -653,6 +652,7 @@ public class Player {
 	 * called whenever a card is played calls the doAction method appends the
 	 * played card to the played card list sets the play twice flag if a card
 	 * should be played twice
+	 * 
 	 * @param cardID
 	 * @throws IOException
 	 */
@@ -720,25 +720,28 @@ public class Player {
 	 * 
 	 * @author Lukas Adler, Nicolas Wipfler
 	 * @throws IOException
-	 * @throws SynchronisationException 
+	 * @throws SynchronisationException
 	 */
 	public Card doAction(String cardID) throws IOException {
 		boolean dontRemoveFlag = false, trashFlag = false;
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 
-//		this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getPlayerName()," - plays " + serverCard.getName(), ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
-		this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getPlayerName()," - plays " + serverCard.getName(), this.getLogColor()));
-		System.out.println("The Playername is: " + this.getPlayerName());
+		// this.gameServer.broadcastMessage(new
+		// PacketBroadcastLog("",this.getPlayerName()," - plays " +
+		// serverCard.getName(),
+		// ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
+		this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
+		GameLog.log(MsgType.INFO, "The Playername is: " + this.getPlayerName());
 
 		if (this.playTwice) {
-			if (!this.secondTimePlayed){
-			System.out.println("playTwice: " + this.playTwice);
-			this.actions++;
-			this.playTwiceCard = serverCard;
+			if (!this.secondTimePlayed) {
+				GameLog.log(MsgType.INFO, "playTwice: " + this.playTwice);
+				this.actions++;
+				this.playTwiceCard = serverCard;
 				dontRemoveFlag = true;
 			}
 		}
-		
+
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
 			return serverCard;
@@ -753,7 +756,7 @@ public class Player {
 		if (!this.reactionMode && serverCard.getTypes().contains(CardType.ACTION)) {
 			this.actions--;
 		}
-		System.out.println("DoAction");
+		GameLog.log(MsgType.INFO, "DoAction");
 		while (cardIterator.hasNext()) {
 			CardAction act = cardIterator.next();
 			String value = serverCard.getActions().get(act);
@@ -771,10 +774,16 @@ public class Player {
 				DrawAndShuffle das = this.getDeck().draw(Integer.parseInt(value));
 				if (das.wasShuffled()) {
 					this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - shuffles deck", this.getLogColor()));
-//					this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - shuffles deck", ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
+					// this.gameServer.broadcastMessage(new
+					// PacketBroadcastLog("", this.getPlayerName(), " - shuffles
+					// deck",
+					// ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 				}
 				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - draws " + das.getDrawAmount() + " cards", this.getLogColor()));
-//				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - draws " + das.getDrawAmount() + " cards", ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
+				// this.gameServer.broadcastMessage(new PacketBroadcastLog("",
+				// this.getPlayerName(), " - draws " + das.getDrawAmount() + "
+				// cards",
+				// ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 				break;
 			case DRAW_CARD_UNTIL:
 				String[] values = value.split("_");
@@ -862,10 +871,10 @@ public class Player {
 				break;
 			case TRASH_AND_ADD_TEMPORARY_MONEY:
 				if (value.split("_")[0].toLowerCase().equals("copper")) {
-					
+
 					Card card = getDeck().getCardByNameFromHand("Copper");
 					if (card != null) {
-						
+
 						getDeck().getCardHand().remove(card);
 						getDeck().trash(card, this.gameServer.getGameController().getGameBoard().getTrashPile());
 						this.coins += Integer.parseInt(value.split("_")[1]);
@@ -902,7 +911,7 @@ public class Player {
 				break;
 			case CHOOSE_CARD_PLAY_TWICE:
 				this.actions++;
-				if (playTwiceCounter < getDeck().amountHandActionCard() - 1){
+				if (playTwiceCounter < getDeck().amountHandActionCard() - 1) {
 					this.playTwiceEnabled = true;
 					this.playTwiceCounter++;
 				}
@@ -919,19 +928,19 @@ public class Player {
 				break;
 			}
 		}
-		
+
 		if (this.reactionMode) {
 			dontRemoveFlag = true;
 			serverCard = null;
 			finishReactionModeForThisPlayer();
 		}
-		
+
 		if (!dontRemoveFlag) {
 			this.getDeck().getCardHand().remove(serverCard);
-		}else {
+		} else {
 			dontRemoveFlag = false;
 		}
-		
+
 		if (trashFlag) {
 			trashFlag = false;
 			this.gameServer.getGameController().getGameBoard().getTrashPile().add(serverCard);
@@ -941,28 +950,27 @@ public class Player {
 	}
 
 	private void finishReactionModeForThisPlayer() throws IOException {
-		
+
 		setModesFalse();
 		this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.playedCards)));
-		
+
 		boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
 
 		if (allReactionCarsPlayedFlag) {
-			if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null || 
-					!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
-//			this.gameServer.sendMessage(port,
-//					new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
+			if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
+					|| !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
+				// this.gameServer.sendMessage(port,
+				// new
+				// PacketDisable(this.gameServer.getGameController().getActivePlayerName()
+				// + "'s turn"));
 				this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 			}
 		} else {
 			this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
-		}			
-		
-		
+		}
+
 		this.gameServer.sendMessage(port, new PacketDontShowEndReactions());
-		
-		
-		
+
 	}
 
 	/**
@@ -987,9 +995,9 @@ public class Player {
 				}
 			}
 		} catch (NoSuchElementException e) {
-			System.out.println("not enough treasures are in the deck");
+			GameLog.log(MsgType.EXCEPTION, "not enough treasures are in the deck");
 		}
-		System.out.println("hinzufuegen");
+		GameLog.log(MsgType.INFO, "hinzufuegen");
 		CollectionsUtil.appendListToList(treasureList, this.getDeck().getCardHand());
 		CollectionsUtil.appendListToList(this.revealList, this.getDeck().getDiscardPile());
 		this.revealList = new LinkedList<Card>();
@@ -1006,7 +1014,7 @@ public class Player {
 	public void drawUntil() {
 		try {
 			while (this.getDeck().getCardHand().size() < this.drawUntil) {
-				System.out.println("cardHandSize: " + this.getDeck().getCardHand().size());
+				GameLog.log(MsgType.INFO, "cardHandSize: " + this.getDeck().getCardHand().size());
 				Card card = this.getDeck().removeSaveFromDrawPile();
 				this.drewCard = card;
 				this.getDeck().getCardHand().add(card);
@@ -1088,25 +1096,25 @@ public class Player {
 				this.discardOrTrashAction.decrementSecondEntry();
 				this.getDeck().getCardHand().remove(card);
 			}
-			
 			if (this.discardOrTrashAction.getSecondEntry() == 0) {
 				this.discardMode = false;
 				if (this.reactionMode) {
 					setModesFalse();
-					
-					boolean allReactionCarsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
 
-					if (allReactionCarsPlayedFlag) {
-						if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard()== null || !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
-//						this.gameServer.sendMessage(port,
-//								new PacketDisable(this.gameServer.getGameController().getActivePlayerName() + "'s turn"));
-						this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
+					boolean allReactionCardsPlayedFlag = this.gameServer.getGameController().allReactionCardsPlayed();
+
+					if (allReactionCardsPlayedFlag) {
+						if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
+								|| !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
+							// this.gameServer.sendMessage(port,
+							// new
+							// PacketDisable(this.gameServer.getGameController().getActivePlayerName()
+							// + "'s turn"));
+							this.gameServer.getGameController().checkReactionModeFinishedAndEnableGuis();
 						}
 					} else {
 						this.gameServer.sendMessage(port, new PacketDisable("wait on reaction"));
-					}					
-					
-					
+					}
 				}
 			}
 			break;
@@ -1173,12 +1181,12 @@ public class Player {
 		this.secondTimePlayed = false;
 		this.playTwiceCard = null;
 		this.playTwiceCounter = 0;
-		
+
 	}
 
 	public void setPlayTwiceEnabled() {
 		this.playTwiceEnabled = true;
-		
+
 	}
 
 }

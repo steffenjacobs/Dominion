@@ -5,8 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
-import com.google.common.collect.LinkedListMultimap;
-import com.google.common.collect.ListMultimap;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
@@ -39,10 +37,9 @@ public class ArtificialIntelligence {
 
 	private Player player;
 	private Move move;
-	
+
 	private List<String> blacklist;
-//	private boolean computing;
-	
+
 	/**
 	 * constructor of the Artificial Intelligence
 	 * 
@@ -55,15 +52,13 @@ public class ArtificialIntelligence {
 		this.packetHandler = packetHandler;
 		this.player = player;
 		this.move = new Move();
-		this.blacklist = CollectionsUtil.linkedList(new String[] {"Copper","Estate","Curse"});
-//		this.computing = false;
+		this.blacklist = CollectionsUtil.linkedList(new String[] { "Copper", "Estate", "Curse" });
 	}
 
-	/*
-	 * keine Probleme mehr, es muss nur genau wie bei myTurn die ReactionPhase
-	 * gehandlet werden
-	 */
+	/* ---------- game executing ---------- */
 
+	// keine Probleme mehr, es muss nur genau wie bei myTurn die ReactionPhase
+	// gehandlet werden
 	private void sendPacket(Packet packet) {
 		new Thread(() -> {
 			packetHandler.handleReceivedPacket(this.player.getPort(), packet);
@@ -74,20 +69,39 @@ public class ArtificialIntelligence {
 		if (card != null) {
 			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
 		} else {
-			GameLog.log(MsgType.AI," played 'null' card");
+			GameLog.log(MsgType.AI, " played 'null' card");
 		}
 	}
-	
+
 	private void playTreasures() {
 		sendPacket(new PacketPlayTreasures());
 	}
 
-	private void playTreasures(int amountNeeded) {}
-	
+	private void playTreasures(int amountNeeded) {
+		int amountAvailable = this.getTreasureCardsValue();
+		if (amountAvailable <= amountNeeded) {
+			playTreasures();
+		} else {
+			LinkedList<Card> allActionCards = this.getAllCardsFromType(CardType.TREASURE);
+			for (Card card : allActionCards) {
+				
+			}
+//			LinkedList<Card> coppers = ;
+//			LinkedList<Card> silvers = ;
+//			LinkedList<Card> golds = ;	
+		}		
+	}
+
+	private void playAllActionCards() {
+		LinkedList<Card> allActionCards = this.getAllCardsFromType(CardType.ACTION);
+		// handle mit unterschiedlichen +Karten typen usw
+		
+	}
+
 	private void setBuyPhase() {
 		sendPacket(new PacketEndActionPhase());
 	}
-	
+
 	private Card getCardFromBoard(String cardname) {
 		return this.player.getGameServer().getGameController().getGameBoard().getCardToBuyFromBoardWithName(cardname);
 	}
@@ -96,13 +110,15 @@ public class ArtificialIntelligence {
 		if (card != null) {
 			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
 		} else {
-			GameLog.log(MsgType.AI," bought 'null' card");
+			GameLog.log(MsgType.AI, " bought 'null' card");
 		}
-	}	
+	}
 
 	private void endTurn() {
 		sendPacket(new PacketEndTurn());
 	}
+
+	/* ---------- turn handling ---------- */
 
 	/**
 	 * start the AI, method is only called once when the game is initialized it
@@ -119,7 +135,7 @@ public class ArtificialIntelligence {
 			public void run() {
 				while (notFinished()) {
 					try {
-						Thread.sleep(2000);
+						Thread.sleep(1000);
 						handleTurn();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -132,42 +148,49 @@ public class ArtificialIntelligence {
 
 	private void handleTurn() {
 		if (myTurn()) {
-			determineMove();
 			GameLog.log(MsgType.AI, this + " is handling a turn");
-			executeMove();
-			if move ready execute, sonst defaultmove
-//		}
+
+			determineMove();
+			if (this.move.isReady()) {
+				executeMove(this.move);
+			} else {
+				/**
+				 * method assigns a default turn as the next turn, if the
+				 * determineMove() method gets interrupted before something
+				 * useful is computed
+				 */
+				executeMove(getDefaultMove());
+			}
+		} else if (this.player.isReactionMode()) {
+			if (this.player.playsReactionCard()) {
+				// handle den und auch alle anderen Modes
+				
+			}
+		}
 	}
 
 	/**
 	 * execute the next turn of AI, which is determined by LinkedListMultimap
 	 * nextTurn
 	 */
-	private void executeMove() {
+	private void executeMove(Move move) {
 		GameLog.log(MsgType.AI, this + " is executing a turn");
-		// LinkedList<Card> cardHand = this.getCardHand();
 		try {
-			Thread.sleep(500);
-			this.playTreasures();
-			Thread.sleep(500);
-			for (Card action : defaultMove.getPlaySequence().get(Execute.PLAY)) {
+			Thread.sleep(200);
+			this.playTreasures(); // evtl playTreasures(amountNeeded)
+			Thread.sleep(200);
+			for (Card action : move.getPlaySequence().get(Execute.PLAY)) {
 				this.playCard(action);
 			}
-			Thread.sleep(250);
+			Thread.sleep(200);
 			this.setBuyPhase();
-			Thread.sleep(250);
-			for (String buy : defaultMove.getBuySequence().get(Execute.BUY)) {
+			Thread.sleep(200);
+			for (String buy : move.getBuySequence().get(Execute.BUY)) {
 				if (!getBlacklist().contains(buy)) {
 					this.buyCard(this.getCardFromBoard(buy));
 				}
 			}
-			Thread.sleep(500);
-			/**
-			 * set computing flag false here, because otherwise the AI would
-			 * compute a new turn before it has even executed the old
-			 */
-//			this.computing = false;
-			Thread.sleep(500);
+			Thread.sleep(200);
 			if (myTurn()) {
 				this.player.getGameServer().broadcastMessage(new PacketBroadcastLog("AI end[ed]Turn() by itself"));
 				this.endTurn();
@@ -185,27 +208,27 @@ public class ArtificialIntelligence {
 	 * compution of the next turn of the AI is interrupted
 	 */
 	private void determineMove() {
-//		this.computing = true;
-		/**
-		 * method assigns a default turn as the next turn, if the
-		 * determineMove() method gets interrupted before something useful is
-		 * computed
-		 */
+		// this.computing = true;
 		// https://dominionstrategy.com/big-money/
-		getDefaultMove();
+
+		// LinkedList<Card> cardHand = this.getCardHand();
+
+		
 	}
 
 	/**
 	 * assign a default turn to nextTurn
+	 * 
+	 * coins has to be checked several times (for example after a 'draw
+	 * card' action is performed and if there are enough coins to the
+	 * desired action (/buy the desired card), don't draw any more cards
+	 * e.g.
 	 */
 	private Move getDefaultMove() {
-		/**
-		 * availableCoinsAtStartOfTurn has to be checked several times (for
-		 * example after a 'draw card' action is performed and if there are
-		 * enough coins to the desired action (/buy the desired card), don't
-		 * draw any more cards e.g.
-		 */
 		Move result = new Move();
+		// LinkedList<Card> cardHand = this.getCardHand();
+
+		
 		int coins = getTreasureCardsValue();
 		if (coins >= 8) {
 			result.putBuy("Province");
@@ -216,9 +239,9 @@ public class ArtificialIntelligence {
 		}
 		return result;
 	}
-	
+
 	/* ---------- game information ---------- */
-	
+
 	/**
 	 * 
 	 * @return
@@ -236,7 +259,7 @@ public class ArtificialIntelligence {
 	private boolean notFinished() {
 		return this.player.getGameServer().getGameController().isGameNotFinished();
 	}
-	
+
 	/**
 	 * 
 	 * @param player
@@ -247,10 +270,10 @@ public class ArtificialIntelligence {
 		return this.player.getDeck().getTreasureValueOfList(this.getCardHand());
 	}
 	
-	private LinkedList<Card> getAllActionCards() {
-		return this.player.getDeck().getCardsByTypeFromHand(CardType.ACTION);
+	private LinkedList<Card> getAllCardsFromType(CardType cardType) {
+		return this.player.getDeck().getCardsByTypeFromHand(cardType);
 	}
-	
+
 	/**
 	 * 
 	 * @return the cardHand of the player
@@ -258,46 +281,20 @@ public class ArtificialIntelligence {
 	private LinkedList<Card> getCardHand() {
 		return this.player.getDeck().getCardHand();
 	}
-	
-	// private int getPlayerActions() {
-	// return this.player.getActions();
-	// }
-	//
-	// private int getPlayerBuys() {
-	// return this.player.getBuys();
-	// }
-	//
-	// private int getPlayerCoins() {
-	// return this.player.getCoins();
-	// }
-	
-	/* ----------      main       ---------- */
-	
-	/**
-	 * main for testing purposes of LinkedListMultimap
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		ListMultimap<String, Integer> map = LinkedListMultimap.create();
-		map.put("a", 2);
-		map.put("b", 3);
-		map.put("a", 3);
-		map.put("c", 2);
 
-		System.out.println("Keys:");
-		for (String b : map.keys()) {
-			System.out.println(b);
-		}
-		System.out.println("\nKeySet:");
-		for (String b : map.keySet()) {
-			System.out.println(b);
-		}
-		System.out.println("\nValues:");
-		for (Integer i : map.values()) {
-			System.out.println(i);
-		}
-		System.out.println(map.get("a"));
+	@SuppressWarnings("unused")
+	private int getPlayerActions() {
+		return this.player.getActions();
+	}
+
+	@SuppressWarnings("unused")
+	private int getPlayerBuys() {
+		return this.player.getBuys();
+	}
+
+	@SuppressWarnings("unused")
+	private int getPlayerCoins() {
+		return this.player.getCoins();
 	}
 
 	/* ---------- getter & setter ---------- */
@@ -310,7 +307,8 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param packetHandler the packetHandler to set
+	 * @param packetHandler
+	 *            the packetHandler to set
 	 */
 	public void setPacketHandler(ServerGamePacketHandler packetHandler) {
 		this.packetHandler = packetHandler;
@@ -324,7 +322,8 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param player the player to set
+	 * @param player
+	 *            the player to set
 	 */
 	public void setPlayer(Player player) {
 		this.player = player;
@@ -338,23 +337,10 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param blacklist the blacklist to set
+	 * @param blacklist
+	 *            the blacklist to set
 	 */
 	public void setBlacklist(List<String> blacklist) {
 		this.blacklist = blacklist;
 	}
-
-	/**
-//	 * @return the computing
-//	 */
-//	public boolean isComputing() {
-//		return computing;
-//	}
-//
-//	/**
-//	 * @param computing the computing to set
-//	 */
-//	public void setComputing(boolean computing) {
-	// this.computing = computing;
-	// }
 }
