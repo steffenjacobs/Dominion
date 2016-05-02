@@ -1,6 +1,7 @@
 package com.tpps.ui.endscreen;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -35,6 +36,11 @@ import com.tpps.ui.GraphicFramework;
 import javafx.scene.layout.Border;
 import sun.font.CreatedFontTracker;
 
+/**
+ * 
+ * @author Nishit Agrawal - nagrawal
+ *
+ */
 public class EndPanel extends JPanel{
 
 	private static final long serialVersionUID = 1L;
@@ -43,10 +49,6 @@ public class EndPanel extends JPanel{
 	private JLabel header;
 	private JPanel center;
 	private JButton returnButton;
-	// ++++++++++++++++
-	// TODO: bei ok button: um zurück zum main menu zu kommen:
-	// Dominioncontroller.getInstance().joinMainMenu();
-	// ++++++++++++++++
 	private Font customFont;
 	
 	public EndPanel() {
@@ -114,6 +116,21 @@ public class EndPanel extends JPanel{
 		});
 		
 	}
+	
+	public void playerOne(String playerOne){
+		
+	}
+	
+	public void playerTwo(String playerTwo){
+		
+	}
+	public void playerThree(String playerThree){
+		
+	}
+	public void playerFour(String playerFour){
+		
+	}
+	
 	
 	public void fontLoading(){
 		try {
