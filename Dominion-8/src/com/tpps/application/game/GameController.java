@@ -1204,10 +1204,8 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			if (player.isDiscardMode()){
 				return false;
-			}
-			return true;
-			
+			}		
 		}
-		return false;
+		return true;
 	}
 }
