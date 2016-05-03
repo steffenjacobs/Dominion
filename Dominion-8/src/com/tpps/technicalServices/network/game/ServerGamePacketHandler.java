@@ -240,61 +240,39 @@ public class ServerGamePacketHandler extends PacketHandler {
 			ie.printStackTrace();
 		}
 		
-		if (refActivePlayer != null && 
-				this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer()) &&
-				refActivePlayer.equals(this.server.getGameController().getActivePlayer())) {
-			try {
-				if (this.server.getGameController().allReactionCardsPlayed()) {
-					System.out.println("enable the aktive player again");
-					if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null ||
-							!this.server.getGameController().getActivePlayer().getPlayTwiceCard().equals("Militia"))
-					this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
-						new PacketEnable("my turn"));
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}else if (this.server.getGameController().getPlayerByPort(port).isReactionMode()
-				&& this.server.getGameController().getPlayerByPort(port).isDiscardMode()) {
-				try {
-					this.server.sendMessage(port, new PacketEnable("react"));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-		}
+	
 		
 		
 		System.out.println("is play twice " + this.server.getGameController().getActivePlayer().isPlayTwice() + 
 				" play twice enabled: " + this.server.getGameController().getActivePlayer().isPlayTwiceEnabled() + 
 				" secondTimePlayed " + this.server.getGameController().getActivePlayer().isSecondTimePlayed() +
 				" counter " + this.server.getGameController().getActivePlayer().getPlayTwiceCounter());
+		
+		
+		Player playTwiceActivePlayer = this.server.getGameController().getActivePlayer();
+		System.out.println("all player discarded" + this.server.getGameController().allPlayerDiscarded());
+		System.out.println("all players trashed: " + this.server.getGameController().allPlayerTrashed());
+		System.out.println("all players gained: " + this.server.getGameController().allPlayerGained());
+		System.out.println("all players revealed: " + this.server.getGameController().allPlayersRevealed());
+		System.out.println("spylist empty: " + this.server.getGameController().getSpyList().isEmpty());
+		System.out.println("all temporary trashpiles empty: " + this.server.getGameController().allTemporaryTrashPilesEmpty());
+		System.out.println("isWitch: " + !playTwiceActivePlayer.isWitch());
+		System.out.println("isBureaucrat: " + !playTwiceActivePlayer.isBureaucrat());
+		System.out.println("revealListEmpty: " + this.server.getGameController().getSpyList().isEmpty());
+		
 		if (this.server.getGameController().getActivePlayer()!= null && this.server.getGameController().getActivePlayer().getPlayTwiceCard() != null
-				&&this.server.getGameController().getActivePlayer().isPlayTwice()) {
+				&&this.server.getGameController().getActivePlayer().isPlayTwice()
 			
 			
-			Player playTwiceActivePlayer = this.server.getGameController().getActivePlayer();
-			System.out.println("all player discarded" + this.server.getGameController().allPlayerDiscarded());
-			System.out.println("all players trashed: " + this.server.getGameController().allPlayerTrashed());
-			System.out.println("all players gained: " + this.server.getGameController().allPlayerGained());
-			System.out.println("all players revealed: " + this.server.getGameController().allPlayersRevealed());
-			System.out.println("spylist empty: " + this.server.getGameController().getSpyList().isEmpty());
-			System.out.println("all temporary trashpiles empty: " + this.server.getGameController().allTemporaryTrashPilesEmpty());
-			System.out.println("isWitch: " + !playTwiceActivePlayer.isWitch());
-			System.out.println("isBureaucrat: " + !playTwiceActivePlayer.isBureaucrat());
-			System.out.println("revealListEmpty: " + this.server.getGameController().getSpyList().isEmpty());
+			
+
 			
 			
 			
 			
 			
-			/*if (!playTwiceActivePlayer.isDiscardMode() && !playTwiceActivePlayer.isTrashMode()
-					&& !playTwiceActivePlayer.isReactionMode() && !playTwiceActivePlayer.playsReactionCard()
-					&& !playTwiceActivePlayer.isGainMode() && !playTwiceActivePlayer.isRevealMode()
-					&& !playTwiceActivePlayer.isThief() && !playTwiceActivePlayer.isWitch()
-					&& !playTwiceActivePlayer.isBureaucrat() && !playTwiceActivePlayer.isSpy()
-					&& !playTwiceActivePlayer.isSecondTimePlayed()
-					&& playTwiceActivePlayer.getPlayTwiceCard() != null) {*/
-			if (this.server.getGameController().allReactionCardsPlayed() && this.server.getGameController().allPlayerDiscarded()
+
+			&& this.server.getGameController().allReactionCardsPlayed() && this.server.getGameController().allPlayerDiscarded()
 					&& this.server.getGameController().allPlayerTrashed() && this.server.getGameController().allPlayerGained()
 					&& this.server.getGameController().allPlayersRevealed() && this.server.getGameController().allReveaListsEmpty()
 					&& this.server.getGameController().getSpyList().isEmpty()	&& this.server.getGameController().allTemporaryTrashPilesEmpty() && 
@@ -302,6 +280,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 				
 //					try {
 						System.out.println("playTwice");
+						
+						
 						playTwiceActivePlayer.setPlayTwiceFalse();
 						playTwiceActivePlayer.setPlayTwiceEnabled();
 						playTwiceActivePlayer.decrementPlayTwiceCounter();
@@ -310,11 +290,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 						}
 						
 						playTwiceActivePlayer.setSecondTimePlayed();
-//						try {
-//							Thread.sleep(5000);
-//						} catch (InterruptedException e) {
-//							e.printStackTrace();
-//						}
+//						
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 						
 						new Thread(() -> {
 							handleReceivedPacket(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
@@ -330,10 +311,35 @@ public class ServerGamePacketHandler extends PacketHandler {
 //					} catch (IOException e) {
 //						e.printStackTrace();
 //					}
-				}
+				
 			
 			
 		}else{
+			
+			if (refActivePlayer != null && 
+					this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer()) &&
+					refActivePlayer.equals(this.server.getGameController().getActivePlayer())) {
+				try {
+					if (this.server.getGameController().allReactionCardsPlayed()) {
+						System.out.println("enable the aktive player again");
+						if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null ||
+								!this.server.getGameController().getActivePlayer().getPlayTwiceCard().equals("Militia"))
+						this.server.sendMessage(this.server.getGameController().getActivePlayer().getPort(),
+							new PacketEnable("my turn"));
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}else if (this.server.getGameController().getPlayerByPort(port).isReactionMode()
+					&& this.server.getGameController().getPlayerByPort(port).isDiscardMode()) {
+					try {
+						this.server.sendMessage(port, new PacketEnable("react"));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+			}
+			
+			
 		if (!skipflag){
 		if (this.server.getGameController().getActivePlayer() != null && this.server.getGameController().getActivePlayer().isPlayTwiceEnabled()){			
 				System.out.println("richtige karte gespielt");
