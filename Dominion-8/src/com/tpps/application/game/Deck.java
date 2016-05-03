@@ -406,7 +406,26 @@ public class Deck {
 		return false;		
 	}
 	
-	public int amountHandActionCard() {
+	/**
+	 * 
+	 * @param type
+	 * @return true if the cardHand contains a card of the CardType type. false otherwise.
+	 */
+	public boolean cardHandContains(CardType type) {
+		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getTypes().contains(type)){
+				return true;
+			}			
+		}
+		return false;		
+	}
+	
+	/**
+	 * 
+	 * @return the amount of action cards in cardHand
+	 */
+	public int cardHandActionCardAmount() {
 		int counter = 0; 
 		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
@@ -416,7 +435,49 @@ public class Deck {
 		}
 		return counter;	
 	}
+	
+	/**
+	 * 
+	 * example: cardHandsWith(1, CardAction.ADD_ACTION_TO_PLAYER) returns a list of all cards
+	 * which give at least +1 action when played.
+	 *
+	 * @param action the CardAction to consider
+	 * @param cards the cardList to check
+	 * @return a list of cards with actions of type *action*
+	 */
+	public LinkedList<Card> cardHandsWith( CardAction action, LinkedList<Card> cards) {
+		LinkedList<Card> cardList = new LinkedList<Card>();
+		for (Card card : cards) {
+			if (card.getActions().containsKey(action)) {
+				cardList.addLast(card);
+			}
+		}
+		return cardList;
+	}
 
+	/**
+	 * 
+	 * @param cards the list of cards to check
+	 * @return the card of the list with the highest cost
+	 */
+	public Card cardWithHighestCost(LinkedList<Card> cards) {
+		Card maxCostCard = null;
+		if (cards != null && cards.size() > 0) {
+			if (cards.size() == 1) {
+				return cards.get(0);
+			} else {
+				for (Card card : cards) {
+					if (maxCostCard == null) {
+						maxCostCard = card;
+					} else if (card.getCost() > maxCostCard.getCost()) {
+						maxCostCard = card;
+					}
+				}
+			}
+		}
+		return maxCostCard;
+	}
+	
 	/**
 	 * @param card which will be put back on top of the drawPile
 	 */
@@ -486,6 +547,4 @@ public class Deck {
 		}
 		return sBuf.append(">").toString();
 	}
-
-	
 }
