@@ -27,7 +27,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketSendHandCard
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendRevealCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateTreasures;
-import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateValues;
+import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateValuesChangeButtons;
 import com.tpps.ui.gameplay.GameWindow;
 
 import javafx.util.Pair;
@@ -105,7 +105,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameStorageInterface.loadRevealCardsAndPassToGameWindow(((PacketSendRevealCards) packet).getCardIds());
 			break;
 		case UPDATE_VALUES:
-			PacketUpdateValues puv = ((PacketUpdateValues) packet);
+			PacketUpdateValuesChangeButtons puv = ((PacketUpdateValuesChangeButtons) packet);
 			System.out.println("clientGameHandler actions: " + puv.getActions() + "buys: " + puv.getBuys() + "coins: " + puv.getCoins());
 			this.gameWindow.setCaptionActions(Integer.toString(puv.getActions()));
 			this.gameWindow.setCaptionBuys(Integer.toString(puv.getBuys()));

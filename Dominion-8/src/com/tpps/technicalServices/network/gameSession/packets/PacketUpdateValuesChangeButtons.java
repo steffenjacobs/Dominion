@@ -9,7 +9,7 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
  * 
  * @author ladler - Lukas Adler
  */
-public class PacketUpdateValues extends Packet {
+public class PacketUpdateValuesChangeButtons extends Packet {
 
 	private static final long serialVersionUID = 4833326642942479357L;
 	private final int actions, buys, coins;
@@ -21,7 +21,7 @@ public class PacketUpdateValues extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketUpdateValues(int actions, int buys, int coins, boolean shouldBeEnabled) {
+	public PacketUpdateValuesChangeButtons(int actions, int buys, int coins, boolean shouldBeEnabled) {
 		super(PacketType.UPDATE_VALUES);
 		this.actions = actions;
 		this.buys = buys;
