@@ -844,9 +844,11 @@ public class Player {
 				}
 				break;
 			case DISCARD_AND_DRAW:
-				this.discardMode = true;
-				this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
-				this.gameServer.sendMessage(port, new PacketStartDiscardMode());
+				if ((this.getDeck().getCardHand().size() - (this.playTwiceCard != null ? 1 : 0)) > 0){
+					this.discardMode = true;
+					this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
+					this.gameServer.sendMessage(port, new PacketStartDiscardMode());
+				}
 				break;
 			case DISCARD_OTHER_DOWNTO:
 				this.gameServer.getGameController().discardOtherDownto(value);
@@ -884,9 +886,11 @@ public class Player {
 				}
 				break;
 			case TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND:
-				this.trashMode = true;
-				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, Integer.parseInt(value.split("_")[1]));
-				this.gainValue = Integer.parseInt(value.split("_")[1]);
+				if (this.getDeck().getCardByTypeFromHand(CardType.TREASURE) != null){
+					this.trashMode = true;
+					this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, Integer.parseInt(value.split("_")[1]));
+					this.gainValue = Integer.parseInt(value.split("_")[1]);
+				}
 				break;
 			case TRASH_AND_GAIN_MORE_THAN:
 				this.trashMode = true;
@@ -895,7 +899,7 @@ public class Player {
 				break;
 			case TRASH_AND_GAIN:
 				this.trashMode = true;
-				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN, Integer.parseInt(value.split("_")[0]));
+				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN, Integer.parseInt(value.split("_")[1]));
 				this.gainValue = Integer.parseInt(value.split("_")[1]);
 				break;
 			case PUT_BACK:
@@ -945,7 +949,9 @@ public class Player {
 
 		if (trashFlag) {
 			trashFlag = false;
-			this.gameServer.getGameController().getGameBoard().getTrashPile().add(serverCard);
+			if (!this.gameServer.getGameController().getGameBoard().getTrashPile().contains(serverCard)){
+				this.gameServer.getGameController().getGameBoard().getTrashPile().add(serverCard);
+			}
 			return null;
 		}
 		return serverCard;
