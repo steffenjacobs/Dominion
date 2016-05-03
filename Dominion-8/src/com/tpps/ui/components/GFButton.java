@@ -50,7 +50,6 @@ public abstract class GFButton extends GameObject {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent);
 		this.caption = caption;
 		resizeFactorFont = relativeWidth+MARGIN_SIZE_FONT;
-		System.out.println(resizeFactorFont);
 		this.resizeObject(absWidth, absHeight);
 	}
 
