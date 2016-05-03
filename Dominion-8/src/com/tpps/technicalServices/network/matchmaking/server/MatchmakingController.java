@@ -37,12 +37,13 @@ public final class MatchmakingController {
 		lobbies = new CopyOnWriteArrayList<>();
 		lobbiesByPlayer = new ConcurrentHashMap<>();
 		playersByName = new ConcurrentHashMap<>();
-//		connectedPortsByPlayer = new ConcurrentHashMap<>();
+		// connectedPortsByPlayer = new ConcurrentHashMap<>();
 		lobbiesByID = new ConcurrentHashMap<>();
 	}
 
 	private static ConcurrentHashMap<Integer, MPlayer> playersByPort;
-//	private static ConcurrentHashMap<MPlayer, Integer> connectedPortsByPlayer;
+	// private static ConcurrentHashMap<MPlayer, Integer>
+	// connectedPortsByPlayer;
 
 	/*** also contains AI-names */
 	private static ConcurrentHashMap<String, MPlayer> playersByName;
@@ -64,6 +65,15 @@ public final class MatchmakingController {
 	 */
 	static GameLobby getLobbyByID(UUID lobbyID) {
 		return lobbiesByID.get(lobbyID);
+	}
+
+	static void createPrivateLobby(MPlayer player) {
+		GameLobby lobby = new GameLobby(true);
+		lobbies.add(lobby);
+		lobbiesByID.put(lobby.getLobbyID(), lobby);
+		lobby.joinPlayer(player);
+		lobbiesByPlayer.put(player, lobby);
+		GameLog.log(MsgType.INFO, player.getPlayerName() + " created a private lobby [" + lobby.getLobbyID() + "]");		
 	}
 
 	/** @return a newly generated, unique ID for the lobby */
@@ -219,14 +229,14 @@ public final class MatchmakingController {
 		// the lobby
 	}
 
-//	/**
-//	 * @return the port a player is connected with
-//	 * @param player
-//	 *            the requested player
-//	 */
-//	public static int getPortFromPlayer(MPlayer player) {
-//		return connectedPortsByPlayer.get(player);
-//	}
+	// /**
+	// * @return the port a player is connected with
+	// * @param player
+	// * the requested player
+	// */
+	// public static int getPortFromPlayer(MPlayer player) {
+	// return connectedPortsByPlayer.get(player);
+	// }
 
 	/**
 	 * adds a player to a lobby
@@ -254,7 +264,7 @@ public final class MatchmakingController {
 		}
 		if (cntAvailableLobbies < availableLobbyShould) {
 			for (; cntAvailableLobbies < availableLobbyShould; cntAvailableLobbies++) {
-				GameLobby lobby = new GameLobby();
+				GameLobby lobby = new GameLobby(false);
 				lobbies.add(lobby);
 				lobbiesByID.put(lobby.getLobbyID(), lobby);
 			}
@@ -287,7 +297,7 @@ public final class MatchmakingController {
 			}
 		}
 		if (bestFitting == null) {
-			bestFitting = new GameLobby();
+			bestFitting = new GameLobby(false);
 		}
 
 		joinLobby(player, bestFitting);
@@ -304,7 +314,7 @@ public final class MatchmakingController {
 	 */
 	public static void addPlayer(MPlayer player, boolean search) {
 		playersByPort.put(player.getConnectionPort(), player);
-//		connectedPortsByPlayer.put(player, player.getConnectionPort());
+		// connectedPortsByPlayer.put(player, player.getConnectionPort());
 		playersByName.put(player.getPlayerName(), player);
 		if (search)
 			findLobbyForPlayer(player);
@@ -321,7 +331,7 @@ public final class MatchmakingController {
 		// remove client
 		GameLog.log(MsgType.NETWORK_INFO, "[-> " + player.getPlayerName() + " @" + player.getConnectionPort());
 		playersByPort.remove(player.getConnectionPort());
-//		connectedPortsByPlayer.remove(player);
+		// connectedPortsByPlayer.remove(player);
 		playersByName.remove(player.getPlayerName());
 		GameLobby lobby = lobbiesByPlayer.remove(player);
 		if (lobby != null) {
@@ -365,7 +375,7 @@ public final class MatchmakingController {
 				}
 			}
 			MPlayer player = playersByName.get(p);
-//			int port = connectedPortsByPlayer.get(player);
+			// int port = connectedPortsByPlayer.get(player);
 			MatchmakingServer.getInstance().disconnect(player.getConnectionPort());
 		}
 		if (!DominionController.isOffline()) {

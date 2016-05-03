@@ -469,7 +469,11 @@ public final class DominionController {
 
 	public void playOffline() {							
 		DominionController.getInstance().joinLobbyGui();
-		DominionController.getInstance().findMatch();
+		try {
+			DominionController.getInstance().getMatchmaker().createPrivateMatch(this.username, this.sessionID);
+		} catch (IOException e) {
+			e.printStackTrace();
+		};
 	}
 
 	/**
