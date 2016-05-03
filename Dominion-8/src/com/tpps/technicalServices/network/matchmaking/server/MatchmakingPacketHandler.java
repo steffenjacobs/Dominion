@@ -130,8 +130,9 @@ public class MatchmakingPacketHandler extends PacketHandler {
 
 			// ignore invalid UUID
 			if (pms.getSenderID() == null
-					|| pms.getSenderID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000")))
+					|| pms.getSenderID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 				break;
+			}
 
 			// check lobby
 			GameLobby toStart = MatchmakingController.getLobbyByID(pms.getLobbyID());
@@ -144,8 +145,9 @@ public class MatchmakingPacketHandler extends PacketHandler {
 
 			// check player
 			MPlayer player = MatchmakingController.getPlayerFromName(pms.getSenderName());
-			if (player == null || !player.getPlayerUID().equals(pms.getSenderID()) || !toStart.isAdmin(player))
+			if (player == null || !player.getPlayerUID().equals(pms.getSenderID()) || !toStart.isAdmin(player)) {
 				break;
+			}
 
 			MatchmakingController.startGame(toStart, pms.getSelectedActionCards());
 
@@ -203,9 +205,21 @@ public class MatchmakingPacketHandler extends PacketHandler {
 
 		threadPool.submit(() -> {
 			if (sess.checkSessionSync(pmr.getPlayerName(), pmr.getPlayerID())) {
-				MPlayer player = MPlayer.initialize(pmr, port);
-				MatchmakingController.addPlayer(player, lobbyID == null);
 
+				MPlayer player = MPlayer.initialize(pmr, port);
+				MatchmakingController.addPlayer(player, false);
+				
+				if (pmr.isPrivate()) {
+					MatchmakingController.createPrivateLobby(player);
+					try {
+						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 1,
+								MatchmakingController.getLobbyFromPlayer(player).getLobbyID()));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return;
+				}				
+				
 				if (lobbyID != null) {
 					MatchmakingController.getLobbyByID(lobbyID).joinPlayer(player);
 				}
@@ -216,7 +230,8 @@ public class MatchmakingPacketHandler extends PacketHandler {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				GameLog.log(MsgType.INFO, player.getPlayerName() + " entered Matchmaking with score " + player.getScore() + ". ");
+				GameLog.log(MsgType.INFO,
+						player.getPlayerName() + " entered Matchmaking with score " + player.getScore() + ". ");
 			} else {
 				try {
 					super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 0, null));

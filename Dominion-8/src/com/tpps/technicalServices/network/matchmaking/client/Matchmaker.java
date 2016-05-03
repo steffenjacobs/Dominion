@@ -131,7 +131,13 @@ public final class Matchmaker {
 	 */
 	public void findMatch(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
-		client.sendMessage(new PacketMatchmakingRequest(username, uid, false));
+		client.sendMessage(new PacketMatchmakingRequest(username, uid, false, false));
+		GameLog.log(MsgType.INFO, "Start searching a match");
+	}
+
+	public void createPrivateMatch(String username, UUID uid) throws IOException {
+		checkAndCreateClient();
+		client.sendMessage(new PacketMatchmakingRequest(username, uid, false, true));
 		GameLog.log(MsgType.INFO, "Start searching a match");
 	}
 
@@ -146,7 +152,7 @@ public final class Matchmaker {
 	 */
 	public void abort(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
-		client.sendMessage(new PacketMatchmakingRequest(username, uid, true));
+		client.sendMessage(new PacketMatchmakingRequest(username, uid, true, false));
 		GameLog.log(MsgType.INFO, "Aborted to search a match");
 	}
 
@@ -182,7 +188,7 @@ public final class Matchmaker {
 				processAnswerCode(pma);
 				break;
 			case MATCHMAKING_PLAYER_INFO:
-				//is called when a player joins or quits
+				// is called when a player joins or quits
 				PacketMatchmakingPlayerInfo pmpi = (PacketMatchmakingPlayerInfo) packet;
 				if (pmpi.isStatus()) {
 					DominionController.getInstance().receiveChatMessageFromChatServer("A Player joined the lobby "
@@ -235,15 +241,17 @@ public final class Matchmaker {
 				break;
 			case 1: // Success
 
-				DominionController.getInstance().receiveChatMessageFromChatServer("You joined a lobby successfully",
-						"BOT", "", Color.YELLOW);
+				DominionController.getInstance()
+						.receiveChatMessageFromChatServer("You joined a "
+								+ (pck.getRequest().isPrivate() ? "private " : "") + "lobby successfully", "BOT", "",
+								Color.YELLOW);
 				/*
 				 * :id : " + pck.getLobbyID()
 				 */
 				DominionController.getInstance().setLobbyID(pck.getLobbyID());
 				break;
 			case 2: // Lobby does not exist
-				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby does not exis", "BOT", "",
+				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby does not exist", "BOT", "",
 						Color.YELLOW);
 				break;
 			case 3: // Lobby is already full

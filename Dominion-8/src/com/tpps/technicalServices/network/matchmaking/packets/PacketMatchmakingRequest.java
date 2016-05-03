@@ -16,7 +16,7 @@ public class PacketMatchmakingRequest extends Packet {
 
 	private final String playerName;
 	private final UUID playerID;
-	private final boolean abort;
+	private final boolean abort, privateMatch;
 
 	/**
 	 * constructor with the name & uuid of the player searching for a match or
@@ -29,11 +29,12 @@ public class PacketMatchmakingRequest extends Packet {
 	 * @param abort
 	 *            true if the search should be aborted, false otherwise
 	 */
-	public PacketMatchmakingRequest(String name, UUID uid, boolean abort) {
+	public PacketMatchmakingRequest(String name, UUID uid, boolean abort, boolean privateMatch) {
 		super(PacketType.MATCHMAKING_REQUEST);
 		this.playerID = uid;
 		this.playerName = name;
 		this.abort = abort;
+		this.privateMatch = privateMatch;
 	}
 
 	/**
@@ -49,11 +50,12 @@ public class PacketMatchmakingRequest extends Packet {
 	 * @param type
 	 *            sub-type of the packet
 	 */
-	public PacketMatchmakingRequest(PacketType type, String name, UUID uid, boolean abort) {
+	public PacketMatchmakingRequest(PacketType type, String name, UUID uid, boolean abort, boolean privateMatch) {
 		super(type);
 		this.playerID = uid;
 		this.playerName = name;
 		this.abort = abort;
+		this.privateMatch = privateMatch;
 	}
 
 	/** @return a representation of the packet as a String */
@@ -66,6 +68,10 @@ public class PacketMatchmakingRequest extends Packet {
 	/** @return true, if the search should be aborted */
 	public boolean isAbort() {
 		return abort;
+	}
+
+	public boolean isPrivate() {
+		return privateMatch;
 	}
 
 	/** @return the name of the player searching for a match */

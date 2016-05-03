@@ -137,14 +137,4 @@ public class MPlayer {
 	public boolean isAI() {
 		return UUID.fromString("00000000-0000-0000-0000-000000000000").equals(this.playerUID);
 	}
-
-//	/**
-//	 * setter for isAI
-//	 * 
-//	 * @param state
-//	 *            the new ai-state
-//	 */
-//	public void setAi(boolean state) {
-//		this.isAI = state;
-//	}
 }

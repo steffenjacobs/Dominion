@@ -28,10 +28,13 @@ public class GameLobby {
 	private GameServer runningServer;
 
 	private MPlayer admin;
+	
+	private final boolean isPrivate;
 
 	/** constructor, generating its unique lobbyID */
-	public GameLobby() {
+	public GameLobby(boolean isPrivate) {
 		this.lobbyID = MatchmakingController.generateLobbyID();
+		this.isPrivate = isPrivate;
 	}
 
 	/**
@@ -221,7 +224,7 @@ public class GameLobby {
 
 	/** @return whether this lobby could support more players */
 	public boolean isAvailable() {
-		return !this.hasStarted() && !this.isFull();
+		return !this.hasStarted() && !this.isFull() && !this.isPrivate;
 	}
 
 	/** @return all players in the lobby */
