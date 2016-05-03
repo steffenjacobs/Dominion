@@ -737,7 +737,9 @@ public class Player {
 			if (!this.secondTimePlayed) {
 				GameLog.log(MsgType.INFO, "playTwice: " + this.playTwice);
 				this.actions++;
-				this.playTwiceCard = serverCard;
+				if (this.playTwiceCard != null) {
+					this.playTwiceCard = serverCard;
+				}
 				dontRemoveFlag = true;
 			}
 		}
