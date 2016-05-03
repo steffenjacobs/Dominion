@@ -599,11 +599,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		System.out.println("validate turn: " + player.getActions() + "buys: " + player.getBuys() + "coins: " + player.getCoins());
 
 		
-			String changeButtons = "";
-		if (player.isDiscardMode() || player.isTrashMode()){
-			changeButtons = "remove";
-		}
-		this.server.sendMessage(port, new PacketUpdateValuesChangeButtons(player.getActions(), player.getBuys(), player.getCoins(), changeButtons));
+	
 		if (player.getActions() == 0 && !player.isThief()) {
 			server.sendMessage(port, new PacketEndActionPhase());
 		}
@@ -616,7 +612,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(player.getPlayedCards())));
 		}
 		
-		
+		String changeButtons = "";
+		if (player.isDiscardMode() || player.isTrashMode()){
+			changeButtons = "remove";
+		}
+		this.server.sendMessage(port, new PacketUpdateValuesChangeButtons(player.getActions(), player.getBuys(), player.getCoins(), changeButtons));
 		this.server.getGameController().isGameFinished();
 	}
 

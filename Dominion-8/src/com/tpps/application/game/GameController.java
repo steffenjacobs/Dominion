@@ -41,6 +41,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketTakeCards;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketGameEnd;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 import com.tpps.technicalServices.util.CollectionsUtil;
+import com.tpps.technicalServices.util.GameConstant;
 
 /**
  * @author Lukas Adler
@@ -953,9 +954,9 @@ public class GameController {
 	 *             if there connects one more player
 	 */
 	public void addPlayerAndChooseRandomActivePlayer(Player player) throws TooMuchPlayerException {
-		if (this.players.size() < 4) {
+		if (this.players.size() < GameConstant.PLAYERS) {
 			this.players.addLast(player);
-			if (this.players.size() == 4) {
+			if (this.players.size() == GameConstant.PLAYERS) {
 				this.activePlayer = getRandomPlayer();
 				this.activePlayer.incTurnNr();
 				try {

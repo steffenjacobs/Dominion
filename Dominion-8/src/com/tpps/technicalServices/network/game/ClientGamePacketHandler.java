@@ -113,6 +113,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			if (puv.getChangeButtons().equals("remove")){
 				this.gameWindow.removeEndActionPhaseButton();
 				this.gameWindow.removeEndTurnButton();
+				this.gameWindow.removePlayTreasuresButton();
 			}
 			break;
 		case UPDATE_TREASURES:
