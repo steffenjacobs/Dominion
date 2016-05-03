@@ -260,7 +260,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		System.out.println("revealListEmpty: " + this.server.getGameController().getSpyList().isEmpty());
 		
 		
-		if (this.server.getGameController().getActivePlayer()!= null && this.server.getGameController().getActivePlayer().getPlayTwiceCard() != null
+		if (this.server.getGameController().getActivePlayer()!= null && playTwiceActivePlayer.getPlayTwiceCard() != null
 				&&this.server.getGameController().getActivePlayer().isPlayTwice()
 			
 			
