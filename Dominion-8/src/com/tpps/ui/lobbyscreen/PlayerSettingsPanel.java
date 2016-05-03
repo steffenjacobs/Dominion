@@ -373,7 +373,6 @@ public class PlayerSettingsPanel extends JPanel {
 		private SerializedCard card;
 
 		private BufferedImage imgNotSelected = null;
-		private BufferedImage originalImage;
 		private boolean selected;
 
 		private static final long serialVersionUID = 2289556894288934256L;
@@ -381,8 +380,7 @@ public class PlayerSettingsPanel extends JPanel {
 		public CardDisplayButton(SerializedCard originalCard) {
 			this.card = originalCard;
 			this.addActionListener(this);
-			this.imgNotSelected = GraphicsUtil.colorScale(new Color(0, 0, 6), card.getImage(), .4f);
-			this.originalImage = this.card.getImage();
+			this.imgNotSelected = GraphicsUtil.colorScale(new Color(0, 0, 6), card.getImage(), .4f);			
 			this.selected = false;
 		}
 

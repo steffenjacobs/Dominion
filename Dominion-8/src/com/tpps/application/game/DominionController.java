@@ -370,6 +370,9 @@ public final class DominionController {
 	 * @author jhuhn
 	 */
 	public void joinLobbyGui(boolean singlePlayer) {
+		this.receiveChatMessageFromChatServer(
+				"----------------","****** You joined the lobbyscreen ******",
+				"----------------", Color.GREEN);
 		this.globalChatPanel.getBackButton().setLobby(true);
 		this.playerSettingsPanel.getStartButton().setEnabled(true);
 		JPanel panel = new JPanel() {
@@ -494,6 +497,9 @@ public final class DominionController {
 	 * opens the community gui
 	 */
 	public void openStatisticsGui() {
+		this.receiveChatMessageFromChatServer(
+				"----------------","*** You  joined  the  communityscreen ***",
+				"----------------", Color.GREEN);
 		this.globalChatPanel.getBackButton().setLobby(false);
 		JPanel panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
