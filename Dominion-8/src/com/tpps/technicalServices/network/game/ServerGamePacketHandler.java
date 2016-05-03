@@ -240,14 +240,13 @@ public class ServerGamePacketHandler extends PacketHandler {
 			ie.printStackTrace();
 		}
 		
-	
+		
 		
 		
 		System.out.println("is play twice " + this.server.getGameController().getActivePlayer().isPlayTwice() + 
 				" play twice enabled: " + this.server.getGameController().getActivePlayer().isPlayTwiceEnabled() + 
 				" secondTimePlayed " + this.server.getGameController().getActivePlayer().isSecondTimePlayed() +
 				" counter " + this.server.getGameController().getActivePlayer().getPlayTwiceCounter());
-		
 		
 		Player playTwiceActivePlayer = this.server.getGameController().getActivePlayer();
 		System.out.println("all player discarded" + this.server.getGameController().allPlayerDiscarded());
@@ -260,18 +259,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 		System.out.println("isBureaucrat: " + !playTwiceActivePlayer.isBureaucrat());
 		System.out.println("revealListEmpty: " + this.server.getGameController().getSpyList().isEmpty());
 		
+		
 		if (this.server.getGameController().getActivePlayer()!= null && this.server.getGameController().getActivePlayer().getPlayTwiceCard() != null
 				&&this.server.getGameController().getActivePlayer().isPlayTwice()
 			
 			
-			
-
-			
+		
 			
 			
 			
 			
-
+			
+			
 			&& this.server.getGameController().allReactionCardsPlayed() && this.server.getGameController().allPlayerDiscarded()
 					&& this.server.getGameController().allPlayerTrashed() && this.server.getGameController().allPlayerGained()
 					&& this.server.getGameController().allPlayersRevealed() && this.server.getGameController().allReveaListsEmpty()
@@ -280,8 +279,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 				
 //					try {
 						System.out.println("playTwice");
-						
-						
 						playTwiceActivePlayer.setPlayTwiceFalse();
 						playTwiceActivePlayer.setPlayTwiceEnabled();
 						playTwiceActivePlayer.decrementPlayTwiceCounter();
@@ -290,12 +287,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 						}
 						
 						playTwiceActivePlayer.setSecondTimePlayed();
-//						
-						try {
-							Thread.sleep(1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+//						try {
+//							Thread.sleep(5000);
+//						} catch (InterruptedException e) {
+//							e.printStackTrace();
+//						}
 						
 						new Thread(() -> {
 							handleReceivedPacket(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
