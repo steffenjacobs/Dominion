@@ -580,7 +580,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				if (this.server.getGameController().checkBoardCardExistsAppendToDiscardPile(cardID)) {
 					GameBoard gameBoard = this.server.getGameController().getGameBoard();
 					this.server.broadcastMessage(new PacketSendBoard(gameBoard.getTreasureCardIDs(), gameBoard.getVictoryCardIDs(), gameBoard.getActionCardIDs()));
-					this.server.sendMessage(port, new PacketUpdateValuesChangeButtons(player.getActions(), player.getBuys(), player.getCoins(), false));
+					this.server.sendMessage(port, new PacketUpdateValuesChangeButtons(player.getActions(), player.getBuys(), player.getCoins(), ""));
 					if (player.getBuys() == 0) {
 						nextActivePlayer(port);
 					}
@@ -599,11 +599,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 		System.out.println("validate turn: " + player.getActions() + "buys: " + player.getBuys() + "coins: " + player.getCoins());
 
 		
-			boolean removeButtonsFlag = false;
+			String changeButtons = "";
 		if (player.isDiscardMode() || player.isTrashMode()){
-			removeButtonsFlag = true;
+			changeButtons = "remove";
 		}
-		this.server.sendMessage(port, new PacketUpdateValuesChangeButtons(player.getActions(), player.getBuys(), player.getCoins(), removeButtonsFlag));
+		this.server.sendMessage(port, new PacketUpdateValuesChangeButtons(player.getActions(), player.getBuys(), player.getCoins(), changeButtons));
 		if (player.getActions() == 0 && !player.isThief()) {
 			server.sendMessage(port, new PacketEndActionPhase());
 		}

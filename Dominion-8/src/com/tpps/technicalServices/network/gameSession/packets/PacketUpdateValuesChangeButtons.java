@@ -13,7 +13,7 @@ public class PacketUpdateValuesChangeButtons extends Packet {
 
 	private static final long serialVersionUID = 4833326642942479357L;
 	private final int actions, buys, coins;
-	private final boolean shouldBeEnabled;
+	private final String changeButtons;
 
 	/**
 	 * initializes the Packet with the id of the card which had been played and
@@ -21,12 +21,12 @@ public class PacketUpdateValuesChangeButtons extends Packet {
 	 * 
 	 * @author ladler - Lukas Adler
 	 */
-	public PacketUpdateValuesChangeButtons(int actions, int buys, int coins, boolean shouldBeEnabled) {
+	public PacketUpdateValuesChangeButtons(int actions, int buys, int coins, String changeButtons) {
 		super(PacketType.UPDATE_VALUES);
 		this.actions = actions;
 		this.buys = buys;
 		this.coins = coins;
-		this.shouldBeEnabled = shouldBeEnabled;
+		this.changeButtons = changeButtons;
 		
 	}
 	
@@ -34,8 +34,8 @@ public class PacketUpdateValuesChangeButtons extends Packet {
 	 * 
 	 * @return if the gameWindow should be enabled again
 	 */
-	public boolean shouldBeEnabled() {
-		return this.shouldBeEnabled;
+	public String getChangeButtons() {
+		return this.changeButtons;
 	}
 	
 	/**
@@ -72,6 +72,6 @@ public class PacketUpdateValuesChangeButtons extends Packet {
 	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + "coins: " + coins + "buys: " + buys + "actions: " + actions;
+		return this.getClass().getSimpleName() + "coins: " + coins + "buys: " + buys + "actions: " + actions + "changeButtons: " + this.changeButtons;
 	}
 }

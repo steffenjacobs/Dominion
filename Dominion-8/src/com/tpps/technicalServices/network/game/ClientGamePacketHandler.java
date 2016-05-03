@@ -110,6 +110,10 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameWindow.setCaptionActions(Integer.toString(puv.getActions()));
 			this.gameWindow.setCaptionBuys(Integer.toString(puv.getBuys()));
 			this.gameWindow.setCaptionCoins(Integer.toString(puv.getCoins()));
+			if (puv.getChangeButtons().equals("remove")){
+				this.gameWindow.removeEndActionPhaseButton();
+				this.gameWindow.removeEndTurnButton();
+			}
 			break;
 		case UPDATE_TREASURES:
 			PacketUpdateTreasures put = (PacketUpdateTreasures) (packet);
