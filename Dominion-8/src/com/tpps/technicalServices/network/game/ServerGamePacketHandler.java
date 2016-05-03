@@ -613,8 +613,20 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 		
 		String changeButtons = "";
-		if (player.isDiscardMode() || player.isTrashMode()){
+		if (player.equals(this.server.getGameController().getActivePlayer())){
+		
+		if (this.server.getGameController().getActivePlayer().isDiscardMode() || 
+				this.server.getGameController().getActivePlayer().isTrashMode()){
 			changeButtons = "remove";
+		}else{
+			if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null){
+				if (this.server.getGameController().getActivePlayer().getActions() > 0){
+					changeButtons = "actions";
+				}else{
+					changeButtons = "playTreasures";
+				}
+			}
+		}
 		}
 		this.server.sendMessage(port, new PacketUpdateValuesChangeButtons(player.getActions(), player.getBuys(), player.getCoins(), changeButtons));
 		this.server.getGameController().isGameFinished();

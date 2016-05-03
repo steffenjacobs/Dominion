@@ -22,7 +22,6 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDontShowEndReactions;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndDiscardMode;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndTrashMode;
-import com.tpps.technicalServices.network.gameSession.packets.PacketSendActiveButtons;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendRevealCards;
@@ -849,14 +848,6 @@ public class Player {
 					this.discardMode = true;
 					this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
 					this.gameServer.sendMessage(port, new PacketStartDiscardMode());
-				}else {
-					if (playTwiceCard == null) {
-						if (actions > 0){ 
-							this.gameServer.sendMessage(port, new PacketSendActiveButtons(true, true, false));
-						}else{
-							this.gameServer.sendMessage(port, new PacketSendActiveButtons(true, false, true));
-						}
-					}
 				}
 				break;
 			case DISCARD_OTHER_DOWNTO:
@@ -880,14 +871,6 @@ public class Player {
 						this.gameServer.sendMessage(port, new PacketStartTrashMode());
 						this.trashMode = true;
 						this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
-					}else {
-						if (playTwiceCard == null) {
-							if (actions > 0){ 
-								this.gameServer.sendMessage(port, new PacketSendActiveButtons(true, true, false));
-							}else{
-								this.gameServer.sendMessage(port, new PacketSendActiveButtons(true, false, true));
-							}
-						}
 					}
 				}
 				// return?
@@ -909,14 +892,6 @@ public class Player {
 					this.trashMode = true;
 					this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, Integer.parseInt(value.split("_")[0]));
 					this.gainValue = Integer.parseInt(value.split("_")[1]);
-				}else {
-					if (playTwiceCard == null) {
-						if (actions > 0){ 
-							this.gameServer.sendMessage(port, new PacketSendActiveButtons(true, true, false));
-						}else{
-							this.gameServer.sendMessage(port, new PacketSendActiveButtons(true, false, true));
-						}
-					}
 				}
 				break;
 			case TRASH_AND_GAIN_MORE_THAN:
@@ -924,14 +899,6 @@ public class Player {
 					this.trashMode = true;
 					this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN_MORE_THAN, Integer.parseInt(value.split("_")[0]));
 					this.gainValue = Integer.parseInt(value.split("_")[1]);
-				}else {
-					if (playTwiceCard == null) {
-						if (actions > 0){ 
-							this.gameServer.sendMessage(port, new PacketSendActiveButtons(true, true, false));
-						}else{
-							this.gameServer.sendMessage(port, new PacketSendActiveButtons(true, false, true));
-						}
-					}
 				}
 				break;
 			case TRASH_AND_GAIN:

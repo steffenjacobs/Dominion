@@ -110,10 +110,20 @@ public class ClientGamePacketHandler extends PacketHandler {
 			this.gameWindow.setCaptionActions(Integer.toString(puv.getActions()));
 			this.gameWindow.setCaptionBuys(Integer.toString(puv.getBuys()));
 			this.gameWindow.setCaptionCoins(Integer.toString(puv.getCoins()));
-			if (puv.getChangeButtons().equals("remove")){
+			switch (puv.getChangeButtons()) {
+			case "remove":
 				this.gameWindow.removeEndActionPhaseButton();
 				this.gameWindow.removeEndTurnButton();
 				this.gameWindow.removePlayTreasuresButton();
+				
+				break;
+			case "actions":
+			
+				break;
+			case "playTreasures":
+
+			default:
+				break;
 			}
 			break;
 		case UPDATE_TREASURES:
