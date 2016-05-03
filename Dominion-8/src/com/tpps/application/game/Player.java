@@ -1087,7 +1087,6 @@ public class Player {
 	 * @throws IOException
 	 */
 	public void discardOrTrash(Card card) throws IOException {
-		if (playTwiceCard == null || !(card.equals(playTwiceCard))){
 		switch (this.discardOrTrashAction.getFirstEntry()) {
 		case DISCARD_AND_DRAW:
 			if (this.discardOrTrashAction.getSecondEntry() == -1) {
@@ -1141,7 +1140,6 @@ public class Player {
 			break;
 		default:
 			break;
-			}
 		}
 	}
 

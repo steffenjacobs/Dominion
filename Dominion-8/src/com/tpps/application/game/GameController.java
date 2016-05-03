@@ -166,7 +166,9 @@ public class GameController {
 	 */
 	public synchronized boolean checkCardExistsAndDiscardOrTrash(Player player, String cardID) throws IOException {
 		Card card = player.getDeck().getCardFromHand(cardID);
-		if (card != null) {
+		if (card != null && (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
+				|| !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().equals(card))) {
+
 			player.discardOrTrash(cardID, this.getGameBoard().getTrashPile());
 			return true;
 		}
