@@ -867,9 +867,11 @@ public class Player {
 					// trashFlag gesetzt karte trashen null zur�ckgeben
 					trashFlag = true;
 				} else {
-					this.gameServer.sendMessage(port, new PacketStartTrashMode());
-					this.trashMode = true;
-					this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
+					if ((this.getDeck().getCardHand().size() - 1) > 0){
+						this.gameServer.sendMessage(port, new PacketStartTrashMode());
+						this.trashMode = true;
+						this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
+					}
 				}
 				// return?
 				break;
@@ -893,9 +895,11 @@ public class Player {
 				}
 				break;
 			case TRASH_AND_GAIN_MORE_THAN:
-				this.trashMode = true;
-				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN_MORE_THAN, Integer.parseInt(value.split("_")[0]));
-				this.gainValue = Integer.parseInt(value.split("_")[1]);
+				if ((this.getDeck().getCardHand().size() - 1) > 0){
+					this.trashMode = true;
+					this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN_MORE_THAN, Integer.parseInt(value.split("_")[0]));
+					this.gainValue = Integer.parseInt(value.split("_")[1]);
+				}
 				break;
 			case TRASH_AND_GAIN:
 				this.trashMode = true;
