@@ -70,13 +70,13 @@ public class GameController {
 	 * sets all flag and creates all required Lists
 	 * @param gameServer
 	 */
-	public GameController(GameServer gameServer) {
+	public GameController(GameServer gameServer, String[] selectedActionCards) {
 		this.gameServer = gameServer;
 		this.cardsEnabled = true;
 		this.players = new LinkedList<Player>();
 		this.thiefList = new CopyOnWriteArrayList<Player>();
 		this.spyList = new CopyOnWriteArrayList<Player>();
-		this.gameBoard = new GameBoard();
+		this.gameBoard = new GameBoard(selectedActionCards);
 		this.gameNotFinished = true;
 	}
 

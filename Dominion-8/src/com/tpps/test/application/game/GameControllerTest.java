@@ -28,7 +28,8 @@ public class GameControllerTest {
 	@Before
 	public void setUp() throws Exception {
 
-		this.gameController = new GameController(null);
+		this.gameController = new GameController(null, new String[]{"Moat", "Militia", "Witch", "Thief", "Spy",
+				"ThroneRoom", "CouncilRoom", "Adventurer", "Cellar", "Chapel"});
 		for (int i = 0; i < GameConstant.PLAYERS; i++) {
 			this.gameController.getPlayers().add((new Player(new Deck(this.gameController.getGameBoard().getStartSet()), i, 80 + i, "test" + i, null, null)));
 		}
@@ -56,7 +57,8 @@ public class GameControllerTest {
 	@Test
 	public void testSetGameBoard() {
 		GameBoard gameBoard = this.gameController.getGameBoard();
-		this.gameController.setGameBoard(new GameBoard());
+		this.gameController.setGameBoard(new GameBoard(new String[]{"Moat", "Militia", "Witch", "Thief", "Spy",
+				"ThroneRoom", "CouncilRoom", "Adventurer", "Cellar", "Chapel"}));
 		assertTrue(!gameBoard.equals(this.gameController.getGameBoard()));
 	}
 

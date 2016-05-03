@@ -33,14 +33,15 @@ public class GameBoard {
 	 * initialises the linkedList for the trashPile calls the init method which
 	 * calls all the init methods for the tables
 	 */
-	public GameBoard() {
+	public GameBoard(String[] selectedActionCards) {
 		this.tableForVictoryCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.tableForTreasureCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.tableForAllActionCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.trashPile = new LinkedList<Card>();
 		init();
-		setAttackSet();
+//		setAttackSet();
+		setSet(selectedActionCards);
 	}
 
 	/**
@@ -472,6 +473,15 @@ public class GameBoard {
 		this.tableForActionCards.put("CouncilRoom", new LinkedList<Card>(this.tableForAllActionCards.get("CouncilRoom")));
 		this.tableForActionCards.put("Chancellor", new LinkedList<Card>(this.tableForAllActionCards.get("Chancellor")));
 		this.tableForActionCards.put("ThroneRoom", new LinkedList<Card>(this.tableForAllActionCards.get("ThroneRoom")));
+	}
+	
+	
+	private void setSet(String[] selectedActionCards) {
+		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
+		for (int i = 0; i < selectedActionCards.length; i++) {
+			String string = selectedActionCards[i];
+			this.tableForActionCards.put(string, new LinkedList<Card>(this.tableForAllActionCards.get(string)));
+		}		
 	}
 
 	/**

@@ -28,7 +28,9 @@ public class PlayerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		GameBoard gameBoard = new GameBoard();
+		GameBoard gameBoard = new GameBoard(new String[]{"Moat", "Militia", "Witch", "Thief", "Spy",
+				"ThroneRoom", "CouncilRoom", "Adventurer", "Cellar", "Chapel"});
+		
 		this.player = new Player(new Deck(gameBoard.getStartSet()), 0, 0, "Test0", null, null);
 	}
 

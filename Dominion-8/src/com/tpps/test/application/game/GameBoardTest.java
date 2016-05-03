@@ -29,7 +29,8 @@ public class GameBoardTest {
 	GameBoard gameBoard;
 	@Before
 	public void setUp() throws Exception {;
-		this.gameBoard = new GameBoard();
+		this.gameBoard = new GameBoard(new String[]{"Moat", "Militia", "Witch", "Thief", "Spy",
+				"ThroneRoom", "CouncilRoom", "Adventurer", "Cellar", "Chapel"});
 	}
 
 	@Test
@@ -106,7 +107,8 @@ public class GameBoardTest {
 	public void findCardListFromBoardTest() {
 		
 		
-			this.gameBoard = new GameBoard();
+			this.gameBoard = new GameBoard(new String[]{"Moat", "Militia", "Witch", "Thief", "Spy",
+					"ThroneRoom", "CouncilRoom", "Adventurer", "Cellar", "Chapel"});
 			LinkedList<Card> testList;
 			boolean exceptionFlag = false;
 			try {
@@ -170,7 +172,8 @@ public class GameBoardTest {
 	
 	@Test
 	public void findAndRemoveCardFromBoard() {
-		this.gameBoard = new GameBoard();
+		this.gameBoard = new GameBoard(new String[]{"Moat", "Militia", "Witch", "Thief", "Spy",
+				"ThroneRoom", "CouncilRoom", "Adventurer", "Cellar", "Chapel"});
 		Class<? extends GameBoard> gameBoardClass = this.gameBoard.getClass();
 		boolean exceptionFlag = false;
 		try {

@@ -23,6 +23,7 @@ public class GameServer extends Server {
 	private static GameServer instance;
 	private SessionClient sessionClient;
 	private LinkedList<Player> disconnectedUser;
+	private final String[] selectedActionCards;
 
 	public GameServer(int port, String[] selectedActionCards) throws IOException {
 		// TODO: implement selectedActionCards
@@ -30,7 +31,8 @@ public class GameServer extends Server {
 		((ServerGamePacketHandler) super.getHandler()).setServer(this);
 		this.sessionClient = new SessionClient(
 				new InetSocketAddress(Addresses.getLocalHost(), SessionServer.getStandardPort()));
-		this.gameController = new GameController(this);
+		this.selectedActionCards = selectedActionCards;
+		this.gameController = new GameController(this, this.selectedActionCards);
 		instance = this;
 		this.getListenerManager().registerListener(new GameServerNetworkListener(this));
 		this.disconnectedUser = new LinkedList<Player>();
@@ -47,7 +49,7 @@ public class GameServer extends Server {
 
 	public void newGame() {
 		this.disconnectAll();
-		this.gameController = new GameController(this);
+		this.gameController = new GameController(this, this.selectedActionCards);
 		setConsoleInput();
 	}
 
