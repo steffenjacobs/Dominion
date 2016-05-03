@@ -709,7 +709,7 @@ public class PlayerSettingsPanel extends JPanel {
 	 */
 	public synchronized boolean removePlayer(String player) {
 		for (int i = 0; i < connectedPlayers.length; i++) {
-			if (connectedPlayers[i].getText().equals(player)) {
+			if (connectedPlayers[i].getText().startsWith(player)) {
 				System.out.println("GUI: removed Player: " + connectedPlayers[i].getText());
 				connectedPlayers[i].resetSearchingField();
 				this.handleStartButton();
@@ -727,10 +727,8 @@ public class PlayerSettingsPanel extends JPanel {
 	 */
 	public synchronized void clearAllPlayers() {
 		for (int i = 0; i < connectedPlayers.length; i++) {
-			if (!connectedPlayers[i].getText().startsWith("Loading")) {
-				System.out.println("GUI: removed Player(all): " + connectedPlayers[i].getText());
-				connectedPlayers[i].resetSearchingField();
-			}
+			System.out.println("GUI: removed Player(all): " + connectedPlayers[i].getText());
+			connectedPlayers[i].resetSearchingField();
 		}
 	}
 
