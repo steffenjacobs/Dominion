@@ -193,7 +193,7 @@ public class GameController {
 						(!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")
 								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")
 								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Bureaucrat")
-								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Thief"))){
+								&& !(this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Thief")))){
 					this.gameServer.sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
 				}
 				return true;
