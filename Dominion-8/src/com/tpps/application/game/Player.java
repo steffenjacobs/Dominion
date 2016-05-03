@@ -844,7 +844,7 @@ public class Player {
 				}
 				break;
 			case DISCARD_AND_DRAW:
-				if ((this.getDeck().getCardHand().size() - (this.playTwiceCard != null ? 1 : 0)) > 0){
+				if ((this.getDeck().getCardHand().size() - 1) > 0){
 					this.discardMode = true;
 					this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
 					this.gameServer.sendMessage(port, new PacketStartDiscardMode());
@@ -888,7 +888,7 @@ public class Player {
 			case TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND:
 				if (this.getDeck().getCardByTypeFromHand(CardType.TREASURE) != null){
 					this.trashMode = true;
-					this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, Integer.parseInt(value.split("_")[1]));
+					this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, Integer.parseInt(value.split("_")[0]));
 					this.gainValue = Integer.parseInt(value.split("_")[1]);
 				}
 				break;
@@ -899,7 +899,7 @@ public class Player {
 				break;
 			case TRASH_AND_GAIN:
 				this.trashMode = true;
-				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN, Integer.parseInt(value.split("_")[1]));
+				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN, Integer.parseInt(value.split("_")[0]));
 				this.gainValue = Integer.parseInt(value.split("_")[1]);
 				break;
 			case PUT_BACK:

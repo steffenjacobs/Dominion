@@ -1,10 +1,12 @@
 package com.tpps.ui.cardeditor;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -14,18 +16,27 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -55,8 +66,14 @@ public class CardEditor extends JFrame implements ActionListener {
 	private Font smallfont;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc,gbc2;
-	private JPanel obenLinks;
+	private JPanel obenLinks,pnlBuy;
 	private int priceint = 2;
+	private JFileChooser fc;
+	private final String newline = "\n";
+	private String basePath;
+	private BufferedImage targetImg;
+	private File targetFile;
+	private final int baseSize = 128;
 
 	public CardEditor() {
 		this.setVisible(true);
@@ -144,7 +161,9 @@ public class CardEditor extends JFrame implements ActionListener {
 		createCard = new JButton("createCard");
 		cancel = new JButton("cancel");
 	}
+	
 
+	  
 	
 	//TODO : Ungefähres Layout vollenden
 	//TODO : Layout an relative Positionen anpassen
@@ -152,8 +171,12 @@ public class CardEditor extends JFrame implements ActionListener {
 	//TODO : Komponenten ans Design anpassen
 	//TODO : Listener der Komponenten
 	
+	/**
+	 * creates the GUI
+	 */
+	
 	private void iniateLayout() {
-
+	
 		JPanel obenLinks = new JPanel();      //Panel für Karteninitation
 		obenLinks.setBackground(Color.green); 
 		gbc.gridx = 0;
@@ -178,7 +201,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		c.add(obenLinks, gbc);
 
 		JPanel pnlBuy = new JPanel();        //Panel für das Bildhochladen
-		gbc.gridx = 1;
+		gbc.gridx = 1;                       //Anpassen fürs Bildhochladen
 		pnlBuy.setBackground(Color.blue); 
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
@@ -187,8 +210,16 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.5;
 		gbc.anchor = GridBagConstraints.SOUTH;
+		pnlBuy.setLayout(new BorderLayout());
+		testImage = new JLabel("");
         uploadImage = new JButton("Upload Image");
-        pnlBuy.add(uploadImage,gbc);
+        uploadImage.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               uploadImageActionPerformed(e);
+            }
+        });			
+        pnlBuy.add(testImage,BorderLayout.PAGE_START);
+        pnlBuy.add(uploadImage,BorderLayout.PAGE_END);
 		c.add(pnlBuy, gbc);
 		
 		JPanel mitte = new JPanel();           //Panel für den Preis
@@ -316,6 +347,63 @@ public class CardEditor extends JFrame implements ActionListener {
 
 	}
 
+	/**
+	 * resizing the uploaded image
+	 */
+	
+    public BufferedImage rescale(BufferedImage originalImage)
+    {
+        BufferedImage resizedImage = new BufferedImage(baseSize, baseSize, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, baseSize, baseSize, null);
+        g.dispose();
+        return resizedImage;
+    }
+    
+	/**
+	 * adds the uploaded image to the layout
+	 */
+	
+    public void setTarget(File reference)
+    {
+        try {
+            targetFile = reference;
+            targetImg = rescale(ImageIO.read(reference));
+        } catch (IOException ex) {
+            Logger.getLogger(CardEditor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        pnlBuy.setLayout(new BorderLayout());
+        pnlBuy.add(new JLabel(new ImageIcon(targetImg)),BorderLayout.PAGE_START); //TestImage verwenden statt neues
+        setVisible(true);
+    }
+    
+	/**
+	 * uploads any jpeg image that the user chooses from his computer
+	 */
+    
+    
+    private void uploadImageActionPerformed(java.awt.event.ActionEvent evt) {
+        JFileChooser fc = new JFileChooser(basePath);
+        fc.setFileFilter(new JPEGImageFileFilter());
+        int res = fc.showOpenDialog(null);
+        // We have an image!
+        try {
+            if (res == JFileChooser.APPROVE_OPTION) {
+                File file = fc.getSelectedFile();
+                setTarget(file);
+            } // Oops!
+            else {
+                JOptionPane.showMessageDialog(null,
+                        "You must select one image to be the reference.", "Aborting...",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        } catch (Exception iOException) {
+        }
+
+    }
+
+	
 	private void createTextfield() {
 		nameField = new JTextField("");
 	}
