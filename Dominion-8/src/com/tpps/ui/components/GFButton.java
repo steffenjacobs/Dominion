@@ -21,7 +21,9 @@ public abstract class GFButton extends GameObject {
 	private static final long serialVersionUID = -5419554206946431577L;
 
 	private String caption;
-
+	private static final int FONTSIZE =22;
+	private static final double MARGIN_SIZE_FONT =0.6;
+	private double resizeFactorFont;
 	private Font customFont;
 
 	/**
@@ -34,6 +36,7 @@ public abstract class GFButton extends GameObject {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,
 				_id);
 		this.caption = caption;
+		resizeFactorFont = relativeWidth+MARGIN_SIZE_FONT;
 		this.resizeObject(absWidth, absHeight);
 	}
 
@@ -46,6 +49,8 @@ public abstract class GFButton extends GameObject {
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent);
 		this.caption = caption;
+		resizeFactorFont = relativeWidth+MARGIN_SIZE_FONT;
+		System.out.println(resizeFactorFont);
 		this.resizeObject(absWidth, absHeight);
 	}
 
@@ -67,7 +72,9 @@ public abstract class GFButton extends GameObject {
 	public GFButton(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int _layer,
 			Image sourceImage, GraphicFramework _parent, String caption) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
+		resizeFactorFont = relativeWidth+MARGIN_SIZE_FONT;
 		this.caption = caption;
+
 	}
 
 	/**
@@ -92,7 +99,7 @@ public abstract class GFButton extends GameObject {
 				super.setRenderedImage(GraphicsUtil.drawStringCentered(
 						GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
 								super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)),
-						this.caption, customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
+						this.caption, customFont.deriveFont(Font.PLAIN, (int)(FONTSIZE*resizeFactorFont)), Color.WHITE));
 			} else if (this.caption.equals("Discard Deck") || this.caption.equals("End ActionPhase")
 					|| this.caption.equals("Play Treasures") || this.caption.equals("End Turn")
 					|| this.caption.equals("Stop Discard") || this.caption.equals("Stop Trash")
@@ -103,12 +110,12 @@ public abstract class GFButton extends GameObject {
 				super.setRenderedImage(GraphicsUtil.drawStringCentered(
 						GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
 								super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)),
-						this.caption, customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
+						this.caption, customFont.deriveFont(Font.PLAIN,(int)(FONTSIZE*resizeFactorFont)), Color.WHITE));
 			} else {
 				super.setRenderedImage(GraphicsUtil.drawStringCentered(
 						GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
 								super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)),
-						this.caption, customFont.deriveFont(Font.PLAIN, 22), Color.BLACK));
+						this.caption, customFont.deriveFont(Font.PLAIN,(int)(FONTSIZE*resizeFactorFont)), Color.BLACK));
 			}
 		}
 	}
