@@ -207,9 +207,9 @@ public class MatchmakingPacketHandler extends PacketHandler {
 			if (sess.checkSessionSync(pmr.getPlayerName(), pmr.getPlayerID())) {
 
 				MPlayer player = MPlayer.initialize(pmr, port);
-				MatchmakingController.addPlayer(player, false);
-				
+
 				if (pmr.isPrivate()) {
+					MatchmakingController.addPlayer(player, false);
 					MatchmakingController.createPrivateLobby(player);
 					try {
 						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 1,
@@ -218,8 +218,9 @@ public class MatchmakingPacketHandler extends PacketHandler {
 						e.printStackTrace();
 					}
 					return;
-				}				
-				
+				}
+				MatchmakingController.addPlayer(player, lobbyID == null);
+
 				if (lobbyID != null) {
 					MatchmakingController.getLobbyByID(lobbyID).joinPlayer(player);
 				}
