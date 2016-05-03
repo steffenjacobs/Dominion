@@ -228,7 +228,6 @@ public class GameController {
 	 * @return
 	 */
 	public synchronized boolean gain(String cardID, Player player) {
-		System.out.println("gain");
 		try {
 			LinkedList<Card> cardList = this.getGameBoard().findCardListFromBoard(cardID);
 			Card card = cardList.getLast();
@@ -480,14 +479,12 @@ public class GameController {
 				} else {
 					player.setRevealMode();
 					player.getRevealList().add(player.getDeck().removeSaveFromDrawPile());
-					System.out.println("was is in revealList:  " + Arrays.toString(player.getRevealList().toArray()));
 					this.spyList.add(player);
 				}
 			}
 		}
 		this.activePlayer.setRevealMode();
 		this.activePlayer.getRevealList().add(activePlayer.getDeck().removeSaveFromDrawPile());
-		System.out.println("was is in revealList:  " + Arrays.toString(this.activePlayer.getRevealList().toArray()));
 		this.spyList.add(this.activePlayer);
 		System.out.println("im gamecontrolloer spyList size: " + this.spyList.size());
 		if (this.spyList.size() > 0) {
@@ -593,8 +590,6 @@ public class GameController {
 						System.err.println("no victory card on hand");
 					}
 					player.setBureaucratFalse();
-					System.out.println(Arrays.toString(player.getDeck().getDrawPile().toArray()));
-					System.out.println();
 				}
 			}
 		}

@@ -260,7 +260,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		System.out.println("revealListEmpty: " + this.server.getGameController().getSpyList().isEmpty());
 		
 		
-		if (this.server.getGameController().getActivePlayer()!= null && playTwiceActivePlayer.getPlayTwiceCard() != null
+		if (this.server.getGameController().getActivePlayer()!= null
 				&&this.server.getGameController().getActivePlayer().isPlayTwice()
 			
 			
@@ -275,7 +275,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 					&& this.server.getGameController().allPlayerTrashed() && this.server.getGameController().allPlayerGained()
 					&& this.server.getGameController().allPlayersRevealed() && this.server.getGameController().allReveaListsEmpty()
 					&& this.server.getGameController().getSpyList().isEmpty()	&& this.server.getGameController().allTemporaryTrashPilesEmpty() && 
-					!playTwiceActivePlayer.isWitch() && !playTwiceActivePlayer.isBureaucrat()){
+					!playTwiceActivePlayer.isWitch() && !playTwiceActivePlayer.isBureaucrat()  && playTwiceActivePlayer.getPlayTwiceCard() != null){
 				
 //					try {
 						System.out.println("playTwice");
@@ -287,15 +287,21 @@ public class ServerGamePacketHandler extends PacketHandler {
 						}
 						
 						playTwiceActivePlayer.setSecondTimePlayed();
-//						try {
-//							Thread.sleep(5000);
-//						} catch (InterruptedException e) {
-//							e.printStackTrace();
-//						}
 						
+						
+						System.out.println("play twice card: " + playTwiceActivePlayer.getPlayTwiceCard().getId());
+						try{
 						new Thread(() -> {
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
 							handleReceivedPacket(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
 						}).start();
+						}catch (NullPointerException e) {
+							System.err.println("this should not happen.");
+						}
 						
 //						cardPlayed(playTwiceActivePlayer.getPort(), new PacketPlayCard(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer.getClientID()));
 //						this.server.getGameController().validateTurnAndExecute(playTwiceActivePlayer.getPlayTwiceCard().getId(), playTwiceActivePlayer);
