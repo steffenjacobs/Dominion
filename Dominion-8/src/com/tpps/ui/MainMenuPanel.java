@@ -165,11 +165,11 @@ public class MainMenuPanel extends JPanel {
 		public void mousePressed(MouseEvent e) {
 			MyAudioPlayer.doClick();
 			if (buttons[0].isOn(e.getX(), e.getY()) && buttons[0].isEnabled()) {
-				DominionController.getInstance().playOffline();
+				DominionController.getInstance().playSingleplayer();
 				
 			}
 			if (buttons[1].isOn(e.getX(), e.getY()) && buttons[1].isEnabled()) {								
-				DominionController.getInstance().joinLobbyGui();
+				DominionController.getInstance().joinLobbyGui(false);
 				DominionController.getInstance().sendPacketToGetStatistics();
 				DominionController.getInstance().findMatch();
 			}

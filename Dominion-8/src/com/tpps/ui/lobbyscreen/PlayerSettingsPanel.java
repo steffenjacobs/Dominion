@@ -96,9 +96,11 @@ public class PlayerSettingsPanel extends JPanel {
 	private BufferedImage redHead;
 	private JPanel midpanel;
 
-	 private BufferedImage brainCrossed;
-	 private BufferedImage brain;
-	
+	private BufferedImage brainCrossed;
+	private BufferedImage brain;
+
+	private ArrayList<String> aiNames = new ArrayList<>();
+	// private boolean singlePlayer = false;
 
 	/**
 	 * constructor, initializes the lobby
@@ -147,7 +149,7 @@ public class PlayerSettingsPanel extends JPanel {
 		panelEast = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		panel.setOpaque(false);
-		
+
 		this.plusKI = new KIButton(brain, true, this);
 		this.minusKI = new KIButton(brainCrossed, false, this);
 
@@ -159,7 +161,7 @@ public class PlayerSettingsPanel extends JPanel {
 		panelEast.setOpaque(false);
 
 		gbc.insets = new Insets(SPACE_PANEL_TO_PANEL, VERTICAL_GAP_KI, 0, H_SPACE_EDGE_TO_FIRSTPANEL);
-		gbc.gridy = 0;		
+		gbc.gridy = 0;
 		panelWest.add(plusKI, gbc);
 		gbc.gridy = 1;
 		panelWest.add(minusKI, gbc);
@@ -196,13 +198,13 @@ public class PlayerSettingsPanel extends JPanel {
 
 		return panel;
 	}
-	
+
 	public StartButton getStartButton() {
 		return startButton;
 	}
 
-	public class StartButton extends JButton implements ActionListener, MouseListener{
-		
+	public class StartButton extends JButton implements ActionListener, MouseListener {
+
 		private static final long serialVersionUID = 1L;
 		private boolean enabledFlag;
 		private BufferedImage switchimage;
@@ -211,7 +213,7 @@ public class PlayerSettingsPanel extends JPanel {
 		public StartButton() {
 			switchimage = PlayerSettingsPanel.this.redHead;
 			this.greenHover = greenLanton;
-			this.greenHover = GraphicsUtil.colorScale(Color.BLACK, greenHover,  0.75F);
+			this.greenHover = GraphicsUtil.colorScale(Color.BLACK, greenHover, 0.75F);
 			this.enabledFlag = false;
 			this.setText("Start");
 			this.setOpaque(false);
@@ -235,44 +237,47 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(enabledFlag){
+			if (enabledFlag) {
 				this.setEnabled(false);
 				this.enabledFlag = false;
 				String[] selCards = new String[cardNamesSelected.size()];
 				cardNamesSelected.toArray(selCards);
-	
+
 				try {
 					DominionController.getInstance().getMatchmaker().sendStartPacket(
-							DominionController.getInstance().getUsername(), DominionController.getInstance().getSessionID(),
+							DominionController.getInstance().getUsername(),
+							DominionController.getInstance().getSessionID(),
 							DominionController.getInstance().getLobbyID(), selCards);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 				System.out.println("Starting game...");
-			}else{
-				DominionController.getInstance().receiveChatMessageFromChatServer("You are not ready to start the match\n"
-						+ "selected cards: " + PlayerSettingsPanel.this.cardNamesSelected.size() + "\n"
-						+ "connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers()
-						 , "BOT", "", Color.YELLOW);
+			} else {
+				DominionController.getInstance()
+						.receiveChatMessageFromChatServer(
+								"You are not ready to start the match\n" + "selected cards: "
+										+ PlayerSettingsPanel.this.cardNamesSelected.size() + "\n"
+										+ "connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers(),
+								"BOT", "", Color.YELLOW);
 			}
 		}
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			if(enabledFlag){
+			if (enabledFlag) {
 				this.switchimage = greenHover;
 			}
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			if(enabledFlag){
+			if (enabledFlag) {
 				this.switchimage = PlayerSettingsPanel.this.greenLanton;
 			}
 		}
@@ -280,13 +285,13 @@ public class PlayerSettingsPanel extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	}
 
@@ -296,9 +301,9 @@ public class PlayerSettingsPanel extends JPanel {
 	public void handleStartButton() {
 		boolean validate = this.validateStartButton();
 		this.startButton.enabledFlag = validate;
-		if(validate){
+		if (validate) {
 			this.startButton.switchimage = greenLanton;
-		}else{
+		} else {
 			this.startButton.switchimage = redHead;
 		}
 		this.startButton.revalidate();
@@ -344,13 +349,13 @@ public class PlayerSettingsPanel extends JPanel {
 			this.remove(bottomAreaPanel);
 		}
 		this.midScroller = middleAreaPanel();
-		
+
 		midpanel = new JPanel(new BorderLayout());
 		midpanel.setOpaque(false);
 		midpanel.add(midScroller, BorderLayout.CENTER);
 		midpanel.add(Box.createHorizontalStrut(IMG_TO_EDGE), BorderLayout.WEST);
 		midpanel.add(Box.createHorizontalStrut(IMG_TO_EDGE), BorderLayout.EAST);
-		
+
 		this.add(midpanel);
 		this.add(bottomAreaPanel);
 		return this;
@@ -459,9 +464,8 @@ public class PlayerSettingsPanel extends JPanel {
 		scrollMid.getHorizontalScrollBar().setOpaque(false);
 		scrollMid.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 		scrollMid.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-		
+
 		scrollMid.setBorder(BorderFactory.createMatteBorder(0, 5, 5, 5, new Color(0, 0, 0, 20)));
-		
 
 		Iterator<SerializedCard> it = DominionController.getInstance().getCardRegistry().getAllCards().iterator();
 
@@ -490,8 +494,7 @@ public class PlayerSettingsPanel extends JPanel {
 
 			panelMid.add(displayedCard);
 		}
-		if (firstCard != null)
-		{
+		if (firstCard != null) {
 			scrollMid.addComponentListener(new CardResizeListener(firstCard));
 		}
 		scrollBarHeight = scrollMid.getHorizontalScrollBar().getHeight();
@@ -616,10 +619,9 @@ public class PlayerSettingsPanel extends JPanel {
 			this.greenLanton = (BufferedImage) GraphicsUtil.setAlpha(greenLanton, 0.6F);
 			this.redHead = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/redhead.png"));
 			this.redHead = (BufferedImage) GraphicsUtil.setAlpha(redHead, 0.6F);
-			 this.brain =
-			 ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/brain.png"));
-			 this.brainCrossed = ImageIO
-			 .read(ClassLoader.getSystemResource("resources/img/lobbyScreen/braincrossed.png"));
+			this.brain = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/brain.png"));
+			this.brainCrossed = ImageIO
+					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/braincrossed.png"));
 			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, PlayerSettingsPanel.ALPHA);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -728,13 +730,13 @@ public class PlayerSettingsPanel extends JPanel {
 			}
 		}
 	}
-	
+
 	/**
 	 * @return an Integer that represents the number of connectedplayers in th
 	 *         gui
 	 */
-	public synchronized int connectedPlayers(){
-		int players  = 0;
+	public synchronized int connectedPlayers() {
+		int players = 0;
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if (connectedPlayers[i].isPlayerFlag()) {
 				players++;
@@ -771,7 +773,7 @@ public class PlayerSettingsPanel extends JPanel {
 	public SearchingField[] getConnectedPlayers() {
 		return connectedPlayers;
 	}
-	
+
 	/**
 	 * @return an arraylist of all selected cards
 	 */
@@ -779,10 +781,25 @@ public class PlayerSettingsPanel extends JPanel {
 		return cardNamesSelected;
 	}
 
-	private ArrayList<String> aiNames = new ArrayList<>();
-	
 	public ArrayList<String> getAiNames() {
 		return aiNames;
+	}
+
+	public void add3AIs() {
+		new Thread(() -> {
+			System.out.println("trying to add 3 ais " + DominionController.getInstance().getLobbyID());
+
+			if (DominionController.getInstance().getLobbyID() == null) {
+				try {
+					DominionController.getInstance().waitForLobby();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			for (int i = 0; i < 3; i++) {
+				((ActionListener) this.plusKI).actionPerformed(new ActionEvent(this, -1, ""));
+			}
+		}).start();
 	}
 
 }
