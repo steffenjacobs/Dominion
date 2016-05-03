@@ -885,7 +885,7 @@ public class Player {
 				break;
 			case TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND:
 				this.trashMode = true;
-				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, Integer.parseInt(value.split("_")[0]));
+				this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, Integer.parseInt(value.split("_")[1]));
 				this.gainValue = Integer.parseInt(value.split("_")[1]);
 				break;
 			case TRASH_AND_GAIN_MORE_THAN:
