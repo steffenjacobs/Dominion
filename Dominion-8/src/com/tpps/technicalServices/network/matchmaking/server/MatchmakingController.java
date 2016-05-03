@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
@@ -36,12 +37,12 @@ public final class MatchmakingController {
 		lobbies = new CopyOnWriteArrayList<>();
 		lobbiesByPlayer = new ConcurrentHashMap<>();
 		playersByName = new ConcurrentHashMap<>();
-		connectedPortsByPlayer = new ConcurrentHashMap<>();
+//		connectedPortsByPlayer = new ConcurrentHashMap<>();
 		lobbiesByID = new ConcurrentHashMap<>();
 	}
 
 	private static ConcurrentHashMap<Integer, MPlayer> playersByPort;
-	private static ConcurrentHashMap<MPlayer, Integer> connectedPortsByPlayer;
+//	private static ConcurrentHashMap<MPlayer, Integer> connectedPortsByPlayer;
 
 	/*** also contains AI-names */
 	private static ConcurrentHashMap<String, MPlayer> playersByName;
@@ -218,14 +219,14 @@ public final class MatchmakingController {
 		// the lobby
 	}
 
-	/**
-	 * @return the port a player is connected with
-	 * @param player
-	 *            the requested player
-	 */
-	public static int getPortFromPlayer(MPlayer player) {
-		return connectedPortsByPlayer.get(player);
-	}
+//	/**
+//	 * @return the port a player is connected with
+//	 * @param player
+//	 *            the requested player
+//	 */
+//	public static int getPortFromPlayer(MPlayer player) {
+//		return connectedPortsByPlayer.get(player);
+//	}
 
 	/**
 	 * adds a player to a lobby
@@ -303,7 +304,7 @@ public final class MatchmakingController {
 	 */
 	public static void addPlayer(MPlayer player, boolean search) {
 		playersByPort.put(player.getConnectionPort(), player);
-		connectedPortsByPlayer.put(player, player.getConnectionPort());
+//		connectedPortsByPlayer.put(player, player.getConnectionPort());
 		playersByName.put(player.getPlayerName(), player);
 		if (search)
 			findLobbyForPlayer(player);
@@ -320,7 +321,7 @@ public final class MatchmakingController {
 		// remove client
 		GameLog.log(MsgType.NETWORK_INFO, "[-> " + player.getPlayerName() + " @" + player.getConnectionPort());
 		playersByPort.remove(player.getConnectionPort());
-		connectedPortsByPlayer.remove(player);
+//		connectedPortsByPlayer.remove(player);
 		playersByName.remove(player.getPlayerName());
 		GameLobby lobby = lobbiesByPlayer.remove(player);
 		if (lobby != null) {
@@ -356,16 +357,20 @@ public final class MatchmakingController {
 	public static void onGameEnd(PacketGameEnd endPacket) {
 		GameLobby lobby = lobbiesByPlayer.get(endPacket.getWinner());
 		for (String p : endPacket.getPlayers()) {
-			SQLStatisticsHandler.addOverallPlaytime(p, System.currentTimeMillis() - lobby.getStartTime());
-			if (!p.equals(endPacket.getWinner())) {
-				SQLStatisticsHandler.addWinOrLoss(p, false);
 
+			if (!DominionController.isOffline()) {
+				SQLStatisticsHandler.addOverallPlaytime(p, System.currentTimeMillis() - lobby.getStartTime());
+				if (!p.equals(endPacket.getWinner())) {
+					SQLStatisticsHandler.addWinOrLoss(p, false);
+				}
 			}
 			MPlayer player = playersByName.get(p);
-			int port = connectedPortsByPlayer.get(player);
-			MatchmakingServer.getInstance().disconnect(port);
+//			int port = connectedPortsByPlayer.get(player);
+			MatchmakingServer.getInstance().disconnect(player.getConnectionPort());
 		}
-		SQLStatisticsHandler.addWinOrLoss(endPacket.getWinner(), true);
+		if (!DominionController.isOffline()) {
+			SQLStatisticsHandler.addWinOrLoss(endPacket.getWinner(), true);
+		}
 
 		lobby.getServer().stopSrv();
 

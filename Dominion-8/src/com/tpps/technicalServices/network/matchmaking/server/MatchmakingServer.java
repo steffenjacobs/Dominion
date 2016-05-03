@@ -26,6 +26,12 @@ public class MatchmakingServer extends Server {
 
 	private final static int PORT_MATCHMAKING = 1341;
 
+	private final boolean local;
+
+	public boolean isLocal() {
+		return this.local;
+	}
+
 	/** @return the standard-port 1341 */
 	public static int getStandardPort() {
 		return PORT_MATCHMAKING;
@@ -44,6 +50,19 @@ public class MatchmakingServer extends Server {
 	}
 
 	/**
+	 * starts a local matchmaking-server
+	 * 
+	 * @throws IOException
+	 */
+	public MatchmakingServer() throws IOException {
+		super(new InetSocketAddress(Addresses.getAllInterfaces(), PORT_MATCHMAKING), new MatchmakingPacketHandler());
+		super.getListenerManager().registerListener(new MatchmakingListener());
+		instance = this;
+		local = true;
+		setupConsoleInput(PORT_MATCHMAKING);
+	}
+
+	/**
 	 * constructor for the matchmaking-server; warning: blocks!
 	 * 
 	 * @param address
@@ -56,6 +75,7 @@ public class MatchmakingServer extends Server {
 		super(address, _handler);
 		super.getListenerManager().registerListener(new MatchmakingListener());
 		instance = this;
+		local = false;
 		SQLHandler.init();
 		SQLHandler.connect();
 		setupConsoleInput(address.getPort());
@@ -161,7 +181,8 @@ public class MatchmakingServer extends Server {
 		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(joinedPlayer, true, adm);
 		try {
 			for (MPlayer receiver : receivers) {
-				super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
+				System.out.println(receiver);
+				super.sendMessage(receiver.getConnectionPort(), pmpj);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -185,7 +206,7 @@ public class MatchmakingServer extends Server {
 
 		PacketMatchmakingSuccessful pms = new PacketMatchmakingSuccessful(opponents, port, selectedActionCards);
 		try {
-			super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pms);
+			super.sendMessage(receiver.getConnectionPort(), pms);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -205,7 +226,7 @@ public class MatchmakingServer extends Server {
 	public void sendQuitPacket(MPlayer receiver, String quitPlayer, boolean adm) {
 		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(quitPlayer, false, adm);
 		try {
-			super.sendMessage(MatchmakingController.getPortFromPlayer(receiver), pmpj);
+			super.sendMessage(receiver.getConnectionPort(), pmpj);
 		} catch (NullPointerException | IOException | IllegalArgumentException e) {
 			// if one this player is already disconnected, too
 		}

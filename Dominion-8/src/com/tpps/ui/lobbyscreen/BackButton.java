@@ -14,16 +14,18 @@ import com.tpps.application.game.DominionController;
 
 /**
  * This class represents the button which is used to go back to the main menu
+ * 
  * @author jhuhn
  */
-public class BackButton extends JButton implements ActionListener{
-	
+public class BackButton extends JButton implements ActionListener {
+
 	private static final long serialVersionUID = 1L;
 	private BufferedImage image;
 	private boolean isLobby;
-	
+
 	/**
 	 * initializes the object
+	 * 
 	 * @author jhuhn
 	 */
 	public BackButton() {
@@ -32,9 +34,9 @@ public class BackButton extends JButton implements ActionListener{
 			this.setOpaque(false);
 			this.setContentAreaFilled(false);
 			this.setBorderPainted(false);
-		} catch (IOException e) {		
+		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
 		this.addActionListener(this);
 	}
 
@@ -46,30 +48,33 @@ public class BackButton extends JButton implements ActionListener{
 	 * @author jhuhn
 	 */
 	protected void paintComponent(Graphics g) {
-	    super.paintComponent(g);
-	    g.drawImage(image, 0, 0, null);
+		super.paintComponent(g);
+		g.drawImage(image, 0, 0, null);
 	}
 
 	@Override
 	/**
-	 * This method overrides the getPrefferedSize method to resize the JButton to the size of the used image
+	 * This method overrides the getPrefferedSize method to resize the JButton
+	 * to the size of the used image
+	 * 
 	 * @author jhuhn
 	 */
 	public Dimension getPreferredSize() {
-	    return new Dimension(image.getWidth(), image.getHeight());
+		return new Dimension(image.getWidth(), image.getHeight());
 	}
-	
+
 	@Override
 	/**
 	 * implements the logic to go back to the main menu
+	 * 
 	 * @author jhuhn
 	 */
 	public void actionPerformed(ActionEvent arg0) {
-		if(isLobby){
+		if (isLobby) {
 			DominionController.getInstance().abortSearching();
 			DominionController.getInstance().joinMainMenu();
 			DominionController.getInstance().clearAllPlayersFromGUI();
-		}else{
+		} else {
 			DominionController.getInstance().joinMainMenu();
 		}
 	}

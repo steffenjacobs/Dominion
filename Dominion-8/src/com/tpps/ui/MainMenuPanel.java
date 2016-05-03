@@ -53,6 +53,15 @@ public class MainMenuPanel extends JPanel {
 		registrateMouseListener();
 		this.addComponentListener(new MyComponentAdapter());
 		repaint();
+		if(DominionController.isOffline()){
+			try {
+				this.buttons[1].setEnabled(false);
+				this.buttons[2].setEnabled(false);
+				this.buttons[3].setEnabled(false);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		GameLog.log(MsgType.INIT, "MainMenuPanel");
 	}
 
@@ -109,7 +118,7 @@ public class MainMenuPanel extends JPanel {
 	protected void changeAlphaForButton(MouseEvent e) {
 		for (int i = 0; i < alpha.length; i++) {
 
-			if (buttons[i].isOn(e.getX(), e.getY())) {
+			if (buttons[i].isOn(e.getX(), e.getY()) && buttons[i].isEnabled()) {
 				if (this.alpha[i] != 1.0F) {
 					this.alpha[i] = 1F;
 					repaint();
@@ -155,19 +164,19 @@ public class MainMenuPanel extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			MyAudioPlayer.doClick();
-			if (buttons[0].isOn(e.getX(), e.getY())) {
-				MainMenuPanel.this.parent.dispose();
+			if (buttons[0].isOn(e.getX(), e.getY()) && buttons[0].isEnabled()) {
+				DominionController.getInstance().playOffline();
 				
 			}
-			if (buttons[1].isOn(e.getX(), e.getY())) {								
+			if (buttons[1].isOn(e.getX(), e.getY()) && buttons[1].isEnabled()) {								
 				DominionController.getInstance().joinLobbyGui();
 				DominionController.getInstance().sendPacketToGetStatistics();
 				DominionController.getInstance().findMatch();
 			}
-			if (buttons[2].isOn(e.getX(), e.getY())) {
+			if (buttons[2].isOn(e.getX(), e.getY())&& buttons[2].isEnabled()) {
 				DominionController.getInstance().openCardeditor();
 			}
-			if (buttons[3].isOn(e.getX(), e.getY())) {				
+			if (buttons[3].isOn(e.getX(), e.getY()) && buttons[3].isEnabled()) {				
 				DominionController.getInstance().openStatisticsGui();
 				DominionController.getInstance().sendPacketToGetStatistics();
 			}

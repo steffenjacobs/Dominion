@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.UUID;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.network.login.SQLHandling.SQLStatisticsHandler;
 import com.tpps.technicalServices.network.matchmaking.packets.PacketMatchmakingRequest;
 
@@ -18,7 +19,11 @@ public class MPlayer {
 	private final String playerName;
 	private final UUID playerUID;
 	private final int connectionPort;
-	private boolean isAI;
+	
+	@Override
+	public String toString(){
+		return "MPlayer_" + System.identityHashCode(this) + " - " + playerName + " [" + playerUID.toString() + "] @" + connectionPort + " AI:" + this.isAI();  
+	}
 
 	private PlayerMatchmakingScore matchmakingScore;
 
@@ -36,14 +41,13 @@ public class MPlayer {
 	 * @param ai
 	 *            determines, whether the linked Player is an AI or not
 	 */
-	private MPlayer(String name, UUID uid, HashMap<String, StatisticUnit> stats, int port, boolean ai) {
+	private MPlayer(String name, UUID uid, HashMap<String, StatisticUnit> stats, int port) {
 		this.playerName = name;
 		this.playerUID = uid;
 		this.connectionPort = port;
 		this.matchmakingScore = new PlayerMatchmakingScore(stats);
-		if (!ai)
+		if (!this.isAI())
 			this.matchmakingScore.calculateMatchmakingScore();
-		this.isAI = ai;
 	}
 
 	/** @return the uuid of the player */
@@ -63,7 +67,7 @@ public class MPlayer {
 
 	/** @return the matchmaking-score of the player */
 	public int getScore() {
-		if (this.isAI) {
+		if (this.isAI()) {
 			return 1;
 		} else {
 			return this.matchmakingScore.getScore();
@@ -92,42 +96,55 @@ public class MPlayer {
 	 *         the data-base
 	 */
 	public static MPlayer initialize(PacketMatchmakingRequest request, int port) {
-		try {
-			ResultSet res = SQLStatisticsHandler.getStatisticsForPlayer(request.getPlayerName());
-			if (res.next()) {
-				HashMap<String, StatisticUnit> stats = new HashMap<>();
-				stats.put("WINS", new StatisticUnit(res.getInt("wins")));
-				stats.put("LOSSES", new StatisticUnit(res.getInt("losses")));
-				stats.put("WIN_LOSS_RATIO", new StatisticUnit(res.getDouble("win_loss")));
-				stats.put("TIMES_PLAYED", new StatisticUnit(res.getInt("games_played")));
-				stats.put("RANK", new StatisticUnit(res.getInt("rank")));
-				stats.put("TIME_PLAYED", new StatisticUnit(res.getInt("playtime")));
-				stats.put("LAST_GAMES_TIMES", new StatisticUnit(
-						SQLStatisticsHandler.getPlaytimeDatesParsed(res.getString("LAST_TIME_PLAYED"))));
-				stats.put("LAST_GAMES_WINS",
-						new StatisticUnit(SQLStatisticsHandler.getLastTimeWinsParsed(res.getString("LAST_TIME_WINS"))));
-				return new MPlayer(request.getPlayerName(), request.getPlayerID(), stats, port, false);
-			} else {
-				return new MPlayer(request.getPlayerName(), request.getPlayerID(), null, 0, true);
+		if (!DominionController.isOffline()) {
+			try {
+				ResultSet res = SQLStatisticsHandler.getStatisticsForPlayer(request.getPlayerName());
+				if (res.next()) {
+					HashMap<String, StatisticUnit> stats = new HashMap<>();
+					stats.put("WINS", new StatisticUnit(res.getInt("wins")));
+					stats.put("LOSSES", new StatisticUnit(res.getInt("losses")));
+					stats.put("WIN_LOSS_RATIO", new StatisticUnit(res.getDouble("win_loss")));
+					stats.put("TIMES_PLAYED", new StatisticUnit(res.getInt("games_played")));
+					stats.put("RANK", new StatisticUnit(res.getInt("rank")));
+					stats.put("TIME_PLAYED", new StatisticUnit(res.getInt("playtime")));
+					stats.put("LAST_GAMES_TIMES", new StatisticUnit(
+							SQLStatisticsHandler.getPlaytimeDatesParsed(res.getString("LAST_TIME_PLAYED"))));
+					stats.put("LAST_GAMES_WINS", new StatisticUnit(
+							SQLStatisticsHandler.getLastTimeWinsParsed(res.getString("LAST_TIME_WINS"))));
+					return new MPlayer(request.getPlayerName(), request.getPlayerID(), stats, port);
+				} else {
+					return new MPlayer(request.getPlayerName(), request.getPlayerID(), null, 0);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
+			return null;
+		} else {
+			HashMap<String, StatisticUnit> stats = new HashMap<>();
+			stats.put("WINS", new StatisticUnit(0));
+			stats.put("LOSSES", new StatisticUnit(0));
+			stats.put("WIN_LOSS_RATIO", new StatisticUnit(0d));
+			stats.put("TIMES_PLAYED", new StatisticUnit(0));
+			stats.put("RANK", new StatisticUnit(0));
+			stats.put("TIME_PLAYED", new StatisticUnit(0));
+			stats.put("LAST_GAMES_TIMES", new StatisticUnit(new long[0]));
+			stats.put("LAST_GAMES_WINS", new StatisticUnit(new boolean[0]));
+			return new MPlayer(request.getPlayerName(), request.getPlayerID(), stats, port);
 		}
-		return null;
 	}
 
 	/** @return true: if this is an AI-Player, false: otherwise */
 	public boolean isAI() {
-		return this.isAI;
+		return UUID.fromString("00000000-0000-0000-0000-000000000000").equals(this.playerUID);
 	}
 
-	/**
-	 * setter for isAI
-	 * 
-	 * @param state
-	 *            the new ai-state
-	 */
-	public void setAi(boolean state) {
-		this.isAI = state;
-	}
+//	/**
+//	 * setter for isAI
+//	 * 
+//	 * @param state
+//	 *            the new ai-state
+//	 */
+//	public void setAi(boolean state) {
+//		this.isAI = state;
+//	}
 }
