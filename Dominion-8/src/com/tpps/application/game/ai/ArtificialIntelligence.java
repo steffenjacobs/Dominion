@@ -82,8 +82,8 @@ public class ArtificialIntelligence {
 		if (amountAvailable <= amountNeeded) {
 			playTreasures();
 		} else {
-			LinkedList<Card> allActionCards = this.getAllCardsFromType(CardType.TREASURE);
-			for (Card card : allActionCards) {
+			LinkedList<Card> allTreasureCards = this.getAllCardsFromType(CardType.TREASURE);
+			for (Card card : allTreasureCards) {
 				// hier
 				
 			}
@@ -152,28 +152,10 @@ public class ArtificialIntelligence {
 		if (myTurn()) {
 			GameLog.log(MsgType.AI, this + " is handling a turn");
 			Move tbe = determineMove();
-			executeMove(tbe);
-			
-			// hier
-			// überlegen ob das mit isReady so gut ist und sonst entfernen
-			
-			// determineMove();
-			// if (this.move.isReady()) {
-			// executeMove(this.move);
-			// } else {
-			// /**
-			// * method assigns a default turn as the next turn, if the
-			// * determineMove() method gets interrupted before something
-			// * useful is computed
-			// */
-			// executeMove(getDefaultMove());
-			// }
-			
+			executeMove(tbe);			
 		} else if (this.player.isReactionMode()) {
 			if (this.player.playsReactionCard()) {
-				// hier
-				// handle den und auch alle anderen Modes
-				
+				playCard(this.player.getDeck().getCardByTypeFromHand(CardType.REACTION));
 			}
 		}
 	}
@@ -186,7 +168,8 @@ public class ArtificialIntelligence {
 		GameLog.log(MsgType.AI, this + " is executing a turn");
 		try {
 			Thread.sleep(200);
-			this.playTreasures(); // evtl playTreasures(amountNeeded)
+			// evtl playTreasures(amountNeeded)
+			this.playTreasures(); 
 			Thread.sleep(200);
 			for (Card action : move.getPlaySequence().get(Execute.PLAY)) {
 				this.playCard(action);
@@ -201,13 +184,13 @@ public class ArtificialIntelligence {
 			}
 			Thread.sleep(200);
 			if (myTurn()) {
-				this.player.getGameServer().broadcastMessage(new PacketBroadcastLog("AI end[ed]Turn() by itself"));
+//				this.player.getGameServer().broadcastMessage(new PacketBroadcastLog("AI end[ed]Turn() by itself"));
 				this.endTurn();
 			}
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
 		}
 	}
 
@@ -224,6 +207,7 @@ public class ArtificialIntelligence {
 		// LinkedList<Card> cardHand = this.getCardHand();
 		// hier
 		
+		// chapel handlen
 		return result;
 	}
 
