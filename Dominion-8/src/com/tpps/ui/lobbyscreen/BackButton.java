@@ -74,6 +74,7 @@ public class BackButton extends JButton implements ActionListener {
 			DominionController.getInstance().abortSearching();
 			DominionController.getInstance().joinMainMenu();
 			DominionController.getInstance().clearAllPlayersFromGUI();
+			DominionController.getInstance().setLobbyID(null);
 		} else {
 			DominionController.getInstance().joinMainMenu();
 		}

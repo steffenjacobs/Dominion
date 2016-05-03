@@ -75,6 +75,7 @@ public final class DominionController {
 	private CardEditor cardEditor;
 
 	private Semaphore waitForSession = new Semaphore(1);
+	private Semaphore waitForLobby = new Semaphore(1);
 
 	/**
 	 * main entry point for client application
@@ -368,7 +369,7 @@ public final class DominionController {
 	 * 
 	 * @author jhuhn
 	 */
-	public void joinLobbyGui() {
+	public void joinLobbyGui(boolean singlePlayer) {
 		this.globalChatPanel.getBackButton().setLobby(true);
 		this.playerSettingsPanel.getStartButton().setEnabled(true);
 		JPanel panel = new JPanel() {
@@ -391,6 +392,9 @@ public final class DominionController {
 		panel.add(this.playerSettingsPanel.updateCards());
 		// this.playerSettingsPanel.setStatisticsBoardPanel(this.statisticsBoardPanel);
 		this.mainFrame.setPanel(panel);
+		if (singlePlayer) {
+			this.playerSettingsPanel.add3AIs();
+		}
 	}
 
 	/**
@@ -467,13 +471,14 @@ public final class DominionController {
 		return sessionID;
 	}
 
-	public void playOffline() {							
-		DominionController.getInstance().joinLobbyGui();
+	public void playSingleplayer() {
+		DominionController.getInstance().joinLobbyGui(true);
 		try {
 			DominionController.getInstance().getMatchmaker().createPrivateMatch(this.username, this.sessionID);
 		} catch (IOException e) {
 			e.printStackTrace();
-		};
+		}
+		;
 	}
 
 	/**
@@ -534,6 +539,7 @@ public final class DominionController {
 	 *            the Id of the lobby the player is in
 	 */
 	public void setLobbyID(UUID lobbyID) {
+		waitForLobby.release(1);
 		this.lobbyID = lobbyID;
 	}
 
@@ -556,6 +562,11 @@ public final class DominionController {
 		}
 		this.isHost = isHost;
 		System.out.println("AM I a host ? " + isHost);
+	}
+
+	public void waitForLobby() throws InterruptedException {
+		waitForLobby.drainPermits();
+		waitForLobby.acquire(1);
 	}
 
 }
