@@ -17,10 +17,10 @@ import com.tpps.technicalServices.network.login.SQLHandling.Utilties;
  * 
  * @author jhuhn - Johannes Huhn
  */
-public class LoginServer extends Server{
-	
+public class LoginServer extends Server {
+
 	private static int server_port = 1338;
-	
+
 	/**
 	 * This method initializes the LoginServer object and the MySQL server
 	 * 
@@ -41,13 +41,21 @@ public class LoginServer extends Server{
 	 */
 	public LoginServer(String host, String port, String username, String password, String database) throws IOException {
 		super(new InetSocketAddress(Addresses.getAllInterfaces(), server_port), new LoginPacketHandler());
-		((LoginPacketHandler)super.getHandler()).setServer(this);
-		
+		((LoginPacketHandler) super.getHandler()).setServer(this);
+		SQLHandler.init();
+		SQLHandler.connect();
 		this.initMySQLServer(host, port, username, password, database);
 		this.checkExistingDatabase();
 		this.setConsoleOutput();
 	}
-	
+
+	/** offline-mode constructor */
+	public LoginServer() throws IOException {
+		super(new InetSocketAddress(Addresses.getAllInterfaces(), server_port), new LoginPacketHandler());
+		((LoginPacketHandler) super.getHandler()).setServer(this);
+		this.setConsoleOutput();
+	}
+
 	/**
 	 * This methods is called when the server is finished with initializing This
 	 * method outputs a 'Dominion Login Server' banner and delivers specific
@@ -55,7 +63,7 @@ public class LoginServer extends Server{
 	 * 
 	 * @author jhuhn - Johannes Huhn
 	 */
-	private void setConsoleOutput(){
+	private void setConsoleOutput() {
 		System.out.println("            * * * * * * * * * * * * * *      ");
 		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
 		System.out.println("* * * * * Dominion Login Server - Team ++; * * * * *");
@@ -64,7 +72,7 @@ public class LoginServer extends Server{
 		System.out.println();
 		System.out.println("Enter 'help' to see all available commands.");
 		System.out.println();
-		
+
 		String line = null;
 		Scanner scanInput = new Scanner(System.in);
 		while (true) {
@@ -74,14 +82,14 @@ public class LoginServer extends Server{
 					SQLHandler.closeConnection();
 					System.exit(0);
 					break;
-				} else if (line.startsWith("create account")) {	 //TODO: update
+				} else if (line.startsWith("create account")) { // TODO: update
 					String[] words = line.split("\\s+");
 					Password temp1 = new Password(words[3], new String("defsalt"));
 					String firsthash = temp1.getHashedPassword();
-					
+
 					Password pw2 = new Password(firsthash);
 					String doublehashed = pw2.getHashedPassword();
-					
+
 					System.out.println(SQLOperations.createAccount(words[2], "", doublehashed, pw2.getSalt()));
 					SQLStatisticsHandler.insertRowForFirstLogin(words[2]);
 				} else if (line.startsWith("show nicknames")) {
@@ -89,25 +97,25 @@ public class LoginServer extends Server{
 				} else if (line.startsWith("reconnect")) {
 					SQLHandler.closeConnection();
 					SQLHandler.connect();
-				} else if(line.startsWith("DROP TABLE")){
+				} else if (line.startsWith("DROP TABLE")) {
 					String[] words = line.split("\\s+");
-					if(SQLOperations.checkTable(words[2])){
+					if (SQLOperations.checkTable(words[2])) {
 						SQLOperations.deleteTable(words[2]);
-					}else {
-						System.out.println("Table: " + words[2]  + " doesn't exist");
+					} else {
+						System.out.println("Table: " + words[2] + " doesn't exist");
 					}
-				} else if(line.startsWith("show tables")){
+				} else if (line.startsWith("show tables")) {
 					System.out.println(SQLOperations.showTables());
-				}else if(line.startsWith("CREATE TABLE accountdetails")){
-					if(!SQLOperations.checkTable("accountdetails")){
+				} else if (line.startsWith("CREATE TABLE accountdetails")) {
+					if (!SQLOperations.checkTable("accountdetails")) {
 						SQLOperations.createAccountdetailsTable();
-					}else{
+					} else {
 						System.out.println("Table accountdetails already exists");
 					}
-				} else if(line.trim().startsWith("CREATE TABLE statistics")){
-					if(!SQLOperations.checkTable("statistics")){
+				} else if (line.trim().startsWith("CREATE TABLE statistics")) {
+					if (!SQLOperations.checkTable("statistics")) {
 						SQLStatisticsHandler.createStatisticsTable(Utilties.createStatisticsList());
-					}else{
+					} else {
 						System.out.println("TABLE statistics already exists");
 					}
 				} else if (line.startsWith("help")) {
@@ -131,7 +139,7 @@ public class LoginServer extends Server{
 		}
 		scanInput.close();
 	}
-	
+
 	/**
 	 * This method initializes the SQLHandler with host, port etc. and connects
 	 * to the MySQL databse
@@ -150,11 +158,11 @@ public class LoginServer extends Server{
 	 * @param database
 	 *            a String representation of the database(MySQL) to use
 	 */
-	private void initMySQLServer(String host, String port, String username, String password, String database){
+	private void initMySQLServer(String host, String port, String username, String password, String database) {
 		SQLHandler.init();
 		SQLHandler.connect();
 	}
-	
+
 	/**
 	 * main entrypoint for the loginserver
 	 * 
@@ -168,14 +176,12 @@ public class LoginServer extends Server{
 			String database = "accountmanager";
 			String user = "root";
 			String password = "root";
-			SQLHandler.init();
-			SQLHandler.connect();
 			new LoginServer(hostname, port, user, password, database);
-		} catch (IOException e) {		
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * This method is important to setup the mysql database This method creates
 	 * MySQL tables and/or databases, if they aren't created
@@ -189,7 +195,7 @@ public class LoginServer extends Server{
 		if (!SQLOperations.checkTable("accountdetails")) {
 			SQLOperations.createAccountdetailsTable();
 		}
-		if(!SQLOperations.checkTable("statistics")){
+		if (!SQLOperations.checkTable("statistics")) {
 			SQLStatisticsHandler.createStatisticsTable(Utilties.createStatisticsList());
 		}
 	}

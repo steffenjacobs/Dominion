@@ -19,9 +19,14 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.chat.client.ChatClient;
+import com.tpps.technicalServices.network.chat.server.ChatServer;
+import com.tpps.technicalServices.network.clientSession.server.SessionServer;
 import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
 import com.tpps.technicalServices.network.game.GameClient;
+import com.tpps.technicalServices.network.login.server.LoginServer;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
+import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
+import com.tpps.technicalServices.util.NetUtil;
 import com.tpps.ui.MainFrame;
 import com.tpps.ui.MainMenuPanel;
 import com.tpps.ui.cardeditor.CardEditor;
@@ -39,10 +44,12 @@ import com.tpps.ui.statisticsscreen.StatisticsBoard;
 public final class DominionController {
 
 	private static DominionController INSTANCE;
-	private UUID lobbyID;
 
+	private UUID lobbyID;
 	private String username;
 	private UUID sessionID;
+	private static boolean offlineMode = false;
+
 	private GameClient gameClient;
 	private Matchmaker matchmaker;
 	private CardStorageController storageController;
@@ -63,15 +70,17 @@ public final class DominionController {
 	private boolean turnFlag;
 	private boolean isHost;
 	private ChatClient chatClient;
-	
+
 	@SuppressWarnings("unused")
 	private CardEditor cardEditor;
 
 	private Semaphore waitForSession = new Semaphore(1);
-	
 
-	/** main entry point for client application 
-	 * @param stuff */
+	/**
+	 * main entry point for client application
+	 * 
+	 * @param stuff
+	 */
 	public static void main(String[] stuff) {
 		new DominionController();
 	}
@@ -80,6 +89,47 @@ public final class DominionController {
 	 * trivial
 	 */
 	private DominionController() {
+		offlineMode = !NetUtil.isNetworkReachable(Addresses.getRemoteAddress());
+		if (offlineMode) {
+			Addresses.setRemoteHost(Addresses.getLocalHost());
+
+			// start session-server
+			new Thread(() -> {
+				try {
+					new SessionServer();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}).start();
+
+			// start matchmaking-server
+			new Thread(() -> {
+				try {
+					new MatchmakingServer();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}).start();
+
+			// start login-server
+			new Thread(() -> {
+				try {
+					new LoginServer();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}).start();
+
+			// start chat-server
+			new Thread(() -> {
+				try {
+					new ChatServer();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}).start();
+
+		}
 		DominionController.INSTANCE = this;
 		DominionController.INSTANCE.init();
 	}
@@ -126,11 +176,13 @@ public final class DominionController {
 	 */
 	public void startMatch(int port) {
 		try {
-			System.out.println("in DominionController: start Match");
 			selectedGameImage = this.playerSettingsPanel.getSelectedPicture();
-			System.out.println("FIRST: " + selectedGameImage);
-			gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), port),
+
+			GameLog.log(MsgType.INFO, "Starting " + (isOffline() ? "Offline" : "Online") + " Match.");
+
+			this.gameClient = new GameClient(new InetSocketAddress(Addresses.getRemoteAddress(), port),
 					new ClientGamePacketHandler());
+
 			this.clearAllPlayersFromGUI();
 			this.joinMainMenu();
 			this.mainFrame.setVisible(false);
@@ -252,8 +304,11 @@ public final class DominionController {
 	 * @author jhuhn
 	 */
 	public void endLogin() {
-		this.mainFrame.setTitle(this.username);
-		storageController.checkStandardCardsAsync();
+		this.mainFrame.setTitle("Dominion by TPPS - Playing as " + this.username + (offlineMode ? " (OFFLINE) " : ""));
+
+		if (!isOffline()) {
+			storageController.checkStandardCardsAsync();
+		}
 
 		this.loadPanels();
 		this.initClients();
@@ -276,16 +331,17 @@ public final class DominionController {
 		return turnFlag;
 	}
 
-	
 	/**
-	 * @param turnFlag set whether it is your turn
+	 * @param turnFlag
+	 *            set whether it is your turn
 	 */
 	public void setTurnFlag(boolean turnFlag) {
 		this.turnFlag = turnFlag;
 	}
 
 	/**
-	 * @param name the new username
+	 * @param name
+	 *            the new username
 	 */
 	public void setUsername(String name) {
 		this.username = name;
@@ -394,6 +450,10 @@ public final class DominionController {
 		return gameClient;
 	}
 
+	public static boolean isOffline() {
+		return offlineMode;
+	}
+
 	/**
 	 * @return the current Session-ID
 	 */
@@ -405,6 +465,11 @@ public final class DominionController {
 				e.printStackTrace();
 			}
 		return sessionID;
+	}
+
+	public void playOffline() {							
+		DominionController.getInstance().joinLobbyGui();
+		DominionController.getInstance().findMatch();
 	}
 
 	/**
@@ -460,31 +525,33 @@ public final class DominionController {
 
 	/**
 	 * sets the lobby the player is in
-	 * @param lobbyID the Id of the lobby the player is in
+	 * 
+	 * @param lobbyID
+	 *            the Id of the lobby the player is in
 	 */
 	public void setLobbyID(UUID lobbyID) {
 		this.lobbyID = lobbyID;
 	}
-	
+
 	/**
 	 * @return the login-GUI-controller
 	 */
 	public LoginGUIController getLoginGuiController() {
 		return loginGuiController;
 	}
-	
+
 	public boolean isHost() {
 		return isHost;
 	}
 
 	public void setHost(boolean isHost) {
-		if(isHost){
+		if (isHost) {
 			playerSettingsPanel.enableOrDisableEverything(true);
-		}else{
+		} else {
 			playerSettingsPanel.enableOrDisableEverything(false);
 		}
 		this.isHost = isHost;
 		System.out.println("AM I a host ? " + isHost);
 	}
-	
+
 }

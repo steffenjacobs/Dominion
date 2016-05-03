@@ -14,18 +14,19 @@ public final class Addresses {
 	private static AutoCreatingProperties conf;
 
 	private static final String CONFIG_FILE = "addresses.cfg";
-	
+
 	private static AutoCreatingProperties sqlconf;
 
 	private static final String SQL_CONFIG_FILE = "sqladdresses.cfg";
-	
-	
 
-	static {		
+	private static String remoteAddress;
+
+	static {
 		conf = new AutoCreatingProperties();
 		conf.load(new File(CONFIG_FILE));
 		sqlconf = new AutoCreatingProperties();
-		sqlconf.load(new File(SQL_CONFIG_FILE));		
+		sqlconf.load(new File(SQL_CONFIG_FILE));
+		remoteAddress = conf.getProperty("REMOTE_HOST", "78.31.66.224");
 	}
 
 	/** @return 127.0.0.1 */
@@ -41,7 +42,7 @@ public final class Addresses {
 
 	/** @return the remote-host address */
 	public static final String getRemoteAddress() {
-		return conf.getProperty("REMOTE_HOST", "78.31.66.224");
+		return remoteAddress;
 	}
 
 	/**
@@ -51,18 +52,18 @@ public final class Addresses {
 	 *            the new IP-Address-String
 	 */
 	public static final void setRemoteHost(String newAddress) {
-		conf.setProperty("REMOTE_HOST", newAddress);
+		remoteAddress = newAddress;
 	}
-	
-	public static final void setSQLInitializiation(String[] data){
+
+	public static final void setSQLInitializiation(String[] data) {
 		sqlconf.setProperty("host", data[0]);
 		sqlconf.setProperty("port", data[1]);
 		sqlconf.setProperty("username", data[2]);
 		sqlconf.setProperty("password", data[3]);
-		sqlconf.setProperty("database", data[4]);		
+		sqlconf.setProperty("database", data[4]);
 	}
-	
-	public static final String[] getSQLInitialization(){
+
+	public static final String[] getSQLInitialization() {
 		String[] data = new String[5];
 		data[0] = sqlconf.getProperty("host", "localhost");
 		data[1] = sqlconf.getProperty("port", "3306");

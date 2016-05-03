@@ -79,6 +79,9 @@ public class LoginGUIController{
 		} else if(state == 3){
 			JOptionPane.showMessageDialog(null, "EMAIL already in use", "Create Account", JOptionPane.ERROR_MESSAGE);
 		}
+		else if (state ==4){
+			JOptionPane.showMessageDialog(null, "You can not create accounts in offline-mode", "Create Account", JOptionPane.ERROR_MESSAGE);			
+		}
 	}
 	
 	/**
