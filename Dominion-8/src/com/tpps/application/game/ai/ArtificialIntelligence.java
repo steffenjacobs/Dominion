@@ -136,7 +136,7 @@ public class ArtificialIntelligence {
 	 * @throws InterruptedException 
 	 */
 	private void playAllActionCards() throws InterruptedException {
-		if (this.player.getDeck().cardHandActionCardAmount() > 0) {
+		if (this.player.getDeck().cardHandContains(CardType.ACTION)) {
 			while (this.player.getActions() > 0 && this.player.getDeck().cardHandContains(CardType.ACTION)) {
 				if (addActionCardAvailable()) {
 					LinkedList<Card> plusActionCards = this.player.getDeck().cardHandsWith(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand());
@@ -149,6 +149,7 @@ public class ArtificialIntelligence {
 				Card tbp = this.player.getDeck().cardWithHighestCost(remainingActionCards);
 				Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 				playCard(tbp);
+				return; // for test purposes
 			}
 		}
 
