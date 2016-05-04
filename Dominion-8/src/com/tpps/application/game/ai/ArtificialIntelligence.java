@@ -135,7 +135,7 @@ public class ArtificialIntelligence {
 	 * determine which cards have the most value and play all of these cards with CardType.ACTION
 	 * @throws InterruptedException 
 	 */
-	private void playAllActionCards() throws InterruptedException {
+	private void playAllActionCards() throws InterruptedException {System.out.println("AI 8.");
 		if (this.player.getDeck().cardHandContains(CardType.ACTION)) {
 			while (this.player.getActions() > 0 && this.player.getDeck().cardHandContains(CardType.ACTION)) {
 				if (addActionCardAvailable()) {
@@ -201,8 +201,9 @@ public class ArtificialIntelligence {
 	 */
 	public void start() {
 		new Thread(new Runnable() {
-
+			
 			public void run() {
+				System.out.println("AI 1.");
 				while (notFinished()) {
 					try {
 						Thread.sleep(1000);
@@ -223,7 +224,9 @@ public class ArtificialIntelligence {
 	 * case no: handle a possible reaction Phase of the player (if an enemy played an attack)
 	 */ 
 	private void handleTurn() {
+		System.out.println("AI 2.");
 		if (myTurn()) {
+			System.out.println("AI 3.");
 			GameLog.log(MsgType.AI, this + "is handling a turn");
 			
 			if (firstTurn())
@@ -246,7 +249,7 @@ public class ArtificialIntelligence {
 	 */
 	private void executeMove() {
 		GameLog.log(MsgType.AI, this + "is executing a turn");
-		try {
+		try {System.out.println("AI 7.");
 			this.playAllActionCards();
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.setBuyPhase();
@@ -294,6 +297,7 @@ public class ArtificialIntelligence {
 	}
 
 	private void determineStrategy() {
+		System.out.println("AI 5.");
 		if (this.player.getGameServer().getGameController().getGameBoard().getTableForActionCards().get("Witch") != null && iAmTheOnlyAI()) {
 			this.strategy = Strategy.WITCH;
 			return;
@@ -331,6 +335,7 @@ public class ArtificialIntelligence {
 	 * check several game states and set the endPhase if necessary
 	 */
 	private void checkEndPhase() {
+		System.out.println("AI 6.");
 		if (getProvinceAmount() < 4) {
 			this.endPhase = true;
 		} else if (this.player.getTurnNr() >= ArtificialIntelligence.ENDPHASE_TURN) {
@@ -391,6 +396,7 @@ public class ArtificialIntelligence {
 	 * @return whether it is the first turn of the AI
 	 */
 	private boolean firstTurn() {
+		System.out.println("AI 4.");
 		return this.player.getTurnNr() == 1;
 	}
 
