@@ -160,6 +160,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case END_TRASH_MODE:
 				this.server.getGameController().getActivePlayer().endTrashMode();
+				
 				PacketSendActiveButtons packetSendActiveButtons;
 				if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null && !this.server.getGameController().getActivePlayer().isDiscardMode() 
 						&& !this.server.getGameController().getActivePlayer().isTrashMode()){
@@ -645,18 +646,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 				this.server.getGameController().getActivePlayer().isTrashMode()){
 			System.out.println("remove");
 			changeButtons = "remove";
+		}else{
+			if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null){
+				if (this.server.getGameController().getActivePlayer().getActions() > 0){
+					System.out.println("actions");
+					changeButtons = "actions";
+				}else{
+					System.out.println("playtreasures");
+					changeButtons = "playTreasures";
+				}
+			}
 		}
-//		}else{
-//			if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null){
-//				if (this.server.getGameController().getActivePlayer().getActions() > 0){
-//					System.out.println("actions");
-//					changeButtons = "actions";
-//				}else{
-//					System.out.println("playtreasures");
-//					changeButtons = "playTreasures";
-//				}
-//			}
-//		}
+		
 		}
 		this.server.sendMessage(port, new PacketUpdateValuesChangeButtons(player.getActions(), player.getBuys(), player.getCoins(), changeButtons));
 		this.server.getGameController().isGameFinished();

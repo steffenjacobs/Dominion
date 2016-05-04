@@ -136,16 +136,16 @@ public class ClientGamePacketHandler extends PacketHandler {
 				this.gameWindow.removePlayTreasuresButton();
 				
 				break;
-//			case "actions":
-//				System.out.println("actions");
-//				this.gameWindow.addEndActionPhaseButton();
-//				this.gameWindow.addEndTurnButton();
-//				break;
-//			case "playTreasures":
-//				System.out.println("play treasures");
-//				this.gameWindow.addPlayTreasuresButton();
-//				this.gameWindow.addEndTurnButton();
-//				break;
+			case "actions":
+				System.out.println("actions");
+				this.gameWindow.addEndActionPhaseButton();
+				this.gameWindow.addEndTurnButton();
+				break;
+			case "playTreasures":
+				System.out.println("play treasures");
+				this.gameWindow.addPlayTreasuresButton();
+				this.gameWindow.addEndTurnButton();
+				break;
 			default:
 				break;
 			}
