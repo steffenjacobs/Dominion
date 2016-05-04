@@ -200,7 +200,7 @@ public class GameWindow extends JFrame {
 
 		this.framework.addComponent(new GameBackground(0, 0, 1, 1, 0, this.backgroundImage, this.framework));
 		this.framework.addComponent(new GameBackground(0.31, 0.05, 0.38, 0.38, 2, this.tableImage, this.framework));
-		this.framework.addComponent(GameWindow.playButton);
+//		this.framework.addComponent(GameWindow.playButton);
 		this.framework.addComponent(GameWindow.closeButton);
 		this.framework.addComponent(GameWindow.endActionPhase);
 		this.framework.addComponent(GameWindow.endTurn);
