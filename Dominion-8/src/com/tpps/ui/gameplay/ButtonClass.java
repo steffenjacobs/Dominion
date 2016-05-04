@@ -34,7 +34,7 @@ import com.tpps.ui.components.GFButton;
 public class ButtonClass extends GFButton {
 	private static final long serialVersionUID = 1520424079770080041L;
 	private Image original;
-	private String parameter;
+	private String parameter="";
 
 	/**
 	 * constructor calling the GraphicFramework and drawing the buttons
@@ -94,20 +94,20 @@ public class ButtonClass extends GFButton {
 	 */
 
 	public void onMouseClick() {
+		if (parameter.equals("exit")) {
+			System.exit(0);
+		}
+		if (parameter.equals("play")) {
+			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
+			MyAudioPlayer.handleMainMusic(false);
+			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getMuteButton());
+		}
+		if (parameter.equals("mute")) {
+			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
+			MyAudioPlayer.handleMainMusic(true);
+			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getPlayButton());
+		}
 		if (DominionController.getInstance().isTurnFlag()) {
-			if (parameter.equals("exit")) {
-				System.exit(0);
-			}
-			if (parameter.equals("play")) {
-				GameWindow.getInstance().getGraphicFramework().removeComponent(this);
-				MyAudioPlayer.handleMainMusic(false);
-				GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getMuteButton());
-			}
-			if (parameter.equals("mute")) {
-				GameWindow.getInstance().getGraphicFramework().removeComponent(this);
-				MyAudioPlayer.handleMainMusic(true);
-				GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getPlayButton());
-			}
 
 			DominionController.getInstance().setTurnFlag(false);
 			DominionController.getInstance().getGameClient().getGameWindow().setCaptionTurn("execute");
