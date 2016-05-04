@@ -20,6 +20,7 @@ import com.google.common.base.CharMatcher;
 public class CreateAccountListener implements MouseListener {
 	CreateAccount ca;
 	LoginGUIController guicontroller;
+	Color textAndLabelColor;
 
 	/**
 	 * simple constructor initializing a parameter
@@ -30,6 +31,7 @@ public class CreateAccountListener implements MouseListener {
 	public CreateAccountListener(CreateAccount createAccount, LoginGUIController guicontroller) {
 		this.ca = createAccount;
 		this.guicontroller = guicontroller;
+		this.textAndLabelColor = System.getProperty("os.name").startsWith("Windows") ? Color.WHITE : Color.BLACK;
 	}
 
 	/**
@@ -164,9 +166,8 @@ public class CreateAccountListener implements MouseListener {
 	@Override
 	public void mouseExited(MouseEvent e) {
 		ca.getCreateAccount().setOpaque(false);
-		ca.getCreateAccount().setForeground(Color.WHITE);
+		ca.getCreateAccount().setForeground(textAndLabelColor);
 		ca.getCreateAccount().setBorderPainted(true);
 		ca.getCreateAccount().setContentAreaFilled(false);	
 	}
-
 }

@@ -17,6 +17,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketEndTurn;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.technicalServices.util.CollectionsUtil;
+import com.tpps.technicalServices.util.GameConstant;
 
 /*
  * - board anschauen, wenn angriffskarten gekauft werden dann defensiv kaufen 
@@ -37,6 +38,9 @@ public class ArtificialIntelligence {
 	private Player player;
 	private List<String> blacklist;
 	private boolean endPhase;
+	
+	private static final int ENDPHASE_TURN = 22;
+	private static final int TIME_DELAY = 500;
 
 	/**
 	 * constructor of the Artificial Intelligence
@@ -84,7 +88,7 @@ public class ArtificialIntelligence {
 	}
 
 	private void playTreasures(int amountNeeded) {
-		int amountAvailable = this.getTreasureCardsValue();
+		int amountAvailable = this.getTreasureCardsValue(getCardHand());
 		if (amountAvailable <= amountNeeded) {
 			playTreasures();
 		} else {
@@ -107,6 +111,7 @@ public class ArtificialIntelligence {
 					playCards(plusActionCards);
 					continue;
 				}				
+				// Logik
 				LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
 				Card tbp = this.player.getDeck().cardWithHighestCost(remainingActionCards);
 				playCard(tbp);
@@ -166,13 +171,16 @@ public class ArtificialIntelligence {
 	private void handleTurn() {
 		if (myTurn()) {
 			GameLog.log(MsgType.AI, this + "is handling a turn");
-			checkEndPhase();
+			if (!endPhase)
+				checkEndPhase();
+			
 			Move tbe = determineMove();
 			executeMove(tbe);
 		} else if (this.player.isReactionMode()) {
 			if (this.player.playsReactionCard()) {
 				playCard(this.player.getDeck().getCardByTypeFromHand(CardType.REACTION));
-				// hier
+//			} else if (this.player.isDiscardMode()) {
+				
 			}
 		}
 	}
@@ -184,21 +192,22 @@ public class ArtificialIntelligence {
 	private void executeMove(Move move) {
 		GameLog.log(MsgType.AI, this + "is executing a turn");
 		try {
-			Thread.sleep(200);
+			this.playAllActionCards();
+			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.playTreasures(); // evtl playTreasures(amountNeeded)
-			Thread.sleep(200);
-			for (Card action : move.getPlaySequence().get(Execute.PLAY)) {
-				this.playCard(action);
-			}
-			Thread.sleep(200);
+			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
+//			for (Card action : move.getPlaySequence().get(Execute.PLAY)) {
+//				this.playCard(action);
+//			}
+			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.setBuyPhase();
-			Thread.sleep(200);
+			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			for (String buy : move.getBuySequence().get(Execute.BUY)) {
-				if (!getBlacklist().contains(buy)) {
+				if (!getBlacklist().contains(buy) || endPhase) {
 					this.buyCard(this.getCardFromBoard(buy));
 				}
 			}
-			Thread.sleep(200);
+			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			if (myTurn()) {
 				GameLog.log(MsgType.AI, "ended Turn by itself.");
 				this.endTurn();
@@ -221,7 +230,7 @@ public class ArtificialIntelligence {
 		// hier
 
 		// chapel handlen
-		return getDefaultMove(); // �ndern
+		return getDefaultMove(); // aendern
 	}
 
 	/**
@@ -231,13 +240,15 @@ public class ArtificialIntelligence {
 	 * action is performed and if there are enough coins to the desired action
 	 * (/buy the desired card), don't draw any more cards e.g.
 	 */
-	private Move getDefaultMove() {
+	private Move getDefaultMove()  /* umbenennen in determineBuy oder so  */{
 		Move result = new Move();
 		// LinkedList<Card> cardHand = this.getCardHand();
 		// hier
 		
-		playAllActionCards();
-		int coins = getTreasureCardsValue();
+//		playAllActionCards(result); // das hier muss in executeMove ausgeführt werden, nicht in getMove
+//		while einbauen, die käufe je nach remaining coins hinzufügt solange noch käufe da sind (durch blacklist wird eh abgefangen wenns nicht gekauft werden soll)
+		// Logik
+		int coins = getTreasureCardsValue(getCardHand());
 		if (coins >= 8) {
 			result.putBuy("Province");
 		} else if (coins >= 6) {
@@ -252,11 +263,11 @@ public class ArtificialIntelligence {
 
 	/**
 	 * 
-	 * @return
+	 * @return if it's the AIs turn
 	 */
 	private boolean myTurn() {
-		Player activePlayer = this.player.getGameServer().getGameController().getActivePlayer();
-		return activePlayer != null ? activePlayer.equals(this.player) : false;
+		String activePlayerName = this.player.getGameServer().getGameController().getActivePlayerName();
+		return activePlayerName != null ? activePlayerName.equals(this.player.getPlayerName()) : false;
 	}
 
 	/**
@@ -268,34 +279,61 @@ public class ArtificialIntelligence {
 		return this.player.getGameServer().getGameController().isGameNotFinished();
 	}
 
-	private boolean checkEndPhase() {
-		// provinzen < 4
-		// 3 niedrigsten Kartenstapel insgesamt unter 7 Karten
-		// turn number sehr hoch
-		
-		// hier
-		// je nachdem: this.endPhase = true;
-		// blacklist einbauen
-			
-		return false;
+	/**
+	 * check several game states and set the endPhase if necessary
+	 */
+	private void checkEndPhase() {
+		if (getProvinceAmount() < 4) {
+			this.endPhase = true;
+			// } else if (this.player.getGameServer().getGameController().getGameBoard().amountOfPilesEmpty() == GameConstant.EMPTY_PILES - 1) {
+			// this.endPhase = true;
+		} else if (this.player.getTurnNr() >= ArtificialIntelligence.ENDPHASE_TURN) {
+			this.endPhase = true;
+		}
+		// hier: 3 niedrigsten Kartenstapel insgesamt unter 7 Karten
 	}
 	
 	/**
 	 * 
-	 * @param player
-	 *            the player to get the information from
-	 * @return
+	 * @param cards the cardList to check
+	 * @return the value of all treasure cards in the given list
 	 */
-	private int getTreasureCardsValue() {
-		return this.player.getDeck().getTreasureValueOfList(this.getCardHand());
+	private int getTreasureCardsValue(LinkedList<Card> cards) {
+		return this.player.getDeck().getTreasureValueOfList(cards);
 	}
 
+	/**
+	 * 
+	 * @param cardType the CardType to search for
+	 * @return all cards from the players deck with type cardType
+	 */
 	private LinkedList<Card> getAllCardsFromType(CardType cardType) {
 		return this.player.getDeck().getCardsByTypeFromHand(cardType);
 	}
 
+	/**
+	 * 
+	 * @return whether there is a card on the players cardhand which adds at least 1 action to the players
+	 * remaining actions when played (e.g. Market)
+	 */
 	private boolean addActionCardAvailable() {
 		return this.player.getDeck().cardHandsWith(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()).size() > 0;
+	}
+	
+	/**
+	 * 
+	 * @return the amount of Provinces left on the board
+	 */
+	private int getProvinceAmount() {
+		return this.player.getGameServer().getGameController().getGameBoard().getTableForVictoryCards().get("Province").size();
+	}
+	
+	/**
+	 * 
+	 * @return whether the AI is the only non-human player
+	 */
+	private boolean iAmTheOnlyAI() {
+		return this.player.getGameServer().getGameController().getArtificialPlayers().size() == 1;
 	}
 	
 	/**

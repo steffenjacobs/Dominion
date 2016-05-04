@@ -134,21 +134,28 @@ public class LoginListener implements MouseListener {
 	public void mouseExited(MouseEvent e) {
 		if (clicked.getText().equals("New Account")) {
 			clicked.setOpaque(false);
-			clicked.setForeground(Color.WHITE);
+			if (System.getProperty("os.name").startsWith("Windows"))
+				clicked.setForeground(Color.WHITE);
+			else
+				clicked.setForeground(Color.BLACK);
 			clicked.setBorderPainted(true);
 			clicked.setContentAreaFilled(false);
 		} else if (clicked.getText().equals("Cancel")) {
 			clicked.setOpaque(false);
-			clicked.setForeground(Color.WHITE);
+			if (System.getProperty("os.name").startsWith("Windows"))
+				clicked.setForeground(Color.WHITE);
+			else
+				clicked.setForeground(Color.BLACK);
 			clicked.setBorderPainted(true);
 			clicked.setContentAreaFilled(false);
 		} else if (clicked.getText().equals("Login")) {
 			clicked.setOpaque(false);
-			clicked.setForeground(Color.WHITE);
+			if (System.getProperty("os.name").startsWith("Windows"))
+				clicked.setForeground(Color.WHITE);
+			else
+				clicked.setForeground(Color.BLACK);
 			clicked.setBorderPainted(true);
 			clicked.setContentAreaFilled(false);
 		}
-
 	}
-
 }
