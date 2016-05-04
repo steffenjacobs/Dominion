@@ -137,14 +137,13 @@ public final class MatchmakingController {
 			GameLog.log(MsgType.INFO, "Setting up lobby " + lobby.getLobbyID());
 			// removeLobby(lobby);
 			String[] playerNames = new String[lobby.getPlayers().size()];
-			MPlayer player;
 
 			boolean hasAI = false;
 
-			for (int i = 0; i < lobby.getPlayers().size(); i++) {
-				player = lobby.getPlayers().get(i);
+			int i = 0;
+			for (MPlayer player : lobby.getPlayers()) {
 				playerNames[i] = player.getPlayerName();
-
+				i++;
 				if (!hasAI && player.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 					hasAI = true;
 				}
@@ -182,9 +181,9 @@ public final class MatchmakingController {
 				for (MPlayer pl : lobby.getPlayers()) {
 
 					/* send AI-register packets */
-					if (pl.getPlayerUID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+					if (pl.isAI()) {
 						try {
-							cl.sendMessage(new PacketRegistratePlayerByServer("AI" + System.identityHashCode(cl),
+							cl.sendMessage(new PacketRegistratePlayerByServer(pl.getPlayerName(),
 									pl.getPlayerUID()));
 							Thread.sleep(100);
 						} catch (Exception e) {
