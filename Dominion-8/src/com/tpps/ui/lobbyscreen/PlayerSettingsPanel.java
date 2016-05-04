@@ -6,6 +6,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -43,6 +44,7 @@ import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.Loader;
 
 /**
  * This class creates a JPanel with all gui components, that are shown on the
@@ -54,7 +56,7 @@ import com.tpps.technicalServices.util.GraphicsUtil;
 public class PlayerSettingsPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private final Font head = new Font("Arial Black", Font.BOLD, 20);
+	private  Font head;
 
 	private BufferedImage[] originalImages = new BufferedImage[4];
 	private BufferedImage[] transparentImages = new BufferedImage[4];
@@ -108,11 +110,14 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	public PlayerSettingsPanel() {
+		this.fontLoading();
 		this.initOriginalBackgroundImages();
 		this.initTransparentBackgroundImages();
 		this.loadingImage();
 		this.setOpaque(false);
 		this.setLayout(new GridLayout(3, 1, 0, SPACE_PANEL_TO_PANEL));
+		head = head.deriveFont(Font.BOLD,25f);
+		
 
 		this.add(this.upperAreaPanel());
 		// this.midScroller = this.middleAreaPanel();
@@ -681,6 +686,21 @@ public class PlayerSettingsPanel extends JPanel {
 	public BufferedImage getSelectedPicture() {
 		System.out.println("ZERO: " + this.selectedImage);
 		return this.selectedImage;
+	}
+	
+	public void fontLoading(){
+		try {
+			if (head == null) {
+				head = Loader.getInstance().getXenipa();
+				if (head == null){
+					head = new Loader().importFont();
+				}
+			}
+		} catch (FontFormatException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	/**
