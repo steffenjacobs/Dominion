@@ -94,9 +94,6 @@ public class ButtonClass extends GFButton {
 	 */
 
 	public void onMouseClick() {
-		if (parameter.equals("exit")) {
-			System.exit(0);
-		}
 //		if (parameter.equals("play")) {
 //			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
 //			MyAudioPlayer.handleMainMusic(false);
@@ -108,6 +105,9 @@ public class ButtonClass extends GFButton {
 //			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getPlayButton());
 //		}
 		if (DominionController.getInstance().isTurnFlag()) {
+			if (parameter.equals("exit")) {
+				System.exit(0);
+			}
 
 			DominionController.getInstance().setTurnFlag(false);
 			DominionController.getInstance().getGameClient().getGameWindow().setCaptionTurn("execute");
