@@ -51,6 +51,7 @@ public class MainMenuPanel extends JPanel {
 		initializeAlpha();				
 		createButtons(this.parent);
 		registrateMouseListener();
+//		MyAudioPlayer.handleMainMusic(true);
 		this.addComponentListener(new MyComponentAdapter());
 		repaint();
 		if(DominionController.isOffline()){
