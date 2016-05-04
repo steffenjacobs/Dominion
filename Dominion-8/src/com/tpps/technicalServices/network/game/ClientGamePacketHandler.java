@@ -239,12 +239,13 @@ public class ClientGamePacketHandler extends PacketHandler {
 			String right = pck.getRight();
 			Color usercolor = pck.getColor();
 			MsgType type = pck.getMsgType();
-			
-//			int logNr = GameLog.getCountAndInc();
 
-			GameLog.log(type, left,/*logNr,*/ GameLog.getMsgColor());
-			GameLog.log(type, username, /*logNr,*/usercolor);
-			GameLog.log(type, right + "\n",/*logNr,*/ GameLog.getMsgColor());
+			long timestamp = pck.getTimestamp();
+			System.out.println("> Time in CGPH is > " + timestamp + " and its the same as pck.getTimestamp(): " + (timestamp == pck.getTimestamp()));
+
+			GameLog.log(type, left, timestamp, GameLog.getMsgColor());
+			GameLog.log(type, username, timestamp, usercolor);
+			GameLog.log(type, right + "\n", timestamp, GameLog.getMsgColor());
 			break;
 		case BROADCAST_LOG_MULTI_COLOR:
 			for (Pair<String, Color> pair : ((PacketBroadcastLogMultiColor) packet).getPair()) {

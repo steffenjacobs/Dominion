@@ -151,7 +151,7 @@ public class GraphicFramework extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		System.err.println("paint anfang");
+//		System.err.println("paint anfang");
 		GameObject[] objects = gameObjects.values().toArray(new GameObject[] {});
 		Arrays.sort(objects, new CompareByLayer());
 
@@ -162,7 +162,7 @@ public class GraphicFramework extends JPanel {
 				
 			}
 		}
-		System.err.println("paint ende");
+//		System.err.println("paint ende");
 	}
 
 	/**

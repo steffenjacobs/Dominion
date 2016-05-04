@@ -190,14 +190,20 @@ public final class Matchmaker {
 			case MATCHMAKING_PLAYER_INFO:
 				// is called when a player joins or quits
 				PacketMatchmakingPlayerInfo pmpi = (PacketMatchmakingPlayerInfo) packet;
+				
+				String chatmessageName = "\"";
+				if (pmpi.getPlayerName().contains("(")) {
+					String[] split = pmpi.getPlayerName().split("\\(");
+					chatmessageName += split[0].substring(0, split[0].length() - 1) + "\" (" + split[1];
+				} else
+					chatmessageName += pmpi.getPlayerName() + "\"";
+				
 				if (pmpi.isStatus()) {
-					DominionController.getInstance().receiveChatMessageFromChatServer("A Player joined the lobby "
-							+ pmpi.getPlayerName() + (pmpi.isLobbyAdmin() ? " (Admin)" : ""), "BOT", "", Color.YELLOW);
+					DominionController.getInstance()
+							.receiveChatMessageFromChatServer("A Player joined the lobby " + chatmessageName + (pmpi.isLobbyAdmin() ? " (Admin)" : ""), "BOT", "", Color.YELLOW);
 				} else if (!pmpi.isStatus()) {
-					DominionController.getInstance().receiveChatMessageFromChatServer(
-							"A Player quitted from the lobby " + pmpi.getPlayerName(), "BOT", "", Color.YELLOW);
+					DominionController.getInstance().receiveChatMessageFromChatServer("A Player quitted from the lobby " + chatmessageName, "BOT", "", Color.YELLOW);
 				}
-
 				if (pmpi.isStatus()) {
 					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " joined the lobby.");
 					if(pmpi.isLobbyAdmin()){
