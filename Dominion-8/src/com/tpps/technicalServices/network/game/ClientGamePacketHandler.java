@@ -103,10 +103,13 @@ public class ClientGamePacketHandler extends PacketHandler {
 				switch (((PacketSendHandCards)packet).getChangeButtons()) {
 				case "action":
 					this.gameWindow.addEndActionPhaseButton();
+					this.gameWindow.removeStopTrashButton();
 					this.gameWindow.addEndTurnButton();
 					break;
 				case "playTreasures":
 					this.gameWindow.addEndTurnButton();
+					this.gameWindow.removeStopTrashButton();
+					this.gameWindow.removeStopDiscardButton();
 					this.gameWindow.addPlayTreasuresButton();
 					break;
 

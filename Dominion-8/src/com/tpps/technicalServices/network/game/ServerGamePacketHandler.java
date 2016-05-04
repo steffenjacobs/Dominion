@@ -145,10 +145,32 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case END_DISCARD_MODE:
 				this.server.getGameController().getActivePlayer().endDiscardAndDrawMode();
-				this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+				
+				PacketSendHandCards packetSendHandCards = new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand()));
+				if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null && !this.server.getGameController().getActivePlayer().isDiscardMode() 
+						&& !this.server.getGameController().getActivePlayer().isTrashMode()){
+					if (this.server.getGameController().getActivePlayer().getActions() > 0 ){
+						packetSendHandCards.setChangeButtons("action");
+					}else{
+						packetSendHandCards.setChangeButtons("playTreasures");
+					}
+				}
+				
+				this.server.sendMessage(port, packetSendHandCards);
 				break;
 			case END_TRASH_MODE:
 				this.server.getGameController().getActivePlayer().endTrashMode();
+				PacketSendActiveButtons packetSendActiveButtons;
+				if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null && !this.server.getGameController().getActivePlayer().isDiscardMode() 
+						&& !this.server.getGameController().getActivePlayer().isTrashMode()){
+					if (this.server.getGameController().getActivePlayer().getActions() > 0 ){
+						packetSendActiveButtons = new PacketSendActiveButtons(true, true, false);
+					}else{
+						packetSendActiveButtons = new PacketSendActiveButtons(true, false, true);
+					}
+					server.sendMessage(port, packetSendActiveButtons);
+				}
+				
 				break;
 			case TAKE_CARDS:
 				int clientID = ((PacketTakeCards) packet).getClientID();
