@@ -99,6 +99,21 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case SEND_HAND_CARDS:
 			LinkedList<String> handCardIds = ((PacketSendHandCards) packet).getCardIds();
 			this.gameStorageInterface.loadHandCardsAndPassToGameWindow(handCardIds);
+			if (((PacketSendHandCards)packet).getChangeButtons() != null) {
+				switch (((PacketSendHandCards)packet).getChangeButtons()) {
+				case "action":
+					this.gameWindow.addEndActionPhaseButton();
+					this.gameWindow.addEndTurnButton();
+					break;
+				case "playTreasures":
+					this.gameWindow.addEndTurnButton();
+					this.gameWindow.addPlayTreasuresButton();
+					break;
+
+				default:
+					break;
+				}
+			}
 			break;
 		case SEND_REVEAL_CARDS:
 			System.out.println(Arrays.toString(((PacketSendRevealCards) packet).getCardIds().toArray()));
@@ -118,16 +133,16 @@ public class ClientGamePacketHandler extends PacketHandler {
 				this.gameWindow.removePlayTreasuresButton();
 				
 				break;
-			case "actions":
-				System.out.println("actions");
-				this.gameWindow.addEndActionPhaseButton();
-				this.gameWindow.addEndTurnButton();
-				break;
-			case "playTreasures":
-				System.out.println("play treasures");
-				this.gameWindow.addPlayTreasuresButton();
-				this.gameWindow.addEndTurnButton();
-				break;
+//			case "actions":
+//				System.out.println("actions");
+//				this.gameWindow.addEndActionPhaseButton();
+//				this.gameWindow.addEndTurnButton();
+//				break;
+//			case "playTreasures":
+//				System.out.println("play treasures");
+//				this.gameWindow.addPlayTreasuresButton();
+//				this.gameWindow.addEndTurnButton();
+//				break;
 			default:
 				break;
 			}

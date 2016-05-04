@@ -15,6 +15,7 @@ public class PacketSendHandCards extends Packet {
 
 	private static final long serialVersionUID = -3848200270426455963L;
 	LinkedList<String> cardIds;
+	private String changeButtons = null;
 
 	/**
 	 * initializes the Packet with the id of the card which had been played and
@@ -25,6 +26,14 @@ public class PacketSendHandCards extends Packet {
 	public PacketSendHandCards(LinkedList<String> cardIds) {
 		super(PacketType.SEND_HAND_CARDS);
 		this.cardIds = cardIds;
+	}
+	
+	public void setChangeButtons(String changeButtons) {
+		this.changeButtons = changeButtons;
+	}
+	
+	public String getChangeButtons() {
+		return this.changeButtons;
 	}
 	
 	

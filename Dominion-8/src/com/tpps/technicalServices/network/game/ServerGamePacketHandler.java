@@ -509,7 +509,15 @@ public class ServerGamePacketHandler extends PacketHandler {
 		if (!player.playsReactionCard() && (player.isDiscardMode() || player.isTrashMode())) {
 			System.out.println("im handler discard mode set");
 			if (this.server.getGameController().checkCardExistsAndDiscardOrTrash(player, cardID)) {
-				server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
+				PacketSendHandCards packetSendHandCards = new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand()));
+				if (player.getPlayTwiceCard() == null && !player.isDiscardMode() && !player.isTrashMode()){
+					if (player.getActions() > 0 ){
+						packetSendHandCards.setChangeButtons("action");
+					}else{
+						packetSendHandCards.setChangeButtons("playTreasures");
+					}
+				}
+				server.sendMessage(port, packetSendHandCards);
 			}
 			return;
 		}
@@ -615,17 +623,18 @@ public class ServerGamePacketHandler extends PacketHandler {
 				this.server.getGameController().getActivePlayer().isTrashMode()){
 			System.out.println("remove");
 			changeButtons = "remove";
-		}else{
-			if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null){
-				if (this.server.getGameController().getActivePlayer().getActions() > 0){
-					System.out.println("actions");
-					changeButtons = "actions";
-				}else{
-					System.out.println("playtreasures");
-					changeButtons = "playTreasures";
-				}
-			}
 		}
+//		}else{
+//			if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null){
+//				if (this.server.getGameController().getActivePlayer().getActions() > 0){
+//					System.out.println("actions");
+//					changeButtons = "actions";
+//				}else{
+//					System.out.println("playtreasures");
+//					changeButtons = "playTreasures";
+//				}
+//			}
+//		}
 		}
 		this.server.sendMessage(port, new PacketUpdateValuesChangeButtons(player.getActions(), player.getBuys(), player.getCoins(), changeButtons));
 		this.server.getGameController().isGameFinished();

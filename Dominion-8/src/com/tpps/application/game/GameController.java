@@ -169,18 +169,10 @@ public class GameController {
 		Card card = player.getDeck().getCardFromHand(cardID);
 		if (card != null && (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
 				|| !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getId().equals(card.getId()))) {
-			System.out.println("discard or trash");
+			
 			player.discardOrTrash(cardID, this.getGameBoard().getTrashPile());
 			return true;
-		}
-		System.out.println(this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getId());
-		System.out.println(card.getId());
-		System.out.println(card != null && (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
-				|| !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getId().equals(card.getId())));
-		System.out.println(card != null);
-		System.out.println((this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null));
-		System.out.println(!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getId().equals(card.getId()));
-		System.out.println("no discard or trash");
+		}		
 		return false;
 	}
 
