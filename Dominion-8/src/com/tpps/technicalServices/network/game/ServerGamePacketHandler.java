@@ -58,7 +58,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private GameServer server;
 	ChatController chatController;
 	private ConcurrentHashMap<String, Color> colorMap;
-	private boolean discardFlag = false;
 
 	public void setServer(GameServer server) {
 		this.server = server;
@@ -534,7 +533,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			System.out.println("im handler discard mode set");
 			if (this.server.getGameController().checkCardExistsAndDiscardOrTrash(player, cardID)) {
 				PacketSendHandCards packetSendHandCards = new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand()));
-				if (player.getPlayTwiceCard() == null && !player.isDiscardMode() && !player.isTrashMode()){
+				if (player.getPlayTwiceCard() == null && !player.isDiscardMode() && !player.isTrashMode() && !player.isGainMode()){
 					if (player.getActions() > 0 ){
 						packetSendHandCards.setChangeButtons("action");
 					}else{
@@ -594,9 +593,16 @@ public class ServerGamePacketHandler extends PacketHandler {
 			return;
 		}
 		if (player.isGainMode()) {
-			if (this.server.getGameController().gain(cardID, player)) {
+			if (this.server.getGameController().gain(cardID, player)) {				
 				this.server.broadcastMessage(new PacketSendBoard(this.server.getGameController().getGameBoard().getTreasureCardIDs(), this.server.getGameController().getGameBoard()
 						.getVictoryCardIDs(), this.server.getGameController().getGameBoard().getActionCardIDs()));
+				if (player.getPlayTwiceCard() == null) {
+					if (player.getActions() > 0) {
+						this.server.sendMessage(port, new PacketSendActiveButtons(true, true, false));
+					}else {
+						this.server.sendMessage(port, new PacketSendActiveButtons(true, false, true));
+					}
+				}
 				this.server.getGameController().isGameFinished();
 			}
 			return;
@@ -644,15 +650,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 		if (player.equals(this.server.getGameController().getActivePlayer())){
 		
 		if (this.server.getGameController().getActivePlayer().isDiscardMode() || 
-				this.server.getGameController().getActivePlayer().isTrashMode()){
-			discardFlag = true;
+				this.server.getGameController().getActivePlayer().isTrashMode()
+				|| this.server.getGameController().getActivePlayer().isGainMode()){			
 			System.out.println("remove");
 			changeButtons = "remove";
 		}else{
-			if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null
-					&& !this.server.getGameController().getActivePlayer().isGainMode()){
-				if (discardFlag){
-					discardFlag = false;
+			if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null){
+				if (!this.server.getGameController().getActivePlayer().isSpy()
+						&& !this.server.getGameController().getActivePlayer().isThief())
 				if (this.server.getGameController().getActivePlayer().getActions() > 0){
 					System.out.println("actions");
 					changeButtons = "actions";
@@ -660,7 +665,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 					System.out.println("playtreasures");
 					changeButtons = "playTreasures";
 				}
-			}
 			}
 		}
 		
