@@ -206,6 +206,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			} else {
 				this.gameWindow.removeEndActionPhaseButton();
 			}
+			System.out.println("active button");
 			break;
 		case END_TRASH_MODE:
 			this.gameWindow.removeStopTrashButton();
