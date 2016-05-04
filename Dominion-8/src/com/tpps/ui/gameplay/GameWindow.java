@@ -324,6 +324,7 @@ public class GameWindow extends JFrame {
 		this.tableCards = new LinkedList<Card>();
 		System.out.println(Arrays.toString(actionCardlds.toArray()));
 		for (int i = 0; i < table.size(); i++) {
+			System.out.println(actionCardlds.get(i));
 			if (actionCardlds.get(i).matches("[A-Z][a-z]+#")) {
 				if (i < 5) {
 					shift += 0.06;
@@ -468,7 +469,7 @@ public class GameWindow extends JFrame {
 		}
 		this.coinButtons = new LinkedList<GFButton>();
 		this.coinCards = new LinkedList<Card>();
-
+		System.out.println(Arrays.toString(actionCardlds.toArray()));
 		for (int i = 0; i < coins.size(); i++) {
 			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 			matcher.find();

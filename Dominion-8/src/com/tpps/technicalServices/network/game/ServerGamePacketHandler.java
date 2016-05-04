@@ -58,6 +58,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private GameServer server;
 	ChatController chatController;
 	private ConcurrentHashMap<String, Color> colorMap;
+	private boolean discardFlag = false;
 
 	public void setServer(GameServer server) {
 		this.server = server;
@@ -644,10 +645,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 		
 		if (this.server.getGameController().getActivePlayer().isDiscardMode() || 
 				this.server.getGameController().getActivePlayer().isTrashMode()){
+			discardFlag = true;
 			System.out.println("remove");
 			changeButtons = "remove";
 		}else{
-			if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null){
+			if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null
+					&& !this.server.getGameController().getActivePlayer().isGainMode()){
+				if (discardFlag){
+					discardFlag = false;
 				if (this.server.getGameController().getActivePlayer().getActions() > 0){
 					System.out.println("actions");
 					changeButtons = "actions";
@@ -655,6 +660,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 					System.out.println("playtreasures");
 					changeButtons = "playTreasures";
 				}
+			}
 			}
 		}
 		
