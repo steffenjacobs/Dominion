@@ -313,6 +313,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 		}
 		System.out.println("open gui");
 		this.gameWindow.setVisible(true);
+		
 	}
 
 	/**
