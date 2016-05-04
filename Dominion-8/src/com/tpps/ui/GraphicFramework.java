@@ -183,6 +183,7 @@ public class GraphicFramework extends JPanel {
 	 * @param _parent the parent JFrame
 	 */
 	public GraphicFramework(JFrame _parent) {
+		System.out.println("im framework");
 		this.parent = _parent;
 		this.mouseListener = new Mouse(this);
 		_parent.getContentPane().addMouseListener(mouseListener);
