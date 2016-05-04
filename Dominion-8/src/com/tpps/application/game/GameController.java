@@ -145,7 +145,7 @@ public class GameController {
 		LinkedList<Player> players = this.getPlayers();
 		for (int i = 0; i < this.players.size(); i++) {
 			Player player = players.get(i);
-			if (player.equals(activePlayer)) {
+			if (player.getPlayerName().equals(activePlayer.getPlayerName())) {
 				this.setActivePlayer(players.get(i < this.players.size() - 1 ? i + 1 : 0));
 				this.getActivePlayer().incTurnNr();
 				break;
@@ -362,7 +362,7 @@ public class GameController {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 
-			if (!player.equals(activePlayer)) {
+			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
 				sendEnableFlag = true;
 
 				if (player.getDeck().cardHandContainsReactionCard()) {
@@ -424,7 +424,7 @@ public class GameController {
 		for (Iterator<Player> iterator = this.players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			player.setThief();
-			if (!player.equals(this.activePlayer)) {
+			if (!player.getPlayerName().equals(this.activePlayer.getPlayerName())) {
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					reactivePlayer = true;
 					player.setThiefFalse();
@@ -482,7 +482,7 @@ public class GameController {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			player.setSpy();
-			if (!player.equals(activePlayer)) {
+			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setSpyFalse();
 					try {
@@ -528,7 +528,7 @@ public class GameController {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			player.setWitch();
-			if (!player.equals(activePlayer)) {
+			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
 
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setWitchFalse();
@@ -576,7 +576,7 @@ public class GameController {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			player.setBureaucrat();
-			if (!player.equals(activePlayer)) {
+			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
 
 				if (player.getDeck().cardHandContainsReactionCard()) {
 					player.setBureaucratFalse();
@@ -799,7 +799,7 @@ public class GameController {
 	public synchronized void drawOthers() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			if (!player.equals(activePlayer)) {
+			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
 				player.getDeck().draw();
 				try {
 					this.gameServer.sendMessage(player.getPort(), new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));

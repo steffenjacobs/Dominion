@@ -151,6 +151,7 @@ public class GraphicFramework extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		System.err.println("paint anfang");
 		GameObject[] objects = gameObjects.values().toArray(new GameObject[] {});
 		Arrays.sort(objects, new CompareByLayer());
 
@@ -161,6 +162,7 @@ public class GraphicFramework extends JPanel {
 				
 			}
 		}
+		System.err.println("paint ende");
 	}
 
 	/**
@@ -183,6 +185,7 @@ public class GraphicFramework extends JPanel {
 	 * @param _parent the parent JFrame
 	 */
 	public GraphicFramework(JFrame _parent) {
+		System.out.println("im framework");
 		this.parent = _parent;
 		this.mouseListener = new Mouse(this);
 		_parent.getContentPane().addMouseListener(mouseListener);

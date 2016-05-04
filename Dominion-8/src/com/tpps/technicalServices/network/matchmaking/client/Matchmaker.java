@@ -245,10 +245,11 @@ public final class Matchmaker {
 				break;
 			case 1: // Success
 
-				DominionController.getInstance()
-						.receiveChatMessageFromChatServer("You joined a "
-								+ (pck.getRequest().isPrivate() ? "private " : "") + "lobby successfully", "BOT", "",
-								Color.YELLOW);
+				if(pck.getRequest().isPrivate()){
+					DominionController.getInstance()
+					.receiveChatMessageFromChatServer("You joined a private lobby successfully", "BOT", "",
+							Color.YELLOW);
+				}
 				/*
 				 * :id : " + pck.getLobbyID()
 				 */
