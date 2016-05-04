@@ -14,9 +14,9 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
 public class PacketSendBoard extends Packet {
 
 	private static final long serialVersionUID = 4282913282327428691L;
-	LinkedList<String> actionCardIds;
-	LinkedList<String> coinCardIds;
-	LinkedList<String> victoryCardIds;
+	private LinkedList<String> actionCardIds;
+	private LinkedList<String> coinCardIds;
+	private LinkedList<String> victoryCardIds;
 
 	/**
 	 * initializes the Packet with the parameters listed below

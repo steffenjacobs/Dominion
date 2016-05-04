@@ -733,21 +733,23 @@ public class Player {
 		this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
 		GameLog.log(MsgType.INFO, "The Playername is: " + this.getPlayerName());
 
+		if (!reactionCard && (this.discardMode || this.trashMode)) {
+			discardOrTrash(serverCard);
+			return serverCard;
+		}		
+		
 		if (this.playTwice) {
 			if (!this.secondTimePlayed) {
 				GameLog.log(MsgType.INFO, "playTwice: " + this.playTwice);
 				this.actions++;
-				if (this.playTwiceCard == null) {
+				if (this.playTwiceCard == null && this.getPlayerName().equals(this.gameServer.getGameController().getActivePlayer().getPlayerName())) {
 					this.playTwiceCard = serverCard;
 				}
 				dontRemoveFlag = true;
 			}
 		}
 
-		if (!reactionCard && (this.discardMode || this.trashMode)) {
-			discardOrTrash(serverCard);
-			return serverCard;
-		}
+
 
 		LinkedList<CardAction> cardActions = new LinkedList<CardAction>(serverCard.getActions().keySet());
 		if (serverCard.getTypes().contains(CardType.REACTION)) {
