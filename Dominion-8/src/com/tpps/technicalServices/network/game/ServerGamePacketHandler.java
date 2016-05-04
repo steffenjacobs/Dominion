@@ -239,10 +239,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 		} catch (IOException ie) {
 			ie.printStackTrace();
 		}
-		
-		
-		
-		
 		System.out.println("is play twice " + this.server.getGameController().getActivePlayer().isPlayTwice() + 
 				" play twice enabled: " + this.server.getGameController().getActivePlayer().isPlayTwiceEnabled() + 
 				" secondTimePlayed " + this.server.getGameController().getActivePlayer().isSecondTimePlayed() +
@@ -681,59 +677,17 @@ public class ServerGamePacketHandler extends PacketHandler {
 		try {
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-			
 			// i think it's not used
 			// this.server.sendMessage(port, new
 			// PacketUpdateValues(this.server.getGameController().getActivePlayer().getActions(),
 			// this.server.getGameController().getActivePlayer().getBuys(),
 			// this.server.getGameController().getActivePlayer().getCoins()));
 			this.server.getGameController().endTurn();
-			
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			this.server.broadcastMessage(new PacketBroadcastLog(""));
-			/**
-			 * Lukas Fragen:
-			 * -2. wo loggen bei gain curse? gain Methode im GC? also die "gains Silver" fehlt auch noch.
-			 *     in buyOneCard oder in gain Meth?
-			 * -1. LUKAS FRAGEN Z472/473 PacketBuyCard/PacketPlayCard ist das ok so? habs ge�ndert weil deprecated
-			 * 0. organizePilesAndrefreshCardHand in GC checken ob das so richtig(/�berhaupt)
-			 *    ausgegeben wird, 
-			 * 0.1 GC 909 buyOneCard funktioniert das also wird immer dort ne karte gekauft?
-			 * 
-			 * 1. client-side loggen? wie und wann und wo gehts
-			 * 2. Zeile 744 (GAINCARDDRAWPILE) im Player ueberpruefen 
-			 * 3. man kann ColorHash map von Jojo oder Player.getLogColor benutzen
-			 * 4. GameController Z.888 evtl appendPrep?; 
-			 * 5. appendPrepText und PacketBroadcastLog �berall aufrufen(siehe screen), logPrepText() bei SetupGui()
-			 * 6. Log Z.151 Matchmaker funktioniert das so? oder join Lobby auf prepText packen?
-			 * 7. GameLog Backup Uhr 28. April 11 Uhr 04
-			 * 8. Pattern to search: "GameLog.log(" | ".broadcastMessage(new PacketBroadcastLog("
-			 * 9. "Copper" und andere Karten als konstanten machen im ganzen Game
-			 * 10. remove line 50 PacketBroadcastLogSingleColor
-			 * 11. update comments in gameLog
-			 * 12. addPlayerAndChooseRandomActivePlayer in GC Z882 mit der schlussendlichen synced. LogMethode abgleichen
-			 * 13. case DRAW_CARD in doACtion bei Player nachschauen mit DrawAndShuffle
-			 * 14. f�r die init in Deck irgendwo f�r jeden Player (- shuffles Deck - draws 5 cards) zum prepText appenden
-			 * 15. if singlecolor works, remove multicolorPacket
-			 * 16. remove cardSSSSS bei 1 card in log messages (tern�rer Ausdruck)
-			 * 17. searchFile new PacketBroadcastLog( �berpr�fen ob das alles auch so gelogt werden soll (zB GameServerNetworkListener)
-			 * 17.1 GameLogTest JUnit
-			 * 17.2 GameLog entweder queue oder count um die richtige Reihenfolge sicherzustellen
-			 * 17.3 AI hat immer den selben Namen im Log?
-			 * 
-			 * Next Steps:
-			 * - Entwickeln & Test AI ohne CheapCardCreator davor laufen zu lassen (dann geht Log (vom Stand 1.5. 13 Uhr, s. Bitbucket))
-			 * - Lukas/Steffen fragen wg Packet Reihenfolge & nummern beim Schicken übergeben
-			 * - je nachdem client oder serverseitig (17.2) einbauen
-			 * 
-			 * 18. @nishit playTreasures nicht mehr klickbar wenn spieler keine geldkarten mehr auf der hand hat
-			 * 19. @nishit tried to fix Add/Remove AI Button with horrible attempt, but didn't work
-			 */
-
 			/** change LOG PREP TEXT */
 			// this.server.broadcastMessage(
 			// new PacketBroadcastLog("-----
@@ -753,7 +707,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			Color c = res.getValue();
 			String s = res.getKey();
 			try {
-				this.server.broadcastMessage(new PacketBroadcastLog(s));
+				this.server.broadcastMessage(new PacketBroadcastLog("","",s,c));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

@@ -1,18 +1,17 @@
 package com.tpps.application.game.ai;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
+import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
-import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndActionPhase;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndTurn;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
@@ -24,6 +23,7 @@ import com.tpps.technicalServices.util.CollectionsUtil;
  * - wenn es nix bringt, mehr karten zu ziehen, ggf. aktionskarten nicht spielen
  * - LinkedListMultimap mit "buy" oder "play" und karte als Spielplan aufbauen
  * - wenn es der potentiell letzte Zug ist, soll die Blacklist ignoriert werden und evtl ein Anwesen gekauft werden
+ * Kommentare anpassen (computing etc.)
  */
 
 /**
@@ -34,11 +34,9 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 public class ArtificialIntelligence {
 
 	private ServerGamePacketHandler packetHandler;
-
 	private Player player;
-	private Move move;
-
 	private List<String> blacklist;
+	private boolean endPhase;
 
 	/**
 	 * constructor of the Artificial Intelligence
@@ -51,8 +49,8 @@ public class ArtificialIntelligence {
 	public ArtificialIntelligence(Player player, UUID uuid, ServerGamePacketHandler packetHandler) {
 		this.packetHandler = packetHandler;
 		this.player = player;
-		this.move = new Move();
 		this.blacklist = CollectionsUtil.linkedList(new String[] { "Copper", "Estate", "Curse" });
+		this.endPhase = false;
 	}
 
 	/* ---------- game executing ---------- */
@@ -66,10 +64,18 @@ public class ArtificialIntelligence {
 	}
 
 	private void playCard(Card card) {
-		if (card != null) {
+		if (card != null && this.player.getActions() > 0) {
 			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
 		} else {
-			GameLog.log(MsgType.AI, " played 'null' card");
+			GameLog.log(MsgType.AI, "played 'null' card");
+		}
+	}
+
+	private void playCards(LinkedList<Card> cards) {
+		if (cards != null && cards.size() > 0) {
+			for (Card card : cards) {
+				playCard(card);
+			}
 		}
 	}
 
@@ -82,22 +88,31 @@ public class ArtificialIntelligence {
 		if (amountAvailable <= amountNeeded) {
 			playTreasures();
 		} else {
-			LinkedList<Card> allActionCards = this.getAllCardsFromType(CardType.TREASURE);
-			for (Card card : allActionCards) {
+			LinkedList<Card> allTreasureCards = this.getAllCardsFromType(CardType.TREASURE);
+			for (Card card : allTreasureCards) {
 				// hier
-				
+
 			}
-//			LinkedList<Card> coppers = ;
-//			LinkedList<Card> silvers = ;
-//			LinkedList<Card> golds = ;	
-		}		
+			// LinkedList<Card> coppers = ;
+			// LinkedList<Card> silvers = ;
+			// LinkedList<Card> golds = ;
+		}
 	}
 
 	private void playAllActionCards() {
-		LinkedList<Card> allActionCards = this.getAllCardsFromType(CardType.ACTION);
-		// hier
-		// handle mit unterschiedlichen +Karten typen usw
-		
+		if (this.player.getDeck().cardHandActionCardAmount() > 0) {
+			while (this.player.getActions() > 0 && this.player.getDeck().cardHandContains(CardType.ACTION)) {
+				if (addActionCardAvailable()) {
+					LinkedList<Card> plusActionCards = this.player.getDeck().cardHandsWith(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand());
+					playCards(plusActionCards);
+					continue;
+				}				
+				LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
+				Card tbp = this.player.getDeck().cardWithHighestCost(remainingActionCards);
+				playCard(tbp);
+			}
+		}
+
 	}
 
 	private void setBuyPhase() {
@@ -112,7 +127,7 @@ public class ArtificialIntelligence {
 		if (card != null) {
 			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
 		} else {
-			GameLog.log(MsgType.AI, " bought 'null' card");
+			GameLog.log(MsgType.AI, "bought 'null' card");
 		}
 	}
 
@@ -150,30 +165,14 @@ public class ArtificialIntelligence {
 
 	private void handleTurn() {
 		if (myTurn()) {
-			GameLog.log(MsgType.AI, this + " is handling a turn");
+			GameLog.log(MsgType.AI, this + "is handling a turn");
+			checkEndPhase();
 			Move tbe = determineMove();
 			executeMove(tbe);
-			
-			// hier
-			// überlegen ob das mit isReady so gut ist und sonst entfernen
-			
-			// determineMove();
-			// if (this.move.isReady()) {
-			// executeMove(this.move);
-			// } else {
-			// /**
-			// * method assigns a default turn as the next turn, if the
-			// * determineMove() method gets interrupted before something
-			// * useful is computed
-			// */
-			// executeMove(getDefaultMove());
-			// }
-			
 		} else if (this.player.isReactionMode()) {
 			if (this.player.playsReactionCard()) {
+				playCard(this.player.getDeck().getCardByTypeFromHand(CardType.REACTION));
 				// hier
-				// handle den und auch alle anderen Modes
-				
 			}
 		}
 	}
@@ -183,7 +182,7 @@ public class ArtificialIntelligence {
 	 * nextTurn
 	 */
 	private void executeMove(Move move) {
-		GameLog.log(MsgType.AI, this + " is executing a turn");
+		GameLog.log(MsgType.AI, this + "is executing a turn");
 		try {
 			Thread.sleep(200);
 			this.playTreasures(); // evtl playTreasures(amountNeeded)
@@ -201,12 +200,10 @@ public class ArtificialIntelligence {
 			}
 			Thread.sleep(200);
 			if (myTurn()) {
-				this.player.getGameServer().broadcastMessage(new PacketBroadcastLog("AI end[ed]Turn() by itself"));
+				GameLog.log(MsgType.AI, "ended Turn by itself.");
 				this.endTurn();
 			}
 		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -217,29 +214,29 @@ public class ArtificialIntelligence {
 	 * compution of the next turn of the AI is interrupted
 	 */
 	private Move determineMove() {
-		// this.computing = true;
 		// https://dominionstrategy.com/big-money/
 
 		Move result = new Move();
 		// LinkedList<Card> cardHand = this.getCardHand();
 		// hier
-		
-		return result;
+
+		// chapel handlen
+		return getDefaultMove(); // ändern
 	}
 
 	/**
 	 * assign a default turn to nextTurn
 	 * 
-	 * coins has to be checked several times (for example after a 'draw
-	 * card' action is performed and if there are enough coins to the
-	 * desired action (/buy the desired card), don't draw any more cards
-	 * e.g.
+	 * coins has to be checked several times (for example after a 'draw card'
+	 * action is performed and if there are enough coins to the desired action
+	 * (/buy the desired card), don't draw any more cards e.g.
 	 */
 	private Move getDefaultMove() {
 		Move result = new Move();
 		// LinkedList<Card> cardHand = this.getCardHand();
 		// hier
 		
+		playAllActionCards();
 		int coins = getTreasureCardsValue();
 		if (coins >= 8) {
 			result.putBuy("Province");
@@ -271,6 +268,18 @@ public class ArtificialIntelligence {
 		return this.player.getGameServer().getGameController().isGameNotFinished();
 	}
 
+	private boolean checkEndPhase() {
+		// provinzen < 4
+		// 3 niedrigsten Kartenstapel insgesamt unter 7 Karten
+		// turn number sehr hoch
+		
+		// hier
+		// je nachdem: this.endPhase = true;
+		// blacklist einbauen
+			
+		return false;
+	}
+	
 	/**
 	 * 
 	 * @param player
@@ -280,11 +289,15 @@ public class ArtificialIntelligence {
 	private int getTreasureCardsValue() {
 		return this.player.getDeck().getTreasureValueOfList(this.getCardHand());
 	}
-	
+
 	private LinkedList<Card> getAllCardsFromType(CardType cardType) {
 		return this.player.getDeck().getCardsByTypeFromHand(cardType);
 	}
 
+	private boolean addActionCardAvailable() {
+		return this.player.getDeck().cardHandsWith(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()).size() > 0;
+	}
+	
 	/**
 	 * 
 	 * @return the cardHand of the player
@@ -293,16 +306,19 @@ public class ArtificialIntelligence {
 		return this.player.getDeck().getCardHand();
 	}
 
+	// TODO: remove
 	@SuppressWarnings("unused")
 	private int getPlayerActions() {
 		return this.player.getActions();
 	}
 
+	// TODO: remove
 	@SuppressWarnings("unused")
 	private int getPlayerBuys() {
 		return this.player.getBuys();
 	}
 
+	// TODO: remove
 	@SuppressWarnings("unused")
 	private int getPlayerCoins() {
 		return this.player.getCoins();
@@ -353,5 +369,19 @@ public class ArtificialIntelligence {
 	 */
 	public void setBlacklist(List<String> blacklist) {
 		this.blacklist = blacklist;
+	}
+
+	/**
+	 * @return the endPhase
+	 */
+	public boolean isEndPhase() {
+		return endPhase;
+	}
+
+	/**
+	 * @param endPhase the endPhase to set
+	 */
+	public void setEndPhase(boolean endPhase) {
+		this.endPhase = endPhase;
 	}
 }

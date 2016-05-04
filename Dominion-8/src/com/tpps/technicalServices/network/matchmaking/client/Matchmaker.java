@@ -200,10 +200,14 @@ public final class Matchmaker {
 
 				if (pmpi.isStatus()) {
 					GameLog.log(MsgType.INFO, "----- Player " + pmpi.getPlayerName() + " joined the lobby.");
-					DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
+					if(pmpi.isLobbyAdmin()){
+						DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName() + " (Admin)");
+					}else{
+						DominionController.getInstance().insertPlayerToGUI(pmpi.getPlayerName());
+					}
 					if (pmpi.getPlayerName().equals(DominionController.getInstance().getUsername())) {
 						if (pmpi.isLobbyAdmin()) {
-							System.out.println(pmpi.getPlayerName() + "is a fucking host");
+							System.out.println(pmpi.getPlayerName() + "is a host");
 							DominionController.getInstance().setHost(true);
 						} else {
 							DominionController.getInstance().setHost(false);

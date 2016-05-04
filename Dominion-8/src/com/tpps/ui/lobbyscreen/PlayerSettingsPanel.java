@@ -372,13 +372,16 @@ public class PlayerSettingsPanel extends JPanel {
 
 		private SerializedCard card;
 
-		private BufferedImage imgSelected = null;
+		private BufferedImage imgNotSelected = null;
+		private boolean selected;
 
 		private static final long serialVersionUID = 2289556894288934256L;
 
 		public CardDisplayButton(SerializedCard originalCard) {
 			this.card = originalCard;
 			this.addActionListener(this);
+			this.imgNotSelected = GraphicsUtil.colorScale(new Color(0, 0, 6), card.getImage(), .4f);			
+			this.selected = false;
 		}
 
 		@Override
@@ -387,21 +390,21 @@ public class PlayerSettingsPanel extends JPanel {
 			Graphics2D h = (Graphics2D) g;
 			h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-			if (imgSelected == null) {
+			if(selected){
 				h.drawImage(card.getImage(), 0, 0, this.getWidth(), this.getHeight(), null);
-			} else {
-				h.drawImage(imgSelected, 0, 0, this.getWidth(), this.getHeight(), null);
+			}else{
+				h.drawImage(imgNotSelected, 0, 0, this.getWidth(), this.getHeight(), null);
 			}
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (imgSelected == null) {
-				cardNamesSelected.add(this.card.getName());
-				imgSelected = GraphicsUtil.colorScale(new Color(0, 0, 6), card.getImage(), .4f);
-			} else {
+			if(selected){
+				selected = false;
 				cardNamesSelected.remove(this.card.getName());
-				imgSelected = null;
+			}else{
+				selected = true;
+				cardNamesSelected.add(this.card.getName());
 			}
 			PlayerSettingsPanel.this.handleStartButton();
 		}
@@ -706,7 +709,7 @@ public class PlayerSettingsPanel extends JPanel {
 	 */
 	public synchronized boolean removePlayer(String player) {
 		for (int i = 0; i < connectedPlayers.length; i++) {
-			if (connectedPlayers[i].getText().equals(player)) {
+			if (connectedPlayers[i].getText().startsWith(player)) {
 				System.out.println("GUI: removed Player: " + connectedPlayers[i].getText());
 				connectedPlayers[i].resetSearchingField();
 				this.handleStartButton();
@@ -724,10 +727,8 @@ public class PlayerSettingsPanel extends JPanel {
 	 */
 	public synchronized void clearAllPlayers() {
 		for (int i = 0; i < connectedPlayers.length; i++) {
-			if (!connectedPlayers[i].getText().startsWith("Loading")) {
-				System.out.println("GUI: removed Player(all): " + connectedPlayers[i].getText());
-				connectedPlayers[i].resetSearchingField();
-			}
+			System.out.println("GUI: removed Player(all): " + connectedPlayers[i].getText());
+			connectedPlayers[i].resetSearchingField();
 		}
 	}
 
