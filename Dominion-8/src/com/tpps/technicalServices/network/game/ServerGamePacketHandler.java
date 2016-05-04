@@ -89,7 +89,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				PacketRegistratePlayerByServer packetRegistratePlayerByServer = (PacketRegistratePlayerByServer) packet;
 
 				if (packetRegistratePlayerByServer.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-					System.out.println("add ai");
+					System.out.println(packetRegistratePlayerByServer.getUsername());
 
 					addPlayerAndCheckPlayerCount(port, clientId, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
 				} else if (this.server.validSession(packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID())) {

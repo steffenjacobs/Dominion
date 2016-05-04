@@ -91,6 +91,7 @@ public class Player {
 		this.port = port;
 		this.playedCards = new LinkedList<Card>();
 		this.userName = userName;
+		System.out.println("username: " + this.userName);
 		this.logColor = ColorUtil.playerColors.get(clientID % 4);
 		this.turnNr = 0;
 		this.gameServer = gameServer;

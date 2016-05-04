@@ -185,6 +185,7 @@ public final class MatchmakingController {
 						try {
 							cl.sendMessage(new PacketRegistratePlayerByServer(pl.getPlayerName(),
 									pl.getPlayerUID()));
+							System.err.println("Registering AI: " + pl.getPlayerName());
 							Thread.sleep(100);
 						} catch (Exception e) {
 							e.printStackTrace();
