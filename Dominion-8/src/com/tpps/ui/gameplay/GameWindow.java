@@ -304,7 +304,7 @@ public class GameWindow extends JFrame {
 	 * @param table
 	 */
 
-	public void tableActionCards(LinkedHashMap<String, SerializedCard> table) {
+	public synchronized void tableActionCards(LinkedHashMap<String, SerializedCard> table) {
 		LinkedList<String> actionCardlds = new LinkedList<>(table.keySet());
 		double shift = 0.295;
 		double shiftBottom = 0.295;
