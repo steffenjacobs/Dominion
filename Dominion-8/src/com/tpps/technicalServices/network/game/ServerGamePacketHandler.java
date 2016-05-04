@@ -338,8 +338,8 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}else{
 			
 			if (refActivePlayer != null && 
-					this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer()) &&
-					refActivePlayer.equals(this.server.getGameController().getActivePlayer())) {
+					this.server.getGameController().getPlayerByPort(port).getPlayerName().equals(this.server.getGameController().getActivePlayer().getPlayerName()) &&
+					refActivePlayer.getPlayerName().equals(this.server.getGameController().getActivePlayer().getPlayerName())) {
 				try {
 					if (this.server.getGameController().allReactionCardsPlayed()) {
 						System.out.println("enable the aktive player again");
@@ -642,12 +642,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 		this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
 		}
 		
-		if (this.server.getGameController().getPlayerByPort(port).equals(this.server.getGameController().getActivePlayer())){
+		if (this.server.getGameController().getPlayerByPort(port).getPlayerName().equals(this.server.getGameController().getActivePlayer().getPlayerName())){
 			this.server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(player.getPlayedCards())));
 		}
 		
 		String changeButtons = "";
-		if (player.equals(this.server.getGameController().getActivePlayer())){
+		if (player.getPlayerName().equals(this.server.getGameController().getActivePlayer().getPlayerName())){
 		
 		if (this.server.getGameController().getActivePlayer().isDiscardMode() || 
 				this.server.getGameController().getActivePlayer().isTrashMode()
