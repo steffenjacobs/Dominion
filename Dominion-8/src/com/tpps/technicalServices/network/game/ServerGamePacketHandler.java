@@ -133,18 +133,29 @@ public class ServerGamePacketHandler extends PacketHandler {
 				if (this.server.getGameController().getPlayerByPort(port).getPlayerName().equals(this.server.getGameController().getActivePlayerName())) {
 					this.server.getGameController().getActivePlayer().endActionPhase();
 					this.server.getGameController().setBuyPhase();
+				}else{
+					this.server.sendMessage(port, new PacketEnable("react"));
+					return;
 				}
 				break;
 			case PLAY_TREASURES:
-				this.server.getGameController().playTreasures();
-				this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
-				this.server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getPlayedCards())));
-				this.server.sendMessage(port, new PacketUpdateTreasures(server.getGameController().getActivePlayer().getCoins()));
+				if (this.server.getGameController().getPlayerByPort(port).getPlayerName().equals(this.server.getGameController().getActivePlayerName())) {
+					this.server.getGameController().playTreasures();
+					this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
+					this.server.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getPlayedCards())));
+					this.server.sendMessage(port, new PacketUpdateTreasures(server.getGameController().getActivePlayer().getCoins()));
+				}else{
+					this.server.sendMessage(port, new PacketEnable("react"));
+					return;
+				}
 				break;
 			case END_TURN:
 				// alle Karten ablegen
 				if (this.server.getGameController().getPlayerByPort(port).getPlayerName().equals(this.server.getGameController().getActivePlayerName())) {
 					this.nextActivePlayer(port);
+				}else{
+					this.server.sendMessage(port, new PacketEnable("react"));
+					return;
 				}
 				break;
 			case END_DISCARD_MODE:
