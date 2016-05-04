@@ -1,6 +1,5 @@
 package com.tpps.technicalServices.util;
 
-import java.util.ArrayList;
 
 /**
  * @author Nicolas Wipfler

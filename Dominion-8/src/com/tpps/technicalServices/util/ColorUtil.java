@@ -5,9 +5,9 @@ import java.util.List;
 
 /**
  * 
- * class converts JAVAFX colors to JAVA AWT colors, but does not work correctly so far and I'm not sure if
- * it is supposed to work anyways because we shouldn't use fxColors in Swing. 
- * The use of the methods is discouraged. 
+ * class converts JAVAFX colors to JAVA AWT colors, but does not work correctly
+ * so far and I'm not sure if it is supposed to work anyways because we
+ * shouldn't use fxColors in Swing. The use of the methods is discouraged.
  * 
  * The colors are in use though.
  * 
@@ -20,8 +20,8 @@ public class ColorUtil {
 	public static final Color SNOW = new Color(255, 250, 250);
 	public static final Color EPICBLUE = new Color(25, 126, 255);
 
-	public static final List<Color> playerColors = CollectionsUtil.linkedColorList(Color.BLUE, Color.ORANGE, ColorUtil.DARKSEAGREEN, Color.YELLOW);
-	
+	public static final List<Color> playerColors = CollectionsUtil.linkedColorList(ColorUtil.EPICBLUE, Color.ORANGE, Color.CYAN, ColorUtil.DARKSEAGREEN);
+
 	public static javafx.scene.paint.Color getFxColor(java.awt.Color color) {
 		return javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0);
 	}

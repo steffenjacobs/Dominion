@@ -52,6 +52,7 @@ public class CreateAccount extends JFrame {
 	BufferedImage blackBeauty;
 	LoginGUIController guicontroller;
 	private BufferedImage walterWhite;
+	private Color textAndLabelColor;
 	
 	/**
 	 * simple constructor (first call) merging all elements
@@ -127,6 +128,7 @@ public class CreateAccount extends JFrame {
 			panels[i] = new JPanel(new FlowLayout());
 		}
 		// this.setContentPane(new JLabel(loading));
+		this.textAndLabelColor = System.getProperty("os.name").startsWith("Windows") ? Color.WHITE : Color.BLACK;
 	}
 
 	
@@ -202,7 +204,7 @@ public class CreateAccount extends JFrame {
 				super.paint(g);
 			}
 		};
-		email.setForeground(Color.WHITE);
+		email.setForeground(textAndLabelColor);
 		email.setOpaque(false);
 		email.setFont(smallfont);
 		panels[1].add(description[0]);
@@ -232,7 +234,7 @@ public class CreateAccount extends JFrame {
 				super.paint(g);
 			}
 		};
-		username.setForeground(Color.WHITE);
+		username.setForeground(textAndLabelColor);
 		username.setOpaque(false);
 		username.setFont(smallfont);
 		panels[2].add(description[1]);
@@ -262,7 +264,7 @@ public class CreateAccount extends JFrame {
 				super.paint(g);
 			}
 		};
-		passwordbox.setForeground(Color.WHITE);
+		passwordbox.setForeground(textAndLabelColor);
 		passwordbox.setOpaque(false);
 		panels[3].add(description[2]);
 		panels[3].add(passwordbox);
@@ -291,7 +293,7 @@ public class CreateAccount extends JFrame {
 				super.paint(g);
 			}
 		};
-		passwordboxRetype.setForeground(Color.white);
+		passwordboxRetype.setForeground(textAndLabelColor);
 		passwordboxRetype.setOpaque(false);
 		panels[4].add(description[3]);
 		panels[4].add(passwordboxRetype);
@@ -342,7 +344,7 @@ public class CreateAccount extends JFrame {
 			}
 		};
 		createAccount.setOpaque(false);
-		createAccount.setForeground(Color.WHITE);
+		createAccount.setForeground(textAndLabelColor);
 		createAccount.setBorderPainted(true);
 		createAccount.setContentAreaFilled(false);
 		createAccount.setFont(customFont.deriveFont(15f));
