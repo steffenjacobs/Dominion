@@ -152,15 +152,15 @@ public class GameWindow extends JFrame {
 				this.framework, "Play Treasures");
 		GameWindow.takeCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
 				this.framework, "Take Cards");
-		GameWindow.putBack = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
+		GameWindow.putBack = new ButtonClass(0.75, 0.5, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
 				this.framework, "Put Back");
 		GameWindow.takeThiefCards = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
 				this.buttonImage, this.framework, "Take Thief Cards");
-		GameWindow.putBackThiefCards = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
+		GameWindow.putBackThiefCards = new ButtonClass(0.75, 0.5, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
 				this.buttonImage, this.framework, "Put Back Thief Cards");
 		GameWindow.takeDrawedCard = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
 				this.buttonImage, this.framework, "Take Drawed Card");
-		GameWindow.setAsideDrawedCard = new ButtonClass(0.75, 0.75, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
+		GameWindow.setAsideDrawedCard = new ButtonClass(0.75, 0.5, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
 				this.buttonImage, this.framework, "Set Aside Drawed Card");
 		GameWindow.endTurn = new ButtonClass(0.75, 0.35, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, buttonImage, framework,
 				"End Turn");
