@@ -206,6 +206,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			} else {
 				this.gameWindow.removeEndActionPhaseButton();
 			}
+			System.out.println("active button");
 			break;
 		case END_TRASH_MODE:
 			this.gameWindow.removeStopTrashButton();
@@ -314,7 +315,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 		}
 		System.out.println("open gui");
 		this.gameWindow.setVisible(true);
-		
+		System.out.println("open gui2");
 	}
 
 	/**
