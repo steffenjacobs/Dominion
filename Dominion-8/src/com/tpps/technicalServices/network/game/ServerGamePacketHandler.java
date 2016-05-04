@@ -130,8 +130,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 				buyCardAndUpdateBoards(packet);
 				break;
 			case END_ACTION_PHASE:
-				this.server.getGameController().getActivePlayer().endActionPhase();
-				this.server.getGameController().setBuyPhase();
+				if (this.server.getGameController().getPlayerByPort(port).getPlayerName().equals(this.server.getGameController().getActivePlayerName())) {
+					this.server.getGameController().getActivePlayer().endActionPhase();
+					this.server.getGameController().setBuyPhase();
+				}
 				break;
 			case PLAY_TREASURES:
 				this.server.getGameController().playTreasures();
@@ -141,7 +143,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case END_TURN:
 				// alle Karten ablegen
-				this.nextActivePlayer(port);
+				if (this.server.getGameController().getPlayerByPort(port).getPlayerName().equals(this.server.getGameController().getActivePlayerName())) {
+					this.nextActivePlayer(port);
+				}
 				break;
 			case END_DISCARD_MODE:
 				this.server.getGameController().getActivePlayer().endDiscardAndDrawMode();
