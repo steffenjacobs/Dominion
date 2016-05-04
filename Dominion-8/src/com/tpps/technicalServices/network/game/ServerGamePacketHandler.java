@@ -145,6 +145,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 					this.server.getGameController().setBuyPhase();
 				}else{
 					this.server.sendMessage(port, new PacketEnable("react"));
+					this.server.sendMessage(port, new PacketSendActiveButtons(true, true, false));
 					return;
 				}
 				break;
