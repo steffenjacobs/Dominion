@@ -19,6 +19,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketTakeCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeDrewCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeThiefCards;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.GFButton;
@@ -33,6 +34,7 @@ import com.tpps.ui.components.GFButton;
 public class ButtonClass extends GFButton {
 	private static final long serialVersionUID = 1520424079770080041L;
 	private Image original;
+	private String parameter;
 
 	/**
 	 * constructor calling the GraphicFramework and drawing the buttons
@@ -52,6 +54,15 @@ public class ButtonClass extends GFButton {
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,
 				caption);
+		this.original = super.getBufferedImage();
+		super.updatedBufferedImage(GraphicsUtil.setAlpha(super.getBufferedImage(), .6f));
+	}
+
+	public ButtonClass(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
+			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption, String parameter) {
+		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,
+				caption);
+		this.parameter = parameter;
 		this.original = super.getBufferedImage();
 		super.updatedBufferedImage(GraphicsUtil.setAlpha(super.getBufferedImage(), .6f));
 	}
@@ -84,13 +95,23 @@ public class ButtonClass extends GFButton {
 
 	public void onMouseClick() {
 		if (DominionController.getInstance().isTurnFlag()) {
-			if (this.getCaption().equals("")) {
+			if (parameter.equals("exit")) {
 				System.exit(0);
 			}
-			
+			if (parameter.equals("play")) {
+				GameWindow.getInstance().getGraphicFramework().removeComponent(this);
+				MyAudioPlayer.handleMainMusic(false);
+				GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getMuteButton());
+			}
+			if (parameter.equals("mute")) {
+				GameWindow.getInstance().getGraphicFramework().removeComponent(this);
+				MyAudioPlayer.handleMainMusic(true);
+				GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getPlayButton());
+			}
+
 			DominionController.getInstance().setTurnFlag(false);
 			DominionController.getInstance().getGameClient().getGameWindow().setCaptionTurn("execute");
-			
+
 			if (this.getCaption().equals("End ActionPhase")) {
 				try {
 					System.out.println("EndActionPhase");
