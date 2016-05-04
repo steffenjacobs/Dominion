@@ -104,6 +104,11 @@ public class CardEditor extends JFrame implements ActionListener {
 
 		c.add(all);
 	}
+	
+	private void fullscreenmode() {
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	//	this.setUndecorated(true);
+	}
 
 	private void resizeImage() {
 		this.loading = new ImageIcon(this.background);
@@ -250,6 +255,32 @@ public class CardEditor extends JFrame implements ActionListener {
 		increasePrice = new JButton("Increase Price");
 		standartPrice = new JButton("Standart Price");
 		decreasePrice = new JButton("Decreace Price");
+		increasePrice.addActionListener((new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				priceint = priceint + 1;
+				price = new JLabel(Integer.toString(priceint));
+				System.out.println(Integer.toString(priceint));
+			}
+		}));
+		standartPrice.addActionListener((new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				priceint = 2;
+				System.out.println(Integer.toString(priceint));
+			}
+		}));
+		decreasePrice.addActionListener((new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				if (priceint > 0) {
+				priceint = priceint - 1;
+				System.out.println(Integer.toString(priceint));
+				} else {
+					System.out.println("The cost can't be lower than 0");
+				}
+			}
+		}));
 		mitte.add(increasePrice,gbc2);
 		gbc2.gridx = 1;
 		gbc2.gridy = 1;
