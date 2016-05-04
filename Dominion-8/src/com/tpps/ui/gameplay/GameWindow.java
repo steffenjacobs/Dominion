@@ -707,7 +707,7 @@ public class GameWindow extends JFrame {
 	public void setCaptionTurn(String caption) {
 		// turn.renewCaption(caption);
 		framework.removeComponent(turn);
-		if (caption.equals("my turn")) {
+		if (caption.equals("my turn")||caption.equals("react")) {
 			turn = new DisplayValue(0.31, 0, 0.38, 0.05, 1, 1, 20, displayImageTurnGreen, framework, caption);
 
 		} else {
