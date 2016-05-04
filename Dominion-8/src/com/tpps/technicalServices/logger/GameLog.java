@@ -75,7 +75,6 @@ public class GameLog {
 	/**
 	 * unused for now, see MsgType class for messageTypeColors
 	 */
-	@SuppressWarnings("unused")
 	private static Color msgTypeColor = null;
 
 	/**
@@ -300,17 +299,17 @@ public class GameLog {
 
 	/**
 	 * Weder MsgType.getDisplay() noch MsgType.getTimeStamp() wird benutzt;
-	 * MsgType.setGameMode() ist auch �berfl�ssig.
+	 * MsgType.setGameMode() ist auch ueberfluessig.
 	 * 
 	 * Es wird nur .GAME auf das textPane gelogt ohne timeStamp Es wird nur
 	 * !GAME in die Konsole gelogt mit timeStamp (und egal ob irgendwo steht
 	 * type.getDisplay() ist false)
 	 * 
-	 * Die �bergebene Farbe ist nur relevant bei .GAME (ansonsten einfach
+	 * Die uebergebene Farbe ist nur relevant bei .GAME (ansonsten einfach
 	 * MsgColor verwenden, ist in der Konsole eh schwarz
 	 * 
-	 * newLines bei .GAME: hinzuf�gen wann desired newLines bei allen anderen:
-	 * nicht hinzuf�gen, da es nicht auf das LogPane kommt und durch Syso eh
+	 * newLines bei .GAME: hinzufuegen wann desired newLines bei allen anderen:
+	 * nicht hinzufuegen, da es nicht auf das LogPane kommt und durch Syso eh
 	 * eine newLine hat
 	 * 
 	 * 

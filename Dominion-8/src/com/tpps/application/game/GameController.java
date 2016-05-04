@@ -48,15 +48,9 @@ import com.tpps.technicalServices.util.GameConstant;
  * @author Nicolas Wipfler
  * 
  */
-
-/* --------Methoden nach Logik sortieren und sichtbarkeit anpassen-------- */
-
 public class GameController {
-	GameServer gameServer;
-
-	public String getActivePlayerName() {
-		return this.activePlayer.getPlayerName();
-	}
+	
+	protected GameServer gameServer;
 	
 	private LinkedList<Player> players;
 
@@ -67,8 +61,9 @@ public class GameController {
 	private CopyOnWriteArrayList<Player> thiefList, spyList;
 
 	/**
-	 * creates the gameController, sets the gameServer
-	 * sets all flag and creates all required Lists
+	 * creates the gameController, sets the gameServer sets all flag and creates
+	 * all required Lists
+	 * 
 	 * @param gameServer
 	 */
 	public GameController(GameServer gameServer, String[] selectedActionCards) {
@@ -89,51 +84,59 @@ public class GameController {
 	}
 
 	/**
-	 *cards can be played
+	 * cards can be played
 	 */
 	public void setCardsEnabled() {
 		this.cardsEnabled = true;
 	}
 
 	/**
-	 *cards can't be played 
+	 * cards can't be played
 	 */
 	public void setCardsDisabled() {
 		this.cardsEnabled = false;
 	}
 
 	/**
-	 * @param gameBoard the gameBoard to set
-	 *            
+	 * @param gameBoard
+	 *            the gameBoard to set
+	 * 
 	 */
 	public void setGameBoard(GameBoard gameBoard) {
 		this.gameBoard = gameBoard;
 	}
 
 	/**
-	 * @param gamePhase  the gamePhase to set
-	 *           
+	 * @param gamePhase
+	 *            the gamePhase to set
+	 * 
 	 */
 	public void setGamePhase(String gamePhase) {
 		this.gamePhase = gamePhase;
 	}
 
 	/**
-	 * @param thiefList the thiefList to set
-	 *            
+	 * @param thiefList
+	 *            the thiefList to set
+	 * 
 	 */
 	public void setThiefList(CopyOnWriteArrayList<Player> thiefList) {
 		this.thiefList = thiefList;
 	}
 
 	/**
-	 * @param spyList the spyList to set
-	 *            
+	 * @param spyList
+	 *            the spyList to set
+	 * 
 	 */
 	public void setSpyList(CopyOnWriteArrayList<Player> spyList) {
 		this.spyList = spyList;
 	}
 
+	public String getActivePlayerName() {
+		return this.activePlayer.getPlayerName();
+	}
+	
 	/**
 	 * determines the next active player
 	 */
@@ -152,6 +155,7 @@ public class GameController {
 
 	/**
 	 * adds the temporaryTrashPile to the trashPile
+	 * 
 	 * @param temporaryTrashPile
 	 */
 	public synchronized void updateTrashPile(LinkedList<Card> temporaryTrashPile) {
@@ -159,7 +163,9 @@ public class GameController {
 	}
 
 	/**
-	 * check if the card exists if the card exists calls the discardOrTrash method
+	 * check if the card exists if the card exists calls the discardOrTrash
+	 * method
+	 * 
 	 * @param player
 	 * @param cardID
 	 * @return trueif the card exists false otherwise
@@ -167,12 +173,13 @@ public class GameController {
 	 */
 	public synchronized boolean checkCardExistsAndDiscardOrTrash(Player player, String cardID) throws IOException {
 		Card card = player.getDeck().getCardFromHand(cardID);
-		if (card != null && (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
-				|| !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getId().equals(card.getId()))) {
-			
+		if (card != null
+				&& (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null || !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getId()
+						.equals(card.getId()))) {
+
 			player.discardOrTrash(cardID, this.getGameBoard().getTrashPile());
 			return true;
-		}		
+		}
 		return false;
 	}
 
@@ -192,11 +199,11 @@ public class GameController {
 			if (player.isReactionMode() && card.getTypes().contains(CardType.REACTION)) {
 				System.out.println("spielt reaktionskarte");
 				player.playCard(cardID);
-				if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null || 
-						(!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")
+				if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
+						|| (!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")
 								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")
-								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Bureaucrat")
-								&& !(this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Thief")))){
+								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Bureaucrat") && !(this.gameServer.getGameController().getActivePlayer()
+								.getPlayTwiceCard().getName().equals("Thief")))) {
 					this.gameServer.sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
 				}
 				return true;
@@ -214,7 +221,7 @@ public class GameController {
 			}
 			if (this.gamePhase.equals("buyPhase")) {
 				if (card.getTypes().contains(CardType.TREASURE)) {
-					 GameLog.log(MsgType.DEBUG, "the card is a Treasure clicked in the buyphase");
+					GameLog.log(MsgType.DEBUG, "the card is a Treasure clicked in the buyphase");
 					this.getActivePlayer().playCard(cardID);
 					return true;
 				}
@@ -224,8 +231,10 @@ public class GameController {
 	}
 
 	/**
-	 * checks if the card exists on the board and gains the card if the gainValue is higher than the costs of the card
-	 * card is gained on the hand if the onHand flag is set
+	 * checks if the card exists on the board and gains the card if the
+	 * gainValue is higher than the costs of the card card is gained on the hand
+	 * if the onHand flag is set
+	 * 
 	 * @param cardID
 	 * @param player
 	 * @return
@@ -244,9 +253,10 @@ public class GameController {
 					return true;
 				}
 				player.getDeck().getDiscardPile().add(card);
+				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getActivePlayerName(), " - gains " + card.getName(), this.gameServer.getGameController().getActivePlayer().getLogColor()));
 				return true;
 			}
-		}catch (WrongSyntaxException e){
+		} catch (WrongSyntaxException e) {
 			GameLog.log(MsgType.ERROR, e.getMessage());
 		} catch (SynchronisationException e) {
 			GameLog.log(MsgType.ERROR, "Card is not on the board please click on an another card.");
@@ -254,13 +264,15 @@ public class GameController {
 			e.printStackTrace();
 		}
 		return false;
-
 	}
 
 	/**
-	 * checks if the card is on the board and adds the card with the param cardId to the trashPile 
+	 * checks if the card is on the board and adds the card with the param
+	 * cardId to the trashPile
+	 * 
 	 * @param cardID
-	 * @return true if the card exists and all conditions are fullfilled to buy the card
+	 * @return true if the card exists and all conditions are fullfilled to buy
+	 *         the card
 	 * @throws SynchronisationException
 	 */
 	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException, NoSuchElementException, WrongSyntaxException {
@@ -273,6 +285,11 @@ public class GameController {
 			player.setCoins(player.getCoins() - card.getCost());
 			cards.removeLast();
 			CollectionsUtil.addCardToList(card, player.getDeck().getDiscardPile());
+			try {
+				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getActivePlayerName(), " - buys " + card.getName(), this.gameServer.getGameController().getActivePlayer().getLogColor()));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			return true;
 		}
 		return false;
@@ -285,7 +302,6 @@ public class GameController {
 	 * @param cardId
 	 */
 	public synchronized boolean isVictoryCardOnHand(String cardId) {
-		
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardId);
 		if (card == null) {
 			return false;
@@ -299,7 +315,7 @@ public class GameController {
 	}
 
 	/**
-	 * calls the play Treasures method of the player. 
+	 * calls the play Treasures method of the player.
 	 * 
 	 * @throws IOException
 	 */
@@ -308,29 +324,36 @@ public class GameController {
 	}
 
 	/**
-	 * adds the played cards to the discardPile calls the refreshCardHand() method of the player
-	 * calls the refresPlayedCardsList()
+	 * adds the played cards to the discardPile calls the refreshCardHand()
+	 * method of the player calls the refresPlayedCardsList()
 	 */
 	public synchronized void organizePilesAndrefreshCardHand() {
 		try {
 			CollectionsUtil.appendListToList(this.getActivePlayer().getPlayedCards(), this.getActivePlayer().getDeck().getDiscardPile());
 			DrawAndShuffle das = this.getActivePlayer().getDeck().refreshCardHand();
 			if (das.wasShuffled()) {
-//				this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getActivePlayerName(), " - shuffles deck",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
-				this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getActivePlayerName(), " - shuffles deck",this.gameServer.getGameController().getActivePlayer().getLogColor()));
+				// this.gameServer.broadcastMessage(new
+				// PacketBroadcastLog("",this.getActivePlayerName(),
+				// " - shuffles deck",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
+				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getActivePlayerName(), " - shuffles deck", this.gameServer.getGameController().getActivePlayer().getLogColor()));
 			}
-//			this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getActivePlayerName()," - draws " + das.getDrawAmount() + " cards",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
-			this.gameServer.broadcastMessage(new PacketBroadcastLog("",this.getActivePlayerName()," - draws " + das.getDrawAmount() + " cards",this.gameServer.getGameController().getActivePlayer().getLogColor()));
+			// this.gameServer.broadcastMessage(new
+			// PacketBroadcastLog("",this.getActivePlayerName()," - draws " +
+			// das.getDrawAmount() +
+			// " cards",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
+			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getActivePlayerName(), " - draws " + das.getDrawAmount() + " cards", this.gameServer.getGameController().getActivePlayer()
+					.getLogColor()));
 			this.getActivePlayer().refreshPlayedCardsList();
 		} catch (IOException e) {
 			GameLog.log(MsgType.EXCEPTION, e.getMessage());
 		}
 	}
-	
+
 	/**
-	 *every player who hasn't a reaction has to discard (cardHandSize - value) cards
-	 *for that purpose the players without reaction card are set into the discardMode
-	 *for players with reaction card the reaction card flag is set.
+	 * every player who hasn't a reaction has to discard (cardHandSize - value)
+	 * cards for that purpose the players without reaction card are set into the
+	 * discardMode for players with reaction card the reaction card flag is set.
+	 * 
 	 * @param value
 	 */
 	public synchronized void discardOtherDownto(String value) {
@@ -349,8 +372,7 @@ public class GameController {
 					if (sendPacketDisable) {
 						sendPacketDisable = false;
 						try {
-							this.gameServer.sendMessage(this.activePlayer.getPort(),
-									new PacketDisable("wait on reaction"));
+							this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable("wait on reaction"));
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
@@ -369,8 +391,7 @@ public class GameController {
 					System.out.println("mehr als 3 karten");
 					player.setReactionMode();
 					player.setDiscardMode();
-					player.setDiscardOrTrashAction(CardAction.DISCARD_CARD,
-							player.getDeck().getCardHand().size() - Integer.parseInt(value));
+					player.setDiscardOrTrashAction(CardAction.DISCARD_CARD, player.getDeck().getCardHand().size() - Integer.parseInt(value));
 					try {
 						if (sendEnableFlag) {
 							System.out.println("send packet react");
@@ -379,8 +400,7 @@ public class GameController {
 						if (sendPacketDisable) {
 							sendPacketDisable = false;
 							System.out.println("sendpacket disable");
-							this.gameServer.sendMessage(this.activePlayer.getPort(),
-									new PacketDisable("wait on reaction"));
+							this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable("wait on reaction"));
 
 						}
 					} catch (IOException e) {
@@ -393,11 +413,10 @@ public class GameController {
 	}
 
 	/**
-	 * let every player who hasn't a reaction card reveal two cards 
-	 * if they are treasure cards they are send to the activePlayer so that he 
-	 * can choose which card he wants to take. All other revealed cards 
-	 * are put on the discard pile.
-	 * players with reaction card are set into the reaction mode
+	 * let every player who hasn't a reaction card reveal two cards if they are
+	 * treasure cards they are send to the activePlayer so that he can choose
+	 * which card he wants to take. All other revealed cards are put on the
+	 * discard pile. players with reaction card are set into the reaction mode
 	 * 
 	 */
 	public synchronized void revealAndTakeCardsDiscardOthers() {
@@ -453,11 +472,11 @@ public class GameController {
 	}
 
 	/**
-	 * let every player who hasn't a reaction reveal one card and add him to the spyList
-	 * for every player in this list the active player can decide whether the player 
-	 * has to put the card on the drawPile or on the discardPile
-	 * sent to the activePlayer
-	 * players with reaction card are set into the reaction mode
+	 * let every player who hasn't a reaction reveal one card and add him to the
+	 * spyList for every player in this list the active player can decide
+	 * whether the player has to put the card on the drawPile or on the
+	 * discardPile sent to the activePlayer players with reaction card are set
+	 * into the reaction mode
 	 */
 	public synchronized void revealCardAll() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
@@ -502,8 +521,8 @@ public class GameController {
 	}
 
 	/**
-	 * let every player who hasn't a reaction card gain one curse 
-	 * players with reaction card are set into the reaction mode
+	 * let every player who hasn't a reaction card gain one curse players with
+	 * reaction card are set into the reaction mode
 	 */
 	public synchronized void gainCurseOthers() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
@@ -606,8 +625,8 @@ public class GameController {
 	}
 
 	/**
-	 * if all players except the active player are not in the witch mode the witch mode is set false 
-	 * for the active player
+	 * if all players except the active player are not in the witch mode the
+	 * witch mode is set false for the active player
 	 */
 	public void checkWitchFinish() {
 		boolean witchFlag = true;
@@ -627,8 +646,8 @@ public class GameController {
 	}
 
 	/**
-	 * if all players except the active player are not in the bureaucrat mode the bureaucrat mode is set false 
-	 * for the active player
+	 * if all players except the active player are not in the bureaucrat mode
+	 * the bureaucrat mode is set false for the active player
 	 */
 	public void checkBureaucratFinish() {
 		boolean bureaucratFlag = true;
@@ -648,8 +667,8 @@ public class GameController {
 	}
 
 	/**
-	 * @return true if all players except the active player are 
-	 * not in the thief mode. false otherwise
+	 * @return true if all players except the active player are not in the thief
+	 *         mode. false otherwise
 	 */
 	public boolean checkThiefFinish() {
 		boolean thiefFlag = true;
@@ -669,8 +688,9 @@ public class GameController {
 	}
 
 	/**
-	 * if all players except the active player are not in the spy mode the spy mode is set false 
-	 * for the active player
+	 * if all players except the active player are not in the spy mode the spy
+	 * mode is set false for the active player
+	 * 
 	 * @return true if the condition above is fulfilled. false otherwise
 	 */
 	public boolean checkSpyFinish() {
@@ -693,9 +713,9 @@ public class GameController {
 	}
 
 	/**
-	 * let the player reveal two cards 
-	 * if they are treasure cards they are send to the activePlayer so that he 
-	 * can choose which card he wants to take.
+	 * let the player reveal two cards if they are treasure cards they are send
+	 * to the activePlayer so that he can choose which card he wants to take.
+	 * 
 	 * @param player
 	 */
 	public void reactOnThief(Player player) {
@@ -733,9 +753,10 @@ public class GameController {
 
 	/**
 	 * 
-	 * lets the player reveal one card and add him to the spyList
-	 * for every player in this list the active player can decide whether the player 
-	 * has to put the card on the drawPile or on the discardPile
+	 * lets the player reveal one card and add him to the spyList for every
+	 * player in this list the active player can decide whether the player has
+	 * to put the card on the drawPile or on the discardPile
+	 * 
 	 * @param player
 	 */
 	public void reactOnSpy(Player player) {
@@ -764,8 +785,7 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			if (player.playsReactionCard() || player.isReactionMode()) {
 				allReactionCardsPlayedFlag = false;
-				System.out.println(player.getPlayerName() + "spielt reaktionskarte: " +
-				player.playsReactionCard() + "player ist reaktionsmodues: " + player.isReactionMode());
+				System.out.println(player.getPlayerName() + "spielt reaktionskarte: " + player.playsReactionCard() + "player ist reaktionsmodues: " + player.isReactionMode());
 				break;
 			}
 		}
@@ -808,20 +828,16 @@ public class GameController {
 		checkSpyFinish();
 		checkWitchFinish();
 		checkBureaucratFinish();
-		if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null ||
-				(!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")
-					&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")
-					&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Bureaucrat")
-					&& !(this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Thief")
-							&& this.gameServer.getGameController().getThiefList().isEmpty()))) {
+		if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
+				|| (!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")
+						&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Witch")
+						&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Bureaucrat") && !(this.gameServer.getGameController().getActivePlayer()
+						.getPlayTwiceCard().getName().equals("Thief") && this.gameServer.getGameController().getThiefList().isEmpty()))) {
 			try {
-				System.out.println("reaktion beendet gespielte karten"
-						+ Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));
-				this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(
-						CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
-				this.gameServer.broadcastMessage(
-						new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
-								this.gameServer.getGameController().getActivePlayerName(), false));
+				System.out.println("reaktion beendet gespielte karten" + Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));
+				this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
+				this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
+						this.gameServer.getGameController().getActivePlayerName(), false));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -838,20 +854,35 @@ public class GameController {
 		this.setNextActivePlayer();
 		this.setActionPhase();
 	}
-	
+
 	/**
 	 * 
 	 * @return the users which have a user with a valid session id
 	 */
 	public LinkedList<Player> getHumanPlayers() {
-		LinkedList<Player> humanPlayers =  new LinkedList<Player>();
+		LinkedList<Player> humanPlayers = new LinkedList<Player>();
 		for (Iterator<Player> iterator = this.players.iterator(); iterator.hasNext();) {
 			Player player = iterator.next();
-			if(!player.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))){
+			if (!player.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 				humanPlayers.add(player);
 			}
 		}
 		return humanPlayers;
+	}
+
+	/**
+	 * 
+	 * @return the users which have a user with a valid session id
+	 */
+	public LinkedList<Player> getArtificialPlayers() {
+		LinkedList<Player> artificialPlayers = new LinkedList<Player>();
+		for (Iterator<Player> iterator = this.players.iterator(); iterator.hasNext();) {
+			Player player = iterator.next();
+			if (player.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+				artificialPlayers.add(player);
+			}
+		}
+		return artificialPlayers;
 	}
 
 	/**
@@ -860,7 +891,7 @@ public class GameController {
 	public LinkedList<Player> getPlayers() {
 		return this.players;
 	}
-	
+
 	/**
 	 * 
 	 * @param userName
@@ -869,19 +900,19 @@ public class GameController {
 	public Player getPlayerByUserName(String userName) {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			if (player.getPlayerName().equals(userName)){
+			if (player.getPlayerName().equals(userName)) {
 				return player;
-			}			
+			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * @param userName
 	 * @return the player with the given port null if not exists
 	 */
-	public Player getPlayerByPort(int port){
+	public Player getPlayerByPort(int port) {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			if (player.getPort() == port) {
@@ -915,6 +946,7 @@ public class GameController {
 
 	/**
 	 * sets the activePlayer with the given param
+	 * 
 	 * @param activePlayer
 	 */
 	public void setActivePlayer(Player activePlayer) {
@@ -930,6 +962,7 @@ public class GameController {
 
 	/**
 	 * set the game not finishe with the given param
+	 * 
 	 * @param gameNotFinished
 	 */
 	public void setGameNotFinished(boolean gameNotFinished) {
@@ -952,10 +985,13 @@ public class GameController {
 				this.activePlayer = getRandomPlayer();
 				this.activePlayer.incTurnNr();
 				try {
-//					this.gameServer.broadcastMessage(
-//							new PacketBroadcastLog("----- ", this.activePlayer.getPlayerName(), ": turn " + this.activePlayer.getTurnNr() + " -----", ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
-					this.gameServer.broadcastMessage(
-							new PacketBroadcastLog("----- ", this.activePlayer.getPlayerName(), ": turn " + this.activePlayer.getTurnNr() + " -----",this.gameServer.getGameController().getActivePlayer().getLogColor()));
+					// this.gameServer.broadcastMessage(
+					// new PacketBroadcastLog("----- ",
+					// this.activePlayer.getPlayerName(), ": turn " +
+					// this.activePlayer.getTurnNr() + " -----",
+					// ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
+					this.gameServer.broadcastMessage(new PacketBroadcastLog("----- ", this.activePlayer.getPlayerName(), ": turn " + this.activePlayer.getTurnNr() + " -----", this.gameServer
+							.getGameController().getActivePlayer().getLogColor()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -971,7 +1007,8 @@ public class GameController {
 	 * not exists throw a SynchronisationException
 	 * 
 	 * @param cardId
-	 * @throws SynchronisationException, WrongSyntaxException
+	 * @throws SynchronisationException
+	 *             , WrongSyntaxException
 	 */
 	public void buyOneCard(String cardId) throws SynchronisationException, WrongSyntaxException {
 		Card card = gameBoard.findAndRemoveCardFromBoard(cardId);
@@ -994,13 +1031,13 @@ public class GameController {
 		return this.gameBoard;
 	}
 
-//	/**
-//	 * sets the discard phase
-//	 */
-//	public void setDiscardPhase() {
-//		System.out.println("DiscardPhaseWasSet");
-//		this.gamePhase = "discardPhase";
-//	}
+	// /**
+	// * sets the discard phase
+	// */
+	// public void setDiscardPhase() {
+	// System.out.println("DiscardPhaseWasSet");
+	// this.gamePhase = "discardPhase";
+	// }
 
 	/**
 	 * sets the action phase
@@ -1045,30 +1082,29 @@ public class GameController {
 			endGame();
 		}
 	}
-	
+
 	public LinkedList<Card> getAllPlayedCards(Player... players) {
 		LinkedList<Card> playedCards = new LinkedList<Card>();
 		for (Iterator<Player> iterator = this.players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			playedCards.addAll(player.getPlayedCards());			
+			playedCards.addAll(player.getPlayedCards());
 		}
 		return playedCards;
 	}
-	
+
 	public LinkedList<String> getPlayerNamesSorted() {
 		LinkedList<String> sortedNames = new LinkedList<String>(Arrays.asList(getPlayerNames()));
 		Collections.sort(sortedNames, (String name1, String name2) -> name1.compareTo(name2));
 		return sortedNames;
-		
 	}
-	
+
 	/**
 	 * 
 	 * @return String array which contains the names of all players
 	 */
 	public String[] getPlayerNames() {
 		LinkedList<String> names = new LinkedList<String>();
-		
+
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
 			names.add(player.getPlayerName());
@@ -1078,15 +1114,15 @@ public class GameController {
 	}
 
 	/**
-	 * disable all guis of all players. send a message to matchmaking server with all
-	 * players and tells who has won.
-	 * calls the newGame method of the gameServer. 
+	 * disable all guis of all players. send a message to matchmaking server
+	 * with all players and tells who has won. calls the newGame method of the
+	 * gameServer.
 	 */
 	public void endGame() {
 		ServerGamePacketHandler gamePacketHandler = (ServerGamePacketHandler) this.gameServer.getHandler();
 		gamePacketHandler.getChatController().deleteChatroom();
 
-		setGameNotFinished(false);	
+		setGameNotFinished(false);
 		try {
 			this.gameServer.broadcastMessage(new PacketShowEndScreen());
 		} catch (IOException e1) {
@@ -1095,22 +1131,20 @@ public class GameController {
 		Client client;
 		try {
 			client = new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.getStandardPort()), new PacketHandler() {
-				
+
 				@Override
 				public void handleReceivedPacket(int port, Packet packet) {
-					
+
 				}
 			}, false);
 			System.out.println("send message to matchmakingserver");
 			client.sendMessage(new PacketGameEnd(getPlayerNames(), getWinningPlayer().getPlayerName(), this.gameServer.getPort()));
-//			this.gameServer.newGame();
+			// this.gameServer.newGame();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
 	}
-	
+
 	/**
 	 * 
 	 * @return the player who has won the game
@@ -1151,17 +1185,17 @@ public class GameController {
 	public void resetThiefList() {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
 	}
-	
+
 	public boolean allReveaListsEmpty() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			if (!player.getRevealList().isEmpty()){
+			if (!player.getRevealList().isEmpty()) {
 				return false;
 			}
 		}
 		return true;
 	}
-	
+
 	public boolean allTemporaryTrashPilesEmpty() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -1171,7 +1205,7 @@ public class GameController {
 		}
 		return true;
 	}
-	
+
 	public boolean allPlayersRevealed() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -1181,7 +1215,7 @@ public class GameController {
 		}
 		return true;
 	}
-	
+
 	public boolean allPlayerGained() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -1191,7 +1225,7 @@ public class GameController {
 		}
 		return true;
 	}
-	
+
 	public boolean allPlayerTrashed() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -1205,9 +1239,9 @@ public class GameController {
 	public boolean allPlayerDiscarded() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
-			if (player.isDiscardMode()){
+			if (player.isDiscardMode()) {
 				return false;
-			}		
+			}
 		}
 		return true;
 	}

@@ -40,7 +40,7 @@ public class GameBoard {
 		this.tableForAllActionCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.trashPile = new LinkedList<Card>();
 		init();
-//		setAttackSet();
+		// setAttackSet();
 		setSet(selectedActionCards);
 	}
 
@@ -474,14 +474,13 @@ public class GameBoard {
 		this.tableForActionCards.put("Chancellor", new LinkedList<Card>(this.tableForAllActionCards.get("Chancellor")));
 		this.tableForActionCards.put("ThroneRoom", new LinkedList<Card>(this.tableForAllActionCards.get("ThroneRoom")));
 	}
-	
-	
+
 	private void setSet(String[] selectedActionCards) {
 		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
 		for (int i = 0; i < selectedActionCards.length; i++) {
 			String string = selectedActionCards[i];
 			this.tableForActionCards.put(string, new LinkedList<Card>(this.tableForAllActionCards.get(string)));
-		}		
+		}
 	}
 
 	/**
@@ -537,23 +536,17 @@ public class GameBoard {
 	 * @throws SynchronisationException
 	 *             if the card was not found on the board
 	 */
-	/*------- schoener machen? -----------*/
 	public synchronized LinkedList<Card> findCardListFromBoard(String cardId) throws SynchronisationException, NoSuchElementException, WrongSyntaxException {
 		Matcher matcher = Pattern.compile("\\d+").matcher(cardId);
-
 		if (matcher.find()) {
-
 			String key = cardId.substring(0, matcher.start());
 			LinkedList<Card> cardList;
 			if (this.tableForTreasureCards.containsKey(key)) {
 				cardList = this.tableForTreasureCards.get(key);
-
 			} else if (this.tableForVictoryCards.containsKey(key)) {
 				cardList = this.tableForVictoryCards.get(key);
-
 			} else if (this.tableForActionCards.containsKey(key)) {
 				cardList = this.tableForActionCards.get(key);
-
 			} else {
 				throw new SynchronisationException();
 			}
@@ -572,23 +565,15 @@ public class GameBoard {
 	 * @return true if three piles(lists) are empty in all hashMaps
 	 */
 	public boolean checkThreePilesEmpty() {
-		int counter = 0;
-		counter += amountOfPilesEmpty(this.tableForActionCards);
-		if (counter >= GameConstant.EMPTY_PILES) {
-			System.out.println("table action cards empty piles: " + counter);
-			return true;
-		}
-		counter += amountOfPilesEmpty(this.tableForTreasureCards);
-		if (counter >= GameConstant.EMPTY_PILES) {
-			System.out.println("table for treasure cards: " +  counter);
-			return true;
-		}
-		counter += amountOfPilesEmpty(this.tableForVictoryCards);
-		if (counter >= GameConstant.EMPTY_PILES) {
-			System.out.println("table for victory cards " + counter);
-			return true;
-		}
-		return false;
+		return amountOfPilesEmpty() == GameConstant.EMPTY_PILES;
+	}
+
+	/**
+	 * 
+	 * @return amount of empty Piles
+	 */
+	public int amountOfPilesEmpty() {
+		return amountOfPilesEmptyForTable(this.tableForActionCards) + amountOfPilesEmptyForTable(this.tableForTreasureCards) + amountOfPilesEmptyForTable(this.tableForVictoryCards);
 	}
 
 	/**
@@ -596,7 +581,7 @@ public class GameBoard {
 	 * @param table
 	 * @return the number of empty piles(lists) in the given hashMap
 	 */
-	public int amountOfPilesEmpty(LinkedHashMap<String, LinkedList<Card>> table) {
+	public int amountOfPilesEmptyForTable(LinkedHashMap<String, LinkedList<Card>> table) {
 		int counter = 0;
 		LinkedList<String> keys = new LinkedList<String>(table.keySet());
 		for (Iterator<String> iterator = keys.iterator(); iterator.hasNext();) {
@@ -608,10 +593,9 @@ public class GameBoard {
 				}
 			}
 		}
-		
 		return counter;
 	}
-	
+
 	public Card getCardToBuyFromBoardWithName(String cardname) {
 		if (this.tableForActionCards.get(cardname) != null)
 			return this.tableForActionCards.get(cardname).getLast();

@@ -15,6 +15,7 @@ import com.tpps.technicalServices.logger.GameLog;
 import javafx.util.Pair;
 
 /**
+ * Basic Collection Utils to make the handling easier
  * 
  * @author Nicolas Christian Wipfler
  * @author Lukas Karl Adler
@@ -82,8 +83,6 @@ public final class CollectionsUtil {
 		resultList.add(object);
 		return resultList;
 	}
-	
-	
 
 	/**
 	 *
@@ -131,8 +130,12 @@ public final class CollectionsUtil {
 	}
 
 	/**
+	 * add a card to a list (method exists so there is a consistent way of adding
+	 * cards to a list at the last position)
 	 * 
-	 * */
+	 * @param card the card to add
+	 * @param destination the destination list
+	 */
 	public static void addCardToList(Card card, LinkedList<Card> destination) {
 		destination.addLast(card);
 	}
@@ -168,7 +171,9 @@ public final class CollectionsUtil {
 
 	/**
 	 * 
-	 * */
+	 * @param cards the cards to get the IDs from
+	 * @return a linked list with all cardIDs of the parameter list cards
+	 */
 	public static LinkedList<String> getCardIDs(LinkedList<Card> cards) {
 		LinkedList<String> cardHandIDs = new LinkedList<String>();
 		for (Iterator<Card> iterator = cards.iterator(); iterator.hasNext();) {
@@ -177,6 +182,11 @@ public final class CollectionsUtil {
 		return cardHandIDs;
 	}
 
+	/**
+	 * 
+	 * @param words the words to add to an array list
+	 * @return an arraylist with all given string parameters of words
+	 */
 	public static ArrayList<String> getArrayList(String... words) {
 		ArrayList<String> returnList = new ArrayList<String>();
 		for (String word : words) {
@@ -185,16 +195,33 @@ public final class CollectionsUtil {
 		return returnList;
 	}
 
+	/**
+	 * 
+	 * @param s a String
+	 * @param c a Color
+	 * @return a TreeMap with the given String and Color
+	 */
 	public static Map<String, Color> getTreeMap(String s, Color c) {
 		Map<String, Color> map = new TreeMap<String, Color>();
 		map.put(s, c);
 		return map;
 	}
 
+	/**
+	 * 
+	 * @param s a String
+	 * @param c a Color
+	 * @return a generic Pair with the given String and Color
+	 */
 	public static Pair<String, Color> getPair(String s, Color c) {
 		return new Pair<String, Color>(s, c);
 	}
-
+	
+	/**
+	 * 
+	 * @param s a String
+	 * @return a generic Pair with the given String and default Color GameLog.getMsgColor()
+	 */
 	public static Pair<String, Color> getPair(String s) {
 		return new Pair<String, Color>(s, GameLog.getMsgColor());
 	}

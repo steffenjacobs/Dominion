@@ -55,6 +55,9 @@ public class LogInGUI extends JFrame {
 	LoginGUIController guicontroller;
 	private BufferedImage blackBeauty;
 	private BufferedImage walterWhite;
+	
+	private static final int FRAME_X = 500;
+	private static final int FRAME_Y = 250;
 
 	/**
 	 * constructor first call
@@ -124,9 +127,9 @@ public class LogInGUI extends JFrame {
 		c = this.getContentPane();
 		all = new JLabel(loading);
 		all.setLayout(new GridLayout(4, 1, 0, 30));
-		this.setSize(width / 4, height / 4);
+		this.setSize(FRAME_X, FRAME_Y);
 		this.setLocationRelativeTo(null);
-		this.setTitle("Log in !");
+		this.setTitle("LogIn");
 		this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -175,17 +178,15 @@ public class LogInGUI extends JFrame {
 	/**
 	 * resizing image according to the window.
 	 */
-
 	private void resizeImage() {
 		loading = new ImageIcon(background);
-		Image newing = background.getScaledInstance(width / 4, height / 4, java.awt.Image.SCALE_SMOOTH);
+		Image newing = background.getScaledInstance(FRAME_X,FRAME_Y, java.awt.Image.SCALE_SMOOTH);
 		loading = new ImageIcon(newing);
 	}
 
 	/**
 	 * first panel creation - Header
 	 */
-
 	private void createpanel1() {
 		header = new JLabel();
 		header.setText("Type in Userinformation");
@@ -218,7 +219,11 @@ public class LogInGUI extends JFrame {
 				super.paint(g);
 			}
 		};
-		userinfo.setForeground(Color.WHITE);
+		if (System.getProperty("os.name").startsWith("Windows")) {
+			userinfo.setForeground(Color.WHITE);
+		} else {
+			userinfo.setForeground(Color.BLACK);
+		}
 		userinfo.setOpaque(false);
 		userinfo.setFont(smallfont);
 		panels[1].add(description[0]);
@@ -248,7 +253,10 @@ public class LogInGUI extends JFrame {
 				super.paint(g);
 			}
 		};
-		passwordbox.setForeground(Color.WHITE);
+		if (System.getProperty("os.name").startsWith("Windows"))
+			passwordbox.setForeground(Color.WHITE);
+		else
+			passwordbox.setForeground(Color.BLACK);
 		passwordbox.setOpaque(false);
 		panels[2].add(description[1]);
 		panels[2].add(passwordbox);
@@ -277,7 +285,10 @@ public class LogInGUI extends JFrame {
 			}
 		};
 		execute.setOpaque(false);
-		execute.setForeground(Color.WHITE);
+		if (System.getProperty("os.name").startsWith("Windows"))
+			execute.setForeground(Color.WHITE);
+		else 
+			execute.setForeground(Color.BLACK);
 		execute.setBorderPainted(true);
 		execute.setContentAreaFilled(false);
 		execute.setFont(customFont.deriveFont(15f));
@@ -293,7 +304,10 @@ public class LogInGUI extends JFrame {
 			}
 		};
 		cancel.setOpaque(false);
-		cancel.setForeground(Color.WHITE);
+		if (System.getProperty("os.name").startsWith("Windows"))
+			cancel.setForeground(Color.WHITE);
+		else
+			cancel.setForeground(Color.BLACK);
 		cancel.setBorderPainted(true);
 		cancel.setContentAreaFilled(false);
 		cancel.setFont(customFont.deriveFont(15f));
@@ -309,7 +323,10 @@ public class LogInGUI extends JFrame {
 			}
 		};
 		createAccount.setOpaque(false);
-		createAccount.setForeground(Color.WHITE);
+		if (System.getProperty("os.name").startsWith("Windows"))
+			createAccount.setForeground(Color.WHITE);
+		else
+			createAccount.setForeground(Color.BLACK);
 		createAccount.setBorderPainted(true);
 		createAccount.setContentAreaFilled(false);
 		createAccount.setFont(customFont.deriveFont(10f));

@@ -83,13 +83,13 @@ public class GameBoardTest {
 	public void amoutOfPilesEmptyTest() {
 		this.gameBoard.getTableForVictoryCards().remove("Province");
 		this.gameBoard.getTableForVictoryCards().put("Province", new LinkedList<Card>());
-		assertThat(this.gameBoard.amountOfPilesEmpty(this.gameBoard.getTableForVictoryCards()), is(1));
+		assertThat(this.gameBoard.amountOfPilesEmptyForTable(this.gameBoard.getTableForVictoryCards()), is(1));
 		
 		this.gameBoard.getTableForTreasureCards().remove("Silver");
 		this.gameBoard.getTableForTreasureCards().put("Silver", new LinkedList<>());
-		assertThat(this.gameBoard.amountOfPilesEmpty(this.gameBoard.getTableForTreasureCards()), is(1));
+		assertThat(this.gameBoard.amountOfPilesEmptyForTable(this.gameBoard.getTableForTreasureCards()), is(1));
 		
-		assertThat(this.gameBoard.amountOfPilesEmpty(this.gameBoard.getTableForActionCards()), is(0));		
+		assertThat(this.gameBoard.amountOfPilesEmptyForTable(this.gameBoard.getTableForActionCards()), is(0));		
 		
 		assertTrue(!this.gameBoard.checkThreePilesEmpty());
 		
