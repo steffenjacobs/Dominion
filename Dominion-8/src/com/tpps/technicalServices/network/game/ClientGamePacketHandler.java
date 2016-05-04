@@ -118,10 +118,13 @@ public class ClientGamePacketHandler extends PacketHandler {
 				
 				break;
 			case "actions":
-			
+				this.gameWindow.addEndActionPhaseButton();
+				this.gameWindow.addEndTurnButton();
 				break;
 			case "playTreasures":
-
+				this.gameWindow.addPlayTreasuresButton();
+				this.gameWindow.addEndTurnButton();
+				break;
 			default:
 				break;
 			}
