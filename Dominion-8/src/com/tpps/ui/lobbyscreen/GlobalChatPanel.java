@@ -336,6 +336,15 @@ public class GlobalChatPanel extends JPanel {
 	}
 
 	/**
+	 * calls the appendChatLocal with default value true
+	 * 
+	 * for JavaDocumentation of this method see {appendChatLocal(String, String, String, Color, boolean}
+	 */
+	public synchronized void appendChatLocal(String message, String user, String timestamp, Color color) {
+		this.appendChatLocal(message, user, timestamp, color, true);
+	}
+	
+	/**
 	 * This method appends a chatmessage to the globalchat on the UI. The carret
 	 * will be set to the maximum (last chatmessage)
 	 * 
@@ -348,13 +357,13 @@ public class GlobalChatPanel extends JPanel {
 	 *            a String representation of time
 	 * @param color
 	 *            the username should be shown as this given color
+	 * @param point 
+	 *            whether the message should get a point appended after the username or not
 	 */
-	public synchronized void appendChatLocal(String message, String user, String timeStamp, Color color) {
-		this.createChatInputPart(timeStamp, whiteColor);
-		this.createChatInputPart(user + ": ", color);
+	public synchronized void appendChatLocal(String message, String user, String timestamp, Color color, boolean point) {
+		this.createChatInputPart(timestamp, whiteColor);
+		this.createChatInputPart(user + (point ? ": " : ""), color);
 		this.createChatInputPart(message + "\n", whiteColor);
-		//"--- # - turn 1 ---"
-		//"nico"
 		
 		try {
 			Thread.sleep(10);

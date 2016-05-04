@@ -23,15 +23,15 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 	private BufferedImage switchimage;
 	private BufferedImage brain;
 	private BufferedImage hoverimage;
-	private boolean kiAdd;
+	private boolean aiAdd;
 	private PlayerSettingsPanel playerSettingsPanel;
 
-	public KIButton(BufferedImage brain, boolean kiAdd, PlayerSettingsPanel playerSettingsPanel) {
-		this.kiAdd = kiAdd;
-		if (kiAdd) {
-			this.setText("+ KI");
+	public KIButton(BufferedImage brain, boolean aiAdd, PlayerSettingsPanel playerSettingsPanel) {
+		this.aiAdd = aiAdd;
+		if (aiAdd) {
+			this.setText("+ AI");
 		} else {
-			this.setText("- KI");
+			this.setText("- AI");
 		}
 		this.setForeground(Color.BLACK);
 		this.playerSettingsPanel = playerSettingsPanel;
@@ -84,21 +84,18 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (kiAdd) {
-			this.playerSettingsPanel.getAiNames().add("" + System.identityHashCode(e));
+		if (aiAdd) {
+			String aiName = this.playerSettingsPanel.getAiName();
 			try {
-				DominionController.getInstance().getMatchmaker().sendAIPacket("AI_" + System.identityHashCode(e),
-						DominionController.getInstance().getLobbyID(), false);
+				DominionController.getInstance().getMatchmaker().sendAIPacket(aiName + " (AI)", DominionController.getInstance().getLobbyID(), false);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 			this.playerSettingsPanel.handleStartButton();
 		} else {
 			try {
-				DominionController.getInstance().getMatchmaker().sendAIPacket(
-						"AI_" + this.playerSettingsPanel.getAiNames()
-								.remove(this.playerSettingsPanel.getAiNames().size() - 1),
-						DominionController.getInstance().getLobbyID(), true);
+				DominionController.getInstance().getMatchmaker()
+						.sendAIPacket(this.playerSettingsPanel.getAiNames().remove(this.playerSettingsPanel.getAiNames().size() - 1) + " (AI)", DominionController.getInstance().getLobbyID(), true);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
