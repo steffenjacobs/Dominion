@@ -195,6 +195,7 @@ public final class DominionController {
 
 	/**
 	 * is called when the match ends
+	 * @param packetShowEndScreen 
 	 */
 	public void finishMatch(PacketShowEndScreen packetShowEndScreen) {
 		this.gameClient.getGameWindow().dispose();
@@ -298,6 +299,10 @@ public final class DominionController {
 	 * calls the receiveChatMessageFromChatServer method with default value true
 	 * 
 	 * for JavaDocumentation of this method see {receiveChatMessageFromChatServer(String, String, String, Color, boolean)}
+	 * @param message 
+	 * @param user 
+	 * @param timeStamp 
+	 * @param color 
 	 */
 	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color) {
 		this.receiveChatMessageFromChatServer(message, user, timeStamp, color, true);
@@ -313,6 +318,7 @@ public final class DominionController {
 	 *            String representation of the timestamp
 	 * @param color
 	 *            color of the user
+	 * @param point 
 	 */
 	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color, boolean point) {
 		if (this.gameClient == null) { // player is not ingame, player is in globalchat
@@ -391,6 +397,7 @@ public final class DominionController {
 	 * opens the LobbyGui
 	 * 
 	 * @author jhuhn
+	 * @param singlePlayer 
 	 */
 	public void joinLobbyGui(boolean singlePlayer) {
 		this.receiveChatMessageFromChatServer(
@@ -480,6 +487,9 @@ public final class DominionController {
 		return gameClient;
 	}
 
+	/**
+	 * @return whether the game is running in offline-mode
+	 */
 	public static boolean isOffline() {
 		return offlineMode;
 	}
@@ -497,6 +507,9 @@ public final class DominionController {
 		return sessionID;
 	}
 
+	/**
+	 * joins a single-player lobby
+	 */
 	public void playSingleplayer() {
 		DominionController.getInstance().joinLobbyGui(true);
 		try {
@@ -579,10 +592,16 @@ public final class DominionController {
 		return loginGuiController;
 	}
 
+	/**
+	 * @return whether the player is host
+	 */
 	public boolean isHost() {
 		return isHost;
 	}
 
+	/**
+	 * @param isHost 
+	 */
 	public void setHost(boolean isHost) {
 		if (isHost) {
 			playerSettingsPanel.enableOrDisableEverything(true);
@@ -593,6 +612,10 @@ public final class DominionController {
 		System.out.println("AM I a host ? " + isHost);
 	}
 
+	/**
+	 * blocks until the lobbyID was added
+	 * @throws InterruptedException
+	 */
 	public void waitForLobby() throws InterruptedException {
 		waitForLobby.drainPermits();
 		waitForLobby.acquire(1);

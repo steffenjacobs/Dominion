@@ -135,6 +135,13 @@ public final class Matchmaker {
 		GameLog.log(MsgType.INFO, "Start searching a match");
 	}
 
+	
+	/**
+	 * create a private lobby for a player
+	 * @param username the user who creates the private lobby
+	 * @param uid the unique ID of the creator of the lobby 
+	 * @throws IOException
+	 */
 	public void createPrivateMatch(String username, UUID uid) throws IOException {
 		checkAndCreateClient();
 		client.sendMessage(new PacketMatchmakingRequest(username, uid, false, true));

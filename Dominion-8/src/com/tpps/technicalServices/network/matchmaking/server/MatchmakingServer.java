@@ -26,12 +26,6 @@ public class MatchmakingServer extends Server {
 
 	private final static int PORT_MATCHMAKING = 1341;
 
-	private final boolean local;
-
-	public boolean isLocal() {
-		return this.local;
-	}
-
 	/** @return the standard-port 1341 */
 	public static int getStandardPort() {
 		return PORT_MATCHMAKING;
@@ -58,7 +52,6 @@ public class MatchmakingServer extends Server {
 		super(new InetSocketAddress(Addresses.getAllInterfaces(), PORT_MATCHMAKING), new MatchmakingPacketHandler());
 		super.getListenerManager().registerListener(new MatchmakingListener());
 		instance = this;
-		local = true;
 		setupConsoleInput(PORT_MATCHMAKING);
 	}
 
@@ -75,7 +68,6 @@ public class MatchmakingServer extends Server {
 		super(address, _handler);
 		super.getListenerManager().registerListener(new MatchmakingListener());
 		instance = this;
-		local = false;
 		SQLHandler.init();
 		SQLHandler.connect();
 		setupConsoleInput(address.getPort());

@@ -69,6 +69,12 @@ public final class MatchmakingController {
 		return lobbiesByID.get(lobbyID);
 	}
 
+	/**
+	 * create a private lobby for a player
+	 * 
+	 * @param player
+	 *            the player who creates a private lobby
+	 */
 	static void createPrivateLobby(MPlayer player) {
 		GameLobby lobby = new GameLobby(true);
 		lobbies.add(lobby);
@@ -357,6 +363,8 @@ public final class MatchmakingController {
 	 * @param endPacket
 	 *            the packet with the winner and all participants in the game
 	 *            that stayed until it ended
+	 * @param port
+	 *            the port the ended server was running on
 	 */
 	public static void onGameEnd(PacketGameEnd endPacket, int port) {
 		GameLobby lobby = runningLobbiesByPort.get(port);

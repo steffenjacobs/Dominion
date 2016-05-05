@@ -20,6 +20,9 @@ public class MPlayer {
 	private final UUID playerUID;
 	private final int connectionPort;
 	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString(){
 		return "MPlayer_" + System.identityHashCode(this) + " - " + playerName + " [" + playerUID.toString() + "] @" + connectionPort + " AI:" + this.isAI();  
