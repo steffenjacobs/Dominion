@@ -54,7 +54,7 @@ public class Player {
 	private final int client_ID;
 
 	private int port, actions, buys, coins, gainValue, drawUntil, turnNr, playTwiceCounter;
-	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand, secondTimePlayed, playTwiceEnabled;;
+	private boolean discardMode, trashMode, reactionMode, reactionCard, gainMode, playTwice, revealMode, thief, witch, bureaucrat, spy, onHand, secondTimePlayed, playTwiceEnabled;
 
 	/**
 	 * creates the player sets all the initial values
@@ -1084,6 +1084,29 @@ public class Player {
 		this.spy = false;
 		this.witch = false;
 		this.bureaucrat = false;
+	}
+	
+	public void setAllModesFalse(){
+		this.discardMode = false;
+		this.trashMode = false;
+		this.reactionMode = false;
+		this.reactionCard = false;
+		this.gainMode = false;
+		this.playTwice = false;
+		this.revealMode = false;
+		this.thief = false;
+		this.witch = false;
+		this.bureaucrat = false;
+		this.spy = false;
+		this.onHand = false;
+		this.secondTimePlayed = false;
+		this.playTwiceEnabled = false;
+		this.drawList = new LinkedList<Card>();
+		this.revealList = new LinkedList<Card>();
+		this.temporaryTrashPile = new LinkedList<Card>();
+		this.setAsideCards = new LinkedList<Card>();
+		this.playTwiceCard = null;		
+		this.playedCards = new LinkedList<Card>();		
 	}
 
 	/**

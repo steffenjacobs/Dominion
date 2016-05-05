@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.UUID;
 
 import com.tpps.application.game.Player;
 import com.tpps.technicalServices.logger.MsgType;
@@ -40,9 +41,9 @@ public class GameServerNetworkListener implements NetworkListener {
 			Player player = (Player) iterator.next();
 			
 				if (player.getPort() == port) {
-//					if (player.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
-//						return;
-//					}
+					if (player.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
+						return;
+					}
 					
 					
 					
