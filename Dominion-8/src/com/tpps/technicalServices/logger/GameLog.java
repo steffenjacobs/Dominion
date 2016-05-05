@@ -8,12 +8,13 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
-
-import javafx.util.Pair;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import com.tpps.technicalServices.util.ANSIUtil;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.ColorUtil;
+
+import javafx.util.Pair;
 
 /**
  * 
@@ -30,7 +31,7 @@ public class GameLog {
 	private static String timestampConsoleColor = ANSIUtil.ANSI_WHITE;
 	private static Color msgColor = Color.WHITE;
 	
-	private static TreeMap<Long, LogObject> waitingLogs;
+	private static ConcurrentSkipListMap<Long, LogObject> waitingLogs;
 	private static Timer timer;
 
 	/**
@@ -224,7 +225,7 @@ public class GameLog {
 	 */
 	public static void init() {
 		GameLog.isInitialized = true;
-		GameLog.waitingLogs = new TreeMap<Long, LogObject>();
+		GameLog.waitingLogs = new ConcurrentSkipListMap<Long, LogObject>();
 		GameLog.timer = new Timer();
 		GameLog.timer.schedule(new TimerTask(){
             @Override
