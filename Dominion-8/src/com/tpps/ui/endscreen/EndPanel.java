@@ -62,10 +62,12 @@ public class EndPanel extends JPanel {
 		this.setVisible(true);
 		fontLoading();
 		loadingImages();
-//		this.playerOne("die Schweinepriester", 20);
-//		this.playerTwo("die Steffenverehrer", 19);
-//		this.playerThree("die Möchtegernwifos", 22);
-//		this.playerFour("Wipaeds..", 12);
+		
+		//TODO comment out those methods if implemented 
+		this.playerOne("die Schweinepriester", 20);
+		this.playerTwo("die Steffenverehrer", 19);
+		this.playerThree("die Möchtegernwifos", 22);
+		this.playerFour("Wipaeds..", 12);
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
