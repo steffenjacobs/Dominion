@@ -56,6 +56,7 @@ public class EndPanel extends JPanel {
 	private Font customFont, resultFont;
 	private JPanel playerOnePanel, playerTwoPanel, playerThreePanel, playerFourPanel;
 	private BufferedImage blackBeauty;
+	private JPanel temp;
 
 	public EndPanel() {
 		this.setLayout(new BorderLayout());
@@ -63,30 +64,37 @@ public class EndPanel extends JPanel {
 		fontLoading();
 		loadingImages();
 		
-		//TODO comment out those methods if implemented 
-		this.playerOne("die Schweinepriester", 20);
-		this.playerTwo("die Steffenverehrer", 19);
-		this.playerThree("die Möchtegernwifos", 22);
-		this.playerFour("Wipaeds..", 12);
+//		TODO comment out those methods if implemented 
 
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
-		}
+
+		playerOnePanel = new JPanel();
+		playerTwoPanel = new JPanel();
+		playerThreePanel = new JPanel();
+		playerFourPanel= new JPanel();
+//		this.playerOne("die Schweinepriester", 20);
+//		this.playerTwo("die Steffenverehrer", 19);
+//		this.playerThree("die Möchtegernwifos", 22);
+//		this.playerFour("Wipaeds..", 12);
+		
+//		try {
+//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//		} catch (ClassNotFoundException e) {
+//			e.printStackTrace();
+//		} catch (InstantiationException e) {
+//			e.printStackTrace();
+//		} catch (IllegalAccessException e) {
+//			e.printStackTrace();
+//		} catch (UnsupportedLookAndFeelException e) {
+//			e.printStackTrace();
+//		}
 
 		this.setVisible(true);
 		this.background = new JLabel(new ImageIcon(originalBackground));
 		this.background.setLayout(new BorderLayout());
 		createPanel1();
-		createPanel2();
+
 		createPanel3();
+		createPanel2();
 
 		this.add(background);
 	}
@@ -115,12 +123,13 @@ public class EndPanel extends JPanel {
 	}
 
 	public void createPanel2() {
-		center = new JPanel(new GridLayout(4, 1));
+		center = new JPanel(new GridLayout(5, 1));
 		center.setOpaque(false);
 		center.add(playerOnePanel);
 		center.add(playerTwoPanel);
 		center.add(playerThreePanel);
 		center.add(playerFourPanel);
+		center.add(temp);
 		background.add(center, BorderLayout.CENTER);
 	}
 
@@ -140,10 +149,13 @@ public class EndPanel extends JPanel {
 		returnButton.setBorderPainted(true);
 		returnButton.setForeground(Color.WHITE);
 		returnButton.setVisible(true);
-		JPanel temp = new JPanel(new FlowLayout());
+		temp = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
 		temp.setOpaque(false);
-		temp.add(returnButton);
-		background.add(temp, BorderLayout.SOUTH);
+		gbc.ipadx=60;
+		gbc.ipady = 20;
+		temp.add(returnButton,gbc);
+//		background.add(temp, BorderLayout.SOUTH);
 		returnButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -260,11 +272,11 @@ public class EndPanel extends JPanel {
 		}
 	}
 
-	public static void main(String[] args) {
-		JFrame jf = new JFrame();
-		jf.add(new EndPanel());
-		jf.setMinimumSize(new Dimension(1920, 1000));
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.setVisible(true);
-	}
+//	public static void main(String[] args) {
+//		JFrame jf = new JFrame();
+//		jf.add(new EndPanel());
+//		jf.setMinimumSize(new Dimension(1280, 720));
+//		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		jf.setVisible(true);
+//	}
 }
