@@ -56,7 +56,7 @@ public class GameController {
 
 	private boolean gameNotFinished, cardsEnabled;
 	private Player activePlayer;
-	private boolean activePlayerNameAvailable;
+//	private boolean activePlayerNameAvailable;
 	private GameBoard gameBoard;
 	private String gamePhase;
 	private CopyOnWriteArrayList<Player> thiefList, spyList;
@@ -75,7 +75,7 @@ public class GameController {
 		this.spyList = new CopyOnWriteArrayList<Player>();
 		this.gameBoard = new GameBoard(selectedActionCards);
 		this.gameNotFinished = true;
-		this.activePlayerNameAvailable = false;
+//		this.activePlayerNameAvailable = false;
 	}
 
 	/**
@@ -136,9 +136,9 @@ public class GameController {
 	}
 
 	public String getActivePlayerName() {
-		if (this.activePlayerNameAvailable)
+//		if (this.activePlayerNameAvailable)
 			return this.activePlayer.getPlayerName();
-		else return "";
+//		else return "";
 	}
 	
 	/**
@@ -988,7 +988,7 @@ public class GameController {
 			if (this.players.size() == GameConstant.PLAYERS) {
 				this.activePlayer = getRandomPlayer();
 				this.activePlayer.incTurnNr();
-				this.activePlayerNameAvailable = true;
+//				this.activePlayerNameAvailable = true;
 				try {
 					// this.gameServer.broadcastMessage(
 					// new PacketBroadcastLog("----- ",
