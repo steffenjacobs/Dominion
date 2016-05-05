@@ -181,7 +181,6 @@ public class MatchmakingServer extends Server {
 		PacketMatchmakingPlayerInfo pmpj = new PacketMatchmakingPlayerInfo(joinedPlayer, true, adm);
 		try {
 			for (MPlayer receiver : receivers) {
-				System.out.println(receiver);
 				super.sendMessage(receiver.getConnectionPort(), pmpj);
 			}
 		} catch (IOException e) {
