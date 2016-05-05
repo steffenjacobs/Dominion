@@ -135,7 +135,7 @@ public class ArtificialIntelligence {
 	 * determine which cards have the most value and play all of these cards with CardType.ACTION
 	 * @throws InterruptedException 
 	 */
-	private void playAllActionCards() throws InterruptedException {System.out.println("AI 8.");
+	private void playAllActionCards() throws InterruptedException {GameLog.log(MsgType.AI, "AI 8: playAllActionCards()");
 		if (this.player.getDeck().cardHandContains(CardType.ACTION)) {
 			while (this.player.getActions() > 0 && this.player.getDeck().cardHandContains(CardType.ACTION)) {
 				if (addActionCardAvailable()) {
@@ -152,7 +152,6 @@ public class ArtificialIntelligence {
 				return; // for test purposes
 			}
 		}
-
 	}
 
 	/**
@@ -224,10 +223,10 @@ public class ArtificialIntelligence {
 	 * case no: handle a possible reaction Phase of the player (if an enemy played an attack)
 	 */ 
 	private void handleTurn() {
-		GameLog.log(MsgType.AI, "AI 2: i'm in handle turn");
+//		GameLog.log(MsgType.AI, "AI 2: i'm in handle turn");
 		if (myTurn()) {
 			GameLog.log(MsgType.AI, "AI 3: i'm in handle turn and it's my turn");
-			GameLog.log(MsgType.AI, this + " is handling a turn");
+			GameLog.log(MsgType.AI, this.player.getPlayerName() + " is handling a turn");
 			
 			if (firstTurn())
 				determineStrategy();
@@ -239,7 +238,7 @@ public class ArtificialIntelligence {
 			if (this.player.playsReactionCard()) {
 				playCard(this.player.getDeck().getCardByTypeFromHand(CardType.REACTION));
 			} else if (this.player.isDiscardMode()) {
-
+				// Logik discard
 			}
 		}
 	}
@@ -248,8 +247,9 @@ public class ArtificialIntelligence {
 	 * execute the next turn of the AI
 	 */
 	private void executeMove() {
-		GameLog.log(MsgType.AI, this + " is executing a turn");
-		try {GameLog.log(MsgType.AI, "AI 7: executeMove()");
+		GameLog.log(MsgType.AI, this.player.getPlayerName() + " is executing a turn");
+		try {
+			GameLog.log(MsgType.AI, "AI 7: executeMove()");
 			this.playAllActionCards();
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.setBuyPhase();
@@ -267,7 +267,7 @@ public class ArtificialIntelligence {
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.buySequence = new LinkedList<String>();
 			if (myTurn()) {
-				GameLog.log(MsgType.AI, this + " ended Turn by itself.");
+				GameLog.log(MsgType.AI, this.player.getPlayerName() + " ended Turn by itself.");
 				this.endTurn();
 			}
 		} catch (InterruptedException e) {
@@ -318,9 +318,9 @@ public class ArtificialIntelligence {
 	 * @return if it's the AIs turn
 	 */
 	private boolean myTurn() {
-		GameLog.log(MsgType.AI, "inside myTurn()");
+//		GameLog.log(MsgType.AI, "inside myTurn()");
 		if (this.player.getGameServer().getGameController().isActivePlayerNameAvailable()) {
-			GameLog.log(MsgType.AI, "inside the >>> if <<< in myTurn()");
+//			GameLog.log(MsgType.AI, "inside the >>> if <<< in myTurn()");
 			String activePlayerName = this.player.getGameServer().getGameController().getActivePlayerName();
 			return /* activePlayerName != null ? */activePlayerName.equals(this.player.getPlayerName()) /* : false */;
 		}
@@ -340,7 +340,7 @@ public class ArtificialIntelligence {
 	 * check several game states and set the endPhase if necessary
 	 */
 	private void checkEndPhase() {
-		System.out.println("AI 6.");
+		GameLog.log(MsgType.AI, "AI 6: inside checkEndPhase()");
 		if (getProvinceAmount() < 4) {
 			this.endPhase = true;
 		} else if (this.player.getTurnNr() >= ArtificialIntelligence.ENDPHASE_TURN) {

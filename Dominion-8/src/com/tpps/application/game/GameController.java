@@ -160,7 +160,7 @@ public class GameController {
 	 */
 	public void setNextActivePlayer() {
 		Player activePlayer = this.getActivePlayer();
-		LinkedList<Player> players = this.getPlayers();
+//		LinkedList<Player> players = this.getPlayers();
 		for (int i = 0; i < this.players.size(); i++) {
 			Player player = players.get(i);
 			if (player.getPlayerName().equals(activePlayer.getPlayerName())) {
@@ -1040,7 +1040,9 @@ public class GameController {
 	 */
 	public Player getRandomPlayer() {
 //		return this.players.get((int) (Math.random() * 4));
-		System.out.println("players.size() is: " + players.size());
+		System.out.print("                                               *** players.size() is: " + players.size() + " and players are ");
+		for (Player p : players) System.out.print(p.getPlayerName() + " ");
+		System.out.println("");
 		return this.players.get((int) (Math.random() * players.size()));
 	}
 
