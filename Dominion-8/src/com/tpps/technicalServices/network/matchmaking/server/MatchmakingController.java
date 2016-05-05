@@ -39,6 +39,7 @@ public final class MatchmakingController {
 		playersByName = new ConcurrentHashMap<>();
 		// connectedPortsByPlayer = new ConcurrentHashMap<>();
 		lobbiesByID = new ConcurrentHashMap<>();
+		runningLobbiesByPort = new ConcurrentHashMap<>();
 	}
 
 	private static ConcurrentHashMap<Integer, MPlayer> playersByPort;
@@ -49,6 +50,7 @@ public final class MatchmakingController {
 	private static ConcurrentHashMap<String, MPlayer> playersByName;
 
 	private static ConcurrentHashMap<MPlayer, GameLobby> lobbiesByPlayer;
+	private static ConcurrentHashMap<Integer, GameLobby> runningLobbiesByPort;
 
 	private static ConcurrentHashMap<UUID, GameLobby> lobbiesByID;
 
@@ -73,7 +75,7 @@ public final class MatchmakingController {
 		lobbiesByID.put(lobby.getLobbyID(), lobby);
 		lobby.joinPlayer(player);
 		lobbiesByPlayer.put(player, lobby);
-		GameLog.log(MsgType.INFO, player.getPlayerName() + " created a private lobby [" + lobby.getLobbyID() + "]");		
+		GameLog.log(MsgType.INFO, player.getPlayerName() + " created a private lobby [" + lobby.getLobbyID() + "]");
 	}
 
 	/** @return a newly generated, unique ID for the lobby */
@@ -164,7 +166,7 @@ public final class MatchmakingController {
 						e.printStackTrace();
 					}
 				});
-				// gameServersByLobby.put(lobby, gsThread);
+				runningLobbiesByPort.put(freePort, lobby);
 				Thread.sleep(500);
 				blockPort.release(1);
 
@@ -183,8 +185,7 @@ public final class MatchmakingController {
 					/* send AI-register packets */
 					if (pl.isAI()) {
 						try {
-							cl.sendMessage(new PacketRegistratePlayerByServer(pl.getPlayerName(),
-									pl.getPlayerUID()));
+							cl.sendMessage(new PacketRegistratePlayerByServer(pl.getPlayerName(), pl.getPlayerUID()));
 							System.err.println("Registering AI: " + pl.getPlayerName());
 							Thread.sleep(100);
 						} catch (Exception e) {
@@ -225,18 +226,11 @@ public final class MatchmakingController {
 	private static void removeLobby(GameLobby lobby) {
 		lobbies.remove(lobby);
 		lobbiesByID.remove(lobby.getLobbyID());
-		// INFO: lobby could not be in lobbiesByPlayer, since no player is in
+		if (lobby.hasStarted())
+			runningLobbiesByPort.remove(lobby.getServer().getPort());
+		// INFO: lobby can not be in lobbiesByPlayer, since no player is in
 		// the lobby
 	}
-
-	// /**
-	// * @return the port a player is connected with
-	// * @param player
-	// * the requested player
-	// */
-	// public static int getPortFromPlayer(MPlayer player) {
-	// return connectedPortsByPlayer.get(player);
-	// }
 
 	/**
 	 * adds a player to a lobby
@@ -364,8 +358,8 @@ public final class MatchmakingController {
 	 *            the packet with the winner and all participants in the game
 	 *            that stayed until it ended
 	 */
-	public static void onGameEnd(PacketGameEnd endPacket) {
-		GameLobby lobby = lobbiesByPlayer.get(endPacket.getWinner());
+	public static void onGameEnd(PacketGameEnd endPacket, int port) {
+		GameLobby lobby = runningLobbiesByPort.get(port);
 		for (String p : endPacket.getPlayers()) {
 
 			if (!DominionController.isOffline()) {
