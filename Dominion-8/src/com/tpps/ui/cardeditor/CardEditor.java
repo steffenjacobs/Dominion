@@ -200,7 +200,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		obenLinks.add(nameField);
 		cardType = new JLabel("Choose Cardtype");
 		obenLinks.add(cardType);
-		selectCardType = new JComboBox();
+		String comboBoxListe[] = {"Action", "Treasure", "Victory", "Point"};
+		selectCardType = new JComboBox(comboBoxListe);
 		obenLinks.add(selectCardType);
 		
 		c.add(obenLinks, gbc);
@@ -326,6 +327,20 @@ public class CardEditor extends JFrame implements ActionListener {
 		actionSelect.add(revealCard);
 		actionSelect.add(isTreasure);
 		actionSelect.add(isVictory);
+		addAction.setOpaque(false);
+		addMoney.setOpaque(false);
+		addPurchase.setOpaque(false);
+		drawCard.setOpaque(false);
+		drawCardUntil.setOpaque(false);
+		putBack.setOpaque(false);
+		gainCard.setOpaque(false);
+		discardCard.setOpaque(false);
+		trashCard.setOpaque(false);
+		revealCard.setOpaque(false);
+		isTreasure.setOpaque(false);
+		isVictory.setOpaque(false);
+		
+		
 		radio.add(addAction);
 		radio.add(addMoney);
 		radio.add(addPurchase);
