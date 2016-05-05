@@ -376,15 +376,6 @@ public class Card extends GameObject {
 		}
 	}
 
-	public <T extends Client> void onAiClick(T client, int clientId) {
-		System.out.println("AiClick on Card");
-		try {
-			client.sendMessage(new PacketPlayCard(this.id, clientId));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * 
 	 */

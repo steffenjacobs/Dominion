@@ -20,8 +20,8 @@ public class PacketBroadcastLog extends Packet {
 	private final String right;
 	private final MsgType msgType;
 	private final Color color;
-
-//	private final int logNr;
+	
+	private final long timestamp;
 	
 	/***
 	 * this will be used in most cases
@@ -38,7 +38,8 @@ public class PacketBroadcastLog extends Packet {
 		this.right = right;
 		this.msgType = MsgType.GAME;
 		this.color = color;
-//		this.logNr = GameLog.getCountAndInc();
+		this.timestamp = System.currentTimeMillis();
+//		System.out.println(" in PBL >>>>>> Timestamp is > " + this.timestamp + " and it's " + (System.currentTimeMillis() - this.timestamp) + " ms old.");
 	}
 
 	/**
@@ -54,24 +55,8 @@ public class PacketBroadcastLog extends Packet {
 		this.right = right;
 		this.msgType = MsgType.GAME;
 		this.color = GameLog.getMsgColor();
-//		this.logNr = GameLog.getCountAndInc();
+		this.timestamp = System.currentTimeMillis();
 	}
-
-	// /**
-	// *
-	// * sets the packettype
-	// *
-	// * @author ladler - Lukas Adler, nwipfler - Nicolas Wipfler
-	// */
-	// public PacketBroadcastLog(MsgType msgType, String right, Color color) {
-	// super(PacketType.BROADCAST_LOG);
-	// this.left = "";
-	// this.username = "";
-	// this.right = right;
-	// this.msgType = msgType;
-	// this.color = color;
-	// this.logNr = GameLog.getCountAndInc();
-	// }
 
 	/**
 	 *
@@ -85,7 +70,7 @@ public class PacketBroadcastLog extends Packet {
 		this.right = right;
 		this.msgType = msgType;
 		this.color = GameLog.getMsgColor();
-//		this.logNr = GameLog.getCountAndInc();
+		this.timestamp = System.currentTimeMillis();
 	}
 
 	public MsgType getMsgType() {
@@ -108,9 +93,9 @@ public class PacketBroadcastLog extends Packet {
 		return this.color;
 	}
 	
-//	public int getLogNr() {
-//		return this.logNr;
-//	}
+	public long getTimestamp() {
+		return this.timestamp;
+	}
 
 	/**
 	 * @return a readable String

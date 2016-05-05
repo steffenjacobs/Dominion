@@ -151,6 +151,7 @@ public class GraphicFramework extends JPanel {
 	@Override
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
+
 		GameObject[] objects = gameObjects.values().toArray(new GameObject[] {});
 		Arrays.sort(objects, new CompareByLayer());
 

@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -43,6 +44,7 @@ import com.tpps.application.game.card.CardType;
 import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.Loader;
 
@@ -56,7 +58,7 @@ import com.tpps.technicalServices.util.Loader;
 public class PlayerSettingsPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private  Font head;
+	private Font head;
 
 	private BufferedImage[] originalImages = new BufferedImage[4];
 	private BufferedImage[] transparentImages = new BufferedImage[4];
@@ -102,6 +104,7 @@ public class PlayerSettingsPanel extends JPanel {
 	private BufferedImage brain;
 
 	private ArrayList<String> aiNames = new ArrayList<>();
+	private ArrayList<String> aiNameList;
 	// private boolean singlePlayer = false;
 
 	/**
@@ -116,8 +119,7 @@ public class PlayerSettingsPanel extends JPanel {
 		this.loadingImage();
 		this.setOpaque(false);
 		this.setLayout(new GridLayout(3, 1, 0, SPACE_PANEL_TO_PANEL));
-		head = head.deriveFont(Font.BOLD,25f);
-		
+		this.head = this.head.deriveFont(Font.BOLD, 25f);
 
 		this.add(this.upperAreaPanel());
 		// this.midScroller = this.middleAreaPanel();
@@ -125,6 +127,8 @@ public class PlayerSettingsPanel extends JPanel {
 		// this.add(this.bottomAreaPanel());
 		this.bottomAreaPanel = this.bottomAreaPanel();
 
+		this.aiNameList = CollectionsUtil.getArrayList("Sir Lancelot", "Ritter der Kokosnuss", "Wizard of Oz",
+				"King Arthur", "Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne", "Harvey Specter");
 		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
 	}
 
@@ -258,12 +262,11 @@ public class PlayerSettingsPanel extends JPanel {
 				}
 				System.out.println("Starting game...");
 			} else {
-				DominionController.getInstance()
-						.receiveChatMessageFromChatServer(
-								"You are not ready to start the match\n" + "selected cards: "
-										+ PlayerSettingsPanel.this.cardNamesSelected.size() + "\n"
-										+ "connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers(),
-								"BOT", "", Color.YELLOW);
+				DominionController.getInstance().receiveChatMessageFromChatServer(
+						"You are not ready to start the match\n" + "         selected cards: "
+								+ PlayerSettingsPanel.this.cardNamesSelected.size() + "\n"
+								+ "         connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers(),
+						"BOT", "", Color.YELLOW);
 			}
 		}
 
@@ -385,7 +388,7 @@ public class PlayerSettingsPanel extends JPanel {
 		public CardDisplayButton(SerializedCard originalCard) {
 			this.card = originalCard;
 			this.addActionListener(this);
-			this.imgNotSelected = GraphicsUtil.colorScale(new Color(0, 0, 6), card.getImage(), .4f);			
+			this.imgNotSelected = GraphicsUtil.colorScale(new Color(0, 0, 6), card.getImage(), .4f);
 			this.selected = false;
 		}
 
@@ -395,19 +398,19 @@ public class PlayerSettingsPanel extends JPanel {
 			Graphics2D h = (Graphics2D) g;
 			h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-			if(selected){
+			if (selected) {
 				h.drawImage(card.getImage(), 0, 0, this.getWidth(), this.getHeight(), null);
-			}else{
+			} else {
 				h.drawImage(imgNotSelected, 0, 0, this.getWidth(), this.getHeight(), null);
 			}
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(selected){
+			if (selected) {
 				selected = false;
 				cardNamesSelected.remove(this.card.getName());
-			}else{
+			} else {
 				selected = true;
 				cardNamesSelected.add(this.card.getName());
 			}
@@ -668,7 +671,7 @@ public class PlayerSettingsPanel extends JPanel {
 		@SuppressWarnings("unchecked")
 		Map<TextAttribute, Integer> attributes = (Map<TextAttribute, Integer>) head.getAttributes();
 
-		attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
+		// attributes.put(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON);
 		header.setFont(head.deriveFont(attributes));
 
 		header.setOpaque(false);
@@ -687,12 +690,12 @@ public class PlayerSettingsPanel extends JPanel {
 		System.out.println("ZERO: " + this.selectedImage);
 		return this.selectedImage;
 	}
-	
-	public void fontLoading(){
+
+	public void fontLoading() {
 		try {
 			if (head == null) {
 				head = Loader.getInstance().getXenipa();
-				if (head == null){
+				if (head == null) {
 					head = new Loader().importFont();
 				}
 			}
@@ -804,6 +807,22 @@ public class PlayerSettingsPanel extends JPanel {
 
 	public ArrayList<String> getAiNames() {
 		return aiNames;
+	}
+
+	public ArrayList<String> getAiNameList() {
+		return this.aiNameList;
+	}
+
+	public String getAiName() {
+		String randomName = this.aiNameList.get(new Random().nextInt(aiNameList.size()));
+		this.aiNames.add(randomName);
+		this.aiNameList.remove(randomName);
+		return randomName;
+	}
+
+	public void removeAiName() {
+		String removed = this.aiNames.remove(aiNames.size() - 1);
+		this.aiNameList.add(removed);
 	}
 
 	public void add3AIs() {

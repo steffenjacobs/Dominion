@@ -280,6 +280,15 @@ public final class DominionController {
 	}
 
 	/**
+	 * calls the receiveChatMessageFromChatServer method with default value true
+	 * 
+	 * for JavaDocumentation of this method see {receiveChatMessageFromChatServer(String, String, String, Color, boolean)}
+	 */
+	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color) {
+		this.receiveChatMessageFromChatServer(message, user, timeStamp, color, true);
+	}
+	
+	/**
 	 * @author jhuhn
 	 * @param message
 	 *            String representation of the chat message to send
@@ -290,10 +299,9 @@ public final class DominionController {
 	 * @param color
 	 *            color of the user
 	 */
-	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color) {
-		if (this.gameClient == null) { // player is not ingame, player is in
-										// globalchat
-			this.globalChatPanel.appendChatLocal(message, user, timeStamp, color);
+	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color, boolean point) {
+		if (this.gameClient == null) { // player is not ingame, player is in globalchat
+			this.globalChatPanel.appendChatLocal(message, user, timeStamp, color, point);
 		} else { // player is ingame
 			this.gameClient.getGameWindow().getChatWindow().appendChatLocal(message, user, timeStamp, color);
 		}
@@ -371,8 +379,8 @@ public final class DominionController {
 	 */
 	public void joinLobbyGui(boolean singlePlayer) {
 		this.receiveChatMessageFromChatServer(
-				"-------------","****** You joined the lobbyscreen ******",
-				"-------------", Color.GREEN);
+				"             ","****** You joined the lobbyscreen ******",
+				"             ", Color.GREEN, false);
 		this.globalChatPanel.getBackButton().setLobby(true);
 		this.playerSettingsPanel.getStartButton().setEnabled(true);
 		JPanel panel = new JPanel() {
@@ -498,8 +506,8 @@ public final class DominionController {
 	 */
 	public void openStatisticsGui() {
 		this.receiveChatMessageFromChatServer(
-				"-------------","*** You  joined  the  communityscreen ***",
-				"-------------", Color.GREEN);
+				"             ","*** You  joined  the  communityscreen ***",
+				"             ", Color.GREEN, false);
 		this.globalChatPanel.getBackButton().setLobby(false);
 		JPanel panel = new JPanel() {
 			private static final long serialVersionUID = 1L;

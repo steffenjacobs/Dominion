@@ -56,6 +56,7 @@ public class GameController {
 
 	private boolean gameNotFinished, cardsEnabled;
 	private Player activePlayer;
+	private boolean activePlayerNameAvailable;
 	private GameBoard gameBoard;
 	private String gamePhase;
 	private CopyOnWriteArrayList<Player> thiefList, spyList;
@@ -74,6 +75,7 @@ public class GameController {
 		this.spyList = new CopyOnWriteArrayList<Player>();
 		this.gameBoard = new GameBoard(selectedActionCards);
 		this.gameNotFinished = true;
+		this.activePlayerNameAvailable = false;
 	}
 
 	/**
@@ -116,6 +118,20 @@ public class GameController {
 	}
 
 	/**
+	 * @return the activePlayerNameAvailable
+	 */
+	public boolean isActivePlayerNameAvailable() {
+		return activePlayerNameAvailable;
+	}
+
+	/**
+	 * @param activePlayerNameAvailable the activePlayerNameAvailable to set
+	 */
+	public void setActivePlayerNameAvailable(boolean activePlayerNameAvailable) {
+		this.activePlayerNameAvailable = activePlayerNameAvailable;
+	}
+
+	/**
 	 * @param thiefList
 	 *            the thiefList to set
 	 * 
@@ -134,7 +150,9 @@ public class GameController {
 	}
 
 	public String getActivePlayerName() {
-		return this.activePlayer.getPlayerName();
+//		if (this.activePlayerNameAvailable)
+			return this.activePlayer.getPlayerName();
+//		else return "";
 	}
 	
 	/**
@@ -142,7 +160,7 @@ public class GameController {
 	 */
 	public void setNextActivePlayer() {
 		Player activePlayer = this.getActivePlayer();
-		LinkedList<Player> players = this.getPlayers();
+//		LinkedList<Player> players = this.getPlayers();
 		for (int i = 0; i < this.players.size(); i++) {
 			Player player = players.get(i);
 			if (player.getPlayerName().equals(activePlayer.getPlayerName())) {
@@ -984,6 +1002,7 @@ public class GameController {
 			if (this.players.size() == GameConstant.PLAYERS) {
 				this.activePlayer = getRandomPlayer();
 				this.activePlayer.incTurnNr();
+				this.activePlayerNameAvailable = true;
 				try {
 					// this.gameServer.broadcastMessage(
 					// new PacketBroadcastLog("----- ",
@@ -1017,10 +1036,14 @@ public class GameController {
 	}
 
 	/**
-	 * @return one of the four players who is randomly choosen
+	 * @return one of the four players who is randomly chosen
 	 */
 	public Player getRandomPlayer() {
-		return this.players.get((int) (Math.random() * 4));
+//		return this.players.get((int) (Math.random() * 4));
+		System.out.print("                                               *** players.size() is: " + players.size() + " and players are ");
+		for (Player p : players) System.out.print(p.getPlayerName() + " ");
+		System.out.println("");
+		return this.players.get((int) (Math.random() * players.size()));
 	}
 
 	/**

@@ -46,6 +46,8 @@ public class Deck {
 	/**
 	 * initializes the deck with 7 COPPER cards and 3 ESTATE cards
 	 * shuffles the deck and draws 5 cards from the drawPile
+	 * 
+	 * @param initCards the initialization list of cards
 	 */
 	private void init(LinkedList<Card> initCards) {
 		if (this.drawPile != null) {
@@ -227,11 +229,6 @@ public class Deck {
 		return victoryCards;
 	}
 	
-	/**
-	 * 
-	 * @param type
-	 * @return
-	 */
 	public LinkedList<Card> getCardsByTypeFromHand(CardType type) {
 		LinkedList<Card> typeCards = new LinkedList<Card>();
 		for (Iterator<Card> iterator = getCardHand().iterator(); iterator.hasNext();) {
@@ -243,10 +240,6 @@ public class Deck {
 		return typeCards;
 	}
 	
-	/**
-	 * 
-	 * @return
-	 */
 	public LinkedList<String> getTreasureCardsFromHand(){
 		LinkedList<Card> treasureCards = new LinkedList<Card>();
 		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
