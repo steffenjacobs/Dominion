@@ -92,7 +92,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				if (packetRegistratePlayerByServer.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))) {
 					System.out.println(packetRegistratePlayerByServer.getUsername());
 
-					addPlayerAndCheckPlayerCount(port, clientId, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
+					addPlayerAndCheckPlayerCount(this.server.getGameController().getAiPort(), clientId, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
 				} else if (this.server.validSession(packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID())) {
 					System.out.println("Connect valid Session username: " + packetRegistratePlayerByServer.getUsername() + "sessionID: " + packetRegistratePlayerByServer.getSessionID());
 					addPlayerAndCheckPlayerCount(port, clientId, packetRegistratePlayerByServer.getUsername(), packetRegistratePlayerByServer.getSessionID());
@@ -159,7 +159,20 @@ public class ServerGamePacketHandler extends PacketHandler {
 				break;
 			case END_TURN:
 				// alle Karten ablegen
+				// String portname =
+				// this.server.getGameController().getPlayerByPort(port).getPlayerName();
+				// String activePlayerName =
+				// this.server.getGameController().getActivePlayerName();
+				// GameLog.log(MsgType.DEBUG, "<<< portname: " + portname + ",
+				// activename: " + activePlayerName + ", .equals: " +
+				// activePlayerName.equals(portname));
+				// GameLog.log(MsgType.AI_DEBUG, "port in sgph.endTurn()" +
+				// port);
+				// GameLog.log(MsgType.AI_DEBUG, "portVergleich: übergebener
+				// port: " + port + ", activePlayerPort: " +
+				// this.server.getGameController().getActivePlayer().getPort());
 				if (this.server.getGameController().getPlayerByPort(port).getPlayerName().equals(this.server.getGameController().getActivePlayerName())) {
+					// GameLog.log(MsgType.DEBUG, "ich bin in END_TURN");
 					this.nextActivePlayer(port);
 				} else {
 					this.server.sendMessage(port, new PacketEnable("react"));
@@ -738,6 +751,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 	private void nextActivePlayer(int port) {
 		try {
+			GameLog.log(MsgType.DEBUG, "ich bin in nextActivePlayer");
 			this.server.getGameController().organizePilesAndrefreshCardHand();
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(this.server.getGameController().getActivePlayer().getDeck().getCardHand())));
 			// i think it's not used

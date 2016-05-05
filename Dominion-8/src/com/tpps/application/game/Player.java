@@ -737,8 +737,8 @@ public class Player {
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
 			return serverCard;
-		}		
-		
+		}
+
 		if (this.playTwice) {
 			if (!this.secondTimePlayed) {
 				GameLog.log(MsgType.INFO, "playTwice: " + this.playTwice);
@@ -749,8 +749,6 @@ public class Player {
 				dontRemoveFlag = true;
 			}
 		}
-
-
 
 		LinkedList<CardAction> cardActions = new LinkedList<CardAction>(serverCard.getActions().keySet());
 		if (serverCard.getTypes().contains(CardType.REACTION)) {
@@ -847,7 +845,7 @@ public class Player {
 				}
 				break;
 			case DISCARD_AND_DRAW:
-				if ((this.getDeck().getCardHand().size() - 1) > 0){
+				if ((this.getDeck().getCardHand().size() - 1) > 0) {
 					this.discardMode = true;
 					this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
 					this.gameServer.sendMessage(port, new PacketStartDiscardMode());
@@ -870,7 +868,7 @@ public class Player {
 					// trashFlag gesetzt karte trashen null zur�ckgeben
 					trashFlag = true;
 				} else {
-					if ((this.getDeck().getCardHand().size() - 1) > 0){
+					if ((this.getDeck().getCardHand().size() - 1) > 0) {
 						this.gameServer.sendMessage(port, new PacketStartTrashMode());
 						this.trashMode = true;
 						this.discardOrTrashAction = new Tuple<CardAction>(act, Integer.parseInt(value));
@@ -891,14 +889,14 @@ public class Player {
 				}
 				break;
 			case TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND:
-				if (this.getDeck().getCardByTypeFromHand(CardType.TREASURE) != null){
+				if (this.getDeck().getCardByTypeFromHand(CardType.TREASURE) != null) {
 					this.trashMode = true;
 					this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, Integer.parseInt(value.split("_")[0]));
 					this.gainValue = Integer.parseInt(value.split("_")[1]);
 				}
 				break;
 			case TRASH_AND_GAIN_MORE_THAN:
-				if ((this.getDeck().getCardHand().size() - 1) > 0){
+				if ((this.getDeck().getCardHand().size() - 1) > 0) {
 					this.trashMode = true;
 					this.discardOrTrashAction = new Tuple<CardAction>(CardAction.TRASH_AND_GAIN_MORE_THAN, Integer.parseInt(value.split("_")[0]));
 					this.gainValue = Integer.parseInt(value.split("_")[1]);
@@ -956,7 +954,7 @@ public class Player {
 
 		if (trashFlag) {
 			trashFlag = false;
-			if (!this.gameServer.getGameController().getGameBoard().getTrashPile().contains(serverCard)){
+			if (!this.gameServer.getGameController().getGameBoard().getTrashPile().contains(serverCard)) {
 				this.gameServer.getGameController().getGameBoard().getTrashPile().add(serverCard);
 			}
 			return null;
@@ -1085,8 +1083,8 @@ public class Player {
 		this.witch = false;
 		this.bureaucrat = false;
 	}
-	
-	public void setAllModesFalse(){
+
+	public void setAllModesFalse() {
 		this.discardMode = false;
 		this.trashMode = false;
 		this.reactionMode = false;
@@ -1105,8 +1103,8 @@ public class Player {
 		this.revealList = new LinkedList<Card>();
 		this.temporaryTrashPile = new LinkedList<Card>();
 		this.setAsideCards = new LinkedList<Card>();
-		this.playTwiceCard = null;		
-		this.playedCards = new LinkedList<Card>();		
+		this.playTwiceCard = null;
+		this.playedCards = new LinkedList<Card>();
 	}
 
 	/**
@@ -1219,12 +1217,13 @@ public class Player {
 		this.secondTimePlayed = false;
 		this.playTwiceCard = null;
 		this.playTwiceCounter = 0;
-
 	}
 
 	public void setPlayTwiceEnabled() {
 		this.playTwiceEnabled = true;
-
 	}
 
+	public boolean isAI() {
+		return UUID.fromString("00000000-0000-0000-0000-000000000000").equals(this.session_ID);
+	}
 }

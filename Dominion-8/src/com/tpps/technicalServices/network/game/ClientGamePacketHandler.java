@@ -243,7 +243,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			MsgType type = pck.getMsgType();
 
 			long timestamp = pck.getTimestamp();
-			System.out.println("> Time in CGPH is > " + timestamp + " and its the same as pck.getTimestamp(): " + (timestamp == pck.getTimestamp()));
+//			System.out.println("> Time in CGPH is > " + timestamp + " and its the same as pck.getTimestamp(): " + (timestamp == pck.getTimestamp()));
 
 			GameLog.log(type, left, /*timestamp,*/ GameLog.getMsgColor());
 			GameLog.log(type, username, /*timestamp,*/ usercolor);

@@ -22,7 +22,8 @@ public enum MsgType {
 	AI("[AI]",Color.ORANGE, true, true, ANSIUtil.ANSI_GREEN),
 	NETWORK_INFO("[NETWORK-INFO]", Color.BLUE, true, true, ANSIUtil.ANSI_BLUE),
 	NETWORK_ERROR("[NETWORK-ERROR]", Color.MAGENTA, true, true, ANSIUtil.ANSI_MAGENTA),
-	STATISTICS("[STATS]",Color.YELLOW,true,true, ANSIUtil.ANSI_YELLOW);
+	STATISTICS("[STATS]",Color.YELLOW,true,true, ANSIUtil.ANSI_YELLOW),
+	AI_DEBUG("[AI_DEBUG_OTHER]",Color.YELLOW,true,true, ANSIUtil.ANSI_YELLOW);
 
 	/**
 	 * message is the String which shows the type of the log in GameLog (in front of every message)

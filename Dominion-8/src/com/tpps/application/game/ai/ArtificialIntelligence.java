@@ -75,6 +75,7 @@ public class ArtificialIntelligence {
 	 */
 	private void sendPacket(Packet packet) {
 		new Thread(() -> {
+//			GameLog.log(MsgType.AI_DEBUG, "port in ai.sendPacket()" + this.player.getPort());
 			packetHandler.handleReceivedPacket(this.player.getPort(), packet);
 		}).start();
 	}
@@ -188,6 +189,7 @@ public class ArtificialIntelligence {
 	 * it is ended automatically (e.g. if the player has no more buys left)
 	 */
 	private void endTurn() {
+		GameLog.log(MsgType.AI, this.player.getPlayerName() + " ended Turn by itself.");
 		sendPacket(new PacketEndTurn());
 	}
 
@@ -202,7 +204,7 @@ public class ArtificialIntelligence {
 		new Thread(new Runnable() {
 			
 			public void run() {
-				GameLog.log(MsgType.AI, "AI 1: run() is started");
+//				GameLog.log(MsgType.AI, "AI 1: run() is started");
 				while (notFinished()) {
 					try {
 						Thread.sleep(1000);
@@ -225,8 +227,8 @@ public class ArtificialIntelligence {
 	private void handleTurn() {
 //		GameLog.log(MsgType.AI, "AI 2: i'm in handle turn");
 		if (myTurn()) {
-			GameLog.log(MsgType.AI, "AI 3: i'm in handle turn and it's my turn");
-			GameLog.log(MsgType.AI, this.player.getPlayerName() + " is handling a turn");
+//			GameLog.log(MsgType.AI, "AI 3: i'm in handle turn and it's my turn");
+//			GameLog.log(MsgType.AI, this.player.getPlayerName() + " is handling a turn");
 			
 			if (firstTurn())
 				determineStrategy();
@@ -249,7 +251,7 @@ public class ArtificialIntelligence {
 	private void executeMove() {
 		GameLog.log(MsgType.AI, this.player.getPlayerName() + " is executing a turn");
 		try {
-			GameLog.log(MsgType.AI, "AI 7: executeMove()");
+//			GameLog.log(MsgType.AI, "AI 7: executeMove()");
 			this.playAllActionCards();
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.setBuyPhase();
@@ -267,7 +269,6 @@ public class ArtificialIntelligence {
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.buySequence = new LinkedList<String>();
 			if (myTurn()) {
-				GameLog.log(MsgType.AI, this.player.getPlayerName() + " ended Turn by itself.");
 				this.endTurn();
 			}
 		} catch (InterruptedException e) {
@@ -292,12 +293,12 @@ public class ArtificialIntelligence {
 			result.addLast("Gold");
 		} else if (coins >= 3) {
 			result.addLast("Silver");
-		}
+		} else result.addLast("Curse");
 		return result;
 	}
 
 	private void determineStrategy() {
-		GameLog.log(MsgType.AI, "AI 5: determineStrategy()");
+//		GameLog.log(MsgType.AI, "AI 5: determineStrategy()");
 		if (this.player.getGameServer().getGameController().getGameBoard().getTableForActionCards().get("Witch") != null && iAmTheOnlyAI()) {
 			this.strategy = Strategy.WITCH;
 			return;
@@ -322,6 +323,7 @@ public class ArtificialIntelligence {
 		if (this.player.getGameServer().getGameController().isActivePlayerNameAvailable()) {
 //			GameLog.log(MsgType.AI, "inside the >>> if <<< in myTurn()");
 			String activePlayerName = this.player.getGameServer().getGameController().getActivePlayerName();
+//			GameLog.log(MsgType.AI, "my name is " + this.player.getPlayerName() + "11111111111111111111111111                         activePlayerName: " + activePlayerName + " und equals ist: " + activePlayerName.equals(this.player.getPlayerName()));
 			return /* activePlayerName != null ? */activePlayerName.equals(this.player.getPlayerName()) /* : false */;
 		}
 		return false;

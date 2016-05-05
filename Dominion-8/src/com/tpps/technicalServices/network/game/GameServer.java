@@ -80,7 +80,6 @@ public class GameServer extends Server {
 		} else {
 			System.out.println("send no message");
 		}
-
 	}
 
 	/**

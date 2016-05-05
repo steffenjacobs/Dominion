@@ -2,11 +2,14 @@ package com.tpps.application.game;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -60,6 +63,7 @@ public class GameController {
 	private GameBoard gameBoard;
 	private String gamePhase;
 	private CopyOnWriteArrayList<Player> thiefList, spyList;
+	private List<Integer> aiPorts;
 
 	/**
 	 * creates the gameController, sets the gameServer sets all flag and creates
@@ -76,6 +80,7 @@ public class GameController {
 		this.gameBoard = new GameBoard(selectedActionCards);
 		this.gameNotFinished = true;
 		this.activePlayerNameAvailable = false;
+		this.aiPorts = new ArrayList<Integer>();
 	}
 
 	/**
@@ -159,6 +164,7 @@ public class GameController {
 	 * determines the next active player
 	 */
 	public void setNextActivePlayer() {
+		GameLog.log(MsgType.DEBUG, "ich bin in setNextActivePlayer");
 		Player activePlayer = this.getActivePlayer();
 //		LinkedList<Player> players = this.getPlayers();
 		for (int i = 0; i < this.players.size(); i++) {
@@ -166,6 +172,7 @@ public class GameController {
 			if (player.getPlayerName().equals(activePlayer.getPlayerName())) {
 				this.setActivePlayer(players.get(i < this.players.size() - 1 ? i + 1 : 0));
 				this.getActivePlayer().incTurnNr();
+				GameLog.log(MsgType.DEBUG, "ich bin in der letzten logischen Schleife in setNextActivePlayer");
 				break;
 			}
 		}
@@ -867,6 +874,7 @@ public class GameController {
 	 * ActionPhase
 	 */
 	public synchronized void endTurn() {
+		GameLog.log(MsgType.DEBUG, "ich bin in der echten endTurn()");
 		this.getActivePlayer().resetPlayerValues();
 		this.getActivePlayer().refreshPlayedCardsList();
 		this.setNextActivePlayer();
@@ -940,6 +948,28 @@ public class GameController {
 		return null;
 	}
 
+//	/**
+//	 * 
+//	test purposes
+//	 */
+//	public Player getPlayerByPort(int port) {
+//		int count = 0;
+//		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+//			Player player = (Player) iterator.next();
+//			if (player.getPort() == port) {
+//				count++;
+//			}
+//		}
+//		GameLog.log(MsgType.AI_DEBUG, ">> There are " + count + " players with Port " + port);
+//		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+//			Player player = (Player) iterator.next();
+//			if (player.getPort() == port) {
+//				return player;
+//			}
+//		}
+//		return null;
+//	}
+	
 	/**
 	 * 
 	 * @param clientId
@@ -1274,5 +1304,14 @@ public class GameController {
 			}
 		}
 		return true;
+	}
+	
+	public int getAiPort() {
+		int ran;
+		do {
+			ran = new Random().nextInt(1024) * (-1);
+		} while (aiPorts.contains(ran));
+		aiPorts.add(ran);
+		return ran;
 	}
 }
