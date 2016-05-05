@@ -203,7 +203,7 @@ public class ArtificialIntelligence {
 		new Thread(new Runnable() {
 			
 			public void run() {
-				System.out.println("AI 1.");
+				GameLog.log(MsgType.AI, "AI 1: run() is started");
 				while (notFinished()) {
 					try {
 						Thread.sleep(1000);
@@ -224,10 +224,10 @@ public class ArtificialIntelligence {
 	 * case no: handle a possible reaction Phase of the player (if an enemy played an attack)
 	 */ 
 	private void handleTurn() {
-		System.out.println("AI 2.");
+		GameLog.log(MsgType.AI, "AI 2: i'm in handle turn");
 		if (myTurn()) {
-			System.out.println("AI 3.");
-			GameLog.log(MsgType.AI, this + "is handling a turn");
+			GameLog.log(MsgType.AI, "AI 3: i'm in handle turn and it's my turn");
+			GameLog.log(MsgType.AI, this + " is handling a turn");
 			
 			if (firstTurn())
 				determineStrategy();
@@ -248,8 +248,8 @@ public class ArtificialIntelligence {
 	 * execute the next turn of the AI
 	 */
 	private void executeMove() {
-		GameLog.log(MsgType.AI, this + "is executing a turn");
-		try {System.out.println("AI 7.");
+		GameLog.log(MsgType.AI, this + " is executing a turn");
+		try {GameLog.log(MsgType.AI, "AI 7: executeMove()");
 			this.playAllActionCards();
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.setBuyPhase();
@@ -267,7 +267,7 @@ public class ArtificialIntelligence {
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.buySequence = new LinkedList<String>();
 			if (myTurn()) {
-				GameLog.log(MsgType.AI, "ended Turn by itself.");
+				GameLog.log(MsgType.AI, this + " ended Turn by itself.");
 				this.endTurn();
 			}
 		} catch (InterruptedException e) {
@@ -297,7 +297,7 @@ public class ArtificialIntelligence {
 	}
 
 	private void determineStrategy() {
-		System.out.println("AI 5.");
+		GameLog.log(MsgType.AI, "AI 5: determineStrategy()");
 		if (this.player.getGameServer().getGameController().getGameBoard().getTableForActionCards().get("Witch") != null && iAmTheOnlyAI()) {
 			this.strategy = Strategy.WITCH;
 			return;
@@ -318,8 +318,13 @@ public class ArtificialIntelligence {
 	 * @return if it's the AIs turn
 	 */
 	private boolean myTurn() {
-		String activePlayerName = this.player.getGameServer().getGameController().getActivePlayerName();
-		return activePlayerName != null ? activePlayerName.equals(this.player.getPlayerName()) : false;
+		GameLog.log(MsgType.AI, "inside myTurn()");
+		if (this.player.getGameServer().getGameController().isActivePlayerNameAvailable()) {
+			GameLog.log(MsgType.AI, "inside the >>> if <<< in myTurn()");
+			String activePlayerName = this.player.getGameServer().getGameController().getActivePlayerName();
+			return /* activePlayerName != null ? */activePlayerName.equals(this.player.getPlayerName()) /* : false */;
+		}
+		return false;
 	}
 
 	/**
@@ -396,7 +401,7 @@ public class ArtificialIntelligence {
 	 * @return whether it is the first turn of the AI
 	 */
 	private boolean firstTurn() {
-		System.out.println("AI 4.");
+		GameLog.log(MsgType.AI, "AI 4: it's the first turn (inside firstTurn())");
 		return this.player.getTurnNr() == 1;
 	}
 

@@ -31,8 +31,8 @@ public class GameLog {
 	private static String timestampConsoleColor = ANSIUtil.ANSI_WHITE;
 	private static Color msgColor = Color.WHITE;
 	
-	private static ConcurrentSkipListMap<Long, LogObject> waitingLogs;
-	private static Timer timer;
+//	private static ConcurrentSkipListMap<Long, LogObject> waitingLogs;
+//	private static Timer timer;
 
 	/**
 	 * unused for now, see MsgType class for messageTypeColors
@@ -225,20 +225,20 @@ public class GameLog {
 	 */
 	public static void init() {
 		GameLog.isInitialized = true;
-		GameLog.waitingLogs = new ConcurrentSkipListMap<Long, LogObject>();
-		GameLog.timer = new Timer();
-		GameLog.timer.schedule(new TimerTask(){
-            @Override
-            public void run() {            		
-            	for (long elementTime : GameLog.waitingLogs.keySet()) {
-            		long currentTime = System.currentTimeMillis();
-            		System.out.println("I am here and the current time is " + currentTime + ", diff. is " + (currentTime-elementTime));
-            		if (currentTime - elementTime > 300) {
-            			GameLog.log(GameLog.waitingLogs.remove(elementTime));
-            		}
-            	}
-            }   
-        },0, 1000);
+//		GameLog.waitingLogs = new ConcurrentSkipListMap<Long, LogObject>();
+//		GameLog.timer = new Timer();
+//		GameLog.timer.schedule(new TimerTask(){
+//            @Override
+//            public void run() {            		
+//            	for (long elementTime : GameLog.waitingLogs.keySet()) {
+//            		long currentTime = System.currentTimeMillis();
+//            		// System.out.println("I am here and the current time is " + currentTime + ", diff. is " + (currentTime-elementTime));
+//            		if (currentTime - elementTime > 300) {
+//            			GameLog.log(GameLog.waitingLogs.remove(elementTime));
+//            		}
+//            	}
+//            }   
+//        },0, 2000);
 		if (guiPossible)
 			GameLog.textPane = new GameLogTextPane();
 		else
@@ -268,14 +268,14 @@ public class GameLog {
 		return line.toString();
 	}
 
-	public static void log(MsgType type, String line, long timestamp, Color color) {
-		System.out.println(">>> here and timestamp is " + timestamp);
-		GameLog.waitingLogs.put(timestamp, new LogObject(type,line,color));
-	}
-	
-	private static void log(LogObject logO) {
-		GameLog.log(logO.getType(), logO.getLine(), logO.getColor());
-	}
+//	public static void log(MsgType type, String line, long timestamp, Color color) {
+////		System.out.println(">>> here and timestamp is " + timestamp);
+//		GameLog.waitingLogs.put(timestamp, new LogObject(type,line,color));
+//	}
+//	
+//	private static void log(LogObject logO) {
+//		GameLog.log(logO.getType(), logO.getLine(), logO.getColor());
+//	}
 	
 	/**
 	 * Weder MsgType.getDisplay() noch MsgType.getTimeStamp() wird benutzt;

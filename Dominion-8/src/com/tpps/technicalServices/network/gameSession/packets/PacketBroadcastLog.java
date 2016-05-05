@@ -39,7 +39,7 @@ public class PacketBroadcastLog extends Packet {
 		this.msgType = MsgType.GAME;
 		this.color = color;
 		this.timestamp = System.currentTimeMillis();
-		System.out.println(" in PBL >>>>>> Timestamp is > " + this.timestamp + " and it's " + (System.currentTimeMillis() - this.timestamp) + " ms old.");
+//		System.out.println(" in PBL >>>>>> Timestamp is > " + this.timestamp + " and it's " + (System.currentTimeMillis() - this.timestamp) + " ms old.");
 	}
 
 	/**

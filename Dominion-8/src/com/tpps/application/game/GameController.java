@@ -56,7 +56,7 @@ public class GameController {
 
 	private boolean gameNotFinished, cardsEnabled;
 	private Player activePlayer;
-//	private boolean activePlayerNameAvailable;
+	private boolean activePlayerNameAvailable;
 	private GameBoard gameBoard;
 	private String gamePhase;
 	private CopyOnWriteArrayList<Player> thiefList, spyList;
@@ -75,7 +75,7 @@ public class GameController {
 		this.spyList = new CopyOnWriteArrayList<Player>();
 		this.gameBoard = new GameBoard(selectedActionCards);
 		this.gameNotFinished = true;
-//		this.activePlayerNameAvailable = false;
+		this.activePlayerNameAvailable = false;
 	}
 
 	/**
@@ -115,6 +115,20 @@ public class GameController {
 	 */
 	public void setGamePhase(String gamePhase) {
 		this.gamePhase = gamePhase;
+	}
+
+	/**
+	 * @return the activePlayerNameAvailable
+	 */
+	public boolean isActivePlayerNameAvailable() {
+		return activePlayerNameAvailable;
+	}
+
+	/**
+	 * @param activePlayerNameAvailable the activePlayerNameAvailable to set
+	 */
+	public void setActivePlayerNameAvailable(boolean activePlayerNameAvailable) {
+		this.activePlayerNameAvailable = activePlayerNameAvailable;
 	}
 
 	/**
@@ -988,7 +1002,7 @@ public class GameController {
 			if (this.players.size() == GameConstant.PLAYERS) {
 				this.activePlayer = getRandomPlayer();
 				this.activePlayer.incTurnNr();
-//				this.activePlayerNameAvailable = true;
+				this.activePlayerNameAvailable = true;
 				try {
 					// this.gameServer.broadcastMessage(
 					// new PacketBroadcastLog("----- ",
@@ -1022,10 +1036,12 @@ public class GameController {
 	}
 
 	/**
-	 * @return one of the four players who is randomly choosen
+	 * @return one of the four players who is randomly chosen
 	 */
 	public Player getRandomPlayer() {
-		return this.players.get((int) (Math.random() * 4));
+//		return this.players.get((int) (Math.random() * 4));
+		System.out.println("players.size() is: " + players.size());
+		return this.players.get((int) (Math.random() * players.size()));
 	}
 
 	/**
