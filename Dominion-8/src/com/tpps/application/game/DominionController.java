@@ -23,6 +23,7 @@ import com.tpps.technicalServices.network.chat.server.ChatServer;
 import com.tpps.technicalServices.network.clientSession.server.SessionServer;
 import com.tpps.technicalServices.network.game.ClientGamePacketHandler;
 import com.tpps.technicalServices.network.game.GameClient;
+import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndScreen;
 import com.tpps.technicalServices.network.login.server.LoginServer;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
@@ -195,10 +196,24 @@ public final class DominionController {
 	/**
 	 * is called when the match ends
 	 */
-	public void finishMatch() {
+	public void finishMatch(PacketShowEndScreen packetShowEndScreen) {
 		this.gameClient.getGameWindow().dispose();
 		this.gameClient = null;
 		this.playerSettingsPanel.initStandardBackground();
+		if (packetShowEndScreen.getPlayerAmount() >= 1){
+			this.endPanel.playerOne(packetShowEndScreen.getNameForPlayer("player1"), packetShowEndScreen.getPointsForPlayer("player1"));
+		}
+		if (packetShowEndScreen.getPlayerAmount() >= 2){
+		this.endPanel.playerTwo(packetShowEndScreen.getNameForPlayer("player2"), packetShowEndScreen.getPointsForPlayer("player2"));
+		}
+		if (packetShowEndScreen.getPlayerAmount() >= 3){
+			this.endPanel.playerThree(packetShowEndScreen.getNameForPlayer("player3"), packetShowEndScreen.getPointsForPlayer("player3"));
+		}
+		if (packetShowEndScreen.getPlayerAmount() == 4) {
+			this.endPanel.playerFour(packetShowEndScreen.getNameForPlayer("player4"), packetShowEndScreen.getPointsForPlayer("player4"));
+		}
+		
+		
 		this.mainFrame.setPanel(this.endPanel);
 		this.mainFrame.setVisible(true);
 	}

@@ -26,6 +26,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketSendClientId
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendHandCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendPlayedCardsToAllClients;
 import com.tpps.technicalServices.network.gameSession.packets.PacketSendRevealCards;
+import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndScreen;
 import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateTreasures;
 import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateValuesChangeButtons;
 import com.tpps.ui.gameplay.GameWindow;
@@ -257,7 +258,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			JOptionPane.showMessageDialog(null, "end game");
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameClient.disconnect();
-			DominionController.getInstance().finishMatch();
+			DominionController.getInstance().finishMatch((PacketShowEndScreen)packet);
 			break;
 		default:
 			System.out.println("unknown packet type: " + packet.getType());

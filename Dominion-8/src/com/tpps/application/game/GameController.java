@@ -1147,7 +1147,14 @@ public class GameController {
 
 		setGameNotFinished(false);
 		try {
-			this.gameServer.broadcastMessage(new PacketShowEndScreen());
+			PacketShowEndScreen packetShowEndScreen = new PacketShowEndScreen();
+			int i = 1;
+			for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+				Player player = (Player) iterator.next();
+				packetShowEndScreen.add("player" + i++, player.getPlayerName(), player.getDeck().getVictoryPoints());
+			}
+			
+			this.gameServer.broadcastMessage(packetShowEndScreen);
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
