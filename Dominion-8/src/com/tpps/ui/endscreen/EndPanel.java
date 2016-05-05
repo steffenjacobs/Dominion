@@ -117,17 +117,17 @@ public class EndPanel extends JPanel{
 		
 	}
 	
-	public void playerOne(String playerOne){
+	public void playerOne(String playerOne, int points){
 		
 	}
 	
-	public void playerTwo(String playerTwo){
+	public void playerTwo(String playerTwo, int points){
 		
 	}
-	public void playerThree(String playerThree){
+	public void playerThree(String playerThree, int points){
 		
 	}
-	public void playerFour(String playerFour){
+	public void playerFour(String playerFour, int points){
 		
 	}
 	
