@@ -7,9 +7,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
-
 /**
  * This class delivers all functionalities that is needed to handle all player
  * statistics in mysql database
@@ -39,11 +36,11 @@ public class SQLStatisticsHandler {
 		}
 		buf.deleteCharAt(buf.length() - 1);
 		buf.append(");");
-		GameLog.log(MsgType.INFO ,buf.toString());
+		System.out.println(buf.toString());
 		try {
 			Statement stmt = SQLHandler.getConnection().createStatement();
 			stmt.executeUpdate(buf.toString());
-			GameLog.log(MsgType.STATISTICS ,"Table statistics created");
+			System.out.println("Table statistics created");
 		} catch (SQLException e) {
 			System.err.println("Table couldn't get created, Maybe it already exists");
 			e.printStackTrace();
@@ -66,7 +63,7 @@ public class SQLStatisticsHandler {
 							+ "VALUES (?, 0, 0, 0, 0,0, 0, '','')");
 			stmt.setString(1, nickname);
 			stmt.executeUpdate();
-			GameLog.log(MsgType.STATISTICS ,"Added nickname Row for statistics");
+			System.out.println("Added nickname Row for statistics");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -184,7 +181,7 @@ public class SQLStatisticsHandler {
 			stmt.executeUpdate();
 			updateWinLoss(nickname);
 			incrementOverallGamesPlayed(nickname);
-			GameLog.log(MsgType.STATISTICS ,"Updated Wins and Losses");
+			System.out.println("Updated Wins and Losses");
 		} catch (SQLException e) {
 			System.err.println("Error while updating win/loss db");
 			e.printStackTrace();
@@ -257,7 +254,7 @@ public class SQLStatisticsHandler {
 			int losses = rsloss.getInt(1);
 			if (losses != 0) {
 				double ratio = (double) wins / (double) losses;
-				// GameLog.log(MsgType. ,ratio);
+				// System.out.println(ratio);
 				PreparedStatement setwinloss = SQLHandler.getConnection()
 						.prepareStatement("UPDATE statistics SET win_loss = ? WHERE nickname = ?;");
 				setwinloss.setDouble(1, ratio);
@@ -269,7 +266,7 @@ public class SQLStatisticsHandler {
 				setwinloss.setString(1, nickname);
 				setwinloss.executeUpdate();
 			}
-			GameLog.log(MsgType.STATISTICS ,"Updated Win/loss successfully for " + nickname);
+			System.out.println("Updated Win/loss successful for " + nickname);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -354,7 +351,7 @@ public class SQLStatisticsHandler {
 			int size = rs.getRow();
 			rs.beforeFirst();
 
-			// GameLog.log(MsgType. ,size);
+			// System.out.println(size);
 			String[][] statz = new String[size][7];
 
 			int height = 0;
@@ -367,7 +364,7 @@ public class SQLStatisticsHandler {
 				int games_played = rs.getInt("games_played");
 				int rank = rs.getInt("rank");
 				long playtime = rs.getLong("playtime");
-				// GameLog.log(MsgType. ,nick);
+				// System.out.println(nick);
 
 				statz[height][width] = nick;
 				statz[height][++width] = "" + wins;
@@ -568,7 +565,7 @@ public class SQLStatisticsHandler {
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
 			String text = rs.getString("LAST_TIME_PLAYED");
-			GameLog.log(MsgType.STATISTICS ,text);
+			System.out.println(text);
 			String[] array = text.split("\\|+");
 			for (int i = 0; i < array.length; i++) {
 				System.out.print(array[i] + " ");
@@ -603,7 +600,7 @@ public class SQLStatisticsHandler {
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
 			String text = rs.getString("LAST_TIME_WINS");
-			GameLog.log(MsgType.STATISTICS ,text);
+			System.out.println(text);
 			String[] array = text.split("\\|+");
 			for (int i = 0; i < array.length; i++) {
 				System.out.print(array[i] + " ");
@@ -675,7 +672,7 @@ public class SQLStatisticsHandler {
 		// long arrayx [] =
 		// SQLStatisticsHandler.getPlaytimeAsLongArray("1460497370656|1460497370657|1460497370658|1460497370659|1460497370660|1460497370661|1460497370662|1460497370663|1460497370664|1460497370665|");
 		// for (int i = 0; i < array.length; i++) {
-		// GameLog.log(MsgType. ,arrayx[i]);
+		// System.out.println(arrayx[i]);
 		// }
 		boolean[] wins = { true, false, true, false, true, false, true, false, true, true };
 		SQLStatisticsHandler.addLastTimeWinsArray(name, wins);

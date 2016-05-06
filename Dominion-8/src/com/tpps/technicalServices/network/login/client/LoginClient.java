@@ -154,7 +154,7 @@ public class LoginClient extends PacketHandler {
 				e.printStackTrace();
 				packetFlag = true;
 			}
-			GameLog.log(MsgType.INFO ,"client sent accountinformaion to server to create a new account");
+			System.out.println("client sent accountinformaion to server to create a new account");
 		}
 	}
 	

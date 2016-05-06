@@ -6,9 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
-
 /**
  * This class delivers functionalities that is used to handle databases The main
  * focus of this class is handling the table of the account details
@@ -82,7 +79,7 @@ public class SQLOperations {
 		try {
 			Statement stmt = SQLHandler.getConnection().createStatement();
 			stmt.executeUpdate(sqlStatement);
-			GameLog.log(MsgType.SQL ,"Table accountdetails added successful");
+			System.out.println("Table accountdetails added successful");
 		} catch (SQLException e) {
 			System.err.println("ERROR creating Table accountdetails");
 			e.printStackTrace();
@@ -131,7 +128,7 @@ public class SQLOperations {
 	 * */
 	public static int createAccount(String nickname, String email, String salt_hashed_pw, String salt){		
 		if(doesMailExist(email)){
-			GameLog.log(MsgType.INFO ,"email already in use");
+			System.out.println("email already in use");
 			return 3;
 		}
 		
@@ -144,11 +141,11 @@ public class SQLOperations {
 			stmt.setString(4, salt);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			GameLog.log(MsgType.INFO ,"Nickname already in use, Primary Key vialotion");
+			System.out.println("Nickname already in use, Primary Key vialotion");
 		//	e.printStackTrace();
 			return 2;			
 		}
-		GameLog.log(MsgType.INFO ,"Account " + nickname + " created successfully");		
+		System.out.println("Account " + nickname + " created successful");		
 		return 1;
 	}
 	
@@ -189,7 +186,7 @@ public class SQLOperations {
 			
 			Statement stmt = SQLHandler.getConnection().createStatement();		
 			stmt.execute("CREATE DATABASE " + database);
-			GameLog.log(MsgType.SQL ,"DATABASE " + database + " created successfull");			
+			System.out.println("DATABASE " + database + " created successfull");			
 		} catch (SQLException e) {
 			System.err.println("Error creating a database called: " + database);
 			e.printStackTrace();
@@ -239,8 +236,8 @@ public class SQLOperations {
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
 			String databasepw = rs.getString("salt_hashed_pw");
-			GameLog.log(MsgType.INFO ,"hash aus db: " + databasepw);
-			GameLog.log(MsgType.INFO ,"calculated hash: " + doublehashedpw);
+			System.out.println("hash aus db: " + databasepw);
+			System.out.println("calculated hash: " + doublehashedpw);
 			if(databasepw.equals(doublehashedpw)){
 				return true;
 			}
@@ -284,7 +281,7 @@ public class SQLOperations {
 		try {
 			Statement stmt = SQLHandler.getConnection().createStatement();
 			stmt.executeUpdate("DROP TABLE " + tablename);
-			GameLog.log(MsgType.SQL ,"Table " + tablename + " deleted");
+			System.out.println("Table " + tablename + " deleted");
 			return true;
 		} catch (SQLException e) {		
 			e.printStackTrace();

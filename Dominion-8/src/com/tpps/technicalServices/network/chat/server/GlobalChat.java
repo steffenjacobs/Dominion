@@ -9,8 +9,6 @@ import java.util.Enumeration;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.packets.PacketSendAnswer;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatAll;
 import com.tpps.technicalServices.network.chat.packets.PacketSendChatCommand;
@@ -119,7 +117,7 @@ public class GlobalChat {
 	 */
 	public void sendChatCommand(int port, PacketSendChatCommand packet){
 		String msg = packet.getChatcommand();
-		GameLog.log(MsgType.PACKET ,"Chat Command: " + packet);
+		System.out.println("Chat Command: " + packet);
 		
 		if(!this.evaluateCommands(packet.getChatcommand(), packet.getSender(), port)){	
 			PacketSendAnswer answer2 = new PacketSendAnswer("", "BOT", "unknown command: " + msg, Color.RED);
