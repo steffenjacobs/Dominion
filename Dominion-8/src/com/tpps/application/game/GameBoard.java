@@ -182,20 +182,23 @@ public class GameBoard {
 	 */
 	private synchronized void initHashMapTreasureCards() {
 		LinkedList<Card> copperList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.COPPER_VALUE.getValue())),
-				CollectionsUtil.linkedList(CardType.TREASURE), CardName.COPPER.getName(), GameConstant.COPPER_COST.getValue()), 60, copperList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.COPPER_VALUE.getValue())), CollectionsUtil.linkedList(CardType.TREASURE),
+						CardName.COPPER.getName(), GameConstant.COPPER_COST.getValue()), 60, copperList);
 		this.tableForTreasureCards.put(CardName.COPPER.getName(), copperList);
 		Card.resetClassID();
 
 		LinkedList<Card> silverList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.SILVER_VALUE.getValue())),
-				CollectionsUtil.linkedList(CardType.TREASURE), CardName.SILVER.getName(), GameConstant.SILVER_COST.getValue()), 40, silverList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.SILVER_VALUE.getValue())), CollectionsUtil.linkedList(CardType.TREASURE),
+						CardName.SILVER.getName(), GameConstant.SILVER_COST.getValue()), 40, silverList);
 		this.tableForTreasureCards.put(CardName.SILVER.getName(), silverList);
 		Card.resetClassID();
 
 		LinkedList<Card> goldList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.GOLD_VALUE.getValue())),
-				CollectionsUtil.linkedList(CardType.TREASURE), CardName.GOLD.getName(), GameConstant.GOLD_COST.getValue()), 30, goldList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_TREASURE, Integer.toString(GameConstant.GOLD_VALUE.getValue())), CollectionsUtil.linkedList(CardType.TREASURE),
+						CardName.GOLD.getName(), GameConstant.GOLD_COST.getValue()), 30, goldList);
 		this.tableForTreasureCards.put(CardName.GOLD.getName(), goldList);
 		Card.resetClassID();
 
@@ -207,26 +210,31 @@ public class GameBoard {
 	 */
 	private synchronized void initHashMapVictoryCards() {
 		LinkedList<Card> estateList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.ESTATE_VALUE.getValue())),
-				CollectionsUtil.linkedList(CardType.VICTORY), CardName.ESTATE.getName(), GameConstant.ESTATE_COST.getValue()), 40, estateList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.ESTATE_VALUE.getValue())), CollectionsUtil.linkedList(CardType.VICTORY),
+						CardName.ESTATE.getName(), GameConstant.ESTATE_COST.getValue()), GameConstant.INIT_ESTATE_PILE_SIZE.getValue()
+						+ (GameConstant.INIT_ESTATE_CARDS_ON_HAND.getValue() * GameConstant.PLAYERS.getValue()), estateList);
 		this.tableForVictoryCards.put(CardName.ESTATE.getName(), estateList);
 		Card.resetClassID();
 
 		LinkedList<Card> duchyList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.DUCHY_VALUE.getValue())),
-				CollectionsUtil.linkedList(CardType.VICTORY), CardName.DUCHY.getName(), GameConstant.DUCHY_COST.getValue()), GameConstant.INIT_DUCHY_PILE_SIZE.getValue(), duchyList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.DUCHY_VALUE.getValue())), CollectionsUtil.linkedList(CardType.VICTORY),
+						CardName.DUCHY.getName(), GameConstant.DUCHY_COST.getValue()), GameConstant.INIT_DUCHY_PILE_SIZE.getValue(), duchyList);
 		this.tableForVictoryCards.put(CardName.DUCHY.getName(), duchyList);
 		Card.resetClassID();
 
 		LinkedList<Card> provinceList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.PROVINCE_VALUE.getValue())),
-				CollectionsUtil.linkedList(CardType.VICTORY), CardName.PROVINCE.getName(), GameConstant.PROVINCE_COST.getValue()), GameConstant.INIT_PROVINCE_PILE_SIZE.getValue(), provinceList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.PROVINCE_VALUE.getValue())), CollectionsUtil.linkedList(CardType.VICTORY),
+						CardName.PROVINCE.getName(), GameConstant.PROVINCE_COST.getValue()), GameConstant.INIT_PROVINCE_PILE_SIZE.getValue(), provinceList);
 		this.tableForVictoryCards.put(CardName.PROVINCE.getName(), provinceList);
 		Card.resetClassID();
 
 		LinkedList<Card> curseList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.CURSE_VALUE.getValue())),
-				CollectionsUtil.linkedList(CardType.CURSE), CardName.CURSE.getName(), GameConstant.CURSE_COST.getValue()), GameConstant.INIT_CURSE_PILE_SIZE.getValue(), curseList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.CURSE_VALUE.getValue())), CollectionsUtil.linkedList(CardType.CURSE), CardName.CURSE
+						.getName(), GameConstant.CURSE_COST.getValue()), GameConstant.INIT_CURSE_PILE_SIZE.getValue(), curseList);
 		this.tableForVictoryCards.put(CardName.CURSE.getName(), curseList);
 		Card.resetClassID();
 	}
@@ -272,10 +280,10 @@ public class GameBoard {
 		// moat
 		LinkedList<Card> moatList = new LinkedList<Card>();
 		CollectionsUtil
-				.cloneCardToList(new Card(
-						CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.DRAW_CARD, CardAction.SEPERATOR, CardAction.DEFEND }),
-								CollectionsUtil.linkedList(new String[] { "2", "NIL", "NIL" })),
-						CollectionsUtil.linkedList(new CardType[] { CardType.ACTION, CardType.REACTION }), CardName.MOAT.getName(), 2), GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), moatList);
+				.cloneCardToList(
+						new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.DRAW_CARD, CardAction.SEPERATOR, CardAction.DEFEND }),
+								CollectionsUtil.linkedList(new String[] { "2", "NIL", "NIL" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION, CardType.REACTION }), CardName.MOAT
+								.getName(), 2), GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), moatList);
 		this.tableForAllActionCards.put(CardName.MOAT.getName(), moatList);
 		Card.resetClassID();
 
@@ -307,10 +315,10 @@ public class GameBoard {
 
 		// bureaucrat
 		LinkedList<Card> bureaucratList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(new Card(
-				CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.GAIN_CARD_DRAW_PILE, CardAction.REVEAL_CARD_OTHERS_PUT_IT_ON_TOP_OF_DECK }),
-						CollectionsUtil.linkedList(new String[] { "silver", "victory" })),
-				CollectionsUtil.linkedList(new CardType[] { CardType.ACTION, CardType.ATTACK }), CardName.BUREAUCRAT.getName(), 0), GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), bureaucratList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.GAIN_CARD_DRAW_PILE, CardAction.REVEAL_CARD_OTHERS_PUT_IT_ON_TOP_OF_DECK }),
+						CollectionsUtil.linkedList(new String[] { "silver", "victory" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION, CardType.ATTACK }), CardName.BUREAUCRAT
+						.getName(), 0), GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), bureaucratList);
 		this.tableForAllActionCards.put(CardName.BUREAUCRAT.getName(), bureaucratList);
 		Card.resetClassID();
 
@@ -334,19 +342,17 @@ public class GameBoard {
 
 		// remodel
 		LinkedList<Card> remodelList = new LinkedList<Card>();
-		CollectionsUtil
-				.cloneCardToList(
-						new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.TRASH_AND_GAIN_MORE_THAN }),
-								CollectionsUtil.linkedList(new String[] { "1_2" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION }), CardName.REMODEL.getName(), 0),
-						GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), remodelList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.TRASH_AND_GAIN_MORE_THAN }), CollectionsUtil.linkedList(new String[] { "1_2" })),
+						CollectionsUtil.linkedList(new CardType[] { CardType.ACTION }), CardName.REMODEL.getName(), 0), GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), remodelList);
 		this.tableForAllActionCards.put(CardName.REMODEL.getName(), remodelList);
 		Card.resetClassID();
 
 		// smithy
 		LinkedList<Card> smithyList = new LinkedList<Card>();
-		CollectionsUtil
-				.cloneCardToList(new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.DRAW_CARD }), CollectionsUtil.linkedList(new String[] { "3" })),
-						CollectionsUtil.linkedList(new CardType[] { CardType.ACTION }), CardName.SMITHY.getName(), 0), GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), smithyList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.DRAW_CARD }), CollectionsUtil.linkedList(new String[] { "3" })), CollectionsUtil
+						.linkedList(new CardType[] { CardType.ACTION }), CardName.SMITHY.getName(), 0), GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), smithyList);
 		this.tableForAllActionCards.put(CardName.SMITHY.getName(), smithyList);
 		Card.resetClassID();
 
@@ -370,11 +376,9 @@ public class GameBoard {
 		// ThroneRoom
 
 		LinkedList<Card> throneRoomList = new LinkedList<Card>();
-		CollectionsUtil
-				.cloneCardToList(
-						new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.CHOOSE_CARD_PLAY_TWICE }),
-								CollectionsUtil.linkedList(new String[] { "Nil" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION }), CardName.THRONEROOM.getName(), 0),
-						GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), throneRoomList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.CHOOSE_CARD_PLAY_TWICE }), CollectionsUtil.linkedList(new String[] { "Nil" })),
+						CollectionsUtil.linkedList(new CardType[] { CardType.ACTION }), CardName.THRONEROOM.getName(), 0), GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), throneRoomList);
 		this.tableForAllActionCards.put(CardName.THRONEROOM.getName(), throneRoomList);
 		Card.resetClassID();
 
@@ -408,25 +412,19 @@ public class GameBoard {
 
 		// Library
 		LinkedList<Card> libraryList = new LinkedList<Card>();
-		CollectionsUtil
-				.cloneCardToList(
-						new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.DRAW_CARD_UNTIL }),
-								CollectionsUtil.linkedList(new String[] { "7_action" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION }), CardName.LIBRARY.getName(), 0),
-						GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), libraryList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.DRAW_CARD_UNTIL }), CollectionsUtil.linkedList(new String[] { "7_action" })),
+						CollectionsUtil.linkedList(new CardType[] { CardType.ACTION }), CardName.LIBRARY.getName(), 0), GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), libraryList);
 		this.tableForAllActionCards.put(CardName.LIBRARY.getName(), libraryList);
 		Card.resetClassID();
 
 		// Market
 		LinkedList<Card> marketList = new LinkedList<Card>();
-		CollectionsUtil
-				.cloneCardToList(
-						new Card(
-								CollectionsUtil.linkedHashMapAction(
-										CollectionsUtil.linkedList(
-												new CardAction[] { CardAction.DRAW_CARD, CardAction.ADD_ACTION_TO_PLAYER, CardAction.ADD_PURCHASE, CardAction.ADD_TEMPORARY_MONEY_FOR_TURN }),
-										CollectionsUtil.linkedList(new String[] { "1", "1", "1", "1" })),
-								CollectionsUtil.linkedList(new CardType[] { CardType.ACTION }), CardName.MARKET.getName(), 0),
-						GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), marketList);
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(
+						CollectionsUtil.linkedList(new CardAction[] { CardAction.DRAW_CARD, CardAction.ADD_ACTION_TO_PLAYER, CardAction.ADD_PURCHASE, CardAction.ADD_TEMPORARY_MONEY_FOR_TURN }),
+						CollectionsUtil.linkedList(new String[] { "1", "1", "1", "1" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION }), CardName.MARKET.getName(), 0),
+				GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), marketList);
 		this.tableForAllActionCards.put(CardName.MARKET.getName(), marketList);
 		Card.resetClassID();
 
@@ -558,9 +556,10 @@ public class GameBoard {
 
 	/**
 	 * 
-	 * @param cardId the cardID of the card to find
-	 * @return a list of cards which contains the card with the given
-	 *         parameter cardId
+	 * @param cardId
+	 *            the cardID of the card to find
+	 * @return a list of cards which contains the card with the given parameter
+	 *         cardId
 	 * @throws SynchronisationException
 	 *             if the card was not found on the board
 	 * @throws NoSuchElementException
@@ -592,6 +591,7 @@ public class GameBoard {
 
 	/**
 	 * 
+	 * @param empty amount of empty piles to check
 	 * @return true if three piles(lists) are empty in all hashMaps
 	 */
 	public boolean checkPilesEmpty(int empty) {

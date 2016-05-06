@@ -53,12 +53,14 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 	}
 
 	@Override
-	public void paint(Graphics g) {
-		Graphics2D h = (Graphics2D) g;
-		h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-		h.drawImage(switchimage, 0, 0, this.getWidth(), this.getHeight(), null);
-		super.paint(h);
-	}
+    public void paint(Graphics g) {
+        Graphics2D h = (Graphics2D) g;
+        if (System.getProperty("os.name").startsWith("Windows")) {
+            h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            h.drawImage(switchimage, 0, 0, this.getWidth(), this.getHeight(), null);
+        }
+        super.paint(h);
+    }
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

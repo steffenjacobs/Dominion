@@ -250,7 +250,7 @@ public class GlobalChat {
 					+ "rank: " + rank + "\n-------------------------";
 			} catch (SQLException e1) {				
 			//	e1.printStackTrace(); unknown user, resultset is empty
-				line = "unknown  user: " + nickname; 
+				line = "unknown user: " + nickname; 
 			}
 			System.out.println(line);
 

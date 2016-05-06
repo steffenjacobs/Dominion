@@ -22,7 +22,7 @@ public class BadWordFilter {
 			"d2l4ZXI=", "YXJzY2g=", "bnV0dGU=", "aHVyZQ==", "dHVudGU=", "cGVuaXM=",
 			"Y29jaw==", "ZGljaw==", "bm9vYg==", "Y3VudA==", "Yml0Y2g=", "emllZ2U=",
 			"aGl0bGVy", "c3Blcm1h", "Zm90emU=", "aG9tbw==", "YXNz", "YmFzdGFyZA==",
-			"ZnVjaw==", "c2hpdA==", "ZmFn", "ZGFtbg==", "aHVyZQ=="
+			"ZnVjaw==", "c2hpdA==", "ZmFn", "ZGFtbg==", "aHVyZQ==", "c3Bhc3Q="
 	);
 
 	/**
@@ -41,16 +41,10 @@ public class BadWordFilter {
 	public static String parseForbiddenWords(String message) {
 		StringBuffer result = new StringBuffer();
 		String replaceCharacters = "#?$%&@";
-		// System.out.println("Message.split(s+) > " +
-		// Arrays.toString(message.split("\\s+")));
 		for (String originalWord : message.split("\\s+")) {
 			String removedSpecialCharacters = originalWord.replaceAll("[^a-zA-Z\u00c4\u00e4\u00d6\u00f6\u00dc\u00fc\u00df0-9\\s]", "");
-			// System.out.println("rsc: " + removedSpecialCharacters);
 			String filter = "";
-			// System.out.println("originalWord: " + originalWord +
-			// " and wordListContains(removedSpecialCharacters.toLowerCase())" +
-			// wordListContains(removedSpecialCharacters.toLowerCase()));
-			if (wordListContains(removedSpecialCharacters.toLowerCase())) {
+			if (abusiveWordListContains(removedSpecialCharacters.toLowerCase())) {
 				for (int i = 0; i < originalWord.length(); i++) {
 					filter += Character.isLetterOrDigit(originalWord.charAt(i)) ? replaceCharacters.charAt(new Random().nextInt(replaceCharacters.length())) : originalWord.charAt(i);
 				}
@@ -65,11 +59,8 @@ public class BadWordFilter {
 				filter = filterNew.toString();
 			} else
 				filter = originalWord;
-			// System.out.println("and according to that, filter is: " +
-			// filter);
 			result.append(filter + " ");
 		}
-		// System.out.println("result: " + result.toString());
 		return result.toString();
 	}
 
@@ -81,9 +72,9 @@ public class BadWordFilter {
 	 * 
 	 * @author Nicolas Wipfler
 	 */
-	private static boolean wordListContains(String word) {
+	private static boolean abusiveWordListContains(String word) {
 		for (String abusiveWord : BadWordFilter.ABUSIVE_WORDS) {
-			if (word.contains(base64decode(abusiveWord))) {
+			if (/*!MatchmakingController.getPlayerNameList().contains(word) && */word.contains(base64decode(abusiveWord))) {
 				return true;
 			}
 		}
@@ -130,19 +121,22 @@ public class BadWordFilter {
 	 * 
 	 * @author Nicolas Wipfler
 	 * */
-	@SuppressWarnings("unused")
-	private static void abusiveWordCreator() {
-		ArrayList<String> words = CollectionsUtil.getArrayList("..", "boeseWoerter");
+	private static void abusiveWordCreator(String... abWords) {
+		ArrayList<String> words = CollectionsUtil.getArrayList(abWords);
 		StringBuffer sBuf = new StringBuffer();
 		for (String word : words) {
 			String encoding = base64encode(word.toLowerCase());
-			sBuf.append("\"" + encoding + "\"" + ", ");
+			sBuf.append(", \"" + encoding + "\"");
 //			System.out.println("Encoding: " + encoding);
 		}
-		System.out.println("result: " + sBuf.toString());
+		System.out.println(sBuf.toString());
 	}
-
-	// public static void main(String[] args) {
-	// abusiveWordCreator();
-	// }
+	
+	/**
+	 * 
+	 * @param args unused
+	 */
+	public static void main(String[] args) {
+		abusiveWordCreator("...");
+	}
 }

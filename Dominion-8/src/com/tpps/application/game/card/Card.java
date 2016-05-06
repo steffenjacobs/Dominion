@@ -21,9 +21,10 @@ import com.tpps.ui.components.GameBackground;
 import com.tpps.ui.gameplay.GameWindow;
 
 /**
+ * Card class represents a GameObject on the board as a card.
+ * 
  * @author Nicolas Wipfler
  */
-
 public class Card extends GameObject {
 
 	private static final long serialVersionUID = -4157717625890678601L;
@@ -44,28 +45,39 @@ public class Card extends GameObject {
 	private boolean animationEnabledVictory = false;
 	private boolean animationEnabledCoins = false;
 
-	// private int mouseReaction = 0;
-	// private ArrayList<GameBackground> cardReaction = new ArrayList<>();
-	// private GameBackground tmp;
 	private static int classID = 0;
 
 	/**
 	 * 
 	 * @param actions
+	 *            the actions of the card
 	 * @param types
+	 *            the cardTypes of the card (e.g. VICTORY and ACTION, see
+	 *            http://www.brettspiele-report.de/images/dominion/die_intrige/
+	 *            dominion_die_intrige_spielkarte_adelige.jpg)
 	 * @param name
+	 *            the name of the card
 	 * @param cost
+	 *            the cost of the card
+	 * @param cardId
+	 *            the cardID of the card
 	 * @param relativeLocX
+	 *            the relative X-location on the screen
 	 * @param relativeLocY
+	 *            the relative Y-location on the screen
 	 * @param relativeWidth
+	 *            the relative width
 	 * @param relativeHeight
+	 *            the relative height
 	 * @param _layer
+	 *            the layer the game-object is on
 	 * @param sourceImage
+	 *            the image-source for the image
 	 * @param _parent
+	 *            the parent framework
 	 */
-	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
-			double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int _layer,
-			Image sourceImage, GraphicFramework _parent) {
+	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost, double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
+			int _layer, Image sourceImage, GraphicFramework _parent) {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
 		this.name = name;
 		this.actions = actions;
@@ -83,21 +95,34 @@ public class Card extends GameObject {
 	/**
 	 * 
 	 * @param actions
+	 *            the actions of the card
 	 * @param types
+	 *            the cardTypes of the card (e.g. VICTORY and ACTION, see
+	 *            http://www.brettspiele-report.de/images/dominion/die_intrige/
+	 *            dominion_die_intrige_spielkarte_adelige.jpg)
 	 * @param name
+	 *            the name of the card
 	 * @param cost
+	 *            the cost of the card
 	 * @param cardId
+	 *            the cardID of the card
 	 * @param relativeLocX
+	 *            the relative X-location on the screen
 	 * @param relativeLocY
+	 *            the relative Y-location on the screen
 	 * @param relativeWidth
+	 *            the relative width
 	 * @param relativeHeight
+	 *            the relative height
 	 * @param _layer
+	 *            the layer the game-object is on
 	 * @param sourceImage
+	 *            the image-source for the image
 	 * @param _parent
+	 *            the parent framework
 	 */
-	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
-			String cardId, double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
-			int _layer, Image sourceImage, GraphicFramework _parent) {
+	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost, String cardId, double relativeLocX, double relativeLocY, double relativeWidth,
+			double relativeHeight, int _layer, Image sourceImage, GraphicFramework _parent) {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
 		this.name = name;
 		this.actions = actions;
@@ -113,8 +138,7 @@ public class Card extends GameObject {
 	}
 
 	/**
-	 * constructor for Card, taking all required data
-	 * 
+	 *
 	 * @param actions
 	 *            the list of CardActions mapped to their value
 	 * @param types
@@ -126,8 +150,7 @@ public class Card extends GameObject {
 	 * @param _parent
 	 *            graphic framework where the card will be drawn
 	 */
-	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
-			GraphicFramework _parent) {
+	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost, GraphicFramework _parent) {
 		super(_parent);
 		this.name = name;
 		this.actions = actions;
@@ -139,12 +162,17 @@ public class Card extends GameObject {
 	}
 
 	/**
-	 * Test Konstruktor
 	 * 
 	 * @param actions
+	 *            the actions of the card
 	 * @param types
+	 *            the cardTypes of the card (e.g. VICTORY and ACTION, see
+	 *            http://www.brettspiele-report.de/images/dominion/die_intrige/
+	 *            dominion_die_intrige_spielkarte_adelige.jpg)
 	 * @param name
+	 *            the name of the card
 	 * @param cost
+	 *            the cost of the card
 	 */
 	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost) {
 		super();
@@ -153,27 +181,42 @@ public class Card extends GameObject {
 		this.cost = cost;
 		this.types = types;
 		this.id = this.name + classID++;
-		// GameLog.log(MsgType. ,id);
 	}
 
 	/**
+	 * 
 	 * @param actions
+	 *            the actions of the card
 	 * @param types
+	 *            the cardTypes of the card (e.g. VICTORY and ACTION, see
+	 *            http://www.brettspiele-report.de/images/dominion/die_intrige/
+	 *            dominion_die_intrige_spielkarte_adelige.jpg)
 	 * @param name
+	 *            the name of the card
 	 * @param cost
+	 *            the cost of the card
 	 * @param cardId
+	 *            the cardID of the card
 	 * @param relativeLocX
+	 *            the relative X-location on the screen
 	 * @param relativeLocY
+	 *            the relative Y-location on the screen
 	 * @param relativeWidth
+	 *            the relative width
 	 * @param relativeHeight
+	 *            the relative height
 	 * @param _layer
+	 *            the layer the game-object is on
 	 * @param sourceImage
+	 *            the image-source for the image
 	 * @param _parent
+	 *            the parent framework
 	 * @param handTrigger
+	 *            a String value representing the players hand position on hover
+	 *            action
 	 */
-	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
-			String cardId, double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
-			int _layer, Image sourceImage, GraphicFramework _parent, String handTrigger) {
+	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost, String cardId, double relativeLocX, double relativeLocY, double relativeWidth,
+			double relativeHeight, int _layer, Image sourceImage, GraphicFramework _parent, String handTrigger) {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
 		this.name = name;
 		this.actions = actions;
@@ -237,11 +280,20 @@ public class Card extends GameObject {
 	}
 
 	/**
-	 * return a cloned Card Object 
+	 * return a cloned Card Object
 	 */
 	@Override
 	public Card clone() {
 		return new Card(this.getActions(), this.getTypes(), this.getName(), this.getCost());
+	}
+
+	/**
+	 * 
+	 * @param relativeY
+	 *            the relativeY to set
+	 */
+	public void setRelativeY(int relativeY) {
+		this.relativeY = relativeY;
 	}
 
 	/**
@@ -251,8 +303,7 @@ public class Card extends GameObject {
 	public void onMouseEnter() {
 		if (!(handTrigger.equals("handCards") || name.equals(CardName.COPPER.getName()) || name.equals(CardName.SILVER.getName()) || name.equals(CardName.GOLD.getName())
 				|| name.equals(CardName.CURSE.getName()) || name.equals(CardName.PROVINCE.getName()) || name.equals(CardName.DUCHY.getName()) || name.equals(CardName.ESTATE.getName()))) {
-			gameBackground = new GameBackground(0.12, 0.01, relativeWidth + 0.08, relativeHeight + 0.24, 110,
-					sourceImage, parent);
+			gameBackground = new GameBackground(0.12, 0.01, relativeWidth + 0.08, relativeHeight + 0.24, 110, sourceImage, parent);
 			parent.addComponent(gameBackground);
 		}
 		if (handTrigger.equals("Victory")) {
@@ -395,10 +446,9 @@ public class Card extends GameObject {
 	@Override
 	public void onMouseClick() {
 		if (DominionController.getInstance().isTurnFlag()) {
-			GameLog.log(MsgType.GUI ,"MouseClick on Card");
+			GameLog.log(MsgType.GUI, "MouseClick on Card");
 			try {
-				DominionController.getInstance().getGameClient().sendMessage(
-						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
+				DominionController.getInstance().getGameClient().sendMessage(new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
 				DominionController.getInstance().setTurnFlag(false);
 				DominionController.getInstance().getGameClient().getGameWindow().setCaptionTurn("execute");
 			} catch (IOException e) {
@@ -414,10 +464,9 @@ public class Card extends GameObject {
 	@Override
 	public void onMouseDrag() {
 		if (DominionController.getInstance().isTurnFlag()) {
-			GameLog.log(MsgType.GUI ,"MouseClick on Card");
+			GameLog.log(MsgType.GUI, "MouseClick on Card");
 			try {
-				DominionController.getInstance().getGameClient().sendMessage(
-						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
+				DominionController.getInstance().getGameClient().sendMessage(new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
 			} catch (IOException e) {
 
 				e.printStackTrace();
@@ -426,12 +475,11 @@ public class Card extends GameObject {
 	}
 
 	/**
-	 * is called when resizing 
+	 * is called when resizing
 	 */
 	@Override
 	public void onResize(int absWidth, int absHeight) {
-		super.setRenderedImage(GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
-				super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)));
+		super.setRenderedImage(GraphicsUtil.resize((BufferedImage) super.getBufferedImage(), super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)));
 	}
 
 	/**
@@ -456,13 +504,5 @@ public class Card extends GameObject {
 				sBuf.append(" ");
 		}
 		return sBuf.append(">\nCost: " + this.cost).toString();
-	}
-
-	/**
-	 * 
-	 * @param relativeY the relativeY to set
-	 */
-	public void setRelativeY(int relativeY) {
-		this.relativeY = relativeY;
 	}
 }
