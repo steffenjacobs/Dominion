@@ -84,15 +84,15 @@ public class GameBoardTest {
 
 		assertThat(this.gameBoard.amountOfPilesEmptyForTable(this.gameBoard.getTableForActionCards()), is(0));
 
-		assertTrue(!this.gameBoard.checkThreePilesEmpty());
+		assertTrue(!this.gameBoard.checkPilesEmpty(GameConstant.EMPTY_PILES.getValue()));
 
 		this.gameBoard.getTableForActionCards().remove(CardName.MOAT.getName());
 		this.gameBoard.getTableForActionCards().put(CardName.MOAT.getName(), new LinkedList<Card>());
-		assertTrue(this.gameBoard.checkThreePilesEmpty());
+		assertTrue(this.gameBoard.checkPilesEmpty(GameConstant.EMPTY_PILES.getValue()));
 
 		this.gameBoard.getTableForTreasureCards().remove(CardName.COPPER.getName());
 		this.gameBoard.getTableForActionCards().put(CardName.COPPER.getName(), new LinkedList<Card>());
-		assertTrue(this.gameBoard.checkThreePilesEmpty());
+		assertTrue(this.gameBoard.checkPilesEmpty(GameConstant.EMPTY_PILES.getValue()));
 
 	}
 

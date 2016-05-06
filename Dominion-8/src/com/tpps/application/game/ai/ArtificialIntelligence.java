@@ -29,6 +29,7 @@ import com.tpps.technicalServices.util.CollectionsUtil;
  * - schauen ob die AI nicht cheatet
  * - checkEndPhase(): 3 niedrigsten Kartenstapel insgesamt unter 7 Karten
  * - in play und buy an Lukas vergleichen ob ich was vergessen hab: GC, SGPH, ...
+ * - enhance AI name list (Charlie Chaplin usw)
  */
 
 /**

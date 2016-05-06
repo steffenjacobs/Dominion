@@ -1107,7 +1107,7 @@ public class GameController {
 		if (this.gameBoard.getTableForVictoryCards().get(CardName.PROVINCE.getName()).isEmpty()) {
 			GameLog.log(MsgType.GAME_INFO, "province empty");
 			endGame();
-		} else if (this.gameBoard.checkThreePilesEmpty()) {
+		} else if (this.gameBoard.checkPilesEmpty(GameConstant.EMPTY_PILES.getValue())) {
 			GameLog.log(MsgType.GAME_INFO, "three piles empty");
 			endGame();
 		}
