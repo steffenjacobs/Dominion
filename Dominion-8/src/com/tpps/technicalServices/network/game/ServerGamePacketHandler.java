@@ -796,7 +796,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				// this.server.getGameController().startGame();
 				// setUpGui();
 			}
-			GameLog.log(MsgType.MM ,"registrate one more client to server with id: " + clientId + "listening on port: " + port);
+			GameLog.log(MsgType.MM ,"registrate one more client to server with id: " + player.getClientID() + "listening on port: " + player.getPort());
 		} catch (TooMuchPlayerException tmpe) {
 			this.server.sendMessage(port, new PacketClientShouldDisconect());
 			tmpe.printStackTrace();
