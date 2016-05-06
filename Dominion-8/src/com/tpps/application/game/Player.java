@@ -67,7 +67,6 @@ public class Player {
 	 * 
 	 */
 	public Player(Deck deck, int clientID, int port, String userName, UUID uuid, GameServer gameServer) {
-		this.deck.c
 		this.reactionCard = false;
 		this.discardMode = false;
 		this.trashMode = false;

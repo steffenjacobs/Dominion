@@ -617,9 +617,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 	private void afterCardWasPlayed(int port, Player player) throws IOException {
 		GameLog.log(MsgType.GAME_INFO ,"validate turn: " + player.getActions() + "buys: " + player.getBuys() + "coins: " + player.getCoins());
 
-		if (player.getActions() == 0 && !player.isThief()) {
-			server.sendMessage(port, new PacketEndActionPhase());
-		}
+//		if (player.getActions() == 0 && !player.isThief()) {
+//			server.sendMessage(port, new PacketEndActionPhase());
+//		}
 		if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null || !this.server.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.WITCH.getName())) {
 			this.server.sendMessage(port, new PacketSendHandCards(CollectionsUtil.getCardIDs(player.getDeck().getCardHand())));
 		}
