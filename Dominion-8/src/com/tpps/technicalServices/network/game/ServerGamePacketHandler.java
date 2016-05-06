@@ -108,7 +108,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				} else {
 					this.server.disconnect(port);
 				}
-				break;
+				return;
 			case RECONNECT:
 				PacketReconnect packetReconnect = (PacketReconnect) packet;
 				if (this.server.validSession(packetReconnect.getUsername(), packetReconnect.getSessionID())) {
@@ -119,7 +119,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				} else {
 					this.server.disconnect(port);
 				}
-				break;
+				return;
 			case CARD_PLAYED:
 				if (this.server.getGameController().getPlayerByPort(port).getPlayerName().equals(this.server.getGameController().getActivePlayerName())
 						|| this.server.getGameController().getPlayerByPort(port).getDeck().getCardFromHand(((PacketPlayCard) packet).getCardID()) != null) {
@@ -335,6 +335,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				System.out.println("player: ");
 			} else if (this.server.getGameController().getPlayerByPort(port).isReactionMode() && this.server.getGameController().getPlayerByPort(port).isDiscardMode()) {
 				try {
 					this.server.sendMessage(port, new PacketEnable("react"));
