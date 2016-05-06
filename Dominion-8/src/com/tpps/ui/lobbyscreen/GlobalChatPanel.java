@@ -35,6 +35,7 @@ import javax.swing.text.StyledDocument;
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.chat.client.BadWordFilter;
 import com.tpps.technicalServices.util.GraphicsUtil;
 
 /**
@@ -296,7 +297,7 @@ public class GlobalChatPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
-		chatmessage = /*BadWordFilter.parseForbiddenWords(*/chatmessage/*)*/;
+		chatmessage = BadWordFilter.parseForbiddenWords(chatmessage);
 		GlobalChatPanel.this.chatInputLine.setText("");
 		this.createChatInputPart(sdf.format(new Date()), whiteColor);
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);

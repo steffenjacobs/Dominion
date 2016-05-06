@@ -34,6 +34,7 @@ import javax.swing.text.StyledDocument;
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.chat.client.BadWordFilter;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.gameplay.GameWindow;
 
@@ -182,7 +183,7 @@ public class ChatWindowForInGame extends JPanel {
 		ChatWindowForInGame.this.chatInputLine.setText("");
 		this.createChatInputPart(" " + sdf.format(new Date()), whiteColor);
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
-		this.createChatInputPart(/*BadWordFilter.parseForbiddenWords(*/chatmessage/*)*/ + "\n", whiteColor);
+		this.createChatInputPart(BadWordFilter.parseForbiddenWords(chatmessage) + "\n", whiteColor);
 		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 		try {
 			Thread.sleep(10);
