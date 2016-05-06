@@ -1,8 +1,8 @@
 package com.tpps.technicalServices.util;
 
 /**
- * ANSIUtil provides basic ANSI color codes with which the console output can be colored.
- * Better Look and Feel of the log messages.
+ * ANSIUtil provides basic ANSI color codes with which the console output can be
+ * colored. Better Look and Feel of the log messages.
  * 
  * @author Nicolas
  *
@@ -19,10 +19,11 @@ public class ANSIUtil {
 	public static final String ANSI_MAGENTA = "\u001B[35m";
 	public static final String ANSI_CYAN = "\u001B[36m";
 	public static final String ANSI_WHITE = "\u001B[37m";
-	
+
 	/**
 	 * 
-	 * @param text the text to color
+	 * @param text
+	 *            the text to color
 	 * @return the white-colored text
 	 */
 	public static String getWhiteText(String text) {
@@ -31,7 +32,8 @@ public class ANSIUtil {
 
 	/**
 	 * 
-	 * @param text the text to color
+	 * @param text
+	 *            the text to color
 	 * @return the cyan-colored text
 	 */
 	public static String getCyanText(String text) {
@@ -40,17 +42,20 @@ public class ANSIUtil {
 
 	/**
 	 * 
-	 * @param text the text to color
+	 * @param text
+	 *            the text to color
 	 * @return the red-colored text
 	 */
 	public static String getRedText(String text) {
 		return ANSI_RED + text + ANSI_RESET;
 	}
-	
+
 	/**
 	 * 
-	 * @param text the text to color
-	 * @param ansicolor the ansicolor to color the text with
+	 * @param text
+	 *            the text to color
+	 * @param ansicolor
+	 *            the ansicolor to color the text with
 	 * @return the ansicolored text
 	 */
 	public static String getAnsiColoredText(String text, String ansicolor) {

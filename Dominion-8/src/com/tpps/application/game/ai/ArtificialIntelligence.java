@@ -128,24 +128,20 @@ public class ArtificialIntelligence {
 	 * @param amountNeeded
 	 *            the amount of treasures needed
 	 */
-	/*private void playTreasures(int amountNeeded) {
-		int amountAvailable = this.getTreasureCardsValue(getCardHand());
-		if (amountAvailable <= amountNeeded) {
-			playTreasures();
-		} else {
-			LinkedList<Card> allTreasureCards = this.getAllCardsFromType(CardType.TREASURE);
-			for (Card card : allTreasureCards) {
-				// spiele solange bis amountNeeded erreicht ist
-				
-			}
-			// Methode die alle Karten mit Namen CardName.COPPER.getName()
-			// zurückgibt, fehlt
-			
-			// LinkedList<Card> coppers = this.player.getDeck().;
-			// LinkedList<Card> silvers = ;
-			// LinkedList<Card> golds = ;
-		}
-	}*/
+	/*
+	 * private void playTreasures(int amountNeeded) { int amountAvailable =
+	 * this.getTreasureCardsValue(getCardHand()); if (amountAvailable <=
+	 * amountNeeded) { playTreasures(); } else { LinkedList<Card>
+	 * allTreasureCards = this.getAllCardsFromType(CardType.TREASURE); for (Card
+	 * card : allTreasureCards) { // spiele solange bis amountNeeded erreicht
+	 * ist
+	 * 
+	 * } // Methode die alle Karten mit Namen CardName.COPPER.getName() //
+	 * zurückgibt, fehlt
+	 * 
+	 * // LinkedList<Card> coppers = this.player.getDeck().; // LinkedList<Card>
+	 * silvers = ; // LinkedList<Card> golds = ; } }
+	 */
 
 	/**
 	 * determine which cards have the most value and play all of these cards
@@ -154,7 +150,7 @@ public class ArtificialIntelligence {
 	 * @throws InterruptedException
 	 */
 	private void playActionCards() throws InterruptedException {
-		GameLog.log(MsgType.AI, "AI 8: playAllActionCards()");
+		// hier mal wegen .getActions schauen
 		if (this.player.getDeck().cardHandContains(CardType.ACTION)) {
 			while (this.player.getActions() > 0 && this.player.getDeck().cardHandContains(CardType.ACTION)) {
 				if (addActionCardAvailable()) {
@@ -202,6 +198,22 @@ public class ArtificialIntelligence {
 			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
 		} else {
 			GameLog.log(MsgType.AI, this.player.getPlayerName() + " bought 'null' card");
+		}
+	}
+	
+	/**
+	 * basic method which discards the given card
+	 * 
+	 * @param card
+	 *            the card to discard
+	 */
+	private void discardCard(Card card) {
+		if (card != null && this.player.isDiscardMode()) {
+			// sendPacket(new Packet(card.getId(), player.getClientID()));
+
+			// hier
+		} else {
+			GameLog.log(MsgType.AI, this.player.getPlayerName() + " discarded 'null' card");
 		}
 	}
 
@@ -259,7 +271,7 @@ public class ArtificialIntelligence {
 			} else if (this.player.isDiscardMode()) {
 				// Logik discard
 				while (this.player.getDeck().getCardHand().size() > 3) {
-//					discardCardWithLowestValue();
+					discardCardWithLowestValue();
 				}
 			}
 		}
@@ -273,7 +285,7 @@ public class ArtificialIntelligence {
 		try {
 			while(this.player.getActions() > 0) {
 				Thread.sleep(ArtificialIntelligence.TIME_DELAY);
-//				this.playActionCards(); hier in playACtions nachsehen + Doc + Log entfernen
+				this.playActionCards();
 			}
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.setBuyPhase();
@@ -298,6 +310,11 @@ public class ArtificialIntelligence {
 		}
 	}
 
+	/**
+	 * method determines the purchases of this turn for the AI
+	 * 
+	 * @return a LinkedList with the determined Purchases
+	 */
 	private LinkedList<String> determinePurchase() {
 		// https://dominionstrategy.com/big-money/
 
@@ -319,6 +336,10 @@ public class ArtificialIntelligence {
 		return result;
 	}
 
+	/**
+	 * method is called once in the first turn to determine a strategy according
+	 * to the situation on the game board
+	 */
 	private void determineStrategy() {
 		if (this.player.getGameServer().getGameController().getGameBoard().getTableForActionCards().get(CardName.WITCH.getName()) != null && iAmTheOnlyAI()) {
 			this.strategy = Strategy.WITCH;
@@ -342,8 +363,7 @@ public class ArtificialIntelligence {
 	private boolean myTurn() {
 		if (this.player.getGameServer().getGameController().isActivePlayerNameAvailable()) {
 			String activePlayerName = this.player.getGameServer().getGameController().getActivePlayerName();
-			return /* activePlayerName != null ? */activePlayerName
-					.equals(this.player.getPlayerName()) /* : false */;
+			return activePlayerName.equals(this.player.getPlayerName());
 		}
 		return false;
 	}
@@ -369,8 +389,13 @@ public class ArtificialIntelligence {
 			this.endPhase = true;
 		}
 	}
-	
-//	private void discardCardWithLowestValue() 
+
+	private void discardCardWithLowestValue() {
+		if (this.player.getDeck().cardHandContains(CardType.CURSE)) {
+			discardCard(this.player.getDeck().getCardByTypeFromHand(CardType.CURSE));
+		}
+		// hier
+	}
 
 	/**
 	 * 

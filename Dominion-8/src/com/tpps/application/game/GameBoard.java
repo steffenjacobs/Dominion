@@ -33,6 +33,7 @@ public class GameBoard {
 	 * Constructor creates the tables for victory, treasure and action cards.
 	 * initialises the linkedList for the trashPile calls the init method which
 	 * calls all the init methods for the tables
+	 * @param selectedActionCards the selected cards
 	 */
 	public GameBoard(String[] selectedActionCards) {
 		this.tableForVictoryCards = new LinkedHashMap<String, LinkedList<Card>>();
@@ -222,13 +223,11 @@ public class GameBoard {
 				CardName.CURSE.getName(), GameConstant.CURSE_COST.getValue()), GameConstant.INIT_CURSE_PILE_SIZE.getValue(), curseList);
 		this.tableForVictoryCards.put(CardName.CURSE.getName(), curseList);
 		Card.resetClassID();
-
 	}
 
 	/**
-	 * initializes the tableForVictoryCards with 10 piles à 10 cards of action
-	 * cards. this will change every game
-	 * 
+	 * initializes the tableForVictoryCards with 10 piles a 10 cards of action
+	 * cards.
 	 * 
 	 * ------ USER CHOOSES CARDS TO PLAY WITH -------
 	 */
@@ -447,6 +446,9 @@ public class GameBoard {
 		Card.resetClassID();
 	}
 
+	/**
+	 * initialize a random card set
+	 */
 	public synchronized void setRandomSet() {
 		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
 		LinkedHashMap<String, LinkedList<Card>> test = new LinkedHashMap<String, LinkedList<Card>>(this.tableForAllActionCards);
@@ -459,7 +461,10 @@ public class GameBoard {
 			this.tableForActionCards.put(keys.remove(index), new LinkedList<Card>(values.remove(index)));
 		}
 	}
-
+	
+	/**
+	 * initialize a basic standard card set
+	 */
 	public synchronized void setStandardSet() {
 		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.tableForActionCards.put(CardName.MOAT.getName(), new LinkedList<Card>(this.tableForAllActionCards.get(CardName.MOAT.getName())));
@@ -474,6 +479,9 @@ public class GameBoard {
 		this.tableForActionCards.put(CardName.REMODEL.getName(), new LinkedList<Card>(this.tableForAllActionCards.get(CardName.REMODEL.getName())));
 	}
 
+	/**
+	 * initialize a basic attack card set
+	 */
 	public synchronized void setAttackSet() {
 		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
 		this.tableForActionCards.put(CardName.MOAT.getName(), new LinkedList<Card>(this.tableForAllActionCards.get(CardName.MOAT.getName())));
@@ -492,6 +500,7 @@ public class GameBoard {
 		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
 		for (int i = 0; i < selectedActionCards.length; i++) {
 			String string = selectedActionCards[i];
+			System.out.println("Hier bin ich");
 			this.tableForActionCards.put(string, new LinkedList<Card>(this.tableForAllActionCards.get(string)));
 		}
 	}
@@ -548,6 +557,8 @@ public class GameBoard {
 	 *         parameter cardId
 	 * @throws SynchronisationException
 	 *             if the card was not found on the board
+	 * @throws NoSuchElementException 
+	 * @throws WrongSyntaxException 
 	 */
 	public synchronized LinkedList<Card> findCardListFromBoard(String cardId) throws SynchronisationException, NoSuchElementException, WrongSyntaxException {
 		Matcher matcher = Pattern.compile("\\d+").matcher(cardId);
@@ -609,6 +620,10 @@ public class GameBoard {
 		return counter;
 	}
 
+	/**
+	 * @param cardname the cardname to get
+	 * @return a card with the given cardname from the board
+	 */
 	public Card getCardToBuyFromBoardWithName(String cardname) {
 		if (this.tableForActionCards.get(cardname) != null)
 			return this.tableForActionCards.get(cardname).getLast();

@@ -60,12 +60,20 @@ public class ServerGamePacketHandler extends PacketHandler {
 	ChatController chatController;
 	private ConcurrentHashMap<String, Color> colorMap;
 
+	/**
+	 * 
+	 * @param server the server to set
+	 */
 	public void setServer(GameServer server) {
 		this.server = server;
 		chatController = new ChatController(this);
 		this.colorMap = new ConcurrentHashMap<String, Color>();
 	}
 
+	/**
+	 * 
+	 * @return the color of the active Player (in chat)
+	 */
 	public Color getActivePlayerColor() {
 		return this.colorMap.get(this.server.getGameController().getActivePlayerName());
 	}
@@ -159,21 +167,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				}
 				break;
 			case END_TURN:
-				// alle Karten ablegen
-				// String portname =
-				// this.server.getGameController().getPlayerByPort(port).getPlayerName();
-				// String activePlayerName =
-				// this.server.getGameController().getActivePlayerName();
-				// GameLog.log(MsgType.DEBUG, "<<< portname: " + portname + ",
-				// activename: " + activePlayerName + ", .equals: " +
-				// activePlayerName.equals(portname));
-				// GameLog.log(MsgType.AI_DEBUG, "port in sgph.endTurn()" +
-				// port);
-				// GameLog.log(MsgType.AI_DEBUG, "portVergleich: übergebener
-				// port: " + port + ", activePlayerPort: " +
-				// this.server.getGameController().getActivePlayer().getPort());
 				if (this.server.getGameController().getPlayerByPort(port).getPlayerName().equals(this.server.getGameController().getActivePlayerName())) {
-					// GameLog.log(MsgType.DEBUG, "ich bin in END_TURN");
 					this.nextActivePlayer(port);
 				} else {
 					this.server.sendMessage(port, new PacketEnable("react"));

@@ -260,7 +260,7 @@ public class PlayerSettingsPanel extends JPanel {
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-				System.out.println("Starting game...");
+				GameLog.log(MsgType.INFO, "Starting game...");
 			} else {
 				DominionController.getInstance().receiveChatMessageFromChatServer(
 						"You are not ready to start the match\n" + "         selected cards: "

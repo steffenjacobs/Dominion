@@ -8,14 +8,11 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.concurrent.Callable;
 
-import javax.swing.JFrame;
-
 import com.tpps.application.game.CardName;
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
-import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
@@ -159,6 +156,21 @@ public class Card extends GameObject {
 		// GameLog.log(MsgType. ,id);
 	}
 
+	/**
+	 * @param actions
+	 * @param types
+	 * @param name
+	 * @param cost
+	 * @param cardId
+	 * @param relativeLocX
+	 * @param relativeLocY
+	 * @param relativeWidth
+	 * @param relativeHeight
+	 * @param _layer
+	 * @param sourceImage
+	 * @param _parent
+	 * @param handTrigger
+	 */
 	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
 			String cardId, double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
 			int _layer, Image sourceImage, GraphicFramework _parent, String handTrigger) {
@@ -179,7 +191,7 @@ public class Card extends GameObject {
 
 	/**
 	 * 
-	 * @return
+	 * @return the actions
 	 */
 	public LinkedHashMap<CardAction, String> getActions() {
 		return actions;
@@ -187,7 +199,7 @@ public class Card extends GameObject {
 
 	/**
 	 * 
-	 * @return
+	 * @return the types
 	 */
 	public LinkedList<CardType> getTypes() {
 		return types;
@@ -195,7 +207,7 @@ public class Card extends GameObject {
 
 	/**
 	 * 
-	 * @return
+	 * @return the cost
 	 */
 	public int getCost() {
 		return this.cost;
@@ -203,7 +215,7 @@ public class Card extends GameObject {
 
 	/**
 	 * 
-	 * @return
+	 * @return the name
 	 */
 	public String getName() {
 		return this.name;
@@ -211,7 +223,7 @@ public class Card extends GameObject {
 
 	/**
 	 * 
-	 * @return
+	 * @return the id
 	 */
 	public String getId() {
 		return id;
@@ -225,12 +237,11 @@ public class Card extends GameObject {
 	}
 
 	/**
-	 * 
+	 * return a cloned Card Object 
 	 */
 	@Override
 	public Card clone() {
-		return new Card(this.getActions(), this.getTypes(), this.getName(),
-				this.getCost()/* , this.getParent() */);
+		return new Card(this.getActions(), this.getTypes(), this.getName(), this.getCost());
 	}
 
 	/**

@@ -51,9 +51,9 @@ import com.tpps.technicalServices.util.CollectionsUtil;
  * 
  */
 public class GameController {
-	
+
 	protected GameServer gameServer;
-	
+
 	private LinkedList<Player> players;
 
 	private boolean gameNotFinished, cardsEnabled;
@@ -69,6 +69,8 @@ public class GameController {
 	 * all required Lists
 	 * 
 	 * @param gameServer
+	 * @param selectedActionCards
+	 *            the selected actioncards
 	 */
 	public GameController(GameServer gameServer, String[] selectedActionCards) {
 		this.gameServer = gameServer;
@@ -129,7 +131,8 @@ public class GameController {
 	}
 
 	/**
-	 * @param activePlayerNameAvailable the activePlayerNameAvailable to set
+	 * @param activePlayerNameAvailable
+	 *            the activePlayerNameAvailable to set
 	 */
 	public void setActivePlayerNameAvailable(boolean activePlayerNameAvailable) {
 		this.activePlayerNameAvailable = activePlayerNameAvailable;
@@ -153,25 +156,25 @@ public class GameController {
 		this.spyList = spyList;
 	}
 
+	/**
+	 * 
+	 * @return the name of the active Player
+	 */
 	public String getActivePlayerName() {
-//		if (this.activePlayerNameAvailable)
-			return this.activePlayer.getPlayerName();
-//		else return "";
+		return this.activePlayer.getPlayerName();
 	}
-	
+
 	/**
 	 * determines the next active player
 	 */
 	public void setNextActivePlayer() {
-		GameLog.log(MsgType.DEBUG, "ich bin in setNextActivePlayer");
 		Player activePlayer = this.getActivePlayer();
-//		LinkedList<Player> players = this.getPlayers();
+		// LinkedList<Player> players = this.getPlayers();
 		for (int i = 0; i < this.players.size(); i++) {
 			Player player = players.get(i);
 			if (player.getPlayerName().equals(activePlayer.getPlayerName())) {
 				this.setActivePlayer(players.get(i < this.players.size() - 1 ? i + 1 : 0));
 				this.getActivePlayer().incTurnNr();
-				GameLog.log(MsgType.DEBUG, "ich bin in der letzten logischen Schleife in setNextActivePlayer");
 				break;
 			}
 		}
@@ -197,9 +200,8 @@ public class GameController {
 	 */
 	public synchronized boolean checkCardExistsAndDiscardOrTrash(Player player, String cardID) throws IOException {
 		Card card = player.getDeck().getCardFromHand(cardID);
-		if (card != null
-				&& (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null || !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getId()
-						.equals(card.getId()))) {
+		if (card != null && (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
+				|| !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getId().equals(card.getId()))) {
 
 			player.discardOrTrash(cardID, this.getGameBoard().getTrashPile());
 			return true;
@@ -208,26 +210,29 @@ public class GameController {
 	}
 
 	/**
-	 * checks whether a card which was clicked exists and if it is allowed to
-	 * play this card in this phase of the game. If it is allowed the card is
-	 * played
+	 * 
 	 * 
 	 * @param cardID
+	 *            the cardID of the card
+	 * @param player
+	 *            the player
+	 * @return whether a card which was clicked exists and if it is allowed to
+	 *         play this card in this phase of the game. If it is allowed the
+	 *         card is played
 	 * @throws IOException
 	 * @throws SynchronisationException
 	 */
 	public synchronized boolean validateTurnAndExecute(String cardID, Player player) throws IOException {
-
 		Card card = player.getDeck().getCardFromHand(cardID);
 		if (card != null) {
 			if (player.isReactionMode() && card.getTypes().contains(CardType.REACTION)) {
-				GameLog.log(MsgType.GAME_INFO ,"spielt reaktionskarte");
+				GameLog.log(MsgType.GAME_INFO, "spielt reaktionskarte");
 				player.playCard(cardID);
 				if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
 						|| (!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.MILITIA.getName())
 								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.WITCH.getName())
-								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.BUREAUCRAT.getName()) && !(this.gameServer.getGameController().getActivePlayer()
-								.getPlayTwiceCard().getName().equals(CardName.THIEF.getName())))) {
+								&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.BUREAUCRAT.getName())
+								&& !(this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.THIEF.getName())))) {
 					this.gameServer.sendMessage(player.getPort(), new PacketSendActiveButtons(true, true, false));
 				}
 				return true;
@@ -255,12 +260,12 @@ public class GameController {
 	}
 
 	/**
-	 * checks if the card exists on the board and gains the card if the
-	 * gainValue is higher than the costs of the card card is gained on the hand
-	 * if the onHand flag is set
 	 * 
 	 * @param cardID
 	 * @param player
+	 * @return if the card exists on the board and gains the card if the
+	 *         gainValue is higher than the costs of the card card is gained on
+	 *         the hand if the onHand flag is set
 	 */
 	public synchronized boolean gain(String cardID, Player player) {
 		try {
@@ -276,7 +281,8 @@ public class GameController {
 					return true;
 				}
 				player.getDeck().getDiscardPile().add(card);
-				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getActivePlayerName(), " - gains " + card.getName(), this.gameServer.getGameController().getActivePlayer().getLogColor()));
+				this.gameServer
+						.broadcastMessage(new PacketBroadcastLog("", this.getActivePlayerName(), " - gains " + card.getName(), this.gameServer.getGameController().getActivePlayer().getLogColor()));
 				return true;
 			}
 		} catch (WrongSyntaxException e) {
@@ -294,12 +300,15 @@ public class GameController {
 	 * cardId to the trashPile
 	 * 
 	 * @param cardID
+	 *            the id of the card
 	 * @return true if the card exists and all conditions are fullfilled to buy
 	 *         the card
 	 * @throws SynchronisationException
+	 * @throws NoSuchElementException
+	 * @throws WrongSyntaxException
 	 */
 	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException, NoSuchElementException, WrongSyntaxException {
-		GameLog.log(MsgType.INFO ,"checkBoardCardExists");
+		GameLog.log(MsgType.INFO, "checkBoardCardExists");
 		LinkedList<Card> cards = this.gameBoard.findCardListFromBoard(cardID);
 		Card card = cards.getLast();
 		Player player = this.getActivePlayer();
@@ -309,7 +318,8 @@ public class GameController {
 			cards.removeLast();
 			CollectionsUtil.addCardToList(card, player.getDeck().getDiscardPile());
 			try {
-				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getActivePlayerName(), " - buys " + card.getName(), this.gameServer.getGameController().getActivePlayer().getLogColor()));
+				this.gameServer
+						.broadcastMessage(new PacketBroadcastLog("", this.getActivePlayerName(), " - buys " + card.getName(), this.gameServer.getGameController().getActivePlayer().getLogColor()));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -319,10 +329,10 @@ public class GameController {
 	}
 
 	/**
-	 * checks if the card according to the given cardId is a victory card on the
-	 * hand
 	 * 
 	 * @param cardId
+	 * @return if the card according to the given cardId is a victory card on
+	 *         the hand
 	 */
 	public synchronized boolean isVictoryCardOnHand(String cardId) {
 		Card card = this.getActivePlayer().getDeck().getCardFromHand(cardId);
@@ -357,15 +367,17 @@ public class GameController {
 			if (das.wasShuffled()) {
 				// this.gameServer.broadcastMessage(new
 				// PacketBroadcastLog("",this.getActivePlayerName(),
-				// " - shuffles deck",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
+				// " - shuffles
+				// deck",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
 				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getActivePlayerName(), " - shuffles deck", this.gameServer.getGameController().getActivePlayer().getLogColor()));
 			}
 			// this.gameServer.broadcastMessage(new
 			// PacketBroadcastLog("",this.getActivePlayerName()," - draws " +
 			// das.getDrawAmount() +
-			// " cards",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
-			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getActivePlayerName(), " - draws " + das.getDrawAmount() + " cards", this.gameServer.getGameController().getActivePlayer()
-					.getLogColor()));
+			// "
+			// cards",((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
+			this.gameServer.broadcastMessage(
+					new PacketBroadcastLog("", this.getActivePlayerName(), " - draws " + das.getDrawAmount() + " cards", this.gameServer.getGameController().getActivePlayer().getLogColor()));
 			this.getActivePlayer().refreshPlayedCardsList();
 		} catch (IOException e) {
 			GameLog.log(MsgType.EXCEPTION, e.getMessage());
@@ -411,18 +423,18 @@ public class GameController {
 				}
 
 				if (player.getDeck().getCardHand().size() > Integer.parseInt(value)) {
-					GameLog.log(MsgType.GAME_INFO ,"mehr als 3 karten");
+					GameLog.log(MsgType.GAME_INFO, "mehr als 3 karten");
 					player.setReactionMode();
 					player.setDiscardMode();
 					player.setDiscardOrTrashAction(CardAction.DISCARD_CARD, player.getDeck().getCardHand().size() - Integer.parseInt(value));
 					try {
 						if (sendEnableFlag) {
-							GameLog.log(MsgType.PACKET ,"send packet react");
+							GameLog.log(MsgType.PACKET, "send packet react");
 							this.gameServer.sendMessage(player.getPort(), new PacketEnable("react"));
 						}
 						if (sendPacketDisable) {
 							sendPacketDisable = false;
-							GameLog.log(MsgType.PACKET ,"sendpacket disable");
+							GameLog.log(MsgType.PACKET, "sendpacket disable");
 							this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable("wait on reaction"));
 
 						}
@@ -480,7 +492,7 @@ public class GameController {
 				}
 			}
 		}
-		GameLog.log(MsgType.GAME_INFO ,"im gamecontrolloer thiefList size: " + thiefList.size());
+		GameLog.log(MsgType.GAME_INFO, "im gamecontrolloer thiefList size: " + thiefList.size());
 		if (thiefList.size() > 0) {
 			try {
 				this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketSendActiveButtons(false, false, false));
@@ -489,7 +501,7 @@ public class GameController {
 				e.printStackTrace();
 			}
 		} else if (!reactivePlayer) {
-			GameLog.log(MsgType.GAME_INFO ,"thief false");
+			GameLog.log(MsgType.GAME_INFO, "thief false");
 			this.activePlayer.setThiefFalse();
 		}
 	}
@@ -531,7 +543,7 @@ public class GameController {
 		this.activePlayer.setRevealMode();
 		this.activePlayer.getRevealList().add(activePlayer.getDeck().removeSaveFromDrawPile());
 		this.spyList.add(this.activePlayer);
-		GameLog.log(MsgType.GAME_INFO ,"im gamecontrolloer spyList size: " + this.spyList.size());
+		GameLog.log(MsgType.GAME_INFO, "im gamecontrolloer spyList size: " + this.spyList.size());
 		if (this.spyList.size() > 0) {
 			try {
 				this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketTakeCards(this.activePlayer.getClientID()));
@@ -663,7 +675,7 @@ public class GameController {
 			}
 		}
 		if (witchFlag) {
-			GameLog.log(MsgType.GAME_INFO ,"witch false");
+			GameLog.log(MsgType.GAME_INFO, "witch false");
 			this.activePlayer.setWitchFalse();
 		}
 	}
@@ -684,7 +696,7 @@ public class GameController {
 			}
 		}
 		if (bureaucratFlag) {
-			GameLog.log(MsgType.GAME_INFO ,"bureaucrat false");
+			GameLog.log(MsgType.GAME_INFO, "bureaucrat false");
 			this.activePlayer.setBureaucratFalse();
 		}
 	}
@@ -706,7 +718,7 @@ public class GameController {
 				break;
 			}
 		}
-		GameLog.log(MsgType.GAME_INFO ,"kein thief" + thiefFlag);
+		GameLog.log(MsgType.GAME_INFO, "kein thief" + thiefFlag);
 		return thiefFlag;
 	}
 
@@ -729,7 +741,7 @@ public class GameController {
 		}
 		if (spyFlag) {
 			this.activePlayer.setSpyFalse();
-			GameLog.log(MsgType.GAME_INFO ,"spy false");
+			GameLog.log(MsgType.GAME_INFO, "spy false");
 			return spyFlag;
 		}
 		return spyFlag;
@@ -771,7 +783,7 @@ public class GameController {
 		} else {
 			player.setThiefFalse();
 		}
-		GameLog.log(MsgType.GAME_INFO ,"react new thieflist size: " + thiefList.size());
+		GameLog.log(MsgType.GAME_INFO, "react new thieflist size: " + thiefList.size());
 	}
 
 	/**
@@ -808,11 +820,11 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			if (player.playsReactionCard() || player.isReactionMode()) {
 				allReactionCardsPlayedFlag = false;
-				GameLog.log(MsgType.GAME_INFO ,player.getPlayerName() + "spielt reaktionskarte: " + player.playsReactionCard() + "player ist reaktionsmodues: " + player.isReactionMode());
+				GameLog.log(MsgType.GAME_INFO, player.getPlayerName() + "spielt reaktionskarte: " + player.playsReactionCard() + "player ist reaktionsmodues: " + player.isReactionMode());
 				break;
 			}
 		}
-		GameLog.log(MsgType.GAME_INFO ,"alle reaktionskarten gespielt? :" + allReactionCardsPlayedFlag);
+		GameLog.log(MsgType.GAME_INFO, "alle reaktionskarten gespielt? :" + allReactionCardsPlayedFlag);
 		return allReactionCardsPlayedFlag;
 	}
 
@@ -854,13 +866,14 @@ public class GameController {
 		if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
 				|| (!this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.MILITIA.getName())
 						&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.WITCH.getName())
-						&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.BUREAUCRAT.getName()) && !(this.gameServer.getGameController().getActivePlayer()
-						.getPlayTwiceCard().getName().equals(CardName.THIEF.getName()) && this.gameServer.getGameController().getThiefList().isEmpty()))) {
+						&& !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.BUREAUCRAT.getName())
+						&& !(this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.THIEF.getName())
+								&& this.gameServer.getGameController().getThiefList().isEmpty()))) {
 			try {
-				GameLog.log(MsgType.GAME_INFO ,"reaktion beendet gespielte karten" + Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));
+				GameLog.log(MsgType.GAME_INFO, "reaktion beendet gespielte karten" + Arrays.toString(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards()).toArray()));
 				this.gameServer.broadcastMessage(new PacketSendPlayedCardsToAllClients(CollectionsUtil.getCardIDs(this.activePlayer.getPlayedCards())));
-				this.gameServer.broadcastMessage(new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(),
-						this.gameServer.getGameController().getActivePlayerName(), false));
+				this.gameServer.broadcastMessage(
+						new PacketEnableDisable(this.gameServer.getGameController().getActivePlayer().getClientID(), this.gameServer.getGameController().getActivePlayerName(), false));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -872,7 +885,6 @@ public class GameController {
 	 * ActionPhase
 	 */
 	public synchronized void endTurn() {
-		GameLog.log(MsgType.DEBUG, "ich bin in der echten endTurn()");
 		this.getActivePlayer().resetPlayerValues();
 		this.getActivePlayer().refreshPlayedCardsList();
 		this.setNextActivePlayer();
@@ -933,7 +945,8 @@ public class GameController {
 
 	/**
 	 * 
-	 * @param userName
+	 * @param port
+	 *            of the player
 	 * @return the player with the given port null if not exists
 	 */
 	public Player getPlayerByPort(int port) {
@@ -946,28 +959,6 @@ public class GameController {
 		return null;
 	}
 
-//	/**
-//	 * 
-//	test purposes
-//	 */
-//	public Player getPlayerByPort(int port) {
-//		int count = 0;
-//		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
-//			Player player = (Player) iterator.next();
-//			if (player.getPort() == port) {
-//				count++;
-//			}
-//		}
-//		GameLog.log(MsgType.AI_DEBUG, ">> There are " + count + " players with Port " + port);
-//		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
-//			Player player = (Player) iterator.next();
-//			if (player.getPort() == port) {
-//				return player;
-//			}
-//		}
-//		return null;
-//	}
-	
 	/**
 	 * 
 	 * @param clientId
@@ -1037,8 +1028,8 @@ public class GameController {
 					// this.activePlayer.getPlayerName(), ": turn " +
 					// this.activePlayer.getTurnNr() + " -----",
 					// ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
-					this.gameServer.broadcastMessage(new PacketBroadcastLog("----- ", this.activePlayer.getPlayerName(), ": turn " + this.activePlayer.getTurnNr() + " -----", this.gameServer
-							.getGameController().getActivePlayer().getLogColor()));
+					this.gameServer.broadcastMessage(new PacketBroadcastLog("----- ", this.activePlayer.getPlayerName(), ": turn " + this.activePlayer.getTurnNr() + " -----",
+							this.gameServer.getGameController().getActivePlayer().getLogColor()));
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -1055,7 +1046,7 @@ public class GameController {
 	 * 
 	 * @param cardId
 	 * @throws SynchronisationException
-	 *             , WrongSyntaxException
+	 * @throws WrongSyntaxException
 	 */
 	public void buyOneCard(String cardId) throws SynchronisationException, WrongSyntaxException {
 		Card card = gameBoard.findAndRemoveCardFromBoard(cardId);
@@ -1082,7 +1073,7 @@ public class GameController {
 	 * sets the action phase
 	 */
 	public void setActionPhase() {
-		GameLog.log(MsgType.GAME_INFO ,"ActionPhaseWasSet");
+		GameLog.log(MsgType.GAME_INFO, "ActionPhaseWasSet");
 		this.gamePhase = "actionPhase";
 	}
 
@@ -1090,7 +1081,7 @@ public class GameController {
 	 * sets the buy phase
 	 */
 	public synchronized void setBuyPhase() {
-		GameLog.log(MsgType.GAME_INFO ,"BuyPhaseWasSet");
+		GameLog.log(MsgType.GAME_INFO, "BuyPhaseWasSet");
 		this.gamePhase = "buyPhase";
 	}
 
@@ -1114,14 +1105,19 @@ public class GameController {
 	 */
 	public void isGameFinished() {
 		if (this.gameBoard.getTableForVictoryCards().get(CardName.PROVINCE.getName()).isEmpty()) {
-			GameLog.log(MsgType.GAME_INFO ,"province empty");
+			GameLog.log(MsgType.GAME_INFO, "province empty");
 			endGame();
 		} else if (this.gameBoard.checkThreePilesEmpty()) {
-			GameLog.log(MsgType.GAME_INFO ,"three piles empty");
+			GameLog.log(MsgType.GAME_INFO, "three piles empty");
 			endGame();
 		}
 	}
 
+	/**
+	 * @param players
+	 *            the players to get the cards from
+	 * @return a list of all played cards from the given players
+	 */
 	public LinkedList<Card> getAllPlayedCards(Player... players) {
 		LinkedList<Card> playedCards = new LinkedList<Card>();
 		for (Iterator<Player> iterator = this.players.iterator(); iterator.hasNext();) {
@@ -1131,6 +1127,9 @@ public class GameController {
 		return playedCards;
 	}
 
+	/**
+	 * @return a list of the sorted playernames
+	 */
 	public LinkedList<String> getPlayerNamesSorted() {
 		LinkedList<String> sortedNames = new LinkedList<String>(Arrays.asList(getPlayerNames()));
 		Collections.sort(sortedNames, (String name1, String name2) -> name1.compareTo(name2));
@@ -1169,7 +1168,7 @@ public class GameController {
 				Player player = (Player) iterator.next();
 				packetShowEndScreen.add("player" + i++, player.getPlayerName(), player.getDeck().getVictoryPoints());
 			}
-			
+
 			this.gameServer.broadcastMessage(packetShowEndScreen);
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -1232,6 +1231,10 @@ public class GameController {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
 	}
 
+	/**
+	 * 
+	 * @return whether all reveal lists are empty
+	 */
 	public boolean allReveaListsEmpty() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -1242,6 +1245,10 @@ public class GameController {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @return whether all temporarytrash lists are empty
+	 */
 	public boolean allTemporaryTrashPilesEmpty() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -1252,6 +1259,10 @@ public class GameController {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @return whether all players are out of reveal mode
+	 */
 	public boolean allPlayersRevealed() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -1262,6 +1273,10 @@ public class GameController {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @return whether all players have gained
+	 */
 	public boolean allPlayerGained() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -1272,6 +1287,10 @@ public class GameController {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @return whether all players have trashed
+	 */
 	public boolean allPlayerTrashed() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -1282,6 +1301,10 @@ public class GameController {
 		return true;
 	}
 
+	/**
+	 * 
+	 * @return whether all players have discarded
+	 */
 	public boolean allPlayerDiscarded() {
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
 			Player player = (Player) iterator.next();
@@ -1291,7 +1314,12 @@ public class GameController {
 		}
 		return true;
 	}
-	
+
+	/**
+	 * 
+	 * @return a negative, so far unused aiPort (ai needs a port to be able to
+	 *         play, but doesn't need it in terms of communication)
+	 */
 	public int getAiPort() {
 		int ran;
 		do {

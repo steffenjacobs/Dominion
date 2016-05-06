@@ -58,9 +58,13 @@ public class Player {
 	/**
 	 * creates the player sets all the initial values
 	 * 
-	 * @param deck
-	 * @param clientID
-	 * @param port
+	 * @param deck the deck of the player
+	 * @param clientID the clientID of the player
+	 * @param port the port of the player
+	 * @param userName the username of the player
+	 * @param uuid the UUID of the player 
+	 * @param gameServer the gameServer of the player
+	 * 
 	 */
 	public Player(Deck deck, int clientID, int port, String userName, UUID uuid, GameServer gameServer) {
 		this.reactionCard = false;
@@ -99,9 +103,12 @@ public class Player {
 	/**
 	 * calls the other constructor
 	 * 
-	 * @param clientID
-	 * @param port
-	 * @param initCards
+	 * @param clientID the clientID of the player
+	 * @param port the port of the player
+	 * @param initCards the init cardset of the player
+	 * @param userName the username of the player
+	 * @param uuid the UUID of the player 
+	 * @param gameServer the gameServer of the player
 	 */
 	public Player(int clientID, int port, LinkedList<Card> initCards, String userName, UUID uuid, GameServer gameServer) {
 		this(new Deck(initCards), clientID, port, userName, uuid, gameServer);
@@ -160,6 +167,9 @@ public class Player {
 		this.turnNr = turnNr;
 	}
 
+	/**
+	 * increment the players turn nr.
+	 */
 	public void incTurnNr() {
 		this.turnNr++;
 	}
@@ -172,6 +182,9 @@ public class Player {
 		return session_ID;
 	}
 
+	/**
+	 * @param sessionID the sessionID to update
+	 */
 	public void updateSessionID(UUID sessionID) {
 		this.session_ID = sessionID;
 	}
@@ -184,6 +197,9 @@ public class Player {
 		return this.secondTimePlayed;
 	}
 
+	/**
+	 * set the secondTimePlayed value to true
+	 */
 	public void setSecondTimePlayed() {
 		this.secondTimePlayed = true;
 	}
@@ -196,22 +212,38 @@ public class Player {
 		return this.playTwice;
 	}
 
+	/**
+	 * set the playTwice value true
+	 */
 	public void setPlayTwice() {
 		this.playTwice = true;
 	}
-
+	
+	/** 
+	 * set the playTwice value false 
+	 */
 	public void setPlayTwiceFalse() {
 		this.playTwice = false;
 	}
 
+	/**
+	 * set the playTwiceEnabled value false
+	 */
 	public void setPlayTwiceEnabledFalse() {
 		this.playTwiceEnabled = false;
 	}
 
+	/**
+	 * 
+	 * @return whether playTwice is enabled
+	 */
 	public boolean isPlayTwiceEnabled() {
 		return this.playTwiceEnabled;
 	}
 
+	/**
+	 * decrement the playTwiceCounter if it's not already zero
+	 */
 	public void decrementPlayTwiceCounter() {
 		if (this.playTwiceCounter > 0) {
 			this.playTwiceCounter--;
@@ -219,6 +251,10 @@ public class Player {
 
 	}
 
+	/**
+	 * 
+	 * @return the playTwiceCounter
+	 */
 	public int getPlayTwiceCounter() {
 		return this.playTwiceCounter;
 	}
@@ -475,6 +511,10 @@ public class Player {
 		return playedCards;
 	}
 
+	/**
+	 * 
+	 * @return the temporaryTrashPile
+	 */
 	public LinkedList<Card> getTemporaryTrashPile() {
 		return this.temporaryTrashPile;
 	}
@@ -688,6 +728,7 @@ public class Player {
 
 	/**
 	 * 
+	 * @param cardActions the relevant cardActions
 	 * @return the relevant actions in this round e.g. by an Action Reaction
 	 *         card return the actions belonging to the actual gameMode
 	 */
@@ -718,6 +759,8 @@ public class Player {
 	 * card actions is called from this method
 	 * 
 	 * @author Lukas Adler, Nicolas Wipfler
+	 * @param cardID the id of the card
+	 * @return the serverCard
 	 * @throws IOException
 	 * @throws SynchronisationException
 	 */
@@ -973,9 +1016,9 @@ public class Player {
 	/**
 	 * reveals so much cards until value treasure cards are revealed
 	 * 
+	 * @param value the value amount to reveal
 	 * @throws noSuchElement
 	 *             exceptions if not enough treasure cards are in the deck
-	 * @param value
 	 */
 	private void revealUntilTreasures(int value) {
 		LinkedList<Card> treasureList = new LinkedList<Card>();
@@ -1067,7 +1110,10 @@ public class Player {
 		this.witch = false;
 		this.bureaucrat = false;
 	}
-
+	
+	/**
+	 * sets all flags on false
+	 */
 	public void setAllModesFalse() {
 		this.discardMode = false;
 		this.trashMode = false;
@@ -1203,10 +1249,17 @@ public class Player {
 		this.playTwiceCounter = 0;
 	}
 
+	/**
+	 * set the playTwiceEnabled value true
+	 */
 	public void setPlayTwiceEnabled() {
 		this.playTwiceEnabled = true;
 	}
 
+	/**
+	 * 
+	 * @return whether the player is an AI (can be identified by default AI UUID)
+	 */
 	public boolean isAI() {
 		return UUID.fromString("00000000-0000-0000-0000-000000000000").equals(this.session_ID);
 	}

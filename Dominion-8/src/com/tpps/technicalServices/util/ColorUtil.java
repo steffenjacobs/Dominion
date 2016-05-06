@@ -11,6 +11,7 @@ import java.util.List;
  * 
  * The colors are in use though.
  * 
+ * 
  * @author nwipfler - Nicolas Wipfler
  */
 public class ColorUtil {
@@ -22,10 +23,24 @@ public class ColorUtil {
 
 	public static final List<Color> playerColors = CollectionsUtil.linkedColorList(ColorUtil.EPICBLUE, Color.ORANGE, Color.CYAN, ColorUtil.DARKSEAGREEN);
 
+	/**
+	 * 
+	 * @param color
+	 *            the awt color to convert
+	 * @return the corresponding javafx color
+	 * @deprecated
+	 */
 	public static javafx.scene.paint.Color getFxColor(java.awt.Color color) {
 		return javafx.scene.paint.Color.rgb(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() / 255.0);
 	}
 
+	/**
+	 * 
+	 * @param color
+	 *            the fx color to convert
+	 * @return the corresponding javafx color
+	 * @deprecated
+	 */
 	public static java.awt.Color getAwtColor(javafx.scene.paint.Color color) {
 		String colorStr = color.toString().substring(2, color.toString().length());
 		return new Color(Integer.valueOf(colorStr.substring(1, 3), 16), Integer.valueOf(colorStr.substring(3, 5), 16), Integer.valueOf(colorStr.substring(5, 7), 16));

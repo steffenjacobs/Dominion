@@ -27,7 +27,7 @@ public enum MsgType {
 	AI_DEBUG("[AI_DEBUG]",Color.YELLOW,true,true, ANSIUtil.ANSI_YELLOW), 
 	GUI("[GUI]",ColorUtil.EPICBLUE,true,true, ANSIUtil.ANSI_YELLOW),
 	CHAT("[CHAT]",ColorUtil.EPICBLUE,true,true, ANSIUtil.ANSI_BLUE),
-	SQL("[SQL]",ColorUtil.EPICBLUE,true,true, ANSIUtil.ANSI_BLUE),
+	SQL("[SQL]",new Color(147, 108, 108),true,true, ANSIUtil.ANSI_BLUE),
 	PACKET("[PACKETHANDLING]", Color.PINK, true,true,ANSIUtil.ANSI_MAGENTA),
 	MM("[MATCHMAKING]",Color.ORANGE,true,true, ANSIUtil.ANSI_YELLOW);
 
@@ -87,7 +87,7 @@ public enum MsgType {
 	
 	/**
 	 * 
-	 * @return
+	 * @return the message
 	 */
 	public String getMessage() {
 		return this.message;
@@ -103,7 +103,7 @@ public enum MsgType {
 
 	/**
 	 * 
-	 * @return
+	 * @return the color
 	 */
 	public Color getColor() {
 		return this.color;
@@ -119,7 +119,7 @@ public enum MsgType {
 
 	/**
 	 * 
-	 * @return
+	 * @return the display
 	 */
 	public boolean getDisplay() {
 		return this.display;

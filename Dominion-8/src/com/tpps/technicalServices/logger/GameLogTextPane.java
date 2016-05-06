@@ -139,6 +139,7 @@ public class GameLogTextPane extends JPanel {
 	 * @param timestamp
 	 *            determines whether there is a timestamp written in front of
 	 *            the text line so the line is only parsed if its necessary
+	 * @param newLine whether there will be a newLine appended or not
 	 */
 	public void updateLogger(final String line, Color textColor, boolean timestamp, boolean newLine) {
 		if (timestamp) {

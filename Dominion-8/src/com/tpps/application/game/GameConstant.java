@@ -1,5 +1,11 @@
 package com.tpps.application.game;
 
+/**
+ * GameConstant lists values according to the rules of the game
+ * 
+ * @author Nicolas
+ *
+ */
 public enum GameConstant {
 
 	PLAYERS(4),
@@ -45,6 +51,10 @@ public enum GameConstant {
 	
 	private int value;
 	
+	/**
+	 * 
+	 * @param value the value of the constant
+	 */
 	private GameConstant(int value) {
 		this.value = value;
 	}

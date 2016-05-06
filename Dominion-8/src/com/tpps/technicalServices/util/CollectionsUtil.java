@@ -23,7 +23,9 @@ import javafx.util.Pair;
 public final class CollectionsUtil {
 
 	/**
-	 * @param
+	 * @param number the number of the LinkedHashMap 
+	 * @param action the action of the LinkedHashMap
+	 * 
 	 * @return creates a sorted hashmap (LinkedHashMap) from the given
 	 *         parameters (single element)
 	 */
@@ -34,7 +36,9 @@ public final class CollectionsUtil {
 	}
 
 	/**
-	 * @param
+	 * @param actions list of actions
+	 * @param numbers list of numbers
+	 *
 	 * @return creates a sorted hashmap (LinkedHashMap) from the given
 	 *         parameters (list)
 	 */
@@ -52,6 +56,8 @@ public final class CollectionsUtil {
 	}
 
 	/**
+	 * @param objects the objects to add to a LinkedList<T>
+	 * @return a T-generic list with all objects
 	 * 
 	 * */
 	public static <T> LinkedList<T> linkedList(T[] objects) {
@@ -64,8 +70,8 @@ public final class CollectionsUtil {
 
 	/**
 	 * 
-	 * @param color
-	 * @return
+	 * @param color the colors to add in a LinkedList
+	 * @return a linked list of all Colors
 	 */
 	public static LinkedList<Color> linkedColorList(Color... color) {
 		LinkedList<Color> resultList = new LinkedList<Color>();
@@ -75,9 +81,12 @@ public final class CollectionsUtil {
 		return resultList;
 	}
 
+
 	/**
 	 * 
-	 * */
+	 * @param object the object to add to a LinkedList
+	 * @return the LinkedList with one object
+	 */
 	public static <T> LinkedList<T> linkedList(T object) {
 		LinkedList<T> resultList = new LinkedList<T>();
 		resultList.add(object);
@@ -120,6 +129,9 @@ public final class CollectionsUtil {
 	/**
 	 * clones the card and adds this card 'amount - 1'-times, to the list in
 	 * parameters, because one object of the card already exists
+	 * @param card the card to clone
+	 * @param amount the amount of cards to clone
+	 * @param destination the destination list
 	 */
 	public static void cloneCardToList(Card card, int amount, LinkedList<Card> destination) {
 		destination.addLast(card);
@@ -141,9 +153,11 @@ public final class CollectionsUtil {
 	}
 
 	/**
+	 * adds a list of cards to the (destination-)list from parameters,
+	 * but doesn't remove the cards from the original list
 	 * 
-	 * @return adds a list of cards to the (destination-)list from parameters,
-	 *         but doesn't remove the cards from the original list
+	 * @param cards the cards to append
+	 * @param destination the destination
 	 */
 	public static void appendListToList(LinkedList<Card> cards, LinkedList<Card> destination) {
 		for (Card card : cards) {
