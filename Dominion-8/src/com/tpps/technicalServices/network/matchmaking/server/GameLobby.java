@@ -28,10 +28,15 @@ public class GameLobby {
 	private GameServer runningServer;
 
 	private MPlayer admin;
-	
+
 	private final boolean isPrivate;
 
-	/** constructor, generating its unique lobbyID */
+	/**
+	 * constructor, generating its unique lobbyID
+	 * 
+	 * @param isPrivate
+	 *            whether the packet contains a private match
+	 */
 	public GameLobby(boolean isPrivate) {
 		this.lobbyID = MatchmakingController.generateLobbyID();
 		this.isPrivate = isPrivate;
@@ -206,7 +211,7 @@ public class GameLobby {
 				}
 
 				// tell everyone who is new admin
-				MatchmakingServer.getInstance().sendQuitPacket(mpl,  this.admin.getPlayerName(), false);
+				MatchmakingServer.getInstance().sendQuitPacket(mpl, this.admin.getPlayerName(), false);
 				MatchmakingServer.getInstance().sendJoinPacket(mpl, this.admin.getPlayerName(), true);
 			}
 		}

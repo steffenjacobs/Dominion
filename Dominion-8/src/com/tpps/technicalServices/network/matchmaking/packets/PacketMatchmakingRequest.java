@@ -28,6 +28,8 @@ public class PacketMatchmakingRequest extends Packet {
 	 *            uuid of the player who searches for a match
 	 * @param abort
 	 *            true if the search should be aborted, false otherwise
+	 * @param privateMatch
+	 *            whether the packet contains a private match
 	 */
 	public PacketMatchmakingRequest(String name, UUID uid, boolean abort, boolean privateMatch) {
 		super(PacketType.MATCHMAKING_REQUEST);
@@ -49,6 +51,8 @@ public class PacketMatchmakingRequest extends Packet {
 	 *            true if the search should be aborted, false otherwise
 	 * @param type
 	 *            sub-type of the packet
+	 * @param privateMatch
+	 *            whether the packet contains a private match
 	 */
 	public PacketMatchmakingRequest(PacketType type, String name, UUID uid, boolean abort, boolean privateMatch) {
 		super(type);
@@ -70,6 +74,9 @@ public class PacketMatchmakingRequest extends Packet {
 		return abort;
 	}
 
+	/**
+	 * @return whether the match is private
+	 */
 	public boolean isPrivate() {
 		return privateMatch;
 	}

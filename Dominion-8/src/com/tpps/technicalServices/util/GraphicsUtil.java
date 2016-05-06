@@ -210,7 +210,7 @@ public final class GraphicsUtil {
 		g.drawImage(setAlpha(bim, scale), 0, 0, null);
 		return copy;
 	}
-	
+
 	/**
 	 * colors the rounded-rectangular shape in a specified color
 	 * 
@@ -220,9 +220,11 @@ public final class GraphicsUtil {
 	 *            the image to color
 	 * @param scale
 	 *            the scale of coloring
+	 * @param arcSize
+	 *            the size of the arc
 	 * @return the colored image
 	 */
-	public static BufferedImage colorScaleRounded(Color color, BufferedImage bim, float scale, int arcSize){
+	public static BufferedImage colorScaleRounded(Color color, BufferedImage bim, float scale, int arcSize) {
 		BufferedImage copy = new BufferedImage(bim.getWidth(), bim.getHeight(), bim.getType());
 		Graphics2D g = copy.createGraphics();
 		g.setPaint(color);

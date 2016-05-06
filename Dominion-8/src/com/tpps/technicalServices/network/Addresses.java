@@ -55,6 +55,9 @@ public final class Addresses {
 		remoteAddress = newAddress;
 	}
 
+	/** trivial
+	 * @param data an arry with the sql-login data
+	 */
 	public static final void setSQLInitializiation(String[] data) {
 		sqlconf.setProperty("host", data[0]);
 		sqlconf.setProperty("port", data[1]);
@@ -63,6 +66,9 @@ public final class Addresses {
 		sqlconf.setProperty("database", data[4]);
 	}
 
+	/** trivial
+	 * @return an array with the sql-login data
+	 */
 	public static final String[] getSQLInitialization() {
 		String[] data = new String[5];
 		data[0] = sqlconf.getProperty("host", "localhost");
