@@ -191,11 +191,11 @@ public class GameWindow extends JFrame {
 		this.stopTrash = new ButtonClass(0.75, 0.25, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
 				this.framework, "Stop Trash");
 		this.action = new DisplayValue(0.1, 0.38, 0.12, 0.12, 1, 1, 20, this.displayImageActions, this.framework,
-				String.valueOf(GameConstant.INIT_ACTIONS));
+				String.valueOf(GameConstant.INIT_ACTIONS.getValue()));
 		this.coin = new DisplayValue(0.1, 0.46, 0.12, 0.12, 1, 1, 20, this.displayImageCoins, this.framework,
-				String.valueOf(GameConstant.INIT_COINS));
+				String.valueOf(GameConstant.INIT_COINS.getValue()));
 		this.buy = new DisplayValue(0.1, 0.54, 0.12, 0.12, 1, 1, 20, this.displayImageBuys, this.framework,
-				String.valueOf(GameConstant.INIT_PURCHASES));
+				String.valueOf(GameConstant.INIT_PURCHASES.getValue()));
 		this.turn = new DisplayValue(0.31, 0, 0.38, 0.05, 1, 1, 20, this.displayImageTurnRed, this.framework, "#");
 
 		this.framework.addComponent(new GameBackground(0, 0, 1, 1, 0, this.backgroundImage, this.framework));
@@ -292,11 +292,11 @@ public class GameWindow extends JFrame {
 		this.framework.removeComponent(buy);
 
 		action = new DisplayValue(0.1, 0.38, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageActions, framework,
-				String.valueOf(GameConstant.INIT_ACTIONS));
+				String.valueOf(GameConstant.INIT_ACTIONS.getValue()));
 		coin = new DisplayValue(0.1, 0.46, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageCoins, framework,
-				String.valueOf(GameConstant.INIT_COINS));
+				String.valueOf(GameConstant.INIT_COINS.getValue()));
 		buy = new DisplayValue(0.1, 0.54, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageBuys, framework,
-				String.valueOf(GameConstant.INIT_PURCHASES));
+				String.valueOf(GameConstant.INIT_PURCHASES.getValue()));
 
 		this.framework.addComponent(action);
 		this.framework.addComponent(coin);
