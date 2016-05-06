@@ -31,7 +31,6 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketStartTrashMo
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeDrewCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.ColorUtil;
-import com.tpps.technicalServices.util.GameConstant;
 
 /**
  * @author Nicolas Wipfler, Lukas Adler
@@ -84,14 +83,14 @@ public class Player {
 		this.deck = deck;
 		this.id = player_ID++;
 		this.session_ID = uuid;
-		this.actions = GameConstant.INIT_ACTIONS;
-		this.buys = GameConstant.INIT_PURCHASES;
-		this.coins = GameConstant.INIT_TREASURES;
+		this.actions = GameConstant.INIT_ACTIONS.getValue();
+		this.buys = GameConstant.INIT_PURCHASES.getValue();
+		this.coins = GameConstant.INIT_COINS.getValue();
 		this.client_ID = clientID;
 		this.port = port;
 		this.playedCards = new LinkedList<Card>();
 		this.userName = userName;
-		System.out.println("username: " + this.userName);
+		GameLog.log(MsgType.GAME_INFO ,"username: " + this.userName);
 		this.logColor = ColorUtil.playerColors.get(clientID % 4);
 		this.turnNr = 0;
 		this.gameServer = gameServer;
@@ -120,7 +119,6 @@ public class Player {
 		this.playTwiceEnabled = false;
 		this.secondTimePlayed = false;
 		this.playTwiceCounter = 0;
-
 	}
 
 	/**
@@ -677,8 +675,8 @@ public class Player {
 	 */
 	public void playTreasures() throws IOException {
 		LinkedList<Card> cards = new LinkedList<Card>();
-		LinkedList<String> treasureCards = this.getDeck().getTreasureCardsFromHand();
-		for (Iterator<String> iterator = treasureCards.iterator(); iterator.hasNext();) {
+		LinkedList<String> treasureCardIDs = this.getDeck().getCardIDsByTypeFrom(CardType.TREASURE, this.getDeck().getCardHand());
+		for (Iterator<String> iterator = treasureCardIDs.iterator(); iterator.hasNext();) {
 			String cardId = (String) iterator.next();
 			cards.add(doAction(cardId));
 		}
@@ -804,26 +802,12 @@ public class Player {
 				this.gameServer.getGameController().drawOthers();
 				break;
 			case GAIN_CARD:
-
-				/* <------- ! fehlt ----> */
 				this.gainMode = true;
 				try {
 					this.gainValue = Integer.parseInt(value);
 				} catch (NumberFormatException e) {
 					e.printStackTrace();
 				}
-
-				// maybe neede
-				// switch (value.toUpperCase()) {
-				// case "CURSE":
-				// break;
-				// case "SILVER":
-				// break;
-				// case "":
-				// break;
-				// default:
-				// break;
-				// }
 				break;
 			case GAIN_CARD_OTHERS:
 				if (value.toLowerCase().equals("curse")) {
@@ -833,7 +817,7 @@ public class Player {
 			case GAIN_CARD_DRAW_PILE:
 				try {
 					if (value.toLowerCase().equals("silver")) {
-						getDeck().getDrawPile().addLast(this.gameServer.getGameController().getGameBoard().getTableForTreasureCards().get("Silver").removeLast());
+						getDeck().getDrawPile().addLast(this.gameServer.getGameController().getGameBoard().getTableForTreasureCards().get(CardName.SILVER.getName()).removeLast());
 					}
 				} catch (NoSuchElementException e) {
 					GameLog.log(MsgType.ERROR, "No more Silver cards on the board.");
@@ -879,7 +863,7 @@ public class Player {
 			case TRASH_AND_ADD_TEMPORARY_MONEY:
 				if (value.split("_")[0].toLowerCase().equals("copper")) {
 
-					Card card = getDeck().getCardByNameFromHand("Copper");
+					Card card = getDeck().getCardByNameFromHand(CardName.COPPER.getName());
 					if (card != null) {
 
 						getDeck().getCardHand().remove(card);
@@ -971,7 +955,7 @@ public class Player {
 
 		if (allReactionCarsPlayedFlag) {
 			if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
-					|| !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
+					|| !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.MILITIA.getName())) {
 				// this.gameServer.sendMessage(port,
 				// new
 				// PacketDisable(this.gameServer.getGameController().getActivePlayerName()
@@ -1141,7 +1125,7 @@ public class Player {
 
 					if (allReactionCardsPlayedFlag) {
 						if (this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard() == null
-								|| !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals("Militia")) {
+								|| !this.gameServer.getGameController().getActivePlayer().getPlayTwiceCard().getName().equals(CardName.MILITIA.getName())) {
 							// this.gameServer.sendMessage(port,
 							// new
 							// PacketDisable(this.gameServer.getGameController().getActivePlayerName()

@@ -10,19 +10,25 @@ import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.logger.DrawAndShuffle;
 import com.tpps.technicalServices.util.CollectionsUtil;
-import com.tpps.technicalServices.util.GameConstant;
 
 /**
+ * Deck class represents the piles in the game such as - drawPile - discardPile
+ * and the - cardHand
+ * 
+ * Player owns a deck and interacts with these piles
+ * 
  * @author Nicolas Wipfler, Lukas Adler
  */
 public class Deck {
 
-	private LinkedList<Card> drawPile; 
+	private LinkedList<Card> drawPile;
 	private LinkedList<Card> discardPile;
 	private LinkedList<Card> cardHand;
 
 	/**
 	 * 
+	 * @param initCards
+	 *            the initial card set
 	 */
 	public Deck(LinkedList<Card> initCards) {
 		this.drawPile = new LinkedList<Card>();
@@ -34,28 +40,32 @@ public class Deck {
 	/**
 	 * 
 	 * @param draw
+	 *            the drawPile
 	 * @param discard
+	 *            the discardPile
 	 * @param cardHand
+	 *            the cardHand
 	 */
 	public Deck(LinkedList<Card> draw, LinkedList<Card> discard, LinkedList<Card> cardHand) {
 		this.drawPile = draw;
 		this.discardPile = discard;
 		this.cardHand = cardHand;
 	}
-	
+
 	/**
-	 * initializes the deck with 7 COPPER cards and 3 ESTATE cards
-	 * shuffles the deck and draws 5 cards from the drawPile
+	 * initializes the deck with 7 COPPER cards and 3 ESTATE cards shuffles the
+	 * deck and draws 5 cards from the drawPile
 	 * 
-	 * @param initCards the initialization list of cards
+	 * @param initCards
+	 *            the initialization list of cards
 	 */
 	private void init(LinkedList<Card> initCards) {
 		if (this.drawPile != null) {
-			CollectionsUtil.appendListToList(initCards, this.drawPile);		
-			
+			CollectionsUtil.appendListToList(initCards, this.drawPile);
+
 			this.shuffleDrawPile();
 		}
-		this.draw(GameConstant.INIT_CARD_HAND_SIZE);
+		this.draw(GameConstant.INIT_CARD_HAND_SIZE.getValue());
 	}
 
 	/**
@@ -66,7 +76,8 @@ public class Deck {
 	}
 
 	/**
-	 * @param drawPile the drawPile to set
+	 * @param drawPile
+	 *            the drawPile to set
 	 */
 	public void setDrawPile(LinkedList<Card> drawPile) {
 		this.drawPile = drawPile;
@@ -80,7 +91,8 @@ public class Deck {
 	}
 
 	/**
-	 * @param discardPile the discardPile to set
+	 * @param discardPile
+	 *            the discardPile to set
 	 */
 	public void setDiscardPile(LinkedList<Card> discardPile) {
 		this.discardPile = discardPile;
@@ -94,40 +106,43 @@ public class Deck {
 	}
 
 	/**
-	 * @param cardHand the cardHand to set
+	 * @param cardHand
+	 *            the cardHand to set
 	 */
 	public void setCardHand(LinkedList<Card> cardHand) {
 		this.cardHand = cardHand;
 	}
-	
+
 	/**
-	 * @return the overall decksize (= size of drawPile AND discardPile AND cardHand)
+	 * @return the overall decksize (= size of drawPile AND discardPile AND
+	 *         cardHand)
 	 */
 	public int getDeckSize() {
 		return this.drawPile.size() + this.discardPile.size() + this.cardHand.size();
 	}
-	
+
 	/**
 	 * 
-	 * @return the amount of treasure cards which are not in cardHand 
-	 * (so the amount treasure carsd in drawPile and discardPile)
+	 * @return the amount of treasure cards which are not in cardHand (so the
+	 *         amount treasure carsd in drawPile and discardPile)
 	 */
-	public int getTreasureAmountNotOnHand() {		
-		return getTreasureAmountOfList(drawPile) + getTreasureAmountOfList(discardPile);		
+	public int getTreasureAmountNotOnHand() {
+		return getTreasureAmountOfList(drawPile) + getTreasureAmountOfList(discardPile);
 	}
-	
+
 	/**
 	 * 
-	 * @param list the list to investigate
-	 * @return the amount of treasure cards in the specific list
+	 * @param list
+	 *            the list to check
+	 * @return the amount of treasure cards in the given list
 	 */
 	public int getTreasureAmountOfList(LinkedList<Card> list) {
 		int treasureCounter = 0;
 		for (Iterator<Card> iterator = drawPile.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(CardType.TREASURE)){
+			if (card.getTypes().contains(CardType.TREASURE)) {
 				treasureCounter++;
-			}			
+			}
 		}
 		return treasureCounter;
 	}
@@ -135,127 +150,169 @@ public class Deck {
 	/**
 	 * 
 	 * @param list
-	 * @return
+	 *            the list to check
+	 * @return the value of all treasure cards in the given list
 	 */
 	public int getTreasureValueOfList(LinkedList<Card> list) {
 		int treasureCounter = 0;
-		for (Iterator<Card> iterator = getCardsByTypeFromHand(CardType.TREASURE).iterator(); iterator.hasNext();) {
+		for (Iterator<Card> iterator = getCardsByTypeFrom(CardType.TREASURE, this.cardHand).iterator(); iterator.hasNext();) {
 			treasureCounter += Integer.valueOf(iterator.next().getActions().get(CardAction.IS_TREASURE));
 		}
 		return treasureCounter;
 	}
-	
+
 	/**
-	 * @param cardID individual id of the card as a String
-	 * @return the card with cardID in cardHand (without removing it from the list)
-	 *         null if the list doesn't contain the card
+	 * @param cardID
+	 *            individual id of the card as a String
+	 * @return the card with cardID in cardHand (without removing it from the
+	 *         list) null if the list doesn't contain the card
 	 */
 	public Card getCardFromHand(String cardID) {
 		return getCardFromPile(cardID, this.cardHand);
 	}
-	
+
 	/**
 	 * 
 	 * @param name
-	 * @return a card which has the given name null otherwise
+	 *            the name to search for
+	 * @return a card which has the given name, null otherwise
 	 */
-	public Card getCardByNameFromHand(String name){
+	public Card getCardByNameFromHand(String name) {
 		for (Iterator<Card> iterator = getCardHand().iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getName().toLowerCase().equals(name.toLowerCase())){
+			if (card.getName().toLowerCase().equals(name.toLowerCase())) {
 				return card;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * @param type
-	 * @return a card which contains the given type null otherwise
+	 *            the CardType to search for
+	 * @return a card which contains the given type, null otherwise
 	 */
-	public Card getCardByTypeFromHand(CardType type){
+	public Card getCardByTypeFromHand(CardType type) {
 		for (Iterator<Card> iterator = getCardHand().iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(type)){
+			if (card.getTypes().contains(type)) {
 				return card;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
-	 * @return the victoryPoints for the deck
+	 * @return the victoryPoints of the deck
 	 */
-	public int getVictoryPoints(){
+	public int getVictoryPoints() {
 		int victoryPoints = 0;
 		LinkedList<Card> victoryCards = getCardsByTypeFromDeck(CardType.VICTORY);
 		for (Iterator<Card> iterator = victoryCards.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
 			victoryPoints += Integer.parseInt(card.getActions().get(CardAction.IS_VICTORY));
 		}
-		return victoryPoints;		
+		return victoryPoints;
 	}
-	
+
 	/**
 	 * 
 	 * @param type
-	 * @return returns a list with all cards of the specified type
+	 *            the CardType to search for
+	 * @return a list with all cards of the specified type
 	 */
 	public LinkedList<Card> getCardsByTypeFromDeck(CardType type) {
-		LinkedList<Card> victoryCards = new LinkedList<Card>();
+		LinkedList<Card> cards = new LinkedList<Card>();
 		for (Iterator<Card> iterator = this.cardHand.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(type)){
-				victoryCards.add(card);
+			if (card.getTypes().contains(type)) {
+				cards.add(card);
 			}
 		}
-		
 		for (Iterator<Card> iterator = this.drawPile.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(type)){
-				victoryCards.add(card);
+			if (card.getTypes().contains(type)) {
+				cards.add(card);
 			}
 		}
-		
 		for (Iterator<Card> iterator = this.discardPile.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(type)){
-				victoryCards.add(card);
+			if (card.getTypes().contains(type)) {
+				cards.add(card);
 			}
 		}
-		
-		return victoryCards;
+		return cards;
 	}
-	
-	public LinkedList<Card> getCardsByTypeFromHand(CardType type) {
+
+	/**
+	 * 
+	 * @param type
+	 *            the cardType to search for
+	 * @param cardLists
+	 *            the cardLists to check
+	 * @return a list of all cards of CardType type in the given lists
+	 */
+	@SuppressWarnings("unchecked")
+	public LinkedList<Card> getCardsByTypeFromList(CardType type, LinkedList<Card>... cardLists) {
+		LinkedList<Card> result = new LinkedList<Card>();
+		for (LinkedList<Card> cardList : cardLists) {
+			for (Iterator<Card> iterator = cardList.iterator(); iterator.hasNext();) {
+				Card card = (Card) iterator.next();
+				if (card.getTypes().contains(type)) {
+					result.add(card);
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 
+	 * @param type
+	 *            the CardType to search for
+	 * @param cardList
+	 *            the list to check
+	 * @return a list of all cards of CardType type from the given list
+	 */
+	public LinkedList<Card> getCardsByTypeFrom(CardType type, LinkedList<Card> cardList) {
 		LinkedList<Card> typeCards = new LinkedList<Card>();
-		for (Iterator<Card> iterator = getCardHand().iterator(); iterator.hasNext();) {
+		for (Iterator<Card> iterator = cardList.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(type)){
+			if (card.getTypes().contains(type)) {
 				typeCards.addLast(card);
 			}
 		}
 		return typeCards;
 	}
-	
-	public LinkedList<String> getTreasureCardsFromHand(){
+
+	/**
+	 * 
+	 * @param type
+	 *            the CardType to search for
+	 * @param cardList
+	 *            the list to check
+	 * @return a list of all cardIDs of CardType type from the given list
+	 */
+	public LinkedList<String> getCardIDsByTypeFrom(CardType type, LinkedList<Card> cardList) {
 		LinkedList<Card> treasureCards = new LinkedList<Card>();
-		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
+		for (Iterator<Card> iterator = cardList.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(CardType.TREASURE)){
+			if (card.getTypes().contains(CardType.TREASURE)) {
 				treasureCards.add(card);
-			}		
+			}
 		}
 		return CollectionsUtil.getCardIDs(treasureCards);
 	}
-	
+
 	/**
-	 * @param cardID individual id of the card as a String
-	 * @param searchPile the list where to search the cardID
-	 * @return the card with cardID in searchPile (without removing it from the list)
-	 *         null if the list doesn't contain the card
+	 * @param cardID
+	 *            individual id of the card as a String
+	 * @param searchPile
+	 *            the list where to search the cardID
+	 * @return the card with cardID in searchPile (without removing it from the
+	 *         list) null if the list doesn't contain the card
 	 */
 	public Card getCardFromPile(String cardID, LinkedList<Card> searchPile) {
 		Iterator<Card> it = searchPile.iterator();
@@ -266,21 +323,24 @@ public class Deck {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * calls discardCardHand() and draw(INIT_CARD_HAND_SIZE) 
-	 * (discards the cardHand and redraws 5 cards for the new turn)
+	 * calls discardCardHand() and draw(INIT_CARD_HAND_SIZE) (discards the
+	 * cardHand and redraws 5 cards for the new turn)
+	 * @return a DrawAndShuffle object which is used by the log to determine what happened
 	 */
 	public DrawAndShuffle refreshCardHand() {
 		this.discardCardHand();
-		return this.draw(GameConstant.INIT_CARD_HAND_SIZE);
+		return this.draw(GameConstant.INIT_CARD_HAND_SIZE.getValue());
 	}
-	
+
 	/**
-	 * if there are not enough cards in the drawPile (less than the drawAmount), 
+	 * if there are not enough cards in the drawPile (less than the drawAmount),
 	 * the method shuffles the discard pile and appends it "below" the draw pile
-	 * @param drawAmount the amount which determines if the piles will be shuffled
-	 */	
+	 * 
+	 * @param drawAmount
+	 *            the amount which determines if the piles will be shuffled
+	 */
 	private boolean shuffleIfLessThan(int drawAmount) {
 		LinkedList<Card> cards = this.discardPile;
 		boolean wasShuffled = false;
@@ -305,18 +365,20 @@ public class Deck {
 		}
 		return wasShuffled;
 	}
-	
+
 	/**
-	 * shuffles only the drawPile
-	 * used in init()
+	 * shuffles only the drawPile used in init()
 	 */
 	private void shuffleDrawPile() {
 		Collections.shuffle(this.drawPile);
 	}
 
 	/**
-	 * if cardHand contains the card, it will be removed from cardHand and added to discardPile
-	 * @param card the card to discard
+	 * if cardHand contains the card, it will be removed from cardHand and added
+	 * to discardPile
+	 * 
+	 * @param card
+	 *            the card to discard
 	 */
 	public void discardCard(Card card) {
 		if (this.cardHand.contains(card)) {
@@ -324,7 +386,7 @@ public class Deck {
 			this.discardPile.addLast(card);
 		}
 	}
-	
+
 	/**
 	 * appends cardHand to discardPile and creates a new list for cardHand
 	 * (discards the cardHand)
@@ -333,7 +395,7 @@ public class Deck {
 		CollectionsUtil.appendListToList(this.cardHand, this.discardPile);
 		this.cardHand = new LinkedList<Card>();
 	}
-	
+
 	/**
 	 * appends drawPile to discardPile and creates a new list for drawPile
 	 * (discards the drawPile)
@@ -342,30 +404,38 @@ public class Deck {
 		CollectionsUtil.appendListToList(this.drawPile, this.discardPile);
 		this.drawPile = new LinkedList<Card>();
 	}
-	
+
 	/**
 	 * discards all cards the player has
 	 */
 	public void discardDeck() {
 		discardCardHand();
-		discardDrawPile();		
+		discardDrawPile();
 	}
-	
+
 	/**
-	 * if the drawPile is not empty, the method adds one card from drawPile to cardHand 
-	 * and removes this card from drawPile
+	 * if the drawPile is not empty, the method adds one card from drawPile to
+	 * cardHand and removes this card from drawPile
+	 * 
+	 * @return 1 if a card was drawn, 0 otherwise
 	 */
 	public int draw() {
 		if (!this.drawPile.isEmpty()) {
 			this.cardHand.addLast(this.drawPile.removeLast());
 			return 1;
-		} else return 0;
+		} else
+			return 0;
 	}
-	
+
 	/**
-	 * calls shuffleIfLessThan(amount) so there will be enough cardsif the drawPile is not empty, the method adds 'amount' cards from drawPile to cardHand and removes
-	 * this card from drawPile
-	 * @param amount the amount of cards to draw
+	 * calls shuffleIfLessThan(amount) so there will be enough cardsif the
+	 * drawPile is not empty, the method adds 'amount' cards from drawPile to
+	 * cardHand and removes this card from drawPile
+	 * 
+	 * @param amount
+	 *            the amount of cards to draw
+	 *            
+	 * @return a DrawAndShuffle object which is used by the GameLog to log what happened
 	 */
 	public DrawAndShuffle draw(int amount) {
 		boolean wasShuffled = this.shuffleIfLessThan(amount);
@@ -375,70 +445,76 @@ public class Deck {
 		}
 		return new DrawAndShuffle(wasShuffled, drawAmount);
 	}
-	
+
 	/**
-	 * if the discardPile contains not enough card the shuffleIfLessThan(1) method is called. 
+	 * if the discardPile contains not enough card the shuffleIfLessThan(1)
+	 * method is called.
+	 * 
 	 * @return one Card from the drawPile
+	 * @throws NoSuchElementException 
 	 */
-	public Card removeSaveFromDrawPile() throws NoSuchElementException{
-		this.shuffleIfLessThan(1);		
+	public Card removeSaveFromDrawPile() throws NoSuchElementException {
+		this.shuffleIfLessThan(1);
 		return this.drawPile.removeLast();
 	}
-	
+
 	/**
 	 * 
-	 * @return true if the cardHand contains a reaction card. false otherwise.
+	 * @return true if the cardHand contains a reaction card, false otherwise.
 	 */
 	public boolean cardHandContainsReactionCard() {
 		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(CardType.REACTION)){
+			if (card.getTypes().contains(CardType.REACTION)) {
 				return true;
-			}			
+			}
 		}
-		return false;		
+		return false;
 	}
-	
+
 	/**
 	 * 
-	 * @param type
-	 * @return true if the cardHand contains a card of the CardType type. false otherwise.
+	 * @param type the cardType to search for
+	 * @return true if the cardHand contains a card of the CardType type. false
+	 *         otherwise.
 	 */
 	public boolean cardHandContains(CardType type) {
 		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(type)){
+			if (card.getTypes().contains(type)) {
 				return true;
-			}			
+			}
 		}
-		return false;		
+		return false;
 	}
-	
+
 	/**
 	 * 
 	 * @return the amount of action cards in cardHand
 	 */
 	public int cardHandActionCardAmount() {
-		int counter = 0; 
+		int counter = 0;
 		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(CardType.ACTION)){
+			if (card.getTypes().contains(CardType.ACTION)) {
 				counter++;
-			}			
+			}
 		}
-		return counter;	
+		return counter;
 	}
-	
+
 	/**
 	 * 
-	 * example: cardHandsWith(1, CardAction.ADD_ACTION_TO_PLAYER) returns a list of all cards
-	 * which give at least +1 action when played.
+	 * example: cardHandsWith(1, CardAction.ADD_ACTION_TO_PLAYER) returns a list
+	 * of all cards which give at least +1 action when played.
 	 *
-	 * @param action the CardAction to consider
-	 * @param cards the cardList to check
+	 * @param action
+	 *            the CardAction to consider
+	 * @param cards
+	 *            the cardList to check
 	 * @return a list of cards with actions of type *action*
 	 */
-	public LinkedList<Card> cardHandsWith( CardAction action, LinkedList<Card> cards) {
+	public LinkedList<Card> cardHandsWith(CardAction action, LinkedList<Card> cards) {
 		LinkedList<Card> cardList = new LinkedList<Card>();
 		for (Card card : cards) {
 			if (card.getActions().containsKey(action)) {
@@ -450,7 +526,8 @@ public class Deck {
 
 	/**
 	 * 
-	 * @param cards the list of cards to check
+	 * @param cards
+	 *            the list of cards to check
 	 * @return the card of the list with the highest cost
 	 */
 	public Card cardWithHighestCost(LinkedList<Card> cards) {
@@ -470,29 +547,31 @@ public class Deck {
 		}
 		return maxCostCard;
 	}
-	
+
 	/**
-	 * @param card which will be put back on top of the drawPile
+	 * @param card
+	 *            which will be put back on top of the drawPile
 	 */
 	public void putBack(Card card) {
 		this.drawPile.addLast(card);
 	}
-	
+
 	/**
-	 * @param cards list of cards which will be put back on top of the drawPile
+	 * @param cards
+	 *            list of cards which will be put back on top of the drawPile
 	 */
 	public void putBack(LinkedList<Card> cards) {
 		for (Card card : cards) {
 			this.putBack(card);
 		}
 	}
-	
+
 	/**
 	 * 
-	 * @param card
-	 * @param trashPile
+	 * @param card the card to trash
+	 * @param trashPile the trashPile to add the card to
 	 */
-	public void trash(Card card, LinkedList<Card> trashPile ) {
+	public void trash(Card card, LinkedList<Card> trashPile) {
 		this.getCardHand().remove(card);
 		trashPile.addLast(card);
 	}

@@ -153,7 +153,7 @@ public class CardClient extends Client {
 
 				@Override
 				public SerializedCard callMeMaybe(SerializedCard object) {
-					System.out.println("Received card from server: " + object.getName());
+					GameLog.log(MsgType.INFO ,"Received card from server: " + object.getName());
 					parent.getCardRegistry().addCard(object);
 					sem.release();
 					return null;

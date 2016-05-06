@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import com.tpps.application.game.CardName;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
 
@@ -33,20 +34,20 @@ public class TestCardLoader {
 		 HashMap<String,SerializedCard> coins = new HashMap<>();
 		 cs.loadCards();
 		 for (int i = 0; i < 3; i++) {
-			coins.put(s+="s",cs.getCard("Copper"));
-			estate.put(s+="s",cs.getCard("Duchy"));
+			coins.put(s+="s",cs.getCard(CardName.COPPER.getName()));
+			estate.put(s+="s",cs.getCard(CardName.DUCHY.getName()));
 		}
 		 
 		 for (int i = 0; i < 10; i++) {
-			table.put(s+="s",cs.getCard("Province"));
+			table.put(s+="s",cs.getCard(CardName.PROVINCE.getName()));
 		}
 
 		 for (int i = 0; i < 13; i++) {
-			hand.put(s+="s",cs.getCard("Gold"));
+			hand.put(s+="s",cs.getCard(CardName.GOLD.getName()));
 		}
 		 
 		 for (int i = 0; i < 15; i++) {
-			middle.put(s+="s",cs.getCard("Gold"));
+			middle.put(s+="s",cs.getCard(CardName.GOLD.getName()));
 		}
 		 
 		 GameWindow gw = new GameWindow();

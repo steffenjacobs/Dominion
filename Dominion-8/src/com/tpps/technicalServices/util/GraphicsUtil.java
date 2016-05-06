@@ -10,6 +10,9 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
+
 /**
  * provides some useful methods for manipulating graphic objects
  * 
@@ -138,7 +141,7 @@ public final class GraphicsUtil {
 			}
 		}
 		if (debug)
-			System.out.println(
+			GameLog.log(MsgType.INFO ,
 					"time to compare " + buff1.getSize() + " values: " + (System.currentTimeMillis() - now) + "ms");
 
 		return true;

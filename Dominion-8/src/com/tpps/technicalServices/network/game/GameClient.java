@@ -53,7 +53,7 @@ public class GameClient extends Client {
 	 */
 	public void setClientId(int clientId) {
 		this.clientId = clientId;
-		System.out.println("clientId was set " + clientId);
+		GameLog.log(MsgType.MM ,"clientId was set " + clientId);
 	}
 
 	/**

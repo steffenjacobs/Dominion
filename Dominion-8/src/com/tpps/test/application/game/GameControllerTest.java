@@ -12,15 +12,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.tpps.application.game.CardName;
 import com.tpps.application.game.Deck;
 import com.tpps.application.game.GameBoard;
+import com.tpps.application.game.GameConstant;
 import com.tpps.application.game.GameController;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.game.WrongSyntaxException;
-import com.tpps.technicalServices.util.GameConstant;
 
 public class GameControllerTest {
 	GameController gameController;
@@ -28,9 +31,9 @@ public class GameControllerTest {
 	@Before
 	public void setUp() throws Exception {
 
-		this.gameController = new GameController(null, new String[]{"Moat", "Militia", "Witch", "Thief", "Spy",
-				"ThroneRoom", "CouncilRoom", "Adventurer", "Cellar", "Chapel"});
-		for (int i = 0; i < GameConstant.PLAYERS; i++) {
+		this.gameController = new GameController(null, new String[]{CardName.MOAT.getName(), CardName.MILITIA.getName(), CardName.WITCH.getName(), CardName.THIEF.getName(), CardName.SPY.getName(),
+				CardName.THRONEROOM.getName(), CardName.COUNCILROOM.getName(), CardName.ADVENTURER.getName(), CardName.CELLAR.getName(), CardName.CHAPEL.getName()});
+		for (int i = 0; i < GameConstant.PLAYERS.getValue(); i++) {
 			this.gameController.getPlayers().add((new Player(new Deck(this.gameController.getGameBoard().getStartSet()), i, 80 + i, "test" + i, null, null)));
 		}
 		this.gameController.setActivePlayer(this.gameController.getPlayers().get(0));
@@ -57,8 +60,8 @@ public class GameControllerTest {
 	@Test
 	public void testSetGameBoard() {
 		GameBoard gameBoard = this.gameController.getGameBoard();
-		this.gameController.setGameBoard(new GameBoard(new String[]{"Moat", "Militia", "Witch", "Thief", "Spy",
-				"ThroneRoom", "CouncilRoom", "Adventurer", "Cellar", "Chapel"}));
+		this.gameController.setGameBoard(new GameBoard(new String[]{CardName.MOAT.getName(), CardName.MILITIA.getName(), CardName.WITCH.getName(), CardName.THIEF.getName(), CardName.SPY.getName(),
+				CardName.THRONEROOM.getName(), CardName.COUNCILROOM.getName(), CardName.ADVENTURER.getName(), CardName.CELLAR.getName(), CardName.CHAPEL.getName()}));
 		assertTrue(!gameBoard.equals(this.gameController.getGameBoard()));
 	}
 
@@ -103,7 +106,7 @@ public class GameControllerTest {
 	@Test
 	public void testUpdateTrashPile() {
 		int size = this.gameController.getGameBoard().getTrashPile().size();
-		this.gameController.getActivePlayer().getTemporaryTrashPile().add(this.gameController.getGameBoard().getTableForTreasureCards().get("Copper").get(0));
+		this.gameController.getActivePlayer().getTemporaryTrashPile().add(this.gameController.getGameBoard().getTableForTreasureCards().get(CardName.COPPER.getName()).get(0));
 		this.gameController.updateTrashPile(this.gameController.getActivePlayer().getTemporaryTrashPile());
 		assertThat(size + 1, is(this.gameController.getGameBoard().getTrashPile().size()));
 	}
@@ -241,7 +244,7 @@ public class GameControllerTest {
 	@Test
 	public void testEndTurn() {
 		Player player = this.gameController.getActivePlayer();
-		System.out.println(player);
+		GameLog.log(MsgType.INFO ,player.toString());
 		this.gameController.endTurn();
 		assertThat(player.getActions(), is(1));
 		assertThat(player.getCoins(), is(0));

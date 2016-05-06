@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
+
 /***
  * basic file operations
  * 
@@ -39,7 +42,7 @@ public class FileParser {
 		} catch (IOException e) {
 			System.err.println(e.getMessage() + " - " + f.getAbsolutePath());
 		}
-		System.out.println(res.size() + " entries loaded from " + file);
+		GameLog.log(MsgType.INFO ,res.size() + " entries loaded from " + file);
 		return res;
 	}
 

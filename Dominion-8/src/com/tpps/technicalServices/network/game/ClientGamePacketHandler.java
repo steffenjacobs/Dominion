@@ -35,7 +35,7 @@ import javafx.util.Pair;
 
 /**
  * 
- * @author ladler - Lukas Adler
+ * @author ladler - Lukas Adler, nwipfler - Nicolas Wipfler
  *
  */
 public class ClientGamePacketHandler extends PacketHandler {
@@ -51,28 +51,30 @@ public class ClientGamePacketHandler extends PacketHandler {
 		}
 		switch (packet.getType()) {
 		case CARD_PLAYED:
-			System.out.println("packet received from Server of type " + packet.getType() + "id: " + ((PacketPlayCard) packet).getCardID());
+			GameLog.log(MsgType.PACKET,"packet received from Server of type " + packet.getType() + "id: " + ((PacketPlayCard) packet).getCardID());
 			break;
 		case SEND_CLIENT_ID:
 			this.gameClient.setClientId(((PacketSendClientId) packet).getClientId());
 			break;
 		case CLIENT_SHOULD_DISCONECT:
-			System.out.println("Sorry there are already too many player connected to the server.");
+			GameLog.log(MsgType.PACKET ,"Sorry there are already too many player connected to the server.");
 			this.gameClient.disconnect();
 			break;
 		case OPEN_GUI_AND_ENABLE_ONE:
-			new Thread(() -> {openGuiAndEnableOne(packet);}).start();			
+			new Thread(() -> {
+				openGuiAndEnableOne(packet);
+			}).start();
 			break;
 		case ENABLE_DISABLE:
 			enableDisable(packet);
-			if (((PacketEnableDisable)packet).resetGameWindow()){
+			if (((PacketEnableDisable) packet).resetGameWindow()) {
 				this.gameWindow.reset();
 			}
 			break;
 		case ENABLE:
 			// this.gameWindow.setEnabled(true);
 			DominionController.getInstance().setTurnFlag(true);
-			this.gameWindow.setCaptionTurn(((PacketEnable)packet).getCaption());
+			this.gameWindow.setCaptionTurn(((PacketEnable) packet).getCaption());
 			break;
 		case ENABLE_OTHERS:
 			if (((PacketEnableOthers) packet).getClientID() == this.gameClient.getClientId()) {
@@ -88,8 +90,8 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case DISABLE:
 			// this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
-			this.gameWindow.setCaptionTurn(((PacketDisable)packet).getCaption());
-			
+			this.gameWindow.setCaptionTurn(((PacketDisable) packet).getCaption());
+
 			break;
 		case SEND_BOARD:
 			PacketSendBoard packetSendBoard = (PacketSendBoard) packet;
@@ -100,8 +102,8 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case SEND_HAND_CARDS:
 			LinkedList<String> handCardIds = ((PacketSendHandCards) packet).getCardIds();
 			this.gameStorageInterface.loadHandCardsAndPassToGameWindow(handCardIds);
-			if (((PacketSendHandCards)packet).getChangeButtons() != null) {
-				switch (((PacketSendHandCards)packet).getChangeButtons()) {
+			if (((PacketSendHandCards) packet).getChangeButtons() != null) {
+				switch (((PacketSendHandCards) packet).getChangeButtons()) {
 				case "action":
 					this.gameWindow.addEndActionPhaseButton();
 					this.gameWindow.removeStopTrashButton();
@@ -120,30 +122,30 @@ public class ClientGamePacketHandler extends PacketHandler {
 			}
 			break;
 		case SEND_REVEAL_CARDS:
-			System.out.println(Arrays.toString(((PacketSendRevealCards) packet).getCardIds().toArray()));
+			GameLog.log(MsgType.PACKET ,Arrays.toString(((PacketSendRevealCards) packet).getCardIds().toArray()));
 			this.gameStorageInterface.loadRevealCardsAndPassToGameWindow(((PacketSendRevealCards) packet).getCardIds());
 			break;
 		case UPDATE_VALUES:
 			PacketUpdateValuesChangeButtons puv = ((PacketUpdateValuesChangeButtons) packet);
-			System.out.println("clientGameHandler actions: " + puv.getActions() + "buys: " + puv.getBuys() + "coins: " + puv.getCoins());
+			GameLog.log(MsgType.PACKET ,"clientGameHandler actions: " + puv.getActions() + "buys: " + puv.getBuys() + "coins: " + puv.getCoins());
 			this.gameWindow.setCaptionActions(Integer.toString(puv.getActions()));
 			this.gameWindow.setCaptionBuys(Integer.toString(puv.getBuys()));
 			this.gameWindow.setCaptionCoins(Integer.toString(puv.getCoins()));
 			switch (puv.getChangeButtons()) {
 			case "remove":
-				System.out.println("remove");
+				GameLog.log(MsgType.PACKET ,"remove");
 				this.gameWindow.removeEndActionPhaseButton();
 				this.gameWindow.removeEndTurnButton();
 				this.gameWindow.removePlayTreasuresButton();
-				
+
 				break;
 			case "actions":
-				System.out.println("actions");
+				GameLog.log(MsgType.PACKET ,"actions");
 				this.gameWindow.addEndActionPhaseButton();
 				this.gameWindow.addEndTurnButton();
 				break;
 			case "playTreasures":
-				System.out.println("play treasures");
+				GameLog.log(MsgType.PACKET ,"play treasures");
 				this.gameWindow.addPlayTreasuresButton();
 				this.gameWindow.addEndTurnButton();
 				break;
@@ -207,7 +209,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			} else {
 				this.gameWindow.removeEndActionPhaseButton();
 			}
-			System.out.println("active button");
+			GameLog.log(MsgType.PACKET ,"active button");
 			break;
 		case END_TRASH_MODE:
 			this.gameWindow.removeStopTrashButton();
@@ -235,33 +237,38 @@ public class ClientGamePacketHandler extends PacketHandler {
 		// break;
 		case BROADCAST_LOG:
 			PacketBroadcastLog pck = (PacketBroadcastLog) packet;
-			
+
 			String left = pck.getLeft();
 			String username = pck.getUsername();
 			String right = pck.getRight();
 			Color usercolor = pck.getColor();
 			MsgType type = pck.getMsgType();
 
-			long timestamp = pck.getTimestamp();
-//			System.out.println("> Time in CGPH is > " + timestamp + " and its the same as pck.getTimestamp(): " + (timestamp == pck.getTimestamp()));
+			// long timestamp = pck.getTimestamp();
+			// GameLog.log(MsgType. ,"> Time in CGPH is > " + timestamp + " and its
+			// the same as pck.getTimestamp(): " + (timestamp ==
+			// pck.getTimestamp()));
 
-			GameLog.log(type, left, /*timestamp,*/ GameLog.getMsgColor());
-			GameLog.log(type, username, /*timestamp,*/ usercolor);
-			GameLog.log(type, right + "\n",/* timestamp,*/ GameLog.getMsgColor());
+			GameLog.log(type, left, /* timestamp, */ GameLog.getMsgColor());
+			GameLog.log(type, username, /* timestamp, */ usercolor);
+			GameLog.log(type, right + "\n", /* timestamp, */ GameLog.getMsgColor());
 			break;
 		case BROADCAST_LOG_MULTI_COLOR:
 			for (Pair<String, Color> pair : ((PacketBroadcastLogMultiColor) packet).getPair()) {
-				GameLog.log(((PacketBroadcastLogMultiColor) packet).getMsgType(), pair.getKey(),/*((PacketBroadcastLogMultiColor) packet).getLogNr(),*/ pair.getValue());
+				GameLog.log(((PacketBroadcastLogMultiColor) packet).getMsgType(), pair.getKey(),
+						/*
+						 * ((PacketBroadcastLogMultiColor) packet).getLogNr(),
+						 */ pair.getValue());
 			}
 			break;
 		case SHOW_END_SCREEN:
 			JOptionPane.showMessageDialog(null, "end game");
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameClient.disconnect();
-			DominionController.getInstance().finishMatch((PacketShowEndScreen)packet);
+			DominionController.getInstance().finishMatch((PacketShowEndScreen) packet);
 			break;
 		default:
-			System.out.println("unknown packet type: " + packet.getType());
+			GameLog.log(MsgType.PACKET ,"unknown packet type: " + packet.getType());
 			break;
 		}
 	}
@@ -272,19 +279,19 @@ public class ClientGamePacketHandler extends PacketHandler {
 	 */
 	private void enableDisable(Packet packet) {
 		// if (this.gameClient.getClientId() == -1){
-		// System.out.println();
+		// GameLog.log(MsgType. ,);
 		// }
-		PacketEnableDisable packetEnableDisable = (PacketEnableDisable)packet;
+		PacketEnableDisable packetEnableDisable = (PacketEnableDisable) packet;
 		if (packetEnableDisable.getClientId() == this.gameClient.getClientId()) {
 			// this.gameWindow.setEnabled(true);
 			DominionController.getInstance().setTurnFlag(true);
 			this.gameWindow.setCaptionTurn("my turn");
-			System.out.println("my gameWindow is enabled");
+			GameLog.log(MsgType.GUI ,"my gameWindow is enabled");
 		} else {
 			// this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameWindow.setCaptionTurn(packetEnableDisable.getUserName() + "'s turn");
-			System.out.println("my gameWindo is disabled");
+			GameLog.log(MsgType.GUI ,"my gameWindo is disabled");
 		}
 	}
 
@@ -300,26 +307,26 @@ public class ClientGamePacketHandler extends PacketHandler {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			System.out.println("clientId not set. please wait a moment");
+			GameLog.log(MsgType.MM ,"clientId not set. please wait a moment");
 		}
-		PacketOpenGuiAndEnableOne packetOpenGuiAndEnableOne = (PacketOpenGuiAndEnableOne)packet;
+		PacketOpenGuiAndEnableOne packetOpenGuiAndEnableOne = (PacketOpenGuiAndEnableOne) packet;
 		if (packetOpenGuiAndEnableOne.getClientId() == this.gameClient.getClientId()) {
 			// this.gameWindow.setEnabled(true);
 			DominionController.getInstance().setTurnFlag(true);
 			this.gameWindow.setCaptionTurn("my turn");
-			System.out.println("my gameWindow is enabled");
+			GameLog.log(MsgType.GUI ,"my gameWindow is enabled");
 		} else {
 			// this.gameWindow.setEnabled(false);
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameWindow.setCaptionTurn(packetOpenGuiAndEnableOne.getUserName() + "'s turn");
-			System.out.println("my gameWindo is disabled");
+			GameLog.log(MsgType.GUI ,"my gameWindo is disabled");
 		}
-		System.out.println("open gui");
+		GameLog.log(MsgType.GUI ,"open gui");
 		this.gameWindow.setVisible(true);
 
-System.out.println("opened gui"+ this.gameWindow.isVisible());
+		GameLog.log(MsgType.GUI ,"opened gui" + this.gameWindow.isVisible());
 
-		System.out.println("open gui2");
+		GameLog.log(MsgType.GUI ,"open gui2");
 	}
 
 	/**

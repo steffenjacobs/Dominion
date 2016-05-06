@@ -344,7 +344,7 @@ public class PlayerSettingsPanel extends JPanel {
 		if (this.cardNamesSelected.size() != 10) {
 			return false;
 		}
-		System.out.println("connectedplayers: " + this.connectedPlayers());
+		GameLog.log(MsgType.GAME_INFO ,"connectedplayers: " + this.connectedPlayers());
 		if (this.connectedPlayers() != 4) {
 			return false;
 		}
@@ -687,7 +687,7 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @return the selected picture
 	 */
 	public BufferedImage getSelectedPicture() {
-		System.out.println("ZERO: " + this.selectedImage);
+		GameLog.log(MsgType.GUI ,"ZERO: " + this.selectedImage);
 		return this.selectedImage;
 	}
 
@@ -716,7 +716,7 @@ public class PlayerSettingsPanel extends JPanel {
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if (!connectedPlayers[i].isPlayerFlag()) {
 				this.connectedPlayers[i].setPlayer(player);
-				System.out.println("GUI: inserted Player: " + connectedPlayers[i].getText());
+				GameLog.log(MsgType.GUI, "inserted Player: " + connectedPlayers[i].getText());
 				this.handleStartButton();
 				return true;
 			}
@@ -733,7 +733,7 @@ public class PlayerSettingsPanel extends JPanel {
 	public synchronized boolean removePlayer(String player) {
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if (connectedPlayers[i].getText().startsWith(player)) {
-				System.out.println("GUI: removed Player: " + connectedPlayers[i].getText());
+				GameLog.log(MsgType.GUI ,"removed Player: " + connectedPlayers[i].getText());
 				connectedPlayers[i].resetSearchingField();
 				this.handleStartButton();
 				return true;
@@ -750,7 +750,7 @@ public class PlayerSettingsPanel extends JPanel {
 	 */
 	public synchronized void clearAllPlayers() {
 		for (int i = 0; i < connectedPlayers.length; i++) {
-			System.out.println("GUI: removed Player(all): " + connectedPlayers[i].getText());
+			GameLog.log(MsgType.GUI ,"removed Player(all): " + connectedPlayers[i].getText());
 			connectedPlayers[i].resetSearchingField();
 		}
 	}

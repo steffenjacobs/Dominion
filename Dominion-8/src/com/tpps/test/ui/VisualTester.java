@@ -9,6 +9,7 @@ import java.util.concurrent.Callable;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import com.tpps.application.game.CardName;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
@@ -99,7 +100,7 @@ public class VisualTester extends JFrame {
 		framework.addComponent(new Card(
 				CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.ADD_ACTION_TO_PLAYER),
 						CollectionsUtil.linkedList("2")),
-				CollectionsUtil.linkedList(CardType.ACTION), "Copper", 4, 0.8, 0.9, 0.9, 0.9, 1,
+				CollectionsUtil.linkedList(CardType.ACTION), CardName.COPPER.getName(), 4, 0.8, 0.9, 0.9, 0.9, 1,
 				ImageIO.read(ClassLoader.getSystemResource("resources/img/mainMenu/Dominion.jpg")), this.framework));
 
 		// new Thread(() -> {

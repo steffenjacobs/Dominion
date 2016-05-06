@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 
 /**
@@ -74,7 +76,7 @@ public class SQLHandler {
 		if (isConnected()) {
 			try {
 				connection.close();
-				System.out.println("Close MySQL connection");
+				GameLog.log(MsgType.SQL ,"Close MySQL connection");
 			}
 			catch (SQLException | NullPointerException e) { }
 		}
@@ -86,12 +88,12 @@ public class SQLHandler {
 					SQLHandler.username, SQLHandler.password);
 		}
 		catch (SQLException e) {
-			System.out.println("Could not connect to MySQL server! Exception: " + e.getMessage());
+			GameLog.log(MsgType.SQL ,"Could not connect to MySQL server! Exception: " + e.getMessage());
 		}
 		catch (ClassNotFoundException e) {
-			System.out.println("Driver not found!");
+			GameLog.log(MsgType.SQL ,"Driver not found!");
 		}
-		System.out.println("Connected to MySQL-Server successfully");
+		GameLog.log(MsgType.SQL ,"Connected to MySQL-Server successfully");
 	}
 	
 	/**
@@ -104,10 +106,10 @@ public class SQLHandler {
 			try {
 				SQLHandler.connection.close();
 				SQLHandler.connection = null;
-				System.out.println("Closed Connection to MySQL-Server successfully");
+				GameLog.log(MsgType.SQL ,"Closed Connection to MySQL-Server successfully");
 			}
 			catch (SQLException e) {
-				System.out.println("Error closing the MySQL Connection!");
+				GameLog.log(MsgType.ERROR ,"Error closing the MySQL Connection!");
 				e.printStackTrace();
 			}
 		}
@@ -124,7 +126,7 @@ public class SQLHandler {
 			return connection;
 		}
 		else {
-			System.out.println("Lost MySQL Connection. Reconnecting...");
+			GameLog.log(MsgType.SQL ,"Lost MySQL Connection. Reconnecting...");
 			SQLHandler.connect();
 			return connection;
 		}

@@ -213,7 +213,7 @@ public final class Matchmaker {
 					}
 					if (pmpi.getPlayerName().equals(DominionController.getInstance().getUsername())) {
 						if (pmpi.isLobbyAdmin()) {
-							System.out.println(pmpi.getPlayerName() + "is a host");
+							GameLog.log(MsgType.MM, pmpi.getPlayerName() + " is a host");
 							DominionController.getInstance().setHost(true);
 						} else {
 							DominionController.getInstance().setHost(false);

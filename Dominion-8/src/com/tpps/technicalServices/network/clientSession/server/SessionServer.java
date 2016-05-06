@@ -9,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Server;
 import com.tpps.technicalServices.network.core.ServerConnectionThread;
@@ -30,11 +32,11 @@ public class SessionServer extends Server {
 
 	/**
 	 * normal constructor
-	 * @throws IOException 
+	 * 
+	 * @throws IOException
 	 */
 	public SessionServer() throws IOException {
-		super(new InetSocketAddress(Addresses.getAllInterfaces(),
-				Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))), new SessionPacketHandler());
+		super(new InetSocketAddress(Addresses.getAllInterfaces(), Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))), new SessionPacketHandler());
 		setConsoleInput();
 	}
 
@@ -45,8 +47,7 @@ public class SessionServer extends Server {
 	 * @throws IOException
 	 */
 	public SessionServer(SessionPacketHandler handler) throws IOException {
-		super(new InetSocketAddress(Addresses.getAllInterfaces(),
-				Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))), handler);
+		super(new InetSocketAddress(Addresses.getAllInterfaces(), Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))), handler);
 	}
 
 	/**
@@ -54,7 +55,7 @@ public class SessionServer extends Server {
 	 * 
 	 * @param args
 	 *            the start-arguments
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
 		try {
@@ -71,14 +72,14 @@ public class SessionServer extends Server {
 	 * sets up the console-input
 	 */
 	private void setConsoleInput() {
-		System.out.println("            * * * * * * * * * * * * * *      ");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("* * * * * Dominion Session Server - Team ++; * * * * *");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("            * * * * * * * * * * * * * *      ");
-		System.out.println();
-		System.out.println("Enter 'help' to see all available commands.");
-		System.out.println();
+		GameLog.log(MsgType.INFO ,"            * * * * * * * * * * * * * *      ");
+		GameLog.log(MsgType.INFO ,"      * * * * * * * * * * * * * * * * * * * *");
+		GameLog.log(MsgType.INFO ,"* * * * * Dominion Session Server - Team ++; * * * * *");
+		GameLog.log(MsgType.INFO ,"      * * * * * * * * * * * * * * * * * * * *");
+		GameLog.log(MsgType.INFO ,"            * * * * * * * * * * * * * *      ");
+		GameLog.log(MsgType.INFO ,"");
+		GameLog.log(MsgType.INFO ,"Enter 'help' to see all available commands.");
+		GameLog.log(MsgType.INFO ,"");
 
 		String line = null;
 		Scanner scanInput = new Scanner(System.in);

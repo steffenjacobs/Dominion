@@ -3,6 +3,8 @@ package com.tpps.ui.animations;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Callable;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 
@@ -79,7 +81,8 @@ public class FadeAnimation extends Animation {
 					if (frameCounter >= maxFrames
 							|| (direction ? (transparency > alphaEnd / 255f) : (transparency < alphaEnd / 255f))
 							|| skip) {
-						System.out.println(frameCounter + "/" + maxFrames);
+						// GameLog.log(MsgType.GUI ,frameCounter + "/" +
+						// maxFrames);
 						// gameObject.setVisible(false);
 						if (resetImageAfterwards) {
 							gameObject.updatedBufferedImage(this.baseImage);

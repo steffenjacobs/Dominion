@@ -5,6 +5,8 @@ import java.net.InetSocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionPacketSenderAPI;
@@ -59,12 +61,12 @@ public class LoginPacketHandler extends PacketHandler {
 	 */
 	@Override
 	public void handleReceivedPacket(int port, final Packet packet) {
-		System.out.println("Server received packet: ");
+		GameLog.log(MsgType.PACKET ,"Server received packet: ");
 		switch (packet.getType()) {
 		case LOGIN_CHECK_REQUEST: // check username, if valid genereate SESSION
 									// ID and send to SessionServer
 			PacketLoginCheckRequest pac = (PacketLoginCheckRequest) packet;
-			System.out.println(pac.getUsername());
+			GameLog.log(MsgType.PACKET ,pac.getUsername());
 
 			String nickname, salt;
 
@@ -76,14 +78,14 @@ public class LoginPacketHandler extends PacketHandler {
 				salt = SQLOperations.getSaltForLogin(nickname);
 			}
 
-			// System.out.println("salt aus db: " + salt);
+			// GameLog.log(MsgType. ,"salt aus db: " + salt);
 			try {
 				Password pw = new Password(pac.getHashedPW(), salt);
 				pw.createHashedPassword();
 				String doublehashed = pw.getHashedPassword();
 				waitingForSessionAnswer.put(nickname, port);
 				if (DominionController.isOffline() || SQLOperations.rightDoubleHashedPassword(nickname, doublehashed)) {
-					System.out.println("calculated hash match with hash out of the database");
+					GameLog.log(MsgType.INFO ,"calculated hash match with hash out of the database");
 					SessionPacketSenderAPI.sendGetRequest(sessionclient, nickname,
 							new SuperCallable<PacketSessionGetAnswer>() {
 								@Override
@@ -99,7 +101,7 @@ public class LoginPacketHandler extends PacketHandler {
 								}
 							});
 				} else {
-					System.out.println("calculated hash doesn't match with hash out of the database");
+					GameLog.log(MsgType.INFO ,"calculated hash doesn't match with hash out of the database");
 					PacketLoginCheckAnswer answer = new PacketLoginCheckAnswer((PacketLoginCheckRequest) packet, 0,
 							null);
 					server.sendMessage(port, answer);
@@ -113,12 +115,12 @@ public class LoginPacketHandler extends PacketHandler {
 					e1.printStackTrace();
 				}
 			} finally {
-				System.out.println("----------------------------");
+				GameLog.log(MsgType.INFO ,"----------------------------");
 			}
 			break;
 
 		case LOGIN_REGISTER_REQUEST: // create user
-			System.out.println("Server got a request to create an Account");
+			GameLog.log(MsgType.PACKET ,"Server got a request to create an Account");
 			PacketRegisterRequest castedPac = (PacketRegisterRequest) packet;
 
 			if (DominionController.isOffline()) {
@@ -148,8 +150,8 @@ public class LoginPacketHandler extends PacketHandler {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println("finished a creating account procedure");
-			System.out.println("----------------------------");
+			GameLog.log(MsgType.INFO ,"finished a creating account procedure");
+			GameLog.log(MsgType.INFO ,"----------------------------");
 			break;
 		case GET_ALL_STATISTICS:
 
@@ -170,7 +172,7 @@ public class LoginPacketHandler extends PacketHandler {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Server sent a packet with all statistics");
+			GameLog.log(MsgType.PACKET ,"Server sent a packet with all statistics");
 		default:
 			break;
 		}

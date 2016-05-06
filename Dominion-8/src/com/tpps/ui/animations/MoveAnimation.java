@@ -36,8 +36,7 @@ public class MoveAnimation extends Animation {
 	 * @param y
 	 *            the y of the destination
 	 */
-	public MoveAnimation(GraphicFramework gf, GameObject gameObject, int durationMillis, Callable<?> callWhenDone,
-			double x, double y) {
+	public MoveAnimation(GraphicFramework gf, GameObject gameObject, int durationMillis, Callable<?> callWhenDone, double x, double y) {
 		super(gameObject, durationMillis);
 		this.maxFrames = durationMillis / DELAY_MILLIS;
 		this.frameCounter = 0;
@@ -50,7 +49,7 @@ public class MoveAnimation extends Animation {
 		this.playAnimationThread = setupLogic();
 	}
 
-	/**@return the Thread containing the animation-logic*/
+	/** @return the Thread containing the animation-logic */
 	private Thread setupLogic() {
 		return new Thread(new Runnable() {
 
@@ -68,7 +67,7 @@ public class MoveAnimation extends Animation {
 
 					// check if done
 					if (frameCounter >= maxFrames) {
-						System.out.println(frameCounter + "/" + maxFrames);
+						// GameLog.log(MsgType. ,frameCounter + "/" + maxFrames);
 						framework.moveGameObjectTo(gameObject, destX, destY);
 
 						try {
@@ -110,26 +109,26 @@ public class MoveAnimation extends Animation {
 		return this.startY + (this.destY - this.startY) / maxFrames * frame;
 	}
 
-	/**@return a readable representation of the object*/
+	/** @return a readable representation of the object */
 	@Override
 	public String toString() {
 		return "@" + System.identityHashCode(this) + " - " + super.gameObject.toString();
 	}
 
-	/**is called on start*/
+	/** is called on start */
 	@Override
 	protected void onStart() {
 		this.playAnimationThread.start();
 	}
 
-	/**is called on resume*/
+	/** is called on resume */
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onResume() {
 		this.playAnimationThread.resume();
 	}
 
-	/**is called on pause*/
+	/** is called on pause */
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onPause() {

@@ -23,12 +23,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.application.game.GameConstant;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.GameLogTextPane;
 import com.tpps.technicalServices.logger.MsgType;
-import com.tpps.technicalServices.util.GameConstant;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.DisplayValue;
@@ -138,7 +138,7 @@ public class GameWindow extends JFrame {
 		// this.backgroundImage = this.loadingImage(backgroundImage,
 		// "resources/img/gamePlay/GameBackground.jpg");
 		this.backgroundImage = DominionController.selectedGameImage;
-		System.out.println("THIRD: " + this.backgroundImage);
+		GameLog.log(MsgType.GUI ,"THIRD: " + this.backgroundImage);
 		this.closeImage = this.loadingImage(this.closeImage, "resources/img/gameObjects/close.png");
 		this.tableImage = this.loadingImage(this.tableImage, "resources/img/gameObjects/table.jpg");
 		this.buttonImage = this.loadingImage(this.buttonImage, "resources/img/gameObjects/testButtonGame.png");
@@ -193,7 +193,7 @@ public class GameWindow extends JFrame {
 		this.action = new DisplayValue(0.1, 0.38, 0.12, 0.12, 1, 1, 20, this.displayImageActions, this.framework,
 				String.valueOf(GameConstant.INIT_ACTIONS));
 		this.coin = new DisplayValue(0.1, 0.46, 0.12, 0.12, 1, 1, 20, this.displayImageCoins, this.framework,
-				String.valueOf(GameConstant.INIT_TREASURES));
+				String.valueOf(GameConstant.INIT_COINS));
 		this.buy = new DisplayValue(0.1, 0.54, 0.12, 0.12, 1, 1, 20, this.displayImageBuys, this.framework,
 				String.valueOf(GameConstant.INIT_PURCHASES));
 		this.turn = new DisplayValue(0.31, 0, 0.38, 0.05, 1, 1, 20, this.displayImageTurnRed, this.framework, "#");
@@ -294,7 +294,7 @@ public class GameWindow extends JFrame {
 		action = new DisplayValue(0.1, 0.38, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageActions, framework,
 				String.valueOf(GameConstant.INIT_ACTIONS));
 		coin = new DisplayValue(0.1, 0.46, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageCoins, framework,
-				String.valueOf(GameConstant.INIT_TREASURES));
+				String.valueOf(GameConstant.INIT_COINS));
 		buy = new DisplayValue(0.1, 0.54, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageBuys, framework,
 				String.valueOf(GameConstant.INIT_PURCHASES));
 
@@ -338,9 +338,9 @@ public class GameWindow extends JFrame {
 		}
 		this.tableButtons = new LinkedList<GFButton>();
 		this.tableCards = new LinkedList<Card>();
-		System.out.println(Arrays.toString(actionCardlds.toArray()));
+		GameLog.log(MsgType.GUI, Arrays.toString(actionCardlds.toArray()));
 		for (int i = 0; i < table.size(); i++) {
-			System.out.println(actionCardlds.get(i));
+			GameLog.log(MsgType.GUI, actionCardlds.get(i));
 			if (actionCardlds.get(i).matches("[A-Z][a-z]+#")) {
 				if (i < 5) {
 					shift += 0.06;
@@ -399,7 +399,7 @@ public class GameWindow extends JFrame {
 			// framework.removeComponent(tableButtons.get(i));
 		}
 		if (table != null) {
-			System.out.println("remove table");
+			GameLog.log(MsgType.GUI, "remove table");
 			framework.removeComponent(table);
 		}
 		extraTableCards = new LinkedList<Card>();
@@ -485,7 +485,7 @@ public class GameWindow extends JFrame {
 		}
 		this.coinButtons = new LinkedList<GFButton>();
 		this.coinCards = new LinkedList<Card>();
-		System.out.println(Arrays.toString(actionCardlds.toArray()));
+		GameLog.log(MsgType.GUI, Arrays.toString(actionCardlds.toArray()));
 		for (int i = 0; i < coins.size(); i++) {
 			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 			matcher.find();
@@ -622,7 +622,7 @@ public class GameWindow extends JFrame {
 						this.handCards.add(card);
 					}
 				} else {
-					// System.out.println("Wie viel handkarten: " +
+					// GameLog.log(MsgType.GUI, "Wie viel handkarten: " +
 					// handCards.size() + "serialized Card "
 					// + serializedCard.getImage());
 					if (i == 0) {
@@ -934,7 +934,7 @@ public class GameWindow extends JFrame {
 		double height = (relativeHeight * HEIGHT) / 4;
 		int y = this.getHeight();
 		int x = this.getWidth();
-		// System.out.println("width: "+width + "height "+height +
+		// GameLog.log(MsgType.GUI, "width: "+width + "height "+height +
 		// "relativeWidth "+relativeWidth + "relativeHeight "+relativeHeight
 		// +"WIDTH "+ WIDTH + "HEIGHT "+ HEIGHT);
 		this.jTabbedPane.setBounds(x - (int) ((WIDTH / 3.5) * relativeWidth),

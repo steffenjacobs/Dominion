@@ -10,8 +10,10 @@ import java.util.concurrent.Callable;
 
 import javax.swing.JFrame;
 
+import com.tpps.application.game.CardName;
 import com.tpps.application.game.DominionController;
-import com.tpps.technicalServices.network.core.Client;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -154,7 +156,7 @@ public class Card extends GameObject {
 		this.cost = cost;
 		this.types = types;
 		this.id = this.name + classID++;
-		// System.out.println(id);
+		// GameLog.log(MsgType. ,id);
 	}
 
 	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
@@ -236,8 +238,8 @@ public class Card extends GameObject {
 	 */
 	@Override
 	public void onMouseEnter() {
-		if (!(handTrigger.equals("handCards") || name.equals("Copper") || name.equals("Silver") || name.equals("Gold")
-				|| name.equals("Curse") || name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
+		if (!(handTrigger.equals("handCards") || name.equals(CardName.COPPER.getName()) || name.equals(CardName.SILVER.getName()) || name.equals(CardName.GOLD.getName())
+				|| name.equals(CardName.CURSE.getName()) || name.equals(CardName.PROVINCE.getName()) || name.equals(CardName.DUCHY.getName()) || name.equals(CardName.ESTATE.getName()))) {
 			gameBackground = new GameBackground(0.12, 0.01, relativeWidth + 0.08, relativeHeight + 0.24, 110,
 					sourceImage, parent);
 			parent.addComponent(gameBackground);
@@ -310,8 +312,8 @@ public class Card extends GameObject {
 	 */
 
 	public void onMouseExit() {
-		if (!(handTrigger.equals("handCards") || name.equals("Copper") || name.equals("Silver") || name.equals("Gold")
-				|| name.equals("Curse") || name.equals("Province") || name.equals("Duchy") || name.equals("Estate"))) {
+		if (!(handTrigger.equals("handCards") || name.equals(CardName.COPPER.getName()) || name.equals(CardName.SILVER.getName()) || name.equals(CardName.GOLD.getName())
+				|| name.equals(CardName.CURSE.getName()) || name.equals(CardName.PROVINCE.getName()) || name.equals(CardName.DUCHY.getName()) || name.equals(CardName.ESTATE.getName()))) {
 			parent.removeComponent(gameBackground);
 		}
 		if (handTrigger.equals("Victory")) {
@@ -382,7 +384,7 @@ public class Card extends GameObject {
 	@Override
 	public void onMouseClick() {
 		if (DominionController.getInstance().isTurnFlag()) {
-			System.out.println("MouseClick on Card");
+			GameLog.log(MsgType.GUI ,"MouseClick on Card");
 			try {
 				DominionController.getInstance().getGameClient().sendMessage(
 						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
@@ -401,7 +403,7 @@ public class Card extends GameObject {
 	@Override
 	public void onMouseDrag() {
 		if (DominionController.getInstance().isTurnFlag()) {
-			System.out.println("MouseClick on Card");
+			GameLog.log(MsgType.GUI ,"MouseClick on Card");
 			try {
 				DominionController.getInstance().getGameClient().sendMessage(
 						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
@@ -410,35 +412,10 @@ public class Card extends GameObject {
 				e.printStackTrace();
 			}
 		}
-		// if (mouseReaction == 0 &&
-		// !(handTrigger.equals("handCards"))&&DominionController.getInstance().isTurnFlag())
-		// {
-		// cardReaction = new GameBackground(this.relativeX, this.relativeY,
-		// this.relativeWidth, this.relativeHeight,
-		// 102, GameWindow.getInstance().getClickImage(), this.parent);
-		// this.parent.addComponent(cardReaction);
-		// mouseReaction++;
-		// }
-		// if (DominionController.getInstance().isTurnFlag()) {
-		// System.out.println("MouseClick on Card");
-		//
-		// try {
-		// DominionController.getInstance().getGameClient().sendMessage(
-		// new PacketPlayCard(this.id,
-		// DominionController.getInstance().getGameClient().getClientId()));
-		// if (cardReaction != null) {
-		// this.parent.removeComponent(cardReaction);
-		// mouseReaction = 0;
-		// }
-		// } catch (IOException e) {
-		//
-		// e.printStackTrace();
-		// }
-		// }
 	}
 
 	/**
-	 * 
+	 * is called when resizing 
 	 */
 	@Override
 	public void onResize(int absWidth, int absHeight) {
@@ -470,24 +447,11 @@ public class Card extends GameObject {
 		return sBuf.append(">\nCost: " + this.cost).toString();
 	}
 
+	/**
+	 * 
+	 * @param relativeY the relativeY to set
+	 */
 	public void setRelativeY(int relativeY) {
 		this.relativeY = relativeY;
-	}
-
-	/**
-	 * main method with test case for cardObject
-	 */
-	public static void main(String[] args) {
-		LinkedList<CardAction> act = CollectionsUtil.linkedList(new CardAction[] { CardAction.ADD_ACTION_TO_PLAYER,
-				CardAction.ADD_PURCHASE, CardAction.ADD_TEMPORARY_MONEY_FOR_TURN, CardAction.DRAW_CARD });
-		LinkedList<String> ints = CollectionsUtil.linkedList(new String[] { "1", "2", "4", "3" });
-		LinkedList<CardType> type = CollectionsUtil.linkedList(CardType.ACTION);
-
-		JFrame frame = new JFrame();
-		GraphicFramework gf = new GraphicFramework(frame);
-		gf.setSize(1, 1);
-
-		Card market = new Card(CollectionsUtil.linkedHashMapAction(act, ints), type, "Market", 5, gf);
-		System.out.println(market.toString());
 	}
 }

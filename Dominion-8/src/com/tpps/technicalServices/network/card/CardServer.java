@@ -41,13 +41,16 @@ public class CardServer extends Server {
 	/**
 	 * constructor for the CardServer, taking an address (where the server will
 	 * listen), a packet-handler, and a card-storage
-	 * @param address the address to connect to
-	 * @param _handler the handler to listen to the received packets
-	 * @param cardStorage the card-storage-instance
-	 * @throws IOException 
+	 * 
+	 * @param address
+	 *            the address to connect to
+	 * @param _handler
+	 *            the handler to listen to the received packets
+	 * @param cardStorage
+	 *            the card-storage-instance
+	 * @throws IOException
 	 */
-	public CardServer(SocketAddress address, PacketHandler _handler, CardStorageController cardStorage)
-			throws IOException {
+	public CardServer(SocketAddress address, PacketHandler _handler, CardStorageController cardStorage) throws IOException {
 		super(address, _handler);
 		this.serverStorage = cardStorage;
 		this.serverStorage.loadCards();
@@ -55,18 +58,17 @@ public class CardServer extends Server {
 		new Thread(() -> setConsoleInput()).start();
 	}
 
-	/** main entry-point for the CardServer 
-	 * @param input start-parameters
-	 * @throws IOException */
+	/**
+	 * main entry-point for the CardServer
+	 * 
+	 * @param input
+	 *            start-parameters
+	 * @throws IOException
+	 */
 	public static void main(String[] input) throws IOException {
 		CardStorageController tmpStorage = new CardStorageController(config.getProperty(CARD_FILE, "serverCards.bin"));
-		new CardServer(
-				new InetSocketAddress(Addresses.getAllInterfaces(),
-						Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))),
-				new CardPacketHandlerServer(tmpStorage,
-						new SessionClient(
-								new InetSocketAddress(Addresses.getRemoteAddress(), SessionServer.getStandardPort()))),
-				tmpStorage);
+		new CardServer(new InetSocketAddress(Addresses.getAllInterfaces(), Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT))),
+				new CardPacketHandlerServer(tmpStorage, new SessionClient(new InetSocketAddress(Addresses.getRemoteAddress(), SessionServer.getStandardPort()))), tmpStorage);
 	}
 
 	/** is called on exit */
@@ -80,14 +82,14 @@ public class CardServer extends Server {
 	 * @author Steffen Jacobs
 	 */
 	private void setConsoleInput() {
-		System.out.println("            * * * * * * * * * * * * * *      ");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("* * * * * Dominion Card Server - Team ++; * * * * *");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("            * * * * * * * * * * * * * *      ");
-		System.out.println();
-		System.out.println("Enter 'help' to see all available commands.");
-		System.out.println();
+		GameLog.log(MsgType.INFO, "            * * * * * * * * * * * * * *      ");
+		GameLog.log(MsgType.INFO, "      * * * * * * * * * * * * * * * * * * * *");
+		GameLog.log(MsgType.INFO, "* * * * * Dominion Card Server - Team ++; * * * * *");
+		GameLog.log(MsgType.INFO, "      * * * * * * * * * * * * * * * * * * * *");
+		GameLog.log(MsgType.INFO, "            * * * * * * * * * * * * * *      ");
+		GameLog.log(MsgType.INFO, "");
+		GameLog.log(MsgType.INFO, "Enter 'help' to see all available commands.");
+		GameLog.log(MsgType.INFO, "");
 
 		String line = null;
 		Scanner scanInput = new Scanner(System.in);
@@ -102,31 +104,31 @@ public class CardServer extends Server {
 				} else if (line.startsWith("clear")) {
 					final int cnt = this.serverStorage.getCardCount();
 					this.serverStorage.clearCards();
-					System.out.println("Cleared " + cnt + " cards!");
+					GameLog.log(MsgType.GAME_INFO, "Cleared " + cnt + " cards!");
 				} else if (line.startsWith("list")) {
-					System.out.println("Connected clients: ");
+					GameLog.log(MsgType.MM, "Connected clients: ");
 					int cnt = 0;
 					for (ServerConnectionThread client : super.clients.values()) {
-						System.out.println(client.toString());
+						GameLog.log(MsgType.MM, client.toString());
 						cnt++;
 					}
 					if (cnt == 0)
-						System.out.println( "(empty)");
+						GameLog.log(MsgType.MM, "(empty)");
 				} else if (line.startsWith("reload")) {
 					super.stopListening();
 					super.startListening();
-					System.out.println("Reload complete.");
+					GameLog.log(MsgType.INFO, "Reload complete.");
 				} else if (line.startsWith("help")) {
-					System.out.println("-------- Available Commands --------");
-					System.out.println("list");
-					System.out.println("show");
-					System.out.println("clear");
-					System.out.println("reload");
-					System.out.println("exit");
-					System.out.println("help");
-					System.out.println("------------------------------------");
+					GameLog.log(MsgType.INFO, "-------- Available Commands --------");
+					GameLog.log(MsgType.INFO, "list");
+					GameLog.log(MsgType.INFO, "show");
+					GameLog.log(MsgType.INFO, "clear");
+					GameLog.log(MsgType.INFO, "reload");
+					GameLog.log(MsgType.INFO, "exit");
+					GameLog.log(MsgType.INFO, "help");
+					GameLog.log(MsgType.INFO, "------------------------------------");
 				} else {
-					System.out.println("Bad command: " + line);
+					GameLog.log(MsgType.ERROR, "Bad command: " + line);
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				GameLog.log(MsgType.ERROR, "Bad syntax.");
@@ -140,8 +142,11 @@ public class CardServer extends Server {
 		return Integer.parseInt(config.getProperty(KEY_PORT, DEFAULT_PORT));
 	}
 
-	/** getter for the Card-Server-Properties 
-	 * @return the card-server-properties*/
+	/**
+	 * getter for the Card-Server-Properties
+	 * 
+	 * @return the card-server-properties
+	 */
 	public Properties getCardServerProperties() {
 		return config;
 	}

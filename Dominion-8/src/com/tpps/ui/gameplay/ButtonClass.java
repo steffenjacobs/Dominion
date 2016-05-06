@@ -4,6 +4,8 @@ import java.awt.Image;
 import java.io.IOException;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameClient;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDiscardDeck;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndActionPhase;
@@ -19,7 +21,6 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketTakeCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeDrewCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeThiefCards;
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.GFButton;
@@ -114,7 +115,7 @@ public class ButtonClass extends GFButton {
 
 			if (this.getCaption().equals("End ActionPhase")) {
 				try {
-					System.out.println("EndActionPhase");
+					GameLog.log(MsgType.GUI ,"EndActionPhase");
 					this.getFramework().removeComponent(this);
 					this.getFramework().addComponent(GameWindow.playTreasures);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndActionPhase());
@@ -124,7 +125,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("Play Treasures")) {
 				try {
-					System.out.println("PacketPlayTreasures");
+					GameLog.log(MsgType.GUI ,"PacketPlayTreasures");
 					this.getFramework().removeComponent(this);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
 				} catch (IOException e) {
@@ -132,11 +133,11 @@ public class ButtonClass extends GFButton {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Caption: " + this.getCaption());
+			GameLog.log(MsgType.GUI ,"Caption: " + this.getCaption());
 			if (this.getCaption().equals("End Turn")) {
 				try {
 					this.getFramework().addComponent(GameWindow.endActionPhase);
-					System.out.println("Packet EndTurn");
+					GameLog.log(MsgType.GUI ,"Packet EndTurn");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndTurn());
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
@@ -144,7 +145,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("Stop Discard")) {
 				try {
-					System.out.println("packet send end discard mode");
+					GameLog.log(MsgType.GUI ,"packet send end discard mode");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndDiscardMode());
 					this.getFramework().removeComponent(this);
 				} catch (IOException e) {
@@ -163,7 +164,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("Discard Deck")) {
 				try {
-					System.out.println("PacketDiscardDeck");
+					GameLog.log(MsgType.GUI ,"PacketDiscardDeck");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketDiscardDeck());
 					this.getFramework().removeComponent(this);
 				} catch (IOException e) {
@@ -223,7 +224,7 @@ public class ButtonClass extends GFButton {
 				}
 			}
 			if (this.getCaption().equals("Take Drawed Card")) {
-				System.out.println("take drawedCard");
+				GameLog.log(MsgType.GUI ,"take drewCard");
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
 					gameClient.sendMessage(new PacketTakeDrewCard());
@@ -257,7 +258,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("End ActionPhase")) {
 				try {
-					System.out.println("EndActionPhase");
+					GameLog.log(MsgType.GUI ,"EndActionPhase");
 					this.getFramework().removeComponent(this);
 					this.getFramework().addComponent(GameWindow.playTreasures);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndActionPhase());
@@ -268,7 +269,7 @@ public class ButtonClass extends GFButton {
 
 			if (this.getCaption().equals("Play Treasures")) {
 				try {
-					System.out.println("PacketPlayTreasures");
+					GameLog.log(MsgType.GUI ,"PacketPlayTreasures");
 					this.getFramework().removeComponent(this);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
 				} catch (IOException e) {
@@ -276,11 +277,11 @@ public class ButtonClass extends GFButton {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Caption: " + this.getCaption());
+			GameLog.log(MsgType.GUI ,"Caption: " + this.getCaption());
 			if (this.getCaption().equals("End Turn")) {
 				try {
 					this.getFramework().addComponent(GameWindow.endActionPhase);
-					System.out.println("Packet EndTurn");
+					GameLog.log(MsgType.GUI ,"Packet EndTurn");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndTurn());
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
@@ -288,7 +289,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("Stop Discard")) {
 				try {
-					System.out.println("packet send end discard mode");
+					GameLog.log(MsgType.GUI ,"packet send end discard mode");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndDiscardMode());
 					this.getFramework().removeComponent(this);
 				} catch (IOException e) {
@@ -307,7 +308,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("Discard Deck")) {
 				try {
-					System.out.println("PacketDiscardDeck");
+					GameLog.log(MsgType.GUI ,"PacketDiscardDeck");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketDiscardDeck());
 					this.getFramework().removeComponent(this);
 				} catch (IOException e) {
@@ -369,7 +370,7 @@ public class ButtonClass extends GFButton {
 				}
 			}
 			if (this.getCaption().equals("Take Drawed Card")) {
-				System.out.println("take drawedCard");
+				GameLog.log(MsgType.GUI ,"take drewCard");
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
 					gameClient.sendMessage(new PacketTakeDrewCard());

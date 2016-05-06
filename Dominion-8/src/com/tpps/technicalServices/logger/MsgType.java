@@ -15,15 +15,21 @@ public enum MsgType {
 
 	INIT("[INITIALIZED]", ColorUtil.MEDIUMGRAY, true, true, ANSIUtil.ANSI_GREEN),
 	INFO("[INFO]", ColorUtil.MEDIUMGRAY, true, true, ANSIUtil.ANSI_CYAN),
-	DEBUG("[BUG]", Color.ORANGE, true, true, ANSIUtil.ANSI_RED),
+	DEBUG("[DEBUG]", Color.ORANGE, true, true, ANSIUtil.ANSI_RED),
 	EXCEPTION("[EXCEPTION]", Color.RED, true, true, ANSIUtil.ANSI_RED),
 	ERROR("[ERROR]", Color.RED, true, true, ANSIUtil.ANSI_RED),
 	GAME("[GAME]", Color.GREEN, true, true, ANSIUtil.ANSI_GREEN),
+	GAME_INFO("[GAME_INFO]", Color.GREEN, true, true, ANSIUtil.ANSI_GREEN),
 	AI("[AI]",Color.ORANGE, true, true, ANSIUtil.ANSI_GREEN),
 	NETWORK_INFO("[NETWORK-INFO]", Color.BLUE, true, true, ANSIUtil.ANSI_BLUE),
 	NETWORK_ERROR("[NETWORK-ERROR]", Color.MAGENTA, true, true, ANSIUtil.ANSI_MAGENTA),
 	STATISTICS("[STATS]",Color.YELLOW,true,true, ANSIUtil.ANSI_YELLOW),
-	AI_DEBUG("[AI_DEBUG_OTHER]",Color.YELLOW,true,true, ANSIUtil.ANSI_YELLOW);
+	AI_DEBUG("[AI_DEBUG]",Color.YELLOW,true,true, ANSIUtil.ANSI_YELLOW), 
+	GUI("[GUI]",ColorUtil.EPICBLUE,true,true, ANSIUtil.ANSI_YELLOW),
+	CHAT("[CHAT]",ColorUtil.EPICBLUE,true,true, ANSIUtil.ANSI_BLUE),
+	SQL("[SQL]",ColorUtil.EPICBLUE,true,true, ANSIUtil.ANSI_BLUE),
+	PACKET("[PACKETHANDLING]", Color.PINK, true,true,ANSIUtil.ANSI_MAGENTA),
+	MM("[MATCHMAKING]",Color.ORANGE,true,true, ANSIUtil.ANSI_YELLOW);
 
 	/**
 	 * message is the String which shows the type of the log in GameLog (in front of every message)

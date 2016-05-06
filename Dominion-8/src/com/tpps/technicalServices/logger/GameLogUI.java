@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 /**
+ * LogUI Panel for external log window (debugging purposes)
  * 
  * @author Nicolas
  *
@@ -15,6 +16,7 @@ public class GameLogUI {
 
 	/**
 	 * constructor for the LogUI, initializes all required settings
+	 * @param pane the pane to add on the UI
 	 */
 	public GameLogUI(GameLogTextPane pane) {
 		try {
@@ -31,14 +33,5 @@ public class GameLogUI {
 		} catch (Exception e) {
 			GameLog.log(MsgType.EXCEPTION, e.getMessage());
 		}
-	}
-	
-	/** TODO remove */
-	public static void main(String[] args) {
-		GameLog.init();
-		new GameLogUI(GameLog.getTextPane());
-		GameLog.log(MsgType.GAME, "abc");
-		GameLog.log(MsgType.NETWORK_ERROR, "def");
-		GameLog.log(MsgType.EXCEPTION, "ghi");
 	}
 }

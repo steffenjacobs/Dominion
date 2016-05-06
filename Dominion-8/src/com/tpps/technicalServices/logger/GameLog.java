@@ -30,9 +30,9 @@ public class GameLog {
 	private static Color timestampPanelColor = ColorUtil.EPICBLUE;
 	private static String timestampConsoleColor = ANSIUtil.ANSI_WHITE;
 	private static Color msgColor = Color.WHITE;
-	
-//	private static ConcurrentSkipListMap<Long, LogObject> waitingLogs;
-//	private static Timer timer;
+
+	private static ConcurrentSkipListMap<Long, LogObject> waitingLogs;
+	private static Timer timer;
 
 	/**
 	 * unused for now, see MsgType class for messageTypeColors
@@ -174,7 +174,7 @@ public class GameLog {
 	public static Map<Integer, Pair<String, Color>> getPrepText() {
 		return prepText;
 	}
-	
+
 	/**
 	 * @return the timestampPanelColor
 	 */
@@ -183,7 +183,8 @@ public class GameLog {
 	}
 
 	/**
-	 * @param timestampPanelColor the timestampPanelColor to set
+	 * @param timestampPanelColor
+	 *            the timestampPanelColor to set
 	 */
 	public static void setTimestampPanelColor(Color timestampPanelColor) {
 		GameLog.timestampPanelColor = timestampPanelColor;
@@ -197,7 +198,8 @@ public class GameLog {
 	}
 
 	/**
-	 * @param timestampConsoleColor the timestampConsoleColor to set
+	 * @param timestampConsoleColor
+	 *            the timestampConsoleColor to set
 	 */
 	public static void setTimestampConsoleColor(String timestampConsoleColor) {
 		GameLog.timestampConsoleColor = timestampConsoleColor;
@@ -211,10 +213,41 @@ public class GameLog {
 	}
 
 	/**
-	 * @param msgTypeColor the msgTypeColor to set
+	 * @param msgTypeColor
+	 *            the msgTypeColor to set
 	 */
 	public static void setMsgTypeColor(Color msgTypeColor) {
 		GameLog.msgTypeColor = msgTypeColor;
+	}
+
+	/**
+	 * @return the waitingLogs
+	 */
+	public static ConcurrentSkipListMap<Long, LogObject> getWaitingLogs() {
+		return waitingLogs;
+	}
+
+	/**
+	 * @param waitingLogs
+	 *            the waitingLogs to set
+	 */
+	public static void setWaitingLogs(ConcurrentSkipListMap<Long, LogObject> waitingLogs) {
+		GameLog.waitingLogs = waitingLogs;
+	}
+
+	/**
+	 * @return the timer
+	 */
+	public static Timer getTimer() {
+		return timer;
+	}
+
+	/**
+	 * @param timer
+	 *            the timer to set
+	 */
+	public static void setTimer(Timer timer) {
+		GameLog.timer = timer;
 	}
 
 	/**
@@ -225,20 +258,19 @@ public class GameLog {
 	 */
 	public static void init() {
 		GameLog.isInitialized = true;
-//		GameLog.waitingLogs = new ConcurrentSkipListMap<Long, LogObject>();
-//		GameLog.timer = new Timer();
-//		GameLog.timer.schedule(new TimerTask(){
-//            @Override
-//            public void run() {            		
-//            	for (long elementTime : GameLog.waitingLogs.keySet()) {
-//            		long currentTime = System.currentTimeMillis();
-//            		// System.out.println("I am here and the current time is " + currentTime + ", diff. is " + (currentTime-elementTime));
-//            		if (currentTime - elementTime > 300) {
-//            			GameLog.log(GameLog.waitingLogs.remove(elementTime));
-//            		}
-//            	}
-//            }   
-//        },0, 2000);
+		GameLog.waitingLogs = new ConcurrentSkipListMap<Long, LogObject>();
+		GameLog.timer = new Timer();
+//		GameLog.timer.schedule(new TimerTask() {
+//			@Override
+//			public void run() {
+//				for (long elementTime : GameLog.waitingLogs.keySet()) {
+//					long currentTime = System.currentTimeMillis();
+//					if (currentTime - elementTime > 300) {
+//						GameLog.log(GameLog.waitingLogs.remove(elementTime));
+//					}
+//				}
+//			}
+//		}, 0, 2000);
 		if (guiPossible)
 			GameLog.textPane = new GameLogTextPane();
 		else
@@ -262,36 +294,37 @@ public class GameLog {
 		StringBuffer line = new StringBuffer();
 		String timestamp = "[" + new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime()) + "]";
 		String msg = type.getMessage();
-		line.append((ansiFlag ? ANSIUtil.getAnsiColoredText(timestamp, GameLog.timestampConsoleColor) 
-				+ " " + ANSIUtil.getAnsiColoredText(msg, type.getAnsiColor()) 
-				: timestamp + " " + msg) + " > ");
+		line.append((ansiFlag ? ANSIUtil.getAnsiColoredText(timestamp, GameLog.timestampConsoleColor) + " " + ANSIUtil.getAnsiColoredText(msg, type.getAnsiColor()) : timestamp + " " + msg) + " > ");
 		return line.toString();
 	}
 
-//	public static void log(MsgType type, String line, long timestamp, Color color) {
-////		System.out.println(">>> here and timestamp is " + timestamp);
-//		GameLog.waitingLogs.put(timestamp, new LogObject(type,line,color));
-//	}
-//	
-//	private static void log(LogObject logO) {
-//		GameLog.log(logO.getType(), logO.getLine(), logO.getColor());
-//	}
-	
 	/**
-	 * Weder MsgType.getDisplay() noch MsgType.getTimeStamp() wird benutzt;
-	 * MsgType.setGameMode() ist auch ueberfluessig.
 	 * 
-	 * Es wird nur .GAME auf das textPane gelogt ohne timeStamp Es wird nur
-	 * !GAME in die Konsole gelogt mit timeStamp (und egal ob irgendwo steht
-	 * type.getDisplay() ist false)
+	 * @param type
+	 *            the messageType of the log message
+	 * @param line
+	 *            the line to log
+	 * @param timestamp
+	 *            a timestamp to sort the messages
+	 * @param color
+	 *            a logColor
+	 */
+	protected static void log(MsgType type, String line, long timestamp, Color color) {
+		GameLog.waitingLogs.put(timestamp, new LogObject(type, line, color));
+	}
+
+	/**
+	 * calls the local log (MsgType, String, Color)
 	 * 
-	 * Die uebergebene Farbe ist nur relevant bei .GAME (ansonsten einfach
-	 * MsgColor verwenden, ist in der Konsole eh schwarz
-	 * 
-	 * newLines bei .GAME: hinzufuegen wann desired newLines bei allen anderen:
-	 * nicht hinzufuegen, da es nicht auf das LogPane kommt und durch Syso eh
-	 * eine newLine hat
-	 * 
+	 * @param logO the logObject to log
+	 */
+	protected static void log(LogObject logO) {
+		GameLog.log(logO.getType(), logO.getLine(), logO.getColor());
+	}
+
+	/**
+	 * log the message to the console if its not of type GAME and if the system
+	 * is able to display a GUI, log it to that GUI if its of type GAME
 	 * 
 	 * @param type
 	 *            the message type of the log message
@@ -318,6 +351,8 @@ public class GameLog {
 	 * 
 	 * @param type
 	 *            the message type of the log message
+	 * @param line
+	 *            the line to log
 	 * @param color
 	 *            the color in which the line is displayed
 	 */

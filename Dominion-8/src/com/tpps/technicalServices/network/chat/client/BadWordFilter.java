@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Random;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 
 /**
@@ -41,13 +43,13 @@ public class BadWordFilter {
 	public static String parseForbiddenWords(String message) {
 		StringBuffer result = new StringBuffer();
 		String replaceCharacters = "#?$%&@";
-		// System.out.println("Message.split(s+) > " +
+		// GameLog.log(MsgType. ,"Message.split(s+) > " +
 		// Arrays.toString(message.split("\\s+")));
 		for (String originalWord : message.split("\\s+")) {
 			String removedSpecialCharacters = originalWord.replaceAll("[^a-zA-Z\u00c4\u00e4\u00d6\u00f6\u00dc\u00fc\u00df0-9\\s]", "");
-			// System.out.println("rsc: " + removedSpecialCharacters);
+			// GameLog.log(MsgType. ,"rsc: " + removedSpecialCharacters);
 			String filter = "";
-			// System.out.println("originalWord: " + originalWord +
+			// GameLog.log(MsgType. ,"originalWord: " + originalWord +
 			// " and wordListContains(removedSpecialCharacters.toLowerCase())" +
 			// wordListContains(removedSpecialCharacters.toLowerCase()));
 			if (wordListContains(removedSpecialCharacters.toLowerCase())) {
@@ -65,11 +67,11 @@ public class BadWordFilter {
 				filter = filterNew.toString();
 			} else
 				filter = originalWord;
-			// System.out.println("and according to that, filter is: " +
+			// GameLog.log(MsgType. ,"and according to that, filter is: " +
 			// filter);
 			result.append(filter + " ");
 		}
-		// System.out.println("result: " + result.toString());
+		// GameLog.log(MsgType. ,"result: " + result.toString());
 		return result.toString();
 	}
 
@@ -137,12 +139,8 @@ public class BadWordFilter {
 		for (String word : words) {
 			String encoding = base64encode(word.toLowerCase());
 			sBuf.append("\"" + encoding + "\"" + ", ");
-//			System.out.println("Encoding: " + encoding);
+//			GameLog.log(MsgType. ,"Encoding: " + encoding);
 		}
-		System.out.println("result: " + sBuf.toString());
+		GameLog.log(MsgType.INFO ,"result: " + sBuf.toString());
 	}
-
-	// public static void main(String[] args) {
-	// abusiveWordCreator();
-	// }
 }

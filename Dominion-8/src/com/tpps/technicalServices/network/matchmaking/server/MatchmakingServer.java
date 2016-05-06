@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Scanner;
 
 import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.Server;
@@ -90,15 +91,15 @@ public class MatchmakingServer extends Server {
 	 */
 	private void setupConsoleInput(int port) {
 
-		System.out.println("            * * * * * * * * * * * * * *      ");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("* * * * * Dominion Matchmaking Server - Team ++; * * * * *");
-		System.out.println("* * * * * * * * * * * Port " + port + " * * * * * * * * * * * ");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("            * * * * * * * * * * * * * *      ");
-		System.out.println();
-		System.out.println("Enter 'help' to see all available commands.");
-		System.out.println();
+		GameLog.log(MsgType.INFO ,"            * * * * * * * * * * * * * *      ");
+		GameLog.log(MsgType.INFO ,"      * * * * * * * * * * * * * * * * * * * *");
+		GameLog.log(MsgType.INFO ,"* * * * * Dominion Matchmaking Server - Team ++; * * * * *");
+		GameLog.log(MsgType.INFO ,"* * * * * * * * * * * Port " + port + " * * * * * * * * * * * ");
+		GameLog.log(MsgType.INFO ,"      * * * * * * * * * * * * * * * * * * * *");
+		GameLog.log(MsgType.INFO ,"            * * * * * * * * * * * * * *      ");
+		GameLog.log(MsgType.INFO ,"");
+		GameLog.log(MsgType.INFO ,"Enter 'help' to see all available commands.");
+		GameLog.log(MsgType.INFO ,"");
 
 		String line = null;
 		Scanner scanInput = new Scanner(System.in);
@@ -110,36 +111,36 @@ public class MatchmakingServer extends Server {
 					break;
 				} else if (line.startsWith("lobbies")) {
 					int cnt = 0;
-					System.out.println("Lobbies (" + MatchmakingController.getLobbies().length + "): ");
+					GameLog.log(MsgType.MM ,"Lobbies (" + MatchmakingController.getLobbies().length + "): ");
 					for (String lobb : MatchmakingController.getLobbies()) {
-						System.out.println(lobb);
+						GameLog.log(MsgType.MM ,lobb);
 						cnt++;
 					}
 					if (cnt == 0) {
-						System.out.println("(empty)");
+						GameLog.log(MsgType.MM ,"(empty)");
 					}
 
 				} else if (line.startsWith("players")) {
-					System.out.println("Online Players (" + MatchmakingController.getPlayers().length + "): ");
+					GameLog.log(MsgType.MM ,"Online Players (" + MatchmakingController.getPlayers().length + "): ");
 
 					int cnt = 0;
 					for (String player : MatchmakingController.getPlayers()) {
-						System.out.println(player);
+						GameLog.log(MsgType.MM ,player);
 						cnt++;
 					}
 					if (cnt == 0) {
-						System.out.println("(empty)");
+						GameLog.log(MsgType.MM ,"(empty)");
 					}
 
 				} else if (line.startsWith("help")) {
-					System.out.println("-------- Available Commands --------");
-					System.out.println("exit");
-					System.out.println("lobbies");
-					System.out.println("players");
-					System.out.println("help");
-					System.out.println("------------------------------------");
+					GameLog.log(MsgType.INFO ,"-------- Available Commands --------");
+					GameLog.log(MsgType.INFO ,"exit");
+					GameLog.log(MsgType.INFO ,"lobbies");
+					GameLog.log(MsgType.INFO ,"players");
+					GameLog.log(MsgType.INFO ,"help");
+					GameLog.log(MsgType.INFO ,"------------------------------------");
 				} else {
-					System.out.println("Bad command: " + line);
+					GameLog.log(MsgType.INFO ,"Bad command: " + line);
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
 				System.err.println("Bad syntax.");

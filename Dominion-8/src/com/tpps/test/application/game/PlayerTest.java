@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.tpps.application.game.CardName;
 import com.tpps.application.game.Deck;
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
@@ -28,28 +29,26 @@ public class PlayerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		GameBoard gameBoard = new GameBoard(new String[]{"Moat", "Militia", "Witch", "Thief", "Spy",
-				"ThroneRoom", "CouncilRoom", "Adventurer", "Cellar", "Chapel"});
-		
+		GameBoard gameBoard = new GameBoard(new String[] { CardName.MOAT.getName(), CardName.MILITIA.getName(), CardName.WITCH.getName(), CardName.THIEF.getName(), CardName.SPY.getName(),
+				CardName.THRONEROOM.getName(), CardName.COUNCILROOM.getName(), CardName.ADVENTURER.getName(), CardName.CELLAR.getName(), CardName.CHAPEL.getName() });
+
 		this.player = new Player(new Deck(gameBoard.getStartSet()), 0, 0, "Test0", null, null);
 	}
 
-//	@Test
-//	public void testPlayerDeckIntIntStringGameServer() {
-//		fail("Not yet implemented");
-//	}
+	// @Test
+	// public void testPlayerDeckIntIntStringGameServer() {
+	// fail("Not yet implemented");
+	// }
 
-//	@Test
-//	public void testPlayerIntIntLinkedListOfCardStringGameServer() {
-//		fail("Not yet implemented");
-//	}
+	// @Test
+	// public void testPlayerIntIntLinkedListOfCardStringGameServer() {
+	// fail("Not yet implemented");
+	// }
 
 	@Test
 	public void testResetPlayerValues() {
-		
-	}
 
-	
+	}
 
 	@Test
 	public void testSetDiscardMode() {
@@ -60,7 +59,6 @@ public class PlayerTest {
 		assertTrue(!this.player.isDiscardMode());
 	}
 
-
 	@Test
 	public void testSetThief() {
 		assertTrue(!this.player.isThief());
@@ -69,15 +67,13 @@ public class PlayerTest {
 		this.player.setThiefFalse();
 		assertTrue(!this.player.isThief());
 	}
-	
+
 	@Test
 	public void testResetThiefMode() {
 		this.player.resetThiefMode();
-		assertTrue(!(this.player.isThief() || this.player.playsReactionCard()
-				|| this.player.isReactionMode() || this.player.isRevealMode()
-				) &&this.player.getRevealList().isEmpty());
+		assertTrue(!(this.player.isThief() || this.player.playsReactionCard() || this.player.isReactionMode() || this.player.isRevealMode()) && this.player.getRevealList().isEmpty());
 	}
-	
+
 	@Test
 	public void testSetWitch() {
 		assertTrue(!this.player.isWitch());
@@ -112,32 +108,29 @@ public class PlayerTest {
 		Field discardOrTrashActionField;
 		try {
 			discardOrTrashActionField = playerClass.getDeclaredField("discardOrTrashAction");
-			if(!discardOrTrashActionField.isAccessible()) {
-			      discardOrTrashActionField.setAccessible(true);
-			 }
-			Tuple<CardAction> discardOrTrashAction = (Tuple<CardAction>)(discardOrTrashActionField.get(this.player));
+			if (!discardOrTrashActionField.isAccessible()) {
+				discardOrTrashActionField.setAccessible(true);
+			}
+			Tuple<CardAction> discardOrTrashAction = (Tuple<CardAction>) (discardOrTrashActionField.get(this.player));
 			assertTrue(!(discardOrTrashAction instanceof Tuple<?>));
 			assertTrue(discardOrTrashAction == null);
 			discardOrTrashAction = new Tuple<CardAction>(CardAction.ADD_ACTION_TO_PLAYER, 2);
 			assertTrue(discardOrTrashAction instanceof Tuple<?>);
-			
-			
-			
+
 			Method setDiscardOrTrahsActionMethod = playerClass.getDeclaredMethod("setDiscardOrTrashAction", CardAction.class, int.class);
-			if (!setDiscardOrTrahsActionMethod.isAccessible()){
+			if (!setDiscardOrTrahsActionMethod.isAccessible()) {
 				setDiscardOrTrahsActionMethod.setAccessible(true);
 			}
 			setDiscardOrTrahsActionMethod.invoke(this.player, CardAction.ADD_ACTION_TO_PLAYER, 2);
 			discardOrTrashActionField = playerClass.getDeclaredField("discardOrTrashAction");
-			if(!discardOrTrashActionField.isAccessible()) {
-			      discardOrTrashActionField.setAccessible(true);
-			 }
-			discardOrTrashAction = (Tuple<CardAction>)(discardOrTrashActionField.get(this.player));
+			if (!discardOrTrashActionField.isAccessible()) {
+				discardOrTrashActionField.setAccessible(true);
+			}
+			discardOrTrashAction = (Tuple<CardAction>) (discardOrTrashActionField.get(this.player));
 			assertTrue(discardOrTrashAction != null);
 			assertThat(discardOrTrashAction.getFirstEntry(), is(CardAction.ADD_ACTION_TO_PLAYER));
 			assertThat(discardOrTrashAction.getSecondEntry(), is(2));
-			
-			
+
 		} catch (NoSuchFieldException | SecurityException e) {
 
 			e.printStackTrace();
@@ -152,7 +145,7 @@ public class PlayerTest {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Test
@@ -181,15 +174,15 @@ public class PlayerTest {
 		this.player.setModesFalse();
 		assertTrue(!this.player.isRevealMode());
 	}
-	
+
 	@Test
 	public void testGetRevealList() {
-//		
+		//
 	}
 
 	@Test
 	public void testSetGainModeFalse() {
-		assertTrue(!this.player.isGainMode());			
+		assertTrue(!this.player.isGainMode());
 	}
 
 	@Test
@@ -197,28 +190,28 @@ public class PlayerTest {
 		assertThat(this.player.getGainValue(), is(0));
 		Class<? extends Player> playerClass = this.player.getClass();
 		Method setGainModeFalse;
-		
-			try {
-				setGainModeFalse = playerClass.getDeclaredMethod("setGainModeFalse");
-				if(!setGainModeFalse.isAccessible()) {
-				      setGainModeFalse.setAccessible(true);
-				  	
-				}
-				setGainModeFalse.invoke(this.player, (Object[])null);
-				assertThat(this.player.getGainValue(), is(-1));
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+
+		try {
+			setGainModeFalse = playerClass.getDeclaredMethod("setGainModeFalse");
+			if (!setGainModeFalse.isAccessible()) {
+				setGainModeFalse.setAccessible(true);
+
 			}
-			
-	}	
+			setGainModeFalse.invoke(this.player, (Object[]) null);
+			assertThat(this.player.getGainValue(), is(-1));
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+
+	}
 
 	@Test
 	public void testSetBuys() {
@@ -240,9 +233,8 @@ public class PlayerTest {
 		deck.addAll(this.player.getDeck().getCardHand());
 		assertThat(deck.size(), is(8));
 		deck.addAll(this.player.getDeck().getDiscardPile());
-		assertThat(deck.size(), is(8));		
+		assertThat(deck.size(), is(8));
 	}
-	
 
 	@Test
 	public void testSetCoins() {
@@ -250,7 +242,6 @@ public class PlayerTest {
 		this.player.setCoins(4);
 		assertThat(this.player.getCoins(), is(4));
 	}
-	
 
 	@Test
 	public void testSetOnHandFalse() {
@@ -258,21 +249,16 @@ public class PlayerTest {
 		this.player.setOnHandFalse();
 		assertTrue(!this.player.isOnHand());
 	}
-	
 
 	@Test
 	public void testSetModesFalse() {
-		assertTrue(!(this.player.isDiscardMode() || this.player.isTrashMode()
-				|| this.player.isReactionMode() || this.player.playsReactionCard() 
-				|| this.player.isGainMode()|| this.player.isRevealMode() 
-				|| this.player.isThief() || this.player.isSpy()
-				|| this.player.isWitch() || this.player.isBureaucrat()));
+		assertTrue(!(this.player.isDiscardMode() || this.player.isTrashMode() || this.player.isReactionMode() || this.player.playsReactionCard() || this.player.isGainMode()
+				|| this.player.isRevealMode() || this.player.isThief() || this.player.isSpy() || this.player.isWitch() || this.player.isBureaucrat()));
 	}
-
 
 	@Test
 	public void testGetID() {
-		
+
 		assertThat(this.player.getClientID(), is(0));
 	}
 
@@ -281,12 +267,11 @@ public class PlayerTest {
 		assertThat(this.player.getClientID(), is(0));
 	}
 
-
 	@Test
 	public void testGetActions() {
 		assertThat(this.player.getActions(), is(1));
 	}
-	
+
 	@Test
 	public void testGetPlayerName() {
 		assertThat(this.player.getPlayerName(), is("Test0"));
@@ -301,31 +286,30 @@ public class PlayerTest {
 			deck.addAll(this.player.getDeck().getCardHand());
 			assertThat(deck.size(), is(7));
 			deck.addAll(this.player.getDeck().getDiscardPile());
-			assertThat(deck.size(), is(7));			
+			assertThat(deck.size(), is(7));
 			assertThat(this.player.getPlayedCards().size(), is(1));
 			assertTrue(card.getId().equals(this.player.getPlayedCards().get(0).getId()));
 			assertTrue(card.equals(this.player.getPlayedCards().get(0)));
-		} catch (IOException e) {		
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	@Test
 	public void testRefreshPlayedCardsList() {
 		CollectionsUtil.appendListToList(this.player.getPlayedCards(), this.player.getDeck().getDiscardPile());
 		this.player.getDeck().refreshCardHand();
 		this.player.refreshPlayedCardsList();
-		for (int i = 0; i < 10; i++){
-			int constant = (int)(Math.random() * 6);
-			for(int i1 = 0; i1 < constant; i1++){
+		for (int i = 0; i < 10; i++) {
+			int constant = (int) (Math.random() * 6);
+			for (int i1 = 0; i1 < constant; i1++) {
 				Card card = this.player.getDeck().getCardHand().getFirst();
 				try {
 					this.player.playCard(card.getId());
 					assertThat(this.player.getDeck().getCardHand().size(), is(5 - i1 - 1));
 					assertThat(this.player.getPlayedCards().size(), is(1 + i1));
 				} catch (IOException e) {
-				
+
 					e.printStackTrace();
 				}
 			}
@@ -337,11 +321,10 @@ public class PlayerTest {
 			deck.addAll(this.player.getDeck().getCardHand());
 			deck.addAll(this.player.getDeck().getDiscardPile());
 			assertThat(deck.size(), is(8));
-			
-			
+
 		}
-		
-	}	
+
+	}
 
 	@Test
 	public void testTakeRevealedCardsSetRevealModeFalse() {
@@ -361,13 +344,13 @@ public class PlayerTest {
 		assertTrue(!this.player.isDiscardMode());
 		Class<? extends Player> playerClass = this.player.getClass();
 		Field drawListField;
-		try {			
+		try {
 			drawListField = playerClass.getDeclaredField("drawList");
 			if (!drawListField.isAccessible()) {
 				drawListField.setAccessible(true);
 			}
 			@SuppressWarnings("unchecked")
-			LinkedList<Card>drawList = (LinkedList<Card>)drawListField.get(this.player);
+			LinkedList<Card> drawList = (LinkedList<Card>) drawListField.get(this.player);
 			assertTrue(drawList.isEmpty());
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
@@ -378,7 +361,7 @@ public class PlayerTest {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Test
@@ -412,8 +395,8 @@ public class PlayerTest {
 				CollectionsUtil.appendListToList(this.player.getPlayedCards(), this.player.getDeck().getDiscardPile());
 				this.player.getDeck().refreshCardHand();
 				this.player.refreshPlayedCardsList();
-			} 
-		} catch (IOException e) {		
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -428,84 +411,80 @@ public class PlayerTest {
 		cardAction.add(CardAction.DEFEND);
 		cardAction.add(CardAction.DRAW_CARD_UNTIL);
 		cardAction.add(CardAction.REVEAL_UNTIL_TREASURES);
-		
+
 		LinkedList<CardAction> firstActions = new LinkedList<CardAction>();
 		firstActions.add(CardAction.ADD_ACTION_TO_PLAYER);
 		firstActions.add(CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND);
-		
-		LinkedList<CardAction> secondActions = new LinkedList<CardAction>();	
-		
+
+		LinkedList<CardAction> secondActions = new LinkedList<CardAction>();
+
 		secondActions.add(CardAction.REVEAL_UNTIL_TREASURES);
 		secondActions.add(CardAction.DRAW_CARD_UNTIL);
 		secondActions.add(CardAction.DEFEND);
-		
+
 		assertThat(firstActions, is(this.player.getRelevantCardActions(cardAction)));
 		assertTrue(!secondActions.equals(this.player.getRelevantCardActions(cardAction)));
-		
+
 		this.player.setReactionMode();
 		assertTrue(this.player.isReactionMode());
 		assertThat(secondActions, is(this.player.getRelevantCardActions(cardAction)));
 		assertTrue(!firstActions.equals(this.player.getRelevantCardActions(cardAction)));
-		
-		
+
 	}
 
 	@Test
 	public void testDoAction() {
 		Card card = this.player.getDeck().getCardByTypeFromHand(CardType.TREASURE);
-			assertThat(this.player.getCoins(), is(0));
-			Card cardRef;
-			try {
-				cardRef = this.player.doAction(card.getId());
-				assertThat(card, is(cardRef));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			assertThat(this.player.getCoins(), is(Integer.parseInt(new LinkedList<String>(card.getActions().values()).get(0))));
-			
-			
+		assertThat(this.player.getCoins(), is(0));
+		Card cardRef;
+		try {
+			cardRef = this.player.doAction(card.getId());
+			assertThat(card, is(cardRef));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		assertThat(this.player.getCoins(), is(Integer.parseInt(new LinkedList<String>(card.getActions().values()).get(0))));
+
 	}
 
 	@Test
 	public void testDiscardOrTrashCard() {
-	
+
 		Card card = this.player.getDeck().getCardHand().getFirst();
 		try {
-			
+
 			Class<? extends Player> playerClass = this.player.getClass();
-			
-				
-				Method setDiscardOrTrahsActionMethod = playerClass.getDeclaredMethod("setDiscardOrTrashAction", CardAction.class, int.class);
-				if(!setDiscardOrTrahsActionMethod.isAccessible()) {
-				      setDiscardOrTrahsActionMethod.setAccessible(true);
-				 }
-				setDiscardOrTrahsActionMethod.invoke(this.player, CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, 2);
-				Field discardOrTrashActionField;
-				
-				discardOrTrashActionField = playerClass.getDeclaredField("discardOrTrashAction");
-				if(!discardOrTrashActionField.isAccessible()) {
-				      discardOrTrashActionField.setAccessible(true);
-				 }
-				@SuppressWarnings("unchecked")
-				Tuple<CardAction> discardOrTrashAction = (Tuple<CardAction>)(discardOrTrashActionField.get(this.player));
-				
-				
-				assertTrue(!this.player.isGainMode());
-				assertThat(discardOrTrashAction.getSecondEntry(), is(2));
-				
-				this.player.discardOrTrash(card);
-				
-				assertTrue(!this.player.isGainMode());
-				card = this.player.getDeck().getCardHand().getFirst();
-				assertThat(discardOrTrashAction.getSecondEntry(), is(1));
-				assertThat(this.player.getGainValue(), is(0));
-				
-				this.player.discardOrTrash(card);
-				assertThat(discardOrTrashAction.getSecondEntry(), is(0));
-				assertTrue(!this.player.isTrashMode());
-				assertTrue(this.player.isGainMode());
-				assertThat(this.player.getGainValue(), is(card.getCost()));
+
+			Method setDiscardOrTrahsActionMethod = playerClass.getDeclaredMethod("setDiscardOrTrashAction", CardAction.class, int.class);
+			if (!setDiscardOrTrahsActionMethod.isAccessible()) {
+				setDiscardOrTrahsActionMethod.setAccessible(true);
+			}
+			setDiscardOrTrahsActionMethod.invoke(this.player, CardAction.TRASH_TREASURE_GAIN_MORE_THAN_ON_HAND, 2);
+			Field discardOrTrashActionField;
+
+			discardOrTrashActionField = playerClass.getDeclaredField("discardOrTrashAction");
+			if (!discardOrTrashActionField.isAccessible()) {
+				discardOrTrashActionField.setAccessible(true);
+			}
+			@SuppressWarnings("unchecked")
+			Tuple<CardAction> discardOrTrashAction = (Tuple<CardAction>) (discardOrTrashActionField.get(this.player));
+
+			assertTrue(!this.player.isGainMode());
+			assertThat(discardOrTrashAction.getSecondEntry(), is(2));
+
+			this.player.discardOrTrash(card);
+
+			assertTrue(!this.player.isGainMode());
+			card = this.player.getDeck().getCardHand().getFirst();
+			assertThat(discardOrTrashAction.getSecondEntry(), is(1));
+			assertThat(this.player.getGainValue(), is(0));
+
+			this.player.discardOrTrash(card);
+			assertThat(discardOrTrashAction.getSecondEntry(), is(0));
+			assertTrue(!this.player.isTrashMode());
+			assertTrue(this.player.isGainMode());
+			assertThat(this.player.getGainValue(), is(card.getCost()));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NoSuchFieldException e) {
@@ -522,7 +501,6 @@ public class PlayerTest {
 			e.printStackTrace();
 		}
 	}
-		
 
 	@Test
 	public void testResetTemporaryTrashPile() {

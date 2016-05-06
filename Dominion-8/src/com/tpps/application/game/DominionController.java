@@ -590,7 +590,7 @@ public final class DominionController {
 			playerSettingsPanel.enableOrDisableEverything(false);
 		}
 		this.isHost = isHost;
-		System.out.println("AM I a host ? " + isHost);
+		GameLog.log(MsgType.MM, "am I a host ? " + isHost);
 	}
 
 	public void waitForLobby() throws InterruptedException {

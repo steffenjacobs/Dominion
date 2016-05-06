@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import com.tpps.application.game.GameController;
 import com.tpps.application.game.Player;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.clientSession.server.SessionServer;
@@ -75,10 +77,10 @@ public class GameServer extends Server {
 	@Override
 	public void sendMessage(int port, Packet packet) throws IOException {
 		if (super.clients.containsKey(port)) {
-			System.out.println("send message.");
+			GameLog.log(MsgType.INFO, "send message.");
 			super.sendMessage(port, packet);
 		} else {
-			System.out.println("send no message");
+			GameLog.log(MsgType.INFO, "send no message");
 		}
 	}
 
@@ -104,14 +106,14 @@ public class GameServer extends Server {
 	 * @author Steffen Jacobs
 	 */
 	private void setConsoleInput() {
-		System.out.println("            * * * * * * * * * * * * * *      ");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("* * * * * Dominion Game Server - Team ++; * * * * *");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("            * * * * * * * * * * * * * *      ");
-		System.out.println();
-		System.out.println("Enter 'help' to see all available commands.");
-		System.out.println();
+		GameLog.log(MsgType.INFO ,"            * * * * * * * * * * * * * *      ");
+		GameLog.log(MsgType.INFO ,"      * * * * * * * * * * * * * * * * * * * *");
+		GameLog.log(MsgType.INFO ,"* * * * * Dominion Game Server - Team ++; * * * * *");
+		GameLog.log(MsgType.INFO ,"      * * * * * * * * * * * * * * * * * * * *");
+		GameLog.log(MsgType.INFO ,"            * * * * * * * * * * * * * *      ");
+		GameLog.log(MsgType.INFO ,"");
+		GameLog.log(MsgType.INFO ,"Enter 'help' to see all available commands.");
+		GameLog.log(MsgType.INFO ,"");
 	}
 
 }

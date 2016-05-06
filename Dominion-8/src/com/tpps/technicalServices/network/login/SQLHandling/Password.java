@@ -2,6 +2,9 @@ package com.tpps.technicalServices.network.login.SQLHandling;
 
 import java.security.MessageDigest;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
+
 /**
  * This class delivers all functionalities that is needed to create or validate
  * an used account This classes uses hashing
@@ -24,7 +27,7 @@ public class Password {
 		this.plaintext = plaintext;
 		byte[] saltAsByte = this.generateSalt();
 		this.salt = String.format("%08x", new java.math.BigInteger(1, saltAsByte));
-		System.out.println("salt: " + this.salt);
+		GameLog.log(MsgType.INFO ,"salt: " + this.salt);
 		try {
 			this.hashedPassword = this.createHashedPassword();
 		} catch (Exception e) {

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Scanner;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Server;
 import com.tpps.technicalServices.network.login.SQLHandling.Password;
@@ -64,14 +66,14 @@ public class LoginServer extends Server {
 	 * @author jhuhn - Johannes Huhn
 	 */
 	private void setConsoleOutput() {
-		System.out.println("            * * * * * * * * * * * * * *      ");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("* * * * * Dominion Login Server - Team ++; * * * * *");
-		System.out.println("      * * * * * * * * * * * * * * * * * * * *");
-		System.out.println("            * * * * * * * * * * * * * *      ");
-		System.out.println();
-		System.out.println("Enter 'help' to see all available commands.");
-		System.out.println();
+		GameLog.log(MsgType.INFO ,"            * * * * * * * * * * * * * *      ");
+		GameLog.log(MsgType.INFO ,"      * * * * * * * * * * * * * * * * * * * *");
+		GameLog.log(MsgType.INFO ,"* * * * * Dominion Login Server - Team ++; * * * * *");
+		GameLog.log(MsgType.INFO ,"      * * * * * * * * * * * * * * * * * * * *");
+		GameLog.log(MsgType.INFO ,"            * * * * * * * * * * * * * *      ");
+		GameLog.log(MsgType.INFO ,"");
+		GameLog.log(MsgType.INFO ,"Enter 'help' to see all available commands.");
+		GameLog.log(MsgType.INFO ,"");
 
 		String line = null;
 		Scanner scanInput = new Scanner(System.in);

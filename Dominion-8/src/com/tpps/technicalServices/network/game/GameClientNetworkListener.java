@@ -3,6 +3,8 @@ package com.tpps.technicalServices.network.game;
 import java.io.IOException;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.events.NetworkListener;
 import com.tpps.technicalServices.network.gameSession.packets.PacketReconnect;
 
@@ -27,7 +29,7 @@ public class GameClientNetworkListener implements NetworkListener {
 
 	@Override
 	public void onClientDisconnect(int port) {
-		System.out.println("gameClient network listener " );
+		GameLog.log(MsgType.NETWORK_INFO ,"gameClient network listener " );
 		DominionController.getInstance().setTurnFlag(false);	
 		DominionController.getInstance().getGameClient().getGameWindow().setCaptionTurn("D");
 	}

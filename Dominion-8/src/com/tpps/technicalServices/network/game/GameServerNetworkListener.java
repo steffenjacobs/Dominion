@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.UUID;
 
 import com.tpps.application.game.Player;
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
@@ -48,12 +49,12 @@ public class GameServerNetworkListener implements NetworkListener {
 					
 					if (!this.gameServer.getDisconnectedUser().contains(player)) {
 						this.gameServer.getDisconnectedUser().add(player);
-						System.out.println("client disconnected");
+						GameLog.log(MsgType.MM,"client disconnected");
 
 
 				if (!this.gameServer.getDisconnectedUser().contains(player)) {
 					this.gameServer.getDisconnectedUser().add(player);
-					System.out.println("client disconnected");
+					GameLog.log(MsgType.MM,"client disconnected");
 					try {
 						this.gameServer.broadcastMessage(new PacketBroadcastLog(MsgType.INFO, "player disconnected."));
 					} catch (IOException e1) {
@@ -76,7 +77,7 @@ public class GameServerNetworkListener implements NetworkListener {
 							e.printStackTrace();
 						}
 						if (this.gameServer.getDisconnectedUser().size() >= 3) {
-							System.out.println("end game because three users are disconnected");
+							GameLog.log(MsgType.MM, "end game because three users are disconnected");
 							Client client;
 							try {
 								client = new Client(new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.getStandardPort()), new PacketHandler() {

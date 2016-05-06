@@ -15,6 +15,8 @@ import java.util.concurrent.Executors;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.PhysicsUtil;
 import com.tpps.ui.GameObject.CompareByLayer;
 
@@ -184,7 +186,7 @@ public class GraphicFramework extends JPanel {
 	 * @param _parent the parent JFrame
 	 */
 	public GraphicFramework(JFrame _parent) {
-		System.out.println("im framework");
+		GameLog.log(MsgType.GUI ,"im framework");
 		this.parent = _parent;
 		this.mouseListener = new Mouse(this);
 		_parent.getContentPane().addMouseListener(mouseListener);
@@ -216,7 +218,7 @@ public class GraphicFramework extends JPanel {
 	}
 
 	private void onWindowResize() {
-		System.out.println("window resized to " + parent.getWidth() + "/" + parent.getHeight());
+		GameLog.log(MsgType.GUI ,"window resized to " + parent.getWidth() + "/" + parent.getHeight());
 		for (GameObject go : gameObjects.values()) {
 			go.resizeObject(parent.getWidth(), parent.getHeight());
 		}

@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.tpps.application.game.CardName;
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.Card;
 import com.tpps.technicalServices.logger.GameLog;
@@ -32,10 +33,10 @@ public class CardStorageController {
 	private static final String DEFAULT_STORAGE_FILE = "cards.bin";
 	private String storageFile;
 	private static final boolean DEBUG = false;
-	private String[] standardCards = { "Copper", "Silver", "Gold", "Estate", "Duchy", "Province", "Cellar", "Chapel",
-			"Chancellor", "Militia", "Moat", "Village", "Woodcutter", "Workshop", "Feast", "Moneylender", "Remodel",
-			"Smithy", "Spy", "ThroneRoom", "CouncilRoom", "Thief", "Festival", "Laboratory", "Library", "Market",
-			"Mine", "Witch", "Curse", "Adventurer", "Bureaucrat" };
+	private String[] standardCards = { CardName.COPPER.getName(), CardName.SILVER.getName(), CardName.GOLD.getName(), CardName.ESTATE.getName(), CardName.DUCHY.getName(), CardName.PROVINCE.getName(), CardName.CELLAR.getName(), CardName.CHAPEL.getName(),
+			CardName.CHANCELLOR.getName(), CardName.MILITIA.getName(), CardName.MOAT.getName(), CardName.VILLAGE.getName(), CardName.WOODCUTTER.getName(), CardName.WORKSHOP.getName(), CardName.FEAST.getName(), CardName.MONEYLENDER.getName(), CardName.REMODEL.getName(),
+			CardName.SMITHY.getName(), CardName.SPY.getName(), CardName.THRONEROOM.getName(), CardName.COUNCILROOM.getName(), CardName.THIEF.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(), CardName.LIBRARY.getName(), CardName.MARKET.getName(),
+			CardName.MINE.getName(), CardName.WITCH.getName(), CardName.CURSE.getName(), CardName.ADVENTURER.getName(), CardName.BUREAUCRAT.getName() };
 
 	/**
 	 * sets storage-file-name to default name
@@ -182,7 +183,7 @@ public class CardStorageController {
 		try {
 			client = new CardClient(new InetSocketAddress(Addresses.getRemoteAddress(), CardServer.getStandardPort()),
 					cHandler, true, DominionController.getInstance());
-			System.out.println(DominionController.getInstance().getUsername() + " - "
+			GameLog.log(MsgType.INFO ,DominionController.getInstance().getUsername() + " - "
 					+ DominionController.getInstance().getSessionID());
 			cHandler.setCardClient(client);
 			Thread.sleep(1000);
@@ -249,11 +250,11 @@ public class CardStorageController {
 
 	/** lists all stored cards in the console */
 	public void listCards() {
-		System.out.println("--- Cards in storage (" + getCardCount() + "): ---");
+		GameLog.log(MsgType.INFO ,"--- Cards in storage (" + getCardCount() + "): ---");
 		for (SerializedCard card : storedCards.values()) {
-			System.out.println(card.toString());
+			GameLog.log(MsgType.INFO ,card.toString());
 		}
-		System.out.println("---       (" + getCardCount() + ")         ---");
+		GameLog.log(MsgType.INFO ,"---       (" + getCardCount() + ")         ---");
 	}
 
 	/**
