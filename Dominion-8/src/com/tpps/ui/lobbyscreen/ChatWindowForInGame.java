@@ -38,6 +38,10 @@ import com.tpps.technicalServices.network.chat.client.BadWordFilter;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.gameplay.GameWindow;
 
+/**
+ * @author jhuhn
+ *
+ */
 public class ChatWindowForInGame extends JPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -52,10 +56,10 @@ public class ChatWindowForInGame extends JPanel {
 	private final int SPACE_FROM_CHATINPUT_TO_BUTTON = 20;
 	private static final float BLACK_TRANSPARENCY = 0.6F;
 	
+	private Color textAndLabelColor;
 	private static final Color ownColor = new Color(0,255,0);
 	public static final SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]: ");
 	private static final Color whiteColor = new Color(255,255,255);
-
 	
 	public ChatWindowForInGame() {
 		this.loadImage();
@@ -89,7 +93,7 @@ public class ChatWindowForInGame extends JPanel {
 		textbox.setBorder(BorderFactory.createEmptyBorder());
 	//	textbox.setLineWrap(true);
 		textbox.setOpaque(false);
-		textbox.setText(" Welcome to our Chat!\n Type /help to see all available Commands.\n");
+		textbox.setText(" Welcome to the Chat!\n Type /help to see all available Commands.\n");
 		font = new Font("Calibri", Font.PLAIN, 12);
 		textbox.setFont(font);
 		scrollpane = new JScrollPane(textbox) {
@@ -141,7 +145,7 @@ public class ChatWindowForInGame extends JPanel {
 				super.paint(g);
 			}
 		};
-		sendButton.setForeground(Color.WHITE);
+		sendButton.setForeground(this.textAndLabelColor);
 		sendButton.setContentAreaFilled(false);
 		sendButton.setBorderPainted(true);
 		sendButton.setOpaque(false);
@@ -158,6 +162,7 @@ public class ChatWindowForInGame extends JPanel {
             }
         });
 		
+        this.textAndLabelColor = System.getProperty("os.name").startsWith("Windows") ? Color.WHITE : Color.BLACK;
 		sendButton = this.initSendButton();
 
 		JPanel center = new JPanel();
@@ -180,10 +185,13 @@ public class ChatWindowForInGame extends JPanel {
 	 * @author jhuhn
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
+		String msg = chatmessage;
+		if (!msg.startsWith("/")) 
+			msg = BadWordFilter.parseForbiddenWords(chatmessage);
 		ChatWindowForInGame.this.chatInputLine.setText("");
 		this.createChatInputPart(" " + sdf.format(new Date()), whiteColor);
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
-		this.createChatInputPart(BadWordFilter.parseForbiddenWords(chatmessage) + "\n", whiteColor);
+		this.createChatInputPart(msg + "\n", whiteColor);
 		DominionController.getInstance().sendChatMessage(chatmessage.trim());
 		try {
 			Thread.sleep(10);

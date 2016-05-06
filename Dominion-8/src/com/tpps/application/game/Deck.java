@@ -9,6 +9,8 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.logger.DrawAndShuffle;
+import com.tpps.technicalServices.logger.GameLog;
+import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 
 /**
@@ -327,7 +329,9 @@ public class Deck {
 	/**
 	 * calls discardCardHand() and draw(INIT_CARD_HAND_SIZE) (discards the
 	 * cardHand and redraws 5 cards for the new turn)
-	 * @return a DrawAndShuffle object which is used by the log to determine what happened
+	 * 
+	 * @return a DrawAndShuffle object which is used by the log to determine
+	 *         what happened
 	 */
 	public DrawAndShuffle refreshCardHand() {
 		this.discardCardHand();
@@ -434,8 +438,9 @@ public class Deck {
 	 * 
 	 * @param amount
 	 *            the amount of cards to draw
-	 *            
-	 * @return a DrawAndShuffle object which is used by the GameLog to log what happened
+	 * 
+	 * @return a DrawAndShuffle object which is used by the GameLog to log what
+	 *         happened
 	 */
 	public DrawAndShuffle draw(int amount) {
 		boolean wasShuffled = this.shuffleIfLessThan(amount);
@@ -451,7 +456,7 @@ public class Deck {
 	 * method is called.
 	 * 
 	 * @return one Card from the drawPile
-	 * @throws NoSuchElementException 
+	 * @throws NoSuchElementException
 	 */
 	public Card removeSaveFromDrawPile() throws NoSuchElementException {
 		this.shuffleIfLessThan(1);
@@ -474,7 +479,8 @@ public class Deck {
 
 	/**
 	 * 
-	 * @param type the cardType to search for
+	 * @param type
+	 *            the cardType to search for
 	 * @return true if the cardHand contains a card of the CardType type. false
 	 *         otherwise.
 	 */
@@ -482,6 +488,23 @@ public class Deck {
 		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
 			if (card.getTypes().contains(type)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * @param name
+	 *            the name to search for
+	 * @return true if the cardHand contains a card with name 'name'. false
+	 *         otherwise.
+	 */
+	public boolean cardHandContains(String name) {
+		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
+			String cardname = iterator.next().getName();
+			if (cardname.equals(name)) {
 				return true;
 			}
 		}
@@ -549,6 +572,33 @@ public class Deck {
 	}
 
 	/**
+	 * 
+	 * @param type
+	 *            cardType of the searched card
+	 * @param cards
+	 *            the list of cards to check
+	 * @return the card of the list with the lowest cost
+	 */
+	public Card cardWithLowestCost(LinkedList<Card> cards, CardType type) {
+		Card minCostCard = null;
+		LinkedList<Card> opCards = this.getCardsByTypeFrom(type, cards);
+		if (opCards != null && cards.size() > 0) {
+			if (opCards.size() == 1) {
+				return opCards.get(0);
+			} else {
+				for (Card card : opCards) {
+					if (minCostCard == null) {
+						minCostCard = card;
+					} else if (card.getCost() < minCostCard.getCost()) {
+						minCostCard = card;
+					}
+				}
+			}
+		}
+		return minCostCard;
+	}
+
+	/**
 	 * @param card
 	 *            which will be put back on top of the drawPile
 	 */
@@ -568,8 +618,10 @@ public class Deck {
 
 	/**
 	 * 
-	 * @param card the card to trash
-	 * @param trashPile the trashPile to add the card to
+	 * @param card
+	 *            the card to trash
+	 * @param trashPile
+	 *            the trashPile to add the card to
 	 */
 	public void trash(Card card, LinkedList<Card> trashPile) {
 		this.getCardHand().remove(card);
@@ -618,5 +670,16 @@ public class Deck {
 			}
 		}
 		return sBuf.append(">").toString();
+	}
+
+	/**
+	 * prints only the cardHand in a short format for debugging purposes
+	 */
+	public void debugCardHandPrint() {
+		GameLog.log(MsgType.GAME_INFO, "Cardnames are: \n - ");
+		for (Card card : this.getCardHand()) {
+			GameLog.log(MsgType.GAME_INFO, card.getName() + " - ");
+		}
+		GameLog.log(MsgType.GAME_INFO, "");
 	}
 }

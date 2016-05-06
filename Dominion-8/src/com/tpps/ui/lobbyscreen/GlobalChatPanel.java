@@ -52,6 +52,7 @@ public class GlobalChatPanel extends JPanel {
 	private BufferedImage blackBeauty;
 	private Font font;
 	private JButton sendButton;
+	private Color textAndLabelColor;
 
 	private BackButton backButton;
 	
@@ -181,6 +182,7 @@ public class GlobalChatPanel extends JPanel {
 	 *         background
 	 */
 	private JButton initSendButton() {
+		this.textAndLabelColor = System.getProperty("os.name").startsWith("Windows") ? Color.WHITE : Color.BLACK;
 		sendButton = new JButton("SEND") {
 			private static final long serialVersionUID = 1L;
 
@@ -193,7 +195,7 @@ public class GlobalChatPanel extends JPanel {
 				super.paint(h);
 			}
 		};
-		sendButton.setForeground(Color.WHITE);
+		sendButton.setForeground(this.textAndLabelColor);
 		sendButton.setContentAreaFilled(false);
 		sendButton.setBorderPainted(true);
 		sendButton.setOpaque(false);
@@ -262,7 +264,7 @@ public class GlobalChatPanel extends JPanel {
 		textbox.setBorder(BorderFactory.createEmptyBorder());
 		// textbox.setLineWrap(true);
 		textbox.setOpaque(false);
-		textbox.setText("Welcome to our Chat!\nType /help to see all available Commands.\n");
+		textbox.setText("Welcome to the Chat!\nType /help to see all available Commands.\n");
 		font = new Font("Calibri", Font.PLAIN, 20);
 		textbox.setFont(font);
 		scrollpane = new JScrollPane(new JPanel(new BorderLayout()).add(textbox)) {
@@ -297,7 +299,8 @@ public class GlobalChatPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	public synchronized void appendChatGlobal(String chatmessage) {
-		chatmessage = BadWordFilter.parseForbiddenWords(chatmessage);
+		if (!chatmessage.startsWith("/")) 
+			chatmessage = BadWordFilter.parseForbiddenWords(chatmessage);
 		GlobalChatPanel.this.chatInputLine.setText("");
 		this.createChatInputPart(sdf.format(new Date()), whiteColor);
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
@@ -339,6 +342,14 @@ public class GlobalChatPanel extends JPanel {
 	 * calls the appendChatLocal with default value true
 	 * 
 	 * for JavaDocumentation of this method see {appendChatLocal(String, String, String, Color, boolean}
+	 @param message
+	 *            a String representation of the chatmessage
+	 * @param user
+	 *            a String representation of the user
+	 * @param timestamp
+	 *            a String representation of time
+	 * @param color
+	 *            the username should be shown as this given color
 	 */
 	public synchronized void appendChatLocal(String message, String user, String timestamp, Color color) {
 		this.appendChatLocal(message, user, timestamp, color, true);
@@ -353,7 +364,7 @@ public class GlobalChatPanel extends JPanel {
 	 *            a String representation of the chatmessage
 	 * @param user
 	 *            a String representation of the user
-	 * @param timeStamp
+	 * @param timestamp
 	 *            a String representation of time
 	 * @param color
 	 *            the username should be shown as this given color
