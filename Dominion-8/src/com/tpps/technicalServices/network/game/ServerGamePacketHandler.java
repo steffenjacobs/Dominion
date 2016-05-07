@@ -638,7 +638,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 			} else {
 				if (this.server.getGameController().getActivePlayer().getPlayTwiceCard() == null) {
 					if (!this.server.getGameController().getActivePlayer().isSpy() && !this.server.getGameController().getActivePlayer().isThief())
-						if (this.server.getGameController().getActivePlayer().getActions() > 0) {
+						if (this.server.getGameController().getActivePlayer().getActions() > 0 && this.server.getGameController().getGamePhase().equals("actionPhase")) {
 							GameLog.log(MsgType.GAME_INFO ,"actions");
 							changeButtons = "actions";
 						} else {
