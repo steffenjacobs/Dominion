@@ -54,14 +54,4 @@ public class ChatMessageLog {
 			e.printStackTrace();
 		}
 	}	
-	
-	public static void main(String[] args) {
-		ChatMessageLog.loadLogFile();
-		ChatMessageLog.insertChatLineToLog("[awdadw]", "kevinS", "Hello world all of this retards");
-		ChatMessageLog.insertChatLineToLog("[awdadw]", "kevinS", "YOLO NIOGGA");
-		ChatMessageLog.insertChatLineToLog("[awdadw]", "kevinS", "HAHA WAS LOS");
-		for (int i = 0; i < 1000; i++) {
-			ChatMessageLog.insertChatLineToLog("[awdadw]", "kevinS", "test " + i);
-		}
-	}
 }

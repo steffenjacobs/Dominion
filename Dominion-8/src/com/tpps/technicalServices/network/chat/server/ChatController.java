@@ -34,6 +34,8 @@ public class ChatController extends PacketHandler{
 	 * @author jhuhn
 	 * @param handler
 	 *            the servergamepackethandler instance to start the match
+	 * @param gameserverPort
+	 *            Integer representation of the port of the used GameServer
 	 */
 	public ChatController(ServerGamePacketHandler handler, int gameserverPort){
 		this.gameserverPort = gameserverPort;

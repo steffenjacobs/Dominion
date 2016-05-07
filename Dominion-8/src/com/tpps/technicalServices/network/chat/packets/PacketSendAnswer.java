@@ -31,6 +31,21 @@ public class PacketSendAnswer extends Packet{
 	}	
 
 	
+	/**
+	 * this constructor is always used if the chat server wants to send sth to a
+	 * client
+	 * 
+	 * @author jhuhn
+	 * @param timeStamp
+	 *            String representation of the timestamp
+	 * @param sender
+	 *            String representation of the sender
+	 * @param chatmessage
+	 *            String representation of the chatmessage
+	 * @param color
+	 *            Color object that is used to undeline the username in the
+	 *            right color
+	 */
 	public PacketSendAnswer(String timeStamp, String sender, String chatmessage, Color color) {
 		super(PacketType.SEND_CHAT_ANSWER);
 		this.timeStamp = timeStamp;
@@ -54,18 +69,30 @@ public class PacketSendAnswer extends Packet{
 		return answer;
 	}
 	
+	/**
+	 * @return String representation of the timestamp
+	 */
 	public String getTimeStamp() {
 		return timeStamp;
 	}
 	
+	/**
+	 * @return String representation of the sender
+	 */
 	public String getSender() {
 		return sender;
 	}
 	
+	/**
+	 * @return String representation of the chatmessage
+	 */
 	public String getChatmessage() {
 		return chatmessage;
 	}
 	
+	/**
+	 * @return color instance used to display the username
+	 */
 	public Color getColor() {
 		return color;
 	}
