@@ -77,9 +77,9 @@ public class GameWindow extends JFrame {
 	// private int heightRelative, widthRelative, leftGap;
 	public static String coins, buys, actions;
 
-	private static ButtonClass muteButton;
+	public static ButtonClass muteButton;
 
-	private static ButtonClass playButton;
+	public static ButtonClass playButton;
 	private static final double CORRECTION_16TO9 = 16 / (double) 9;
 
 	public static GameWindow getInstance() {
@@ -157,9 +157,9 @@ public class GameWindow extends JFrame {
 
 		GameWindow.closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
 				this.closeImage, this.framework, "", "exit");
-		GameWindow.muteButton = new ButtonClass(0.03, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
+		GameWindow.muteButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
 				this.muteImage, this.framework, "", "mute");
-		GameWindow.playButton = new ButtonClass(0.03, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
+		GameWindow.playButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
 				this.playImage, this.framework, "", "play");
 		GameWindow.endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
 				this.buttonImage, this.framework, "End ActionPhase");
@@ -200,7 +200,7 @@ public class GameWindow extends JFrame {
 
 		this.framework.addComponent(new GameBackground(0, 0, 1, 1, 0, this.backgroundImage, this.framework));
 		this.framework.addComponent(new GameBackground(0.31, 0.05, 0.38, 0.38, 2, this.tableImage, this.framework));
-//		this.framework.addComponent(GameWindow.playButton);
+		this.framework.addComponent(GameWindow.playButton);
 		this.framework.addComponent(GameWindow.closeButton);
 		this.framework.addComponent(GameWindow.endActionPhase);
 		this.framework.addComponent(GameWindow.endTurn);
