@@ -26,8 +26,8 @@ public class MyAudioPlayer {
 		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource("resources/sounds/Cash.mp3"));
 		MyAudioPlayer.mainMusicPlayer = new MP3Player(
 				ClassLoader.getSystemResource("resources/sounds/lobby.mp3"));
-//		MyAudioPlayer.gameMusicPlayer = new MP3Player(
-//				ClassLoader.getSystemResource("resources/sounds/1HourofMedievalAndFantasyInnMusic.mp3"));
+		MyAudioPlayer.gameMusicPlayer = new MP3Player(
+				ClassLoader.getSystemResource("resources/sounds/mainMusic.mp3"));
 		lastVolumes.put(mainMusicPlayer, new Integer(55));
 	}
 	
@@ -61,12 +61,12 @@ public class MyAudioPlayer {
 	
 	public static void handleGameMusic(boolean play) {
 		if(play){
-			if (!MyAudioPlayer.mainMusicPlayer.isPlaying()) {
-				MyAudioPlayer.mainMusicPlayer.play();
-				MyAudioPlayer.mainMusicPlayer.setRepeat(true);
+			if (!MyAudioPlayer.gameMusicPlayer.isPlaying()) {
+				MyAudioPlayer.gameMusicPlayer.play();
+				MyAudioPlayer.gameMusicPlayer.setRepeat(true);
 			}
 		}else{
-			MyAudioPlayer.mainMusicPlayer.pause();
+			MyAudioPlayer.gameMusicPlayer.pause();
 		}
 	}
 	

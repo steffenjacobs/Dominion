@@ -77,8 +77,9 @@ public class Card extends GameObject {
 	 * @param _parent
 	 *            the parent framework
 	 */
-	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost, double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
-			int _layer, Image sourceImage, GraphicFramework _parent) {
+	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
+			double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int _layer,
+			Image sourceImage, GraphicFramework _parent) {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
 		this.name = name;
 		this.actions = actions;
@@ -122,8 +123,9 @@ public class Card extends GameObject {
 	 * @param _parent
 	 *            the parent framework
 	 */
-	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost, String cardId, double relativeLocX, double relativeLocY, double relativeWidth,
-			double relativeHeight, int _layer, Image sourceImage, GraphicFramework _parent) {
+	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
+			String cardId, double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
+			int _layer, Image sourceImage, GraphicFramework _parent) {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
 		this.name = name;
 		this.actions = actions;
@@ -151,7 +153,8 @@ public class Card extends GameObject {
 	 * @param _parent
 	 *            graphic framework where the card will be drawn
 	 */
-	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost, GraphicFramework _parent) {
+	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
+			GraphicFramework _parent) {
 		super(_parent);
 		this.name = name;
 		this.actions = actions;
@@ -216,8 +219,9 @@ public class Card extends GameObject {
 	 *            a String value representing the players hand position on hover
 	 *            action
 	 */
-	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost, String cardId, double relativeLocX, double relativeLocY, double relativeWidth,
-			double relativeHeight, int _layer, Image sourceImage, GraphicFramework _parent, String handTrigger) {
+	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
+			String cardId, double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
+			int _layer, Image sourceImage, GraphicFramework _parent, String handTrigger) {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
 		this.name = name;
 		this.actions = actions;
@@ -302,9 +306,12 @@ public class Card extends GameObject {
 	 */
 	@Override
 	public void onMouseEnter() {
-		if (!(handTrigger.equals("handCards") || name.equals(CardName.COPPER.getName()) || name.equals(CardName.SILVER.getName()) || name.equals(CardName.GOLD.getName())
-				|| name.equals(CardName.CURSE.getName()) || name.equals(CardName.PROVINCE.getName()) || name.equals(CardName.DUCHY.getName()) || name.equals(CardName.ESTATE.getName()))) {
-			gameBackground = new GameBackground(0.12, 0.01, relativeWidth + 0.08, relativeHeight + 0.24, 110, sourceImage, parent);
+		if (!(handTrigger.equals("handCards") || name.equals(CardName.COPPER.getName())
+				|| name.equals(CardName.SILVER.getName()) || name.equals(CardName.GOLD.getName())
+				|| name.equals(CardName.CURSE.getName()) || name.equals(CardName.PROVINCE.getName())
+				|| name.equals(CardName.DUCHY.getName()) || name.equals(CardName.ESTATE.getName()))) {
+			gameBackground = new GameBackground(0.12, 0.01, relativeWidth + 0.08, relativeHeight + 0.24, 110,
+					sourceImage, parent);
 			parent.addComponent(gameBackground);
 		}
 		if (handTrigger.equals("Victory")) {
@@ -375,8 +382,10 @@ public class Card extends GameObject {
 	 */
 
 	public void onMouseExit() {
-		if (!(handTrigger.equals("handCards") || name.equals(CardName.COPPER.getName()) || name.equals(CardName.SILVER.getName()) || name.equals(CardName.GOLD.getName())
-				|| name.equals(CardName.CURSE.getName()) || name.equals(CardName.PROVINCE.getName()) || name.equals(CardName.DUCHY.getName()) || name.equals(CardName.ESTATE.getName()))) {
+		if (!(handTrigger.equals("handCards") || name.equals(CardName.COPPER.getName())
+				|| name.equals(CardName.SILVER.getName()) || name.equals(CardName.GOLD.getName())
+				|| name.equals(CardName.CURSE.getName()) || name.equals(CardName.PROVINCE.getName())
+				|| name.equals(CardName.DUCHY.getName()) || name.equals(CardName.ESTATE.getName()))) {
 			parent.removeComponent(gameBackground);
 		}
 		if (handTrigger.equals("Victory")) {
@@ -449,10 +458,13 @@ public class Card extends GameObject {
 		if (DominionController.getInstance().isTurnFlag()) {
 			GameLog.log(MsgType.GUI, "MouseClick on Card");
 			try {
-				DominionController.getInstance().getGameClient().sendMessage(new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
+				DominionController.getInstance().getGameClient().sendMessage(
+						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
 				DominionController.getInstance().setTurnFlag(false);
 				DominionController.getInstance().getGameClient().getGameWindow().setCaptionTurn("execute");
-				MyAudioPlayer.doCashSound();
+				if (handTrigger.equals("Coins")) {
+					MyAudioPlayer.doCashSound();
+				}
 			} catch (IOException e) {
 
 				e.printStackTrace();
@@ -468,7 +480,8 @@ public class Card extends GameObject {
 		if (DominionController.getInstance().isTurnFlag()) {
 			GameLog.log(MsgType.GUI, "MouseClick on Card");
 			try {
-				DominionController.getInstance().getGameClient().sendMessage(new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
+				DominionController.getInstance().getGameClient().sendMessage(
+						new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
 			} catch (IOException e) {
 
 				e.printStackTrace();
@@ -481,7 +494,8 @@ public class Card extends GameObject {
 	 */
 	@Override
 	public void onResize(int absWidth, int absHeight) {
-		super.setRenderedImage(GraphicsUtil.resize((BufferedImage) super.getBufferedImage(), super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)));
+		super.setRenderedImage(GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
+				super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)));
 	}
 
 	/**

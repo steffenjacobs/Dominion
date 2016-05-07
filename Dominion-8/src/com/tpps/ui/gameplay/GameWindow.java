@@ -30,6 +30,7 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.GameLogTextPane;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.DisplayValue;
 import com.tpps.ui.components.GFButton;
@@ -138,7 +139,7 @@ public class GameWindow extends JFrame {
 		// this.backgroundImage = this.loadingImage(backgroundImage,
 		// "resources/img/gamePlay/GameBackground.jpg");
 		this.backgroundImage = DominionController.selectedGameImage;
-		GameLog.log(MsgType.GUI ,"THIRD: " + this.backgroundImage);
+		GameLog.log(MsgType.GUI, "THIRD: " + this.backgroundImage);
 		this.closeImage = this.loadingImage(this.closeImage, "resources/img/gameObjects/close.png");
 		this.tableImage = this.loadingImage(this.tableImage, "resources/img/gameObjects/table.jpg");
 		this.buttonImage = this.loadingImage(this.buttonImage, "resources/img/gameObjects/testButtonGame.png");
@@ -153,14 +154,13 @@ public class GameWindow extends JFrame {
 		this.clickImage = this.loadingImage(this.clickImage, "resources/img/gameObjects/CardGreen.png");
 		this.muteImage = this.loadingImage(this.muteImage, "resources/img/gameObjects/Mute.png");
 		this.playImage = this.loadingImage(this.playImage, "resources/img/gameObjects/Play.png");
-		
 
 		GameWindow.closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
-				this.closeImage, this.framework, "","exit");
-		GameWindow.muteButton =new ButtonClass(0.03, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
-				this.muteImage, this.framework, "","mute");
-		GameWindow.playButton =new ButtonClass(0.03, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
-				this.playImage, this.framework, "","play");
+				this.closeImage, this.framework, "", "exit");
+		GameWindow.muteButton = new ButtonClass(0.03, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
+				this.muteImage, this.framework, "", "mute");
+		GameWindow.playButton = new ButtonClass(0.03, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
+				this.playImage, this.framework, "", "play");
 		GameWindow.endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
 				this.buttonImage, this.framework, "End ActionPhase");
 		GameWindow.playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
@@ -251,6 +251,7 @@ public class GameWindow extends JFrame {
 				}
 			}
 		});
+		MyAudioPlayer.handleGameMusic(true);
 		this.revalidate();
 		this.repaint();
 	}
@@ -723,7 +724,7 @@ public class GameWindow extends JFrame {
 	public void setCaptionTurn(String caption) {
 		// turn.renewCaption(caption);
 		framework.removeComponent(turn);
-		if (caption.equals("my turn")||caption.equals("react")) {
+		if (caption.equals("my turn") || caption.equals("react")) {
 			turn = new DisplayValue(0.31, 0, 0.38, 0.05, 1, 1, 20, displayImageTurnGreen, framework, caption);
 
 		} else {
@@ -1001,12 +1002,12 @@ public class GameWindow extends JFrame {
 	public LinkedList<GFButton> getCoinButtons() {
 		return coinButtons;
 	}
-	
-	public  ButtonClass getMuteButton(){
+
+	public ButtonClass getMuteButton() {
 		return muteButton;
 	}
-	
-	public  ButtonClass getPlayButton(){
+
+	public ButtonClass getPlayButton() {
 		return playButton;
 	}
 
