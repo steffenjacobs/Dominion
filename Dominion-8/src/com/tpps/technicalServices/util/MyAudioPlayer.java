@@ -59,7 +59,10 @@ public class MyAudioPlayer {
 	 */
 	public static void handleMainMusic(boolean play){
 		if(play){
-			MyAudioPlayer.mainMusicPlayer.play();
+			if (!MyAudioPlayer.mainMusicPlayer.isPlaying()) {
+				MyAudioPlayer.mainMusicPlayer.play();
+				MyAudioPlayer.mainMusicPlayer.setRepeat(true);
+			}
 		}else{
 			MyAudioPlayer.mainMusicPlayer.pause();
 		}
