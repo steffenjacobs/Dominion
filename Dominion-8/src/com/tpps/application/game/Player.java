@@ -758,11 +758,12 @@ public class Player {
 	 * most important method for the card action. every method which executes
 	 * card actions is called from this method
 	 * 
-	 * @author Lukas Adler, Nicolas Wipfler
 	 * @param cardID the id of the card
 	 * @return the serverCard
 	 * @throws IOException
 	 * @throws SynchronisationException
+	 * 
+	 * @author Lukas Adler, Nicolas Wipfler
 	 */
 	public Card doAction(String cardID) throws IOException {
 		boolean dontRemoveFlag = false, trashFlag = false;
@@ -772,14 +773,22 @@ public class Player {
 		// PacketBroadcastLog("",this.getPlayerName()," - plays " +
 		// serverCard.getName(),
 		// ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
-		this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
+		if (this.isDiscardMode())
+			if (serverCard.getName().equals(CardName.MOAT.getName())) 
+				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
+			else
+				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - discards " + serverCard.getName(), this.getLogColor()));
+		else if (this.isTrashMode())
+			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - trashes " + serverCard.getName(), this.getLogColor()));
+		else 
+			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
+		
 		GameLog.log(MsgType.INFO, "The Playername is: " + this.getPlayerName());
-
+		
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
 			return serverCard;
 		}
-
 		if (this.playTwice) {
 			if (!this.secondTimePlayed) {
 				GameLog.log(MsgType.INFO, "playTwice: " + this.playTwice);

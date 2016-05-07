@@ -19,6 +19,10 @@ import com.tpps.technicalServices.util.CollectionsUtil;
  * 
  * Player owns a deck and interacts with these piles
  * 
+ * A few methods might appear to be redundant, but since the game works just
+ * fine now in almost every edge case, there is no need to remove working
+ * methods right now. Would be future work to make the code more stable
+ * 
  * @author Nicolas Wipfler, Lukas Adler
  */
 public class Deck {
@@ -461,6 +465,49 @@ public class Deck {
 	public Card removeSaveFromDrawPile() throws NoSuchElementException {
 		this.shuffleIfLessThan(1);
 		return this.drawPile.removeLast();
+	}
+	
+	/**
+	 * 
+	 * @param name the cardname to search
+	 * @return whether the deck contains a card with name *name*
+	 */
+	public boolean deckContains(String name) {
+		for (Card c : this.drawPile) {
+			if (c.getName().equals(name))
+				return true;
+		}
+		for (Card c : this.discardPile) {
+			if (c.getName().equals(name))
+				return true;
+		}
+		for (Card c : this.cardHand) {
+			if (c.getName().equals(name))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param name the cardname to search
+	 * @return the amount of found cards in the deck with the given name
+	 */
+	public int deckContainsAmountOf(String name) {
+		int count = 0;
+		for (Card c : this.drawPile) {
+			if (c.getName().equals(name))
+				count++;
+		}
+		for (Card c : this.discardPile) {
+			if (c.getName().equals(name))
+				count++;
+		}
+		for (Card c : this.cardHand) {
+			if (c.getName().equals(name))
+				count++;
+		}
+		return count;
 	}
 
 	/**

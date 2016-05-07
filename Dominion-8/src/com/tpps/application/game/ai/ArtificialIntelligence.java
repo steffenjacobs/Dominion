@@ -23,6 +23,20 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 /**
  * Global AI class. If you get stomped, don't worry, it's intended.
  * 
+ * 
+ * In a few cases the AI is allowed to check if the deck contains a specific
+ * card. It could be considered as cheating, but since I don't want to write
+ * horrible code with many counters and flags which indicate if the AI already
+ * bought a card or not, and how many cards she already has of a cardtype (a
+ * human player can obviously count that), I implemented it like that.
+ * 
+ * E.g. the AI plays a Chapel strategy. If it buys one in the first turn, there
+ * is no need to buy it in the second turn again. There would have to be a
+ * counter or flag, whether the AI already bought a chapel. If it can be looked
+ * up in the deck though, no more terrifying flags and counters for all possible
+ * combinations and cards are needed anymore.
+ * 
+ * 
  * @author Nicolas Wipfler
  */
 public class ArtificialIntelligence {
@@ -36,7 +50,7 @@ public class ArtificialIntelligence {
 	private List<String> blacklist;
 	private boolean endPhase;
 
-	private static final int ENDPHASE_TURN = 22;
+//	private static final int ENDPHASE_TURN = 22;
 	private static final int TIME_DELAY = 650;
 
 	/**
@@ -155,13 +169,10 @@ public class ArtificialIntelligence {
 				play(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
 			}
 			// Logik + Strategy, chapel handlen
-			return; // for test purposes
 
-			// LinkedList<Card> remainingActionCards =
-			// this.getAllCardsFromType(CardType.ACTION);
-			// Card tbp =
-			// this.player.getDeck().cardWithHighestCost(remainingActionCards);
-			// play(tbp);
+			LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
+			Card tbp = this.player.getDeck().cardWithHighestCost(remainingActionCards);
+			play(tbp);
 		}
 	}
 
@@ -320,6 +331,22 @@ public class ArtificialIntelligence {
 
 		// wenn chapel strategy, nach 1 chapel im deck keine mehr kaufen
 
+		// witch and chapel strategy/ militia and chapel, 5/2 und 4/3
+		// unterscheiden
+
+		// ein estate nicht trashen
+
+		// mit chapel auch evtl adventurer kaufen wenn keine witch/militia da
+		// ist
+
+		// evtl nur abwehr kaufen wenn gameboard angriffkarten + eigene
+		// angriffskarten < als es eigentlich sein müsste
+
+		// evtl market mit chapel
+
+		// bei plain gucken ob ich councilroom + village/jahrmarkt + militia
+		// spielen kann
+
 		LinkedList<String> result = new LinkedList<String>();
 		int coins = getTreasureCardsValue(getCardHand());
 		if (coins >= 8) {
@@ -377,10 +404,11 @@ public class ArtificialIntelligence {
 	 * check several game states and set the endPhase if necessary
 	 */
 	private void checkEndPhase() {
-		if (getProvinceAmount() < 4) {
+		if (getProvinceAmount() < 3) {
 			this.endPhase = true;
-		} else if (this.player.getTurnNr() >= ArtificialIntelligence.ENDPHASE_TURN) {
-			this.endPhase = true;
+			// } else if (this.player.getTurnNr() >=
+			// ArtificialIntelligence.ENDPHASE_TURN) {
+			// this.endPhase = true;
 		} else if (this.player.getGameServer().getGameController().getGameBoard().amountOfPilesEmpty() == GameConstant.EMPTY_PILES.getValue() - 1) {
 			this.endPhase = true;
 		}
