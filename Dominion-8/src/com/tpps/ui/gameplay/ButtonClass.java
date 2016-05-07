@@ -110,7 +110,6 @@ public class ButtonClass extends GFButton {
 			if (parameter.equals("exit")) {
 				System.exit(0);
 			}
-
 			DominionController.getInstance().setTurnFlag(false);
 			DominionController.getInstance().getGameClient().getGameWindow().setCaptionTurn("execute");
 
