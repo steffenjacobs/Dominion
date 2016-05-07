@@ -96,16 +96,16 @@ public class ButtonClass extends GFButton {
 	 */
 
 	public void onMouseClick() {
-//		if (parameter.equals("play")) {
-//			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
-//			MyAudioPlayer.handleGameMusic(false);
-//			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getMuteButton());
-//		}
-//		if (parameter.equals("mute")) {
-//			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
-//			MyAudioPlayer.handleGameMusic(true);
-//			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getPlayButton());
-//		}
+		if (parameter.equals("play")) {
+			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
+			MyAudioPlayer.handleGameMusic(false);
+			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getMuteButton());
+		}
+		if (parameter.equals("mute")) {
+			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
+			MyAudioPlayer.handleGameMusic(true);
+			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getPlayButton());
+		}
 		if (DominionController.getInstance().isTurnFlag()) {
 			if (parameter.equals("exit")) {
 				System.exit(0);

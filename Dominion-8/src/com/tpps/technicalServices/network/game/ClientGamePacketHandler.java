@@ -115,6 +115,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 					this.gameWindow.removeStopTrashButton();
 					this.gameWindow.removeStopDiscardButton();
 					this.gameWindow.addPlayTreasuresButton();
+					this.gameWindow.removeEndActionPhaseButton();
 					break;
 
 				default:
