@@ -41,6 +41,7 @@ public class ChatPacketHandler extends PacketHandler{
 	 */
 	public ChatPacketHandler() {				
 		chatrooms = new ArrayList<ChatRoom>();	
+		ChatMessageLog.loadLogFile();
 	}
 	
 	/**
@@ -64,6 +65,8 @@ public class ChatPacketHandler extends PacketHandler{
 			}else{
 				global.sendChatToAllExceptSender(castedpacket);
 			}
+			ChatMessageLog.insertChatLineToLog(ChatServer.sdf.format(new Date()),
+					castedpacket.getUsername(), castedpacket.getChatmessage());
 			break;
 			
 		case SEND_CHAT_TO_CLIENT:
@@ -75,6 +78,11 @@ public class ChatPacketHandler extends PacketHandler{
 			}else{							
 				global.sendPMToClient(castedpacket3);
 			}
+			ChatMessageLog.insertChatLineToLog(
+					ChatServer.sdf.format(new Date()), "PM from: "
+							+ castedpacket3.getSender() + " to "
+							+ castedpacket3.getReceiver(),
+					castedpacket3.getMessage());
 			break;
 		case SEND_CHAT_COMMAND:
 			PacketSendChatCommand castedpacket2 = (PacketSendChatCommand) packet;					
