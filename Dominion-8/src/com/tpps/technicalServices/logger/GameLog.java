@@ -16,6 +16,10 @@ import com.tpps.technicalServices.util.ColorUtil;
 import javafx.util.Pair;
 
 /**
+ * all messages we want to log can be logged with methods of this class
+ * replaces System.out in some ways
+ * 
+ * is also used for ingame logging of the game actions
  * 
  * @author nicolaswipfler
  *

@@ -93,7 +93,7 @@ public class ChatWindowForInGame extends JPanel {
 		textbox.setBorder(BorderFactory.createEmptyBorder());
 	//	textbox.setLineWrap(true);
 		textbox.setOpaque(false);
-		textbox.setText(" Welcome to the Chat!\n Type /help to see all available Commands.\n");
+		textbox.setText(" Welcome to the Chat!\n Type /help to see all available Commands.\n Press [1] for Chat and [2] for Log.\n Press [SPACE] to hide or open.\n\n");
 		font = new Font("Calibri", Font.PLAIN, 12);
 		textbox.setFont(font);
 		scrollpane = new JScrollPane(textbox) {
