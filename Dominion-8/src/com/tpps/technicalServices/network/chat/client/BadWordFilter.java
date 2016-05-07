@@ -18,12 +18,12 @@ import com.tpps.technicalServices.util.CollectionsUtil;
  */
 public class BadWordFilter {
 
-	private static final ArrayList<String> ABUSIVE_WORDS = CollectionsUtil.getArrayList(
+	private static final ArrayList<String> ABUSIVE_WORDS = CollectionsUtil.getArrayList(new String[]{
 			"d2l4ZXI=", "YXJzY2g=", "bnV0dGU=", "aHVyZQ==", "dHVudGU=", "cGVuaXM=",
 			"Y29jaw==", "ZGljaw==", "bm9vYg==", "Y3VudA==", "Yml0Y2g=", "emllZ2U=",
 			"aGl0bGVy", "c3Blcm1h", "Zm90emU=", "aG9tbw==", "YXNz", "YmFzdGFyZA==",
 			"ZnVjaw==", "c2hpdA==", "ZmFn", "ZGFtbg==", "aHVyZQ==", "c3Bhc3Q="
-	);
+	});
 
 	/**
 	 * This method parses any chat/log message and removes abusive language.

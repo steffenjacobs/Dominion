@@ -618,6 +618,38 @@ public class Deck {
 
 	/**
 	 * 
+	 * example: cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER,
+	 * player.getDeck()) returns a list of all cards which give one more action
+	 * to the player when played.
+	 *
+	 * @param action
+	 *            the CardAction to consider
+	 * @param deck
+	 *            the deck to check
+	 * @return a list of cards with actions of type *action*
+	 */
+	public LinkedList<Card> cardsWithAction(CardAction action, Deck deck) {
+		LinkedList<Card> cardList = new LinkedList<Card>();
+		for (Card card : deck.getDiscardPile()) {
+			if (card.getActions().containsKey(action)) {
+				cardList.addLast(card);
+			}
+		}
+		for (Card card : deck.getDrawPile()) {
+			if (card.getActions().containsKey(action)) {
+				cardList.addLast(card);
+			}
+		}
+		for (Card card : deck.getCardHand()) {
+			if (card.getActions().containsKey(action)) {
+				cardList.addLast(card);
+			}
+		}
+		return cardList;
+	}
+
+	/**
+	 * 
 	 * @param cards
 	 *            the list of cards to check
 	 * @return the card of the list with the highest cost

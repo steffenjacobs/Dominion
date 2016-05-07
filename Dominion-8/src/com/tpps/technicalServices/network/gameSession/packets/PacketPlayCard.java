@@ -22,6 +22,9 @@ public class PacketPlayCard extends Packet {
 		return this.playedCardID;
 	}
 	
+	/**
+	 * @return the clientID
+	 */
 	public int getClientID() {
 		return this.clientID;
 	}
@@ -29,6 +32,9 @@ public class PacketPlayCard extends Packet {
 	/**
 	 * initializes the Packet with the id of the card which had been played and
 	 * the name of the player who played the card
+	 * 
+	 * @param cardID id of the card
+	 * @param clientID id of the player
 	 * 
 	 * @author Steffen Jacobs
 	 */

@@ -127,8 +127,8 @@ public class PlayerSettingsPanel extends JPanel {
 		// this.add(this.bottomAreaPanel());
 		this.bottomAreaPanel = this.bottomAreaPanel();
 
-		this.aiNameList = CollectionsUtil.getArrayList("Sir Lancelot", "Ritter der Kokosnuss", "Wizard of Oz",
-				"King Arthur", "Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne", "Harvey Specter");
+		this.aiNameList = CollectionsUtil.getArrayList(new String[]{"Sir Lancelot", "Ritter der Kokosnuss", "Wizard of Oz",
+				"King Arthur", "Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne", "Harvey Specter"});
 		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
 	}
 

@@ -1,10 +1,12 @@
 package com.tpps.application.game.ai;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 import com.tpps.application.game.CardName;
+import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.GameConstant;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
@@ -46,12 +48,19 @@ public class ArtificialIntelligence {
 
 	private Strategy strategy;
 
+//	private List<Card> boardActionCards;
 	private List<String> buySequence;
 	private List<String> blacklist;
 	private boolean endPhase;
+	/**
+	 * indicator if the starting hand is 5/2 (true) or 4/3 (false)
+	 * */
+	private boolean fiveTwoStart;
 
 //	private static final int ENDPHASE_TURN = 22;
 	private static final int TIME_DELAY = 650;
+	
+	private static final String NO_BUY = "#";
 
 	/**
 	 * constructor of the Artificial Intelligence
@@ -160,15 +169,19 @@ public class ArtificialIntelligence {
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			/**
-			 * move with double Province not possible like that, but AI won't do
-			 * this since it plays big money mostly
+			 * in BIG_MONEY(_..) strategies, the execution of an action card
+			 * will not give more buying power if there is already a treasure
+			 * value >= 8 (so you're already able to buy the most valuable card:
+			 * province). A second benefit is that the unplayed action card will be reshuffled and can be drawn earlier again.
 			 */
-			if (this.getTreasureCardsValue(getCardHand()) >= 8) {
+			if (!this.strategy.equals(Strategy.DRAW_ADD_ACTION) && this.getTreasureCardsValue(getCardHand()) >= 8) {
 				return;
 			} else if (addActionCardAvailable()) {
 				play(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
 			}
 			// Logik + Strategy, chapel handlen
+			
+			// ein estate nicht trashen
 
 			LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
 			Card tbp = this.player.getDeck().cardWithHighestCost(remainingActionCards);
@@ -264,7 +277,7 @@ public class ArtificialIntelligence {
 	private void handleTurn() {
 		if (myTurn()) {
 
-			if (firstTurn())
+			if (turn(1))
 				determineStrategy();
 			if (!endPhase)
 				checkEndPhase();
@@ -274,10 +287,8 @@ public class ArtificialIntelligence {
 			if (this.player.playsReactionCard()) {
 				play(this.player.getDeck().getCardByTypeFromHand(CardType.REACTION));
 			} else if (this.player.isDiscardMode()) {
-				while (this.player.isDiscardMode()) { // &&
-														// this.player.getDeck().
-														// getCardHand().size()
-														// > 3
+				while (this.player.isDiscardMode()) { 
+					// && this.player.getDeck().getCardHand().size() > 3
 					discardLeastValuableCard();
 				}
 			}
@@ -295,12 +306,12 @@ public class ArtificialIntelligence {
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.setBuyPhase();
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
-			this.buySequence = determinePurchase();
+			this.buySequence = getPurchaseSequence();
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.playTreasures();
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			for (String buy : this.buySequence) {
-				if (!getBlacklist().contains(buy) || endPhase) {
+				if (!buy.equals("#") && (!blacklist.contains(buy) || endPhase)) {
 					Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 					this.buy(this.getCardFromBoard(buy));
 				}
@@ -320,9 +331,15 @@ public class ArtificialIntelligence {
 	 * 
 	 * @return a LinkedList with the determined Purchases
 	 */
-	private LinkedList<String> determinePurchase() {
+	private LinkedList<String> getPurchaseSequence() {
+		LinkedList<String> result = new LinkedList<String>();
+		for (int i = 0; i < this.player.getBuys(); i++)
+			result.add(determinePurchase());
+		return result;
+	}
+	
+	private String determinePurchase() {
 		// https://dominionstrategy.com/big-money/
-
 		// while einbauen, die kaeufe je nach remaining coins hinzufuegt solange
 		// noch kaeufe da sind (durch blacklist wird eh abgefangen wenns nicht
 		// gekauft werden soll)
@@ -334,29 +351,68 @@ public class ArtificialIntelligence {
 		// witch and chapel strategy/ militia and chapel, 5/2 und 4/3
 		// unterscheiden
 
-		// ein estate nicht trashen
+		// village bei witch kaufen? eher bad für big money
 
-		// mit chapel auch evtl adventurer kaufen wenn keine witch/militia da
+		// mit chapel auch evtl adventurer/Market? eher bad für big money, kaufen wenn keine witch/militia da
 		// ist
 
 		// evtl nur abwehr kaufen wenn gameboard angriffkarten + eigene
 		// angriffskarten < als es eigentlich sein müsste
 
-		// evtl market mit chapel
-
-		// bei plain gucken ob ich councilroom + village/jahrmarkt + militia
+		// bei none gucken ob ich councilroom + village/jahrmarkt + militia
 		// spielen kann
-
-		LinkedList<String> result = new LinkedList<String>();
+		
+		// 5/2 opening hand witch and chapel
+		
+		// erst ab turn 7 provinz kaufen
+		// ab turn 7 bei 5 market kaufen bei big money
+		
+		// this.strategy = Strategy.BIG_MONEY_CHAPEL; // buy remodel am ende
+		
+		// first turn special handeln fuer alle. bei bigmoney schauen ob smithy der grund war dass es gewählt wurde und 4/3 ausführen
+		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
+		int treasureValue = getTreasureCardsValue(getCardHand());
+		/**
+		 * first two turns are handled seperately, because they are a crucial part in the game and the rules on how to behave in this turns differ from the rest of the game in some cases
+		 */
+		if (turn(1) || turn(2)) {
+			switch (strategy) {
+			case BIG_MONEY:
+				if (board.getTableForActionCards().containsKey(CardName.SMITHY.getName())) {
+					if (!fiveTwoStart) {
+						if (treasureValue == 4) {
+							return CardName.SMITHY.getName();
+						} else
+							return CardName.SILVER.getName();
+					} 
+					// buy board.getActionCardWithCost(5)
+				}
+				break;
+			case BIG_MONEY_CHAPEL:
+				break;
+			case BIG_MONEY_CHAPEL_MILITIA:
+				break;
+			case BIG_MONEY_CHAPEL_WITCH:
+				break;
+			case BIG_MONEY_WITCH:
+				break;
+			case DRAW_ADD_ACTION:
+				break;
+			default: // do nothing
+				break;
+			}
+		}
+		
+		
 		int coins = getTreasureCardsValue(getCardHand());
 		if (coins >= 8) {
-			result.addLast(CardName.PROVINCE.getName());
+			return CardName.PROVINCE.getName();
 		} else if (coins >= 6) {
-			result.addLast(CardName.GOLD.getName());
+			return CardName.GOLD.getName();
 		} else if (coins >= 3) {
-			result.addLast(CardName.SILVER.getName());
+			return CardName.SILVER.getName();
 		}
-		return result;
+		return"";
 	}
 
 	/**
@@ -364,17 +420,33 @@ public class ArtificialIntelligence {
 	 * to the situation on the game board
 	 */
 	private void determineStrategy() {
-		if (this.player.getGameServer().getGameController().getGameBoard().getTableForActionCards().get(CardName.WITCH.getName()) != null && iAmTheOnlyAI()) {
-			this.strategy = Strategy.WITCH;
+		int cardHandValue = getTreasureCardsValue(getCardHand());
+		this.fiveTwoStart = (cardHandValue == 5 || cardHandValue == 2) ? true : false;
+		
+		GameBoard board = player.getGameServer().getGameController().getGameBoard();
+		
+		if (board.getTableForActionCards().containsKey(CardName.CHAPEL.getName())) {
+			if (board.getTableForActionCards().containsKey(CardName.WITCH.getName())) {
+				this.strategy = Strategy.BIG_MONEY_CHAPEL_WITCH;
+				return;
+			} else if (board.getTableForActionCards().containsKey(CardName.MILITIA.getName()) && iAmTheOnlyAI()) {
+				this.strategy = Strategy.BIG_MONEY_CHAPEL_MILITIA;
+				return;
+			} else {
+				this.strategy = Strategy.BIG_MONEY_CHAPEL;
+				return;
+			}	
+		} else if (board.getTableForActionCards().containsKey(CardName.WITCH.getName())) {
+			this.strategy = Strategy.BIG_MONEY_WITCH;
 			return;
-		} else if (this.player.getGameServer().getGameController().getGameBoard().getTableForActionCards().get(CardName.CHAPEL.getName()) != null) {
-			this.strategy = Strategy.PLAIN_CHAPEL;
+		} else if (board.getTableForActionCards().containsKey(CardName.SMITHY.getName()) && !fiveTwoStart) {
+			this.strategy = Strategy.BIG_MONEY;
 			return;
-		} else if (this.player.getGameServer().getGameController().getGameBoard().getTableForActionCards().get(CardName.SMITHY.getName()) != null) {
-			this.strategy = Strategy.SMITHY;
+		} else if (this.drawAddActionStrategyPossible()) {
+			this.strategy = Strategy.DRAW_ADD_ACTION;
 			return;
 		} else
-			this.strategy = Strategy.PLAIN;
+			this.strategy = Strategy.BIG_MONEY;
 	}
 
 	/* ---------- game information ---------- */
@@ -404,12 +476,18 @@ public class ArtificialIntelligence {
 	 * check several game states and set the endPhase if necessary
 	 */
 	private void checkEndPhase() {
-		if (getProvinceAmount() < 3) {
+		if (getPileSize(CardName.PROVINCE.getName()) < 4) {
 			this.endPhase = true;
-			// } else if (this.player.getTurnNr() >=
-			// ArtificialIntelligence.ENDPHASE_TURN) {
-			// this.endPhase = true;
-		} else if (this.player.getGameServer().getGameController().getGameBoard().amountOfPilesEmpty() == GameConstant.EMPTY_PILES.getValue() - 1) {
+			/*
+			 * } else if (this.player.getTurnNr() >=
+			 * ArtificialIntelligence.ENDPHASE_TURN) { this.endPhase = true;
+			 * 
+			 * } else if
+			 * (this.player.getGameServer().getGameController().getGameBoard
+			 * ().amountOfPilesEmpty() == GameConstant.EMPTY_PILES.getValue() -
+			 * 1) { this.endPhase = true;
+			 */
+		} else if (this.player.getGameServer().getGameController().getGameBoard().getSizeOfSmallestPilesOnBoard(3) <= 5) {
 			this.endPhase = true;
 		}
 	}
@@ -428,8 +506,67 @@ public class ArtificialIntelligence {
 
 		int treasureValue = getTreasureCardsValue(getCardHand());
 
-		/** if card hand doesn't contain a Chapel */
-		if (!this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
+		/** BIG_MONEY(_..) discarding */
+		if (!this.strategy.equals(Strategy.DRAW_ADD_ACTION)) {
+			/** if card hand doesn't contain a Chapel */
+			if (!this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
+				/** discard a CURSE */
+				if (this.player.getDeck().cardHandContains(CardType.CURSE)) {
+					discard(this.player.getDeck().getCardByTypeFromHand(CardType.CURSE));
+					return;
+				}
+				/** discard a random VICTORY card */
+				if (this.player.getDeck().cardHandContains(CardType.VICTORY)) {
+					discard(this.player.getDeck().getCardByTypeFromHand(CardType.VICTORY));
+					return;
+				}
+				/**
+				 * or if the treasureValue on card hand is >= 6, discard the
+				 * action card with the lowest cost
+				 */
+				if (treasureValue >= 6) {
+					if (this.player.getDeck().cardHandContains(CardType.ACTION)) {
+						discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.ACTION));
+						return;
+					}
+				}
+			}
+			/** if card hand contains a Chapel */
+			if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
+				/**
+				 * if there are less than two cards which can possibly be
+				 * trashed by the chapel, discard the chapel itself if the
+				 * treasureValue on card hand is >= 7, discard the action card
+				 * with the lowest cost
+				 */
+				if (canBeTrashedByChapel() < 2 || treasureValue >= 7) {
+					discard(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
+					return;
+				}
+				/** discard any VICTORY card but Estate */
+				LinkedList<Card> victoryOnCardHand = this.player.getDeck().getCardsByTypeFrom(CardType.VICTORY, this.getCardHand());
+				if (victoryOnCardHand != null && victoryOnCardHand.size() > 0) {
+					for (Card c : victoryOnCardHand) {
+						if (!c.getName().equals(CardName.ESTATE.getName())) {
+							discard(c);
+							return;
+						}
+					}
+				}
+			}
+			/** discard a COPPER */
+			if (this.player.getDeck().cardHandContains(CardName.COPPER.getName())) {
+				discard(this.player.getDeck().getCardByNameFromHand(CardName.COPPER.getName()));
+				return;
+			}
+			/** discard another TREASURE card */
+			if (this.player.getDeck().cardHandContains(CardType.TREASURE)) {
+				GameLog.log(MsgType.ERROR, "the method must not get here (unless it has a card hand like 5x gold");
+				discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.TREASURE));
+				return;
+			}
+		/** DRAW_ADD_ACTION discarding */
+		} else {
 			/** discard a CURSE */
 			if (this.player.getDeck().cardHandContains(CardType.CURSE)) {
 				discard(this.player.getDeck().getCardByTypeFromHand(CardType.CURSE));
@@ -440,49 +577,22 @@ public class ArtificialIntelligence {
 				discard(this.player.getDeck().getCardByTypeFromHand(CardType.VICTORY));
 				return;
 			}
-			/**
-			 * or if the treasureValue on card hand is >= 6, discard the action
-			 * card with the lowest cost
-			 */
-			if (treasureValue >= 6) {
-				if (this.player.getDeck().cardHandContains(CardType.ACTION)) {
-					discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.ACTION));
-					return;
-				}
-			}
-		}
-		/** if card hand contains a Chapel */
-		if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
-			/**
-			 * if there are less than two cards which can possibly be trashed by
-			 * the chapel, discard the chapel itself if the treasureValue on
-			 * card hand is >= 7, discard the action card with the lowest cost
-			 */
-			if (canBeTrashedByChapel() < 2 || treasureValue >= 7) {
-				discard(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
+			/** discard a COPPER */
+			if (this.player.getDeck().cardHandContains(CardName.COPPER.getName())) {
+				discard(this.player.getDeck().getCardByNameFromHand(CardName.COPPER.getName()));
 				return;
 			}
-			/** discard any VICTORY card but Estate */
-			LinkedList<Card> victoryOnCardHand = this.player.getDeck().getCardsByTypeFrom(CardType.VICTORY, this.getCardHand());
-			if (victoryOnCardHand != null && victoryOnCardHand.size() > 0) {
-				for (Card c : victoryOnCardHand) {
-					if (!c.getName().equals(CardName.ESTATE.getName())) {
-						discard(c);
-						return;
-					}
-				}
+			/** discard the ACTION card with lowest cost on hand */
+			if (this.player.getDeck().cardHandContains(CardType.ACTION)) {
+				discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.ACTION));
+				return;
 			}
-		}
-		/** discard a COPPER */
-		if (this.player.getDeck().cardHandContains(CardName.COPPER.getName())) {
-			discard(this.player.getDeck().getCardByNameFromHand(CardName.COPPER.getName()));
-			return;
-		}
-		/** discard another TREASURE card */
-		if (this.player.getDeck().cardHandContains(CardType.TREASURE)) {
-			GameLog.log(MsgType.ERROR, "the method must not get here (unless it has a card hand like 5x gold");
-			discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.TREASURE));
-			return;
+			/** discard another TREASURE card */
+			if (this.player.getDeck().cardHandContains(CardType.TREASURE)) {
+				GameLog.log(MsgType.ERROR, "the method must not get here (unless it has a card hand like 5x gold");
+				discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.TREASURE));
+				return;
+			}
 		}
 	}
 
@@ -521,8 +631,8 @@ public class ArtificialIntelligence {
 	 * 
 	 * @return the amount of Provinces left on the board
 	 */
-	private int getProvinceAmount() {
-		return this.player.getGameServer().getGameController().getGameBoard().getTableForVictoryCards().get(CardName.PROVINCE.getName()).size();
+	private int getPileSize(String cardname) {
+		return this.player.getGameServer().getGameController().getGameBoard().getTableForVictoryCards().get(cardname).size();
 	}
 
 	/**
@@ -534,12 +644,11 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * 
+	 * @param turn the turn to ask for
 	 * @return whether it is the first turn of the AI
 	 */
-	private boolean firstTurn() {
-		GameLog.log(MsgType.AI, "AI 4: it's the first turn (inside firstTurn())");
-		return this.player.getTurnNr() == 1;
+	private boolean turn(int turn) {
+		return this.player.getTurnNr() == turn;
 	}
 
 	/**
@@ -548,6 +657,24 @@ public class ArtificialIntelligence {
 	 */
 	private LinkedList<Card> getCardHand() {
 		return this.player.getDeck().getCardHand();
+	}
+	
+	/**
+	 * 
+	 * @return whether the strategy DRAW_ADD_ACTION will can be successful
+	 */
+	private boolean drawAddActionStrategyPossible() {
+		int count = 0;
+		GameBoard board = player.getGameServer().getGameController().getGameBoard();
+		ArrayList<String> cardNames = CollectionsUtil.getArrayList(new String[]{CardName.COUNCILROOM.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(), CardName.MARKET.getName(),
+				CardName.VILLAGE.getName(), CardName.WITCH.getName()});
+
+		for (String name : cardNames) {
+			if (board.getTableForActionCards().containsKey(name)) {
+				count++;
+			}
+		}
+		return count >= 3;
 	}
 
 	/**
@@ -565,8 +692,8 @@ public class ArtificialIntelligence {
 		}
 		return canBeTrashed;
 	}
-
-	/* ---------- getter & setter ---------- */
+	
+	/* ---------- getters & setters ---------- */
 
 	/**
 	 * @return the packetHandler
@@ -576,8 +703,7 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param packetHandler
-	 *            the packetHandler to set
+	 * @param packetHandler the packetHandler to set
 	 */
 	public void setPacketHandler(ServerGamePacketHandler packetHandler) {
 		this.packetHandler = packetHandler;
@@ -591,11 +717,38 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param player
-	 *            the player to set
+	 * @param player the player to set
 	 */
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	/**
+	 * @return the strategy
+	 */
+	public Strategy getStrategy() {
+		return strategy;
+	}
+
+	/**
+	 * @param strategy the strategy to set
+	 */
+	public void setStrategy(Strategy strategy) {
+		this.strategy = strategy;
+	}
+
+	/**
+	 * @return the buySequence
+	 */
+	public List<String> getBuySequence() {
+		return buySequence;
+	}
+
+	/**
+	 * @param buySequence the buySequence to set
+	 */
+	public void setBuySequence(List<String> buySequence) {
+		this.buySequence = buySequence;
 	}
 
 	/**
@@ -606,8 +759,7 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param blacklist
-	 *            the blacklist to set
+	 * @param blacklist the blacklist to set
 	 */
 	public void setBlacklist(List<String> blacklist) {
 		this.blacklist = blacklist;
@@ -626,35 +778,5 @@ public class ArtificialIntelligence {
 	 */
 	public void setEndPhase(boolean endPhase) {
 		this.endPhase = endPhase;
-	}
-
-	/**
-	 * @return the strategy
-	 */
-	public Strategy getStrategy() {
-		return strategy;
-	}
-
-	/**
-	 * @param strategy
-	 *            the strategy to set
-	 */
-	public void setStrategy(Strategy strategy) {
-		this.strategy = strategy;
-	}
-
-	/**
-	 * @return the buySequence
-	 */
-	public List<String> getBuySequence() {
-		return buySequence;
-	}
-
-	/**
-	 * @param buySequence
-	 *            the buySequence to set
-	 */
-	public void setBuySequence(List<String> buySequence) {
-		this.buySequence = buySequence;
 	}
 }
