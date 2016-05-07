@@ -100,11 +100,13 @@ public class ButtonClass extends GFButton {
 			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
 			MyAudioPlayer.handleGameMusic(false);
 			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getMuteButton());
+			return;
 		}
 		if (parameter.equals("mute")) {
 			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
 			MyAudioPlayer.handleGameMusic(true);
 			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getPlayButton());
+			return;
 		}
 		if (DominionController.getInstance().isTurnFlag()) {
 			if (parameter.equals("exit")) {
