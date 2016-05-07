@@ -147,6 +147,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 				break;
 			case "playTreasures":
 				GameLog.log(MsgType.PACKET ,"play treasures");
+				this.gameWindow.removeEndActionPhaseButton();
 				this.gameWindow.addPlayTreasuresButton();
 				this.gameWindow.addEndTurnButton();
 				break;
