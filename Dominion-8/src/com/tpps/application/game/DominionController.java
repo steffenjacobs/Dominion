@@ -27,6 +27,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndScree
 import com.tpps.technicalServices.network.login.server.LoginServer;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.technicalServices.util.NetUtil;
 import com.tpps.ui.MainFrame;
 import com.tpps.ui.MainMenuPanel;
@@ -351,6 +352,7 @@ public final class DominionController {
 	 */
 	public void joinMainMenu() {
 		mainFrame.setPanel(mainMenuPanel);
+		MyAudioPlayer.handleMainMusic(true);
 		mainFrame.setVisible(true);
 	}
 

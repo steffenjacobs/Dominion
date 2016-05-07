@@ -60,9 +60,8 @@ public class MyAudioPlayer {
 	public static void handleMainMusic(boolean play){
 		if(play){
 			MyAudioPlayer.mainMusicPlayer.play();
-			MyAudioPlayer.mainMusicPlayer.setRepeat(true);
 		}else{
-			MyAudioPlayer.mainMusicPlayer.stop();
+			MyAudioPlayer.mainMusicPlayer.pause();
 		}
 	}
 
