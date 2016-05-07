@@ -65,7 +65,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	private ImageIcon loading;
 	private int width, gridwidth;
 	private int height, gridheight;
-	private Font smallfont;
+	private Font smallfont,radioFont,priceFont;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc,gbc2;
 	private JPanel obenLinks,pnlBuy;
@@ -85,10 +85,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		// createButtons();
 //		loadImage();
 //		resizeImage();
-		initComponents();
-		c = this.getContentPane();
-		c.setLayout(new GridBagLayout());
-		iniateLayout();
+
 		
 		all = new JLabel(loading);
 		// all.setLayout(new GridLayout(4, 1, 0, 30));
@@ -101,12 +98,17 @@ public class CardEditor extends JFrame implements ActionListener {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		smallfont = new Font("Calibri", Font.BOLD, 19);
+		radioFont = new Font("Arial", Font.BOLD, 12);
+		priceFont = new Font("Arial",Font.BOLD,30);
 		try {
 			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		initComponents();
+		c = this.getContentPane();
+		c.setLayout(new GridBagLayout());
+		iniateLayout();
 //		BackgroundPanel bg  = new BackgroundPanel();
 //		bg.setSize(new Dimension(width, height));
 //		c.add(bg);
@@ -254,10 +256,14 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.ipadx = 60;
 		obenLinks.setLayout(new GridLayout(2,2,30,10));
 		enterName = new JLabel("Enter Cardname");
+		enterName.setFont(smallfont);
+		enterName.setForeground(Color.WHITE);
 		obenLinks.add(enterName);
 		nameField = new JTextField(1);
 		obenLinks.add(nameField);
 		cardType = new JLabel("Choose Cardtype");
+		cardType.setFont(smallfont);
+		cardType.setForeground(Color.WHITE);
 		obenLinks.add(cardType);
 		String comboBoxListe[] = {"Action", "Treasure", "Victory", "Point"};
 		selectCardType = new JComboBox(comboBoxListe);
@@ -307,6 +313,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc2.ipady = 60;
 		gbc2.anchor = GridBagConstraints.NORTH;
 		price = new JLabel(Integer.toString(priceint));;
+		price.setFont(priceFont);
+		price.setForeground(Color.WHITE);
 		mitte.add(price,gbc2);
 		gbc2.gridx = 0;
 		gbc2.gridy = 1;
@@ -366,17 +374,41 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.anchor = GridBagConstraints.CENTER;
 		actionSelect = new ButtonGroup();		
 		addAction = new JRadioButton("Add Action");
+		addAction.setFont(radioFont);
+		addAction.setForeground(Color.WHITE);
 		addMoney = new JRadioButton("Add Money");
+		addMoney.setFont(radioFont);
+		addMoney.setForeground(Color.WHITE);
 		addPurchase = new JRadioButton("Add Purchase");
+		addPurchase.setFont(radioFont);
+		addPurchase.setForeground(Color.WHITE);
 		drawCard= new JRadioButton("Draw Card");
+		drawCard.setFont(radioFont);
+		drawCard.setForeground(Color.WHITE);
 		drawCardUntil= new JRadioButton("Draw Card Until");
+		drawCardUntil.setFont(radioFont);
+		drawCardUntil.setForeground(Color.WHITE);
 		putBack = new JRadioButton("Put Back");
+		putBack.setFont(radioFont);
+		putBack.setForeground(Color.WHITE);
 		gainCard = new JRadioButton("Gain Card");
+		gainCard.setFont(radioFont);
+		gainCard.setForeground(Color.WHITE);
 		discardCard= new JRadioButton("Discard Card");
+		discardCard.setFont(radioFont);
+		discardCard.setForeground(Color.WHITE);
 		trashCard= new JRadioButton("Trash Card");
+		trashCard.setFont(radioFont);
+		trashCard.setForeground(Color.WHITE);
 		revealCard = new JRadioButton("Reveal Card");
+		revealCard.setFont(radioFont);
+		revealCard.setForeground(Color.WHITE);
 		isTreasure = new JRadioButton("Is Treasure");
+		isTreasure.setFont(radioFont);
+		isTreasure.setForeground(Color.WHITE);
 		isVictory= new JRadioButton("Is Victory");
+		isVictory.setFont(radioFont);
+		isVictory.setForeground(Color.WHITE);
 		actionSelect.add(addAction);
 		actionSelect.add(addMoney);
 		actionSelect.add(addPurchase);
