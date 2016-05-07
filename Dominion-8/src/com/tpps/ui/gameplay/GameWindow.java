@@ -291,6 +291,7 @@ public class GameWindow extends JFrame {
 		this.framework.removeComponent(action);
 		this.framework.removeComponent(coin);
 		this.framework.removeComponent(buy);
+		this.framework.removeComponent(discardDeck);
 
 		action = new DisplayValue(0.1, 0.38, 0.12, 0.12, 1, getWIDTH(), getHEIGHT(), displayImageActions, framework,
 				String.valueOf(GameConstant.INIT_ACTIONS.getValue()));
