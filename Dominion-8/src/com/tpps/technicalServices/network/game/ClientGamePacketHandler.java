@@ -29,6 +29,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketSendRevealCa
 import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndScreen;
 import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateTreasures;
 import com.tpps.technicalServices.network.gameSession.packets.PacketUpdateValuesChangeButtons;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.gameplay.GameWindow;
 
 import javafx.util.Pair;
@@ -325,7 +326,8 @@ public class ClientGamePacketHandler extends PacketHandler {
 		this.gameWindow.setVisible(true);
 
 		GameLog.log(MsgType.GUI ,"opened gui" + this.gameWindow.isVisible());
-
+		MyAudioPlayer.handleMainMusic(false);
+//		MyAudioPlayer.handleGameMusic(true);
 		GameLog.log(MsgType.GUI ,"open gui2");
 	}
 

@@ -12,7 +12,7 @@ public class MyAudioPlayer {
 
 	private static MP3Player mp3, mp32, mp33;
 	private static int lastVolume, lastSoundVolume;
-	private static MP3Player mainMusicPlayer;
+	private static MP3Player mainMusicPlayer, gameMusicPlayer;
 	private static LinkedHashMap<MP3Player, Integer> lastVolumes;
 	/**
 	 * initialisiert die Player und setzt lastVolume und lastSoundVolume
@@ -22,9 +22,11 @@ public class MyAudioPlayer {
 //		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
 		MyAudioPlayer.mp32 = new MP3Player(
 				ClassLoader.getSystemResource("resources/sounds/Click.mp3"));
-//		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource(""));
+		MyAudioPlayer.mp33 = new MP3Player("resources/sounds/Cash.mp3");
 		MyAudioPlayer.mainMusicPlayer = new MP3Player(
 				ClassLoader.getSystemResource("resources/sounds/lobby.mp3"));
+//		MyAudioPlayer.gameMusicPlayer = new MP3Player(
+//				ClassLoader.getSystemResource("resources/sounds/1HourofMedievalAndFantasyInnMusic.mp3"));
 		lastVolumes.put(mainMusicPlayer, new Integer(55));
 	}
 	

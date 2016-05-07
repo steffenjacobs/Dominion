@@ -14,6 +14,7 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.animations.MoveAnimation;
@@ -451,6 +452,7 @@ public class Card extends GameObject {
 				DominionController.getInstance().getGameClient().sendMessage(new PacketPlayCard(this.id, DominionController.getInstance().getGameClient().getClientId()));
 				DominionController.getInstance().setTurnFlag(false);
 				DominionController.getInstance().getGameClient().getGameWindow().setCaptionTurn("execute");
+				MyAudioPlayer.doCashSound();
 			} catch (IOException e) {
 
 				e.printStackTrace();
