@@ -45,6 +45,8 @@ public class ChatRoom {
 	private Votekick votekick;
 	private ColorPool pool;
 	
+	private int gameserverPort;
+	
 	/**
 	 * initializes the ChatRoom object
 	 * 
@@ -512,7 +514,11 @@ public class ChatRoom {
 		String getkicked = this.votekick.getUsertogetkicked();
 		if(this.votekick.fastEvaluateVote()){			
 			this.chatpackethandler.kickPlayer(getkicked);
-			this.sendMessageToAll("The player '" + getkicked + "' gets kicked!");			
+			this.sendMessageToAll("The player '" + getkicked + "' gets kicked!");
+			
+			//SEND PACKET TO GAMESERVER TO VOTEKICK USER
+			new VotekickClient(this.gameserverPort).sendVotekickPacket(getkicked);
+			System.out.println("kicked from chatroom " + id);
 		}else{
 			this.sendMessageToAll("The player '" + getkicked + "' stays in the match!");
 		}
@@ -579,5 +585,17 @@ public class ChatRoom {
 	 */
 	public void removeUser(String user){
 		this.clientsByUsername.remove(user);		
+	}
+	
+	
+	/**
+	 * @author jhuhn - Johannes Huhn
+	 * @param gameserverPort
+	 *            port of the gameserver, that is connected with this chatromm
+	 *            instance
+	 */
+	public void setGameserverPort(int gameserverPort) {
+		System.out.println("set the gameServer port");
+		this.gameserverPort = gameserverPort;
 	}
 }

@@ -20,6 +20,7 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.chat.packets.PacketVotekick;
 import com.tpps.technicalServices.network.chat.server.ChatController;
 import com.tpps.technicalServices.network.core.PacketHandler;
 import com.tpps.technicalServices.network.core.packet.Packet;
@@ -66,7 +67,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	 */
 	public void setServer(GameServer server) {
 		this.server = server;
-		chatController = new ChatController(this);
+		chatController = new ChatController(this, this.server.getPort());
 		this.colorMap = new ConcurrentHashMap<String, Color>();
 	}
 
@@ -93,6 +94,17 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 		try {
 			switch (packet.getType()) {
+			case VOTEKICK:
+				// ----------------------
+				// Votekick logik für ingame,
+				// zu diesem Zeitpunkt, ist der
+				// user schon aus dem chatroom raus				
+				// ----------------------
+				GameLog.log(MsgType.INFO , "This gameserver " + this.server.getPort() + " received a votekickpacket");
+				PacketVotekick votekickPacket = (PacketVotekick) packet;
+				GameLog.log(MsgType.INFO , "The User gets kicked: " + votekickPacket.getUser());
+				return;	//oder doch break ?
+				
 			case REGISTRATE_PLAYER_BY_SERVER:
 				int clientId = GameServer.getCLIENT_ID();
 				GameLog.log(MsgType.MM ,"clientId: " + clientId);

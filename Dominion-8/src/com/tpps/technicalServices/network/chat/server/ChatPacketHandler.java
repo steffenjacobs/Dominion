@@ -135,6 +135,8 @@ public class ChatPacketHandler extends PacketHandler{
 		switch(packet.getCommand()){
 		case "createChatroom":
 			int chatid = this.addChatRoom(packet.getMembers());
+			this.getSpecificChatRoom(packet.getMembers().get(0)).setGameserverPort(packet.getGameserverPort());
+			System.out.println("GameServer Port: " + packet.getGameserverPort());
 			
 			HashMap<String, Color> colorMap = new HashMap<String, Color>();
 			for (int i = 0; i < packet.getMembers().size(); i++) {

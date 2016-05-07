@@ -26,6 +26,8 @@ public class ChatController extends PacketHandler{
 	private HashMap<String, Color> colorMap;
 	private ServerGamePacketHandler handler;
 	
+	private int gameserverPort;
+	
 	/**
 	 * initializes the chatcontroller class
 	 * 
@@ -33,7 +35,8 @@ public class ChatController extends PacketHandler{
 	 * @param handler
 	 *            the servergamepackethandler instance to start the match
 	 */
-	public ChatController(ServerGamePacketHandler handler){
+	public ChatController(ServerGamePacketHandler handler, int gameserverPort){
+		this.gameserverPort = gameserverPort;
 		this.handler = handler;
 		try {
 			ChatController.chatclient = new Client(new InetSocketAddress(Addresses.getLocalHost(), 1340), this, false);
@@ -52,7 +55,7 @@ public class ChatController extends PacketHandler{
 	 *            an ArrayList of all members who participate in the chatroom
 	 */
 	public void createChatRoom(ArrayList<String> members){
-		PacketChatController packet = new PacketChatController("createChatroom", members);
+		PacketChatController packet = new PacketChatController("createChatroom", members, this.gameserverPort);
 		try {
 			ChatController.chatclient.sendMessage(packet);
 		} catch (IOException e) {		

@@ -25,6 +25,8 @@ public class PacketChatController extends Packet{
 	private int chatroomId;
 	private HashMap<String, Color> colorMap = new HashMap<String, Color>();
 	
+	private int gameserverPort;
+	
 	
 	/**
 	 * constructor to create a chatroom
@@ -36,10 +38,11 @@ public class PacketChatController extends Packet{
 	 *            an ArrayList of all members who want to participate to the
 	 *            chatroom
 	 */
-	public PacketChatController(String command, ArrayList<String> members) {
+	public PacketChatController(String command, ArrayList<String> members, int gameserverPort) {
 		super(PacketType.CHAT_CONTROLLER); 
 		this.command = command;
 		this.members = members;
+		this.gameserverPort = gameserverPort;
 	}
 	
 	/**
@@ -150,9 +153,19 @@ public class PacketChatController extends Packet{
 	}
 	
 	/**
+	 * @author jhuhn
 	 * @return a Hashmap with key user and value Color
 	 */
 	public HashMap<String, Color> getColorMap() {
 		return colorMap;
+	}
+	
+	
+	/**
+	 * @author jhuhn
+	 * @return the port of the gameserver
+	 */
+	public int getGameserverPort() {
+		return gameserverPort;
 	}
 }
