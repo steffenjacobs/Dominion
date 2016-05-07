@@ -58,12 +58,18 @@ public class Player {
 	/**
 	 * creates the player sets all the initial values
 	 * 
-	 * @param deck the deck of the player
-	 * @param clientID the clientID of the player
-	 * @param port the port of the player
-	 * @param userName the username of the player
-	 * @param uuid the UUID of the player 
-	 * @param gameServer the gameServer of the player
+	 * @param deck
+	 *            the deck of the player
+	 * @param clientID
+	 *            the clientID of the player
+	 * @param port
+	 *            the port of the player
+	 * @param userName
+	 *            the username of the player
+	 * @param uuid
+	 *            the UUID of the player
+	 * @param gameServer
+	 *            the gameServer of the player
 	 * 
 	 */
 	public Player(Deck deck, int clientID, int port, String userName, UUID uuid, GameServer gameServer) {
@@ -94,7 +100,7 @@ public class Player {
 		this.port = port;
 		this.playedCards = new LinkedList<Card>();
 		this.userName = userName;
-		GameLog.log(MsgType.GAME_INFO ,"username: " + this.userName);
+		GameLog.log(MsgType.GAME_INFO, "username: " + this.userName);
 		this.logColor = ColorUtil.playerColors.get(clientID % 4);
 		this.turnNr = 0;
 		this.gameServer = gameServer;
@@ -103,12 +109,18 @@ public class Player {
 	/**
 	 * calls the other constructor
 	 * 
-	 * @param clientID the clientID of the player
-	 * @param port the port of the player
-	 * @param initCards the init cardset of the player
-	 * @param userName the username of the player
-	 * @param uuid the UUID of the player 
-	 * @param gameServer the gameServer of the player
+	 * @param clientID
+	 *            the clientID of the player
+	 * @param port
+	 *            the port of the player
+	 * @param initCards
+	 *            the init cardset of the player
+	 * @param userName
+	 *            the username of the player
+	 * @param uuid
+	 *            the UUID of the player
+	 * @param gameServer
+	 *            the gameServer of the player
 	 */
 	public Player(int clientID, int port, LinkedList<Card> initCards, String userName, UUID uuid, GameServer gameServer) {
 		this(new Deck(initCards), clientID, port, userName, uuid, gameServer);
@@ -183,7 +195,8 @@ public class Player {
 	}
 
 	/**
-	 * @param sessionID the sessionID to update
+	 * @param sessionID
+	 *            the sessionID to update
 	 */
 	public void updateSessionID(UUID sessionID) {
 		this.session_ID = sessionID;
@@ -218,9 +231,9 @@ public class Player {
 	public void setPlayTwice() {
 		this.playTwice = true;
 	}
-	
-	/** 
-	 * set the playTwice value false 
+
+	/**
+	 * set the playTwice value false
 	 */
 	public void setPlayTwiceFalse() {
 		this.playTwice = false;
@@ -728,7 +741,8 @@ public class Player {
 
 	/**
 	 * 
-	 * @param cardActions the relevant cardActions
+	 * @param cardActions
+	 *            the relevant cardActions
 	 * @return the relevant actions in this round e.g. by an Action Reaction
 	 *         card return the actions belonging to the actual gameMode
 	 */
@@ -758,28 +772,49 @@ public class Player {
 	 * most important method for the card action. every method which executes
 	 * card actions is called from this method
 	 * 
-	 * @author Lukas Adler, Nicolas Wipfler
-	 * @param cardID the id of the card
+	 * @param cardID
+	 *            the id of the card
 	 * @return the serverCard
 	 * @throws IOException
 	 * @throws SynchronisationException
+	 * 
+	 * @author Lukas Adler, Nicolas Wipfler
 	 */
 	public Card doAction(String cardID) throws IOException {
 		boolean dontRemoveFlag = false, trashFlag = false;
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 
-		// this.gameServer.broadcastMessage(new
-		// PacketBroadcastLog("",this.getPlayerName()," - plays " +
-		// serverCard.getName(),
-		// ((ServerGamePacketHandler)this.gameServer.getHandler()).getActivePlayerColor()));
-		this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
+		/*
+		 * this.gameServer.broadcastMessage(new
+		 * PacketBroadcastLog("",this.getPlayerName()," - plays " +
+		 * serverCard.getName(),
+		 * ((ServerGamePacketHandler)this.gameServer.getHandler
+		 * ()).getActivePlayerColor()));
+		 */
+		GameLog.log(MsgType.ERROR, "discardMode1 " + String.valueOf(this.isDiscardMode()));
+		GameLog.log(MsgType.ERROR, "discardMode2 " + String.valueOf(this.discardMode));
+
+		GameLog.log(MsgType.ERROR, "trashMode1 " + String.valueOf(this.isTrashMode()));
+		GameLog.log(MsgType.ERROR, "trashMode2 " + String.valueOf(this.trashMode));
+		
+		if (this.isDiscardMode())
+			if (serverCard.getName().equals(CardName.MOAT.getName()))
+				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
+			else
+				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - discards " + serverCard.getName(), this.getLogColor()));
+		else if (this.isTrashMode())
+			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - trashes " + serverCard.getName(), this.getLogColor()));
+		else {
+			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
+			GameLog.log(MsgType.ERROR, ">>> HIER REIN <<<" );
+		}
 		GameLog.log(MsgType.INFO, "The Playername is: " + this.getPlayerName());
 
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
 			return serverCard;
 		}
-
+		
 		if (this.playTwice) {
 			if (!this.secondTimePlayed) {
 				GameLog.log(MsgType.INFO, "playTwice: " + this.playTwice);
@@ -1016,7 +1051,8 @@ public class Player {
 	/**
 	 * reveals so much cards until value treasure cards are revealed
 	 * 
-	 * @param value the value amount to reveal
+	 * @param value
+	 *            the value amount to reveal
 	 * @throws noSuchElement
 	 *             exceptions if not enough treasure cards are in the deck
 	 */
@@ -1110,7 +1146,7 @@ public class Player {
 		this.witch = false;
 		this.bureaucrat = false;
 	}
-	
+
 	/**
 	 * sets all flags on false
 	 */
@@ -1258,7 +1294,8 @@ public class Player {
 
 	/**
 	 * 
-	 * @return whether the player is an AI (can be identified by default AI UUID)
+	 * @return whether the player is an AI (can be identified by default AI
+	 *         UUID)
 	 */
 	public boolean isAI() {
 		return UUID.fromString("00000000-0000-0000-0000-000000000000").equals(this.session_ID);

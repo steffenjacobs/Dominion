@@ -6,12 +6,14 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -63,7 +65,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	private ImageIcon loading;
 	private int width, gridwidth;
 	private int height, gridheight;
-	private Font smallfont;
+	private Font smallfont,radioFont,priceFont;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc,gbc2;
 	private JPanel obenLinks,pnlBuy;
@@ -81,14 +83,14 @@ public class CardEditor extends JFrame implements ActionListener {
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		gbc = new GridBagConstraints();
 		// createButtons();
-		// loadImage();
-		// resizeImage();
-		c = this.getContentPane();
-		c.setLayout(new GridBagLayout());
+//		loadImage();
+//		resizeImage();
+
+		
 		all = new JLabel(loading);
 		// all.setLayout(new GridLayout(4, 1, 0, 30));
 		// all.setLayout(new GridBagLayout());
-		iniateLayout();
+
 		this.setSize(width / 5, height / 2);
 		this.setLocationRelativeTo(null);
 		this.setTitle("Card Editor !");
@@ -96,13 +98,21 @@ public class CardEditor extends JFrame implements ActionListener {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		smallfont = new Font("Calibri", Font.BOLD, 19);
+		radioFont = new Font("Arial", Font.BOLD, 12);
+		priceFont = new Font("Arial",Font.BOLD,30);
 		try {
 			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		c.add(all);
+		initComponents();
+		c = this.getContentPane();
+		c.setLayout(new GridBagLayout());
+		iniateLayout();
+//		BackgroundPanel bg  = new BackgroundPanel();
+//		bg.setSize(new Dimension(width, height));
+//		c.add(bg);
+//		c.add(all);
 	}
 	
 	private void fullscreenmode() {
@@ -176,14 +186,65 @@ public class CardEditor extends JFrame implements ActionListener {
 	//TODO : Komponenten ans Design anpassen
 	//TODO : Listener der Komponenten
 	
+	
+    private void initComponents() {
+        /*
+         * Neue ContentPane setzen, die das Hintergrundbild zeichnet. Hier zu
+         * Vorzeigezwecken alles in einem Schritt reingeklatscht, sollte im
+         * Normalfall sauberer implementiert werden.
+         */
+        try {
+			setContentPane(new JPanel() {
+ 
+			    /**
+			     * Das Hintergrundbild.
+			     */
+			    private Image               img;
+ 
+			    /*
+			     * Da es sich hierbei um eine anonyme Klasse handelt, kann ich
+			     * keinen expliziten Konstruktor deklarieren, daher wird das Bild in
+			     * einem Initialisierer geladen.
+			     */
+			    {
+			        img = ImageIO
+							.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+    
+ 
+			        MediaTracker mt = new MediaTracker(this);
+			        mt.addImage(img, 1);
+			        try {
+			            mt.waitForAll();
+			        } catch(InterruptedException e) {
+			            e.printStackTrace();
+			        }
+			    }
+ 
+			    /*
+			     * (non-Javadoc)
+			     * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+			     */
+			    @Override protected void paintComponent(Graphics g) {
+			        g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+			    }
+			});
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+	
 	/**
 	 * creates the GUI
 	 */
 	
 	private void iniateLayout() {
+		
+		
 	
 		JPanel obenLinks = new JPanel();      //Panel für Karteninitation
-		obenLinks.setBackground(Color.green); 
+//		obenLinks.setBackground(Color.green); 
+		obenLinks.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.gridwidth = 2;
@@ -195,10 +256,14 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.ipadx = 60;
 		obenLinks.setLayout(new GridLayout(2,2,30,10));
 		enterName = new JLabel("Enter Cardname");
+		enterName.setFont(smallfont);
+		enterName.setForeground(Color.WHITE);
 		obenLinks.add(enterName);
 		nameField = new JTextField(1);
 		obenLinks.add(nameField);
 		cardType = new JLabel("Choose Cardtype");
+		cardType.setFont(smallfont);
+		cardType.setForeground(Color.WHITE);
 		obenLinks.add(cardType);
 		String comboBoxListe[] = {"Action", "Treasure", "Victory", "Point"};
 		selectCardType = new JComboBox(comboBoxListe);
@@ -208,7 +273,8 @@ public class CardEditor extends JFrame implements ActionListener {
 
 		JPanel pnlBuy = new JPanel();        //Panel für das Bildhochladen
 		gbc.gridx = 1;                       //Anpassen fürs Bildhochladen
-		pnlBuy.setBackground(Color.blue); 
+//		pnlBuy.setBackground(Color.blue); 
+		pnlBuy.setOpaque(false);
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;
@@ -229,7 +295,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		c.add(pnlBuy, gbc);
 		
 		JPanel mitte = new JPanel();           //Panel für den Preis
-		mitte.setBackground(Color.ORANGE);
+//		mitte.setBackground(Color.ORANGE);
+		mitte.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		gbc.gridwidth = 2;
@@ -246,6 +313,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc2.ipady = 60;
 		gbc2.anchor = GridBagConstraints.NORTH;
 		price = new JLabel(Integer.toString(priceint));;
+		price.setFont(priceFont);
+		price.setForeground(Color.WHITE);
 		mitte.add(price,gbc2);
 		gbc2.gridx = 0;
 		gbc2.gridy = 1;
@@ -293,28 +362,53 @@ public class CardEditor extends JFrame implements ActionListener {
 		
 		
 		JPanel radio = new JPanel();            //Panel für die RadioButtons
-		radio.setBackground(Color.YELLOW);
+//		radio.setBackground(Color.YELLOW);
+		radio.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		gbc.gridwidth = 2;
 		gbc.gridheight = 1;
 		gbc.weightx = 0.99;
-		gbc.weighty = 0.5;
+		gbc.weighty = 0.7;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.CENTER;
 		actionSelect = new ButtonGroup();		
 		addAction = new JRadioButton("Add Action");
+		addAction.setFont(radioFont);
+		addAction.setForeground(Color.WHITE);
 		addMoney = new JRadioButton("Add Money");
+		addMoney.setFont(radioFont);
+		addMoney.setForeground(Color.WHITE);
 		addPurchase = new JRadioButton("Add Purchase");
+		addPurchase.setFont(radioFont);
+		addPurchase.setForeground(Color.WHITE);
 		drawCard= new JRadioButton("Draw Card");
+		drawCard.setFont(radioFont);
+		drawCard.setForeground(Color.WHITE);
 		drawCardUntil= new JRadioButton("Draw Card Until");
+		drawCardUntil.setFont(radioFont);
+		drawCardUntil.setForeground(Color.WHITE);
 		putBack = new JRadioButton("Put Back");
+		putBack.setFont(radioFont);
+		putBack.setForeground(Color.WHITE);
 		gainCard = new JRadioButton("Gain Card");
+		gainCard.setFont(radioFont);
+		gainCard.setForeground(Color.WHITE);
 		discardCard= new JRadioButton("Discard Card");
+		discardCard.setFont(radioFont);
+		discardCard.setForeground(Color.WHITE);
 		trashCard= new JRadioButton("Trash Card");
+		trashCard.setFont(radioFont);
+		trashCard.setForeground(Color.WHITE);
 		revealCard = new JRadioButton("Reveal Card");
+		revealCard.setFont(radioFont);
+		revealCard.setForeground(Color.WHITE);
 		isTreasure = new JRadioButton("Is Treasure");
+		isTreasure.setFont(radioFont);
+		isTreasure.setForeground(Color.WHITE);
 		isVictory= new JRadioButton("Is Victory");
+		isVictory.setFont(radioFont);
+		isVictory.setForeground(Color.WHITE);
 		actionSelect.add(addAction);
 		actionSelect.add(addMoney);
 		actionSelect.add(addPurchase);
@@ -357,7 +451,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		
 
 		JPanel untenLinks = new JPanel();		//Karte erstellen
-		untenLinks.setBackground(Color.red); 
+//		untenLinks.setBackground(Color.red); 
+		untenLinks.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 4;
 		gbc.gridwidth = 1;
@@ -370,7 +465,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		c.add(untenLinks, gbc);
 
 		JPanel untenRechts = new JPanel();		//Zurück ins Menü
-		untenRechts.setBackground(Color.gray);
+//		untenRechts.setBackground(Color.gray);
+		untenRechts.setOpaque(false);
 		gbc.gridx = 1;
 		gbc.gridy = 4;
 		gbc.gridwidth = 2;
@@ -390,8 +486,10 @@ public class CardEditor extends JFrame implements ActionListener {
 		c.add(untenRechts, gbc);
 
 		// createButtons();
-
-	}
+		}
+	
+	
+	
 
 	/**
 	 * resizing the uploaded image
@@ -467,5 +565,37 @@ public class CardEditor extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		
 	}
+
+}
+
+
+class BackgroundPanel extends JPanel {
+
+    private static final long serialVersionUID = 1L;
+    private Image img;
+
+    public BackgroundPanel() {
+        try {
+            img = ImageIO
+            		.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+            System.out.println("Picture loaded.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Picture was not found.");
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        // TODO Auto-generated method stub
+        super.paintComponent(g);
+        g.drawImage(img,0,0, getWidth()*10, getHeight(), this);
+        System.out.println("Methode abgerufen");
+
+    }
+
+    public Image getBackgroundImage() {
+        return img;
+    }
 
 }

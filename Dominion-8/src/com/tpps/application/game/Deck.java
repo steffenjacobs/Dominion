@@ -19,6 +19,10 @@ import com.tpps.technicalServices.util.CollectionsUtil;
  * 
  * Player owns a deck and interacts with these piles
  * 
+ * A few methods might appear to be redundant, but since the game works just
+ * fine now in almost every edge case, there is no need to remove working
+ * methods right now. Would be future work to make the code more stable
+ * 
  * @author Nicolas Wipfler, Lukas Adler
  */
 public class Deck {
@@ -462,6 +466,49 @@ public class Deck {
 		this.shuffleIfLessThan(1);
 		return this.drawPile.removeLast();
 	}
+	
+	/**
+	 * 
+	 * @param name the cardname to search
+	 * @return whether the deck contains a card with name *name*
+	 */
+	public boolean deckContains(String name) {
+		for (Card c : this.drawPile) {
+			if (c.getName().equals(name))
+				return true;
+		}
+		for (Card c : this.discardPile) {
+			if (c.getName().equals(name))
+				return true;
+		}
+		for (Card c : this.cardHand) {
+			if (c.getName().equals(name))
+				return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @param name the cardname to search
+	 * @return the amount of found cards in the deck with the given name
+	 */
+	public int deckContainsAmountOf(String name) {
+		int count = 0;
+		for (Card c : this.drawPile) {
+			if (c.getName().equals(name))
+				count++;
+		}
+		for (Card c : this.discardPile) {
+			if (c.getName().equals(name))
+				count++;
+		}
+		for (Card c : this.cardHand) {
+			if (c.getName().equals(name))
+				count++;
+		}
+		return count;
+	}
 
 	/**
 	 * 
@@ -562,6 +609,38 @@ public class Deck {
 	public LinkedList<Card> cardsWithAction(CardAction action, LinkedList<Card> cards) {
 		LinkedList<Card> cardList = new LinkedList<Card>();
 		for (Card card : cards) {
+			if (card.getActions().containsKey(action)) {
+				cardList.addLast(card);
+			}
+		}
+		return cardList;
+	}
+
+	/**
+	 * 
+	 * example: cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER,
+	 * player.getDeck()) returns a list of all cards which give one more action
+	 * to the player when played.
+	 *
+	 * @param action
+	 *            the CardAction to consider
+	 * @param deck
+	 *            the deck to check
+	 * @return a list of cards with actions of type *action*
+	 */
+	public LinkedList<Card> cardsWithAction(CardAction action, Deck deck) {
+		LinkedList<Card> cardList = new LinkedList<Card>();
+		for (Card card : deck.getDiscardPile()) {
+			if (card.getActions().containsKey(action)) {
+				cardList.addLast(card);
+			}
+		}
+		for (Card card : deck.getDrawPile()) {
+			if (card.getActions().containsKey(action)) {
+				cardList.addLast(card);
+			}
+		}
+		for (Card card : deck.getCardHand()) {
 			if (card.getActions().containsKey(action)) {
 				cardList.addLast(card);
 			}

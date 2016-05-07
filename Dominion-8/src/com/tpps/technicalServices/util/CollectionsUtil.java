@@ -201,9 +201,9 @@ public final class CollectionsUtil {
 	 * @param words the words to add to an array list
 	 * @return an arraylist with all given string parameters of words
 	 */
-	public static ArrayList<String> getArrayList(String... words) {
-		ArrayList<String> returnList = new ArrayList<String>();
-		for (String word : words) {
+	public static <T> ArrayList<T> getArrayList(T[] words) {
+		ArrayList<T> returnList = new ArrayList<T>();
+		for (T word : words) {
 			returnList.add(word);
 		}
 		return returnList;
