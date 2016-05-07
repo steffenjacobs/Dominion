@@ -22,7 +22,8 @@ public class MyAudioPlayer {
 //		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
 		MyAudioPlayer.mp32 = new MP3Player(
 				ClassLoader.getSystemResource("resources/sounds/Click.mp3"));
-		MyAudioPlayer.mp33 = new MP3Player("resources/sounds/Cash.mp3");
+		
+		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource("resources/sounds/Cash.mp3"));
 		MyAudioPlayer.mainMusicPlayer = new MP3Player(
 				ClassLoader.getSystemResource("resources/sounds/lobby.mp3"));
 //		MyAudioPlayer.gameMusicPlayer = new MP3Player(
