@@ -36,7 +36,7 @@ import com.tpps.ui.components.GFButton;
 public class ButtonClass extends GFButton {
 	private static final long serialVersionUID = 1520424079770080041L;
 	private Image original;
-	private String parameter="";
+	private String parameter = "";
 
 	/**
 	 * constructor calling the GraphicFramework and drawing the buttons
@@ -117,7 +117,7 @@ public class ButtonClass extends GFButton {
 
 			if (this.getCaption().equals("End ActionPhase")) {
 				try {
-					GameLog.log(MsgType.GUI ,"EndActionPhase");
+					GameLog.log(MsgType.GUI, "EndActionPhase");
 					this.getFramework().removeComponent(this);
 					this.getFramework().addComponent(GameWindow.playTreasures);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndActionPhase());
@@ -127,7 +127,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("Play Treasures")) {
 				try {
-					GameLog.log(MsgType.GUI ,"PacketPlayTreasures");
+					GameLog.log(MsgType.GUI, "PacketPlayTreasures");
 					this.getFramework().removeComponent(this);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
 				} catch (IOException e) {
@@ -135,11 +135,11 @@ public class ButtonClass extends GFButton {
 					e.printStackTrace();
 				}
 			}
-			GameLog.log(MsgType.GUI ,"Caption: " + this.getCaption());
+			GameLog.log(MsgType.GUI, "Caption: " + this.getCaption());
 			if (this.getCaption().equals("End Turn")) {
 				try {
 					this.getFramework().addComponent(GameWindow.endActionPhase);
-					GameLog.log(MsgType.GUI ,"Packet EndTurn");
+					GameLog.log(MsgType.GUI, "Packet EndTurn");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndTurn());
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
@@ -147,7 +147,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("Stop Discard")) {
 				try {
-					GameLog.log(MsgType.GUI ,"packet send end discard mode");
+					GameLog.log(MsgType.GUI, "packet send end discard mode");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndDiscardMode());
 					this.getFramework().removeComponent(this);
 				} catch (IOException e) {
@@ -166,7 +166,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("Discard Deck")) {
 				try {
-					GameLog.log(MsgType.GUI ,"PacketDiscardDeck");
+					GameLog.log(MsgType.GUI, "PacketDiscardDeck");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketDiscardDeck());
 					this.getFramework().removeComponent(this);
 				} catch (IOException e) {
@@ -226,7 +226,7 @@ public class ButtonClass extends GFButton {
 				}
 			}
 			if (this.getCaption().equals("Take Drawed Card")) {
-				GameLog.log(MsgType.GUI ,"take drewCard");
+				GameLog.log(MsgType.GUI, "take drewCard");
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
 					gameClient.sendMessage(new PacketTakeDrewCard());
@@ -260,7 +260,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("End ActionPhase")) {
 				try {
-					GameLog.log(MsgType.GUI ,"EndActionPhase");
+					GameLog.log(MsgType.GUI, "EndActionPhase");
 					this.getFramework().removeComponent(this);
 					this.getFramework().addComponent(GameWindow.playTreasures);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndActionPhase());
@@ -271,7 +271,7 @@ public class ButtonClass extends GFButton {
 
 			if (this.getCaption().equals("Play Treasures")) {
 				try {
-					GameLog.log(MsgType.GUI ,"PacketPlayTreasures");
+					GameLog.log(MsgType.GUI, "PacketPlayTreasures");
 					this.getFramework().removeComponent(this);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
 				} catch (IOException e) {
@@ -279,11 +279,11 @@ public class ButtonClass extends GFButton {
 					e.printStackTrace();
 				}
 			}
-			GameLog.log(MsgType.GUI ,"Caption: " + this.getCaption());
+			GameLog.log(MsgType.GUI, "Caption: " + this.getCaption());
 			if (this.getCaption().equals("End Turn")) {
 				try {
 					this.getFramework().addComponent(GameWindow.endActionPhase);
-					GameLog.log(MsgType.GUI ,"Packet EndTurn");
+					GameLog.log(MsgType.GUI, "Packet EndTurn");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndTurn());
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
@@ -291,7 +291,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("Stop Discard")) {
 				try {
-					GameLog.log(MsgType.GUI ,"packet send end discard mode");
+					GameLog.log(MsgType.GUI, "packet send end discard mode");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketEndDiscardMode());
 					this.getFramework().removeComponent(this);
 				} catch (IOException e) {
@@ -310,7 +310,7 @@ public class ButtonClass extends GFButton {
 			}
 			if (this.getCaption().equals("Discard Deck")) {
 				try {
-					GameLog.log(MsgType.GUI ,"PacketDiscardDeck");
+					GameLog.log(MsgType.GUI, "PacketDiscardDeck");
 					DominionController.getInstance().getGameClient().sendMessage(new PacketDiscardDeck());
 					this.getFramework().removeComponent(this);
 				} catch (IOException e) {
@@ -372,7 +372,7 @@ public class ButtonClass extends GFButton {
 				}
 			}
 			if (this.getCaption().equals("Take Drawed Card")) {
-				GameLog.log(MsgType.GUI ,"take drewCard");
+				GameLog.log(MsgType.GUI, "take drewCard");
 				GameClient gameClient = DominionController.getInstance().getGameClient();
 				try {
 					gameClient.sendMessage(new PacketTakeDrewCard());

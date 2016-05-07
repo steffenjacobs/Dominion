@@ -10,7 +10,7 @@ import jaco.mp3.player.MP3Player;
  */
 public class MyAudioPlayer {
 
-	private static MP3Player mp3, mp32, mp33;
+	private static MP3Player mp3, mp32, mp33, mp34;
 	private static int lastVolume, lastSoundVolume;
 	private static MP3Player mainMusicPlayer, gameMusicPlayer;
 	private static LinkedHashMap<MP3Player, Integer> lastVolumes;
@@ -22,6 +22,7 @@ public class MyAudioPlayer {
 //		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
 		MyAudioPlayer.mp32 = new MP3Player(
 				ClassLoader.getSystemResource("resources/sounds/Click.mp3"));
+		MyAudioPlayer.mp34 = new MP3Player(ClassLoader.getSystemResource("resources/sounds/Victory.mp3"));
 		
 		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource("resources/sounds/Cash.mp3"));
 		MyAudioPlayer.mainMusicPlayer = new MP3Player(
@@ -102,6 +103,9 @@ public class MyAudioPlayer {
 	 */
 	public static void doCashSound() {
 		MyAudioPlayer.mp33.play();
+	}
+	public static void doVictorySound(){
+		MyAudioPlayer.mp34.play();
 	}
 	
 	/**

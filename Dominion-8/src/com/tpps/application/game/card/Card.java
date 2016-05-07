@@ -465,6 +465,9 @@ public class Card extends GameObject {
 				if (handTrigger.equals("Coins")) {
 					MyAudioPlayer.doCashSound();
 				}
+				if (handTrigger.equals("Victory")) {
+					MyAudioPlayer.doVictorySound();
+				}
 			} catch (IOException e) {
 
 				e.printStackTrace();
