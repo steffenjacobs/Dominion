@@ -528,8 +528,30 @@ public class Deck {
 
 	/**
 	 * 
-	 * example: cardHandsWith(1, CardAction.ADD_ACTION_TO_PLAYER) returns a list
-	 * of all cards which give at least +1 action when played.
+	 * example: cardWithAction(CardAction.ADD_ACTION_TO_PLAYER,
+	 * player.getDeck().getCardHand()) returns a card which gives one more
+	 * action to the player when played.
+	 *
+	 * @param action
+	 *            the CardAction to consider
+	 * @param cards
+	 *            the cardList to check
+	 * @return a card with action *action*
+	 */
+	public Card cardWithAction(CardAction action, LinkedList<Card> cards) {
+		for (Card card : cards) {
+			if (card.getActions().containsKey(action)) {
+				return card;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * example: cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER,
+	 * player.getDeck().getCardHand()) returns a list of all cards which give
+	 * one more action to the player when played.
 	 *
 	 * @param action
 	 *            the CardAction to consider
@@ -537,7 +559,7 @@ public class Deck {
 	 *            the cardList to check
 	 * @return a list of cards with actions of type *action*
 	 */
-	public LinkedList<Card> cardHandsWith(CardAction action, LinkedList<Card> cards) {
+	public LinkedList<Card> cardsWithAction(CardAction action, LinkedList<Card> cards) {
 		LinkedList<Card> cardList = new LinkedList<Card>();
 		for (Card card : cards) {
 			if (card.getActions().containsKey(action)) {

@@ -104,6 +104,7 @@ public class ArtificialIntelligence {
 	 *            the list of cards to be played
 	 * @throws InterruptedException
 	 */
+	@SuppressWarnings("unused")
 	private void playCards(LinkedList<Card> cards) throws InterruptedException {
 		if (cards != null && cards.size() > 0) {
 			for (Card card : cards) {
@@ -123,12 +124,12 @@ public class ArtificialIntelligence {
 
 	/**
 	 * method should play only as few as possible treasure cards (e.g. to not
-	 * reveal to other players that AI has a gold on hand, if there is already enough
-	 * money for a desired purchase even without playing the gold)
+	 * reveal to other players that AI has a gold on hand, if there is already
+	 * enough money for a desired purchase even without playing the gold)
 	 * 
 	 * @param amountNeeded
 	 *            the amount of treasures needed
-	 */	
+	 */
 	@SuppressWarnings("unused")
 	private void playTreasures(int amountNeeded) {
 		int amountAvailable = this.getTreasureCardsValue(getCardHand());
@@ -141,8 +142,9 @@ public class ArtificialIntelligence {
 				if (alreadyPlayed < amountNeeded) {
 					play(card);
 					alreadyPlayed += Integer.valueOf(card.getActions().get(CardAction.IS_TREASURE));
-				} else return;
-			} 
+				} else
+					return;
+			}
 		}
 	}
 
@@ -153,22 +155,22 @@ public class ArtificialIntelligence {
 	 * @throws InterruptedException
 	 */
 	private void playActionCards() throws InterruptedException {
-		// hier mal wegen .getActions schauen
-		if (this.player.getDeck().cardHandContains(CardType.ACTION)) {
-			while (this.player.getActions() > 0 && this.player.getDeck().cardHandContains(CardType.ACTION)) {
-				if (addActionCardAvailable()) {
-					LinkedList<Card> plusActionCards = this.player.getDeck().cardHandsWith(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand());
-					playCards(plusActionCards);
-					continue;
-				}
-				// Logik + Strategy, chapel handlen
-
-				LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
-				Card tbp = this.player.getDeck().cardWithHighestCost(remainingActionCards);
-				Thread.sleep(ArtificialIntelligence.TIME_DELAY);
-				play(tbp);
-				return; // for test purposes
+		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
+			Thread.sleep(ArtificialIntelligence.TIME_DELAY);			
+			/** move with double Province not possible like that, but AI won't do this since it plays big money mostly */
+			if (this.getTreasureCardsValue(getCardHand()) >= 8) {
+				return;
+			} else if (addActionCardAvailable()) {
+				play(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
 			}
+			// Logik + Strategy, chapel handlen
+			return; // for test purposes
+			
+			// LinkedList<Card> remainingActionCards =
+			// this.getAllCardsFromType(CardType.ACTION);
+			// Card tbp =
+			// this.player.getDeck().cardWithHighestCost(remainingActionCards);
+			// play(tbp);
 		}
 	}
 
@@ -270,7 +272,7 @@ public class ArtificialIntelligence {
 			if (this.player.playsReactionCard()) {
 				play(this.player.getDeck().getCardByTypeFromHand(CardType.REACTION));
 			} else if (this.player.isDiscardMode()) {
-				while (this.player.isDiscardMode() /* && this.player.getDeck().getCardHand().size() > 3*/) {
+				while (this.player.isDiscardMode()) { // && this.player.getDeck().  getCardHand().size() > 3			 
 					discardLeastValuableCard();
 				}
 			}
@@ -283,11 +285,10 @@ public class ArtificialIntelligence {
 	private void executeMove() {
 		GameLog.log(MsgType.AI, this.player.getPlayerName() + " is executing a turn");
 		try {
-			while (this.player.getActions() > 0) {
-				Thread.sleep(ArtificialIntelligence.TIME_DELAY);
-				this.playActionCards();
-			}
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
+			this.playActionCards();
+			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
+//			if (this.player.getGameServer().getGameController().getGamePhase().equals("actionPhase"))
 			this.setBuyPhase();
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.buySequence = determinePurchase();
@@ -325,7 +326,7 @@ public class ArtificialIntelligence {
 		// Logik + Strategy
 
 		// wenn chapel strategy, nach 1 chapel im deck keine mehr kaufen
-		
+
 		LinkedList<String> result = new LinkedList<String>();
 		int coins = getTreasureCardsValue(getCardHand());
 		if (coins >= 8) {
@@ -403,39 +404,44 @@ public class ArtificialIntelligence {
 	private void discardLeastValuableCard() {
 		GameLog.log(MsgType.GAME_INFO, "In AI.discardLeastValuableCard(), see next line for debugCardHandPrint()");
 		this.player.getDeck().debugCardHandPrint();
-		
+
 		int treasureValue = getTreasureCardsValue(getCardHand());
-		
-		// if card hand doesn't contain a Chapel
+
+		/** if card hand doesn't contain a Chapel */
 		if (!this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
-			// discard a CURSE
+			/** discard a CURSE */
 			if (this.player.getDeck().cardHandContains(CardType.CURSE)) {
 				discard(this.player.getDeck().getCardByTypeFromHand(CardType.CURSE));
 				return;
 			}
-			// discard a random VICTORY card
+			/** discard a random VICTORY card */
 			if (this.player.getDeck().cardHandContains(CardType.VICTORY)) {
 				discard(this.player.getDeck().getCardByTypeFromHand(CardType.VICTORY));
 				return;
 			}
-			// or if the treasureValue on card hand is >= 6, discard the action card
-			// with the lowest cost
+			/**
+			 * or if the treasureValue on card hand is >= 6, discard the action
+			 * card with the lowest cost
+			 */
 			if (treasureValue >= 6) {
 				if (this.player.getDeck().cardHandContains(CardType.ACTION)) {
 					discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.ACTION));
 					return;
 				}
 			}
-		} 
-		// if card hand contains a Chapel
+		}
+		/** if card hand contains a Chapel */
 		if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
-			// if there are less than two cards which can possibly be trashed by the chapel, discard the chapel itself
-			// if the treasureValue on card hand is >= 7, discard the action card with the lowest cost
+			/**
+			 * if there are less than two cards which can possibly be trashed by
+			 * the chapel, discard the chapel itself if the treasureValue on
+			 * card hand is >= 7, discard the action card with the lowest cost
+			 */
 			if (canBeTrashedByChapel() < 2 || treasureValue >= 7) {
 				discard(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
 				return;
 			}
-			// discard any VICTORY card but Estate
+			/** discard any VICTORY card but Estate */
 			LinkedList<Card> victoryOnCardHand = this.player.getDeck().getCardsByTypeFrom(CardType.VICTORY, this.getCardHand());
 			if (victoryOnCardHand != null && victoryOnCardHand.size() > 0) {
 				for (Card c : victoryOnCardHand) {
@@ -446,12 +452,12 @@ public class ArtificialIntelligence {
 				}
 			}
 		}
-		// discard a COPPER
+		/** discard a COPPER */
 		if (this.player.getDeck().cardHandContains(CardName.COPPER.getName())) {
 			discard(this.player.getDeck().getCardByNameFromHand(CardName.COPPER.getName()));
 			return;
 		}
-		// discard another TREASURE card 
+		/** discard another TREASURE card */
 		if (this.player.getDeck().cardHandContains(CardType.TREASURE)) {
 			GameLog.log(MsgType.ERROR, "the method must not get here (unless it has a card hand like 5x gold");
 			discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.TREASURE));
@@ -486,7 +492,8 @@ public class ArtificialIntelligence {
 	 *         Market)
 	 */
 	private boolean addActionCardAvailable() {
-		return this.player.getDeck().cardHandsWith(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()).size() > 0;
+		return this.player.getDeck().cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()) != null
+		    && this.player.getDeck().cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()).size() > 0;
 	}
 
 	/**
@@ -521,10 +528,11 @@ public class ArtificialIntelligence {
 	private LinkedList<Card> getCardHand() {
 		return this.player.getDeck().getCardHand();
 	}
-	
+
 	/**
 	 * 
-	 * @return how many cards on card hand are trash worthy and would be trashed by the chapel
+	 * @return how many cards on card hand are trash worthy and would be trashed
+	 *         by the chapel
 	 */
 	private int canBeTrashedByChapel() {
 		LinkedList<Card> cards = getCardHand();
