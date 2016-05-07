@@ -165,7 +165,6 @@ public class MainMenuPanel extends JPanel {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			MyAudioPlayer.doClick();
-			MyAudioPlayer.handleMainMusic(false);
 			if (buttons[0].isOn(e.getX(), e.getY()) && buttons[0].isEnabled()) {
 				DominionController.getInstance().playSingleplayer();
 				
