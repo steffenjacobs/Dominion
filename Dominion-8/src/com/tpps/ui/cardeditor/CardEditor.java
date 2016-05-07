@@ -6,12 +6,14 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -81,14 +83,17 @@ public class CardEditor extends JFrame implements ActionListener {
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		gbc = new GridBagConstraints();
 		// createButtons();
-		// loadImage();
-		// resizeImage();
+//		loadImage();
+//		resizeImage();
+		initComponents();
 		c = this.getContentPane();
 		c.setLayout(new GridBagLayout());
+		iniateLayout();
+		
 		all = new JLabel(loading);
 		// all.setLayout(new GridLayout(4, 1, 0, 30));
 		// all.setLayout(new GridBagLayout());
-		iniateLayout();
+
 		this.setSize(width / 5, height / 2);
 		this.setLocationRelativeTo(null);
 		this.setTitle("Card Editor !");
@@ -101,8 +106,11 @@ public class CardEditor extends JFrame implements ActionListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		c.add(all);
+		
+//		BackgroundPanel bg  = new BackgroundPanel();
+//		bg.setSize(new Dimension(width, height));
+//		c.add(bg);
+//		c.add(all);
 	}
 	
 	private void fullscreenmode() {
@@ -176,14 +184,65 @@ public class CardEditor extends JFrame implements ActionListener {
 	//TODO : Komponenten ans Design anpassen
 	//TODO : Listener der Komponenten
 	
+	
+    private void initComponents() {
+        /*
+         * Neue ContentPane setzen, die das Hintergrundbild zeichnet. Hier zu
+         * Vorzeigezwecken alles in einem Schritt reingeklatscht, sollte im
+         * Normalfall sauberer implementiert werden.
+         */
+        try {
+			setContentPane(new JPanel() {
+ 
+			    /**
+			     * Das Hintergrundbild.
+			     */
+			    private Image               img;
+ 
+			    /*
+			     * Da es sich hierbei um eine anonyme Klasse handelt, kann ich
+			     * keinen expliziten Konstruktor deklarieren, daher wird das Bild in
+			     * einem Initialisierer geladen.
+			     */
+			    {
+			        img = ImageIO
+							.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+    
+ 
+			        MediaTracker mt = new MediaTracker(this);
+			        mt.addImage(img, 1);
+			        try {
+			            mt.waitForAll();
+			        } catch(InterruptedException e) {
+			            e.printStackTrace();
+			        }
+			    }
+ 
+			    /*
+			     * (non-Javadoc)
+			     * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+			     */
+			    @Override protected void paintComponent(Graphics g) {
+			        g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+			    }
+			});
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		}
+	
 	/**
 	 * creates the GUI
 	 */
 	
 	private void iniateLayout() {
+		
+		
 	
 		JPanel obenLinks = new JPanel();      //Panel für Karteninitation
-		obenLinks.setBackground(Color.green); 
+//		obenLinks.setBackground(Color.green); 
+		obenLinks.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 		gbc.gridwidth = 2;
@@ -208,7 +267,8 @@ public class CardEditor extends JFrame implements ActionListener {
 
 		JPanel pnlBuy = new JPanel();        //Panel für das Bildhochladen
 		gbc.gridx = 1;                       //Anpassen fürs Bildhochladen
-		pnlBuy.setBackground(Color.blue); 
+//		pnlBuy.setBackground(Color.blue); 
+		pnlBuy.setOpaque(false);
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;
@@ -229,7 +289,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		c.add(pnlBuy, gbc);
 		
 		JPanel mitte = new JPanel();           //Panel für den Preis
-		mitte.setBackground(Color.ORANGE);
+//		mitte.setBackground(Color.ORANGE);
+		mitte.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		gbc.gridwidth = 2;
@@ -293,13 +354,14 @@ public class CardEditor extends JFrame implements ActionListener {
 		
 		
 		JPanel radio = new JPanel();            //Panel für die RadioButtons
-		radio.setBackground(Color.YELLOW);
+//		radio.setBackground(Color.YELLOW);
+		radio.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		gbc.gridwidth = 2;
 		gbc.gridheight = 1;
 		gbc.weightx = 0.99;
-		gbc.weighty = 0.5;
+		gbc.weighty = 0.7;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.CENTER;
 		actionSelect = new ButtonGroup();		
@@ -357,7 +419,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		
 
 		JPanel untenLinks = new JPanel();		//Karte erstellen
-		untenLinks.setBackground(Color.red); 
+//		untenLinks.setBackground(Color.red); 
+		untenLinks.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 4;
 		gbc.gridwidth = 1;
@@ -370,7 +433,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		c.add(untenLinks, gbc);
 
 		JPanel untenRechts = new JPanel();		//Zurück ins Menü
-		untenRechts.setBackground(Color.gray);
+//		untenRechts.setBackground(Color.gray);
+		untenRechts.setOpaque(false);
 		gbc.gridx = 1;
 		gbc.gridy = 4;
 		gbc.gridwidth = 2;
@@ -390,8 +454,10 @@ public class CardEditor extends JFrame implements ActionListener {
 		c.add(untenRechts, gbc);
 
 		// createButtons();
-
-	}
+		}
+	
+	
+	
 
 	/**
 	 * resizing the uploaded image
@@ -467,5 +533,37 @@ public class CardEditor extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		
 	}
+
+}
+
+
+class BackgroundPanel extends JPanel {
+
+    private static final long serialVersionUID = 1L;
+    private Image img;
+
+    public BackgroundPanel() {
+        try {
+            img = ImageIO
+            		.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+            System.out.println("Picture loaded.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Picture was not found.");
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        // TODO Auto-generated method stub
+        super.paintComponent(g);
+        g.drawImage(img,0,0, getWidth()*10, getHeight(), this);
+        System.out.println("Methode abgerufen");
+
+    }
+
+    public Image getBackgroundImage() {
+        return img;
+    }
 
 }
