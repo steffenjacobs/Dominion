@@ -20,18 +20,6 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayTreasures;
 import com.tpps.technicalServices.util.CollectionsUtil;
 
-/*
- * - board anschauen, wenn angriffskarten gekauft werden dann defensiv kaufen 
- * - wenn es nix bringt, mehr karten zu ziehen, ggf. aktionskarten nicht spielen
- * - LinkedListMultimap mit "buy" oder "play" und karte als Spielplan aufbauen
- * - wenn es der potentiell letzte Zug ist, soll die Blacklist ignoriert werden und evtl ein Anwesen gekauft werden
- * - Kommentare anpassen (computing etc.)
- * - schauen ob die AI nicht cheatet
- * - checkEndPhase(): 3 niedrigsten Kartenstapel insgesamt unter 7 Karten
- * - in play und buy an Lukas vergleichen ob ich was vergessen hab: GC, SGPH, ...
- * - enhance AI name list (Charlie Chaplin usw)
- */
-
 /**
  * Global AI class. If you get stomped, don't worry, it's intended.
  * 
@@ -156,8 +144,11 @@ public class ArtificialIntelligence {
 	 */
 	private void playActionCards() throws InterruptedException {
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
-			Thread.sleep(ArtificialIntelligence.TIME_DELAY);			
-			/** move with double Province not possible like that, but AI won't do this since it plays big money mostly */
+			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
+			/**
+			 * move with double Province not possible like that, but AI won't do
+			 * this since it plays big money mostly
+			 */
 			if (this.getTreasureCardsValue(getCardHand()) >= 8) {
 				return;
 			} else if (addActionCardAvailable()) {
@@ -165,7 +156,7 @@ public class ArtificialIntelligence {
 			}
 			// Logik + Strategy, chapel handlen
 			return; // for test purposes
-			
+
 			// LinkedList<Card> remainingActionCards =
 			// this.getAllCardsFromType(CardType.ACTION);
 			// Card tbp =
@@ -272,7 +263,10 @@ public class ArtificialIntelligence {
 			if (this.player.playsReactionCard()) {
 				play(this.player.getDeck().getCardByTypeFromHand(CardType.REACTION));
 			} else if (this.player.isDiscardMode()) {
-				while (this.player.isDiscardMode()) { // && this.player.getDeck().  getCardHand().size() > 3			 
+				while (this.player.isDiscardMode()) { // &&
+														// this.player.getDeck().
+														// getCardHand().size()
+														// > 3
 					discardLeastValuableCard();
 				}
 			}
@@ -288,7 +282,6 @@ public class ArtificialIntelligence {
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.playActionCards();
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
-//			if (this.player.getGameServer().getGameController().getGamePhase().equals("actionPhase"))
 			this.setBuyPhase();
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			this.buySequence = determinePurchase();
@@ -493,7 +486,7 @@ public class ArtificialIntelligence {
 	 */
 	private boolean addActionCardAvailable() {
 		return this.player.getDeck().cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()) != null
-		    && this.player.getDeck().cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()).size() > 0;
+				&& this.player.getDeck().cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()).size() > 0;
 	}
 
 	/**
