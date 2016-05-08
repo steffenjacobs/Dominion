@@ -57,7 +57,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	private BufferedImage walterWhite;
 	private BufferedImage background;
 	private JButton uploadImage, increasePrice, decreasePrice, standartPrice, createCard, cancel;
-	private ButtonGroup actionSelect = new ButtonGroup();
+	private ButtonGroup actionSelect;
 	private JRadioButton addAction, addMoney, addPurchase, drawCard, drawCardUntil, putBack, gainCard, discardCard,
 			trashCard, revealCard, isTreasure, isVictory;
 	private Container c;
@@ -70,7 +70,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	private Font smallfont,radioFont,priceFont;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc,gbc2;
-	private JPanel obenLinks,pnlBuy;
+	private JPanel obenLinks,uImage;
 	private int priceint = 2;
 	private JFileChooser fc;
 	private final String newline = "\n";
@@ -80,16 +80,15 @@ public class CardEditor extends JFrame implements ActionListener {
 	private final int baseSize = 128;
 	private BufferedImage back;
 	private BackButton backButton;
-
+    private boolean showPic;
+	
 	public CardEditor() {
 		this.setVisible(true);
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		gbc = new GridBagConstraints();
-		// createButtons();
 //		loadImage();
 //		resizeImage();
-
 		
 		all = new JLabel(loading);
 		// all.setLayout(new GridLayout(4, 1, 0, 30));
@@ -165,41 +164,24 @@ public class CardEditor extends JFrame implements ActionListener {
 		testImage = new JLabel("");
 	}
 
-	// TODO : Dokumentation
-	// TODO : Layout fixen
 
-	private void createButtons() {
-
-		// uploadImage.setPreferredSize(new Dimension(10,20));
-		// gbl.setConstraints(uploadImage,gbc);
-
-		increasePrice = new JButton("increasePrice");
-		// add(increasePrice,gbc);
-		decreasePrice = new JButton("decreasePrice");
-		standartPrice = new JButton("standardPrice");
-		createCard = new JButton("createCard");
-		cancel = new JButton("cancel");
-	}
-	
-
-	  
-	
-	//TODO : Ungefähres Layout vollenden
-	//TODO : Layout an relative Positionen anpassen
-	//TODO : Layout ans Design anpassen
-	//TODO : Komponenten ans Design anpassen
-	//TODO : Listener der Komponenten
+  
+//TODO : ButtonIcons
+//TODO : Upload Image verschiebt Radiobuttons
+//TODO : Radiobutton ActionListener - als Checkbox machen?
+//TODO : Documentation und Formatierung
+//TODO : Textfield, Namesabfrage ändern
+//TODO : Upload in die Cloud
 	
 	
     private void initComponents() {
-
+		/**
+		 * loads the backgroundimage
+		 */	
         try {
 			setContentPane(new JPanel() {
- 
-			    /**
-			     * Das Hintergrundbild.
-			     */
-			    private Image               img;
+
+			    private Image img;
 	    
 			    {
 			        img = ImageIO
@@ -236,11 +218,10 @@ public class CardEditor extends JFrame implements ActionListener {
 	private void iniateLayout() {
 		
 		/**
-		 * creates the Toppanel
+		 * creates the top panel
 		 */	
 	
-		JPanel obenLinks = new JPanel();      
-//		obenLinks.setBackground(Color.green); 
+		JPanel obenLinks = new JPanel();       
 		obenLinks.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -271,42 +252,41 @@ public class CardEditor extends JFrame implements ActionListener {
 		 * creates the Panel for uploading the Image
 		 */	
 
-		JPanel pnlBuy = new JPanel();       
+		JPanel uImage = new JPanel();       
 		gbc.gridx = 1;                       
-//		pnlBuy.setBackground(Color.blue); 
-		pnlBuy.setOpaque(false);
+		uImage.setOpaque(false);
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 0.5;
-		gbc.weighty = 0.5;
+		gbc.weightx = 0.35;
+		gbc.weighty = 1;
 		gbc.anchor = GridBagConstraints.SOUTH;
-		pnlBuy.setLayout(new BorderLayout());
-		testImage = new JLabel("");
+		uImage.setLayout(new BorderLayout());
         uploadImage = new JButton("Upload Image");
+        testImage = new JLabel("");
         uploadImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                uploadImageActionPerformed(e);
             }
         });			
-        pnlBuy.add(testImage,BorderLayout.PAGE_START);
-        pnlBuy.add(uploadImage,BorderLayout.PAGE_END);
-		c.add(pnlBuy, gbc);
+        uImage.add(testImage, BorderLayout.CENTER);
+        uImage.add(uploadImage,BorderLayout.PAGE_END);
+		c.add(uImage, gbc);
 		
 		/**
 		 * creates the Panel for setting the Price
 		 */	
 		
 		JPanel mitte = new JPanel();           
-//		mitte.setBackground(Color.ORANGE);
+
 		mitte.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		gbc.gridwidth = 2;
 		gbc.gridheight = 1;
 		gbc.weightx = 0.99;
-		gbc.weighty = 0.1;
+		gbc.weighty = 0.05;
 		gbc.fill = GridBagConstraints.BOTH;
 		mitte.setLayout(new GridBagLayout());
 		gbc2 = new GridBagConstraints();
@@ -325,12 +305,17 @@ public class CardEditor extends JFrame implements ActionListener {
 		increasePrice = new JButton("Increase Price");
 		standartPrice = new JButton("Standart Price");
 		decreasePrice = new JButton("Decreace Price");
+		
+		/**
+		 * change the price preview when clicking on button
+		 */	
+		
 		increasePrice.addActionListener((new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				priceint = priceint + 1;
 				price.setText(Integer.toString(priceint));
-				System.out.println(Integer.toString(priceint));
+				System.out.println("Cost : " + Integer.toString(priceint));
 			}
 		}));
 		standartPrice.addActionListener((new ActionListener() {
@@ -338,7 +323,7 @@ public class CardEditor extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				priceint = 2;
 				price.setText(Integer.toString(priceint));
-				System.out.println(Integer.toString(priceint));
+				System.out.println("Cost : " + Integer.toString(priceint));
 			}
 		}));
 		decreasePrice.addActionListener((new ActionListener() {
@@ -347,7 +332,7 @@ public class CardEditor extends JFrame implements ActionListener {
 				if (priceint > 0) {
 				priceint = priceint - 1;
 				price.setText(Integer.toString(priceint));
-				System.out.println(Integer.toString(priceint));
+				System.out.println("Cost : " + Integer.toString(priceint));
 				} else {
 					System.out.println("The cost can't be lower than 0");
 				}
@@ -372,16 +357,21 @@ public class CardEditor extends JFrame implements ActionListener {
 		 */	
 		
 		JPanel radio = new JPanel();            //Panel für die RadioButtons
-//		radio.setBackground(Color.YELLOW);
 		radio.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		gbc.gridwidth = 2;
 		gbc.gridheight = 1;
 		gbc.weightx = 0.99;
-		gbc.weighty = 0.7;
+		gbc.weighty = 1;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.CENTER;
+		
+		/**
+		 * creates the radiobuttons
+		 */	
+		
+		
 		actionSelect = new ButtonGroup();		
 		addAction = new JRadioButton("Add Action");
 		addAction.setFont(radioFont);
@@ -462,8 +452,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		 */	
 		
 
-		JPanel untenLinks = new JPanel();		
-//		untenLinks.setBackground(Color.red); 
+		JPanel untenLinks = new JPanel();		 
 		untenLinks.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 4;
@@ -480,8 +469,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		 * creates the Panel for getting back into the main menu
 		 */
 
-		JPanel untenRechts = new JPanel();		//Zurück ins Menü
-//		untenRechts.setBackground(Color.gray);
+		JPanel untenRechts = new JPanel();
 		untenRechts.setOpaque(false);
 		gbc.gridx = 1;
 		gbc.gridy = 4;
@@ -516,8 +504,6 @@ public class CardEditor extends JFrame implements ActionListener {
 		}));
 		untenRechts.add(cancel);
 		c.add(untenRechts, gbc);
-
-		// createButtons();
 		}
 	
 	
@@ -548,9 +534,8 @@ public class CardEditor extends JFrame implements ActionListener {
         } catch (IOException ex) {
             Logger.getLogger(CardEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        pnlBuy.setLayout(new BorderLayout());
-        pnlBuy.add(new JLabel(new ImageIcon(targetImg)),BorderLayout.PAGE_START); //TestImage verwenden statt neues
+        testImage.setIcon(new ImageIcon(targetImg));
+//        System.out.println("wird abgerufen");
         setVisible(true);
     }
     
@@ -560,7 +545,8 @@ public class CardEditor extends JFrame implements ActionListener {
     
     
     private void uploadImageActionPerformed(java.awt.event.ActionEvent evt) {
-        JFileChooser fc = new JFileChooser(basePath);
+//    	System.out.println("wird abgerufen");
+    	JFileChooser fc = new JFileChooser(basePath);
         fc.setFileFilter(new JPEGImageFileFilter());
         int res = fc.showOpenDialog(null);
         // We have an image!
@@ -568,13 +554,16 @@ public class CardEditor extends JFrame implements ActionListener {
             if (res == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 setTarget(file);
+//                System.out.println("wird abgerufen");
             } // Oops!
             else {
                 JOptionPane.showMessageDialog(null,
                         "You must select one image to be the reference.", "Aborting...",
                         JOptionPane.WARNING_MESSAGE);
+             
             }
         } catch (Exception iOException) {
+        	
         }
 
     }
@@ -593,39 +582,3 @@ public class CardEditor extends JFrame implements ActionListener {
 	}
 
 }
-
-
-/* 
-
-class BackgroundPanel extends JPanel {
-
-    private static final long serialVersionUID = 1L;
-    private Image img;
-
-    public BackgroundPanel() {
-        try {
-            img = ImageIO
-            		.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
-            System.out.println("Picture loaded.");
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Picture was not found.");
-        }
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        // TODO Auto-generated method stub
-        super.paintComponent(g);
-        g.drawImage(img,0,0, getWidth()*10, getHeight(), this);
-        System.out.println("Methode abgerufen");
-
-    }
-
-    public Image getBackgroundImage() {
-        return img;
-    }
-
-}
-
-*/

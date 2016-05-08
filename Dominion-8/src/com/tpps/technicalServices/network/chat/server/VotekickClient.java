@@ -48,6 +48,7 @@ public class VotekickClient extends PacketHandler{
 			e.printStackTrace();
 		}
 		System.out.println("sent packet to gameserver to kick client " + username);
+		this.gameclient.disconnect();
 	}
 	
 
