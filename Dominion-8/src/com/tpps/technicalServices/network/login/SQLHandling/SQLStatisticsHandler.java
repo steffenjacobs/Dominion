@@ -84,7 +84,7 @@ public class SQLStatisticsHandler {
 			stmt.setString(1, nickname);
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
-			return rs.getInt("playtime");
+			return rs.getLong("playtime");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

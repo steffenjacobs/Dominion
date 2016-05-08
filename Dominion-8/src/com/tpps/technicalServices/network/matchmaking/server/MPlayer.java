@@ -109,7 +109,7 @@ public class MPlayer {
 					stats.put("WIN_LOSS_RATIO", new StatisticUnit(res.getDouble("win_loss")));
 					stats.put("TIMES_PLAYED", new StatisticUnit(res.getInt("games_played")));
 					stats.put("RANK", new StatisticUnit(res.getInt("rank")));
-					stats.put("TIME_PLAYED", new StatisticUnit(res.getInt("playtime")));
+					stats.put("TIME_PLAYED", new StatisticUnit(res.getLong("playtime")));
 					stats.put("LAST_GAMES_TIMES", new StatisticUnit(
 							SQLStatisticsHandler.getPlaytimeDatesParsed(res.getString("LAST_TIME_PLAYED"))));
 					stats.put("LAST_GAMES_WINS", new StatisticUnit(

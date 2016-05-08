@@ -35,7 +35,7 @@ public final class MatchmakingController {
 	static {
 		playersByPort = new ConcurrentHashMap<Integer, MPlayer>();
 		lobbies = new CopyOnWriteArrayList<>();
-		lobbiesByPlayer = new ConcurrentHashMap<>();
+		lobbiesByPlayerName = new ConcurrentHashMap<>();
 		playersByName = new ConcurrentHashMap<>();
 		// connectedPortsByPlayer = new ConcurrentHashMap<>();
 		lobbiesByID = new ConcurrentHashMap<>();
@@ -49,7 +49,7 @@ public final class MatchmakingController {
 	/*** also contains AI-names */
 	private static ConcurrentHashMap<String, MPlayer> playersByName;
 
-	private static ConcurrentHashMap<MPlayer, GameLobby> lobbiesByPlayer;
+	private static ConcurrentHashMap<String, GameLobby> lobbiesByPlayerName;
 	private static ConcurrentHashMap<Integer, GameLobby> runningLobbiesByPort;
 
 	private static ConcurrentHashMap<UUID, GameLobby> lobbiesByID;
@@ -80,7 +80,7 @@ public final class MatchmakingController {
 		lobbies.add(lobby);
 		lobbiesByID.put(lobby.getLobbyID(), lobby);
 		lobby.joinPlayer(player);
-		lobbiesByPlayer.put(player, lobby);
+		lobbiesByPlayerName.put(player.getPlayerName(), lobby);
 		GameLog.log(MsgType.INFO, player.getPlayerName() + " created a private lobby [" + lobby.getLobbyID() + "]");
 	}
 
@@ -98,8 +98,8 @@ public final class MatchmakingController {
 	 *            the player to get the associated GameLobby from
 	 * @return the GameLobby-instance associated with the MPlayer-object
 	 */
-	static GameLobby getLobbyFromPlayer(MPlayer player) {
-		return lobbiesByPlayer.get(player);
+	static GameLobby getLobbyFromPlayerName(String player) {
+		return lobbiesByPlayerName.get(player);
 	}
 
 	/**
@@ -143,6 +143,7 @@ public final class MatchmakingController {
 		GameLog.log(MsgType.INFO, "Starting lobby " + lobby.getLobbyID());
 		exec.submit(() -> {
 			GameLog.log(MsgType.INFO, "Setting up lobby " + lobby.getLobbyID());
+			lobby.onStart();
 			// removeLobby(lobby);
 			String[] playerNames = new String[lobby.getPlayers().size()];
 
@@ -248,7 +249,7 @@ public final class MatchmakingController {
 	 */
 	private static void joinLobby(MPlayer player, GameLobby lobby) {
 		lobby.joinPlayer(player);
-		lobbiesByPlayer.put(player, lobby);
+		lobbiesByPlayerName.put(player.getPlayerName(), lobby);
 	}
 
 	/** creates new empty lobbies */
@@ -333,7 +334,7 @@ public final class MatchmakingController {
 		playersByPort.remove(player.getConnectionPort());
 		// connectedPortsByPlayer.remove(player);
 		playersByName.remove(player.getPlayerName());
-		GameLobby lobby = lobbiesByPlayer.remove(player);
+		GameLobby lobby = lobbiesByPlayerName.remove(player);
 		if (lobby != null) {
 			lobby.quitPlayer(player);
 			if (lobby.isEmpty()) {
@@ -367,26 +368,38 @@ public final class MatchmakingController {
 	 *            the port the ended server was running on
 	 */
 	public static void onGameEnd(PacketGameEnd endPacket, int port) {
-		GameLobby lobby = runningLobbiesByPort.get(port);
-		for (String p : endPacket.getPlayers()) {
+		GameLobby lobby = getLobbyFromPlayerName(endPacket.getWinner());
+		if (lobby != null) {
+			GameLog.log(MsgType.INFO, "Received end-packet: " + endPacket.toString());
+		} else {
+			GameLog.log(MsgType.ERROR, "Received bad end-packet: " + endPacket.toString());
+		}
+		for (String playerName : endPacket.getPlayers()) {
 
-			MPlayer player = playersByName.get(p);
+			MPlayer player = playersByName.get(playerName);
 
 			if (player != null && player.isAI()) {
 				continue;
 			}
 
 			if (!DominionController.isOffline()) {
-				SQLStatisticsHandler.addOverallPlaytime(p, System.currentTimeMillis() - lobby.getStartTime());
-				if (!p.equals(endPacket.getWinner())) {
-					SQLStatisticsHandler.addWinOrLoss(p, false);
+				// Every player except AIs
+				SQLStatisticsHandler.addOverallPlaytime(playerName, System.currentTimeMillis() - lobby.getStartTime());
+				if (!playerName.equals(endPacket.getWinner())) {
+					// player lost
+					SQLStatisticsHandler.addWinOrLoss(playerName, false);
 				}
 			}
 
 			// int port = connectedPortsByPlayer.get(player);
-			MatchmakingServer.getInstance().disconnect(player.getConnectionPort());
+			try {
+				MatchmakingServer.getInstance().disconnect(player.getConnectionPort());
+			} catch (NullPointerException ex) {
+				System.err.println("Error while disconnecting: not connected!");
+			}
 		}
 		if (!DominionController.isOffline()) {
+			// Add win for player who won
 			SQLStatisticsHandler.addWinOrLoss(endPacket.getWinner(), true);
 		}
 

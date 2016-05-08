@@ -213,7 +213,7 @@ public class MatchmakingPacketHandler extends PacketHandler {
 					MatchmakingController.createPrivateLobby(player);
 					try {
 						super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 1,
-								MatchmakingController.getLobbyFromPlayer(player).getLobbyID()));
+								MatchmakingController.getLobbyFromPlayerName(player.getPlayerName()).getLobbyID()));
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -227,7 +227,7 @@ public class MatchmakingPacketHandler extends PacketHandler {
 
 				try {
 					super.parent.sendMessage(port, new PacketMatchmakingAnswer(pmr, 1,
-							MatchmakingController.getLobbyFromPlayer(player).getLobbyID()));
+							MatchmakingController.getLobbyFromPlayerName(player.getPlayerName()).getLobbyID()));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
