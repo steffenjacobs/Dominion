@@ -370,8 +370,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 			
 			if (votekickPacket.getUser().equals(this.server.getGameController().getActivePlayerName())) {				
 				this.server.getGameController().setNextActivePlayer();
-				System.out.println("new active Player");
-				this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getPort(),
+				System.out.println("new active Player: " + this.server.getGameController().getActivePlayer().getPlayerName());
+				this.server.broadcastMessage(this.server.getGameController().getPlayerByUserName(votekickPacket.getUser()).getPort(),
+				new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
 						this.server.getGameController().getActivePlayerName(), true));
 			}
 			
