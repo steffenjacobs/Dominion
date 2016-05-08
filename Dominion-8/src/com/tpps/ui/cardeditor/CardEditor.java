@@ -168,7 +168,9 @@ public class CardEditor extends JFrame implements ActionListener {
   
 //TODO : ButtonIcons
 //TODO : Upload Image verschiebt Radiobuttons
-//TODO : Radiobutton ActionListener
+//TODO : Radiobutton ActionListener - als Checkbox machen?
+//TODO : Documentation und Formatierung
+//TODO : Textfield, Namesabfrage ändern
 //TODO : Upload in die Cloud
 	
 	
@@ -216,11 +218,10 @@ public class CardEditor extends JFrame implements ActionListener {
 	private void iniateLayout() {
 		
 		/**
-		 * creates the Toppanel
+		 * creates the top panel
 		 */	
 	
-		JPanel obenLinks = new JPanel();      
-//		obenLinks.setBackground(Color.green); 
+		JPanel obenLinks = new JPanel();       
 		obenLinks.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -362,7 +363,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.gridwidth = 2;
 		gbc.gridheight = 1;
 		gbc.weightx = 0.99;
-		gbc.weighty = 0.7;
+		gbc.weighty = 1;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.CENTER;
 		
