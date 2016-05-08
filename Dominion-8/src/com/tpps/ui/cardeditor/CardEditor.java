@@ -70,7 +70,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	private Font smallfont,radioFont,priceFont;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc,gbc2;
-	private JPanel obenLinks,pnlBuy;
+	private JPanel obenLinks,uImage;
 	private int priceint = 2;
 	private JFileChooser fc;
 	private final String newline = "\n";
@@ -80,7 +80,8 @@ public class CardEditor extends JFrame implements ActionListener {
 	private final int baseSize = 128;
 	private BufferedImage back;
 	private BackButton backButton;
-
+    private boolean showPic;
+	
 	public CardEditor() {
 		this.setVisible(true);
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -271,28 +272,28 @@ public class CardEditor extends JFrame implements ActionListener {
 		 * creates the Panel for uploading the Image
 		 */	
 
-		JPanel pnlBuy = new JPanel();       
+		JPanel uImage = new JPanel();       
 		gbc.gridx = 1;                       
-//		pnlBuy.setBackground(Color.blue); 
-		pnlBuy.setOpaque(false);
+//		uImage.setBackground(Color.blue); 
+		uImage.setOpaque(false);
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 0.5;
-		gbc.weighty = 0.5;
+		gbc.weightx = 0.35;
+		gbc.weighty = 1;
 		gbc.anchor = GridBagConstraints.SOUTH;
-		pnlBuy.setLayout(new BorderLayout());
-		testImage = new JLabel("");
+		uImage.setLayout(new BorderLayout());
         uploadImage = new JButton("Upload Image");
+        testImage = new JLabel("");
         uploadImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                uploadImageActionPerformed(e);
             }
         });			
-        pnlBuy.add(testImage,BorderLayout.PAGE_START);
-        pnlBuy.add(uploadImage,BorderLayout.PAGE_END);
-		c.add(pnlBuy, gbc);
+        uImage.add(testImage, BorderLayout.CENTER);
+        uImage.add(uploadImage,BorderLayout.PAGE_END);
+		c.add(uImage, gbc);
 		
 		/**
 		 * creates the Panel for setting the Price
@@ -306,7 +307,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.gridwidth = 2;
 		gbc.gridheight = 1;
 		gbc.weightx = 0.99;
-		gbc.weighty = 0.1;
+		gbc.weighty = 0.05;
 		gbc.fill = GridBagConstraints.BOTH;
 		mitte.setLayout(new GridBagLayout());
 		gbc2 = new GridBagConstraints();
@@ -330,7 +331,7 @@ public class CardEditor extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				priceint = priceint + 1;
 				price.setText(Integer.toString(priceint));
-				System.out.println(Integer.toString(priceint));
+				System.out.println("Cost : " + Integer.toString(priceint));
 			}
 		}));
 		standartPrice.addActionListener((new ActionListener() {
@@ -338,7 +339,7 @@ public class CardEditor extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				priceint = 2;
 				price.setText(Integer.toString(priceint));
-				System.out.println(Integer.toString(priceint));
+				System.out.println("Cost : " + Integer.toString(priceint));
 			}
 		}));
 		decreasePrice.addActionListener((new ActionListener() {
@@ -347,7 +348,7 @@ public class CardEditor extends JFrame implements ActionListener {
 				if (priceint > 0) {
 				priceint = priceint - 1;
 				price.setText(Integer.toString(priceint));
-				System.out.println(Integer.toString(priceint));
+				System.out.println("Cost : " + Integer.toString(priceint));
 				} else {
 					System.out.println("The cost can't be lower than 0");
 				}
@@ -462,8 +463,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		 */	
 		
 
-		JPanel untenLinks = new JPanel();		
-//		untenLinks.setBackground(Color.red); 
+		JPanel untenLinks = new JPanel();		 
 		untenLinks.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 4;
@@ -548,9 +548,8 @@ public class CardEditor extends JFrame implements ActionListener {
         } catch (IOException ex) {
             Logger.getLogger(CardEditor.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        pnlBuy.setLayout(new BorderLayout());
-        pnlBuy.add(new JLabel(new ImageIcon(targetImg)),BorderLayout.PAGE_START); //TestImage verwenden statt neues
+        testImage.setIcon(new ImageIcon(targetImg));
+//        System.out.println("wird abgerufen");
         setVisible(true);
     }
     
@@ -560,7 +559,8 @@ public class CardEditor extends JFrame implements ActionListener {
     
     
     private void uploadImageActionPerformed(java.awt.event.ActionEvent evt) {
-        JFileChooser fc = new JFileChooser(basePath);
+//    	System.out.println("wird abgerufen");
+    	JFileChooser fc = new JFileChooser(basePath);
         fc.setFileFilter(new JPEGImageFileFilter());
         int res = fc.showOpenDialog(null);
         // We have an image!
@@ -568,13 +568,16 @@ public class CardEditor extends JFrame implements ActionListener {
             if (res == JFileChooser.APPROVE_OPTION) {
                 File file = fc.getSelectedFile();
                 setTarget(file);
+//                System.out.println("wird abgerufen");
             } // Oops!
             else {
                 JOptionPane.showMessageDialog(null,
                         "You must select one image to be the reference.", "Aborting...",
                         JOptionPane.WARNING_MESSAGE);
+             
             }
         } catch (Exception iOException) {
+        	
         }
 
     }
@@ -593,6 +596,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	}
 
 }
+
 
 
 /* 
