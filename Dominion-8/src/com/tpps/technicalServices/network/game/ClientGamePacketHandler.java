@@ -61,6 +61,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 			//setHost = false
 //			DominionController.getInstance().getGameClient().getGameWindow().dispose();
 //			DominionController.getInstance().joinMainMenu();
+			JOptionPane.showMessageDialog(null, "You got votekicked :( BYE BYE", "Votekick result", JOptionPane.INFORMATION_MESSAGE);
 			System.exit(0);
 			break;
 		case CARD_PLAYED:

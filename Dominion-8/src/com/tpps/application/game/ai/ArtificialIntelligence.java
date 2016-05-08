@@ -203,16 +203,11 @@ public class ArtificialIntelligence {
 				return;
 			} else if (addActionCardAvailable()) {
 				play(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
-			} else if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName()) && canBeTrashedByChapel() > 0) {
+				continue;
+			} else if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName()) && !getTrashWorthyCards().isEmpty()) {
 				LinkedList<Card> trashCards = getTrashWorthyCards();
 				play(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
-				if (!endPhase) {
-					//trash estates
-//					this.player.getDeck().(CardName.ESTATE.getName())== 1
-					while (this.player.isTrashMode()) {
-						
-					}
-				}
+				trash(trashCards);
 			}
 
 			// Logik + Strategy, chapel handlen
@@ -510,131 +505,102 @@ public class ArtificialIntelligence {
 				return ArtificialIntelligence.NO_BUY;
 			}
 		} else {
+			if (treasureValue >= 8) {
+				return CardName.PROVINCE.getName();
+			} else if (treasureValue >= 6 && !this.strategy.equals(Strategy.BIG_MONEY_CHAPEL)) {
+				return CardName.GOLD.getName();
+			}
 			switch (strategy) {
 			case BIG_MONEY: // 2 Moats (first has to be bought before silver)
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
-					return CardName.GOLD.getName();
-				} else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5) {
+				if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5)
 					return CardName.DUCHY.getName();
-				} else if (treasureValue >= 4 && this.player.getTurnNr() >= 6 && board.getTableForActionCards().containsKey(CardName.SMITHY.getName())
-						&& this.player.getDeck().containsAmountOf(CardType.ACTION) < 2) {
+				else if (treasureValue >= 4 && this.player.getTurnNr() >= 6 && board.getTableForActionCards().containsKey(CardName.SMITHY.getName())
+						&& this.player.getDeck().containsAmountOf(CardType.ACTION) < 2)
 					return CardName.SMITHY.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 2 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1)) {
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+						&& (discardModeCount > 2 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
-				} else if (treasureValue >= 3) {
+				else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
-						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 2) {
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
+						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 2)
 					return CardName.MOAT.getName();
-				} else
-					return CardName.ESTATE.getName();
 			case BIG_MONEY_CHAPEL: // 2 Moats
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
+				if (treasureValue >= 6) {
 					if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName()) >= 5 && board.getTableForActionCards().containsKey(CardName.ADVENTURER.getName())
 							&& !this.player.getDeck().contains(CardName.ADVENTURER.getName())) {
 						return CardName.ADVENTURER.getName();
 					} else
 						return CardName.GOLD.getName();
-				} else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5) {
+				} else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5)
 					return CardName.DUCHY.getName();
-				} else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName())) {
+				else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName()))
 					return CardName.CHAPEL.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1)) {
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
-				} else if (treasureValue >= 3) {
+				else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
-						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 2) {
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
+						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 2)
 					return CardName.MOAT.getName();
-				} else
-					return CardName.ESTATE.getName();
 			case BIG_MONEY_CHAPEL_MILITIA: // 1 Moat and 2 Militias
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
-					return CardName.GOLD.getName();
-				} else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5) {
+				if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5)
 					return CardName.DUCHY.getName();
-				} else if (treasureValue >= 4 && this.player.getDeck().containsAmountOf(CardName.MILITIA.getName()) < 2 && board.getTableForActionCards().containsKey(CardName.MILITIA.getName())) {
+				else if (treasureValue >= 4 && this.player.getDeck().containsAmountOf(CardName.MILITIA.getName()) < 2 && board.getTableForActionCards().containsKey(CardName.MILITIA.getName()))
 					return CardName.MILITIA.getName();
-				} else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName())) {
+				else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName()))
 					return CardName.CHAPEL.getName();
-				} else if (treasureValue >= 3) {
+				else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1)) {
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
-				} else
-					return CardName.ESTATE.getName();
 			case BIG_MONEY_CHAPEL_WITCH: // No Moats and 2 Witches
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
-					return CardName.GOLD.getName();
-				} else if (treasureValue >= 5) {
+				if (treasureValue >= 5) {
 					if (this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2 && board.getTableForActionCards().containsKey(CardName.WITCH.getName()))
 						return CardName.WITCH.getName();
 					else if (this.getPileSize(CardName.PROVINCE.getName()) <= 5)
 						return CardName.DUCHY.getName();
 					else
 						return CardName.SILVER.getName();
-				} else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName())) {
+				} else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName()))
 					return CardName.CHAPEL.getName();
-				} else if (treasureValue >= 3) {
+				else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
-				} else
-					return CardName.ESTATE.getName();
 			case BIG_MONEY_WITCH: // 1 Moat and 2 Witches
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
-					return CardName.GOLD.getName();
-				} else if (treasureValue >= 5) {
+				if (treasureValue >= 5) {
 					if (this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2 && board.getTableForActionCards().containsKey(CardName.WITCH.getName()))
 						return CardName.WITCH.getName();
 					else if (this.getPileSize(CardName.PROVINCE.getName()) <= 5)
 						return CardName.DUCHY.getName();
 					else
 						return CardName.SILVER.getName();
-				} else if (treasureValue >= 3) {
+				} else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1)) {
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
-				} else
-					return CardName.ESTATE.getName();
 			case DRAW_ADD_ACTION: // 3 Moats Max.
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
-					return CardName.GOLD.getName();
-				} else if (treasureValue >= 5) {
+				if (treasureValue >= 5) {
 					LinkedList<String> addAndDrawList = CollectionsUtil.join(board.getActionCardsWithActionWhichCost(CardAction.ADD_ACTION_TO_PLAYER, 5),
 							board.getActionCardsWithActionWhichCost(CardAction.DRAW_CARD, 5));
 					return addAndDrawList.get(new Random().nextInt(addAndDrawList.size()));
 				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1)) {
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
-				} else if (treasureValue >= 4 && !this.player.getDeck().contains(CardName.MILITIA.getName()) && board.getTableForActionCards().containsKey(CardName.MILITIA.getName())
-						&& this.player.getTurnNr() >= 7) {
+				else if (treasureValue >= 4 && !this.player.getDeck().contains(CardName.MILITIA.getName()) && board.getTableForActionCards().containsKey(CardName.MILITIA.getName())
+						&& this.player.getTurnNr() >= 7)
 					// punish potential Councilroom with Militia
 					return CardName.MILITIA.getName();
-				} else if (treasureValue >= 3) {
+				else if (treasureValue >= 3) {
 					if (Math.random() < 0.5)
 						if (board.getTableForActionCards().containsKey(CardName.VILLAGE.getName()))
 							return CardName.VILLAGE.getName();
 					return CardName.SILVER.getName();
 				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
-						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 3) {
+						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 3)
 					return CardName.MOAT.getName();
-				} else
-					return CardName.ESTATE.getName();
 			default:
 				return CardName.ESTATE.getName();
 			}
@@ -765,7 +731,7 @@ public class ArtificialIntelligence {
 				 * treasureValue on card hand is >= 7, discard the action card
 				 * with the lowest cost
 				 */
-				if (canBeTrashedByChapel() < 2 || treasureValue >= 7) {
+				if (getTrashWorthyCards().size() < 2 || treasureValue >= 7) {
 					discard(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
 					return;
 				}
@@ -905,36 +871,54 @@ public class ArtificialIntelligence {
 
 	/**
 	 * 
-	 * @return how many cards on card hand are trash worthy and would be trashed
-	 *         by the chapel
+	 * @return whether there is only one estate left in the deck
 	 */
-	private int canBeTrashedByChapel() {
-		LinkedList<Card> cards = getCardHand();
-		int canBeTrashed = 0;
-		for (Card card : cards) {
-			if ((card.getName().equals(CardName.ESTATE.getName()) && !lastEstateInDeck(card)) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName())) {
-				canBeTrashed++;
-			}
-		}
-		return canBeTrashed;
+	private boolean lastEstateInDeck() {
+		return this.player.getDeck().containsAmountOf(CardName.ESTATE.getName()) == 1;
 	}
-	
+
+	/**
+	 * 
+	 * @param card
+	 *            the card to check if its worth to trash
+	 * @return whether the card is worth to trash or not
+	 */
+	private boolean isTrashWorthy(Card card) {
+		return (card.getName().equals(CardName.ESTATE.getName()) && !lastEstateInDeck()) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName());
+	}
+
+	/**
+	 * 
+	 * @return list of cards on hand that can be trashed by the chapel
+	 */
 	private LinkedList<Card> getTrashWorthyCards() {
 		LinkedList<Card> resultList = new LinkedList<Card>();
 		for (Card c : getCardHand()) {
-			if (this.player.getDeck().containsAmountOf(CardName.ESTATE.getName()) > 1) {
-				
+			if (this.isTrashWorthy(c)) {
+				resultList.add(c);
 			}
 		}
 		return resultList;
 	}
 	
-	private boolean lastEstateInDeck(Card c) {
-		return this.player.getDeck().containsAmountOf(CardName.ESTATE.getName()) == 1;
-	}
-	
-	private boolean isTrashWorthy(Card card) {
-		return (card.getName().equals(CardName.ESTATE.getName()) && !lastEstateInDeck(card)) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName());
+	private void trash(LinkedList<Card> trashCards) {
+		int treasureCardsValue = getTreasureCardsValue(getCardHand());
+		for (Card c : trashCards) {
+			if (c.getName().equals(CardName.CURSE.getName())) {
+				play(c);
+			} else if (c.getName().equals(CardName.ESTATE.getName())) {
+				play(c);
+			}
+			// if (endPhase)
+
+		}
+		// if (endPhase)
+		// trash curse/copper
+		// trash(trashCards, CardName.CURSE.getName(),
+		// CardName.COPPER.getName());
+		// else
+		// trash(trashCards, CardName.CURSE.getName(),
+		// CardName.COPPER.getName(), CardName.ESTATE.getName());
 	}
 
 	/* ---------- getters & setters ---------- */
