@@ -228,6 +228,21 @@ public class MyAudioPlayer {
 				MyAudioPlayer.mp33.setVolume(MyAudioPlayer.lastSoundVolume);
 			}
 			break;
+
+		case "mainMusicPlayer":
+			if (MyAudioPlayer.mainMusicPlayer.getVolume() != 0) {
+				MyAudioPlayer.mainMusicPlayer.setVolume(0);
+				MyAudioPlayer.mp32.setVolume(0);
+				MyAudioPlayer.mp33.setVolume(0);
+			} else {
+				if (MyAudioPlayer.lastSoundVolume == 0) {
+					MyAudioPlayer.lastSoundVolume = 55;
+				}
+				MyAudioPlayer.mainMusicPlayer.setVolume(MyAudioPlayer.lastSoundVolume);
+				MyAudioPlayer.mp32.setVolume(MyAudioPlayer.lastSoundVolume);
+				MyAudioPlayer.mp33.setVolume(MyAudioPlayer.lastSoundVolume);
+			}
+			break;
 		}
 	}
 
