@@ -643,8 +643,8 @@ public class GameBoard {
 	public int getSizeOfSmallestPilesOnBoard(int lowest) {
 		int result = 0;
 		ArrayList<Integer> sizes = new ArrayList<Integer>();
-		for (LinkedList<Card> list : tableForActionCards.values()) {
-			sizes.add(list.size());
+		for (Map.Entry<String, LinkedList<Card>> entry : this.tableForActionCards.entrySet()) {
+			sizes.add(entry.getValue().size());
 		}
 		Collections.sort(sizes);
 		for (int i = 0; i < lowest; i++) {
@@ -662,6 +662,22 @@ public class GameBoard {
 		LinkedList<String> result = new LinkedList<String>();
 		for (Map.Entry<String, LinkedList<Card>> entry : this.tableForActionCards.entrySet()) {
 			if (entry.getValue().getLast().getCost() == cost) {
+				result.add(entry.getKey());
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * 
+	 * @param action the action of the card
+	 * @param cost the cost of the card
+	 * @return a list of names with all actioncards that contain action and cost #cost
+	 */
+	public LinkedList<String> getActionCardsWithActionWhichCost(CardAction action, int cost) {
+		LinkedList<String> result = new LinkedList<String>();
+		for (Map.Entry<String, LinkedList<Card>> entry : this.tableForActionCards.entrySet()) {
+			if (entry.getValue().getLast().getCost() == cost && entry.getValue().getLast().getActions().containsKey(action)) {
 				result.add(entry.getKey());
 			}
 		}

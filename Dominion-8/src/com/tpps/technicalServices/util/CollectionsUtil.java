@@ -239,4 +239,20 @@ public final class CollectionsUtil {
 	public static Pair<String, Color> getPair(String s) {
 		return new Pair<String, Color>(s, GameLog.getMsgColor());
 	}
+	
+	/**
+	 * @param lists the lists to join
+	 * @return a joined list of the given parameters with no duplicate entries
+	 */
+	@SafeVarargs
+	public static <T> LinkedList<T> join(LinkedList<T>... lists) {
+		LinkedList<T> result = new LinkedList<T>();
+		for (LinkedList<T> list : lists) {
+			for (T t : list) {
+				if (!result.contains(t))
+					result.add(t);
+			}
+		}
+		return result;
+	}
 }
