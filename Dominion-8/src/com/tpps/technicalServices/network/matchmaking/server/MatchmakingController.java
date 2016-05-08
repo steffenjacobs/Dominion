@@ -370,13 +370,19 @@ public final class MatchmakingController {
 		GameLobby lobby = runningLobbiesByPort.get(port);
 		for (String p : endPacket.getPlayers()) {
 
+			MPlayer player = playersByName.get(p);
+
+			if (player != null && player.isAI()) {
+				continue;
+			}
+
 			if (!DominionController.isOffline()) {
 				SQLStatisticsHandler.addOverallPlaytime(p, System.currentTimeMillis() - lobby.getStartTime());
 				if (!p.equals(endPacket.getWinner())) {
 					SQLStatisticsHandler.addWinOrLoss(p, false);
 				}
 			}
-			MPlayer player = playersByName.get(p);
+
 			// int port = connectedPortsByPlayer.get(player);
 			MatchmakingServer.getInstance().disconnect(player.getConnectionPort());
 		}
