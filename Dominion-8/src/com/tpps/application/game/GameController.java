@@ -1230,6 +1230,14 @@ public class GameController {
 	public void resetThiefList() {
 		this.thiefList = new CopyOnWriteArrayList<Player>();
 	}
+	
+	
+	/**
+	 * resets the spyList
+	 */
+	public void resetSpyList() {
+		this.spyList = new CopyOnWriteArrayList<Player>();
+	}
 
 	/**
 	 * 

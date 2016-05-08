@@ -93,18 +93,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 		Player refActivePlayer = this.server.getGameController().getActivePlayer();
 
 		try {
-			switch (packet.getType()) {
-			case VOTEKICK:
-				// ----------------------
-				// Votekick logik für ingame,
-				// zu diesem Zeitpunkt, ist der
-				// user schon aus dem chatroom raus				
-				// ----------------------
-				GameLog.log(MsgType.INFO , "This gameserver " + this.server.getPort() + " received a votekickpacket");
-				PacketVotekick votekickPacket = (PacketVotekick) packet;
-				GameLog.log(MsgType.INFO , "The User gets kicked: " + votekickPacket.getUser());
-				return;	//oder doch break ?
-				
+			switch (packet.getType()) {				
 			case REGISTRATE_PLAYER_BY_SERVER:
 				int clientId = GameServer.getCLIENT_ID();
 				GameLog.log(MsgType.MM ,"clientId: " + clientId);
@@ -132,6 +121,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 					this.server.disconnect(port);
 				}
 				return;
+			case VOTEKICK:
+				voteKick(port, packet);				
+				return;	//oder doch break ?
 			case CARD_PLAYED:
 				if (this.server.getGameController().getPlayerByPort(port).getPlayerName().equals(this.server.getGameController().getActivePlayerName())
 						|| this.server.getGameController().getPlayerByPort(port).getDeck().getCardFromHand(((PacketPlayCard) packet).getCardID()) != null) {
@@ -362,6 +354,28 @@ public class ServerGamePacketHandler extends PacketHandler {
 					this.server.getGameController().getActivePlayer().setPlayTwiceEnabledFalse();
 				}
 			}
+		}
+	}
+
+	private void voteKick(int port, Packet packet) throws IOException {
+		// ----------------------
+		// Votekick logik für ingame,
+		// zu diesem Zeitpunkt, ist der
+		// user schon aus dem chatroom raus				
+		// ----------------------
+		GameLog.log(MsgType.INFO , "This gameserver " + this.server.getPort() + " received a votekickpacket");
+		PacketVotekick votekickPacket = (PacketVotekick) packet;
+		GameLog.log(MsgType.INFO , "The User gets kicked: " + votekickPacket.getUser());
+		this.server.getGameController().getPlayers().remove(this.server.getGameController().getPlayerByUserName(votekickPacket.getUser()));
+		this.server.sendMessage(port, votekickPacket);
+		for (Iterator<Player> iterator = this.server.getGameController().getPlayers().iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			player.setAllModesFalse();
+			this.server.getGameController().resetThiefList();
+			this.server.getGameController().resetSpyList();
+			if (votekickPacket.getUser().equals(this.server.getGameController().getActivePlayerName())) {
+				this.server.getGameController().setNextActivePlayer();
+			}			
 		}
 	}
 

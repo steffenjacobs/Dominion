@@ -51,6 +51,11 @@ public class ClientGamePacketHandler extends PacketHandler {
 			return;
 		}
 		switch (packet.getType()) {
+		case VOTEKICK:
+			this.gameClient.disconnect();
+			this.gameWindow.setCaptionTurn("votekicked");
+			DominionController.getInstance().setTurnFlag(false);
+			break;
 		case CARD_PLAYED:
 			GameLog.log(MsgType.PACKET,"packet received from Server of type " + packet.getType() + "id: " + ((PacketPlayCard) packet).getCardID());
 			break;
