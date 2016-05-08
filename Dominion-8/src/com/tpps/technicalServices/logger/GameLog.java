@@ -2,6 +2,10 @@ package com.tpps.technicalServices.logger;
 
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
@@ -36,11 +40,10 @@ public class GameLog {
 
 	private static ConcurrentSkipListMap<Long, LogObject> waitingLogs;
 	private static Timer timer;
-
-	/**
-	 * unused for now, see MsgType class for messageTypeColors
-	 */
-	private static Color msgTypeColor = null;
+	
+	private static final String filePath = "gamelog.txt";
+	private static BufferedWriter writer;
+	private static File logFile = new File(filePath);
 
 	/**
 	 * if the user has the ANSI plugin installed, set this flag to true so the
@@ -78,14 +81,6 @@ public class GameLog {
 	 */
 	public static void setBackgroundColor(Color backgroundColor) {
 		GameLog.backgroundColor = backgroundColor;
-	}
-
-	/**
-	 * @param msgtypeColor
-	 *            the msgtypeColor to set
-	 */
-	public static void setMsgtypeColor(Color msgtypeColor) {
-		GameLog.msgTypeColor = msgtypeColor;
 	}
 
 	/**
@@ -209,21 +204,6 @@ public class GameLog {
 	}
 
 	/**
-	 * @return the msgTypeColor
-	 */
-	public static Color getMsgTypeColor() {
-		return msgTypeColor;
-	}
-
-	/**
-	 * @param msgTypeColor
-	 *            the msgTypeColor to set
-	 */
-	public static void setMsgTypeColor(Color msgTypeColor) {
-		GameLog.msgTypeColor = msgTypeColor;
-	}
-
-	/**
 	 * @return the waitingLogs
 	 */
 	public static ConcurrentSkipListMap<Long, LogObject> getWaitingLogs() {
@@ -274,6 +254,7 @@ public class GameLog {
 //				}
 //			}
 //		}, 0, 2000);
+		GameLog.loadLogFile();
 		if (guiPossible)
 			GameLog.textPane = new GameLogTextPane();
 		else
@@ -341,8 +322,11 @@ public class GameLog {
 			if (type.equals(MsgType.GAME) && guiPossible) {
 				GameLog.textPane.updateTextArea(line, color);
 			}
-			if (!type.equals(MsgType.GAME))
-				System.out.println(createTimestamp(type) + line);
+			if (!type.equals(MsgType.GAME)) {
+				String msg = createTimestamp(type) + line;
+				System.out.println(msg);
+				GameLog.insertLineToLogFile(msg);
+			}
 		} else {
 			init();
 			log(type, line, color);
@@ -388,4 +372,39 @@ public class GameLog {
 	public static void resetPrepText() {
 		GameLog.prepText = new TreeMap<Integer, Pair<String, Color>>();
 	}
+	
+	/**
+	 * This method opens the gamelog file
+	 * 
+	 */
+	private static void loadLogFile(){
+		try {			
+			if(!logFile.exists()){
+				logFile.createNewFile();
+			}
+			writer = new BufferedWriter(new FileWriter(logFile));
+		} catch (IOException e) {		
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * inserts a single message to the logfile
+	 * 
+	 * @param timeStamp
+	 *            String of the time
+	 * @param user
+	 *            String of the user who
+	 * @param line
+	 *            String of a chatline
+	 */
+	private static void insertLineToLogFile(String msg){
+		try {
+			writer.write(msg);
+			writer.newLine();
+			writer.flush();
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
+	}	
 }
