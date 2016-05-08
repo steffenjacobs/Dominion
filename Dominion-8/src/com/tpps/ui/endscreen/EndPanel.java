@@ -32,7 +32,7 @@ import com.sun.javafx.tk.Toolkit;
 import com.sun.xml.internal.ws.api.Component;
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.Loader;
+import com.tpps.technicalServices.util.FontLoader;
 import com.tpps.ui.GraphicFramework;
 
 import javafx.scene.layout.Border;
@@ -257,10 +257,10 @@ public class EndPanel extends JPanel {
 	public void fontLoading() {
 		try {
 			if (customFont == null) {
-				customFont = Loader.getInstance().getXenipa();
+				customFont = FontLoader.getInstance().getXenipa();
 				resultFont = customFont;
 				if (customFont == null) {
-					customFont = new Loader().importFont();
+					customFont = new FontLoader().importFont();
 					resultFont = customFont;
 
 				}

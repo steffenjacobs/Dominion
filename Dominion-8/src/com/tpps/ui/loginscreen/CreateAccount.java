@@ -25,7 +25,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.Loader;
+import com.tpps.technicalServices.util.FontLoader;
 
 /**
  * 
@@ -67,9 +67,9 @@ public class CreateAccount extends JFrame {
 		resizeImage();
 		try {
 			if (customFont == null) {
-				customFont = Loader.getInstance().getXenipa();
+				customFont = FontLoader.getInstance().getXenipa();
 				if (customFont == null) {
-					customFont = new Loader().importFont();
+					customFont = new FontLoader().importFont();
 				}
 			}
 		} catch (FontFormatException e1) {

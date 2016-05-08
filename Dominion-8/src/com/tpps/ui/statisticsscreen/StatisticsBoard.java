@@ -29,6 +29,7 @@ import javax.swing.table.JTableHeader;
 
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.network.login.SQLHandling.Ranking;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.ImageLoader;
 
@@ -55,8 +56,7 @@ public class StatisticsBoard extends JPanel {
 	private Object columnNames[] = { "nickname", "wins", "losses", "w/l ratio", "total matches", "rank", "playtime" };
 
 	private String[][] statistics;
-	
-	
+
 	/**
 	 * initializes the statisticsboard
 	 */
@@ -136,6 +136,8 @@ public class StatisticsBoard extends JPanel {
 			this.model.setValueAt(
 					getTimeString(Long.valueOf((String) model.getValueAt(i, this.model.getColumnCount() - 1))), i,
 					this.model.getColumnCount() - 1);
+			this.model.setValueAt(Ranking.getRankByScore((String) this.model.getValueAt(i, 0),
+					Integer.parseInt((String) this.model.getValueAt(i, 5))), i, 5);
 		}
 	}
 

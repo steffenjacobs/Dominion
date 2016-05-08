@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 
-public class ImageLoader {	
+public final class ImageLoader {	
 
 	private static final ConcurrentHashMap<String, BufferedImage> loadedImages;
 

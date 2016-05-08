@@ -9,7 +9,6 @@ import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -24,8 +23,8 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import com.tpps.technicalServices.util.FontLoader;
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.Loader;
 
 //TODO: underline Header, set Background, set transparent, map 'RETURN' key to Login
 
@@ -35,8 +34,6 @@ import com.tpps.technicalServices.util.Loader;
 public class LogInGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private int width;
-	private int height;
 	private Container c;
 	private JButton execute;
 
@@ -82,16 +79,14 @@ public class LogInGUI extends JFrame {
 	 */
 
 	private void createdComponent() {
-		width = Toolkit.getDefaultToolkit().getScreenSize().width;
-		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 
 		loadImage();
 		resizeImage();
 		try {
 			if (customFont == null) {
-				customFont = Loader.getInstance().getXenipa();
+				customFont = FontLoader.getInstance().getXenipa();
 				if (customFont == null) {
-					customFont = new Loader().importFont();
+					customFont = new FontLoader().importFont();
 				}
 			}
 		} catch (FontFormatException e1) {

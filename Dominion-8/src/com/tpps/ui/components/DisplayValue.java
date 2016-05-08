@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.Loader;
+import com.tpps.technicalServices.util.FontLoader;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 
@@ -77,9 +77,9 @@ public final class DisplayValue extends GameObject {
 	public void onResize(int absWidth, int absHeight) {
 		try {
 			if (customFont == null) {
-				customFont = Loader.getInstance().getXenipa();
+				customFont = FontLoader.getInstance().getXenipa();
 				if (customFont == null) {
-					customFont = new Loader().importFont();
+					customFont = new FontLoader().importFont();
 				}
 			}
 
@@ -109,9 +109,9 @@ public final class DisplayValue extends GameObject {
 		this.caption = caption;
 		try {
 			if (customFont == null) {
-				customFont = Loader.getInstance().getXenipa();
+				customFont = FontLoader.getInstance().getXenipa();
 				if (customFont == null) {
-					customFont = new Loader().importFont();
+					customFont = new FontLoader().importFont();
 				}
 			}
 		} catch (FontFormatException e) {

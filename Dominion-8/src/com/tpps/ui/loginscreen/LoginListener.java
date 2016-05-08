@@ -1,8 +1,6 @@
 package com.tpps.ui.loginscreen;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -21,8 +19,6 @@ import javax.swing.JTextField;
 public class LoginListener implements MouseListener {
 
 	private JButton clicked;
-	private JButton cancel;
-	private JButton createAccount;
 
 	private JTextField userinfo;
 	private JPasswordField passwordbox;
@@ -43,8 +39,6 @@ public class LoginListener implements MouseListener {
 		this.userinfo = userinfo;
 		this.passwordbox = passwordbox;
 		this.guicontroller = guicontroller;
-		this.cancel = cancel;
-		this.createAccount = createAccount;
 		userinfo.requestFocus();
 		passwordbox.addKeyListener(new KeyListener() {
 

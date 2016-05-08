@@ -46,7 +46,7 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.Loader;
+import com.tpps.technicalServices.util.FontLoader;
 
 /**
  * This class creates a JPanel with all gui components, that are shown on the
@@ -709,9 +709,9 @@ public class PlayerSettingsPanel extends JPanel {
 	public void fontLoading() {
 		try {
 			if (head == null) {
-				head = Loader.getInstance().getXenipa();
+				head = FontLoader.getInstance().getXenipa();
 				if (head == null) {
-					head = new Loader().importFont();
+					head = new FontLoader().importFont();
 				}
 			}
 		} catch (FontFormatException e1) {
