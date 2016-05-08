@@ -2,7 +2,6 @@ package com.tpps.ui.statisticsscreen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,12 +18,17 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumn;
 
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
 
+/**
+ * This class provides all UI functionalities that come with loading all
+ * statistics from the database
+ * 
+ * @author jhuhn
+ */
 public class StatisticsBoard extends JPanel{
 	
 	private static final long serialVersionUID = 1L;
@@ -38,12 +42,13 @@ public class StatisticsBoard extends JPanel{
 	private JTable table;
 	private DefaultTableModel model; 
 	
-	Object rowData[][] = { { "Row1-Column1", "Row1-Column2", "Row1-Column3"}, { "Row2-Column1", "Row2-Column2", "Row2-Column3"} };
-	Object columnNames[] = { "nickname", "wins", "losses", "w/l ratio", "total matches" , "rank", "playtime"};
+	private Object columnNames[] = { "nickname", "wins", "losses", "w/l ratio", "total matches" , "rank", "playtime"};
 	
+	/**
+	 * initializes the statisticsboard
+	 */
 	public StatisticsBoard() {
 		model = new DefaultTableModel();
-		rowData = this.initRowData();
 		this.setVisible(true);
 		this.setOpaque(false);
 		this.setLayout(new BorderLayout());
@@ -57,16 +62,11 @@ public class StatisticsBoard extends JPanel{
 		GameLog.log(MsgType.INIT, "StatisticsBoard");
 	}
 	
-	private String[][] initRowData(){
-		String[][] data = new String[1000][7];
-		for (int i = 0; i < data.length; i++) {
-			for (int j = 0; j < data[i].length; j++) {
-				data[i][j] = "Row_" + i + " Column_" + j ;
-			}
-		}
-		return data;
-	}
-	
+	/**
+	 * This method sets the tabledate on the ui
+	 * 
+	 * @param statistics twodimenstional String array of all statistics
+	 */
 	public void setTableData(String[][] statistics){
 		this.clearTable();			
 		for (int i = 0; i < statistics.length; i++) {
@@ -74,18 +74,28 @@ public class StatisticsBoard extends JPanel{
 		}		
 	}
 	
+	/**
+	 * This method cleares the table
+	 */
 	private void clearTable(){
 		this.model = (DefaultTableModel)table.getModel();
 		this.model.getDataVector().removeAllElements();
 		this.model.fireTableDataChanged();
 	}
 	
+	/**
+	 * initialize the columndata
+	 */
 	private void initColumnData(){
 		for (int i = 0; i < columnNames.length; i++) {
 			this.model.addColumn(columnNames[i]);
 		}
 	}
 	
+	/**
+	 * 
+	 * @return a JScrollpane with all table data
+	 */
 	private JScrollPane createTable(){
 		this.loadImage();
 		this.table = new JTable(model);
@@ -129,6 +139,9 @@ public class StatisticsBoard extends JPanel{
 		return pane;
 	}
 	
+	/**
+	 * loads ui images out of resources
+	 */
 	private void loadImage(){
 		try {
 			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));

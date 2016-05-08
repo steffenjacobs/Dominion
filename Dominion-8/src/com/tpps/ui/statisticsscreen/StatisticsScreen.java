@@ -10,10 +10,14 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import com.tpps.ui.lobbyscreen.GlobalChatPanel;
 
+/**
+ * This class is mainly for testing purposes (Statistics panel)
+ * 
+ * @author jhuhn
+ */
 public class StatisticsScreen extends JFrame{
 
 	private static final long serialVersionUID = 1L;
@@ -24,6 +28,9 @@ public class StatisticsScreen extends JFrame{
 	
 	private StatisticsBoard statBoard;
 	
+	/**
+	 * init testclass
+	 */
 	public StatisticsScreen() {
 		try {
 			this.originalBackground = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
@@ -50,6 +57,9 @@ public class StatisticsScreen extends JFrame{
 		this.repaint();
 	}
 	
+	/**
+	 * @param args not used
+	 */
 	public static void main(String[] args) {
 		new StatisticsScreen();
 	}
