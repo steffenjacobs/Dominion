@@ -472,7 +472,7 @@ public class Deck {
 	 * @param name the cardname to search
 	 * @return whether the deck contains a card with name *name*
 	 */
-	public boolean deckContains(String name) {
+	public boolean contains(String name) {
 		for (Card c : this.drawPile) {
 			if (c.getName().equals(name))
 				return true;
@@ -493,7 +493,7 @@ public class Deck {
 	 * @param name the cardname to search
 	 * @return the amount of found cards in the deck with the given name
 	 */
-	public int deckContainsAmountOf(String name) {
+	public int containsAmountOf(String name) {
 		int count = 0;
 		for (Card c : this.drawPile) {
 			if (c.getName().equals(name))
@@ -505,6 +505,28 @@ public class Deck {
 		}
 		for (Card c : this.cardHand) {
 			if (c.getName().equals(name))
+				count++;
+		}
+		return count;
+	}
+	
+	/**
+	 * 
+	 * @param type the cardtype to search for
+	 * @return the amount of found cards in the deck with the given type
+	 */
+	public int containsAmountOf(CardType type) {
+		int count = 0;
+		for (Card c : this.drawPile) {
+			if (c.getTypes().contains(type))
+				count++;
+		}
+		for (Card c : this.discardPile) {
+			if (c.getTypes().contains(type))
+				count++;
+		}
+		for (Card c : this.cardHand) {
+			if (c.getTypes().contains(type))
 				count++;
 		}
 		return count;
