@@ -208,11 +208,15 @@ public class PlayerSettingsPanel extends JPanel {
 		return panel;
 	}
 
-	public StartButton getStartButton() {
-		return startButton;
+
+	/**
+	 * @param enable boolean to enable and disable startbutton
+	 */
+	public void setStartButtonEnabled(boolean enable) {
+		this.startButton.setEnabled(enable);
 	}
 
-	public class StartButton extends JButton implements ActionListener, MouseListener {
+	private class StartButton extends JButton implements ActionListener, MouseListener {
 
 		private static final long serialVersionUID = 1L;
 		private boolean enabledFlag;
@@ -351,6 +355,12 @@ public class PlayerSettingsPanel extends JPanel {
 		return true;
 	}
 
+	/**
+	 * updates cards in playersettingspanel
+	 * 
+	 * @author sjacobs
+	 * @return an instance of updated playersettingpanel
+	 */
 	public PlayerSettingsPanel updateCards() {
 		if (this.midpanel != null) {
 			this.remove(midpanel);
@@ -691,6 +701,11 @@ public class PlayerSettingsPanel extends JPanel {
 		return this.selectedImage;
 	}
 
+	/**
+	 * loads a specific font
+	 * 
+	 * @author nagrawal
+	 */
 	public void fontLoading() {
 		try {
 			if (head == null) {
@@ -805,14 +820,18 @@ public class PlayerSettingsPanel extends JPanel {
 		return cardNamesSelected;
 	}
 
+	/**
+	 * @author sjacobs
+	 * @return an Arraylist of Stirngs with all AI names
+	 */
 	public ArrayList<String> getAiNames() {
 		return aiNames;
 	}
 
-	public ArrayList<String> getAiNameList() {
-		return this.aiNameList;
-	}
-
+	/**
+	 * @author nwipfler
+	 * @return a String representation of a random AI
+	 */
 	public String getAiName() {
 		String randomName = this.aiNameList.get(new Random().nextInt(aiNameList.size()));
 		this.aiNames.add(randomName);
@@ -820,11 +839,21 @@ public class PlayerSettingsPanel extends JPanel {
 		return randomName;
 	}
 
+	/**
+	 * removes the last AI name
+	 * 
+	 * @author nwipfler
+	 */
 	public void removeAiName() {
 		String removed = this.aiNames.remove(aiNames.size() - 1);
 		this.aiNameList.add(removed);
 	}
 
+	/**
+	 * adds 3 AIs to the lobby, used for singleplayer
+	 * 
+	 * @author sjacobs
+	 */
 	public void add3AIs() {
 		new Thread(() -> {
 			System.out.println("trying to add 3 ais " + DominionController.getInstance().getLobbyID());

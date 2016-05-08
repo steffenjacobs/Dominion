@@ -406,7 +406,7 @@ public final class DominionController {
 				"             ","****** You joined the lobbyscreen ******",
 				"             ", Color.GREEN, false);
 		this.globalChatPanel.getBackButton().setLobby(true);
-		this.playerSettingsPanel.getStartButton().setEnabled(true);
+		this.playerSettingsPanel.setStartButtonEnabled(true);
 		JPanel panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 

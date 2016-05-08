@@ -17,6 +17,11 @@ import javax.swing.JButton;
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
 
+/**
+ * KI + or KI - Button class. This class is used to add or remove KI's
+ * 
+ * @author jhuhn
+ */
 public class KIButton extends JButton implements MouseListener, ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -26,6 +31,17 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 	private boolean aiAdd;
 	private PlayerSettingsPanel playerSettingsPanel;
 
+	/**
+	 * initializes the KI Button instance
+	 * 
+	 * @author jhuhn
+	 * @param brain
+	 *            Image that is shown instead of the standard JButton look
+	 * @param aiAdd
+	 *            boolean true: add KI, false: remove KI
+	 * @param playerSettingsPanel
+	 *            playersettingspanel instance to connect functionalities
+	 */
 	public KIButton(BufferedImage brain, boolean aiAdd, PlayerSettingsPanel playerSettingsPanel) {
 		this.aiAdd = aiAdd;
 		if (aiAdd) {
@@ -46,10 +62,6 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 		this.setVisible(true);
 		this.addMouseListener(this);
 		this.addActionListener(this);
-	}
-
-	public void setBrain(BufferedImage brain) {
-		this.brain = brain;
 	}
 
 	@Override
@@ -86,6 +98,7 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		//add ki
 		if (aiAdd) {
 			String aiName = this.playerSettingsPanel.getAiName();
 			try {
@@ -94,6 +107,7 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 				e1.printStackTrace();
 			}
 			this.playerSettingsPanel.handleStartButton();
+		//remove ki	
 		} else {
 			try {
 				DominionController.getInstance().getMatchmaker()
