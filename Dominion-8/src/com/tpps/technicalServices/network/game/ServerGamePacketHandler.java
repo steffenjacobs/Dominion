@@ -374,19 +374,21 @@ public class ServerGamePacketHandler extends PacketHandler {
 					.remove(kickedPlayer);
 			System.out.println("größe: " + this.server.getGameController().getPlayers().size());
 			this.server.sendMessage(kickedPlayer.getPort(), votekickPacket);
+			
 			for (Iterator<Player> iterator = this.server.getGameController().getPlayers().iterator(); iterator
 					.hasNext();) {
 				Player player = (Player) iterator.next();
 				player.setAllModesFalse();
 				this.server.getGameController().resetThiefList();
 				this.server.getGameController().resetSpyList();
-				if (votekickPacket.getUser().equals(this.server.getGameController().getActivePlayerName())) {
-					
-					this.server.getGameController().setNextActivePlayer();
-					System.out.println("new active Player");
-					this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getPort(),
-							this.server.getGameController().getActivePlayerName(), true));
-				}
+				
+			}
+			if (votekickPacket.getUser().equals(this.server.getGameController().getActivePlayerName())) {
+				
+				this.server.getGameController().setNextActivePlayer();
+				System.out.println("new active Player");
+				this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getPort(),
+						this.server.getGameController().getActivePlayerName(), true));
 			}
 		}
 	}
