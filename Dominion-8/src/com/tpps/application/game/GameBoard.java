@@ -697,10 +697,7 @@ public class GameBoard {
 	public int getSizeOfPilesOnBoardWithType(CardType type) {
 		int result = 0;
 		for (Map.Entry<String, LinkedList<Card>> entry : this.tableForActionCards.entrySet()) {
-			System.out.println("In the Map, !entry.getValue().isEmpty:" + !entry.getValue().isEmpty() + "entry.getValue().getLast().getTypes().contains(type)"
-					+ entry.getValue().getLast().getTypes().contains(type));
 			if (!entry.getValue().isEmpty() && entry.getValue().getLast().getTypes().contains(type)) {
-				System.out.println("Drinne");
 				result += entry.getValue().size();
 			}
 		}
@@ -739,21 +736,5 @@ public class GameBoard {
 			}
 		}
 		return result;
-	}
-
-	public static void main(String[] args) {
-		GameBoard b = new GameBoard();
-		System.out.println(b.getCostOfCardByName(CardName.WITCH.getName()));
-		System.out.println(b.getCostOfCardByName("#"));
-	}
-
-	public GameBoard() {
-		this.tableForVictoryCards = new LinkedHashMap<String, LinkedList<Card>>();
-		this.tableForTreasureCards = new LinkedHashMap<String, LinkedList<Card>>();
-		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
-		this.tableForAllActionCards = new LinkedHashMap<String, LinkedList<Card>>();
-		this.trashPile = new LinkedList<Card>();
-		init();
-		setAttackSet();
 	}
 }

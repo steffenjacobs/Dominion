@@ -203,12 +203,18 @@ public class ArtificialIntelligence {
 				return;
 			} else if (addActionCardAvailable()) {
 				play(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
-			} 
-//			else if (this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName())) {
-//				bug?
-//			}
-			
-			
+			} else if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName()) && canBeTrashedByChapel() > 0) {
+				LinkedList<Card> trashCards = getTrashWorthyCards();
+				play(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
+				if (!endPhase) {
+					//trash estates
+//					this.player.getDeck().(CardName.ESTATE.getName())== 1
+					while (this.player.isTrashMode()) {
+						
+					}
+				}
+			}
+
 			// Logik + Strategy, chapel handlen
 
 			// ein estate nicht trashen
@@ -886,8 +892,8 @@ public class ArtificialIntelligence {
 	private boolean drawAddActionStrategyPossible() {
 		int count = 0;
 		GameBoard board = player.getGameServer().getGameController().getGameBoard();
-		ArrayList<String> cardNames = CollectionsUtil.getArrayList(new String[] { CardName.COUNCILROOM.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(),
-				CardName.MARKET.getName(), CardName.VILLAGE.getName(), CardName.WITCH.getName() });
+		ArrayList<String> cardNames = CollectionsUtil.getArrayList(new String[] { CardName.COUNCILROOM.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(), CardName.MARKET.getName(),
+				CardName.VILLAGE.getName(), CardName.WITCH.getName() });
 
 		for (String name : cardNames) {
 			if (board.getTableForActionCards().containsKey(name)) {
@@ -906,11 +912,29 @@ public class ArtificialIntelligence {
 		LinkedList<Card> cards = getCardHand();
 		int canBeTrashed = 0;
 		for (Card card : cards) {
-			if (card.getName().equals(CardName.ESTATE.getName()) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName())) {
+			if ((card.getName().equals(CardName.ESTATE.getName()) && !lastEstateInDeck(card)) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName())) {
 				canBeTrashed++;
 			}
 		}
 		return canBeTrashed;
+	}
+	
+	private LinkedList<Card> getTrashWorthyCards() {
+		LinkedList<Card> resultList = new LinkedList<Card>();
+		for (Card c : getCardHand()) {
+			if (this.player.getDeck().containsAmountOf(CardName.ESTATE.getName()) > 1) {
+				
+			}
+		}
+		return resultList;
+	}
+	
+	private boolean lastEstateInDeck(Card c) {
+		return this.player.getDeck().containsAmountOf(CardName.ESTATE.getName()) == 1;
+	}
+	
+	private boolean isTrashWorthy(Card card) {
+		return (card.getName().equals(CardName.ESTATE.getName()) && !lastEstateInDeck(card)) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName());
 	}
 
 	/* ---------- getters & setters ---------- */
