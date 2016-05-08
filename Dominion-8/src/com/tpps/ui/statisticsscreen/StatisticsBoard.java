@@ -6,11 +6,13 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -52,6 +54,9 @@ public class StatisticsBoard extends JPanel {
 
 	private Object columnNames[] = { "nickname", "wins", "losses", "w/l ratio", "total matches", "rank", "playtime" };
 
+	private String[][] statistics;
+	
+	
 	/**
 	 * initializes the statisticsboard
 	 */
@@ -132,13 +137,12 @@ public class StatisticsBoard extends JPanel {
 					getTimeString(Long.valueOf((String) model.getValueAt(i, this.model.getColumnCount() - 1))), i,
 					this.model.getColumnCount() - 1);
 		}
-
 	}
 
 	private String getTimeString(long milliseconds) {
 		long second = (milliseconds / 1000) % 60;
 		long minute = (milliseconds / (1000 * 60)) % 60;
-		long hour = (milliseconds / (1000 * 60 * 60)) % 24;
+		long hour = (milliseconds / (1000 * 60 * 60));
 
 		return String.format("%02d:%02d:%02d", hour, minute, second);
 	}
@@ -147,8 +151,6 @@ public class StatisticsBoard extends JPanel {
 		this.statistics = statistics;
 		this.setTableData(statistics);
 	}
-
-	private String[][] statistics;
 
 	private void filterTable(String start) {
 		ArrayList<String[]> filtered = new ArrayList<>();
@@ -227,7 +229,68 @@ public class StatisticsBoard extends JPanel {
 		header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		header.setReorderingAllowed(false);
 
+		header.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int index = table.convertColumnIndexToModel(table.columnAtPoint(e.getPoint()));
+				if (index >= 0) {
+
+					switch (index) {
+					case 0:
+						Arrays.sort(statistics, new Comparator<String[]>() {
+							@Override
+							public int compare(final String[] entry1, final String[] entry2) {
+								final String cell1 = entry1[index];
+								final String cell2 = entry2[index];
+								return cell1.toLowerCase().compareTo(cell2.toLowerCase());
+							}
+						});
+						break;
+					case 1:
+					case 2:
+					case 4:
+					case 5:
+						Arrays.sort(statistics, new Comparator<String[]>() {
+							@Override
+							public int compare(final String[] entry1, final String[] entry2) {
+								final int cell1 = Integer.parseInt(entry1[index]);
+								final int cell2 = Integer.parseInt(entry2[index]);
+								return cell2 > cell1 ? 1 : (cell1 == cell2 ? 0 : -1);
+							}
+						});
+						break;
+					case 3:
+						Arrays.sort(statistics, new Comparator<String[]>() {
+							@Override
+							public int compare(final String[] entry1, final String[] entry2) {
+								final double cell1 = Double.parseDouble(entry1[index]);
+								final double cell2 = Double.parseDouble(entry2[index]);
+								return cell2 > cell1 ? 1 : (cell1 == cell2 ? 0 : -1);
+							}
+						});
+						break;
+					case 6:
+						Arrays.sort(statistics, new Comparator<String[]>() {
+							@Override
+							public int compare(final String[] entry1, final String[] entry2) {
+								final long cell1 = Long.parseLong(entry1[index]);
+								final long cell2 = Long.parseLong(entry2[index]);
+								System.out.println(cell2 + " - " + cell1);
+								return cell2 > cell1 ? 1 : (cell1 == cell2 ? 0 : -1);
+							}
+						});
+						break;
+					default:
+						break;
+					}
+					StatisticsBoard.this.setTableData(statistics);
+				}
+			}
+		});
+
 		return pane;
+
 	}
 
 	/**
