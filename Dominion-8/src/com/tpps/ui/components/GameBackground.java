@@ -41,7 +41,20 @@ public class GameBackground extends GameObject {
 		this.layer = _layer;
 
 	}
-	
+
+	/**
+	 * second constructor with reactioncounter as parameter.
+	 * 
+	 * @param relativeLocX
+	 * @param relativeLocY
+	 * @param relativeWidth
+	 * @param relativeHeight
+	 * @param _layer
+	 * @param sourceImage
+	 * @param _parent
+	 * @param counter
+	 */
+
 	public GameBackground(double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
 			int _layer, Image sourceImage, GraphicFramework _parent, int counter) {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
@@ -78,7 +91,13 @@ public class GameBackground extends GameObject {
 		if (this.layer == 0)
 			GameWindow.getInstance().requestFocus();
 	}
-	
+
+	/**
+	 * getter method
+	 * 
+	 * @return
+	 */
+
 	public int getCounter() {
 		return counter;
 	}

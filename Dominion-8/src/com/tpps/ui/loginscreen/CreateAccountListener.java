@@ -40,7 +40,6 @@ public class CreateAccountListener implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
-		
 		if (!(String.valueOf(ca.getPasswordbox().getPassword())
 				.equals(String.valueOf(ca.getPasswordboxRetype().getPassword())))) {
 			JOptionPane.showMessageDialog(null, "Password does not match. Please recheck");
@@ -67,8 +66,8 @@ public class CreateAccountListener implements MouseListener {
 			JOptionPane.showMessageDialog(null, "Username not allowed");
 			return;
 		}
-		
-		if(!(ca.getUsername().getText().matches("^[_a-zA-Z0-9]+$"))){
+
+		if (!(ca.getUsername().getText().matches("^[_a-zA-Z0-9]+$"))) {
 			JOptionPane.showMessageDialog(null, "Username not allowed");
 			return;
 		}
@@ -81,10 +80,10 @@ public class CreateAccountListener implements MouseListener {
 		// --------------------------------------
 		guicontroller.createAccountWithServer(ca.getUsername().getText(),
 				String.valueOf(ca.getPasswordbox().getPassword()), ca.getEmail().getText());
-				// new
-				// LoginClient().handleAccountCreation(ca.getUsername().getText(),
-				// String.valueOf(ca.getPasswordbox().getPassword()),ca.getEmail().getText());
-				// --------------------------------------
+		// new
+		// LoginClient().handleAccountCreation(ca.getUsername().getText(),
+		// String.valueOf(ca.getPasswordbox().getPassword()),ca.getEmail().getText());
+		// --------------------------------------
 
 		// new LogInGUI(ca.getUsername().getText(),
 		// ca.getPasswordbox().getPassword());
@@ -94,7 +93,6 @@ public class CreateAccountListener implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 
-		
 		if (!(String.valueOf(ca.getPasswordbox().getPassword())
 				.equals(String.valueOf(ca.getPasswordboxRetype().getPassword())))) {
 			JOptionPane.showMessageDialog(null, "Password does not match. Please recheck");
@@ -121,8 +119,8 @@ public class CreateAccountListener implements MouseListener {
 			JOptionPane.showMessageDialog(null, "Username not allowed");
 			return;
 		}
-		
-		if(!(ca.getUsername().getText().matches("^[_a-zA-Z0-9]+$"))){
+
+		if (!(ca.getUsername().getText().matches("^[_a-zA-Z0-9]+$"))) {
 			JOptionPane.showMessageDialog(null, "Username not allowed");
 			return;
 		}
@@ -135,19 +133,19 @@ public class CreateAccountListener implements MouseListener {
 		// --------------------------------------
 		guicontroller.createAccountWithServer(ca.getUsername().getText(),
 				String.valueOf(ca.getPasswordbox().getPassword()), ca.getEmail().getText());
-				// new
-				// LoginClient().handleAccountCreation(ca.getUsername().getText(),
-				// String.valueOf(ca.getPasswordbox().getPassword()),ca.getEmail().getText());
-				// --------------------------------------
+		// new
+		// LoginClient().handleAccountCreation(ca.getUsername().getText(),
+		// String.valueOf(ca.getPasswordbox().getPassword()),ca.getEmail().getText());
+		// --------------------------------------
 
 		// new LogInGUI(ca.getUsername().getText(),
 		// ca.getPasswordbox().getPassword());
 		// ca.dispose();
-		
+
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {	
+	public void mouseReleased(MouseEvent e) {
 	}
 
 	@Override
@@ -156,7 +154,7 @@ public class CreateAccountListener implements MouseListener {
 		ca.getCreateAccount().setForeground(Color.GRAY);
 		ca.getCreateAccount().setBorderPainted(true);
 		ca.getCreateAccount().setContentAreaFilled(false);
-		
+
 	}
 
 	@Override
@@ -164,6 +162,6 @@ public class CreateAccountListener implements MouseListener {
 		ca.getCreateAccount().setOpaque(false);
 		ca.getCreateAccount().setForeground(textAndLabelColor);
 		ca.getCreateAccount().setBorderPainted(true);
-		ca.getCreateAccount().setContentAreaFilled(false);	
+		ca.getCreateAccount().setContentAreaFilled(false);
 	}
 }

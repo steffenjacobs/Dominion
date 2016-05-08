@@ -14,24 +14,22 @@ public class MyAudioPlayer {
 	private static int lastVolume, lastSoundVolume;
 	private static MP3Player mainMusicPlayer, gameMusicPlayer;
 	private static LinkedHashMap<MP3Player, Integer> lastVolumes;
+
 	/**
 	 * initialisiert die Player und setzt lastVolume und lastSoundVolume
 	 */
-	public static void init() {		
+	public static void init() {
 		lastVolumes = new LinkedHashMap<MP3Player, Integer>();
-//		MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
-		MyAudioPlayer.mp32 = new MP3Player(
-				ClassLoader.getSystemResource("resources/sounds/Click.mp3"));
+		// MyAudioPlayer.mp3 = new MP3Player(ClassLoader.getSystemResource(""));
+		MyAudioPlayer.mp32 = new MP3Player(ClassLoader.getSystemResource("resources/sounds/Click.mp3"));
 		MyAudioPlayer.mp34 = new MP3Player(ClassLoader.getSystemResource("resources/sounds/Victory.mp3"));
-		
+
 		MyAudioPlayer.mp33 = new MP3Player(ClassLoader.getSystemResource("resources/sounds/Cash.mp3"));
-		MyAudioPlayer.mainMusicPlayer = new MP3Player(
-				ClassLoader.getSystemResource("resources/sounds/lobby.mp3"));
-		MyAudioPlayer.gameMusicPlayer = new MP3Player(
-				ClassLoader.getSystemResource("resources/sounds/mainMusic.mp3"));
+		MyAudioPlayer.mainMusicPlayer = new MP3Player(ClassLoader.getSystemResource("resources/sounds/lobby.mp3"));
+		MyAudioPlayer.gameMusicPlayer = new MP3Player(ClassLoader.getSystemResource("resources/sounds/mainMusic.mp3"));
 		lastVolumes.put(mainMusicPlayer, new Integer(55));
 	}
-	
+
 	/**
 	 * startet die HintergrundMusik und setzt den Player auf wiederholen
 	 */
@@ -59,30 +57,30 @@ public class MyAudioPlayer {
 		// mp3.addMP3PlayerListener(new MyMP3PlayerListener());
 		MyAudioPlayer.mp3.setRepeat(true);
 	}
-	
+
 	public static void handleGameMusic(boolean play) {
-		if(play){
+		if (play) {
 			if (!MyAudioPlayer.gameMusicPlayer.isPlaying()) {
 				MyAudioPlayer.gameMusicPlayer.play();
 				MyAudioPlayer.gameMusicPlayer.setRepeat(true);
 			}
-		}else{
+		} else {
 			MyAudioPlayer.gameMusicPlayer.pause();
 		}
 	}
-	
+
 	/**
 	 * @author jhuhn
 	 * @param play
 	 *            true: play lobby music, false: stop lobby music
 	 */
-	public static void handleMainMusic(boolean play){
-		if(play){
+	public static void handleMainMusic(boolean play) {
+		if (play) {
 			if (!MyAudioPlayer.mainMusicPlayer.isPlaying()) {
 				MyAudioPlayer.mainMusicPlayer.play();
 				MyAudioPlayer.mainMusicPlayer.setRepeat(true);
 			}
-		}else{
+		} else {
 			MyAudioPlayer.mainMusicPlayer.pause();
 		}
 	}
@@ -92,8 +90,9 @@ public class MyAudioPlayer {
 	 */
 
 	public static void doClick() {
-		MyAudioPlayer.mp32.play();		
+		MyAudioPlayer.mp32.play();
 	}
+
 	public static void doPunch() {
 		MyAudioPlayer.mp32.play();
 	}
@@ -104,10 +103,17 @@ public class MyAudioPlayer {
 	public static void doCashSound() {
 		MyAudioPlayer.mp33.play();
 	}
-	public static void doVictorySound(){
+
+	/**
+	 * spielt einen victory sound
+	 * 
+	 * @author nagrawal
+	 */
+
+	public static void doVictorySound() {
 		MyAudioPlayer.mp34.play();
 	}
-	
+
 	/**
 	 * setzt die lautstärke runter für den gewählten Player
 	 * 
@@ -120,7 +126,6 @@ public class MyAudioPlayer {
 			lastVolumes.put(mp3Player, new Integer(mp3Player.getVolume()));
 		}
 	}
-	
 
 	/**
 	 * setzt die lautstärke runter für den gewählten Player
@@ -145,14 +150,14 @@ public class MyAudioPlayer {
 			break;
 		}
 	}
-	
+
 	public static void newTurnUp(MP3Player mp3Player) {
-		
-			if (mp3Player.getVolume() <= 95) {
-				mp3Player.setVolume(mp3Player.getVolume() + 5);
-				lastVolumes.put(mp3Player, new Integer(mp3Player.getVolume()));
-			}
-	
+
+		if (mp3Player.getVolume() <= 95) {
+			mp3Player.setVolume(mp3Player.getVolume() + 5);
+			lastVolumes.put(mp3Player, new Integer(mp3Player.getVolume()));
+		}
+
 	}
 
 	/**
@@ -178,22 +183,19 @@ public class MyAudioPlayer {
 			break;
 		}
 	}
-	
+
 	public static void newMute(MP3Player mp3player) {
 
-			if (mp3player.getVolume() != 0) {
-				mp3player.setVolume(0);
-			} else {
-				if (lastVolumes.get(mp3player) == 0) {
-					lastVolumes.put(mp3player, 55);
-				}
-				MyAudioPlayer.mp3.setVolume(lastVolumes.get(mp3player));
+		if (mp3player.getVolume() != 0) {
+			mp3player.setVolume(0);
+		} else {
+			if (lastVolumes.get(mp3player) == 0) {
+				lastVolumes.put(mp3player, 55);
 			}
-				}
+			MyAudioPlayer.mp3.setVolume(lastVolumes.get(mp3player));
+		}
+	}
 
-
-	
-	
 	/**
 	 * setzt die lautstärke auf Null wenn sie ungleich Null ist wenn sie gleich
 	 * Null ist setzt sie die Lautstärke auf die letzte Lautstärke ungleich Null

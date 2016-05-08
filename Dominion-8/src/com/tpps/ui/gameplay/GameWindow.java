@@ -82,9 +82,21 @@ public class GameWindow extends JFrame {
 	public static ButtonClass playButton;
 	private static final double CORRECTION_16TO9 = 16 / (double) 9;
 
+	/**
+	 * getter Method for GameWindow
+	 * 
+	 * @return
+	 */
+
 	public static GameWindow getInstance() {
 		return instance;
 	}
+
+	/**
+	 * getter Method for framework
+	 * 
+	 * @return
+	 */
 
 	public GraphicFramework getGraphicFramework() {
 		return this.framework;
@@ -722,6 +734,13 @@ public class GameWindow extends JFrame {
 		// action.renewCaption(caption);
 	}
 
+	/**
+	 * 
+	 * a method to set the caption on the TurnButton.
+	 * 
+	 * @param caption
+	 */
+
 	public void setCaptionTurn(String caption) {
 		// turn.renewCaption(caption);
 		framework.removeComponent(turn);
@@ -876,6 +895,10 @@ public class GameWindow extends JFrame {
 		framework.addComponent(this.endReactions);
 	}
 
+	/**
+	 * 
+	 * removing EndReactionMode Button
+	 */
 	public void removeEndReactionModeButton() {
 		framework.removeComponent(this.endReactions);
 	}
@@ -896,19 +919,44 @@ public class GameWindow extends JFrame {
 		framework.addComponent(endActionPhase);
 	}
 
+	/**
+	 * 
+	 * adding TakeThiefCardsButton and removing all other Buttons from the
+	 * GameBoard
+	 * 
+	 */
+
 	public void addTakeThiefCardsButtonRemoveOtherButtons() {
 		framework.addComponent(takeThiefCards);
 		framework.removeComponent(playTreasures);
 		framework.removeComponent(endTurn);
 	}
 
+	/**
+	 * 
+	 * adding PutBackThiefCards Button to the GameBoard
+	 * 
+	 */
+
 	public void addPutBackThiefCardsButton() {
 		framework.addComponent(putBackThiefCards);
 	}
 
+	/**
+	 * 
+	 * adding TakeDrawedCard Button
+	 * 
+	 */
+
 	public void addTakeDrawedCard() {
 		framework.addComponent(takeDrawedCard);
 	}
+
+	/**
+	 * 
+	 * adding setasideDrawedCard Button
+	 * 
+	 */
 
 	public void addSetAsideDrawedCard() {
 		framework.addComponent(setAsideDrawedCard);
@@ -945,49 +993,128 @@ public class GameWindow extends JFrame {
 		revalidate();
 	}
 
+	/**
+	 * 
+	 * getter Method for background Image
+	 * 
+	 * @return
+	 */
+
 	public BufferedImage getBackgroundImage() {
 		return backgroundImage;
 	}
+
+	/**
+	 * 
+	 * setting method for backgroundImage
+	 * 
+	 * @param backgroundImage
+	 */
 
 	public void setBackgroundImage(BufferedImage backgroundImage) {
 		this.backgroundImage = backgroundImage;
 	}
 
+	/**
+	 * 
+	 * get Screen resolution Width
+	 * 
+	 * @return
+	 */
+
 	public int getWIDTH() {
 		return WIDTH;
 	}
+
+	/**
+	 * get Screen resolution Height
+	 * 
+	 * @return
+	 */
 
 	public int getHEIGHT() {
 		return HEIGHT;
 	}
 
+	/**
+	 * 
+	 * reactionCounter for the Card Class. How many times it was clicked
+	 * 
+	 */
+
 	public void reactionCounterInkrement() {
 		reactionCounter++;
 	}
+
+	/**
+	 * 
+	 * setting method
+	 * 
+	 * @param reactionCounter
+	 */
 
 	public void setReactionCounter(int reactionCounter) {
 		this.reactionCounter = reactionCounter;
 	}
 
+	/**
+	 * 
+	 * getter of ReactionCounter
+	 * 
+	 * @return
+	 */
+
 	public int getReactionCounter() {
 		return reactionCounter;
 	}
+
+	/**
+	 * 
+	 * getter Method for GameBackgroundCounter
+	 * 
+	 * @return
+	 */
 
 	public int getGameBackgroundCounter() {
 		return gameBackgroundCounter;
 	}
 
+	/**
+	 * 
+	 * gameBackgroundCoutnerInkrement. How many times the background was
+	 * clicked.
+	 */
+
 	public void gameBackgroundCounterInkrement() {
 		gameBackgroundCounter++;
 	}
+
+	/**
+	 * 
+	 * setter Method
+	 * 
+	 * @param gamebackgroundCounter
+	 */
 
 	public void setGamebackgroundCounter(int gamebackgroundCounter) {
 		this.gameBackgroundCounter = gamebackgroundCounter;
 	}
 
+	/**
+	 * getter method
+	 * 
+	 * @return
+	 */
+
 	public BufferedImage getClickImage() {
 		return clickImage;
 	}
+
+	/**
+	 * getter method for ChatWindow
+	 * 
+	 * @return
+	 */
 
 	public ChatWindowForInGame getChatWindow() {
 		return chatWindow;
@@ -1000,17 +1127,43 @@ public class GameWindow extends JFrame {
 		return topGap;
 	}
 
+	/**
+	 * getter Method
+	 * 
+	 * @return
+	 */
+
 	public LinkedList<GFButton> getCoinButtons() {
 		return coinButtons;
 	}
+
+	/**
+	 * getter Method
+	 * 
+	 * @return
+	 */
 
 	public ButtonClass getMuteButton() {
 		return muteButton;
 	}
 
+	/**
+	 * 
+	 * getter Method
+	 * 
+	 * @return
+	 */
+
 	public ButtonClass getPlayButton() {
 		return playButton;
 	}
+
+	/**
+	 * 
+	 * getter Method
+	 * 
+	 * @return
+	 */
 
 	public LinkedList<GFButton> getVictoryButtons() {
 		return victoryButtons;
