@@ -639,8 +639,9 @@ public class GameBoard {
 	 * @param cardname
 	 *            the cardname to get
 	 * @return a card with the given cardname from the board
+	 * @throws NoSuchElementException 
 	 */
-	public Card getCardToBuyFromBoardWithName(String cardname) {
+	public Card getCardToBuyFromBoardWithName(String cardname) throws NoSuchElementException {
 		if (this.tableForActionCards.get(cardname) != null)
 			return this.tableForActionCards.get(cardname).getLast();
 		if (this.tableForVictoryCards.get(cardname) != null)
@@ -658,9 +659,14 @@ public class GameBoard {
 	 * @return if the card is on the board return the cost of the card, -1 otherwise
 	 */
 	public int getCostOfCardByName(String name) {
-		if (this.getCardToBuyFromBoardWithName(name) != null) {
-			return this.getCardToBuyFromBoardWithName(name).getCost();
-		} else return -1;
+		try {
+			if (this.getCardToBuyFromBoardWithName(name) != null) {
+				return this.getCardToBuyFromBoardWithName(name).getCost();
+			} else
+				return -1;
+		} catch (NoSuchElementException nsee) {
+			return -1;
+		}
 	}
 
 	/**
