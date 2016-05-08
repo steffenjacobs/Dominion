@@ -31,7 +31,7 @@ public final class GraphicsUtil {
 	 *            image which will be used
 	 * @return modified image
 	 */
-	public static Image setAlpha(Image img, float transparency) {
+	public static BufferedImage setAlpha(Image img, float transparency) {
 		BufferedImage tmpImg = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g2d = (Graphics2D) tmpImg.getGraphics();
 		g2d.setComposite(AlphaComposite.SrcOver.derive(transparency));

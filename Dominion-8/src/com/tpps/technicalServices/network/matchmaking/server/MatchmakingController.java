@@ -94,12 +94,12 @@ public final class MatchmakingController {
 	}
 
 	/**
-	 * @param player
+	 * @param playerName
 	 *            the player to get the associated GameLobby from
 	 * @return the GameLobby-instance associated with the MPlayer-object
 	 */
-	static GameLobby getLobbyFromPlayerName(String player) {
-		return lobbiesByPlayerName.get(player);
+	static GameLobby getLobbyFromPlayerName(String playerName) {
+		return lobbiesByPlayerName.get(playerName);
 	}
 
 	/**
@@ -334,7 +334,7 @@ public final class MatchmakingController {
 		playersByPort.remove(player.getConnectionPort());
 		// connectedPortsByPlayer.remove(player);
 		playersByName.remove(player.getPlayerName());
-		GameLobby lobby = lobbiesByPlayerName.remove(player);
+		GameLobby lobby = lobbiesByPlayerName.remove(player.getPlayerName());
 		if (lobby != null) {
 			lobby.quitPlayer(player);
 			if (lobby.isEmpty()) {
@@ -373,6 +373,7 @@ public final class MatchmakingController {
 			GameLog.log(MsgType.INFO, "Received end-packet: " + endPacket.toString());
 		} else {
 			GameLog.log(MsgType.ERROR, "Received bad end-packet: " + endPacket.toString());
+			return;
 		}
 		for (String playerName : endPacket.getPlayers()) {
 

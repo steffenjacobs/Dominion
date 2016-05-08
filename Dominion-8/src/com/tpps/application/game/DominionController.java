@@ -256,7 +256,7 @@ public final class DominionController {
 	 *            the database
 	 */
 	public void loadStatisticsToGui(String[][] statistics) {
-		this.statisticsBoardPanel.setTableData(statistics);
+		this.statisticsBoardPanel.setStatisticsData(statistics);
 	}
 
 	/**
