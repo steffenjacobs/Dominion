@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.tpps.application.game.CardName;
 import com.tpps.application.game.GameBoard;
+import com.tpps.application.game.GameConstant;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
@@ -30,7 +31,8 @@ import com.tpps.technicalServices.util.CollectionsUtil;
  * card. It could be considered as cheating, but since I don't want to write
  * horrible code with many counters and flags which indicate if the AI already
  * bought a card or not, and how many cards she already has of a cardtype (a
- * human player can obviously count that), I implemented it like that.
+ * human player can obviously count that), the AI is allowed to look it up in
+ * the deck.
  * 
  * E.g. the AI plays a Chapel strategy. If it buys one in the first turn, there
  * is no need to buy it in the second turn again. There would have to be a
@@ -48,20 +50,58 @@ public class ArtificialIntelligence {
 
 	private Strategy strategy;
 
-	// private List<Card> boardActionCards;
+	@SuppressWarnings("unused")
+	private List<Card> boardActionCards;
+
 	private List<String> buySequence;
 	private List<String> blacklist;
+
+	/**
+	 * indicates if the game will shortly come to an end, so e.g. ESTATES will be
+	 * bought in the (potential) last turn
+	 */
 	private boolean endPhase;
 	/**
-	 * indicator if the starting hand is 5/2 (true) or 4/3 (false)
-	 * */
+	 * indicates if the starting hand is 5/2 (true) or 4/3 (false)
+	 */
 	private boolean fiveTwoStart;
+	/**
+	 * the amount of CardType.ATTACK action cards on the board
+	 */
+	private int attacks;
+	/**
+	 * how many times the AI has been in discardMode
+	 */
+	private int discardModeCount;
 
-	// private static final int ENDPHASE_TURN = 22;
-	private static final int TIME_DELAY = 650;
+	@SuppressWarnings("unused")
+	private static final int ENDPHASE_TURN = 22;
+
+	private static final int TIME_DELAY = 600;
+
+	private static final double MOAT_RATIO_1 = 0.87;
+	private static final double MOAT_RATIO_2 = 0.45;
 
 	private static final String NO_BUY = "#";
 
+	// private static final String GOLD = CardName.GOLD.getName();
+	// private static final String SILVER = CardName.SILVER.getName();
+	//
+	// private static final String PROVINCE = CardName.PROVINCE.getName();
+	// private static final String DUCHY = CardName.DUCHY.getName();
+	// private static final String ESTATE = CardName.ESTATE.getName();
+	//
+	// private static final String CHAPEL = CardName.CHAPEL.getName();
+	// private static final String SMITHY = CardName.SMITHY.getName();
+	// private static final String WITCH = CardName.WITCH.getName();
+	// private static final String MILITIA = CardName.MILITIA.getName();
+	//
+	// private static final String ADVENTURER = CardName.ADVENTURER.getName();
+	// private static final String FEAST = CardName.FEAST.getName();
+	// private static final String COUNCILROOM = CardName.COUNCILROOM.getName();
+	// private static final String MARKET = CardName.MARKET.getName();
+	// private static final String FESTIVAL = CardName.FESTIVAL.getName();
+	
 	/**
 	 * constructor of the Artificial Intelligence
 	 * 
@@ -77,6 +117,7 @@ public class ArtificialIntelligence {
 		this.player = player;
 		this.blacklist = CollectionsUtil.linkedList(new String[] { CardName.COPPER.getName(), CardName.ESTATE.getName(), CardName.CURSE.getName() });
 		this.endPhase = false;
+		this.discardModeCount = 0;
 	}
 
 	/* ---------- game executing ---------- */
@@ -290,6 +331,7 @@ public class ArtificialIntelligence {
 			if (this.player.playsReactionCard()) {
 				play(this.player.getDeck().getCardByTypeFromHand(CardType.REACTION));
 			} else if (this.player.isDiscardMode()) {
+				discardModeCount++;
 				while (this.player.isDiscardMode()) {
 					// && this.player.getDeck().getCardHand().size() > 3
 					discardLeastValuableCard();
@@ -314,9 +356,10 @@ public class ArtificialIntelligence {
 			this.playTreasures();
 			Thread.sleep(ArtificialIntelligence.TIME_DELAY);
 			for (String buy : this.buySequence) {
-				if (!buy.equals("#") && (!blacklist.contains(buy) || endPhase)) {
+				System.out.println("AI DEBUG_buy draussen: " + buy);
+				if (!buy.equals(ArtificialIntelligence.NO_BUY) && (!blacklist.contains(buy) || endPhase)) {
 					Thread.sleep(ArtificialIntelligence.TIME_DELAY);
-					System.out.println("AI DEBUG_buy: " + buy);
+					System.out.println("AI DEBUG_buy drin: " + buy);
 					this.buy(this.getCardFromBoard(buy));
 				}
 			}
@@ -336,13 +379,22 @@ public class ArtificialIntelligence {
 	 * @return a LinkedList with the determined Purchases
 	 */
 	private LinkedList<String> getPurchaseSequence() {
+		int treasureValue = getTreasureCardsValue(getCardHand());
 		LinkedList<String> result = new LinkedList<String>();
-		for (int i = 0; i < this.player.getBuys(); i++)
-			result.add(determinePurchase());
+		for (int i = 0; i < this.player.getBuys(); i++) {
+			String purchase = determinePurchase(treasureValue);
+			int purchaseCost = this.player.getGameServer().getGameController().getGameBoard().getCostOfCardByName(purchase);
+			if (purchaseCost != -1) {
+				treasureValue -= purchaseCost;
+			}
+			result.add(purchase);
+			GameLog.log(MsgType.AI_DEBUG, "getting PurchaseSequence... Strategy: " + this.strategy + ", treasureValue: " + getTreasureCardsValue(getCardHand()) + ", purchase: " + purchase
+					+ ", new treasureValue: " + treasureValue);
+		}
 		return result;
 	}
 
-	private String determinePurchase() {
+	private String determinePurchase(int treasureValue) {
 
 		// wenn chapel strategy, nach 1 chapel im deck keine mehr kaufen
 
@@ -366,8 +418,14 @@ public class ArtificialIntelligence {
 		// gekauft werden? aber das sollte die NoSuchElement
 		// mit sich bringen
 
+		// if deck contains curse/ miliz is played (in reaction phase)
+
 		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
-		int treasureValue = getTreasureCardsValue(getCardHand());
+
+		int attacksOriginally = attacks * GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue();
+		int attacksBoughtByEnemies = attacksOriginally - board.getSizeOfPilesOnBoardWithType(CardType.ATTACK) - this.player.getDeck().containsAmountOf(CardType.ATTACK);
+		int attacksAvailableRatio = attacksBoughtByEnemies / attacksOriginally;
+
 		/**
 		 * first two turns are handled seperately, because they are a crucial
 		 * part in the game and the rules on how to behave in this turns differ
@@ -458,24 +516,60 @@ public class ArtificialIntelligence {
 				} else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5) {
 					return CardName.DUCHY.getName();
 				} else if (treasureValue >= 4 && this.player.getTurnNr() >= 6 && board.getTableForActionCards().containsKey(CardName.SMITHY.getName())
-						&& this.player.getDeck().deckContainsAmountOf(CardName.SMITHY.getName()) < 2) {
+						&& this.player.getDeck().containsAmountOf(CardType.ACTION) < 2) {
 					return CardName.SMITHY.getName();
 				} else if (treasureValue >= 3) {
 					return CardName.SILVER.getName();
-					// } else if (endPhase) {
-					// return CardName.ESTATE.getName();
-				}
-				break;
+				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+						&& (discardModeCount > 2 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1)) {
+					return CardName.MOAT.getName();
+				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2) {
+					return CardName.MOAT.getName();
+				} else
+					return CardName.ESTATE.getName();
 			case BIG_MONEY_CHAPEL:
-				// if
-				// (this.player.getDeck().deckContainsAmountOf(CardName.GOLD.getName())
-				// > X)
-				// return CardName.ADVENTURER.getName();
-				// adventurer bei genug gold
-				break;
+				if (treasureValue >= 8) {
+					return CardName.PROVINCE.getName();
+				} else if (treasureValue >= 6) {
+					if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName()) >= 5 && board.getTableForActionCards().containsKey(CardName.ADVENTURER.getName())
+							&& !this.player.getDeck().contains(CardName.ADVENTURER.getName())) {
+						return CardName.ADVENTURER.getName();
+					} else
+						return CardName.GOLD.getName();
+				} else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5) {
+					return CardName.DUCHY.getName();
+				} else if (treasureValue >= 2) {
+					if (!this.getPlayer().getDeck().contains(CardName.CHAPEL.getName())) {
+						return CardName.CHAPEL.getName();
+					} else
+						return CardName.SILVER.getName();
+				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+						&& (discardModeCount > 2 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < 0.86)) {
+					return CardName.MOAT.getName();
+				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < 0.65) {
+					return CardName.MOAT.getName();
+				} else
+					return CardName.ESTATE.getName();
 			case BIG_MONEY_CHAPEL_MILITIA:
+
 				break;
 			case BIG_MONEY_CHAPEL_WITCH:
+				if (treasureValue >= 8) {
+					return CardName.PROVINCE.getName();
+				} else if (treasureValue >= 6) {
+					return CardName.GOLD.getName();
+				} else if (treasureValue >= 5) {
+					if (this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2 && board.getTableForActionCards().containsKey(CardName.WITCH.getName()))
+						return CardName.WITCH.getName();
+					else if (this.getPileSize(CardName.PROVINCE.getName()) <= 5)
+						return CardName.DUCHY.getName();
+					else return CardName.SILVER.getName();
+				} else if (treasureValue >= 2) {
+					if (!this.getPlayer().getDeck().contains(CardName.CHAPEL.getName())) {
+						return CardName.CHAPEL.getName();
+					} else
+						return CardName.SILVER.getName();
+				}
 				break;
 			case BIG_MONEY_WITCH:
 				break;
@@ -494,10 +588,11 @@ public class ArtificialIntelligence {
 	 * to the situation on the game board
 	 */
 	private void determineStrategy() {
+		GameBoard board = player.getGameServer().getGameController().getGameBoard();
+
 		int cardHandValue = getTreasureCardsValue(getCardHand());
 		this.fiveTwoStart = (cardHandValue == 5 || cardHandValue == 2) ? true : false;
-
-		GameBoard board = player.getGameServer().getGameController().getGameBoard();
+		this.attacks = board.amountOfPilesWithType(CardType.ATTACK);
 
 		if (board.getTableForActionCards().containsKey(CardName.CHAPEL.getName())) {
 			if (board.getTableForActionCards().containsKey(CardName.MILITIA.getName()) && board.getTableForActionCards().containsKey(CardName.WITCH.getName())) {

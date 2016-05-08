@@ -444,7 +444,7 @@ public class GameBoard {
 		LinkedList<Card> witchList = new LinkedList<Card>();
 		CollectionsUtil.cloneCardToList(
 				new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.DRAW_CARD, CardAction.GAIN_CARD_OTHERS }),
-						CollectionsUtil.linkedList(new String[] { "2", "curse" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION }), CardName.WITCH.getName(), 5),
+						CollectionsUtil.linkedList(new String[] { "2", "curse" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION, CardType.ATTACK }), CardName.WITCH.getName(), 5),
 				GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), witchList);
 		this.tableForAllActionCards.put(CardName.WITCH.getName(), witchList);
 		Card.resetClassID();
@@ -620,6 +620,22 @@ public class GameBoard {
 	}
 
 	/**
+	 * @param type
+	 *            the type to search for
+	 * @return the amount of pile sizes with the given cardType on board (e.g.
+	 *         how many ATTACKS are on the board)
+	 */
+	public int amountOfPilesWithType(CardType type) {
+		int count = 0;
+		for (Map.Entry<String, LinkedList<Card>> entry : this.tableForActionCards.entrySet()) {
+			if (!entry.getValue().isEmpty() && entry.getValue().getLast().getTypes().contains(type)) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	/**
 	 * @param cardname
 	 *            the cardname to get
 	 * @return a card with the given cardname from the board
@@ -632,6 +648,19 @@ public class GameBoard {
 		if (this.tableForTreasureCards.get(cardname) != null)
 			return this.tableForTreasureCards.get(cardname).getLast();
 		return null;
+	}
+
+	/**
+	 * get cost of cards which are not in the deck yet
+	 * 
+	 * @param name
+	 *            the name of the card
+	 * @return if the card is on the board return the cost of the card, -1 otherwise
+	 */
+	public int getCostOfCardByName(String name) {
+		if (this.getCardToBuyFromBoardWithName(name) != null) {
+			return this.getCardToBuyFromBoardWithName(name).getCost();
+		} else return -1;
 	}
 
 	/**
@@ -654,6 +683,25 @@ public class GameBoard {
 	}
 
 	/**
+	 * 
+	 * @param type
+	 *            the type of the piles to search on the board
+	 * @return the size of all piles with cardtype type on the board
+	 */
+	public int getSizeOfPilesOnBoardWithType(CardType type) {
+		int result = 0;
+		for (Map.Entry<String, LinkedList<Card>> entry : this.tableForActionCards.entrySet()) {
+			System.out.println("In the Map, !entry.getValue().isEmpty:" + !entry.getValue().isEmpty() + "entry.getValue().getLast().getTypes().contains(type)"
+					+ entry.getValue().getLast().getTypes().contains(type));
+			if (!entry.getValue().isEmpty() && entry.getValue().getLast().getTypes().contains(type)) {
+				System.out.println("Drinne");
+				result += entry.getValue().size();
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * @param cost
 	 *            the cost to search for
 	 * @return a list of names with all actioncards which cost #cost
@@ -661,26 +709,45 @@ public class GameBoard {
 	public LinkedList<String> getActionCardsWhichCost(int cost) {
 		LinkedList<String> result = new LinkedList<String>();
 		for (Map.Entry<String, LinkedList<Card>> entry : this.tableForActionCards.entrySet()) {
-			if (entry.getValue().getLast().getCost() == cost) {
+			if (!entry.getValue().isEmpty() && entry.getValue().getLast().getCost() == cost) {
 				result.add(entry.getKey());
 			}
 		}
 		return result;
 	}
-	
+
 	/**
 	 * 
-	 * @param action the action of the card
-	 * @param cost the cost of the card
-	 * @return a list of names with all actioncards that contain action and cost #cost
+	 * @param action
+	 *            the action of the card
+	 * @param cost
+	 *            the cost of the card
+	 * @return a list of names with all actioncards that contain action and cost
+	 *         #cost
 	 */
 	public LinkedList<String> getActionCardsWithActionWhichCost(CardAction action, int cost) {
 		LinkedList<String> result = new LinkedList<String>();
 		for (Map.Entry<String, LinkedList<Card>> entry : this.tableForActionCards.entrySet()) {
-			if (entry.getValue().getLast().getCost() == cost && entry.getValue().getLast().getActions().containsKey(action)) {
+			if (!entry.getValue().isEmpty() && entry.getValue().getLast().getCost() == cost && entry.getValue().getLast().getActions().containsKey(action)) {
 				result.add(entry.getKey());
 			}
 		}
 		return result;
+	}
+
+	public static void main(String[] args) {
+		GameBoard b = new GameBoard();
+		System.out.println(b.getCostOfCardByName(CardName.WITCH.getName()));
+		System.out.println(b.getCostOfCardByName("#"));
+	}
+
+	public GameBoard() {
+		this.tableForVictoryCards = new LinkedHashMap<String, LinkedList<Card>>();
+		this.tableForTreasureCards = new LinkedHashMap<String, LinkedList<Card>>();
+		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
+		this.tableForAllActionCards = new LinkedHashMap<String, LinkedList<Card>>();
+		this.trashPile = new LinkedList<Card>();
+		init();
+		setAttackSet();
 	}
 }
