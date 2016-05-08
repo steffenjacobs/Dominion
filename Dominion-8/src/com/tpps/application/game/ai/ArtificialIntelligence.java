@@ -204,6 +204,8 @@ public class ArtificialIntelligence {
 			} else if (addActionCardAvailable()) {
 				play(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
 			}
+			
+			
 			// Logik + Strategy, chapel handlen
 
 			// ein estate nicht trashen
@@ -241,7 +243,7 @@ public class ArtificialIntelligence {
 	 *            the card to buy
 	 */
 	private void buy(Card card) {
-		if (card != null && this.player.getBuys() > 0) {
+		if (card != null && this.player.getBuys() > 0 && this.player.getCoins() >= card.getCost()) {
 			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
 		} else {
 			GameLog.log(MsgType.ERROR, this.player.getPlayerName() + " tried to buy 'null' card or player had no buys left.");
@@ -348,7 +350,7 @@ public class ArtificialIntelligence {
 			this.playTreasures();
 			sleep();
 			for (String buy : this.buySequence) {
-				checkIfAvailableAndBuy(buy);
+				checkAndBuy(buy);
 			}
 			sleep();
 			this.buySequence = new LinkedList<String>();
@@ -360,24 +362,35 @@ public class ArtificialIntelligence {
 		}
 	}
 
-	private void checkIfAvailableAndBuy(String buy) throws InterruptedException {
+	/**
+	 * check if the card is available on the board and buy it
+	 * 
+	 * @param buy
+	 *            the name of the card to buy
+	 * @throws InterruptedException
+	 */
+	private void checkAndBuy(String buy) throws InterruptedException {
 		GameLog.log(MsgType.AI_DEBUG, "buy outer: " + buy);
 		if (!buy.equals(ArtificialIntelligence.NO_BUY) && (!blacklist.contains(buy) || endPhase)) {
 			sleep();
-			Card cardToBuy;
-			if (boardContains(buy)) {
-				try {
-					cardToBuy = this.getCardFromBoard(buy);
-				} catch(NoSuchElementException nsee) {
-					cardToBuy = this.getCardFromBoard(CardName.SILVER.getName());
-				}
+			try {
+				Card cardToBuy = this.getCardFromBoard(buy);
+				this.buy(cardToBuy);
+				GameLog.log(MsgType.AI_DEBUG, "buy inner: " + buy);
+			} catch (NoSuchElementException nsee) {
+				GameLog.log(MsgType.AI_DEBUG, "buy NSEE <<<<< " + buy);
+				if (this.player.getCoins() >= 6 && this.player.getGameServer().getGameController().getGameBoard().getTableForTreasureCards().containsKey(CardName.GOLD.getName()))
+					this.buy(this.getCardFromBoard(CardName.GOLD.getName()));
+				else if (this.player.getCoins() >= 3 && this.player.getGameServer().getGameController().getGameBoard().getTableForTreasureCards().containsKey(CardName.SILVER.getName()))
+					this.buy(this.getCardFromBoard(CardName.SILVER.getName()));
+				else if (endPhase && this.player.getCoins() >= 2 && this.player.getGameServer().getGameController().getGameBoard().getTableForVictoryCards().containsKey(CardName.ESTATE.getName())) {
+					this.buy(this.getCardFromBoard(CardName.ESTATE.getName()));
+				} else
+					return;
 			}
-			
-//			this.buy(cardToBuy);
-			GameLog.log(MsgType.AI_DEBUG, "buy inner: " + buy);
 		}
 	}
-	
+
 	/**
 	 * method determines the purchases of this turn for the AI
 	 * 
@@ -895,16 +908,6 @@ public class ArtificialIntelligence {
 			}
 		}
 		return canBeTrashed;
-	}
-	
-	/**
-	 * 
-	 * @param name of the card
-	 * @return whether the board contains a pile of this card
-	 */
-	private boolean boardContains(String name) {
-		GameBoard b = this.player.getGameServer().getGameController().getGameBoard();
-		return b.getTableForActionCards().containsKey(name) || b.getTableForVictoryCards().containsKey(name) || b.getTableForTreasureCards().containsKey(name);
 	}
 
 	/* ---------- getters & setters ---------- */
