@@ -57,6 +57,11 @@ public class ClientGamePacketHandler extends PacketHandler {
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameWindow.setCaptionTurn("votekicked");
 			System.out.println("caption set");
+			
+			//setHost = false
+//			DominionController.getInstance().getGameClient().getGameWindow().dispose();
+//			DominionController.getInstance().joinMainMenu();
+			System.exit(0);
 			break;
 		case CARD_PLAYED:
 			GameLog.log(MsgType.PACKET,"packet received from Server of type " + packet.getType() + "id: " + ((PacketPlayCard) packet).getCardID());
@@ -332,6 +337,8 @@ public class ClientGamePacketHandler extends PacketHandler {
 			GameLog.log(MsgType.GUI ,"my gameWindo is disabled");
 		}
 		GameLog.log(MsgType.GUI ,"open gui");
+		this.gameWindow.setVisible(true);
+		this.gameWindow.setVisible(true);
 		this.gameWindow.setVisible(true);
 
 		GameLog.log(MsgType.GUI ,"opened gui" + this.gameWindow.isVisible());
