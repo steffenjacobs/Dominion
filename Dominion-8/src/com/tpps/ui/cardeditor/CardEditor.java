@@ -320,10 +320,6 @@ public class CardEditor extends JFrame implements ActionListener {
 		price.setFont(priceFont);
 		price.setForeground(Color.WHITE);
 		mitte.add(price,gbc2);
-		gbc2.gridx = 0;
-		gbc2.gridy = 1;
-		gbc2.anchor = GridBagConstraints.BELOW_BASELINE;
-		gbc2.ipady = 0;
 //		gbc.anchor = GridBagConstraints.FIRST_LINE_END;
 //		gbc.fill = GridBagConstraints.HORIZONTAL;
 		increasePrice = new JButton("Increase Price");
@@ -333,7 +329,7 @@ public class CardEditor extends JFrame implements ActionListener {
 
 			public void actionPerformed(ActionEvent e) {
 				priceint = priceint + 1;
-				price = new JLabel(Integer.toString(priceint));
+				price.setText(Integer.toString(priceint));
 				System.out.println(Integer.toString(priceint));
 			}
 		}));
@@ -341,6 +337,7 @@ public class CardEditor extends JFrame implements ActionListener {
 
 			public void actionPerformed(ActionEvent e) {
 				priceint = 2;
+				price.setText(Integer.toString(priceint));
 				System.out.println(Integer.toString(priceint));
 			}
 		}));
@@ -349,12 +346,18 @@ public class CardEditor extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				if (priceint > 0) {
 				priceint = priceint - 1;
+				price.setText(Integer.toString(priceint));
 				System.out.println(Integer.toString(priceint));
 				} else {
 					System.out.println("The cost can't be lower than 0");
 				}
 			}
 		}));
+		mitte.add(price,gbc2);	
+		gbc2.gridx = 0;
+		gbc2.gridy = 1;
+		gbc2.anchor = GridBagConstraints.BELOW_BASELINE;
+		gbc2.ipady = 0;
 		mitte.add(increasePrice,gbc2);
 		gbc2.gridx = 1;
 		gbc2.gridy = 1;
