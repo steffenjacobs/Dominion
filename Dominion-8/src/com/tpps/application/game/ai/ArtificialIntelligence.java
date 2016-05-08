@@ -203,7 +203,10 @@ public class ArtificialIntelligence {
 				return;
 			} else if (addActionCardAvailable()) {
 				play(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
-			}
+			} 
+//			else if (this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName())) {
+//				bug?
+//			}
 			
 			
 			// Logik + Strategy, chapel handlen
