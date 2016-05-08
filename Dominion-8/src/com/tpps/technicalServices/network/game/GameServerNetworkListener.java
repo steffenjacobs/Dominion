@@ -88,7 +88,8 @@ public class GameServerNetworkListener implements NetworkListener {
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-						} else if (this.gameServer.getDisconnectedUser().size() >= 1) {
+					} else if (this.gameServer.getDisconnectedUser().size() >= 1) {
+						try {
 							Player player1 = this.gameServer.getGameController().getPlayerByPort(port);
 							this.gameServer.getGameController().getPlayers().remove(player1);
 							this.gameServer.getDisconnectedUser().remove(player1);
@@ -104,9 +105,12 @@ public class GameServerNetworkListener implements NetworkListener {
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
+						} catch (IndexOutOfBoundsException e) {
+							e.printStackTrace();
 						}
-					}).start();
-					
+					}
+				}).start();
+
 				}
 			}
 		}
