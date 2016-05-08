@@ -60,6 +60,22 @@ public class ButtonClass extends GFButton {
 		super.updatedBufferedImage(GraphicsUtil.setAlpha(super.getBufferedImage(), .6f));
 	}
 
+	/**
+	 * second constructor with addition of parameter which defines the card type
+	 * 
+	 * @param relativeX
+	 * @param relativeY
+	 * @param relativeWidth
+	 * @param relativeHeight
+	 * @param absWidth
+	 * @param absHeight
+	 * @param _layer
+	 * @param sourceImage
+	 * @param _parent
+	 * @param caption
+	 * @param parameter
+	 */
+
 	public ButtonClass(double relativeX, double relativeY, double relativeWidth, double relativeHeight, int absWidth,
 			int absHeight, int _layer, Image sourceImage, GraphicFramework _parent, String caption, String parameter) {
 		super(relativeX, relativeY, relativeWidth, relativeHeight, absWidth, absHeight, _layer, sourceImage, _parent,

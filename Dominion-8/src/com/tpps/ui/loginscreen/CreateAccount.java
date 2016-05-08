@@ -53,7 +53,7 @@ public class CreateAccount extends JFrame {
 	LoginGUIController guicontroller;
 	private BufferedImage walterWhite;
 	private Color textAndLabelColor;
-	
+
 	/**
 	 * simple constructor (first call) merging all elements
 	 */
@@ -62,13 +62,13 @@ public class CreateAccount extends JFrame {
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		this.guicontroller = guicontroller;
-		
+
 		loadImage();
 		resizeImage();
 		try {
 			if (customFont == null) {
 				customFont = Loader.getInstance().getXenipa();
-				if (customFont == null){
+				if (customFont == null) {
 					customFont = new Loader().importFont();
 				}
 			}
@@ -103,7 +103,6 @@ public class CreateAccount extends JFrame {
 	 * A simple initialize method to set specific Frame.
 	 */
 
-	
 	private void init() {
 		c = this.getContentPane();
 		all = new JLabel(loading);
@@ -120,7 +119,6 @@ public class CreateAccount extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 
 		description = new JLabel[4];
 		panels = new JPanel[6];
@@ -131,7 +129,6 @@ public class CreateAccount extends JFrame {
 		this.textAndLabelColor = System.getProperty("os.name").startsWith("Windows") ? Color.WHITE : Color.BLACK;
 	}
 
-	
 	/**
 	 * importing background image from resources
 	 */
@@ -143,7 +140,7 @@ public class CreateAccount extends JFrame {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		try {
 			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
 			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
@@ -157,11 +154,11 @@ public class CreateAccount extends JFrame {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * background resize method
 	 */
-	
+
 	private void resizeImage() {
 		loading = new ImageIcon(background);
 		Image newing = background.getScaledInstance(width / 4, height / 2, java.awt.Image.SCALE_SMOOTH);
@@ -171,7 +168,7 @@ public class CreateAccount extends JFrame {
 	/**
 	 * first panel created as a header
 	 */
-	
+
 	private void createpanel1() {
 		header = new JLabel();
 		header.setText("Create Account");
@@ -184,7 +181,7 @@ public class CreateAccount extends JFrame {
 		all.add(panels[0]);
 		// c.add(panels[0]);
 	}
-	
+
 	/**
 	 * second panel created as JTextfield for email
 	 */
@@ -195,7 +192,7 @@ public class CreateAccount extends JFrame {
 		description[0] = new JLabel("Email: ");
 		description[0].setFont(smallfont);
 		description[0].setHorizontalAlignment(JLabel.CENTER);
-		email = new JTextField(){			
+		email = new JTextField() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -214,7 +211,7 @@ public class CreateAccount extends JFrame {
 		all.add(panels[1]);
 		panels[0].revalidate();
 	}
-	
+
 	/**
 	 * third panel created for the USER-ID
 	 */
@@ -225,7 +222,7 @@ public class CreateAccount extends JFrame {
 		description[1] = new JLabel("Username: ");
 		description[1].setFont(smallfont);
 		description[1].setHorizontalAlignment(JLabel.CENTER);
-		username = new JTextField(){			
+		username = new JTextField() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -244,7 +241,7 @@ public class CreateAccount extends JFrame {
 		all.add(panels[2]);
 		panels[2].revalidate();
 	}
-	
+
 	/**
 	 * fourth panel is for the first password
 	 */
@@ -255,7 +252,7 @@ public class CreateAccount extends JFrame {
 		description[2] = new JLabel("Password: ");
 		description[2].setFont(smallfont);
 		description[2].setHorizontalAlignment(JLabel.CENTER);
-		passwordbox = new JPasswordField(){			
+		passwordbox = new JPasswordField() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -273,7 +270,7 @@ public class CreateAccount extends JFrame {
 		all.add(panels[3]);
 		panels[3].revalidate();
 	}
-	
+
 	/**
 	 * password recheck panel
 	 */
@@ -284,7 +281,7 @@ public class CreateAccount extends JFrame {
 		description[3] = new JLabel("Retype Password: ");
 		description[3].setFont(smallfont);
 		description[3].setHorizontalAlignment(JLabel.CENTER);
-		passwordboxRetype = new JPasswordField(){			
+		passwordboxRetype = new JPasswordField() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
@@ -302,29 +299,29 @@ public class CreateAccount extends JFrame {
 		all.add(panels[4]);
 		panels[4].revalidate();
 	}
-	
-//	/**
-//	 * User-Description panel. 
-//	 */
-//
-//	private void createpanel6() {
-//		panels[5].setLayout(new GridLayout(1, 2));
-//
-//		description[4] = new JLabel("Description: ");
-//		description[4].setFont(smallfont);
-//		description[4].setHorizontalAlignment(JLabel.CENTER);
-//		describing = new JTextField();
-//
-//		describing.setOpaque(false);
-//		describing.setFont(smallfont);
-//		panels[5].add(description[4]);
-//		panels[5].add(describing);
-//		panels[5].setOpaque(false);
-//		// panels[1].setBorder(BorderFactory.createLineBorder(Color.RED, 4));
-//		all.add(panels[5]);
-//		panels[5].revalidate();
-//	}
-	
+
+	// /**
+	// * User-Description panel.
+	// */
+	//
+	// private void createpanel6() {
+	// panels[5].setLayout(new GridLayout(1, 2));
+	//
+	// description[4] = new JLabel("Description: ");
+	// description[4].setFont(smallfont);
+	// description[4].setHorizontalAlignment(JLabel.CENTER);
+	// describing = new JTextField();
+	//
+	// describing.setOpaque(false);
+	// describing.setFont(smallfont);
+	// panels[5].add(description[4]);
+	// panels[5].add(describing);
+	// panels[5].setOpaque(false);
+	// // panels[1].setBorder(BorderFactory.createLineBorder(Color.RED, 4));
+	// all.add(panels[5]);
+	// panels[5].revalidate();
+	// }
+
 	/**
 	 * Create Account button with specific listener.
 	 */
@@ -332,8 +329,8 @@ public class CreateAccount extends JFrame {
 	private void createpanel6() {
 		panels[5].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
 		// panels[3].setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
-		
-		createAccount = new JButton("Create New Account"){
+
+		createAccount = new JButton("Create New Account") {
 
 			private static final long serialVersionUID = 1L;
 
@@ -358,36 +355,40 @@ public class CreateAccount extends JFrame {
 
 		panels[5].revalidate();
 	}
-	
+
 	/**
 	 * getter Email
+	 * 
 	 * @return email
 	 */
 
 	public JTextField getEmail() {
 		return email;
 	}
-	
+
 	/**
 	 * Getter USER-ID
+	 * 
 	 * @return username
 	 */
 
 	public JTextField getUsername() {
 		return username;
 	}
-	
+
 	/**
 	 * Getter for password
-	 * @return passwordbox 
+	 * 
+	 * @return passwordbox
 	 */
 
 	public JPasswordField getPasswordbox() {
 		return passwordbox;
 	}
-	
+
 	/**
 	 * Confirmation password getter
+	 * 
 	 * @return passwordboxRetype
 	 */
 
@@ -397,9 +398,10 @@ public class CreateAccount extends JFrame {
 
 	/**
 	 * Button getter.
+	 * 
 	 * @return createAccount
 	 */
-	
+
 	public JButton getCreateAccount() {
 		return createAccount;
 	}

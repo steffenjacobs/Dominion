@@ -23,7 +23,7 @@ public final class DisplayValue extends GameObject {
 	private static final long serialVersionUID = 4684563120751528743L;
 	private String caption;
 	private Font customFont;
-	
+
 	/**
 	 * 
 	 * calling the GraphicFramework and drawing the display value panel.
@@ -78,11 +78,11 @@ public final class DisplayValue extends GameObject {
 		try {
 			if (customFont == null) {
 				customFont = Loader.getInstance().getXenipa();
-				if (customFont == null){
+				if (customFont == null) {
 					customFont = new Loader().importFont();
 				}
-			}			
-			
+			}
+
 		} catch (FontFormatException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -98,9 +98,9 @@ public final class DisplayValue extends GameObject {
 	public String getCaption() {
 		return caption;
 	}
-	
+
 	/**
-	 * a method to renew the caption on the display value panel 
+	 * a method to renew the caption on the display value panel
 	 * 
 	 * @param caption
 	 */
@@ -110,7 +110,7 @@ public final class DisplayValue extends GameObject {
 		try {
 			if (customFont == null) {
 				customFont = Loader.getInstance().getXenipa();
-				if (customFont == null){
+				if (customFont == null) {
 					customFont = new Loader().importFont();
 				}
 			}
@@ -120,7 +120,8 @@ public final class DisplayValue extends GameObject {
 			e.printStackTrace();
 		}
 		if (this.getCaption() != null) {
-			super.setRenderedImage(GraphicsUtil.drawStringCentered(GraphicsUtil.resize((BufferedImage)super.getBufferedImage(), 100, 100), caption,
+			super.setRenderedImage(GraphicsUtil.drawStringCentered(
+					GraphicsUtil.resize((BufferedImage) super.getBufferedImage(), 100, 100), caption,
 					customFont.deriveFont(Font.PLAIN, 22), Color.WHITE));
 		}
 	}

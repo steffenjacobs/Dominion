@@ -36,12 +36,14 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.ui.lobbyscreen.BackButton;
 
 /**
  * 
@@ -76,6 +78,8 @@ public class CardEditor extends JFrame implements ActionListener {
 	private BufferedImage targetImg;
 	private File targetFile;
 	private final int baseSize = 128;
+	private BufferedImage back;
+	private BackButton backButton;
 
 	public CardEditor() {
 		this.setVisible(true);
@@ -188,11 +192,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	
 	
     private void initComponents() {
-        /*
-         * Neue ContentPane setzen, die das Hintergrundbild zeichnet. Hier zu
-         * Vorzeigezwecken alles in einem Schritt reingeklatscht, sollte im
-         * Normalfall sauberer implementiert werden.
-         */
+
         try {
 			setContentPane(new JPanel() {
  
@@ -201,11 +201,8 @@ public class CardEditor extends JFrame implements ActionListener {
 			     */
 			    private Image               img;
  
-			    /*
-			     * Da es sich hierbei um eine anonyme Klasse handelt, kann ich
-			     * keinen expliziten Konstruktor deklarieren, daher wird das Bild in
-			     * einem Initialisierer geladen.
-			     */
+
+			    
 			    {
 			        img = ImageIO
 							.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
@@ -475,6 +472,21 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.31;
 		cancel = new JButton("Cancel");
+		ImageIcon back;
+		try {
+			
+			back = new ImageIcon (ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/Back.png")));
+			Dimension d = new Dimension(back.getIconWidth(), back.getIconHeight());
+			cancel.setOpaque(false);
+			cancel.setContentAreaFilled(false);
+			cancel.setBorderPainted(false);
+			cancel.setPreferredSize(d);
+			cancel.setIcon(back);
+		
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		cancel.addActionListener((new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
@@ -546,17 +558,11 @@ public class CardEditor extends JFrame implements ActionListener {
         }
 
     }
+    
 
-	
-	private void createTextfield() {
-		nameField = new JTextField("");
-	}
+    
 
-	private void createCombobox() {
-		selectCardType = new JComboBox();
-	}
-
-	public static void main(String[] args) {
+		public static void main(String[] args) {
 		new CardEditor().setVisible(true);
 	}
 

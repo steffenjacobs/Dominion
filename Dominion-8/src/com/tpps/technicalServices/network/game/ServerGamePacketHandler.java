@@ -367,12 +367,21 @@ public class ServerGamePacketHandler extends PacketHandler {
 		PacketVotekick votekickPacket = (PacketVotekick) packet;
 		if (this.server.getGameController().getPlayerByUserName(votekickPacket.getUser()) != null) {
 			GameLog.log(MsgType.INFO, "This gameserver " + this.server.getPort() + " received a votekickpacket");
-
+			
+			if (votekickPacket.getUser().equals(this.server.getGameController().getActivePlayerName())) {				
+				this.server.getGameController().setNextActivePlayer();
+				System.out.println("new active Player: " + this.server.getGameController().getActivePlayer().getPlayerName());
+				this.server.broadcastMessage(this.server.getGameController().getPlayerByUserName(votekickPacket.getUser()).getPort(),
+				new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(),
+						this.server.getGameController().getActivePlayerName(), true));
+			}
+			
 			GameLog.log(MsgType.INFO, "The User gets kicked: " + votekickPacket.getUser());
 			Player kickedPlayer = this.server.getGameController().getPlayerByUserName(votekickPacket.getUser());
 			this.server.getGameController().getPlayers()
 					.remove(kickedPlayer);
 			System.out.println("größe: " + this.server.getGameController().getPlayers().size());
+			
 			this.server.sendMessage(kickedPlayer.getPort(), votekickPacket);
 			
 			for (Iterator<Player> iterator = this.server.getGameController().getPlayers().iterator(); iterator
@@ -380,15 +389,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				Player player = (Player) iterator.next();
 				player.setAllModesFalse();
 				this.server.getGameController().resetThiefList();
-				this.server.getGameController().resetSpyList();
-				
-			}
-			if (votekickPacket.getUser().equals(this.server.getGameController().getActivePlayerName())) {
-				
-				this.server.getGameController().setNextActivePlayer();
-				System.out.println("new active Player");
-				this.server.broadcastMessage(new PacketEnableDisable(this.server.getGameController().getActivePlayer().getPort(),
-						this.server.getGameController().getActivePlayerName(), true));
+				this.server.getGameController().resetSpyList();				
 			}
 		}
 	}

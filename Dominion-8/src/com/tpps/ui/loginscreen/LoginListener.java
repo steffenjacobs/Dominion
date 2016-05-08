@@ -23,7 +23,7 @@ public class LoginListener implements MouseListener {
 	private JButton clicked;
 	private JButton cancel;
 	private JButton createAccount;
-	
+
 	private JTextField userinfo;
 	private JPasswordField passwordbox;
 	private LoginGUIController guicontroller;
@@ -47,24 +47,24 @@ public class LoginListener implements MouseListener {
 		this.createAccount = createAccount;
 		userinfo.requestFocus();
 		passwordbox.addKeyListener(new KeyListener() {
-			
+
 			@Override
 			public void keyTyped(KeyEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void keyPressed(KeyEvent e) {
-				if(e.getKeyCode() == KeyEvent.VK_ENTER){
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					guicontroller.createLoginClient(userinfo.getText(), String.valueOf(passwordbox.getPassword()));
-				}	
+				}
 			}
 		});
 	}
@@ -81,8 +81,7 @@ public class LoginListener implements MouseListener {
 			guicontroller.createAccountGUI();
 		} else if (clicked.getText().equals("Cancel")) {
 			System.exit(0);
-		}
-		else if (clicked.getText().equals("Login")) {
+		} else if (clicked.getText().equals("Login")) {
 			// -------------------------------
 			guicontroller.createLoginClient(userinfo.getText(), String.valueOf(passwordbox.getPassword()));
 			// -------------------------------
@@ -95,8 +94,7 @@ public class LoginListener implements MouseListener {
 			guicontroller.createAccountGUI();
 		} else if (clicked.getText().equals("Cancel")) {
 			System.exit(0);
-		}
-		else if (clicked.getText().equals("Login")) {
+		} else if (clicked.getText().equals("Login")) {
 			// -------------------------------
 			guicontroller.createLoginClient(userinfo.getText(), String.valueOf(passwordbox.getPassword()));
 			// -------------------------------

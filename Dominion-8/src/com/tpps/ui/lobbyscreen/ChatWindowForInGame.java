@@ -303,6 +303,19 @@ public class ChatWindowForInGame extends JPanel {
 		frame.setSize(500, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
+	
+	/**
+	 * 
+	 * method designed for the relative layout in the GameGui
+	 * 
+	 *  @author nagrawal
+	 * 
+	 * @param x
+	 * @param y
+	 * @param sizeFactorWidth
+	 * @param sizeFactorHeight
+	 * @param gameWindow
+	 */
 
 	public void onResize(int x, int y, double sizeFactorWidth, double sizeFactorHeight, GameWindow gameWindow) {
 		double width = (sizeFactorWidth * maxWidth) / 4;
