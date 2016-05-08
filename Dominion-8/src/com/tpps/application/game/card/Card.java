@@ -39,7 +39,7 @@ public class Card extends GameObject {
 	private final String id;
 	private GraphicFramework parent;
 	private double relativeX, relativeY, relativeWidth, relativeHeight;
-	private Image sourceImage;
+	private BufferedImage sourceImage;
 	private GameBackground gameBackground;
 	private String handTrigger = "";
 	private boolean animationEnabled = false;
@@ -79,7 +79,7 @@ public class Card extends GameObject {
 	 */
 	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
 			double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight, int _layer,
-			Image sourceImage, GraphicFramework _parent) {
+			BufferedImage sourceImage, GraphicFramework _parent) {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
 		this.name = name;
 		this.actions = actions;
@@ -125,7 +125,7 @@ public class Card extends GameObject {
 	 */
 	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
 			String cardId, double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
-			int _layer, Image sourceImage, GraphicFramework _parent) {
+			int _layer, BufferedImage sourceImage, GraphicFramework _parent) {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
 		this.name = name;
 		this.actions = actions;
@@ -221,7 +221,7 @@ public class Card extends GameObject {
 	 */
 	public Card(LinkedHashMap<CardAction, String> actions, LinkedList<CardType> types, String name, int cost,
 			String cardId, double relativeLocX, double relativeLocY, double relativeWidth, double relativeHeight,
-			int _layer, Image sourceImage, GraphicFramework _parent, String handTrigger) {
+			int _layer, BufferedImage sourceImage, GraphicFramework _parent, String handTrigger) {
 		super(relativeLocX, relativeLocY, relativeWidth, relativeHeight, _layer, sourceImage, _parent);
 		this.name = name;
 		this.actions = actions;
@@ -317,6 +317,7 @@ public class Card extends GameObject {
 		if (handTrigger.equals("Victory")) {
 			for (int i = 0; i < GameWindow.getInstance().getVictoryButtons().size(); i++) {
 				parent.removeComponent(GameWindow.getInstance().getVictoryButtons().get(i));
+
 			}
 			// try {
 			// Thread.sleep(50);
@@ -334,6 +335,9 @@ public class Card extends GameObject {
 				}, relativeX + 0.05, relativeY);
 				anim.play();
 			}
+			gameBackground = new GameBackground(0.12, 0.01, 0.05 + 0.08, 0.15 + 0.24, 110,
+					GraphicsUtil.rotate(sourceImage, 270), parent);
+			parent.addComponent(gameBackground);
 		}
 		if (handTrigger.equals("Coins")) {
 			for (int i = 0; i < GameWindow.getInstance().getCoinButtons().size(); i++) {
@@ -355,6 +359,9 @@ public class Card extends GameObject {
 				}, relativeX - 0.05, relativeY);
 				anim.play();
 			}
+			gameBackground = new GameBackground(0.12, 0.01, 0.05 + 0.08, 0.15 + 0.24, 110,
+					GraphicsUtil.rotate(sourceImage, 90), parent);
+			parent.addComponent(gameBackground);
 		}
 
 		if (handTrigger.equals("handCards")) {
@@ -408,6 +415,7 @@ public class Card extends GameObject {
 				}, relativeX, relativeY);
 				anim.play();
 			}
+			parent.removeComponent(gameBackground);
 		}
 		if (handTrigger.equals("Coins")) {
 			for (int i = 0; i < GameWindow.getInstance().getCoinButtons().size(); i++) {
@@ -429,6 +437,7 @@ public class Card extends GameObject {
 				}, relativeX, relativeY);
 				anim.play();
 			}
+			parent.removeComponent(gameBackground);
 		}
 		if (handTrigger.equals("handCards")) {
 			// try {
