@@ -20,6 +20,7 @@ public class GameClient extends Client {
 
 	private int clientId;
 	private GameWindow gameWindow;
+	private GameClientNetworkListener gameClientNetworkListener;
 	
 	public GameClient(SocketAddress _address, ClientGamePacketHandler _handler) throws IOException {
 		super(_address, _handler, false);
@@ -29,12 +30,17 @@ public class GameClient extends Client {
 		this.gameWindow = new GameWindow();
 		_handler.setGameWindow(gameWindow);
 		_handler.setGameStorageInterface(new GameStorageInterface(gameWindow));
-		super.getListenerManager().registerListener(new GameClientNetworkListener(this));
+		this.gameClientNetworkListener = new GameClientNetworkListener(this);
+		super.getListenerManager().registerListener(this.gameClientNetworkListener);
 		registrateByServer();
 	}
 	
 	public GameWindow getGameWindow() {
 		return gameWindow;
+	}
+	
+	public GameClientNetworkListener getGameClientNetworkListener() {
+		return this.gameClientNetworkListener;
 	}
 
 	/**

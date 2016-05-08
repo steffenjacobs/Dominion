@@ -52,6 +52,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 		}
 		switch (packet.getType()) {
 		case VOTEKICK:
+			this.gameClient.getListenerManager().unregisterListener(this.gameClient.getGameClientNetworkListener());
 			this.gameClient.disconnect();
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameWindow.setCaptionTurn("votekicked");
