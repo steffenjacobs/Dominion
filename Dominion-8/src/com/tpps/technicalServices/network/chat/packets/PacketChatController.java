@@ -37,6 +37,7 @@ public class PacketChatController extends Packet{
 	 * @param members
 	 *            an ArrayList of all members who want to participate to the
 	 *            chatroom
+	 * @param gameserverPort String representation of the used gameserver port
 	 */
 	public PacketChatController(String command, ArrayList<String> members, int gameserverPort) {
 		super(PacketType.CHAT_CONTROLLER); 
