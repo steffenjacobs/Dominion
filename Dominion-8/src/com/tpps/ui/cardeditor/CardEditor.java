@@ -200,9 +200,7 @@ public class CardEditor extends JFrame implements ActionListener {
 			     * Das Hintergrundbild.
 			     */
 			    private Image               img;
- 
-
-			    
+	    
 			    {
 			        img = ImageIO
 							.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
@@ -237,9 +235,11 @@ public class CardEditor extends JFrame implements ActionListener {
 	
 	private void iniateLayout() {
 		
-		
+		/**
+		 * creates the Toppanel
+		 */	
 	
-		JPanel obenLinks = new JPanel();      //Panel für Karteninitation
+		JPanel obenLinks = new JPanel();      
 //		obenLinks.setBackground(Color.green); 
 		obenLinks.setOpaque(false);
 		gbc.gridx = 0;
@@ -265,11 +265,14 @@ public class CardEditor extends JFrame implements ActionListener {
 		String comboBoxListe[] = {"Action", "Treasure", "Victory", "Point"};
 		selectCardType = new JComboBox(comboBoxListe);
 		obenLinks.add(selectCardType);
-		
 		c.add(obenLinks, gbc);
+		
+		/**
+		 * creates the Panel for uploading the Image
+		 */	
 
-		JPanel pnlBuy = new JPanel();        //Panel für das Bildhochladen
-		gbc.gridx = 1;                       //Anpassen fürs Bildhochladen
+		JPanel pnlBuy = new JPanel();       
+		gbc.gridx = 1;                       
 //		pnlBuy.setBackground(Color.blue); 
 		pnlBuy.setOpaque(false);
 		gbc.gridy = 1;
@@ -291,7 +294,11 @@ public class CardEditor extends JFrame implements ActionListener {
         pnlBuy.add(uploadImage,BorderLayout.PAGE_END);
 		c.add(pnlBuy, gbc);
 		
-		JPanel mitte = new JPanel();           //Panel für den Preis
+		/**
+		 * creates the Panel for setting the Price
+		 */	
+		
+		JPanel mitte = new JPanel();           
 //		mitte.setBackground(Color.ORANGE);
 		mitte.setOpaque(false);
 		gbc.gridx = 0;
@@ -313,10 +320,6 @@ public class CardEditor extends JFrame implements ActionListener {
 		price.setFont(priceFont);
 		price.setForeground(Color.WHITE);
 		mitte.add(price,gbc2);
-		gbc2.gridx = 0;
-		gbc2.gridy = 1;
-		gbc2.anchor = GridBagConstraints.BELOW_BASELINE;
-		gbc2.ipady = 0;
 //		gbc.anchor = GridBagConstraints.FIRST_LINE_END;
 //		gbc.fill = GridBagConstraints.HORIZONTAL;
 		increasePrice = new JButton("Increase Price");
@@ -326,7 +329,7 @@ public class CardEditor extends JFrame implements ActionListener {
 
 			public void actionPerformed(ActionEvent e) {
 				priceint = priceint + 1;
-				price = new JLabel(Integer.toString(priceint));
+				price.setText(Integer.toString(priceint));
 				System.out.println(Integer.toString(priceint));
 			}
 		}));
@@ -334,6 +337,7 @@ public class CardEditor extends JFrame implements ActionListener {
 
 			public void actionPerformed(ActionEvent e) {
 				priceint = 2;
+				price.setText(Integer.toString(priceint));
 				System.out.println(Integer.toString(priceint));
 			}
 		}));
@@ -342,12 +346,18 @@ public class CardEditor extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				if (priceint > 0) {
 				priceint = priceint - 1;
+				price.setText(Integer.toString(priceint));
 				System.out.println(Integer.toString(priceint));
 				} else {
 					System.out.println("The cost can't be lower than 0");
 				}
 			}
 		}));
+		mitte.add(price,gbc2);	
+		gbc2.gridx = 0;
+		gbc2.gridy = 1;
+		gbc2.anchor = GridBagConstraints.BELOW_BASELINE;
+		gbc2.ipady = 0;
 		mitte.add(increasePrice,gbc2);
 		gbc2.gridx = 1;
 		gbc2.gridy = 1;
@@ -357,6 +367,9 @@ public class CardEditor extends JFrame implements ActionListener {
 		mitte.add(decreasePrice, gbc2);
 		c.add(mitte,gbc);
 		
+		/**
+		 * creates the Panel for setting the Cardaction
+		 */	
 		
 		JPanel radio = new JPanel();            //Panel für die RadioButtons
 //		radio.setBackground(Color.YELLOW);
@@ -430,8 +443,6 @@ public class CardEditor extends JFrame implements ActionListener {
 		revealCard.setOpaque(false);
 		isTreasure.setOpaque(false);
 		isVictory.setOpaque(false);
-		
-		
 		radio.add(addAction);
 		radio.add(addMoney);
 		radio.add(addPurchase);
@@ -446,8 +457,12 @@ public class CardEditor extends JFrame implements ActionListener {
 		radio.add(isVictory);
 		c.add(radio,gbc);
 		
+		/**
+		 * creates the Panel for creating the card
+		 */	
+		
 
-		JPanel untenLinks = new JPanel();		//Karte erstellen
+		JPanel untenLinks = new JPanel();		
 //		untenLinks.setBackground(Color.red); 
 		untenLinks.setOpaque(false);
 		gbc.gridx = 0;
@@ -460,6 +475,10 @@ public class CardEditor extends JFrame implements ActionListener {
 		createCard = new JButton("Create Card");
 		untenLinks.add(createCard);
 		c.add(untenLinks, gbc);
+		
+		/**
+		 * creates the Panel for getting back into the main menu
+		 */
 
 		JPanel untenRechts = new JPanel();		//Zurück ins Menü
 //		untenRechts.setBackground(Color.gray);
@@ -472,10 +491,10 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.31;
 		cancel = new JButton("Cancel");
-		ImageIcon back;
+/*		ImageIcon back;  //TODO Vorlage erstellen für Buttons
 		try {
 			
-			back = new ImageIcon (ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/Back.png")));
+			back = new ImageIcon (ImageIO.read(ClassLoader.getSystemResource("resources/img/cardEditor/Vorlage.jpg")));
 			Dimension d = new Dimension(back.getIconWidth(), back.getIconHeight());
 			cancel.setOpaque(false);
 			cancel.setContentAreaFilled(false);
@@ -487,6 +506,7 @@ public class CardEditor extends JFrame implements ActionListener {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+*/		
 		cancel.addActionListener((new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
@@ -575,6 +595,8 @@ public class CardEditor extends JFrame implements ActionListener {
 }
 
 
+/* 
+
 class BackgroundPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
@@ -605,3 +627,5 @@ class BackgroundPanel extends JPanel {
     }
 
 }
+
+*/
