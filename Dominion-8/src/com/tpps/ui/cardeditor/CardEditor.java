@@ -3,7 +3,9 @@ package com.tpps.ui.cardeditor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -34,6 +36,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.util.FontLoader;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.lobbyscreen.BackButton;
 
@@ -59,7 +62,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	private ImageIcon loading;
 	private int width, gridwidth;
 	private int height, gridheight;
-	private Font smallfont, radioFont, priceFont;
+	private Font smallfont,radioFont,priceFont,customFont;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc, gbc2;
 	private JPanel obenLinks, uImage;
@@ -67,18 +70,35 @@ public class CardEditor extends JFrame implements ActionListener {
 	private JFileChooser fc;
 	private final String newline = "\n";
 	private String basePath;
-	private BufferedImage targetImg;
+	private BufferedImage targetImg,buttonIcon;
 	private File targetFile;
 	private final int baseSize = 128;
 	private BufferedImage back;
 	private BackButton backButton;
-	private boolean showPic;
+    private boolean showPic;
+    private Dimension d;
+
+
 
 	public CardEditor() {
 		this.setVisible(true);
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		gbc = new GridBagConstraints();
+		try {
+			if (customFont == null) {
+				customFont = FontLoader.getInstance().getXenipa();
+				customFont.isBold();
+				if (customFont == null) {
+					customFont = new FontLoader().importFont();
+				}
+			}
+		} catch (FontFormatException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 		// loadImage();
 		// resizeImage();
 
@@ -100,6 +120,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		loadButtonIcon();
 		initComponents();
 		c = this.getContentPane();
 		c.setLayout(new GridBagLayout());
@@ -332,6 +353,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc2.gridy = 1;
 		gbc2.anchor = GridBagConstraints.BELOW_BASELINE;
 		gbc2.ipady = 0;
+		mitte.add(increasePrice,gbc2);
 		mitte.add(increasePrice, gbc2);
 		gbc2.gridx = 1;
 		gbc2.gridy = 1;
@@ -448,7 +470,21 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.35;
-		createCard = new JButton("Create Card");
+		createCard = new JButton("Create Card") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(buttonIcon, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		createCard.setOpaque(false);
+//		createCard.setBorderPainted(true);
+		createCard.setContentAreaFilled(false);
+		createCard.setFont(customFont.deriveFont(15f));
+		createCard.setPreferredSize(d);
 		untenLinks.add(createCard);
 		c.add(untenLinks, gbc);
 
@@ -466,6 +502,23 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.31;
 		cancel = new JButton("Cancel");
+
+		ImageIcon back;  //TODO Vorlage erstellen für Buttons
+		try {
+			
+			back = new ImageIcon (ImageIO.read(ClassLoader.getSystemResource("resources/img/cardEditor/cEbutton.png")));
+//			Dimension d = new Dimension(back.getIconWidth(), back.getIconHeight());
+			cancel.setOpaque(false);
+			cancel.setContentAreaFilled(false);
+			cancel.setBorderPainted(false);
+			cancel.setPreferredSize(d);
+			cancel.setIcon(back);
+		
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		/*
 		 * ImageIcon back; //TODO Vorlage erstellen für Buttons try {
 		 * 
@@ -479,6 +532,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		 * } catch (IOException e1) { // TODO Auto-generated catch block
 		 * e1.printStackTrace(); }
 		 */
+
 		cancel.addActionListener((new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
@@ -488,7 +542,19 @@ public class CardEditor extends JFrame implements ActionListener {
 		}));
 		untenRechts.add(cancel);
 		c.add(untenRechts, gbc);
+
+		}
+	
+	private void loadButtonIcon() {
+		try {
+			this.buttonIcon = ImageIO.read(ClassLoader.getSystemResource("resources/img/cardEditor/cEbutton2.png"));
+			d = new Dimension(buttonIcon.getWidth(), buttonIcon.getHeight());
+		} catch (IOException e) {
+			e.printStackTrace(); 
+		}
 	}
+	
+
 
 	/**
 	 * resizing the uploaded image
