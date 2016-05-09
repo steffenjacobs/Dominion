@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -58,7 +59,7 @@ public class CreateAccount extends JFrame {
 	 * simple constructor (first call) merging all elements
 	 */
 
-	public CreateAccount(LoginGUIController guicontroller) {
+	public CreateAccount(LoginGUIController guicontroller, Point location) {
 		this.guicontroller = guicontroller;
 
 		loadImage();
@@ -94,6 +95,7 @@ public class CreateAccount extends JFrame {
 		this.createpanel4();
 		this.createpanel5();
 		this.createpanel6();
+		this.setLocation(location);
 		this.revalidate();
 	}
 

@@ -46,7 +46,7 @@ public class LoginGUIController{
 	 */
 	public void createAccountGUI(){
 		this.logingui.dispose();
-		createaccount = new CreateAccount(this);
+		createaccount = new CreateAccount(this, logingui.getLocation());
 	}
 	
 	/**
