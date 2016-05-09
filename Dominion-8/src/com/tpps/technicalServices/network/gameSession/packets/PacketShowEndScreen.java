@@ -15,7 +15,7 @@ import com.tpps.technicalServices.network.core.packet.PacketType;
 public class PacketShowEndScreen extends Packet {
 
 	private static final long serialVersionUID = -6159725370768320315L;
-	LinkedHashMap<String, Tuple<String>> namePoints;
+	private LinkedHashMap<String, Tuple<String>> namePoints;
 
 
 	/**

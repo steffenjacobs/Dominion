@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -631,9 +632,38 @@ public class CardEditor extends JFrame implements ActionListener {
         createCard.setBorderPainted(false);
 		createCard.setFont(customFont.deriveFont(15f));
 		createCard.setPreferredSize(d);
-		createCard.addActionListener(new ActionListener() {
+		createCard.addActionListener(new ActionListener() {             //TODO : Übergeben
 			public void actionPerformed(ActionEvent e) {
-				new ActionQuery(comboBoxListe);
+				if (schleifenZaehler < 4 && schleifenZaehler > 0) {
+				ArrayList<String> radioButtons = new ArrayList<String>();
+				if (rbp1 == true)
+				radioButtons.add(addAction.getName());
+				if (rbp2 == true)
+				radioButtons.add(addMoney.getName());
+				if (rbp3 == true)
+				radioButtons.add(addPurchase.getName());
+				if (rbp4 == true)
+				radioButtons.add(drawCard.getName());
+				if (rbp5 == true)
+				radioButtons.add(drawCardUntil.getName());	
+				if (rbp6 == true)
+				radioButtons.add(putBack.getName());	
+				if (rbp7 == true)
+				radioButtons.add(gainCard.getName());
+				if (rbp8 == true)
+				radioButtons.add(discardCard.getName());
+				if (rbp9 == true)
+				radioButtons.add(trashCard.getName());	
+                if (rbp10 == true)	
+                radioButtons.add(revealCard.getName());
+				if (rbp11 == true)
+				radioButtons.add(isTreasure.getName());
+				if (rbp12 == true)
+				radioButtons.add(isVictory.getName());
+				
+				new ActionQuery(radioButtons);
+				}
+				
 			}
 		});
 		untenLinks.add(createCard);

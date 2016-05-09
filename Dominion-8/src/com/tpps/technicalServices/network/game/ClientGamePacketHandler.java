@@ -284,9 +284,11 @@ public class ClientGamePacketHandler extends PacketHandler {
 			}
 			break;
 		case SHOW_END_SCREEN:
-			JOptionPane.showMessageDialog(null, "end game");
+			GameLog.log(MsgType.PACKET, "end game packet received");
 			DominionController.getInstance().setTurnFlag(false);
 			this.gameClient.disconnect();
+			GameLog.log(MsgType.INFO, "gameclient disconnected");
+			JOptionPane.showMessageDialog(null, "end game");
 			DominionController.getInstance().finishMatch((PacketShowEndScreen) packet);
 			break;
 		default:
