@@ -146,14 +146,18 @@ public class CardClient extends Client {
 		}
 
 		try {
+			System.out.println("req1");
 			Semaphore sem = new Semaphore(1);
 			sem.acquire();
+			System.out.println("req2");
 			super.sendMessage(new PacketGetCardRequest(cardName, parent.getSessionID(), parent.getUsername()));
+			System.out.println("req3");
 			this.getRequests.put(cardName, new SuperCallable<SerializedCard>() {
 
 				@Override
 				public SerializedCard callMeMaybe(SerializedCard object) {
 					GameLog.log(MsgType.INFO ,"Received card from server: " + object.getName());
+					DominionController.getInstance().updateLoadingScrenSubtext(object.getName());
 					parent.getCardRegistry().addCard(object);
 					sem.release();
 					return null;
