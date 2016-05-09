@@ -32,6 +32,7 @@ public class GameLobby {
 	private final boolean isPrivate;
 	
 	
+	/**is called when the game starts*/
 	public void onStart(){
 		this.startTime = System.currentTimeMillis();
 	}

@@ -3,8 +3,6 @@ package com.tpps.ui.animations;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Callable;
 
-import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.ui.GameObject;
 

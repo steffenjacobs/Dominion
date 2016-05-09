@@ -791,12 +791,7 @@ public class Player {
 		 * ((ServerGamePacketHandler)this.gameServer.getHandler
 		 * ()).getActivePlayerColor()));
 		 */
-		GameLog.log(MsgType.ERROR, "discardMode1 " + String.valueOf(this.isDiscardMode()));
-		GameLog.log(MsgType.ERROR, "discardMode2 " + String.valueOf(this.discardMode));
-
-		GameLog.log(MsgType.ERROR, "trashMode1 " + String.valueOf(this.isTrashMode()));
-		GameLog.log(MsgType.ERROR, "trashMode2 " + String.valueOf(this.trashMode));
-		
+		GameLog.log(MsgType.DEBUG, "discardMode: " + String.valueOf(this.isDiscardMode()) + ", trashMode: " + String.valueOf(this.isTrashMode()));
 		if (this.isDiscardMode())
 			if (serverCard.getName().equals(CardName.MOAT.getName()))
 				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
@@ -806,9 +801,9 @@ public class Player {
 			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - trashes " + serverCard.getName(), this.getLogColor()));
 		else {
 			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
-			GameLog.log(MsgType.ERROR, ">>> HIER REIN <<<" );
+			GameLog.log(MsgType.DEBUG, ">>> HIER REIN <<<" );
 		}
-		GameLog.log(MsgType.INFO, "The Playername is: " + this.getPlayerName());
+//		GameLog.log(MsgType.INFO, "The Playername is: " + this.getPlayerName());
 
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
@@ -835,7 +830,7 @@ public class Player {
 		if (!this.reactionMode && serverCard.getTypes().contains(CardType.ACTION)) {
 			this.actions--;
 		}
-		GameLog.log(MsgType.INFO, "DoAction");
+//		GameLog.log(MsgType.INFO, "DoAction");
 		while (cardIterator.hasNext()) {
 			CardAction act = cardIterator.next();
 			String value = serverCard.getActions().get(act);
@@ -984,7 +979,7 @@ public class Player {
 				break;
 			case CHOOSE_CARD_PLAY_TWICE:
 				this.actions++;
-				if (playTwiceCounter < getDeck().cardHandActionCardAmount() - 1) {
+				if (playTwiceCounter < getDeck().cardHandAmount(CardType.ACTION) - 1) {
 					this.playTwiceEnabled = true;
 					this.playTwiceCounter++;
 				}

@@ -11,7 +11,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.Loader;
+import com.tpps.technicalServices.util.FontLoader;
 
 /**
  * 
@@ -86,9 +86,9 @@ public class MainMenuButton {
 		// g.setFont(Loader.importFont(), Font.PLAIN, letterSize);
 		try {
 			if (customFont == null) {
-				customFont = Loader.getInstance().getXenipa();
+				customFont = FontLoader.getInstance().getXenipa();
 				if (customFont == null) {
-					customFont = new Loader().importFont();
+					customFont = new FontLoader().importFont();
 				}
 			}
 
