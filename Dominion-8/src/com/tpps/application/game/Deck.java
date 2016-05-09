@@ -218,7 +218,12 @@ public class Deck {
 		LinkedList<Card> victoryCards = getCardsByTypeFromDeck(CardType.VICTORY);
 		for (Iterator<Card> iterator = victoryCards.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			victoryPoints += Integer.parseInt(card.getActions().get(CardAction.IS_VICTORY));
+			if (card.getName().equals("Garden")){
+				victoryPoints += (int)(this.getDeckSize() / 10);
+				
+			}else{
+				victoryPoints += Integer.parseInt(card.getActions().get(CardAction.IS_VICTORY));
+			}
 		}
 		return victoryPoints;
 	}
@@ -796,17 +801,5 @@ public class Deck {
 			}
 		}
 		return sBuf.append(">").toString();
-	}
-
-	/**
-	 * prints only the cardHand in a short format for debugging purposes
-	 */
-	public void debugCardHandPrint() {
-		StringBuffer logString = new StringBuffer();
-		logString.append("Cardnames: - ");
-		for (Card card : this.getCardHand()) {
-			logString.append( card.getName() + " - ");
-		}
-		GameLog.log(MsgType.AI_DEBUG, logString.toString());
 	}
 }
