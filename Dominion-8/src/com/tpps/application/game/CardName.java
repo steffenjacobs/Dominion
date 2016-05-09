@@ -12,6 +12,7 @@ public enum CardName {
 	DUCHY("Duchy"),
 	PROVINCE("Province"),
 	CURSE("Curse"),
+	GARDENS("Gardens"),
 	COPPER("Copper"),
 	SILVER("Silver"),
 	GOLD("Gold"),

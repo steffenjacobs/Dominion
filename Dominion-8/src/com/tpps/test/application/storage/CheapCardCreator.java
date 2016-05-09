@@ -19,6 +19,7 @@ import org.junit.Test;
 import com.tpps.application.game.CardName;
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.GameConstant;
+import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.storage.CardStorageController;
@@ -35,6 +36,7 @@ import com.tpps.technicalServices.network.clientSession.client.SessionPacketSend
 import com.tpps.technicalServices.network.clientSession.packets.PacketSessionGetAnswer;
 import com.tpps.technicalServices.network.clientSession.server.SessionServer;
 import com.tpps.technicalServices.network.core.SuperCallable;
+import com.tpps.technicalServices.util.CollectionsUtil;
 
 /**
  * @author Steffen Jacobs
@@ -327,6 +329,22 @@ public class CheapCardCreator {
 		types.add(CardType.ATTACK);
 		cards.put(CardName.BUREAUCRAT.getName(), new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
 				(LinkedList<CardType>) types.clone(), 0, CardName.BUREAUCRAT.getName(), getImg(CardName.BUREAUCRAT.getName())));
+		
+
+		
+		actions.remove(CardAction.GAIN_CARD_DRAW_PILE);
+		actions.remove(CardAction.REVEAL_CARD_OTHERS_PUT_IT_ON_TOP_OF_DECK);
+		types.remove(CardType.ATTACK);
+		types.remove(CardType.ACTION);
+		types.add(CardType.VICTORY);
+		actions.put(CardAction.IS_VICTORY, Integer.toString(GameConstant.GARDEN_VALUE.getValue()));
+		cards.put(CardName.GARDENS.getName(), new SerializedCard((LinkedHashMap<CardAction, String>) actions.clone(),
+				(LinkedList<CardType>) types.clone(), 4, CardName.GARDENS.getName(), getImg(CardName.GARDENS.getName())));
+		
+		
+		
+		
+		
 
 		// setup Dummy-DominionController
 		DominionController dom = DominionController.getInstance();

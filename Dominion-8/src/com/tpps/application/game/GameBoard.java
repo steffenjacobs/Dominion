@@ -240,6 +240,13 @@ public class GameBoard {
 						.getName(), GameConstant.CURSE_COST.getValue()), GameConstant.INIT_CURSE_PILE_SIZE.getValue(), curseList);
 		this.tableForVictoryCards.put(CardName.CURSE.getName(), curseList);
 		Card.resetClassID();
+		
+		LinkedList<Card> gardenList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.GARDEN_VALUE.getValue())), CollectionsUtil.linkedList(CardType.VICTORY), CardName.GARDENS
+						.getName(), GameConstant.GARDEN_COST.getValue()), GameConstant.INIT_GARDEN_PILE_SIZE.getValue(), gardenList);
+		this.tableForVictoryCards.put(CardName.GARDENS.getName(), gardenList);
+		Card.resetClassID();
 	}
 
 	/**
