@@ -47,7 +47,7 @@ public class AITest {
 	 */
 	@Test
 	public void firstTest() {
-		ai.setBuyPhase();
+//		ai.setBuyPhase();
 		ai.getPlayer().getGameServer().getGameController().getGamePhase().equals("buyPhase");
 	}
 }
