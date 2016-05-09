@@ -98,7 +98,6 @@ public class StatsCard {
 			public void mousePressed(MouseEvent e) {
 				locX = e.getX();
 				locY = e.getY();
-
 			}
 		});
 
@@ -120,7 +119,6 @@ public class StatsCard {
 			public void mousePressed(MouseEvent e) {
 				locX = e.getX();
 				locY = e.getY();
-
 			}
 		});
 		layoutPane
