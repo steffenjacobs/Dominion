@@ -69,6 +69,8 @@ public class GameWindow extends JFrame {
 	private int reactionCounter, gameBackgroundCounter, topGap;
 
 	private BufferedImage displayImageTurnGreen, muteImage, playImage;
+	
+	private static int WIDTH, HEIGHT;
 
 	// private static ButtonClass muteButton, playButton;
 
@@ -102,6 +104,8 @@ public class GameWindow extends JFrame {
 	 * @throws IOException
 	 */
 	public GameWindow() {
+		WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
+		HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 		GameWindow.instance = this;
 
 		GameLog.log(MsgType.INIT, "GameWindow");
@@ -215,7 +219,7 @@ public class GameWindow extends JFrame {
 		// this.framework.add(this.chatWindow);
 		// this.framework.add(this.loggerPane);
 		this.framework.add(this.jTabbedPane);
-
+		
 		this.addComponentListener(new MyComponentAdapter());
 		this.setFocusable(true);
 		this.addKeyListener(new KeyListener() {
@@ -257,6 +261,10 @@ public class GameWindow extends JFrame {
 		MyAudioPlayer.handleGameMusic(true);
 		this.revalidate();
 		this.repaint();
+		
+		System.out.println(this.jTabbedPane.getBounds());
+
+		
 	}
 
 	private void tabbedComponent() {
@@ -268,6 +276,7 @@ public class GameWindow extends JFrame {
 		this.jTabbedPane.setOpaque(false);
 		this.jTabbedPane.add("Chat", this.chatWindow);
 		this.jTabbedPane.add("Game Log", this.loggerPane);
+		System.out.println("created panel for chat + gamelog");
 	}
 
 	/**
