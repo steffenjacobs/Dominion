@@ -8,10 +8,9 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
-
-import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.FontLoader;
+import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * 
@@ -50,13 +49,12 @@ public class MainMenuButton {
 
 	private void updateGraphics() throws IOException {
 		if (this.enabled) {
-			
-			this.originalImage = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/gameObjects/testButton.png"));
+
+			this.originalImage = ImageLoader.getImage("resources/img/gameObjects/testButton.png");
 		} else {
-			
+
 			this.originalImage = GraphicsUtil.colorScale(Color.black,
-					ImageIO.read(ClassLoader.getSystemResource("resources/img/gameObjects/testButton.png")), .5f);
+					ImageLoader.getImage("resources/img/gameObjects/testButton.png"), .5f);
 
 		}
 		this.originalImage = GraphicsUtil.resize(this.originalImage, this.originalImage.getWidth(),

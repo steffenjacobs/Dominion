@@ -16,7 +16,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -27,7 +26,7 @@ import javax.swing.SwingConstants;
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndScreen;
 import com.tpps.technicalServices.util.FontLoader;
-import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * 
@@ -140,19 +139,8 @@ public class EndPanel extends JPanel {
 	 * loads images
 	 */
 	private void loadingImages() {
-		try {
-			this.originalBackground = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		this.originalBackground = ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg");
+		this.blackBeauty = ImageLoader.getImage("black_0.4");
 	}
 
 	/**

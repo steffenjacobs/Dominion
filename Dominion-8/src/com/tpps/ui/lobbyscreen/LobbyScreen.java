@@ -3,13 +3,12 @@ package com.tpps.ui.lobbyscreen;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * This class is created mainly for gui testing purposes
@@ -20,10 +19,9 @@ import javax.swing.JLabel;
 public class LobbyScreen extends JFrame{
 
 	private static final long serialVersionUID = 1L;
-	private int width = 2560;
-	private int height = 1440;
+	private int width = 1920;
+	private int height = 1080;
 	private Container c;
-	private BufferedImage originalBackground;
 	
 	private PlayerSettingsPanel right;
 	
@@ -33,14 +31,9 @@ public class LobbyScreen extends JFrame{
 	 * @author jhuhn
 	 */
 	LobbyScreen(){
-		try {
-			this.originalBackground = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
 		this.setVisible(true);
-		this.c = new JLabel(new ImageIcon(originalBackground));
+		this.c = new JLabel(new ImageIcon(ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg")));
 		this.setContentPane(c);
 		c.setLayout(new GridLayout(1,2));
 		

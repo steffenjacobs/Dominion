@@ -11,7 +11,6 @@ import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import com.tpps.application.storage.CardStorageController;
@@ -27,6 +26,7 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndScree
 import com.tpps.technicalServices.network.login.server.LoginServer;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
+import com.tpps.technicalServices.util.ImageLoader;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.technicalServices.util.NetUtil;
 import com.tpps.ui.LoadingScreen;
@@ -196,12 +196,7 @@ public final class DominionController {
 		globalChatPanel = new GlobalChatPanel();
 		statisticsBoardPanel = new StatisticsBoard();
 		playerSettingsPanel = new PlayerSettingsPanel().updateCards();
-		try {
-			this.originalBackground = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.originalBackground = ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg");
 	}
 
 	/**

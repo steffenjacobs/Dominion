@@ -12,7 +12,6 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -58,8 +57,9 @@ public class CreateAccount extends JFrame {
 
 	/**
 	 * simple constructor (first call) merging all elements
+	 * @param guicontroller 
+	 * @param location 
 	 */
-
 	public CreateAccount(LoginGUIController guicontroller, Point location) {
 		this.guicontroller = guicontroller;
 
@@ -132,11 +132,7 @@ public class CreateAccount extends JFrame {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		smallfont = new Font("Calibri", Font.BOLD, 19);
-		try {
-			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.setIconImage(ImageLoader.getImage("resources/img/loginScreen/Icon.png"));
 
 		description = new JLabel[4];
 		panels = new JPanel[6];
@@ -155,34 +151,7 @@ public class CreateAccount extends JFrame {
 		this.background = GraphicsUtil.resize(ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg"),
 				size.width, size.height);
 
-		// try {
-		// this.blackBeauty =
-		// ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-		// blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty,
-		// 0.4F);
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
-		// try {
-		// this.walterWhite =
-		// ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/walterWhite.jpg"));
-		// walterWhite = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty,
-		// 0.4F);
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
 	}
-
-	// /**
-	// * background resize method
-	// */
-	//
-	// private void resizeImage() {
-	// loading = new ImageIcon(background);
-	// Image newing = background.getScaledInstance(size.width, size.height,
-	// java.awt.Image.SCALE_SMOOTH);
-	// loading = new ImageIcon(newing);
-	// }
 
 	/**
 	 * first panel created as a header

@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import com.tpps.application.game.CardName;
@@ -15,6 +14,7 @@ import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.animations.FadeAnimation;
@@ -85,8 +85,7 @@ public class VisualTester extends JFrame {
 		framework = new GraphicFramework(this);
 		this.setContentPane(framework);
 
-		BufferedImage im = ImageIO
-				.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
+		BufferedImage im = ImageLoader.getImage("resources/img/gameObjects/testButton.png");
 		im = GraphicsUtil.resize(im, (int) (im.getWidth() * .4), (int) (im.getHeight() * 0.8));
 
 		framework.addComponent(new TestButton(.3, .3, .4, .4, WIDTH, HEIGHT, 6, im, framework, "first"));
@@ -101,7 +100,7 @@ public class VisualTester extends JFrame {
 				CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(CardAction.ADD_ACTION_TO_PLAYER),
 						CollectionsUtil.linkedList("2")),
 				CollectionsUtil.linkedList(CardType.ACTION), CardName.COPPER.getName(), 4, 0.8, 0.9, 0.9, 0.9, 1,
-				ImageIO.read(ClassLoader.getSystemResource("resources/img/mainMenu/Dominion.jpg")), this.framework));
+				ImageLoader.getImage("resources/img/mainMenu/Dominion.jpg"), this.framework));
 
 		// new Thread(() -> {
 		// try {

@@ -11,13 +11,13 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.components.MainMenuButton;
 
@@ -89,16 +89,11 @@ public class MainMenuPanel extends JPanel {
 	 * loads the backgroundImage from filesystem
 	 */
 	private void loadBackgroundImage() {
-		try {
-			this.originalBackground = ImageIO.read(ClassLoader
-					.getSystemResource("resources/img/mainMenu/Dominion.jpg"));
-			
-			int newWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-			int newHeight = Toolkit.getDefaultToolkit().getScreenSize().height;			
-			this.actualBackground = GraphicsUtil.resize(this.originalBackground, newWidth, newHeight);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.originalBackground = ImageLoader.getImage("resources/img/mainMenu/Dominion.jpg");
+		
+		int newWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
+		int newHeight = Toolkit.getDefaultToolkit().getScreenSize().height;			
+		this.actualBackground = GraphicsUtil.resize(this.originalBackground, newWidth, newHeight);
 	}
 	
 	/**

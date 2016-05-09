@@ -7,10 +7,10 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JButton;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * This class represents the button which is used to go back to the main menu
@@ -29,14 +29,10 @@ public class BackButton extends JButton implements ActionListener {
 	 * @author jhuhn
 	 */
 	public BackButton() {
-		try {
-			this.image = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/Back.png"));
-			this.setOpaque(false);
-			this.setContentAreaFilled(false);
-			this.setBorderPainted(false);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.image = ImageLoader.getImage("resources/img/lobbyScreen/Back.png");
+		this.setOpaque(false);
+		this.setContentAreaFilled(false);
+		this.setBorderPainted(false);
 		this.addActionListener(this);
 	}
 
