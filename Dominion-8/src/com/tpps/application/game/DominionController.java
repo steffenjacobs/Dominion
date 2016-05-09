@@ -11,7 +11,6 @@ import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import com.tpps.application.storage.CardStorageController;
@@ -27,8 +26,10 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndScree
 import com.tpps.technicalServices.network.login.server.LoginServer;
 import com.tpps.technicalServices.network.matchmaking.client.Matchmaker;
 import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
+import com.tpps.technicalServices.util.ImageLoader;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.technicalServices.util.NetUtil;
+import com.tpps.ui.LoadingScreen;
 import com.tpps.ui.MainFrame;
 import com.tpps.ui.MainMenuPanel;
 import com.tpps.ui.cardeditor.CardEditor;
@@ -78,6 +79,7 @@ public final class DominionController {
 
 	private Semaphore waitForSession = new Semaphore(1);
 	private Semaphore waitForLobby = new Semaphore(1);
+	private LoadingScreen loadingScreen;
 
 	/**
 	 * main entry point for client application
@@ -86,6 +88,39 @@ public final class DominionController {
 	 */
 	public static void main(String[] stuff) {
 		new DominionController();
+	}
+
+	/** closes the loading screen and joins main-menu */
+	public void closeLoadingScreen() {
+		if (this.loadingScreen != null) {
+			this.loadingScreen.dispose();
+			this.loadingScreen = null;
+			joinMainMenu();
+		}
+	}
+
+	/**
+	 * updates the subtext of a loading-screen
+	 * 
+	 * @param subtext
+	 *            the new subtext
+	 */
+	public void updateLoadingScrenSubtext(String subtext) {
+		if (this.loadingScreen != null) {
+			this.loadingScreen.setSubText(subtext);
+		}
+	}
+
+	/**
+	 * shows a new loading screen
+	 * 
+	 * @param message
+	 *            the message to show
+	 */
+	public void showLoadingScreen(String message) {
+		if (this.loadingScreen == null) {
+			this.loadingScreen = new LoadingScreen(message);
+		}
 	}
 
 	/**
@@ -160,13 +195,8 @@ public final class DominionController {
 		mainMenuPanel = new MainMenuPanel(this.mainFrame);
 		globalChatPanel = new GlobalChatPanel();
 		statisticsBoardPanel = new StatisticsBoard();
-		playerSettingsPanel = new PlayerSettingsPanel().updateCards();		
-		try {
-			this.originalBackground = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		playerSettingsPanel = new PlayerSettingsPanel().updateCards();
+		this.originalBackground = ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg");
 	}
 
 	/**
@@ -195,7 +225,8 @@ public final class DominionController {
 
 	/**
 	 * is called when the match ends
-	 * @param packetShowEndScreen 
+	 * 
+	 * @param packetShowEndScreen
 	 */
 	public void finishMatch(PacketShowEndScreen packetShowEndScreen) {
 		this.gameClient.getGameWindow().dispose();
@@ -287,16 +318,19 @@ public final class DominionController {
 	/**
 	 * calls the receiveChatMessageFromChatServer method with default value true
 	 * 
-	 * for JavaDocumentation of this method see {receiveChatMessageFromChatServer(String, String, String, Color, boolean)}
-	 * @param message 
-	 * @param user 
-	 * @param timeStamp 
-	 * @param color 
+	 * for JavaDocumentation of this method see
+	 * {receiveChatMessageFromChatServer(String, String, String, Color,
+	 * boolean)}
+	 * 
+	 * @param message
+	 * @param user
+	 * @param timeStamp
+	 * @param color
 	 */
 	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color) {
 		this.receiveChatMessageFromChatServer(message, user, timeStamp, color, true);
 	}
-	
+
 	/**
 	 * @author jhuhn
 	 * @param message
@@ -307,10 +341,12 @@ public final class DominionController {
 	 *            String representation of the timestamp
 	 * @param color
 	 *            color of the user
-	 * @param point 
+	 * @param point
 	 */
-	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color, boolean point) {
-		if (this.gameClient == null) { // player is not ingame, player is in globalchat
+	public void receiveChatMessageFromChatServer(String message, String user, String timeStamp, Color color,
+			boolean point) {
+		if (this.gameClient == null) { // player is not ingame, player is in
+										// globalchat
 			this.globalChatPanel.appendChatLocal(message, user, timeStamp, color, point);
 		} else { // player is ingame
 			this.gameClient.getGameWindow().getChatWindow().appendChatLocal(message, user, timeStamp, color);
@@ -325,14 +361,12 @@ public final class DominionController {
 	public void endLogin() {
 		this.mainFrame.setTitle("Dominion by TPPS - Playing as " + this.username + (offlineMode ? " (OFFLINE) " : ""));
 
-		if (!isOffline()) {
-			storageController.checkStandardCardsAsync();
-		}
-
 		this.loadPanels();
 		this.initClients();
-
-		this.joinMainMenu();
+		
+		if (!isOffline()) {
+			storageController.checkStandardCards(true);
+		}
 	}
 
 	/**
@@ -387,11 +421,10 @@ public final class DominionController {
 	 * opens the LobbyGui
 	 * 
 	 * @author jhuhn
-	 * @param singlePlayer 
+	 * @param singlePlayer
 	 */
 	public void joinLobbyGui(boolean singlePlayer) {
-		this.receiveChatMessageFromChatServer(
-				"             ","****** You joined the lobbyscreen ******",
+		this.receiveChatMessageFromChatServer("             ", "****** You joined the lobbyscreen ******",
 				"             ", Color.GREEN, false);
 		this.globalChatPanel.getBackButton().setLobby(true);
 		this.playerSettingsPanel.setStartButtonEnabled(true);
@@ -459,6 +492,7 @@ public final class DominionController {
 	 *            new session-id
 	 */
 	public void setSessionID(UUID sessionID) {
+		System.out.println("session set");
 		this.sessionID = sessionID;
 		waitForSession.release();
 	}
@@ -490,6 +524,7 @@ public final class DominionController {
 	public UUID getSessionID() {
 		if (sessionID == null)
 			try {
+				System.out.println("waiting for session...");
 				waitForSession.acquire();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
@@ -523,8 +558,7 @@ public final class DominionController {
 	 * opens the community gui
 	 */
 	public void joinStatisticsGui() {
-		this.receiveChatMessageFromChatServer(
-				"             ","*** You  joined  the  communityscreen ***",
+		this.receiveChatMessageFromChatServer("             ", "*** You  joined  the  communityscreen ***",
 				"             ", Color.GREEN, false);
 		this.globalChatPanel.getBackButton().setLobby(false);
 		JPanel panel = new JPanel() {
@@ -591,7 +625,7 @@ public final class DominionController {
 	}
 
 	/**
-	 * @param isHost 
+	 * @param isHost
 	 */
 	public void setHost(boolean isHost) {
 		if (isHost) {
@@ -605,6 +639,7 @@ public final class DominionController {
 
 	/**
 	 * blocks until the lobbyID was added
+	 * 
 	 * @throws InterruptedException
 	 */
 	public void waitForLobby() throws InterruptedException {

@@ -40,6 +40,11 @@ public class CreateAccountListener implements MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 
+		if (ca.getCancel().equals(e.getSource())) {
+			this.guicontroller.backtoLogin();
+			return;
+		}
+
 		if (!(String.valueOf(ca.getPasswordbox().getPassword())
 				.equals(String.valueOf(ca.getPasswordboxRetype().getPassword())))) {
 			JOptionPane.showMessageDialog(null, "Password does not match. Please recheck");
@@ -63,12 +68,12 @@ public class CreateAccountListener implements MouseListener {
 		// }
 
 		if (CharMatcher.WHITESPACE.matchesAnyOf(ca.getUsername().getText())) {
-			JOptionPane.showMessageDialog(null, "Username not allowed");
+			JOptionPane.showMessageDialog(null, "Username has Whitespaces");
 			return;
 		}
 
 		if (!(ca.getUsername().getText().matches("^[_a-zA-Z0-9]+$"))) {
-			JOptionPane.showMessageDialog(null, "Username not allowed");
+			JOptionPane.showMessageDialog(null, "Username doesn't match pattern");
 			return;
 		}
 
@@ -93,6 +98,11 @@ public class CreateAccountListener implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 
+		if (ca.getCancel().equals(e.getSource())) {
+			this.guicontroller.backtoLogin();
+			return;
+		}
+
 		if (!(String.valueOf(ca.getPasswordbox().getPassword())
 				.equals(String.valueOf(ca.getPasswordboxRetype().getPassword())))) {
 			JOptionPane.showMessageDialog(null, "Password does not match. Please recheck");
@@ -116,12 +126,12 @@ public class CreateAccountListener implements MouseListener {
 		// }
 
 		if (CharMatcher.WHITESPACE.matchesAnyOf(ca.getUsername().getText())) {
-			JOptionPane.showMessageDialog(null, "Username not allowed");
+			JOptionPane.showMessageDialog(null, "Your Username consists of Whitespaces");
 			return;
 		}
 
 		if (!(ca.getUsername().getText().matches("^[_a-zA-Z0-9]+$"))) {
-			JOptionPane.showMessageDialog(null, "Username not allowed");
+			JOptionPane.showMessageDialog(null, "Username does't match the pattern");
 			return;
 		}
 
@@ -131,8 +141,10 @@ public class CreateAccountListener implements MouseListener {
 		}
 
 		// --------------------------------------
-		guicontroller.createAccountWithServer(ca.getUsername().getText(),
-				String.valueOf(ca.getPasswordbox().getPassword()), ca.getEmail().getText());
+		else if (ca.getCreateAccount().getText().equals("Create New Account")) {
+			guicontroller.createAccountWithServer(ca.getUsername().getText(),
+					String.valueOf(ca.getPasswordbox().getPassword()), ca.getEmail().getText());
+		}
 		// new
 		// LoginClient().handleAccountCreation(ca.getUsername().getText(),
 		// String.valueOf(ca.getPasswordbox().getPassword()),ca.getEmail().getText());
@@ -150,18 +162,32 @@ public class CreateAccountListener implements MouseListener {
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		ca.getCreateAccount().setOpaque(false);
-		ca.getCreateAccount().setForeground(Color.GRAY);
-		ca.getCreateAccount().setBorderPainted(true);
-		ca.getCreateAccount().setContentAreaFilled(false);
+		if (ca.getCreateAccount().equals(e.getSource())) {
+			ca.getCreateAccount().setOpaque(false);
+			ca.getCreateAccount().setForeground(Color.GRAY);
+			ca.getCreateAccount().setBorderPainted(true);
+			ca.getCreateAccount().setContentAreaFilled(false);
+		} else {
+			ca.getCancel().setOpaque(false);
+			ca.getCancel().setForeground(Color.GRAY);
+			ca.getCancel().setBorderPainted(true);
+			ca.getCancel().setContentAreaFilled(false);
+		}
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		ca.getCreateAccount().setOpaque(false);
-		ca.getCreateAccount().setForeground(textAndLabelColor);
-		ca.getCreateAccount().setBorderPainted(true);
-		ca.getCreateAccount().setContentAreaFilled(false);
+		if (ca.getCreateAccount().equals(e.getSource())) {
+			ca.getCreateAccount().setOpaque(false);
+			ca.getCreateAccount().setForeground(textAndLabelColor);
+			ca.getCreateAccount().setBorderPainted(true);
+			ca.getCreateAccount().setContentAreaFilled(false);
+		} else {
+			ca.getCancel().setOpaque(false);
+			ca.getCancel().setForeground(textAndLabelColor);
+			ca.getCancel().setBorderPainted(true);
+			ca.getCancel().setContentAreaFilled(false);
+		}
 	}
 }

@@ -13,11 +13,11 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import org.junit.Test;
 
+import com.tpps.technicalServices.util.ImageLoader;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.RelativeGeom2D;
@@ -68,7 +68,7 @@ public class GraphicFrameworkTest {
 		assertNotNull(framework);
 
 		// add two overlapping buttons
-		Image img = ImageIO.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
+		Image img = ImageLoader.getImage("resources/img/gameObjects/testButton.png");
 		TestButton button_1 = new TestButton(0, 0, .5, .5, F_WIDTH, F_HEIGHT, 1, img, framework, "TEST");
 		TestButton button_2 = new TestButton(0, 0, .25, .25, F_WIDTH, F_HEIGHT, 2, img, framework, "TEST2");
 		framework.addComponent(button_1);

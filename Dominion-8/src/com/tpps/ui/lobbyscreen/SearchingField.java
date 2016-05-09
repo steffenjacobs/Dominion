@@ -4,13 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JTextField;
 
-import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * An instance of this class handles one joined (or not) player in the lobby
@@ -24,7 +22,6 @@ public class SearchingField extends JTextField implements Runnable{
 	private static final long serialVersionUID = 1L;
 	private BufferedImage blackBeauty;
 	private final Font font = new Font("Calibri", Font.PLAIN, 20);
-	private static final float BLACK_TRANSPARENCY = 0.6F;
 	private boolean playerFlag;
 	
 	/**
@@ -42,12 +39,7 @@ public class SearchingField extends JTextField implements Runnable{
 		this.setForeground(Color.WHITE);
 		
 		
-		try {
-			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, BLACK_TRANSPARENCY);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.blackBeauty = ImageLoader.getImage("black_0.6");
 	}
 	
 	/**

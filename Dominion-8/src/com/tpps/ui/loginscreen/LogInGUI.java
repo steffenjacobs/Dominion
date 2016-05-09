@@ -2,7 +2,6 @@ package com.tpps.ui.loginscreen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -28,7 +27,6 @@ import com.tpps.technicalServices.util.FontLoader;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.ImageLoader;
 
-//TODO: underline Header, set Background, set transparent, map 'RETURN' key to Login
 
 /***
  * @author nagrawal - Nishit Agrawal

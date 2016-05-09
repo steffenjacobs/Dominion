@@ -3,14 +3,13 @@ package com.tpps.ui;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * 
@@ -28,11 +27,7 @@ public class MainFrame extends JFrame {
 	 * Contructor for the mainMenu
 	 */
 	public MainFrame() {
-		try {
-			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.setIconImage((ImageLoader.getImage("resources/img/loginScreen/Icon.png")));
 		this.c = this.getContentPane();
 		int width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		int height = Toolkit.getDefaultToolkit().getScreenSize().height;

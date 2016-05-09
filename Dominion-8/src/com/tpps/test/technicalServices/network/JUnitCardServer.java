@@ -12,8 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 
-import javax.imageio.ImageIO;
-
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,6 +30,7 @@ import com.tpps.technicalServices.network.clientSession.client.SessionPacketSend
 import com.tpps.technicalServices.network.clientSession.packets.PacketSessionGetAnswer;
 import com.tpps.technicalServices.network.clientSession.server.SessionServer;
 import com.tpps.technicalServices.network.core.SuperCallable;
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * test the CardServer: client can send a check-card-name-request to the server,
@@ -75,8 +74,7 @@ public class JUnitCardServer {
 		types.add(CardType.CURSE);
 		types.add(CardType.VICTORY);
 		types.add(CardType.TREASURE);
-		BufferedImage img = ImageIO.read(
-				JUnitCardServer.class.getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
+		BufferedImage img = ImageLoader.getImage("resources/img/gameObjects/testButton.png");
 
 		testCard = new SerializedCard(actions, types, 5, "☢TestCardäöü☢", img);
 	}

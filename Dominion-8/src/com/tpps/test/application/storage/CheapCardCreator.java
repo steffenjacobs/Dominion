@@ -12,14 +12,11 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 
-import javax.imageio.ImageIO;
-
 import org.junit.Test;
 
 import com.tpps.application.game.CardName;
 import com.tpps.application.game.DominionController;
 import com.tpps.application.game.GameConstant;
-import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.storage.CardStorageController;
@@ -36,7 +33,7 @@ import com.tpps.technicalServices.network.clientSession.client.SessionPacketSend
 import com.tpps.technicalServices.network.clientSession.packets.PacketSessionGetAnswer;
 import com.tpps.technicalServices.network.clientSession.server.SessionServer;
 import com.tpps.technicalServices.network.core.SuperCallable;
-import com.tpps.technicalServices.util.CollectionsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * @author Steffen Jacobs
@@ -493,8 +490,7 @@ public class CheapCardCreator {
 	}
 
 	private BufferedImage getImg(String name) throws IOException {
-		return ImageIO.read(getClass().getClassLoader()
-				.getResourceAsStream("resources/img/gameObjects/baseCards/" + name + ".png"));
+		return ImageLoader.getImage("resources/img/gameObjects/baseCards/" + name + ".png");
 	}
 
 }

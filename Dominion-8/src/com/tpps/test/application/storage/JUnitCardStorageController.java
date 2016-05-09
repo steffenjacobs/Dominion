@@ -7,14 +7,13 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-import javax.imageio.ImageIO;
-
 import org.junit.Test;
 
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.storage.CardStorageController;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * JUnit-Test for CardStorageController check if cards can be added to the
@@ -43,8 +42,7 @@ public class JUnitCardStorageController {
 		types.add(CardType.CURSE);
 		types.add(CardType.VICTORY);
 		types.add(CardType.TREASURE);
-		BufferedImage img = ImageIO
-				.read(getClass().getClassLoader().getResourceAsStream("resources/img/gameObjects/testButton.png"));
+		BufferedImage img = ImageLoader.getImage("resources/img/gameObjects/testButton.png");
 
 		SerializedCard sc = new SerializedCard(actions, types, 5, "☢TestCardäöü☢", img);
 

@@ -8,9 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -21,7 +19,7 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 import com.tpps.ui.gameplay.GameWindow;
 
 /**
@@ -45,7 +43,6 @@ public class GameLogTextPane extends JPanel {
 	private JScrollPane scrollPane;
 
 	private BufferedImage blackBeauty;
-	private static final float BLACK_TRANSPARENCY = 0.6F;
 
 	private int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private int maxHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -66,12 +63,7 @@ public class GameLogTextPane extends JPanel {
 		this.setLayout(new BorderLayout());
 		this.setOpaque(false);
 
-		try {
-			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			this.blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(this.blackBeauty, GameLogTextPane.BLACK_TRANSPARENCY);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.blackBeauty = ImageLoader.getImage("black_0.6");
 
 		this.textPane = new JTextPane();
 		this.textPane.setEditable(false);

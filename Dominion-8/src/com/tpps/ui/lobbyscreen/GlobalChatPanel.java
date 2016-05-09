@@ -14,13 +14,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -38,7 +36,7 @@ import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.client.BadWordFilter;
-import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * This method is responsible to create and handle the global chat in the gui
@@ -61,7 +59,6 @@ public class GlobalChatPanel extends JPanel {
 	private static final int HORIZONTAL_STRUT = 50;
 	private static final int SPACE_FROM_CHATBOX_TO_CHATINPUT = 5;
 	private static final int SPACE_FROM_CHATINPUT_TO_BUTTON = 20;
-	private static final float BLACK_TRANSPARENCY = 0.6F;
 
 	private static final long serialVersionUID = 1L;
 	private static final Color ownColor = new Color(0, 255, 0);
@@ -253,12 +250,7 @@ public class GlobalChatPanel extends JPanel {
 	 */
 	private void createScrollingChatArea() {
 
-		try {
-			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, BLACK_TRANSPARENCY);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.blackBeauty = ImageLoader.getImage("black_0.6");
 		textbox = new JTextPane();
 		textbox.setFocusable(false);
 		textbox.setForeground(Color.WHITE);

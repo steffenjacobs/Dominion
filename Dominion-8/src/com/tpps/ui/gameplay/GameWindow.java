@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
@@ -30,6 +29,7 @@ import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.GameLogTextPane;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.DisplayValue;
@@ -72,7 +72,7 @@ public class GameWindow extends JFrame {
 	private BufferedImage displayImageTurnGreen, muteImage, playImage;
 
 	private static ButtonClass muteButton, playButton;
-	
+
 	private static final double CORRECTION_16TO9 = 16 / (double) 9;
 
 	/**
@@ -128,7 +128,7 @@ public class GameWindow extends JFrame {
 		this.coinButtons = new LinkedList<GFButton>();
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
+		this.setIconImage(ImageLoader.getImage("resources/img/loginScreen/Icon.png"));
 		// this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		// this.setUndecorated(true);
 		this.setMinimumSize(new Dimension(1280, 720));
@@ -278,11 +278,7 @@ public class GameWindow extends JFrame {
 	 */
 
 	private BufferedImage loadingImage(BufferedImage im, String resource) {
-		try {
-			im = ImageIO.read(getClass().getClassLoader().getResourceAsStream(resource));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		im = ImageLoader.getImage(resource);
 		return im;
 	}
 
@@ -368,7 +364,7 @@ public class GameWindow extends JFrame {
 							0.07, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 
 					GFButton button = new ButtonClass(shiftCard += 0.06, 0.07, 0.015, 0.015 * CORRECTION_16TO9,
-							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number,"NumberButton");
+							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number, "NumberButton");
 
 					framework.addComponent(button);
 					framework.addComponent(card);
@@ -379,7 +375,7 @@ public class GameWindow extends JFrame {
 							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
 							shiftBottom += 0.06, 0.25, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 					GFButton button = new ButtonClass(shiftCardBottom += 0.06, 0.25, 0.015, 0.015 * CORRECTION_16TO9,
-							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number,"NumberButton");
+							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number, "NumberButton");
 
 					framework.addComponent(button);
 					framework.addComponent(card);
@@ -502,7 +498,7 @@ public class GameWindow extends JFrame {
 					GraphicsUtil.rotate(serializedCard.getImage(), 270), framework, "Coins");
 
 			GFButton button = new ButtonClass(0.935, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
-					getHEIGHT(), l, buttonGameImage, framework, number,"NumberButton");
+					getHEIGHT(), l, buttonGameImage, framework, number, "NumberButton");
 			framework.addComponent(button);
 			framework.addComponent(card);
 			this.coinCards.add(card);
@@ -688,7 +684,7 @@ public class GameWindow extends JFrame {
 					serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 90), framework, "Victory");
 			GFButton button = new ButtonClass(0.04, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
-					getWIDTH(), l, buttonGameImage, framework, number,"NumberButton");
+					getWIDTH(), l, buttonGameImage, framework, number, "NumberButton");
 			framework.addComponent(button);
 			framework.addComponent(card);
 

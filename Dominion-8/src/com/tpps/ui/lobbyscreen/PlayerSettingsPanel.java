@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -45,8 +44,9 @@ import com.tpps.application.storage.SerializedCard;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
-import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.FontLoader;
+import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * This class creates a JPanel with all gui components, that are shown on the
@@ -598,17 +598,10 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	public void initOriginalBackgroundImages() {
-		try {
-			this.originalImages[0] = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/spring.jpg"));
-			this.originalImages[1] = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/summer.jpg"));
-			this.originalImages[2] = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/fall.jpg"));
-			this.originalImages[3] = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/winter.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.originalImages[0] = ImageLoader.getImage("resources/img/lobbyScreen/spring.jpg");
+		this.originalImages[1] = ImageLoader.getImage("resources/img/lobbyScreen/summer.jpg");
+		this.originalImages[2] = ImageLoader.getImage("resources/img/lobbyScreen/fall.jpg");
+		this.originalImages[3] = ImageLoader.getImage("resources/img/lobbyScreen/winter.jpg");
 	}
 
 	/**
@@ -629,19 +622,14 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	public void loadingImage() {
-		try {
-			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			this.greenLanton = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/greenlanton.png"));
-			this.greenLanton = (BufferedImage) GraphicsUtil.setAlpha(greenLanton, 0.6F);
-			this.redHead = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/redhead.png"));
-			this.redHead = (BufferedImage) GraphicsUtil.setAlpha(redHead, 0.6F);
-			this.brain = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/brain.png"));
-			this.brainCrossed = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/braincrossed.png"));
-			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, PlayerSettingsPanel.ALPHA);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.blackBeauty = ImageLoader.getImage("resources/img/lobbyScreen/blackbeauty.png");
+		this.greenLanton = ImageLoader.getImage("resources/img/lobbyScreen/greenlanton.png");
+		this.greenLanton = (BufferedImage) GraphicsUtil.setAlpha(greenLanton, 0.6F);
+		this.redHead = ImageLoader.getImage("resources/img/lobbyScreen/redhead.png");
+		this.redHead = (BufferedImage) GraphicsUtil.setAlpha(redHead, 0.6F);
+		this.brain = ImageLoader.getImage("resources/img/lobbyScreen/brain.png");
+		this.brainCrossed = ImageLoader.getImage("resources/img/lobbyScreen/braincrossed.png");
+		blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, PlayerSettingsPanel.ALPHA);
 	}
 
 	/**

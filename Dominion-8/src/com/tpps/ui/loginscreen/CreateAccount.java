@@ -12,7 +12,6 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -52,13 +51,15 @@ public class CreateAccount extends JFrame {
 	private LoginGUIController guicontroller;
 
 	private JPanel content;
+	private JButton cancel;
 
 	private static final Dimension size = new Dimension(500, 350);
 
 	/**
 	 * simple constructor (first call) merging all elements
+	 * @param guicontroller 
+	 * @param location 
 	 */
-
 	public CreateAccount(LoginGUIController guicontroller, Point location) {
 		this.guicontroller = guicontroller;
 
@@ -131,11 +132,7 @@ public class CreateAccount extends JFrame {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		smallfont = new Font("Calibri", Font.BOLD, 19);
-		try {
-			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.setIconImage(ImageLoader.getImage("resources/img/loginScreen/Icon.png"));
 
 		description = new JLabel[4];
 		panels = new JPanel[6];
@@ -151,38 +148,10 @@ public class CreateAccount extends JFrame {
 	 */
 
 	private void loadImage() {
-		this.background = GraphicsUtil.resize(
-				ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg"),
+		this.background = GraphicsUtil.resize(ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg"),
 				size.width, size.height);
 
-		// try {
-		// this.blackBeauty =
-		// ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-		// blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty,
-		// 0.4F);
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
-		// try {
-		// this.walterWhite =
-		// ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/walterWhite.jpg"));
-		// walterWhite = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty,
-		// 0.4F);
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
 	}
-
-	// /**
-	// * background resize method
-	// */
-	//
-	// private void resizeImage() {
-	// loading = new ImageIcon(background);
-	// Image newing = background.getScaledInstance(size.width, size.height,
-	// java.awt.Image.SCALE_SMOOTH);
-	// loading = new ImageIcon(newing);
-	// }
 
 	/**
 	 * first panel created as a header
@@ -362,18 +331,39 @@ public class CreateAccount extends JFrame {
 				super.paint(g);
 			}
 		};
+		cancel = new JButton("Cancel") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
+				super.paint(g);
+			}
+		};
+
 		createAccount.setOpaque(false);
 		createAccount.setForeground(textAndLabelColor);
 		createAccount.setBorderPainted(true);
 		createAccount.setContentAreaFilled(false);
 		createAccount.setFont(customFont.deriveFont(15f));
 		createAccount.setPreferredSize(new Dimension(180, 30));
+
+		cancel.setOpaque(false);
+		cancel.setForeground(textAndLabelColor);
+		cancel.setBorderPainted(true);
+		cancel.setContentAreaFilled(false);
+		cancel.setFont(customFont.deriveFont(15f));
+		cancel.setPreferredSize(new Dimension(180, 30));
+
 		panels[5].add(createAccount);
+		panels[5].add(cancel);
 		panels[5].setOpaque(false);
 		all.add(panels[5]);
 		this.getContentPane().add(all);
 
 		createAccount.addMouseListener(new CreateAccountListener(this, guicontroller));
+		cancel.addMouseListener(new CreateAccountListener(this, guicontroller));
 
 		panels[5].revalidate();
 	}
@@ -426,5 +416,15 @@ public class CreateAccount extends JFrame {
 
 	public JButton getCreateAccount() {
 		return createAccount;
+	}
+
+	/**
+	 * Button getter
+	 * 
+	 * @return cancel
+	 */
+
+	public JButton getCancel() {
+		return cancel;
 	}
 }

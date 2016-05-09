@@ -12,13 +12,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -37,7 +35,7 @@ import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.chat.client.BadWordFilter;
-import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 import com.tpps.ui.gameplay.GameWindow;
 
 /**
@@ -56,7 +54,6 @@ public class ChatWindowForInGame extends JPanel {
 	private int maxWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private int maxHeight =	Toolkit.getDefaultToolkit().getScreenSize().height;	
 	private final int SPACE_FROM_CHATINPUT_TO_BUTTON = 20;
-	private static final float BLACK_TRANSPARENCY = 0.6F;
 	
 	private Color textAndLabelColor;
 	private static final Color ownColor = new Color(0,255,0);
@@ -80,12 +77,7 @@ public class ChatWindowForInGame extends JPanel {
 	}
 
 	private void loadImage() {
-		try {
-			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			this.blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, BLACK_TRANSPARENCY);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.blackBeauty = ImageLoader.getImage("black_0.6");
 	}
 
 	private void createMiddlePanel() {
