@@ -1,5 +1,6 @@
 package com.tpps.ui.loginscreen;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -12,6 +13,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -34,7 +36,7 @@ import com.tpps.technicalServices.util.ImageLoader;
 public class LogInGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private Container c;
+//	private Container c;
 	private JButton execute;
 
 	private JButton cancel;
@@ -46,12 +48,14 @@ public class LogInGUI extends JFrame {
 	private JPasswordField passwordbox;
 	private JLabel[] description;
 	private JLabel header;
-	private JLabel all;
+	private JLabel allComponents;
 	private JPanel[] panels;
 	private Font smallfont, customFont;
 	private LoginGUIController guicontroller;
 //	private BufferedImage blackBeauty;
 //	private BufferedImage walterWhite;
+	
+	private JPanel backPanel;
 
 	private static final int FRAME_X = 500;
 	private static final int FRAME_Y = 250;
@@ -119,9 +123,23 @@ public class LogInGUI extends JFrame {
 	 */
 
 	private void init() {
-		c = this.getContentPane();
-		all = new JLabel(loading);
-		all.setLayout(new GridLayout(4, 1, 0, 30));
+		this.backPanel = new JPanel(new BorderLayout()){
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {				
+				g.drawImage(background, 0, 0, null);
+				super.paint(g);				
+			}
+		};
+		this.backPanel.setOpaque(false);
+		this.backPanel.add(Box.createHorizontalStrut(35), BorderLayout.LINE_END);
+		this.backPanel.add(Box.createHorizontalStrut(35), BorderLayout.LINE_START);
+		
+		allComponents = new JLabel(loading);		
+		allComponents.setLayout(new GridLayout(4, 1, 0, 30));
+		this.backPanel.add(allComponents, BorderLayout.CENTER);
+		
 		this.setSize(FRAME_X, FRAME_Y);
 		this.setLocationRelativeTo(null);
 		this.setTitle("LogIn");
@@ -145,19 +163,6 @@ public class LogInGUI extends JFrame {
 
 	private void loadImage() {
 		this.background = GraphicsUtil.resize(ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg"), FRAME_X, FRAME_Y);
-
-//		try {
-//			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-//			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		try {
-//			this.walterWhite = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/walterWhite.jpg"));
-//			walterWhite = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
 	}
 
 	/**
@@ -181,7 +186,7 @@ public class LogInGUI extends JFrame {
 		panels[0].add(header);
 		panels[0].setOpaque(false);
 		// panels[0].setBorder(BorderFactory.createLineBorder(Color.GREEN, 4));
-		all.add(panels[0]);
+		allComponents.add(panels[0]);
 		// c.add(panels[0]);
 	}
 
@@ -215,7 +220,7 @@ public class LogInGUI extends JFrame {
 		panels[1].add(userinfo);
 		panels[1].setOpaque(false);
 		// panels[1].setBorder(BorderFactory.createLineBorder(Color.RED, 4));
-		all.add(panels[1]);
+		allComponents.add(panels[1]);
 		panels[0].revalidate();
 	}
 
@@ -247,7 +252,7 @@ public class LogInGUI extends JFrame {
 		panels[2].add(passwordbox);
 		panels[2].setOpaque(false);
 		// panels[2].setBorder(BorderFactory.createLineBorder(Color.CYAN, 4));
-		all.add(panels[2]);
+		allComponents.add(panels[2]);
 		panels[2].revalidate();
 	}
 
@@ -324,8 +329,9 @@ public class LogInGUI extends JFrame {
 		panels[3].add(createAccount);
 		panels[3].add(cancel);
 		panels[3].setOpaque(false);
-		all.add(panels[3]);
-		c.add(all);
+		allComponents.add(panels[3]);
+		this.backPanel.add(allComponents);
+		this.getContentPane().add(backPanel);
 		panels[3].revalidate();
 
 		createAccount.addMouseListener(
