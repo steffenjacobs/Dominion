@@ -74,25 +74,14 @@ public class ObserverThread extends Thread {
 					}
 				}
 				
-				if (kiFlag) {
-					Client client;
-					try {
-						client = new Client(
-								new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.getStandardPort()),
-								new PacketHandler() {
-
-									@Override
-									public void handleReceivedPacket(int port, Packet packet) {
-
-									}
-								}, false);
+				if (kiFlag || this.gameServer.getGameController().getPlayers().size() == 1) {
+					
 						GameLog.log(MsgType.MM, "send message to matchmakingserver");
-						client.sendMessage(new PacketGameEnd(this.gameServer.getGameController().getPlayerNames(),
-								this.gameServer.getGameController().getWinningPlayer().getPlayerName(),
-								this.gameServer.getPort()));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+						if (!this.gameServer.getGameServerNetworkListener().getPacketSend().get()){
+							this.gameServer.getGameController().endGame();
+							this.gameServer.getGameServerNetworkListener().getPacketSend().set(true);
+						}
+					
 					return;
 				}
 				

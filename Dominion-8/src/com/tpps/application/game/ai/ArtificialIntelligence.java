@@ -364,7 +364,7 @@ public class ArtificialIntelligence {
 	 * send a PacketEndActionPhase() to end the actionPhase and start the
 	 * buyPhase
 	 */
-	private void setBuyPhase() {
+	public void setBuyPhase() {
 		sendPacket(new PacketEndActionPhase());
 	}
 
@@ -537,7 +537,6 @@ public class ArtificialIntelligence {
 	 */
 	private String determinePurchase(int treasureValue) {
 		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
-		LinkedList<Card> cardHandBeforeTurn = getCardHand();
 
 		double attacksOriginally = attacks * GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue();
 		double attacksBoughtByEnemies = attacksOriginally - board.getSizeOfPilesOnBoardWithType(CardType.ATTACK) - this.player.getDeck().containsAmountOf(CardType.ATTACK);
@@ -652,7 +651,7 @@ public class ArtificialIntelligence {
 				 * the board, start to buy DUCHYs because they won't have a huge
 				 * impact on the deck anymore in this phase of the game
 				 */
-				if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5)
+				if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5 && cardAvailableOnBoard(CardName.DUCHY.getName()))
 					return CardName.DUCHY.getName();
 				/**
 				 * special case for a second smithy, because it's only in a few
