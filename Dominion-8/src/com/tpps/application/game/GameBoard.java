@@ -461,7 +461,7 @@ public class GameBoard {
 		CollectionsUtil.cloneCardToList(
 				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.GARDEN_VALUE.getValue())), CollectionsUtil.linkedList(CardType.VICTORY), CardName.GARDENS
 						.getName(), GameConstant.GARDEN_COST.getValue()), GameConstant.INIT_GARDEN_PILE_SIZE.getValue(), gardenList);
-		this.tableForVictoryCards.put(CardName.GARDENS.getName(), gardenList);
+		this.tableForAllActionCards.put(CardName.GARDENS.getName(), gardenList);
 		Card.resetClassID();
 	}
 
