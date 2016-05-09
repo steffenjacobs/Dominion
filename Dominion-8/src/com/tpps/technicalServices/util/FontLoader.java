@@ -29,6 +29,13 @@ public class FontLoader {
 	}
 
 	public Font getXenipa() {
+		if(this.xenippa==null){
+			try {
+				this.xenippa = importFont();
+			} catch (FontFormatException | IOException e) {
+				e.printStackTrace();
+			}
+		}
 		return this.xenippa;
 	}
 
