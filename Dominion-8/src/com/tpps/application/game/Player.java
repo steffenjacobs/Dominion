@@ -791,7 +791,7 @@ public class Player {
 		 * ((ServerGamePacketHandler)this.gameServer.getHandler
 		 * ()).getActivePlayerColor()));
 		 */
-		GameLog.log(MsgType.ERROR, "discardMode: " + String.valueOf(this.isDiscardMode()) + "trashMode: " + String.valueOf(this.isTrashMode()));
+		GameLog.log(MsgType.DEBUG, "discardMode: " + String.valueOf(this.isDiscardMode()) + ", trashMode: " + String.valueOf(this.isTrashMode()));
 		if (this.isDiscardMode())
 			if (serverCard.getName().equals(CardName.MOAT.getName()))
 				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));

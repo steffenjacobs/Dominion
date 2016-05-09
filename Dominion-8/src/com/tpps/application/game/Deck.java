@@ -802,10 +802,11 @@ public class Deck {
 	 * prints only the cardHand in a short format for debugging purposes
 	 */
 	public void debugCardHandPrint() {
-		GameLog.log(MsgType.GAME_INFO, "debugCardHandPrint: Cardnames are \n - ");
+		StringBuffer logString = new StringBuffer();
+		logString.append("Cardnames: - ");
 		for (Card card : this.getCardHand()) {
-			GameLog.log(MsgType.GAME_INFO, card.getName() + " - ");
+			logString.append( card.getName() + " - ");
 		}
-		GameLog.log(MsgType.GAME_INFO, "");
+		GameLog.log(MsgType.AI_DEBUG, logString.toString());
 	}
 }
