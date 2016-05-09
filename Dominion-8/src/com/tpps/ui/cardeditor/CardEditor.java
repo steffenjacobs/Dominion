@@ -594,7 +594,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		fc.setFileFilter(new JPEGImageFileFilter());
 		int res = fc.showOpenDialog(null);
 		// We have an image!
-		try {
+		try { 
 			if (res == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();
 				setTarget(file);
