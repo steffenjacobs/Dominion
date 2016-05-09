@@ -689,7 +689,9 @@ public class ArtificialIntelligence {
 					if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName()) >= 5 && cardAvailableOnBoard(CardName.ADVENTURER.getName())
 							&& !this.player.getDeck().contains(CardName.ADVENTURER.getName(), this.player.getPlayedCards())) {
 						return CardName.ADVENTURER.getName();
-					} else
+					} else if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName()) > 7 && this.getPileSize(CardName.PROVINCE.getName()) < 7
+							&& cardAvailableOnBoard(CardName.DUCHY.getName())) {
+					} else if (cardAvailableOnBoard(CardName.GOLD.getName()))
 						return CardName.GOLD.getName();
 				}
 				/**
@@ -831,7 +833,8 @@ public class ArtificialIntelligence {
 				 * try to play FESTIVAL, LABORATORY, COUNCILROOM etc.. and in
 				 * the end a MILITIA. that's why this is bought here.
 				 */
-				else if (treasureValue >= 4 && !this.player.getDeck().contains(CardName.MILITIA.getName(), this.player.getPlayedCards()) && cardAvailableOnBoard(CardName.MILITIA.getName()) && this.player.getTurnNr() >= 7)
+				else if (treasureValue >= 4 && !this.player.getDeck().contains(CardName.MILITIA.getName(), this.player.getPlayedCards()) && cardAvailableOnBoard(CardName.MILITIA.getName())
+						&& this.player.getTurnNr() >= 7)
 					// punish potential Councilroom with Militia
 					return CardName.MILITIA.getName();
 				else if (treasureValue >= 3) {

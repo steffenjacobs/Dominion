@@ -8,7 +8,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.tpps.application.game.CardName;
-import com.tpps.application.game.Deck;
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.ai.ArtificialIntelligence;
@@ -92,6 +91,6 @@ public class AITest {
 	@Test
 	public void firstTest() {
 		// ai.setBuyPhase();
-//		ai.getPlayer().getGameServer().getGameController().getGamePhase().equals("buyPhase");
+		// ai.getPlayer().getGameServer().getGameController().getGamePhase().equals("buyPhase");
 	}
 }
