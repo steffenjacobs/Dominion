@@ -185,8 +185,13 @@ public class ArtificialIntelligence {
 	 * @throws InterruptedException
 	 */
 	private void playActionCards() throws InterruptedException {
+		
+		GameLog.log(MsgType.GAME_INFO, "playActionCards(), cardPrint:");
+		this.player.getDeck().debugCardHandPrint();
+		
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
 			sleep();
+			GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife?");
 			/**
 			 * in BIG_MONEY(_..) strategies, the execution of an action card
 			 * will not give more buying power if there is already a treasure
@@ -272,16 +277,6 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * 
-	 * @param cardname
-	 *            the cardname to get
-	 * @return the card object with name cardname
-	 */
-	private Card getCardFromBoard(String cardname) throws NoSuchElementException {
-		return this.player.getGameServer().getGameController().getGameBoard().getCardToBuyFromBoardWithName(cardname);
-	}
-
-	/**
 	 * basic method which buys the given card
 	 * 
 	 * @param card
@@ -314,7 +309,7 @@ public class ArtificialIntelligence {
 	 * it is ended automatically (e.g. if the player has no more buys left)
 	 */
 	private void endTurn() {
-		GameLog.log(MsgType.AI, this.player.getPlayerName() + " ended Turn by itself.");
+//		GameLog.log(MsgType.AI, this.player.getPlayerName() + " ended Turn by itself.");
 		sendPacket(new PacketEndTurn());
 	}
 
@@ -393,6 +388,7 @@ public class ArtificialIntelligence {
 	 */
 	private void executeMove() {
 		GameLog.log(MsgType.AI, this.player.getPlayerName() + " is executing a turn");
+		this.player.getDeck().debugCardHandPrint();
 		try {
 			sleep();
 			this.playActionCards();
@@ -432,7 +428,7 @@ public class ArtificialIntelligence {
 				this.buy(cardToBuy);
 				GameLog.log(MsgType.AI_DEBUG, "buy inner: " + buy);
 			} catch (NoSuchElementException nsee) {
-				GameLog.log(MsgType.AI_DEBUG, "buy NSEE <<<<< " + buy);
+				GameLog.log(MsgType.AI_DEBUG, "buy NoSuchElementException <<<<< " + buy);
 				if (this.player.getCoins() >= 6 && this.player.getGameServer().getGameController().getGameBoard().getTableForTreasureCards().containsKey(CardName.GOLD.getName()))
 					this.buy(this.getCardFromBoard(CardName.GOLD.getName()));
 				else if (this.player.getCoins() >= 3 && this.player.getGameServer().getGameController().getGameBoard().getTableForTreasureCards().containsKey(CardName.SILVER.getName()))
@@ -460,7 +456,7 @@ public class ArtificialIntelligence {
 				treasureValue -= purchaseCost;
 			}
 			result.add(purchase);
-			GameLog.log(MsgType.AI_DEBUG, "getting PurchaseSequence... Strategy: " + this.strategy + ", treasureValue: " + getTreasureCardsValue(getCardHand()) + ", purchase: " + purchase
+			GameLog.log(MsgType.AI_DEBUG, "getting PurchaseSequence: Strategy: " + this.strategy + ", treasureValue: " + getTreasureCardsValue(getCardHand()) + ", purchase: " + purchase
 					+ ", new treasureValue: " + treasureValue);
 		}
 		return result;
@@ -481,7 +477,8 @@ public class ArtificialIntelligence {
 		int attacksOriginally = attacks * GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue();
 		int attacksBoughtByEnemies = attacksOriginally - board.getSizeOfPilesOnBoardWithType(CardType.ATTACK) - this.player.getDeck().containsAmountOf(CardType.ATTACK);
 		int attacksAvailableRatio = attacksBoughtByEnemies / attacksOriginally;
-
+		GameLog.log(MsgType.AI_DEBUG, "attacksAvailableRatio: " + attacksAvailableRatio);
+		
 		/**
 		 * first two turns are handled seperately, because they are a crucial
 		 * part in the game and the rules on how to behave in this turns differ
@@ -845,6 +842,91 @@ public class ArtificialIntelligence {
 	}
 
 	/**
+	 * 
+	 * @return whether there is a card on the players cardhand which adds at
+	 *         least 1 action to the players remaining actions when played (e.g.
+	 *         Market)
+	 */
+	private boolean addActionCardAvailable() {
+		return !this.player.getDeck().cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()).isEmpty();
+	}
+
+	/**
+	 * 
+	 * @return whether the AI is the only non-human player
+	 */
+	private boolean iAmTheOnlyAI() {
+		return this.player.getGameServer().getGameController().getArtificialPlayers().size() == 1;
+	}
+
+	/**
+	 * @param turn
+	 *            the turn to ask for
+	 * @return whether it is the first turn of the AI
+	 */
+	private boolean turn(int turn) {
+		return this.player.getTurnNr() == turn;
+	}
+
+	/**
+	 * 
+	 * @return whether the strategy DRAW_ADD_ACTION will can be successful
+	 */
+	private boolean drawAddActionStrategyPossible() {
+		int count = 0;
+		GameBoard board = player.getGameServer().getGameController().getGameBoard();
+		ArrayList<String> cardNames = CollectionsUtil.getArrayList(new String[] { CardName.COUNCILROOM.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(), CardName.MARKET.getName(),
+				CardName.VILLAGE.getName(), CardName.WITCH.getName() });
+	
+		for (String name : cardNames) {
+			if (board.getTableForActionCards().containsKey(name)) {
+				count++;
+			}
+		}
+		return count >= 3;
+	}
+
+	/**
+	 * 
+	 * @param name
+	 *            the name of the card
+	 * @param type
+	 *            the type of the card
+	 * @return whether the
+	 */
+	private boolean cardAvailableOnBoard(String name, CardType type) {
+		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
+		switch (type) {
+		case ACTION:
+			return board.getTableForActionCards().containsKey(name) && !board.getTableForActionCards().get(name).isEmpty();
+		case TREASURE:
+			return board.getTableForTreasureCards().containsKey(name) && !board.getTableForTreasureCards().get(name).isEmpty();
+		case VICTORY:
+			return board.getTableForVictoryCards().containsKey(name) && !board.getTableForVictoryCards().get(name).isEmpty();
+		default:
+			return false;
+		}
+	}
+
+	/**
+	 * 
+	 * @return whether there is only one estate left in the deck
+	 */
+	private boolean lastEstateInDeck() {
+		return this.player.getDeck().containsAmountOf(CardName.ESTATE.getName()) == 1;
+	}
+
+	/**
+	 * 
+	 * @param card
+	 *            the card to check if its worth to trash
+	 * @return whether the card is worth to trash or not
+	 */
+	private boolean isTrashWorthy(Card card) {
+		return (card.getName().equals(CardName.ESTATE.getName()) && !lastEstateInDeck()) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName());
+	}
+
+	/**
 	 * check different game(board) states and set the endPhase if necessary
 	 */
 	private void checkEndPhase() {
@@ -856,6 +938,66 @@ public class ArtificialIntelligence {
 	}
 
 	/**
+	 * 
+	 * @param cards
+	 *            the cardList to check
+	 * @return the value of all treasure cards in the given list
+	 */
+	private int getTreasureCardsValue(LinkedList<Card> cards) {
+		return this.player.getDeck().getTreasureValueOfList(cards);
+	}
+
+	/**
+	 * 
+	 * @return the amount of Provinces left on the board
+	 */
+	private int getPileSize(String cardname) {
+		return this.player.getGameServer().getGameController().getGameBoard().getTableForVictoryCards().get(cardname).size();
+	}
+
+	/**
+	 * 
+	 * @param cardname
+	 *            the cardname to get
+	 * @return the card object with name cardname
+	 */
+	private Card getCardFromBoard(String cardname) throws NoSuchElementException {
+		return this.player.getGameServer().getGameController().getGameBoard().getCardToBuyFromBoardWithName(cardname);
+	}
+
+	/**
+	 * 
+	 * @param cardType
+	 *            the CardType to search for
+	 * @return all cards from the players deck with type cardType
+	 */
+	private LinkedList<Card> getAllCardsFromType(CardType cardType) {
+		return this.player.getDeck().getCardsByTypeFrom(cardType, getCardHand());
+	}
+
+	/**
+	 * 
+	 * @return the cardHand of the player
+	 */
+	private LinkedList<Card> getCardHand() {
+		return this.player.getDeck().getCardHand();
+	}
+
+	/**
+	 * 
+	 * @return list of cards on hand that can be trashed by the chapel
+	 */
+	private LinkedList<Card> getTrashWorthyCards() {
+		LinkedList<Card> resultList = new LinkedList<Card>();
+		for (Card c : getCardHand()) {
+			if (this.isTrashWorthy(c)) {
+				resultList.add(c);
+			}
+		}
+		return resultList;
+	}
+
+	/**
 	 * the least valuable card of the players cardhand will be discarded
 	 * 
 	 * method had to cover several cases which are very important for the AI if
@@ -864,11 +1006,11 @@ public class ArtificialIntelligence {
 	 * it can win). That's why there are so many if/elses
 	 */
 	private void discardLeastValuableCard() {
-		GameLog.log(MsgType.GAME_INFO, "In AI.discardLeastValuableCard(), see next line for debugCardHandPrint()");
+		GameLog.log(MsgType.GAME_INFO, "discardLeastValuableCard(), cardPrint:");
 		this.player.getDeck().debugCardHandPrint();
-
+	
 		int treasureValue = getTreasureCardsValue(getCardHand());
-
+	
 		/** BIG_MONEY(_..) discarding */
 		if (!this.strategy.equals(Strategy.DRAW_ADD_ACTION)) {
 			/** if card hand doesn't contain a Chapel */
@@ -960,119 +1102,6 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * 
-	 * @param cards
-	 *            the cardList to check
-	 * @return the value of all treasure cards in the given list
-	 */
-	private int getTreasureCardsValue(LinkedList<Card> cards) {
-		return this.player.getDeck().getTreasureValueOfList(cards);
-	}
-
-	/**
-	 * 
-	 * @param cardType
-	 *            the CardType to search for
-	 * @return all cards from the players deck with type cardType
-	 */
-	private LinkedList<Card> getAllCardsFromType(CardType cardType) {
-		return this.player.getDeck().getCardsByTypeFrom(cardType, getCardHand());
-	}
-
-	/**
-	 * 
-	 * @return whether there is a card on the players cardhand which adds at
-	 *         least 1 action to the players remaining actions when played (e.g.
-	 *         Market)
-	 */
-	private boolean addActionCardAvailable() {
-		return !this.player.getDeck().cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()).isEmpty();
-	}
-
-	/**
-	 * 
-	 * @return the amount of Provinces left on the board
-	 */
-	private int getPileSize(String cardname) {
-		return this.player.getGameServer().getGameController().getGameBoard().getTableForVictoryCards().get(cardname).size();
-	}
-
-	/**
-	 * 
-	 * @return whether the AI is the only non-human player
-	 */
-	private boolean iAmTheOnlyAI() {
-		return this.player.getGameServer().getGameController().getArtificialPlayers().size() == 1;
-	}
-
-	/**
-	 * @param turn
-	 *            the turn to ask for
-	 * @return whether it is the first turn of the AI
-	 */
-	private boolean turn(int turn) {
-		return this.player.getTurnNr() == turn;
-	}
-
-	/**
-	 * 
-	 * @return the cardHand of the player
-	 */
-	private LinkedList<Card> getCardHand() {
-		return this.player.getDeck().getCardHand();
-	}
-
-	/**
-	 * 
-	 * @return whether the strategy DRAW_ADD_ACTION will can be successful
-	 */
-	private boolean drawAddActionStrategyPossible() {
-		int count = 0;
-		GameBoard board = player.getGameServer().getGameController().getGameBoard();
-		ArrayList<String> cardNames = CollectionsUtil.getArrayList(new String[] { CardName.COUNCILROOM.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(), CardName.MARKET.getName(),
-				CardName.VILLAGE.getName(), CardName.WITCH.getName() });
-
-		for (String name : cardNames) {
-			if (board.getTableForActionCards().containsKey(name)) {
-				count++;
-			}
-		}
-		return count >= 3;
-	}
-
-	/**
-	 * 
-	 * @return whether there is only one estate left in the deck
-	 */
-	private boolean lastEstateInDeck() {
-		return this.player.getDeck().containsAmountOf(CardName.ESTATE.getName()) == 1;
-	}
-
-	/**
-	 * 
-	 * @param card
-	 *            the card to check if its worth to trash
-	 * @return whether the card is worth to trash or not
-	 */
-	private boolean isTrashWorthy(Card card) {
-		return (card.getName().equals(CardName.ESTATE.getName()) && !lastEstateInDeck()) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName());
-	}
-
-	/**
-	 * 
-	 * @return list of cards on hand that can be trashed by the chapel
-	 */
-	private LinkedList<Card> getTrashWorthyCards() {
-		LinkedList<Card> resultList = new LinkedList<Card>();
-		for (Card c : getCardHand()) {
-			if (this.isTrashWorthy(c)) {
-				resultList.add(c);
-			}
-		}
-		return resultList;
-	}
-
-	/**
 	 * trashes the cards according to game situation and strategy
 	 * 
 	 * @param trashCards
@@ -1149,28 +1178,6 @@ public class ArtificialIntelligence {
 		trash(trashCards);
 		if (this.player.isTrashMode()) {
 			endTrash();
-		}
-	}
-
-	/**
-	 * 
-	 * @param name
-	 *            the name of the card
-	 * @param type
-	 *            the type of the card
-	 * @return whether the
-	 */
-	private boolean cardAvailableOnBoard(String name, CardType type) {
-		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
-		switch (type) {
-		case ACTION:
-			return board.getTableForActionCards().containsKey(name) && !board.getTableForActionCards().get(name).isEmpty();
-		case TREASURE:
-			return board.getTableForTreasureCards().containsKey(name) && !board.getTableForTreasureCards().get(name).isEmpty();
-		case VICTORY:
-			return board.getTableForVictoryCards().containsKey(name) && !board.getTableForVictoryCards().get(name).isEmpty();
-		default:
-			return false;
 		}
 	}
 }

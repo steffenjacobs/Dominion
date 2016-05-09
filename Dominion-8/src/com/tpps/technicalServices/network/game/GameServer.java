@@ -77,10 +77,10 @@ public class GameServer extends Server {
 	@Override
 	public void sendMessage(int port, Packet packet) throws IOException {
 		if (super.clients.containsKey(port)) {
-			GameLog.log(MsgType.INFO, "send message.");
+//			GameLog.log(MsgType.INFO, "send message.");
 			super.sendMessage(port, packet);
 		} else {
-			GameLog.log(MsgType.INFO, "send no message");
+//			GameLog.log(MsgType.INFO, "send no message");
 		}
 	}
 

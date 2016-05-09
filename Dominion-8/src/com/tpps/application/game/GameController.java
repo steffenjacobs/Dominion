@@ -308,7 +308,7 @@ public class GameController {
 	 * @throws WrongSyntaxException
 	 */
 	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException, NoSuchElementException, WrongSyntaxException {
-		GameLog.log(MsgType.INFO, "checkBoardCardExists");
+//		GameLog.log(MsgType.INFO, "checkBoardCardExists");
 		LinkedList<Card> cards = this.gameBoard.findCardListFromBoard(cardID);
 		Card card = cards.getLast();
 		Player player = this.getActivePlayer();
@@ -824,7 +824,7 @@ public class GameController {
 				break;
 			}
 		}
-		GameLog.log(MsgType.GAME_INFO, "alle reaktionskarten gespielt? :" + allReactionCardsPlayedFlag);
+//		GameLog.log(MsgType.GAME_INFO, "alle reaktionskarten gespielt? :" + allReactionCardsPlayedFlag);
 		return allReactionCardsPlayedFlag;
 	}
 
@@ -1073,7 +1073,7 @@ public class GameController {
 	 * sets the action phase
 	 */
 	public void setActionPhase() {
-		GameLog.log(MsgType.GAME_INFO, "ActionPhaseWasSet");
+//		GameLog.log(MsgType.GAME_INFO, "ActionPhaseWasSet");
 		this.gamePhase = "actionPhase";
 	}
 
@@ -1081,7 +1081,7 @@ public class GameController {
 	 * sets the buy phase
 	 */
 	public synchronized void setBuyPhase() {
-		GameLog.log(MsgType.GAME_INFO, "BuyPhaseWasSet");
+//		GameLog.log(MsgType.GAME_INFO, "BuyPhaseWasSet");
 		this.gamePhase = "buyPhase";
 	}
 
