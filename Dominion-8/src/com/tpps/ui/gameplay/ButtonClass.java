@@ -21,11 +21,9 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketTakeCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeDrewCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeThiefCards;
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.GFButton;
-import com.tpps.ui.settings.SettingsController;
 
 /**
  * GameGui Button Class
