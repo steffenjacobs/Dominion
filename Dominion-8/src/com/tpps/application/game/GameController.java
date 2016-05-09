@@ -1185,7 +1185,7 @@ public class GameController {
 			GameLog.log(MsgType.MM, "send message to matchmakingserver");
 			client.sendMessage(new PacketGameEnd(getPlayerNames(), getWinningPlayer().getPlayerName(), this.gameServer.getPort()));
 			// this.gameServer.newGame();
-		} catch (IOException e) {
+		} catch (IOException | NullPointerException e) {
 			e.printStackTrace();
 		}
 	}

@@ -39,7 +39,7 @@ public class GameBoardTest {
 	public void test() {
 
 		LinkedList<Card> startSet = this.gameBoard.getStartSet();
-		assertThat(startSet.size(), is(8));
+		assertThat(startSet.size(), is(10));
 		for (int i = 0; i < GameConstant.INIT_COPPER_CARDS_ON_HAND.getValue(); i++) {
 			assertTrue(startSet.get(i).getTypes().contains(CardType.TREASURE));
 			assertTrue(startSet.get(i).getCost() == GameConstant.COPPER_COST.getValue());
@@ -92,8 +92,8 @@ public class GameBoardTest {
 		this.gameBoard.getTableForActionCards().put(CardName.MOAT.getName(), new LinkedList<Card>());
 		assertTrue(this.gameBoard.checkPilesEmpty(GameConstant.EMPTY_PILES.getValue()));
 
-		this.gameBoard.getTableForTreasureCards().remove(CardName.COPPER.getName());
-		this.gameBoard.getTableForActionCards().put(CardName.COPPER.getName(), new LinkedList<Card>());
+//		this.gameBoard.getTableForTreasureCards().remove(CardName.COPPER.getName());
+//		this.gameBoard.getTableForActionCards().put(CardName.COPPER.getName(), new LinkedList<Card>());
 		assertTrue(this.gameBoard.checkPilesEmpty(GameConstant.EMPTY_PILES.getValue()));
 
 	}
