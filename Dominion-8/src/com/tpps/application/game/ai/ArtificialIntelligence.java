@@ -231,10 +231,10 @@ public class ArtificialIntelligence {
 		debugCardPrint("cardHand", getCardHand());
 
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
-//			if (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
-//				GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
-//				continue;
-//			}
+			if (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
+				GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+				continue;
+			}
 			sleep();
 			debugCardPrint("cardHand", getCardHand());
 			/**
