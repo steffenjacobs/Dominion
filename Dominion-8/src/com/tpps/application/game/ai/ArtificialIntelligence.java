@@ -272,7 +272,7 @@ public class ArtificialIntelligence {
 	 * send a PacketEndActionPhase() to end the actionPhase and start the
 	 * buyPhase
 	 */
-	private void setBuyPhase() {
+	public void setBuyPhase() {
 		sendPacket(new PacketEndActionPhase());
 	}
 
@@ -1179,5 +1179,161 @@ public class ArtificialIntelligence {
 		if (this.player.isTrashMode()) {
 			endTrash();
 		}
+	}
+
+	/* getters & setters, needed for JUnit */
+	
+	/**
+	 * @return the packetHandler
+	 */
+	public ServerGamePacketHandler getPacketHandler() {
+		return packetHandler;
+	}
+
+	/**
+	 * @param packetHandler the packetHandler to set
+	 */
+	public void setPacketHandler(ServerGamePacketHandler packetHandler) {
+		this.packetHandler = packetHandler;
+	}
+
+	/**
+	 * @return the player
+	 */
+	public Player getPlayer() {
+		return player;
+	}
+
+	/**
+	 * @param player the player to set
+	 */
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	/**
+	 * @return the strategy
+	 */
+	public Strategy getStrategy() {
+		return strategy;
+	}
+
+	/**
+	 * @param strategy the strategy to set
+	 */
+	public void setStrategy(Strategy strategy) {
+		this.strategy = strategy;
+	}
+
+	/**
+	 * @return the buySequence
+	 */
+	public List<String> getBuySequence() {
+		return buySequence;
+	}
+
+	/**
+	 * @param buySequence the buySequence to set
+	 */
+	public void setBuySequence(List<String> buySequence) {
+		this.buySequence = buySequence;
+	}
+
+	/**
+	 * @return the blacklist
+	 */
+	public List<String> getBlacklist() {
+		return blacklist;
+	}
+
+	/**
+	 * @param blacklist the blacklist to set
+	 */
+	public void setBlacklist(List<String> blacklist) {
+		this.blacklist = blacklist;
+	}
+
+	/**
+	 * @return the endPhase
+	 */
+	public boolean isEndPhase() {
+		return endPhase;
+	}
+
+	/**
+	 * @param endPhase the endPhase to set
+	 */
+	public void setEndPhase(boolean endPhase) {
+		this.endPhase = endPhase;
+	}
+
+	/**
+	 * @return the fiveTwoStart
+	 */
+	public boolean isFiveTwoStart() {
+		return fiveTwoStart;
+	}
+
+	/**
+	 * @param fiveTwoStart the fiveTwoStart to set
+	 */
+	public void setFiveTwoStart(boolean fiveTwoStart) {
+		this.fiveTwoStart = fiveTwoStart;
+	}
+
+	/**
+	 * @return the attacks
+	 */
+	public int getAttacks() {
+		return attacks;
+	}
+
+	/**
+	 * @param attacks the attacks to set
+	 */
+	public void setAttacks(int attacks) {
+		this.attacks = attacks;
+	}
+
+	/**
+	 * @return the discardModeCount
+	 */
+	public int getDiscardModeCount() {
+		return discardModeCount;
+	}
+
+	/**
+	 * @param discardModeCount the discardModeCount to set
+	 */
+	public void setDiscardModeCount(int discardModeCount) {
+		this.discardModeCount = discardModeCount;
+	}
+
+	/**
+	 * @return the timeDelay
+	 */
+	public static int getTimeDelay() {
+		return TIME_DELAY;
+	}
+
+	/**
+	 * @return the moatRatio1
+	 */
+	public static double getMoatRatio1() {
+		return MOAT_RATIO_1;
+	}
+
+	/**
+	 * @return the moatRatio2
+	 */
+	public static double getMoatRatio2() {
+		return MOAT_RATIO_2;
+	}
+
+	/**
+	 * @return the noBuy
+	 */
+	public static String getNoBuy() {
+		return NO_BUY;
 	}
 }
