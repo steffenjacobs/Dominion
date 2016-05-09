@@ -52,9 +52,6 @@ public class ArtificialIntelligence {
 
 	private Strategy strategy;
 
-	@SuppressWarnings("unused")
-	private List<Card> boardActionCards;
-
 	private List<String> buySequence;
 	private List<String> blacklist;
 
@@ -75,9 +72,6 @@ public class ArtificialIntelligence {
 	 * how many times the AI has been in discardMode
 	 */
 	private int discardModeCount;
-
-	@SuppressWarnings("unused")
-	private static final int ENDPHASE_TURN = 22;
 
 	private static final int TIME_DELAY = 600;
 
@@ -252,9 +246,17 @@ public class ArtificialIntelligence {
 						}
 					case DRAW_ADD_ACTION:
 					default:
-						LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
-						play(remainingActionCards.get(new Random().nextInt(remainingActionCards.size())));
-						continue;
+						if (this.player.getDeck().cardHandContains(CardName.WITCH.getName())) {
+							play(this.player.getDeck().getCardByNameFromHand(CardName.WITCH.getName()));
+							continue;
+						} else if (this.player.getDeck().cardHandContains(CardName.MILITIA.getName())) {
+							play(this.player.getDeck().getCardByNameFromHand(CardName.MILITIA.getName()));
+							continue;
+						} else {
+							LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
+							play(remainingActionCards.get(new Random().nextInt(remainingActionCards.size())));
+							continue;
+						}
 					}
 				}
 			}
@@ -629,7 +631,7 @@ public class ArtificialIntelligence {
 				/**
 				 * if no chapel has been bought yet, buy the first and only one
 				 */
-				else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName()))
+				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName()))
 					return CardName.CHAPEL.getName();
 				/**
 				 * if other players buy ATTACKs, the player has already a CURSE
@@ -668,7 +670,7 @@ public class ArtificialIntelligence {
 				/**
 				 * if no chapel has been bought yet, buy the first and only one
 				 */
-				else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName()))
+				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName()))
 					return CardName.CHAPEL.getName();
 				/**
 				 * classic SILVER with 3 coins
@@ -685,7 +687,10 @@ public class ArtificialIntelligence {
 					return CardName.MOAT.getName();
 			case BIG_MONEY_CHAPEL_WITCH: // No Moats and 2 Witches
 				/**
-				 * if there are <2 WITCHES
+				 * if there are <2 WITCHES, buy one OR <= 5 PROVINCEs on the
+				 * board, start to buy DUCHYs because they won't have a huge
+				 * impact on the deck anymore in this phase of the game. If both
+				 * conditions are false, buy SILVER
 				 */
 				if (treasureValue >= 5) {
 					if (this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2 && board.getTableForActionCards().containsKey(CardName.WITCH.getName()))
@@ -694,11 +699,24 @@ public class ArtificialIntelligence {
 						return CardName.DUCHY.getName();
 					else
 						return CardName.SILVER.getName();
-				} else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName()))
+				}
+				/**
+				 * if no chapel has been bought yet, buy the first and only one
+				 */
+				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName()))
 					return CardName.CHAPEL.getName();
+				/**
+				 * classic SILVER with 3 coins
+				 */
 				else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
 			case BIG_MONEY_WITCH: // 1 Moat and 2 Witches
+				/**
+				 * if there are <2 WITCHES, buy one OR <= 5 PROVINCEs on the
+				 * board, start to buy DUCHYs because they won't have a huge
+				 * impact on the deck anymore in this phase of the game. If both
+				 * conditions are false, buy SILVER
+				 */
 				if (treasureValue >= 5) {
 					if (this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2 && board.getTableForActionCards().containsKey(CardName.WITCH.getName()))
 						return CardName.WITCH.getName();
@@ -706,19 +724,42 @@ public class ArtificialIntelligence {
 						return CardName.DUCHY.getName();
 					else
 						return CardName.SILVER.getName();
-				} else if (treasureValue >= 3)
+				}
+				/**
+				 * classic SILVER with 3 coins
+				 */
+				else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
+				/**
+				 * if other players buy ATTACKs, the player has already a CURSE
+				 * in deck or was already more than 3 times in discard mode, the
+				 * first MOAT will be bought
+				 */
 				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
 						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
 			case DRAW_ADD_ACTION: // 3 Moats Max.
+				/**
+				 * with 5 coins, buy an action card (random) which has either
+				 * +ACTIONs, +DRAW_CARDs or both.
+				 */
 				if (treasureValue >= 5) {
 					LinkedList<String> addAndDrawList = CollectionsUtil.join(board.getActionCardsWithActionWhichCost(CardAction.ADD_ACTION_TO_PLAYER, 5),
 							board.getActionCardsWithActionWhichCost(CardAction.DRAW_CARD, 5));
 					return addAndDrawList.get(new Random().nextInt(addAndDrawList.size()));
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+				}
+				/**
+				 * if other players buy ATTACKs, the player has already a CURSE
+				 * in deck or was already more than 3 times in discard mode, the
+				 * first MOAT will be bought
+				 */
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
 						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
+				/**
+				 * try to play FESTIVAL, LABORATORY, COUNCILROOM etc.. and in
+				 * the end a MILITIA. that's why this is bought here.
+				 */
 				else if (treasureValue >= 4 && !this.player.getDeck().contains(CardName.MILITIA.getName()) && board.getTableForActionCards().containsKey(CardName.MILITIA.getName())
 						&& this.player.getTurnNr() >= 7)
 					// punish potential Councilroom with Militia
@@ -1119,7 +1160,6 @@ public class ArtificialIntelligence {
 	 *            the type of the card
 	 * @return whether the
 	 */
-	@SuppressWarnings("unused")
 	private boolean cardAvailableOnBoard(String name, CardType type) {
 		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
 		switch (type) {
@@ -1132,97 +1172,5 @@ public class ArtificialIntelligence {
 		default:
 			return false;
 		}
-	}
-
-	/* ---------- getters & setters ---------- */
-
-	/**
-	 * @return the packetHandler
-	 */
-	public ServerGamePacketHandler getPacketHandler() {
-		return packetHandler;
-	}
-
-	/**
-	 * @param packetHandler
-	 *            the packetHandler to set
-	 */
-	public void setPacketHandler(ServerGamePacketHandler packetHandler) {
-		this.packetHandler = packetHandler;
-	}
-
-	/**
-	 * @return the player
-	 */
-	public Player getPlayer() {
-		return player;
-	}
-
-	/**
-	 * @param player
-	 *            the player to set
-	 */
-	public void setPlayer(Player player) {
-		this.player = player;
-	}
-
-	/**
-	 * @return the strategy
-	 */
-	public Strategy getStrategy() {
-		return strategy;
-	}
-
-	/**
-	 * @param strategy
-	 *            the strategy to set
-	 */
-	public void setStrategy(Strategy strategy) {
-		this.strategy = strategy;
-	}
-
-	/**
-	 * @return the buySequence
-	 */
-	public List<String> getBuySequence() {
-		return buySequence;
-	}
-
-	/**
-	 * @param buySequence
-	 *            the buySequence to set
-	 */
-	public void setBuySequence(List<String> buySequence) {
-		this.buySequence = buySequence;
-	}
-
-	/**
-	 * @return the blacklist
-	 */
-	public List<String> getBlacklist() {
-		return blacklist;
-	}
-
-	/**
-	 * @param blacklist
-	 *            the blacklist to set
-	 */
-	public void setBlacklist(List<String> blacklist) {
-		this.blacklist = blacklist;
-	}
-
-	/**
-	 * @return the endPhase
-	 */
-	public boolean isEndPhase() {
-		return endPhase;
-	}
-
-	/**
-	 * @param endPhase
-	 *            the endPhase to set
-	 */
-	public void setEndPhase(boolean endPhase) {
-		this.endPhase = endPhase;
 	}
 }
