@@ -61,7 +61,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	private JComboBox selectCardType;
 	private ImageIcon loading;
 	private int width, gridwidth;
-	private int height, gridheight;
+	private int height, gridheight, schleifenZaehler = 0;
 	private Font smallfont,radioFont,priceFont,customFont;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc, gbc2;
@@ -75,8 +75,9 @@ public class CardEditor extends JFrame implements ActionListener {
 	private final int baseSize = 128;
 	private BufferedImage back;
 	private BackButton backButton;
-    private boolean showPic;
+    private boolean showPic,pruefer;
     private Dimension d;
+    
 
 
 
@@ -106,7 +107,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		// all.setLayout(new GridLayout(4, 1, 0, 30));
 		// all.setLayout(new GridBagLayout());
 
-		this.setSize(width / 5, height / 2);
+		this.setSize(width / 5, (int) (height / 1.8));
 		this.setLocationRelativeTo(null);
 		this.setTitle("Card Editor !");
 		this.setResizable(false);
@@ -176,7 +177,6 @@ public class CardEditor extends JFrame implements ActionListener {
 		testImage = new JLabel("");
 	}
 
-	// TODO : ButtonIcons
 	// TODO : Upload Image verschiebt Radiobuttons
 	// TODO : Radiobutton ActionListener - als Checkbox machen?
 	// TODO : Documentation und Formatierung
@@ -269,7 +269,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 0.27;
-		gbc.weighty = 1;
+		gbc.weighty = 0.5;
 		gbc.anchor = GridBagConstraints.SOUTH;
 		uImage.setLayout(new BorderLayout());
 		uploadImage = new JButton("Upload Image") {
@@ -290,6 +290,14 @@ public class CardEditor extends JFrame implements ActionListener {
 	uploadImage.setFont(customFont.deriveFont(15f));
 	uploadImage.setPreferredSize(d);
 		testImage = new JLabel("");
+		testImage.setSize(baseSize, baseSize);
+		try {
+			testImage.setIcon(new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("resources/img/cardEditor/placeHolder.png"))));
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		uploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				uploadImageActionPerformed(e);
@@ -508,6 +516,11 @@ public class CardEditor extends JFrame implements ActionListener {
 		revealCard.setOpaque(false);
 		isTreasure.setOpaque(false);
 		isVictory.setOpaque(false);
+		pruefer = trashCard.isSelected();
+		if (pruefer = true) {
+			schleifenZaehler = schleifenZaehler + 1;
+			System.out.println("You have selected " + Integer.toString(schleifenZaehler) + " of three possible actions");
+		}
 		radio.add(addAction);
 		radio.add(addMoney);
 		radio.add(addPurchase);

@@ -162,7 +162,7 @@ public class GameBoard {
 			if (cardList.size() > 0) {
 				cardIds.add(cardList.getLast().getId());
 			} else {
-				GameLog.log(MsgType.INFO, "nil added");
+//				GameLog.log(MsgType.INFO, "nil added");
 				cardIds.add(string + "#");
 			}
 		}
