@@ -468,13 +468,13 @@ public class ArtificialIntelligence {
 	 * @throws InterruptedException
 	 */
 	private void checkAndBuy(String buy) throws InterruptedException {
-		GameLog.log(MsgType.AI_DEBUG, "buy outer: " + buy);
+//		GameLog.log(MsgType.AI_DEBUG, "buy outer: " + buy);
 		if (!buy.equals(ArtificialIntelligence.NO_BUY) && (!blacklist.contains(buy) || endPhase)) {
 			sleep();
 			try {
 				Card cardToBuy = this.getCardFromBoard(buy);
 				this.buy(cardToBuy);
-				GameLog.log(MsgType.AI_DEBUG, "buy inner: " + buy);
+//				GameLog.log(MsgType.AI_DEBUG, "buy inner: " + buy);
 			} catch (NoSuchElementException nsee) {
 				GameLog.log(MsgType.AI_DEBUG, "buy NoSuchElementException <<<<< " + buy);
 				if (this.player.getCoins() >= 6 && !buy.equals(CardName.GOLD.getName()) && cardAvailableOnBoard(CardName.GOLD.getName()))
@@ -1057,7 +1057,7 @@ public class ArtificialIntelligence {
 	 * it can win). That's why there are so many if/elses
 	 */
 	private void discardLeastValuableCard() {
-		GameLog.log(MsgType.GAME_INFO, "discardLeastValuableCard(), cardPrint:");
+		GameLog.log(MsgType.GAME_INFO, "discardLeastValuableCard()");
 		debugCardPrint("cardHand: ", getCardHand());
 	
 		int treasureValue = getTreasureCardsValue(getCardHand());
