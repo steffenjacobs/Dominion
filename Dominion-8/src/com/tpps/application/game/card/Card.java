@@ -16,14 +16,14 @@ import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
+import com.tpps.ui.animations.AnimationDirection;
 import com.tpps.ui.animations.MoveAnimation;
 import com.tpps.ui.components.GameBackground;
-import com.tpps.ui.gameplay.GameWindow;
 
 /**
  * Card class represents a GameObject on the board as a card.
  * 
- * @author Nicolas Wipfler
+ * @author Nicolas Wipfler, Steffen Jacobs
  */
 public class Card extends GameObject {
 
@@ -41,9 +41,12 @@ public class Card extends GameObject {
 	private BufferedImage sourceImage;
 	private GameBackground gameBackground;
 	private String handTrigger = "";
-	private boolean animationEnabled = false;
-	private boolean animationEnabledVictory = false;
-	private boolean animationEnabledCoins = false;
+
+	private MoveAnimation moveAnimation = null;
+
+	private AnimationDirection animDir = AnimationDirection.STATIC;
+
+	private boolean mouseOver = false;
 
 	private static int classID = 0;
 
@@ -305,6 +308,7 @@ public class Card extends GameObject {
 	 */
 	@Override
 	public void onMouseEnter() {
+		mouseOver = true;
 		if (!(handTrigger.equals("handCards") || name.equals(CardName.COPPER.getName())
 				|| name.equals(CardName.SILVER.getName()) || name.equals(CardName.GOLD.getName())
 				|| name.equals(CardName.CURSE.getName()) || name.equals(CardName.PROVINCE.getName())
@@ -315,72 +319,13 @@ public class Card extends GameObject {
 			parent.addComponent(gameBackground);
 		}
 		if (handTrigger.equals("Victory")) {
-			for (int i = 0; i < GameWindow.getInstance().getVictoryButtons().size(); i++) {
-				parent.removeComponent(GameWindow.getInstance().getVictoryButtons().get(i));
-
-			}
-			// try {
-			// Thread.sleep(50);
-			// } catch (InterruptedException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			if (!(animationEnabledVictory)) {
-				MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
-					@Override
-					public Void call() throws Exception {
-						animationEnabledVictory = true;
-						return null;
-					}
-				}, relativeX + 0.05, relativeY);
-				anim.play();
-			}
-			gameBackground = new GameBackground(0.12, 0.01, 0.05 + 0.08, 0.15 + 0.24, 110,
-					GraphicsUtil.rotate(sourceImage, 270), parent);
-			parent.addComponent(gameBackground);
+			checkAndPlayRightAnimation();
 		}
 		if (handTrigger.equals("Coins")) {
-			for (int i = 0; i < GameWindow.getInstance().getCoinButtons().size(); i++) {
-				parent.removeComponent(GameWindow.getInstance().getCoinButtons().get(i));
-			}
-			// try {
-			// Thread.sleep(50);
-			// } catch (InterruptedException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			if (!(animationEnabledCoins)) {
-				MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
-					@Override
-					public Void call() throws Exception {
-						animationEnabledCoins = true;
-						return null;
-					}
-				}, relativeX - 0.05, relativeY);
-				anim.play();
-			}
-			gameBackground = new GameBackground(0.12, 0.01, 0.05 + 0.08, 0.15 + 0.24, 110,
-					GraphicsUtil.rotate(sourceImage, 90), parent);
-			parent.addComponent(gameBackground);
+			checkAndPlayLeftAnimation();
 		}
-
 		if (handTrigger.equals("handCards")) {
-			// try {
-			// Thread.sleep(50);
-			// } catch (InterruptedException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			if (!(animationEnabled)) {
-				MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
-					@Override
-					public Void call() throws Exception {
-						animationEnabled = true;
-						return null;
-					}
-				}, relativeX, relativeY - 0.05);
-				anim.play();
-			}
+			checkAndPlayUpAnimation();
 		}
 	}
 
@@ -389,6 +334,7 @@ public class Card extends GameObject {
 	 */
 
 	public void onMouseExit() {
+		mouseOver = false;
 		if (!(handTrigger.equals("handCards") || name.equals(CardName.COPPER.getName())
 				|| name.equals(CardName.SILVER.getName()) || name.equals(CardName.GOLD.getName())
 				|| name.equals(CardName.CURSE.getName()) || name.equals(CardName.PROVINCE.getName())
@@ -397,66 +343,103 @@ public class Card extends GameObject {
 			parent.removeComponent(gameBackground);
 		}
 		if (handTrigger.equals("Victory")) {
-			for (int i = 0; i < GameWindow.getInstance().getVictoryButtons().size(); i++) {
-				parent.addComponent(GameWindow.getInstance().getVictoryButtons().get(i));
-			}
-			// try {
-			// Thread.sleep(50);
-			// } catch (InterruptedException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			if (animationEnabledVictory) {
-				MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
-					@Override
-					public Void call() throws Exception {
-						animationEnabledVictory = false;
-						return null;
-					}
-				}, relativeX, relativeY);
-				anim.play();
-			}
-			parent.removeComponent(gameBackground);
+			checkAndPlayRightBackAnimation();
 		}
 		if (handTrigger.equals("Coins")) {
-			for (int i = 0; i < GameWindow.getInstance().getCoinButtons().size(); i++) {
-				parent.addComponent(GameWindow.getInstance().getCoinButtons().get(i));
-			}
-			// try {
-			// Thread.sleep(50);
-			// } catch (InterruptedException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			if (animationEnabledCoins) {
-				MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
-					@Override
-					public Void call() throws Exception {
-						animationEnabledCoins = false;
-						return null;
-					}
-				}, relativeX, relativeY);
-				anim.play();
-			}
-			parent.removeComponent(gameBackground);
+			checkAndPlayLeftBackAnimation();
 		}
 		if (handTrigger.equals("handCards")) {
-			// try {
-			// Thread.sleep(50);
-			// } catch (InterruptedException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
-			if (animationEnabled) {
-				MoveAnimation anim = new MoveAnimation(parent, this, 250, new Callable<Void>() {
-					@Override
-					public Void call() throws Exception {
-						animationEnabled = false;
-						return null;
-					}
-				}, relativeX, relativeY);
-				anim.play();
-			}
+			checkAndPlayDownAnimation();
+		}
+	}
+
+	private void checkAndPlayDownAnimation() {
+		if (!mouseOver && animDir == AnimationDirection.STATIC) {
+			animDir = AnimationDirection.DOWN;
+			moveAnimation = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					animDir = AnimationDirection.STATIC;
+					checkAndPlayUpAnimation();
+					return null;
+				}
+			}, relativeX, relativeY);
+			moveAnimation.play();
+		}
+	}
+
+	private void checkAndPlayUpAnimation() {
+		if (mouseOver && animDir == AnimationDirection.STATIC) {
+			animDir = AnimationDirection.UP;
+			moveAnimation = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					animDir = AnimationDirection.STATIC;
+					checkAndPlayDownAnimation();
+					return null;
+				}
+			}, relativeX, relativeY - .05);
+			moveAnimation.play();
+		}
+	}
+
+	private void checkAndPlayLeftAnimation() {
+		if (mouseOver && animDir == AnimationDirection.STATIC) {
+			animDir = AnimationDirection.LEFT;
+			moveAnimation = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					animDir = AnimationDirection.STATIC;
+					checkAndPlayLeftBackAnimation();
+					return null;
+				}
+			}, relativeX - .05, relativeY);
+			moveAnimation.play();
+		}
+	}
+
+	private void checkAndPlayLeftBackAnimation() {
+		if (!mouseOver && animDir == AnimationDirection.STATIC) {
+			animDir = AnimationDirection.RIGHT;
+			moveAnimation = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					animDir = AnimationDirection.STATIC;
+					checkAndPlayLeftAnimation();
+					return null;
+				}
+			}, relativeX, relativeY);
+			moveAnimation.play();
+		}
+	}
+
+	private void checkAndPlayRightAnimation() {
+		if (mouseOver && animDir == AnimationDirection.STATIC) {
+			animDir = AnimationDirection.LEFT;
+			moveAnimation = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					animDir = AnimationDirection.STATIC;
+					checkAndPlayRightBackAnimation();
+					return null;
+				}
+			}, relativeX + 0.05, relativeY);
+			moveAnimation.play();
+		}
+	}
+
+	private void checkAndPlayRightBackAnimation() {
+		if (!mouseOver && animDir == AnimationDirection.STATIC) {
+			animDir = AnimationDirection.RIGHT;
+			moveAnimation = new MoveAnimation(parent, this, 250, new Callable<Void>() {
+				@Override
+				public Void call() throws Exception {
+					animDir = AnimationDirection.STATIC;
+					checkAndPlayRightAnimation();
+					return null;
+				}
+			}, relativeX, relativeY);
+			moveAnimation.play();
 		}
 	}
 

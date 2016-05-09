@@ -142,4 +142,10 @@ public class FadeAnimation extends Animation {
 	protected void onPause() {
 		this.playAnimationThread.suspend();
 	}
+
+	/** is called on stop */
+	@Override
+	protected void onStop() {
+		this.playAnimationThread.interrupt();		
+	}
 }
