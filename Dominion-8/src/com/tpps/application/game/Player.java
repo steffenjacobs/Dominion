@@ -792,24 +792,29 @@ public class Player {
 		 * ()).getActivePlayerColor()));
 		 */
 		GameLog.log(MsgType.DEBUG, "discardMode: " + String.valueOf(this.isDiscardMode()) + ", trashMode: " + String.valueOf(this.isTrashMode()));
-		if (this.isDiscardMode())
-			if (serverCard.getName().equals(CardName.MOAT.getName()))
+		if (this.isDiscardMode()) {
+			if (serverCard.getName().equals(CardName.MOAT.getName())) {
 				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
-			else
+				GameLog.log(MsgType.DEBUG, " >>> - plays MOAT <<<");
+			} else {
 				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - discards " + serverCard.getName(), this.getLogColor()));
-		else if (this.isTrashMode())
+				GameLog.log(MsgType.DEBUG, " >>> - discards <<<");
+			}
+		} else if (this.isTrashMode()) {
 			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - trashes " + serverCard.getName(), this.getLogColor()));
-		else {
+			GameLog.log(MsgType.DEBUG, " >>> - trashes <<<");
+		} else {
 			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
-			GameLog.log(MsgType.DEBUG, ">>> HIER REIN <<<" );
+			GameLog.log(MsgType.DEBUG, " >>> - plays <<<");
 		}
-//		GameLog.log(MsgType.INFO, "The Playername is: " + this.getPlayerName());
+		// GameLog.log(MsgType.INFO, "The Playername is: " +
+		// this.getPlayerName());
 
 		if (!reactionCard && (this.discardMode || this.trashMode)) {
 			discardOrTrash(serverCard);
 			return serverCard;
 		}
-		
+
 		if (this.playTwice) {
 			if (!this.secondTimePlayed) {
 				GameLog.log(MsgType.INFO, "playTwice: " + this.playTwice);
@@ -830,7 +835,7 @@ public class Player {
 		if (!this.reactionMode && serverCard.getTypes().contains(CardType.ACTION)) {
 			this.actions--;
 		}
-//		GameLog.log(MsgType.INFO, "DoAction");
+		// GameLog.log(MsgType.INFO, "DoAction");
 		while (cardIterator.hasNext()) {
 			CardAction act = cardIterator.next();
 			String value = serverCard.getActions().get(act);
