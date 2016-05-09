@@ -400,7 +400,7 @@ public class GameController {
 			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
 				sendEnableFlag = true;
 
-				if (player.getDeck().cardHandContainsReactionCard()) {
+				if (player.getDeck().cardHandContains(CardType.REACTION)) {
 					player.setReactionCard(true);
 					player.setReactionMode();
 
@@ -460,7 +460,7 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			player.setThief();
 			if (!player.getPlayerName().equals(this.activePlayer.getPlayerName())) {
-				if (player.getDeck().cardHandContainsReactionCard()) {
+				if (player.getDeck().cardHandContains(CardType.REACTION)) {
 					reactivePlayer = true;
 					player.setThiefFalse();
 					try {
@@ -518,7 +518,7 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			player.setSpy();
 			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
-				if (player.getDeck().cardHandContainsReactionCard()) {
+				if (player.getDeck().cardHandContains(CardType.REACTION)) {
 					player.setSpyFalse();
 					try {
 						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable("wait on reaction"));
@@ -565,7 +565,7 @@ public class GameController {
 			player.setWitch();
 			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
 
-				if (player.getDeck().cardHandContainsReactionCard()) {
+				if (player.getDeck().cardHandContains(CardType.REACTION)) {
 					player.setWitchFalse();
 					try {
 						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable("wait on reaction"));
@@ -613,7 +613,7 @@ public class GameController {
 			player.setBureaucrat();
 			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
 
-				if (player.getDeck().cardHandContainsReactionCard()) {
+				if (player.getDeck().cardHandContains(CardType.REACTION)) {
 					player.setBureaucratFalse();
 					if (sendPacketDisable) {
 						sendPacketDisable = false;

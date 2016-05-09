@@ -534,20 +534,6 @@ public class Deck {
 
 	/**
 	 * 
-	 * @return true if the cardHand contains a reaction card, false otherwise.
-	 */
-	public boolean cardHandContainsReactionCard() {
-		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
-			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(CardType.REACTION)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * 
 	 * @param type
 	 *            the cardType to search for
 	 * @return true if the cardHand contains a card of the CardType type. false
@@ -582,13 +568,30 @@ public class Deck {
 
 	/**
 	 * 
-	 * @return the amount of action cards in cardHand
+	 * @param type the type to search for in cardHand
+	 * @return the amount of cards with type in cardHand
 	 */
-	public int cardHandActionCardAmount() {
+	public int cardHandAmount(CardType type) {
 		int counter = 0;
 		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getTypes().contains(CardType.ACTION)) {
+			if (card.getTypes().contains(type)) {
+				counter++;
+			}
+		}
+		return counter;
+	}
+	
+	/**
+	 * 
+	 * @param name the name to search for in cardHand
+	 * @return the amount of cards with type in cardHand
+	 */
+	public int cardHandAmount(String name) {
+		int counter = 0;
+		for (Iterator<Card> iterator = cardHand.iterator(); iterator.hasNext();) {
+			Card card = (Card) iterator.next();
+			if (card.getName().equals(name)) {
 				counter++;
 			}
 		}
