@@ -64,6 +64,9 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 		this.addActionListener(this);
 	}
 
+	/**
+	 * @see javax.swing.JComponent#paint(java.awt.Graphics)
+	 */
 	@Override
     public void paint(Graphics g) {
         Graphics2D h = (Graphics2D) g;
@@ -74,28 +77,46 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
         super.paint(h);
     }
 
+	/**
+	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
 	}
 
+	/**
+	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseEntered(MouseEvent e) {
 		this.switchimage = hoverimage;
 	}
 
+	/**
+	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseExited(MouseEvent e) {
 		this.switchimage = brain;
 	}
 
+	/**
+	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mousePressed(MouseEvent e) {
 	}
 
+	/**
+	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
+	 */
 	@Override
 	public void mouseReleased(MouseEvent e) {
 	}
 
+	/**
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//add ki
