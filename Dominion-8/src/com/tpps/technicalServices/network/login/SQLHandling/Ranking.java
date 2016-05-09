@@ -10,6 +10,7 @@ import com.tpps.technicalServices.network.matchmaking.server.StatisticUnit;
 
 import sun.misc.BASE64Encoder;
 
+/** @author Steffen Jacobs, Johannes Huhn */
 public final class Ranking {
 
 	private static final ArrayList<String> special;
@@ -21,11 +22,18 @@ public final class Ranking {
 		special.add("c3RlZmFu");
 		special.add("Z2VyYmln");
 	}
-	
-	private Ranking(){
+
+	private Ranking() {
 		throw new AssertionError();
 	}
 
+	/**
+	 * updates the player-rank in the database
+	 * 
+	 * @param playerName
+	 *            the name of the player to update the rank of
+	 * @throws SQLException
+	 */
 	public static void udpatePlayerRank(String playerName) throws SQLException {
 		ResultSet res = SQLStatisticsHandler.getStatisticsForPlayer(playerName);
 		if (res.next()) {
@@ -47,19 +55,31 @@ public final class Ranking {
 		}
 	}
 
+	/**
+	 * @param playerName
+	 *            the name of the player to check
+	 * @return true if player is special
+	 */
 	private static boolean isSpecial(String playerName) {
 		return special.contains(new String(new BASE64Encoder().encode(playerName.toLowerCase().getBytes())));
 	}
 
+	/**
+	 * @param playerName
+	 *            the name of the player
+	 * @param score
+	 *            the matchmaking-score to calculate the rank-name from
+	 * @return the rank-string from a player
+	 */
 	public static String getRankByScore(String playerName, int score) {
 		if (isSpecial(playerName)) {
 			return "Lama";
 		}
 		if (score < 190)
 			return "Noob";
-		if (score < 250)
+		if (score < 200)
 			return "Mediocre";
-		if (score < 400) {
+		if (score < 250) {
 			return "Global Elite";
 		}
 		return "Blood Diamond";

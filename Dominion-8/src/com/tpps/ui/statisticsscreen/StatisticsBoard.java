@@ -143,6 +143,11 @@ public class StatisticsBoard extends JPanel {
 		}
 	}
 
+	/**
+	 * @return a time-sting hh:mm:ss
+	 * @param milliseconds
+	 *            delta-time
+	 */
 	private String getTimeString(long milliseconds) {
 		long second = (milliseconds / 1000) % 60;
 		long minute = (milliseconds / (1000 * 60)) % 60;
@@ -151,11 +156,23 @@ public class StatisticsBoard extends JPanel {
 		return String.format("%02d:%02d:%02d", hour, minute, second);
 	}
 
+	/**
+	 * sets the statistics-data
+	 * 
+	 * @param statistics
+	 *            the statistics to update
+	 */
 	public void setStatisticsData(String[][] statistics) {
 		this.statistics = statistics;
 		this.setTableData(statistics);
 	}
 
+	/**
+	 * filters the table by input
+	 * 
+	 * @param start
+	 *            the start-sequence to filter
+	 */
 	private void filterTable(String start) {
 		ArrayList<String[]> filtered = new ArrayList<>();
 		for (String[] s : statistics) {
@@ -308,8 +325,9 @@ public class StatisticsBoard extends JPanel {
 			e.printStackTrace();
 		}
 	}
-	
-	public void updateFocus(){
+
+	/** sets the focus to the search-bar */
+	public void updateFocus() {
 		this.jtf.requestFocus();
 	}
 
