@@ -308,7 +308,8 @@ public class Card extends GameObject {
 		if (!(handTrigger.equals("handCards") || name.equals(CardName.COPPER.getName())
 				|| name.equals(CardName.SILVER.getName()) || name.equals(CardName.GOLD.getName())
 				|| name.equals(CardName.CURSE.getName()) || name.equals(CardName.PROVINCE.getName())
-				|| name.equals(CardName.DUCHY.getName()) || name.equals(CardName.ESTATE.getName()))) {
+				|| name.equals(CardName.DUCHY.getName()) || name.equals(CardName.ESTATE.getName())
+				|| name.equals(CardName.GARDENS.getName()))) {
 			gameBackground = new GameBackground(0.12, 0.01, relativeWidth + 0.08, relativeHeight + 0.24, 110,
 					sourceImage, parent);
 			parent.addComponent(gameBackground);
@@ -391,7 +392,8 @@ public class Card extends GameObject {
 		if (!(handTrigger.equals("handCards") || name.equals(CardName.COPPER.getName())
 				|| name.equals(CardName.SILVER.getName()) || name.equals(CardName.GOLD.getName())
 				|| name.equals(CardName.CURSE.getName()) || name.equals(CardName.PROVINCE.getName())
-				|| name.equals(CardName.DUCHY.getName()) || name.equals(CardName.ESTATE.getName()))) {
+				|| name.equals(CardName.DUCHY.getName()) || name.equals(CardName.ESTATE.getName())
+				|| name.equals(CardName.GARDENS.getName()))) {
 			parent.removeComponent(gameBackground);
 		}
 		if (handTrigger.equals("Victory")) {
