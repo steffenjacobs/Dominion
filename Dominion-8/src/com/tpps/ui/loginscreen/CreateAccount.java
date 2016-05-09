@@ -2,22 +2,17 @@ package com.tpps.ui.loginscreen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,8 +22,8 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.FontLoader;
+import com.tpps.technicalServices.util.GraphicsUtil;
 
 /**
  * 
@@ -226,7 +221,7 @@ public class CreateAccount extends JFrame {
 		email.setForeground(textAndLabelColor);
 		email.setOpaque(false);
 		email.setFont(bigfont);
-		
+
 		panels[1].add(description[0]);
 		panels[1].add(email);
 		panels[1].setOpaque(false);

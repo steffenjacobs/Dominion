@@ -268,8 +268,8 @@ public class PlayerSettingsPanel extends JPanel {
 			} else {
 				DominionController.getInstance().receiveChatMessageFromChatServer(
 						"You are not ready to start the match\n" + "         selected cards: "
-								+ PlayerSettingsPanel.this.cardNamesSelected.size() + "\n"
-								+ "         connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers(),
+								+ PlayerSettingsPanel.this.cardNamesSelected.size() + "/10"+ "\n"
+								+ "         connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers() + "/4",
 						"BOT", "", Color.YELLOW);
 			}
 		}

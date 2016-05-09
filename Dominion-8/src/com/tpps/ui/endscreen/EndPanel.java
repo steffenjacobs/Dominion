@@ -1,11 +1,7 @@
 package com.tpps.ui.endscreen;
 
 import java.awt.BorderLayout;
-
 import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
@@ -18,25 +14,15 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
-import com.sun.javafx.tk.Toolkit;
-import com.sun.xml.internal.ws.api.Component;
 import com.tpps.application.game.DominionController;
-import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.FontLoader;
-import com.tpps.ui.GraphicFramework;
-
-import javafx.scene.layout.Border;
-import sun.font.CreatedFontTracker;
+import com.tpps.technicalServices.util.GraphicsUtil;
 
 /**
  * 
@@ -63,9 +49,8 @@ public class EndPanel extends JPanel {
 		this.setVisible(true);
 		fontLoading();
 		loadingImages();
-		
-//		TODO comment out those methods if implemented 
 
+		// TODO comment out those methods if implemented
 
 		playerOnePanel = new JPanel();
 		playerOnePanel.setOpaque(false);
@@ -73,24 +58,24 @@ public class EndPanel extends JPanel {
 		playerTwoPanel.setOpaque(false);
 		playerThreePanel = new JPanel();
 		playerThreePanel.setOpaque(false);
-		playerFourPanel= new JPanel();
+		playerFourPanel = new JPanel();
 		playerFourPanel.setOpaque(false);
-//		this.playerOne("die Schweinepriester", 20);
-//		this.playerTwo("die Steffenverehrer", 19);
-//		this.playerThree("die Möchtegernwifos", 22);
-//		this.playerFour("Wipaeds..", 12);
-		
-//		try {
-//			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//		} catch (ClassNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (InstantiationException e) {
-//			e.printStackTrace();
-//		} catch (IllegalAccessException e) {
-//			e.printStackTrace();
-//		} catch (UnsupportedLookAndFeelException e) {
-//			e.printStackTrace();
-//		}
+		// this.playerOne("die Schweinepriester", 20);
+		// this.playerTwo("die Steffenverehrer", 19);
+		// this.playerThree("die Möchtegernwifos", 22);
+		// this.playerFour("Wipaeds..", 12);
+
+		// try {
+		// UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		// } catch (ClassNotFoundException e) {
+		// e.printStackTrace();
+		// } catch (InstantiationException e) {
+		// e.printStackTrace();
+		// } catch (IllegalAccessException e) {
+		// e.printStackTrace();
+		// } catch (UnsupportedLookAndFeelException e) {
+		// e.printStackTrace();
+		// }
 
 		this.setVisible(true);
 		this.background = new JLabel(new ImageIcon(originalBackground));
@@ -138,7 +123,7 @@ public class EndPanel extends JPanel {
 	}
 
 	public void createPanel3() {
-		returnButton = new JButton("Return"){
+		returnButton = new JButton("Return") {
 
 			private static final long serialVersionUID = 1L;
 
@@ -156,10 +141,10 @@ public class EndPanel extends JPanel {
 		temp = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		temp.setOpaque(false);
-		gbc.ipadx=60;
+		gbc.ipadx = 60;
 		gbc.ipady = 20;
-		temp.add(returnButton,gbc);
-//		background.add(temp, BorderLayout.SOUTH);
+		temp.add(returnButton, gbc);
+		// background.add(temp, BorderLayout.SOUTH);
 		returnButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -172,7 +157,7 @@ public class EndPanel extends JPanel {
 
 	public void playerOne(String playerOne, int points) {
 
-		playerOnePanel = new JPanel(new GridLayout(1, 2)){
+		playerOnePanel = new JPanel(new GridLayout(1, 2)) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -218,7 +203,7 @@ public class EndPanel extends JPanel {
 
 	public void playerThree(String playerThree, int points) {
 
-		playerThreePanel = new JPanel(new GridLayout(1, 2)){
+		playerThreePanel = new JPanel(new GridLayout(1, 2)) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -276,11 +261,11 @@ public class EndPanel extends JPanel {
 		}
 	}
 
-//	public static void main(String[] args) {
-//		JFrame jf = new JFrame();
-//		jf.add(new EndPanel());
-//		jf.setMinimumSize(new Dimension(1280, 720));
-//		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		jf.setVisible(true);
-//	}
+	// public static void main(String[] args) {
+	// JFrame jf = new JFrame();
+	// jf.add(new EndPanel());
+	// jf.setMinimumSize(new Dimension(1280, 720));
+	// jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	// jf.setVisible(true);
+	// }
 }
