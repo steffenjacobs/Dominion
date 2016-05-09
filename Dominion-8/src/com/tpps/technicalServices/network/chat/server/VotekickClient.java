@@ -57,6 +57,7 @@ public class VotekickClient extends PacketHandler{
 	 */
 	public void handleReceivedPacket(int port, Packet packet) {
 		this.gameclient.disconnect();
+		System.out.println("disconnected Votekick client ");
 	}
 
 }
