@@ -50,7 +50,12 @@ public class EndPanel extends JPanel {
 	private JPanel temp;
 	private ArrayList<JPanel> userPanels;
 
-	
+	/**
+	 * initializes object
+	 * 
+	 * @param packetShowEndScreen
+	 *            packet that has player statistics from match
+	 */
 	public EndPanel(PacketShowEndScreen packetShowEndScreen) {
 		this.setLayout(new BorderLayout());
 		this.setOpaque(false);
@@ -65,8 +70,7 @@ public class EndPanel extends JPanel {
 		for (int i = 0; i < packetShowEndScreen.getPlayerAmount(); i++) {
 			userPanels.add(this.createPlayerJPanel(
 					packetShowEndScreen.getNameForPlayer("player" + (i+1)),
-					packetShowEndScreen.getPointsForPlayer("player" + (i+1)),
-					new JPanel()));
+					packetShowEndScreen.getPointsForPlayer("player" + (i+1))));
 			System.out.println( "PLAYER:_" + packetShowEndScreen.getNameForPlayer("player" + (i+1)) + "POINTS: " + packetShowEndScreen.getPointsForPlayer("player" + (i+1)));
 		}
 		addUserPanels();
@@ -76,6 +80,9 @@ public class EndPanel extends JPanel {
 	}
 	
 	@Override
+	/**
+	 * override paint for background
+	 */
 	public void paint(Graphics g) {
 		Graphics2D h = (Graphics2D) g;
 		h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
@@ -84,9 +91,17 @@ public class EndPanel extends JPanel {
 		super.paint(h);
 	}
 	
-	
-	public JPanel createPlayerJPanel(String playerOne, int points, JPanel panel) {
-		panel = new JPanel(new GridLayout(1, 2)) {
+	/**
+	 * inserts a player with matchinfo to GUI
+	 * 
+	 * @param playerOne
+	 *            a String reperesentation of the player
+	 * @param points
+	 *            integer of points that the player reached during the match
+	 * @return a JPanel that contains userinfo from last match
+	 */
+	public JPanel createPlayerJPanel(String playerOne, int points) {		
+		JPanel panel = new JPanel(new GridLayout(1, 2)) {
 
 			private static final long serialVersionUID = 1L;
 
@@ -121,6 +136,9 @@ public class EndPanel extends JPanel {
 		return panel;
 	}
 
+	/**
+	 * loads images
+	 */
 	private void loadingImages() {
 		try {
 			this.originalBackground = ImageIO
@@ -137,6 +155,9 @@ public class EndPanel extends JPanel {
 
 	}
 
+	/**
+	 * creates header
+	 */
 	public void createPanelHeader() {
 		header = new JLabel("Results", SwingConstants.CENTER);
 		header.setForeground(Color.WHITE);
@@ -144,6 +165,9 @@ public class EndPanel extends JPanel {
 		this.add(header, BorderLayout.PAGE_START);
 	}
 
+	/**
+	 * adds all user panels to the gui
+	 */
 	public void addUserPanels() {
 		center = new JPanel(new GridLayout(this.userPanels.size() + 1, 1, 0, 30));
 		center.setOpaque(false);
@@ -154,6 +178,9 @@ public class EndPanel extends JPanel {
 		this.add(center, BorderLayout.CENTER);
 	}
 
+	/**
+	 * creates the return button
+	 */
 	public void createPanelButton() {
 		returnButton = new JButton("Return") {
 
@@ -190,7 +217,9 @@ public class EndPanel extends JPanel {
 		});
 
 	}
-
+	/**
+	 * creates font 
+	 */
 	public void fontLoading() {
 		try {
 			if (customFont == null) {
