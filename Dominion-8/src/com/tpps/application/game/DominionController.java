@@ -160,8 +160,7 @@ public final class DominionController {
 		mainMenuPanel = new MainMenuPanel(this.mainFrame);
 		globalChatPanel = new GlobalChatPanel();
 		statisticsBoardPanel = new StatisticsBoard();
-		playerSettingsPanel = new PlayerSettingsPanel().updateCards();
-		this.endPanel = new EndPanel();
+		playerSettingsPanel = new PlayerSettingsPanel().updateCards();		
 		try {
 			this.originalBackground = ImageIO
 					.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
@@ -200,24 +199,31 @@ public final class DominionController {
 	 */
 	public void finishMatch(PacketShowEndScreen packetShowEndScreen) {
 		this.gameClient.getGameWindow().dispose();
+		System.err.println("gamewindow disposed");
 		this.gameClient = null;
 		this.playerSettingsPanel.initStandardBackground();
-		if (packetShowEndScreen.getPlayerAmount() >= 1){
-			this.endPanel.playerOne(packetShowEndScreen.getNameForPlayer("player1"), packetShowEndScreen.getPointsForPlayer("player1"));
-		}
-		if (packetShowEndScreen.getPlayerAmount() >= 2){
-		this.endPanel.playerTwo(packetShowEndScreen.getNameForPlayer("player2"), packetShowEndScreen.getPointsForPlayer("player2"));
-		}
-		if (packetShowEndScreen.getPlayerAmount() >= 3){
-			this.endPanel.playerThree(packetShowEndScreen.getNameForPlayer("player3"), packetShowEndScreen.getPointsForPlayer("player3"));
-		}
-		if (packetShowEndScreen.getPlayerAmount() == 4) {
-			this.endPanel.playerFour(packetShowEndScreen.getNameForPlayer("player4"), packetShowEndScreen.getPointsForPlayer("player4"));
-		}
-		
+//		System.err.println("init standardbackground");
+//		if (packetShowEndScreen.getPlayerAmount() >= 1){
+//			this.endPanel.playerOne(packetShowEndScreen.getNameForPlayer("player1"), packetShowEndScreen.getPointsForPlayer("player1"));
+//			System.err.println(">= 1");
+//		}
+//		if (packetShowEndScreen.getPlayerAmount() >= 2){
+//			this.endPanel.playerTwo(packetShowEndScreen.getNameForPlayer("player2"), packetShowEndScreen.getPointsForPlayer("player2"));
+//			System.err.println(">= 2");
+//		}
+//		if (packetShowEndScreen.getPlayerAmount() >= 3){
+//			this.endPanel.playerThree(packetShowEndScreen.getNameForPlayer("player3"), packetShowEndScreen.getPointsForPlayer("player3"));
+//			System.err.println(">= 3");
+//		}
+//		if (packetShowEndScreen.getPlayerAmount() == 4) {
+//			this.endPanel.playerFour(packetShowEndScreen.getNameForPlayer("player4"), packetShowEndScreen.getPointsForPlayer("player4"));
+//			System.err.println(">= 4");
+//		}
+		this.endPanel = new EndPanel(packetShowEndScreen);
 		
 		this.mainFrame.setPanel(this.endPanel);
 		this.mainFrame.setVisible(true);
+		System.err.println("now visible");
 	}
 
 	/**
