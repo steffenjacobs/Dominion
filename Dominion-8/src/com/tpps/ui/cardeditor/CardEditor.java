@@ -3,8 +3,6 @@ package com.tpps.ui.cardeditor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -12,7 +10,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -20,7 +17,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
@@ -33,13 +31,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
@@ -67,10 +59,10 @@ public class CardEditor extends JFrame implements ActionListener {
 	private ImageIcon loading;
 	private int width, gridwidth;
 	private int height, gridheight;
-	private Font smallfont,radioFont,priceFont;
+	private Font smallfont, radioFont, priceFont;
 	private GridBagLayout gbl;
-	private GridBagConstraints gbc,gbc2;
-	private JPanel obenLinks,uImage;
+	private GridBagConstraints gbc, gbc2;
+	private JPanel obenLinks, uImage;
 	private int priceint = 2;
 	private JFileChooser fc;
 	private final String newline = "\n";
@@ -80,16 +72,16 @@ public class CardEditor extends JFrame implements ActionListener {
 	private final int baseSize = 128;
 	private BufferedImage back;
 	private BackButton backButton;
-    private boolean showPic;
-	
+	private boolean showPic;
+
 	public CardEditor() {
 		this.setVisible(true);
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		gbc = new GridBagConstraints();
-//		loadImage();
-//		resizeImage();
-		
+		// loadImage();
+		// resizeImage();
+
 		all = new JLabel(loading);
 		// all.setLayout(new GridLayout(4, 1, 0, 30));
 		// all.setLayout(new GridBagLayout());
@@ -102,7 +94,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		smallfont = new Font("Calibri", Font.BOLD, 19);
 		radioFont = new Font("Arial", Font.BOLD, 12);
-		priceFont = new Font("Arial",Font.BOLD,30);
+		priceFont = new Font("Arial", Font.BOLD, 30);
 		try {
 			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
 		} catch (IOException e) {
@@ -112,15 +104,15 @@ public class CardEditor extends JFrame implements ActionListener {
 		c = this.getContentPane();
 		c.setLayout(new GridBagLayout());
 		iniateLayout();
-//		BackgroundPanel bg  = new BackgroundPanel();
-//		bg.setSize(new Dimension(width, height));
-//		c.add(bg);
-//		c.add(all);
+		// BackgroundPanel bg = new BackgroundPanel();
+		// bg.setSize(new Dimension(width, height));
+		// c.add(bg);
+		// c.add(all);
 	}
-	
+
 	private void fullscreenmode() {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-	//	this.setUndecorated(true);
+		// this.setUndecorated(true);
 	}
 
 	private void resizeImage() {
@@ -156,7 +148,6 @@ public class CardEditor extends JFrame implements ActionListener {
 
 	}
 
-
 	private void createLabels() {
 		enterName = new JLabel("Geben Sie den Kartennamen ein");
 		price = new JLabel("");
@@ -164,64 +155,61 @@ public class CardEditor extends JFrame implements ActionListener {
 		testImage = new JLabel("");
 	}
 
+	// TODO : ButtonIcons
+	// TODO : Upload Image verschiebt Radiobuttons
+	// TODO : Radiobutton ActionListener - als Checkbox machen?
+	// TODO : Documentation und Formatierung
+	// TODO : Textfield, Namesabfrage ändern
+	// TODO : Upload in die Cloud
 
-  
-//TODO : ButtonIcons
-//TODO : Upload Image verschiebt Radiobuttons
-//TODO : Radiobutton ActionListener - als Checkbox machen?
-//TODO : Documentation und Formatierung
-//TODO : Textfield, Namesabfrage ändern
-//TODO : Upload in die Cloud
-	
-	
-    private void initComponents() {
+	private void initComponents() {
 		/**
 		 * loads the backgroundimage
-		 */	
-        try {
+		 */
+		try {
 			setContentPane(new JPanel() {
 
-			    private Image img;
-	    
-			    {
-			        img = ImageIO
-							.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
-    
- 
-			        MediaTracker mt = new MediaTracker(this);
-			        mt.addImage(img, 1);
-			        try {
-			            mt.waitForAll();
-			        } catch(InterruptedException e) {
-			            e.printStackTrace();
-			        }
-			    }
- 
-			    /*
-			     * (non-Javadoc)
-			     * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
-			     */
-			    @Override protected void paintComponent(Graphics g) {
-			        g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
-			    }
+				private Image img;
+
+				{
+					img = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+
+					MediaTracker mt = new MediaTracker(this);
+					mt.addImage(img, 1);
+					try {
+						mt.waitForAll();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+				 */
+				@Override
+				protected void paintComponent(Graphics g) {
+					g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+				}
 			});
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		}
-	
+	}
+
 	/**
 	 * creates the GUI
 	 */
-	
+
 	private void iniateLayout() {
-		
+
 		/**
 		 * creates the top panel
-		 */	
-	
-		JPanel obenLinks = new JPanel();       
+		 */
+
+		JPanel obenLinks = new JPanel();
 		obenLinks.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -232,7 +220,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.5;
 		gbc.ipadx = 60;
-		obenLinks.setLayout(new GridLayout(2,2,30,10));
+		obenLinks.setLayout(new GridLayout(2, 2, 30, 10));
 		enterName = new JLabel("Enter Cardname");
 		enterName.setFont(smallfont);
 		enterName.setForeground(Color.WHITE);
@@ -243,17 +231,17 @@ public class CardEditor extends JFrame implements ActionListener {
 		cardType.setFont(smallfont);
 		cardType.setForeground(Color.WHITE);
 		obenLinks.add(cardType);
-		String comboBoxListe[] = {"Action", "Treasure", "Victory", "Point"};
+		String comboBoxListe[] = { "Action", "Treasure", "Victory", "Point" };
 		selectCardType = new JComboBox(comboBoxListe);
 		obenLinks.add(selectCardType);
 		c.add(obenLinks, gbc);
-		
+
 		/**
 		 * creates the Panel for uploading the Image
-		 */	
+		 */
 
-		JPanel uImage = new JPanel();       
-		gbc.gridx = 1;                       
+		JPanel uImage = new JPanel();
+		gbc.gridx = 1;
 		uImage.setOpaque(false);
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
@@ -263,22 +251,22 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.weighty = 1;
 		gbc.anchor = GridBagConstraints.SOUTH;
 		uImage.setLayout(new BorderLayout());
-        uploadImage = new JButton("Upload Image");
-        testImage = new JLabel("");
-        uploadImage.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-               uploadImageActionPerformed(e);
-            }
-        });			
-        uImage.add(testImage, BorderLayout.CENTER);
-        uImage.add(uploadImage,BorderLayout.PAGE_END);
+		uploadImage = new JButton("Upload Image");
+		testImage = new JLabel("");
+		uploadImage.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				uploadImageActionPerformed(e);
+			}
+		});
+		uImage.add(testImage, BorderLayout.CENTER);
+		uImage.add(uploadImage, BorderLayout.PAGE_END);
 		c.add(uImage, gbc);
-		
+
 		/**
 		 * creates the Panel for setting the Price
-		 */	
-		
-		JPanel mitte = new JPanel();           
+		 */
+
+		JPanel mitte = new JPanel();
 
 		mitte.setOpaque(false);
 		gbc.gridx = 0;
@@ -296,20 +284,21 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc2.gridwidth = 1;
 		gbc2.ipady = 60;
 		gbc2.anchor = GridBagConstraints.NORTH;
-		price = new JLabel(Integer.toString(priceint));;
+		price = new JLabel(Integer.toString(priceint));
+		;
 		price.setFont(priceFont);
 		price.setForeground(Color.WHITE);
-		mitte.add(price,gbc2);
-//		gbc.anchor = GridBagConstraints.FIRST_LINE_END;
-//		gbc.fill = GridBagConstraints.HORIZONTAL;
+		mitte.add(price, gbc2);
+		// gbc.anchor = GridBagConstraints.FIRST_LINE_END;
+		// gbc.fill = GridBagConstraints.HORIZONTAL;
 		increasePrice = new JButton("Increase Price");
 		standartPrice = new JButton("Standart Price");
 		decreasePrice = new JButton("Decreace Price");
-		
+
 		/**
 		 * change the price preview when clicking on button
-		 */	
-		
+		 */
+
 		increasePrice.addActionListener((new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -330,33 +319,33 @@ public class CardEditor extends JFrame implements ActionListener {
 
 			public void actionPerformed(ActionEvent e) {
 				if (priceint > 0) {
-				priceint = priceint - 1;
-				price.setText(Integer.toString(priceint));
-				System.out.println("Cost : " + Integer.toString(priceint));
+					priceint = priceint - 1;
+					price.setText(Integer.toString(priceint));
+					System.out.println("Cost : " + Integer.toString(priceint));
 				} else {
 					System.out.println("The cost can't be lower than 0");
 				}
 			}
 		}));
-		mitte.add(price,gbc2);	
+		mitte.add(price, gbc2);
 		gbc2.gridx = 0;
 		gbc2.gridy = 1;
 		gbc2.anchor = GridBagConstraints.BELOW_BASELINE;
 		gbc2.ipady = 0;
-		mitte.add(increasePrice,gbc2);
+		mitte.add(increasePrice, gbc2);
 		gbc2.gridx = 1;
 		gbc2.gridy = 1;
-		mitte.add(standartPrice,gbc2);
+		mitte.add(standartPrice, gbc2);
 		gbc2.gridx = 2;
 		gbc2.gridy = 1;
 		mitte.add(decreasePrice, gbc2);
-		c.add(mitte,gbc);
-		
+		c.add(mitte, gbc);
+
 		/**
 		 * creates the Panel for setting the Cardaction
-		 */	
-		
-		JPanel radio = new JPanel();            //Panel für die RadioButtons
+		 */
+
+		JPanel radio = new JPanel(); // Panel für die RadioButtons
 		radio.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 3;
@@ -366,13 +355,12 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.weighty = 1;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.anchor = GridBagConstraints.CENTER;
-		
+
 		/**
 		 * creates the radiobuttons
-		 */	
-		
-		
-		actionSelect = new ButtonGroup();		
+		 */
+
+		actionSelect = new ButtonGroup();
 		addAction = new JRadioButton("Add Action");
 		addAction.setFont(radioFont);
 		addAction.setForeground(Color.WHITE);
@@ -382,10 +370,10 @@ public class CardEditor extends JFrame implements ActionListener {
 		addPurchase = new JRadioButton("Add Purchase");
 		addPurchase.setFont(radioFont);
 		addPurchase.setForeground(Color.WHITE);
-		drawCard= new JRadioButton("Draw Card");
+		drawCard = new JRadioButton("Draw Card");
 		drawCard.setFont(radioFont);
 		drawCard.setForeground(Color.WHITE);
-		drawCardUntil= new JRadioButton("Draw Card Until");
+		drawCardUntil = new JRadioButton("Draw Card Until");
 		drawCardUntil.setFont(radioFont);
 		drawCardUntil.setForeground(Color.WHITE);
 		putBack = new JRadioButton("Put Back");
@@ -394,10 +382,10 @@ public class CardEditor extends JFrame implements ActionListener {
 		gainCard = new JRadioButton("Gain Card");
 		gainCard.setFont(radioFont);
 		gainCard.setForeground(Color.WHITE);
-		discardCard= new JRadioButton("Discard Card");
+		discardCard = new JRadioButton("Discard Card");
 		discardCard.setFont(radioFont);
 		discardCard.setForeground(Color.WHITE);
-		trashCard= new JRadioButton("Trash Card");
+		trashCard = new JRadioButton("Trash Card");
 		trashCard.setFont(radioFont);
 		trashCard.setForeground(Color.WHITE);
 		revealCard = new JRadioButton("Reveal Card");
@@ -406,14 +394,14 @@ public class CardEditor extends JFrame implements ActionListener {
 		isTreasure = new JRadioButton("Is Treasure");
 		isTreasure.setFont(radioFont);
 		isTreasure.setForeground(Color.WHITE);
-		isVictory= new JRadioButton("Is Victory");
+		isVictory = new JRadioButton("Is Victory");
 		isVictory.setFont(radioFont);
 		isVictory.setForeground(Color.WHITE);
 		actionSelect.add(addAction);
 		actionSelect.add(addMoney);
 		actionSelect.add(addPurchase);
 		actionSelect.add(drawCard);
-		actionSelect.add(drawCardUntil); 
+		actionSelect.add(drawCardUntil);
 		actionSelect.add(putBack);
 		actionSelect.add(gainCard);
 		actionSelect.add(discardCard);
@@ -445,14 +433,13 @@ public class CardEditor extends JFrame implements ActionListener {
 		radio.add(revealCard);
 		radio.add(isTreasure);
 		radio.add(isVictory);
-		c.add(radio,gbc);
-		
+		c.add(radio, gbc);
+
 		/**
 		 * creates the Panel for creating the card
-		 */	
-		
+		 */
 
-		JPanel untenLinks = new JPanel();		 
+		JPanel untenLinks = new JPanel();
 		untenLinks.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 4;
@@ -464,7 +451,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		createCard = new JButton("Create Card");
 		untenLinks.add(createCard);
 		c.add(untenLinks, gbc);
-		
+
 		/**
 		 * creates the Panel for getting back into the main menu
 		 */
@@ -479,22 +466,19 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.31;
 		cancel = new JButton("Cancel");
-/*		ImageIcon back;  //TODO Vorlage erstellen für Buttons
-		try {
-			
-			back = new ImageIcon (ImageIO.read(ClassLoader.getSystemResource("resources/img/cardEditor/Vorlage.jpg")));
-			Dimension d = new Dimension(back.getIconWidth(), back.getIconHeight());
-			cancel.setOpaque(false);
-			cancel.setContentAreaFilled(false);
-			cancel.setBorderPainted(false);
-			cancel.setPreferredSize(d);
-			cancel.setIcon(back);
-		
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-*/		
+		/*
+		 * ImageIcon back; //TODO Vorlage erstellen für Buttons try {
+		 * 
+		 * back = new ImageIcon (ImageIO.read(ClassLoader.getSystemResource(
+		 * "resources/img/cardEditor/Vorlage.jpg"))); Dimension d = new
+		 * Dimension(back.getIconWidth(), back.getIconHeight());
+		 * cancel.setOpaque(false); cancel.setContentAreaFilled(false);
+		 * cancel.setBorderPainted(false); cancel.setPreferredSize(d);
+		 * cancel.setIcon(back);
+		 * 
+		 * } catch (IOException e1) { // TODO Auto-generated catch block
+		 * e1.printStackTrace(); }
+		 */
 		cancel.addActionListener((new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
@@ -504,81 +488,71 @@ public class CardEditor extends JFrame implements ActionListener {
 		}));
 		untenRechts.add(cancel);
 		c.add(untenRechts, gbc);
-		}
-	
-	
-	
+	}
 
 	/**
 	 * resizing the uploaded image
 	 */
-	
-    public BufferedImage rescale(BufferedImage originalImage)
-    {
-        BufferedImage resizedImage = new BufferedImage(baseSize, baseSize, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = resizedImage.createGraphics();
-        g.drawImage(originalImage, 0, 0, baseSize, baseSize, null);
-        g.dispose();
-        return resizedImage;
-    }
-    
+
+	public BufferedImage rescale(BufferedImage originalImage) {
+		BufferedImage resizedImage = new BufferedImage(baseSize, baseSize, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = resizedImage.createGraphics();
+		g.drawImage(originalImage, 0, 0, baseSize, baseSize, null);
+		g.dispose();
+		return resizedImage;
+	}
+
 	/**
 	 * adds the uploaded image to the layout
 	 */
-	
-    public void setTarget(File reference)
-    {
-        try {
-            targetFile = reference;
-            targetImg = rescale(ImageIO.read(reference));
-        } catch (IOException ex) {
-            Logger.getLogger(CardEditor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        testImage.setIcon(new ImageIcon(targetImg));
-//        System.out.println("wird abgerufen");
-        setVisible(true);
-    }
-    
+
+	public void setTarget(File reference) {
+		try {
+			targetFile = reference;
+			targetImg = rescale(ImageIO.read(reference));
+		} catch (IOException ex) {
+			Logger.getLogger(CardEditor.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		testImage.setIcon(new ImageIcon(targetImg));
+		// System.out.println("wird abgerufen");
+		setVisible(true);
+	}
+
 	/**
 	 * uploads any jpeg image that the user chooses from his computer
 	 */
-    
-    
-    private void uploadImageActionPerformed(java.awt.event.ActionEvent evt) {
-//    	System.out.println("wird abgerufen");
-    	JFileChooser fc = new JFileChooser(basePath);
-        fc.setFileFilter(new JPEGImageFileFilter());
-        int res = fc.showOpenDialog(null);
-        // We have an image!
-        try {
-            if (res == JFileChooser.APPROVE_OPTION) {
-                File file = fc.getSelectedFile();
-                setTarget(file);
-//                System.out.println("wird abgerufen");
-            } // Oops!
-            else {
-                JOptionPane.showMessageDialog(null,
-                        "You must select one image to be the reference.", "Aborting...",
-                        JOptionPane.WARNING_MESSAGE);
-             
-            }
-        } catch (Exception iOException) {
-        	
-        }
 
-    }
-    
+	private void uploadImageActionPerformed(java.awt.event.ActionEvent evt) {
+		// System.out.println("wird abgerufen");
+		JFileChooser fc = new JFileChooser(basePath);
+		fc.setFileFilter(new JPEGImageFileFilter());
+		int res = fc.showOpenDialog(null);
+		// We have an image!
+		try {
+			if (res == JFileChooser.APPROVE_OPTION) {
+				File file = fc.getSelectedFile();
+				setTarget(file);
+				// System.out.println("wird abgerufen");
+			} // Oops!
+			else {
+				JOptionPane.showMessageDialog(null, "You must select one image to be the reference.", "Aborting...",
+						JOptionPane.WARNING_MESSAGE);
 
-    
+			}
+		} catch (Exception iOException) {
 
-		public static void main(String[] args) {
+		}
+
+	}
+
+	public static void main(String[] args) {
 		new CardEditor().setVisible(true);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
