@@ -68,12 +68,12 @@ public class CreateAccountListener implements MouseListener {
 		// }
 
 		if (CharMatcher.WHITESPACE.matchesAnyOf(ca.getUsername().getText())) {
-			JOptionPane.showMessageDialog(null, "Username not allowed");
+			JOptionPane.showMessageDialog(null, "Username has Whitespaces");
 			return;
 		}
 
 		if (!(ca.getUsername().getText().matches("^[_a-zA-Z0-9]+$"))) {
-			JOptionPane.showMessageDialog(null, "Username not allowed");
+			JOptionPane.showMessageDialog(null, "Username doesn't match pattern");
 			return;
 		}
 
@@ -126,12 +126,12 @@ public class CreateAccountListener implements MouseListener {
 		// }
 
 		if (CharMatcher.WHITESPACE.matchesAnyOf(ca.getUsername().getText())) {
-			JOptionPane.showMessageDialog(null, "Username not allowed");
+			JOptionPane.showMessageDialog(null, "Your Username consists of Whitespaces");
 			return;
 		}
 
 		if (!(ca.getUsername().getText().matches("^[_a-zA-Z0-9]+$"))) {
-			JOptionPane.showMessageDialog(null, "Username not allowed");
+			JOptionPane.showMessageDialog(null, "Username does't match the pattern");
 			return;
 		}
 
