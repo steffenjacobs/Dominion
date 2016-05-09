@@ -37,6 +37,7 @@ import com.tpps.ui.endscreen.EndPanel;
 import com.tpps.ui.lobbyscreen.GlobalChatPanel;
 import com.tpps.ui.lobbyscreen.PlayerSettingsPanel;
 import com.tpps.ui.loginscreen.LoginGUIController;
+import com.tpps.ui.settings.SettingsController;
 import com.tpps.ui.statisticsscreen.StatisticsBoard;
 
 /**
@@ -363,7 +364,8 @@ public final class DominionController {
 
 		this.loadPanels();
 		this.initClients();
-		
+		SettingsController.load();
+
 		if (!isOffline()) {
 			storageController.checkStandardCards(true);
 		}

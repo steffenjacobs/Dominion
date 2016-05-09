@@ -581,11 +581,11 @@ public class GameController {
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-
 				} else {
 					try {
 						player.getDeck().getDiscardPile().add(this.gameBoard.getTableForVictoryCards().get(CardName.CURSE.getName()).removeLast());
-					} catch (NoSuchElementException e) {
+						this.gameServer.broadcastMessage(new PacketBroadcastLog("", player.getPlayerName(), " - gains " + CardName.CURSE.getName(), player.getLogColor()));
+					} catch (NoSuchElementException | IOException e) {
 						GameLog.log(MsgType.ERROR, "Not enough curses.\n");
 					}
 					player.setWitchFalse();
@@ -1335,5 +1335,18 @@ public class GameController {
 		} while (aiPorts.contains(ran));
 		aiPorts.add(ran);
 		return ran;
+	}
+	
+	/**
+	 * @return whether there is still a player in reactionMode
+	 */
+	public boolean playerStillInReactionMode() {
+		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
+			Player player = (Player) iterator.next();
+			if (player.isReactionMode()) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

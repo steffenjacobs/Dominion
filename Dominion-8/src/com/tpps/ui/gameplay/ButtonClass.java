@@ -21,7 +21,6 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketTakeCards;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeDrewCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketTakeThiefCards;
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.GameObject;
 import com.tpps.ui.GraphicFramework;
 import com.tpps.ui.components.GFButton;
@@ -112,18 +111,18 @@ public class ButtonClass extends GFButton {
 	 */
 
 	public void onMouseClick() {
-		if (parameter.equals("play")) {
-			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
-			MyAudioPlayer.handleGameMusic(false);
-			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getMuteButton());
-			return;
-		}
-		if (parameter.equals("mute")) {
-			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
-			MyAudioPlayer.handleGameMusic(true);
-			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getPlayButton());
-			return;
-		}
+//		if (parameter.equals("play")) {
+//			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
+//			SettingsController.changeVolumeIngame(50);
+//			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getMuteButton());
+//			return;
+//		}
+//		if (parameter.equals("mute")) {
+//			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
+//			SettingsController.changeVolumeIngame(0);
+//			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getPlayButton());
+//			return;
+//		}
 		if (parameter.equals("NumberButton")) {
 			return;
 		}
