@@ -55,6 +55,15 @@ public class LoginGUIController {
 		this.logingui.dispose();
 		createaccount = new CreateAccount(this, logingui.getLocation());
 	}
+	
+	/**
+	 * this method rejoins the LoginGui
+	 */
+	
+	public void backtoLogin(){
+		this.createaccount.dispose();
+		loginclient = new LoginClient(new LoginGUIController());
+	}
 
 	/**
 	 * cerates an account
