@@ -10,6 +10,7 @@ import javax.swing.JButton;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.ImageLoader;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 
 /**
  * This class represents the button which is used to go back to the main menu
@@ -65,6 +66,7 @@ public class BackButton extends JButton implements ActionListener {
 	 * @author jhuhn
 	 */
 	public void actionPerformed(ActionEvent arg0) {
+		MyAudioPlayer.doClick();
 		if (isLobby) {
 			DominionController.getInstance().abortSearching();
 			DominionController.getInstance().joinMainMenu();

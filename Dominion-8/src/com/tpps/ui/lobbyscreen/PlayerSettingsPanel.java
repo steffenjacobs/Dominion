@@ -47,6 +47,7 @@ import com.tpps.technicalServices.util.CollectionsUtil;
 import com.tpps.technicalServices.util.FontLoader;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.ImageLoader;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 
 /**
  * This class creates a JPanel with all gui components, that are shown on the
@@ -252,6 +253,8 @@ public class PlayerSettingsPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (enabledFlag) {
+				MyAudioPlayer.doClick();
+				
 				this.setEnabled(false);
 				this.enabledFlag = false;
 				String[] selCards = new String[cardNamesSelected.size()];
@@ -412,6 +415,7 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			MyAudioPlayer.doClick();
 			if (selected) {
 				selected = false;
 				cardNamesSelected.remove(this.card.getName());
@@ -576,6 +580,7 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
+			MyAudioPlayer.doClick();
 			if (e.getSource() == labelImages[0]) {
 				PlayerSettingsPanel.this.changeSelectedPicture(0);
 			} else if (e.getSource() == labelImages[1]) {

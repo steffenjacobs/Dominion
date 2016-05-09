@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.ImageLoader;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 
 /**
  * this class represents the settings-button - Singleton
@@ -45,6 +46,7 @@ public final class SettingsButton extends JPanel {
 		this.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				MyAudioPlayer.doClick();
 				SettingsController.showSettingsWindow(SettingsController.getCenter());
 			}
 
