@@ -1196,6 +1196,8 @@ public class ArtificialIntelligence {
 				GameLog.log(MsgType.ERROR, "the method must not get here (unless it has a card hand like 5x gold");
 				playDiscard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.TREASURE));
 				return;
+			} else {
+				playDiscard(getCardHand().get(new Random().nextInt(getCardHand().size())));
 			}
 		}
 	}
