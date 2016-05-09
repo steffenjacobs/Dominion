@@ -187,12 +187,12 @@ public class ArtificialIntelligence {
 	private void playActionCards() throws InterruptedException {
 		
 		GameLog.log(MsgType.GAME_INFO, "playActionCards(), cardPrint:");
-		this.player.getDeck().debugCardHandPrint();
+		debugCardPrint("cardHand", getCardHand());
 		
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
 			sleep();
 			GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife?, cardHand:");
-			this.player.getDeck().debugCardHandPrint();
+			debugCardPrint("cardHand", getCardHand());
 			/**
 			 * in BIG_MONEY(_..) strategies, the execution of an action card
 			 * will not give more buying power if there is already a treasure
@@ -214,12 +214,15 @@ public class ArtificialIntelligence {
 			/**
 			 * otherwise, if there is only 1 ACTION card on hand, play it
 			 */
-			if (this.player.getDeck().containsAmountOf(CardType.ACTION) == 1) {
-				GameLog.log(MsgType.ERROR, "immer wieder hier");
+			GameLog.log(MsgType.DEBUG, "cardHandAmount ACTION: " + this.player.getDeck().cardHandAmount(CardType.ACTION));
+			if (this.player.getDeck().cardHandAmount(CardType.ACTION) == 1) {
+				GameLog.log(MsgType.ERROR, "1 action");
 				if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
+					GameLog.log(MsgType.ERROR, "and it is played");
 					playChapel();
 					continue;
 				} else {
+					GameLog.log(MsgType.ERROR, "and it is played");
 					play(this.player.getDeck().getCardByTypeFromHand(CardType.ACTION));
 					continue;
 				}
@@ -228,7 +231,7 @@ public class ArtificialIntelligence {
 			 * if there are more than one ACTION cards on hand, decide depending
 			 * on the strategy and on the trashWorthyCards, what to play
 			 */
-			if (this.player.getDeck().containsAmountOf(CardType.ACTION) > 2) {
+			if (this.player.getDeck().cardHandAmount(CardType.ACTION) >= 2) {
 				/**
 				 * if there are 3 trashWorthy cards or more (but the amount of
 				 * coppers in hand is less than 3) play Chapel
@@ -274,7 +277,7 @@ public class ArtificialIntelligence {
 	 * send a PacketEndActionPhase() to end the actionPhase and start the
 	 * buyPhase
 	 */
-	public void setBuyPhase() {
+	private void setBuyPhase() {
 		sendPacket(new PacketEndActionPhase());
 	}
 
@@ -390,7 +393,7 @@ public class ArtificialIntelligence {
 	 */
 	private void executeMove() {
 		GameLog.log(MsgType.AI, this.player.getPlayerName() + " is executing a turn");
-		this.player.getDeck().debugCardHandPrint();
+		debugCardPrint("cardHand", getCardHand());
 		try {
 			sleep();
 			this.playActionCards();
@@ -479,7 +482,7 @@ public class ArtificialIntelligence {
 		double attacksOriginally = attacks * GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue();
 		double attacksBoughtByEnemies = attacksOriginally - board.getSizeOfPilesOnBoardWithType(CardType.ATTACK) - this.player.getDeck().containsAmountOf(CardType.ATTACK);
 		double attacksAvailableRatio = (attacksOriginally - attacksBoughtByEnemies) / attacksOriginally;
-		GameLog.log(MsgType.AI_DEBUG, "attacksAvailableRatio: " + attacksAvailableRatio);
+		GameLog.log(MsgType.AI_DEBUG, "attacksOriginally: " + attacksOriginally + ", attacksEnemies: " + attacksBoughtByEnemies + ", attacksAvailableRatio: " + attacksAvailableRatio);
 		
 		/**
 		 * first two turns are handled seperately, because they are a crucial
@@ -1009,7 +1012,7 @@ public class ArtificialIntelligence {
 	 */
 	private void discardLeastValuableCard() {
 		GameLog.log(MsgType.GAME_INFO, "discardLeastValuableCard(), cardPrint:");
-		this.player.getDeck().debugCardHandPrint();
+		debugCardPrint("cardHand: ", getCardHand());
 	
 		int treasureValue = getTreasureCardsValue(getCardHand());
 	
@@ -1111,6 +1114,7 @@ public class ArtificialIntelligence {
 	 */
 	private void trash(LinkedList<Card> trashCards) {
 		int treasureCardsValue = getTreasureCardsValue(getCardHand());
+		debugCardPrint("trashCards", trashCards);
 		if (trashCards.isEmpty())
 			return;
 		for (Card c : trashCards) {
@@ -1183,6 +1187,19 @@ public class ArtificialIntelligence {
 		}
 	}
 
+	/**
+	 * prints only the cardHand in a short format for debugging purposes
+	 * @param cards the cardlist to print
+	 */
+	private void debugCardPrint(String prefix, LinkedList<Card> cards) {
+		StringBuffer logString = new StringBuffer();
+		logString.append("Cardnames, " + prefix + ": -");
+		for (Card card : cards) {
+			logString.append( card.getName() + " - ");
+		}
+		GameLog.log(MsgType.AI_DEBUG, logString.toString());
+	}
+	
 	/* getters & setters, needed for JUnit */
 	
 	/**
