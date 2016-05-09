@@ -124,6 +124,10 @@ public class ButtonClass extends GFButton {
 			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getPlayButton());
 			return;
 		}
+		if (parameter.equals("NumberButton")) {
+			return;
+		}
+
 		if (DominionController.getInstance().isTurnFlag()) {
 			if (parameter.equals("exit")) {
 				System.exit(0);
