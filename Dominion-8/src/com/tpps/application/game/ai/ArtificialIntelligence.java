@@ -474,9 +474,9 @@ public class ArtificialIntelligence {
 
 		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
 
-		int attacksOriginally = attacks * GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue();
-		int attacksBoughtByEnemies = attacksOriginally - board.getSizeOfPilesOnBoardWithType(CardType.ATTACK) - this.player.getDeck().containsAmountOf(CardType.ATTACK);
-		int attacksAvailableRatio = attacksBoughtByEnemies / attacksOriginally;
+		double attacksOriginally = attacks * GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue();
+		double attacksBoughtByEnemies = attacksOriginally - board.getSizeOfPilesOnBoardWithType(CardType.ATTACK) - this.player.getDeck().containsAmountOf(CardType.ATTACK);
+		double attacksAvailableRatio = attacksBoughtByEnemies / attacksOriginally;
 		GameLog.log(MsgType.AI_DEBUG, "attacksAvailableRatio: " + attacksAvailableRatio);
 		
 		/**
