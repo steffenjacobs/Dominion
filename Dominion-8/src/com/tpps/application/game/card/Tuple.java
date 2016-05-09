@@ -1,11 +1,14 @@
 package com.tpps.application.game.card;
 
+import java.io.Serializable;
+
 /**
  *
  * @param <A>
  */
-public class Tuple<A> {
+public class Tuple<A> implements Serializable{
 
+	private static final long serialVersionUID = -804258763406909062L;
 	private A a;
 	private int val;
 
