@@ -5,7 +5,6 @@ package com.tpps.ui.settings;
  * 
  * @author Steffen Jacobs
  */
-@SuppressWarnings("javadoc")
 public enum VolumeSliderType {
 	MENU, GAME, FX;
 }

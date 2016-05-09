@@ -36,7 +36,6 @@ public final class SettingsController {
 	 */
 	static boolean fullScreen;
 
-	@SuppressWarnings("javadoc")
 	static int volumeMenu, volumeIngame, volumeFX;
 	
 	private static final Dimension STANDARD_WINDOW_SIZE = new Dimension(1280, 720);
