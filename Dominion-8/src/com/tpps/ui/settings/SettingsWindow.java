@@ -29,6 +29,7 @@ import javax.swing.event.ChangeListener;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.ImageLoader;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 
 /**
  * This class is a visual representation of the values from the
@@ -91,6 +92,7 @@ public final class SettingsWindow {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				MyAudioPlayer.doClick();
 				frame.dispose();
 			}
 

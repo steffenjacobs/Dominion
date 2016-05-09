@@ -171,20 +171,23 @@ public class MainMenuPanel extends JPanel {
 		 */
 		@Override
 		public void mousePressed(MouseEvent e) {
-			MyAudioPlayer.doClick();
 			if (buttons[0].isOn(e.getX(), e.getY()) && buttons[0].isEnabled()) {
+				MyAudioPlayer.doClick();
 				DominionController.getInstance().joinSingleplayer();
 
 			}
 			if (buttons[1].isOn(e.getX(), e.getY()) && buttons[1].isEnabled()) {
+				MyAudioPlayer.doClick();
 				DominionController.getInstance().joinLobbyGui(false);
 				DominionController.getInstance().sendPacketToGetStatistics();
 				DominionController.getInstance().findMatch();
 			}
 			if (buttons[2].isOn(e.getX(), e.getY()) && buttons[2].isEnabled()) {
+				MyAudioPlayer.doClick();
 				DominionController.getInstance().joinCardEditor();
 			}
 			if (buttons[3].isOn(e.getX(), e.getY()) && buttons[3].isEnabled()) {
+				MyAudioPlayer.doClick();
 				DominionController.getInstance().joinStatisticsGui();
 				DominionController.getInstance().sendPacketToGetStatistics();
 			}

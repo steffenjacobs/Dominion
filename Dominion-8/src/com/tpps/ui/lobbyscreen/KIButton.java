@@ -16,6 +16,7 @@ import javax.swing.JButton;
 
 import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 
 /**
  * KI + or KI - Button class. This class is used to add or remove KI's
@@ -119,6 +120,7 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		MyAudioPlayer.doClick();
 		//add ki
 		if (aiAdd) {
 			String aiName = this.playerSettingsPanel.getAiName();
