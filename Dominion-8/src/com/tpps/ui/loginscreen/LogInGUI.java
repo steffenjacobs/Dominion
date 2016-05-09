@@ -25,6 +25,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import com.tpps.technicalServices.util.FontLoader;
 import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 
 //TODO: underline Header, set Background, set transparent, map 'RETURN' key to Login
 
@@ -49,9 +50,9 @@ public class LogInGUI extends JFrame {
 	private JLabel all;
 	private JPanel[] panels;
 	private Font smallfont, customFont;
-	LoginGUIController guicontroller;
-	private BufferedImage blackBeauty;
-	private BufferedImage walterWhite;
+	private LoginGUIController guicontroller;
+//	private BufferedImage blackBeauty;
+//	private BufferedImage walterWhite;
 
 	private static final int FRAME_X = 500;
 	private static final int FRAME_Y = 250;
@@ -148,25 +149,20 @@ public class LogInGUI extends JFrame {
 	 */
 
 	private void loadImage() {
-		try {
-			this.background = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			this.walterWhite = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/walterWhite.jpg"));
-			walterWhite = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.background = GraphicsUtil.resize(ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg"), FRAME_X, FRAME_Y);
 
+//		try {
+//			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
+//			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		try {
+//			this.walterWhite = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/walterWhite.jpg"));
+//			walterWhite = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	/**
@@ -209,7 +205,7 @@ public class LogInGUI extends JFrame {
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(walterWhite, 0, 0, null);
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
 				super.paint(g);
 			}
 		};
@@ -243,7 +239,7 @@ public class LogInGUI extends JFrame {
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(walterWhite, 0, 0, null);
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
 				super.paint(g);
 			}
 		};
@@ -274,7 +270,7 @@ public class LogInGUI extends JFrame {
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(blackBeauty, 0, 0, null);
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
 				super.paint(g);
 			}
 		};
@@ -293,7 +289,7 @@ public class LogInGUI extends JFrame {
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(blackBeauty, 0, 0, null);
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
 				super.paint(g);
 			}
 		};
@@ -312,7 +308,7 @@ public class LogInGUI extends JFrame {
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(blackBeauty, 0, 0, null);
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
 				super.paint(g);
 			}
 		};

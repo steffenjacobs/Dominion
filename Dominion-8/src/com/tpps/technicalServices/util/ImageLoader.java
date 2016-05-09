@@ -19,6 +19,10 @@ public final class ImageLoader {
 		loadedImages = new ConcurrentHashMap<>();
 
 		addImage("black_0.6", GraphicsUtil.setAlpha(getImage("resources/img/lobbyScreen/blackbeauty.png"), 0.6f));
+		addImage("black_0.4", GraphicsUtil.setAlpha(getImage("resources/img/lobbyScreen/blackbeauty.png"), 0.4f));
+		addImage("white_0.4", GraphicsUtil.setAlpha(getImage("resources/img/lobbyScreen/walterWhite.jpg"), 0.4f));
+		
+		getImage("resources/img/loginScreen/LoginBackground.jpg");
 	}
 
 	/** never call this (Singleton) */
