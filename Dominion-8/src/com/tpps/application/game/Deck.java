@@ -216,10 +216,10 @@ public class Deck {
 		LinkedList<Card> victoryCards = getCardsByTypeFromDeck(CardType.VICTORY);
 		for (Iterator<Card> iterator = victoryCards.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getName().equals(CardName.GARDENS.getName())){
-				victoryPoints += (int)(this.getDeckSize() / 10);
-				
-			}else{
+			if (card.getName().equals(CardName.GARDENS.getName())) {
+				victoryPoints += (int) (this.getDeckSize() / 10);
+
+			} else {
 				victoryPoints += Integer.parseInt(card.getActions().get(CardAction.IS_VICTORY));
 			}
 		}
@@ -469,13 +469,19 @@ public class Deck {
 		this.shuffleIfLessThan(1);
 		return this.drawPile.removeLast();
 	}
-	
+
 	/**
 	 * 
-	 * @param name the cardname to search
+	 * @param name
+	 *            the cardname to search
+	 * @param playedCards
+	 *            the played cards of the player have to be passed to the
+	 *            method. without considering these, the deck could contain the
+	 *            card with the given name, but if it was already played in this
+	 *            turn, the method results in a wrong return
 	 * @return whether the deck contains a card with name *name*
 	 */
-	public boolean contains(String name) {
+	public boolean contains(String name, LinkedList<Card> playedCards) {
 		for (Card c : this.drawPile) {
 			if (c.getName().equals(name))
 				return true;
@@ -488,12 +494,17 @@ public class Deck {
 			if (c.getName().equals(name))
 				return true;
 		}
+		for (Card c : playedCards) {
+			if (c.getName().equals(name))
+				return true;
+		}
 		return false;
 	}
-	
+
 	/**
 	 * 
-	 * @param name the cardname to search
+	 * @param name
+	 *            the cardname to search
 	 * @return the amount of found cards in the deck with the given name
 	 */
 	public int containsAmountOf(String name) {
@@ -512,10 +523,11 @@ public class Deck {
 		}
 		return count;
 	}
-	
+
 	/**
 	 * 
-	 * @param type the cardtype to search for
+	 * @param type
+	 *            the cardtype to search for
 	 * @return the amount of found cards in the deck with the given type
 	 */
 	public int containsAmountOf(CardType type) {
@@ -571,7 +583,8 @@ public class Deck {
 
 	/**
 	 * 
-	 * @param type the type to search for in cardHand
+	 * @param type
+	 *            the type to search for in cardHand
 	 * @return the amount of cards with type in cardHand
 	 */
 	public int cardHandAmount(CardType type) {
@@ -584,10 +597,11 @@ public class Deck {
 		}
 		return counter;
 	}
-	
+
 	/**
 	 * 
-	 * @param name the name to search for in cardHand
+	 * @param name
+	 *            the name to search for in cardHand
 	 * @return the amount of cards with type in cardHand
 	 */
 	public int cardHandAmount(String name) {

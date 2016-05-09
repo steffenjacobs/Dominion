@@ -2,6 +2,7 @@ package com.tpps.technicalServices.network.game;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.tpps.application.game.Player;
 import com.tpps.technicalServices.logger.GameLog;
@@ -12,10 +13,17 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 
 public class GameServerNetworkListener implements NetworkListener {
 	private GameServer gameServer;
+	private AtomicBoolean packetSend;
 
 	public GameServerNetworkListener(GameServer gameServer) {
 		this.gameServer = gameServer;
+		this.packetSend = new AtomicBoolean(false);
 	}
+	
+	public AtomicBoolean getPacketSend() {
+		return this.packetSend;
+	}
+
 
 	@Override
 	public void onClientConnect(int port) {
@@ -54,4 +62,6 @@ public class GameServerNetworkListener implements NetworkListener {
 				}
 			}
 		}
+
+
 	}

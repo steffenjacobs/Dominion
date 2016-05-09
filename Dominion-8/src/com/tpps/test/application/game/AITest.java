@@ -29,6 +29,7 @@ import com.tpps.test.technicalServices.network.TestPacketHandler;
  *
  */
 public class AITest {
+	
 	static Player player;
 	static GameServer gameServer;
 	static GameBoard board;

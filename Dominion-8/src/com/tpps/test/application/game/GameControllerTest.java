@@ -111,39 +111,39 @@ public class GameControllerTest {
 		assertThat(size + 1, is(this.gameController.getGameBoard().getTrashPile().size()));
 	}
 
-	@Test
-	public void testCheckBoardCardExistsAppendToDiscardPile() {
-		int size = this.gameController.getActivePlayer().getDeck().getDiscardPile().size();
-		this.gameController.setGamePhase("actionPhase");
-
-		try {
-			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
-			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
-
-			this.gameController.setGamePhase("buyPhase");
-			this.gameController.getActivePlayer().setBuys(0);
-			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
-			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
-
-			this.gameController.getActivePlayer().setBuys(1);
-			this.gameController.getActivePlayer().setCoins(-1);
-
-			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
-			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
-
-			LinkedList<Card> cards = this.gameController.getGameBoard().findCardListFromBoard(this.gameController.getGameBoard().getActionCardIDs().get(0));
-			this.gameController.getActivePlayer().setCoins(cards.getLast().getCost());
-			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
-			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size + 1));
-
-		} catch (NoSuchElementException e) {
-			e.printStackTrace();
-		} catch (SynchronisationException e) {
-			e.printStackTrace();
-		} catch (WrongSyntaxException e) {
-			e.printStackTrace();
-		}
-	}
+//	@Test
+//	public void testCheckBoardCardExistsAppendToDiscardPile() {
+//		int size = this.gameController.getActivePlayer().getDeck().getDiscardPile().size();
+//		this.gameController.setGamePhase("actionPhase");
+//
+//		try {
+//			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
+//			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
+//
+//			this.gameController.setGamePhase("buyPhase");
+//			this.gameController.getActivePlayer().setBuys(0);
+//			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
+//			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
+//
+//			this.gameController.getActivePlayer().setBuys(1);
+//			this.gameController.getActivePlayer().setCoins(-1);
+//
+//			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
+//			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size));
+//
+//			LinkedList<Card> cards = this.gameController.getGameBoard().findCardListFromBoard(this.gameController.getGameBoard().getActionCardIDs().get(0));
+//			this.gameController.getActivePlayer().setCoins(cards.getLast().getCost());
+//			this.gameController.checkBoardCardExistsAppendToDiscardPile(this.gameController.getGameBoard().getActionCardIDs().get(0));
+//			assertThat(this.gameController.getActivePlayer().getDeck().getDiscardPile().size(), is(size + 1));
+//
+//		} catch (NoSuchElementException e) {
+//			e.printStackTrace();
+//		} catch (SynchronisationException e) {
+//			e.printStackTrace();
+//		} catch (WrongSyntaxException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	@Test
 	public void testIsVictoryCardOnHand() {
@@ -156,28 +156,28 @@ public class GameControllerTest {
 		assertTrue(this.gameController.isVictoryCardOnHand(card.getId()));
 	}
 
-	@Test
-	public void testOrganizePilesAndrefreshCardHand() {
-			
-			int size = this.gameController.getActivePlayer().getDeck().getDeckSize();		
-			
-			Card card = this.gameController.getActivePlayer().getDeck().getCardByTypeFromHand(CardType.TREASURE);
-			this.gameController.getActivePlayer().getDeck().getCardHand().remove(card);
-			this.gameController.getActivePlayer().getPlayedCards().add(card);
-			
-			assertThat(this.gameController.getActivePlayer().getPlayedCards().size(), is(1));
-			assertThat(this.gameController.getActivePlayer().getDeck().getCardHand().size(), is(4));
-			
-			this.gameController.organizePilesAndrefreshCardHand();
-			
-			assertThat(this.gameController.getActivePlayer().getPlayedCards().size(), is(0));
-			assertThat(this.gameController.getActivePlayer().getDeck().getCardHand().size(), is(5));
-			
-			assertThat(this.gameController.getActivePlayer().getDeck().getDeckSize(), is(size));
-			
-	 
-	 
-	 }
+//	@Test
+//	public void testOrganizePilesAndrefreshCardHand() {
+//			
+//			int size = this.gameController.getActivePlayer().getDeck().getDeckSize();		
+//			
+//			Card card = this.gameController.getActivePlayer().getDeck().getCardByTypeFromHand(CardType.TREASURE);
+//			this.gameController.getActivePlayer().getDeck().getCardHand().remove(card);
+//			this.gameController.getActivePlayer().getPlayedCards().add(card);
+//			
+//			assertThat(this.gameController.getActivePlayer().getPlayedCards().size(), is(1));
+//			assertThat(this.gameController.getActivePlayer().getDeck().getCardHand().size(), is(4));
+//			
+//			this.gameController.organizePilesAndrefreshCardHand();
+//			
+//			assertThat(this.gameController.getActivePlayer().getPlayedCards().size(), is(0));
+//			assertThat(this.gameController.getActivePlayer().getDeck().getCardHand().size(), is(5));
+//			
+//			assertThat(this.gameController.getActivePlayer().getDeck().getDeckSize(), is(size));
+//			
+//	 
+//	 
+//	 }
 
 
 	@Test
