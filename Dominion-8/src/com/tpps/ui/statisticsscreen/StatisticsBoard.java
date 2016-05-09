@@ -52,6 +52,7 @@ public class StatisticsBoard extends JPanel {
 	private final Font fontSearch = new Font("Calibri", Font.PLAIN, 45);
 	private JTable table;
 	private DefaultTableModel model;
+	private JTextField jtf;
 
 	private Object columnNames[] = { "nickname", "wins", "losses", "w/l ratio", "total matches", "rank", "playtime" };
 
@@ -69,7 +70,7 @@ public class StatisticsBoard extends JPanel {
 		l.setVgap(30);
 		this.setLayout(l);
 
-		JTextField jtf = new JTextField() {
+		jtf = new JTextField() {
 
 			private static final long serialVersionUID = 3876533247395550610L;
 
@@ -80,7 +81,7 @@ public class StatisticsBoard extends JPanel {
 			}
 		};
 
-		jtf.setForeground(new Color(205, 200, 200));
+		jtf.setForeground(Color.WHITE);
 		jtf.setFont(fontSearch);
 
 		jtf.addCaretListener(new CaretListener() {
@@ -91,6 +92,7 @@ public class StatisticsBoard extends JPanel {
 			}
 		});
 		jtf.setOpaque(false);
+		jtf.setCaretColor(jtf.getForeground());
 
 		JPanel jpText = new JPanel();
 		jpText.setOpaque(false);
@@ -157,7 +159,7 @@ public class StatisticsBoard extends JPanel {
 	private void filterTable(String start) {
 		ArrayList<String[]> filtered = new ArrayList<>();
 		for (String[] s : statistics) {
-			if (s[0].startsWith(start)) {
+			if (s[0].toLowerCase().startsWith(start.toLowerCase())) {
 				filtered.add(s);
 			}
 		}
@@ -305,6 +307,10 @@ public class StatisticsBoard extends JPanel {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void updateFocus(){
+		this.jtf.requestFocus();
 	}
 
 }

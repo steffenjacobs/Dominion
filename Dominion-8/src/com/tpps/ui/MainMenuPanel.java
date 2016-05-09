@@ -166,7 +166,7 @@ public class MainMenuPanel extends JPanel {
 		public void mousePressed(MouseEvent e) {
 			MyAudioPlayer.doClick();
 			if (buttons[0].isOn(e.getX(), e.getY()) && buttons[0].isEnabled()) {
-				DominionController.getInstance().playSingleplayer();
+				DominionController.getInstance().joinSingleplayer();
 				
 			}
 			if (buttons[1].isOn(e.getX(), e.getY()) && buttons[1].isEnabled()) {								
@@ -175,10 +175,10 @@ public class MainMenuPanel extends JPanel {
 				DominionController.getInstance().findMatch();
 			}
 			if (buttons[2].isOn(e.getX(), e.getY())&& buttons[2].isEnabled()) {
-				DominionController.getInstance().openCardeditor();
+				DominionController.getInstance().joinCardEditor();
 			}
 			if (buttons[3].isOn(e.getX(), e.getY()) && buttons[3].isEnabled()) {				
-				DominionController.getInstance().openStatisticsGui();
+				DominionController.getInstance().joinStatisticsGui();
 				DominionController.getInstance().sendPacketToGetStatistics();
 			}
 		}
