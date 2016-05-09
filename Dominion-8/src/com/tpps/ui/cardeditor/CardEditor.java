@@ -172,7 +172,7 @@ public class CardEditor extends JFrame implements ActionListener {
 
 	private void createLabels() {
 		enterName = new JLabel("Geben Sie den Kartennamen ein");
-		price = new JLabel("");
+		price = new JLabel(""); 
 		cardType = new JLabel("Cardtype");
 		testImage = new JLabel("");
 	}
