@@ -984,7 +984,7 @@ public class Player {
 				break;
 			case CHOOSE_CARD_PLAY_TWICE:
 				this.actions++;
-				if (playTwiceCounter < getDeck().cardHandActionCardAmount() - 1) {
+				if (playTwiceCounter < getDeck().cardHandAmount(CardType.ACTION) - 1) {
 					this.playTwiceEnabled = true;
 					this.playTwiceCounter++;
 				}
