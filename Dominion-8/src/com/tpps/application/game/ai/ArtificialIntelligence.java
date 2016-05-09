@@ -191,7 +191,8 @@ public class ArtificialIntelligence {
 		
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
 			sleep();
-			GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife?");
+			GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife?, cardHand:");
+			this.player.getDeck().debugCardHandPrint();
 			/**
 			 * in BIG_MONEY(_..) strategies, the execution of an action card
 			 * will not give more buying power if there is already a treasure
@@ -214,6 +215,7 @@ public class ArtificialIntelligence {
 			 * otherwise, if there is only 1 ACTION card on hand, play it
 			 */
 			if (this.player.getDeck().containsAmountOf(CardType.ACTION) == 1) {
+				GameLog.log(MsgType.ERROR, "immer wieder hier");
 				if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
 					playChapel();
 					continue;
