@@ -8,6 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.tpps.application.game.CardName;
+import com.tpps.application.game.Deck;
 import com.tpps.application.game.GameBoard;
 import com.tpps.application.game.Player;
 import com.tpps.application.game.ai.ArtificialIntelligence;
@@ -74,13 +75,13 @@ public class AITest {
 				new PacketRegistratePlayerByServer("test2", UUID.fromString("00000000-0000-0000-0000-000000000000")));
 		cl.sendMessage(
 				new PacketRegistratePlayerByServer("test3", UUID.fromString("00000000-0000-0000-0000-000000000000")));
-		// player = new Player(new Deck(board.getStartSet()), 1234, 1234,
-		// "Test0",
-		// UUID.fromString("00000000-0000-0000-0000-000000000000"), gameServer);
+		 player = new Player(new Deck(board.getStartSet()), 1234, 1234,
+		 "Test0",
+		 UUID.fromString("00000000-0000-0000-0000-000000000000"), gameServer);
 
-		// ai = new ArtificialIntelligence(player,
-		// UUID.fromString("00000000-0000-0000-0000-000000000000"),
-		// new ServerGamePacketHandler());
+		 ai = new ArtificialIntelligence(player,
+		 UUID.fromString("00000000-0000-0000-0000-000000000000"),
+		 new ServerGamePacketHandler());
 
 		Thread.sleep(5000);
 	}
@@ -91,6 +92,6 @@ public class AITest {
 	@Test
 	public void firstTest() {
 		// ai.setBuyPhase();
-		// ai.getPlayer().getGameServer().getGameController().getGamePhase().equals("buyPhase");
+		ai.getPlayer().getGameServer().getGameController().getGamePhase().equals("buyPhase");
 	}
 }
