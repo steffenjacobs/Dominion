@@ -1168,7 +1168,7 @@ public class GameController {
 				Player player = (Player) iterator.next();
 				packetShowEndScreen.add("player" + i++, player.getPlayerName(), player.getDeck().getVictoryPoints());
 			}
-
+			this.gameServer.getListenerManager().unregisterListener(this.gameServer.getGameServerNetworkListener());
 			this.gameServer.broadcastMessage(packetShowEndScreen);
 		} catch (IOException e1) {
 			e1.printStackTrace();

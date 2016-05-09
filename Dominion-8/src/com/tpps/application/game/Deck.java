@@ -218,7 +218,7 @@ public class Deck {
 		LinkedList<Card> victoryCards = getCardsByTypeFromDeck(CardType.VICTORY);
 		for (Iterator<Card> iterator = victoryCards.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getName().equals("Garden")){
+			if (card.getName().equals(CardName.GARDENS.getName())){
 				victoryPoints += (int)(this.getDeckSize() / 10);
 				
 			}else{
