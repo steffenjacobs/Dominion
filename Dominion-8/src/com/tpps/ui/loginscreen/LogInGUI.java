@@ -12,7 +12,6 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -130,11 +129,7 @@ public class LogInGUI extends JFrame {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		smallfont = new Font("Calibri", Font.BOLD, 19);
-		try {
-			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.setIconImage(ImageLoader.getImage("resources/img/loginScreen/Icon.png"));
 
 		description = new JLabel[2];
 		panels = new JPanel[4];

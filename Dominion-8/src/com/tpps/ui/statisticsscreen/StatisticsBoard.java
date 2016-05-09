@@ -2,21 +2,25 @@ package com.tpps.ui.statisticsscreen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.RenderingHints;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -37,22 +41,25 @@ import com.tpps.technicalServices.util.ImageLoader;
  * This class provides all UI functionalities that come with loading all
  * statistics from the database
  * 
- * @author jhuhn
+ * @author Johannes Huhn, Steffen Jacobs
  */
 public class StatisticsBoard extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private static final int VERTICAL_STRUT = 30;
 	private static final int HORIZONTAL_STRUT = 50;
-	private static final float BLACK_TRANSPARENCY = 0.6F;
 	private static final int CELL_ROW_HEIGHT = 50;
-	private BufferedImage blackBeauty;
-	private final Font font = new Font("Calibri", Font.PLAIN, 20);
-	private final Font headFont = new Font("Arial Black", Font.BOLD, 14);
+	// private BufferedImage blackBeauty;
+	private final Font fontTable = new Font("Calibri", Font.PLAIN, 20);
+	private final Font fontHead = new Font("Arial Black", Font.BOLD, 14);
 	private final Font fontSearch = new Font("Calibri", Font.PLAIN, 45);
 	private JTable table;
 	private DefaultTableModel model;
 	private JTextField jtf;
+
+	private static final Dimension STATSCARD_SIZE = new Dimension(500, 500);
+
+	private int sortColumn = 0;
 
 	private Object columnNames[] = { "nickname", "wins", "losses", "w/l ratio", "total matches", "rank", "playtime" };
 
@@ -197,20 +204,165 @@ public class StatisticsBoard extends JPanel {
 		}
 	}
 
+	private String[][] getStatsOf(String playerName) {
+		if (statistics.length < 1) {
+			return null;
+		}
+		String[][] result = new String[7][2];
+		int oldSort = sortColumn;
+		for (int i = 0; i < statistics[0].length; i++) {
+			sortTableByColumn(i);
+			for (int j = 0; j < statistics.length; j++) {
+				if (statistics[j][0].equals(playerName)) {
+					result[i][0] = statistics[j][i];
+					result[i][1] = String.valueOf(j);
+					break;
+				}
+			}
+		}
+		sortTableByColumn(oldSort);
+		return result;
+	}
+
+	private JPanel createStatisticsCard(String playerName) {
+		System.out.println("creating stats-card for " + playerName);
+
+		BorderLayout layout = new BorderLayout();
+		JPanel panel = new JPanel(layout) {
+			private static final long serialVersionUID = 1511323112772019677L;
+
+			private final BufferedImage black = GraphicsUtil.resize(ImageLoader.getImage("black_0.4"),
+					STATSCARD_SIZE.width, STATSCARD_SIZE.height);
+
+			@Override
+			public void paintComponent(Graphics g) {
+				g.drawImage(black, 0,0,null);
+				super.paintComponent(g);
+			}
+
+		};
+
+		String[][] stats = getStatsOf(playerName);
+
+		if (stats == null) {
+			layout.addLayoutComponent(new JLabel("Player not found: " + playerName), BorderLayout.CENTER);
+			return panel;
+		}
+
+		JPanel gridPane = new JPanel(new GridLayout(stats.length, 1, 0, 30));
+
+		Font font = new Font("Calibri", Font.PLAIN, 20);
+
+		JLabel[] txts = new JLabel[stats.length];
+		for (int i = 0; i < stats.length; i++) {
+			txts[i] = new JLabel(stats[i][0] + " - " + stats[i][1] + 1);
+			txts[i].setOpaque(false);
+			txts[i].setFont(font);
+			txts[i].setForeground(Color.WHITE);
+			gridPane.add(txts[i]);
+		}
+		txts[5].setText(Ranking.getRankByScore(playerName, Integer.valueOf(stats[5][0])));
+
+		// layout.addLayoutComponent(gridPane, BorderLayout.CENTER);
+		panel.add(gridPane);
+		panel.setOpaque(false);
+		gridPane.setOpaque(false);
+
+		return panel;
+	}
+
+	private int locX, locY;
+
 	/**
 	 * 
 	 * @return a JScrollpane with all table data
 	 */
 	private JScrollPane createTable() {
-		this.loadImage();
 		this.table = new JTable(model);
+		this.table.addMouseListener(new MouseAdapter() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JFrame frame = new JFrame();
+				frame.setSize(STATSCARD_SIZE.width, STATSCARD_SIZE.height);
+				frame.setResizable(false);
+				frame.setUndecorated(true);
+				frame.setVisible(true);
+				frame.setLayout(new FlowLayout());
+
+				JPanel layoutPane = new JPanel() {
+					private static final long serialVersionUID = -7511174609023430339L;
+					private final BufferedImage background = GraphicsUtil.resize(
+							ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg"), STATSCARD_SIZE.width,
+							STATSCARD_SIZE.height);
+
+					@Override
+					public void paintComponent(Graphics g) {
+						super.paintComponent(g);
+						g.drawImage(background, 0, 0, null);
+					}
+				};
+
+				frame.setContentPane(layoutPane);
+				layoutPane.setLayout(new BorderLayout());
+				layoutPane.add(Box.createHorizontalStrut(30), BorderLayout.LINE_START);
+
+				JLabel label = new JLabel();
+				label.setForeground(Color.WHITE);
+				label.setHorizontalAlignment(JLabel.RIGHT);
+				label.setText("x ");
+				label.setOpaque(false);
+				label.setFont(new Font("Calibri", Font.PLAIN, 25));
+				layoutPane.add(Box.createHorizontalGlue(), BorderLayout.NORTH);
+				layoutPane.add(label, BorderLayout.NORTH);
+				label.addMouseListener(new MouseAdapter() {
+
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						frame.dispose();
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e) {
+						locX = e.getX();
+						locY = e.getY();
+
+					}
+				});
+
+				MouseMotionAdapter dragListener = new MouseMotionAdapter() {
+
+					@Override
+					public void mouseDragged(MouseEvent e) {
+						frame.setLocation((int) (frame.getLocation().getX() - locX + e.getX()),
+								(int) (frame.getLocation().getY() - locY + e.getY()));
+					}
+				};
+
+				frame.addMouseMotionListener(dragListener);
+				label.addMouseMotionListener(dragListener);
+
+				frame.addMouseListener(new MouseAdapter() {
+
+					@Override
+					public void mousePressed(MouseEvent e) {
+						locX = e.getX();
+						locY = e.getY();
+
+					}
+				});
+				layoutPane.add(createStatisticsCard(
+						(String) table.getValueAt(table.convertRowIndexToModel(table.rowAtPoint(e.getPoint())), 0)));
+
+			}
+		});
 		this.initColumnData();
 		table.setOpaque(false);
 		((DefaultTableCellRenderer) table.getDefaultRenderer(Object.class)).setOpaque(false);
 		table.setForeground(Color.WHITE);
 		table.setFocusable(false);
 		table.setEnabled(false);
-		table.setFont(font);
+		table.setFont(fontTable);
 		table.setRowHeight(CELL_ROW_HEIGHT);
 
 		JScrollPane pane = new JScrollPane(table) {
@@ -222,7 +374,7 @@ public class StatisticsBoard extends JPanel {
 				Graphics2D h = (Graphics2D) g;
 				h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-				h.drawImage(blackBeauty, 0, 0, this.getWidth(), this.getHeight(), null);
+				h.drawImage(ImageLoader.getImage("black_0.6"), 0, 0, this.getWidth(), this.getHeight(), null);
 				super.paint(h);
 			}
 		};
@@ -237,7 +389,7 @@ public class StatisticsBoard extends JPanel {
 		header.setOpaque(false);
 		header.setForeground(Color.WHITE);
 		header.setEnabled(true);
-		header.setFont(headFont);
+		header.setFont(fontHead);
 		header.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		header.setReorderingAllowed(false);
 
@@ -245,59 +397,7 @@ public class StatisticsBoard extends JPanel {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int index = table.convertColumnIndexToModel(table.columnAtPoint(e.getPoint()));
-				if (index >= 0) {
-
-					switch (index) {
-					case 0:
-						Arrays.sort(statistics, new Comparator<String[]>() {
-							@Override
-							public int compare(final String[] entry1, final String[] entry2) {
-								final String cell1 = entry1[index];
-								final String cell2 = entry2[index];
-								return cell1.toLowerCase().compareTo(cell2.toLowerCase());
-							}
-						});
-						break;
-					case 1:
-					case 2:
-					case 4:
-					case 5:
-						Arrays.sort(statistics, new Comparator<String[]>() {
-							@Override
-							public int compare(final String[] entry1, final String[] entry2) {
-								final int cell1 = Integer.parseInt(entry1[index]);
-								final int cell2 = Integer.parseInt(entry2[index]);
-								return cell2 > cell1 ? 1 : (cell1 == cell2 ? 0 : -1);
-							}
-						});
-						break;
-					case 3:
-						Arrays.sort(statistics, new Comparator<String[]>() {
-							@Override
-							public int compare(final String[] entry1, final String[] entry2) {
-								final double cell1 = Double.parseDouble(entry1[index]);
-								final double cell2 = Double.parseDouble(entry2[index]);
-								return cell2 > cell1 ? 1 : (cell1 == cell2 ? 0 : -1);
-							}
-						});
-						break;
-					case 6:
-						Arrays.sort(statistics, new Comparator<String[]>() {
-							@Override
-							public int compare(final String[] entry1, final String[] entry2) {
-								final long cell1 = Long.parseLong(entry1[index]);
-								final long cell2 = Long.parseLong(entry2[index]);
-								System.out.println(cell2 + " - " + cell1);
-								return cell2 > cell1 ? 1 : (cell1 == cell2 ? 0 : -1);
-							}
-						});
-						break;
-					default:
-						break;
-					}
-					StatisticsBoard.this.setTableData(statistics);
-				}
+				sortTableByColumn(table.convertColumnIndexToModel(table.columnAtPoint(e.getPoint())));
 			}
 		});
 
@@ -306,14 +406,63 @@ public class StatisticsBoard extends JPanel {
 	}
 
 	/**
-	 * loads ui images out of resources
+	 * sorts the table by a column
+	 * 
+	 * @param colIndex
+	 *            the column to sort the table by
 	 */
-	private void loadImage() {
-		try {
-			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, BLACK_TRANSPARENCY);
-		} catch (IOException e) {
-			e.printStackTrace();
+	private void sortTableByColumn(int colIndex) {
+		if (colIndex >= 0) {
+			sortColumn = colIndex;
+
+			switch (colIndex) {
+			case 0:
+				Arrays.sort(statistics, new Comparator<String[]>() {
+					@Override
+					public int compare(final String[] entry1, final String[] entry2) {
+						final String cell1 = entry1[colIndex];
+						final String cell2 = entry2[colIndex];
+						return cell1.toLowerCase().compareTo(cell2.toLowerCase());
+					}
+				});
+				break;
+			case 1:
+			case 2:
+			case 4:
+			case 5:
+				Arrays.sort(statistics, new Comparator<String[]>() {
+					@Override
+					public int compare(final String[] entry1, final String[] entry2) {
+						final int cell1 = Integer.parseInt(entry1[colIndex]);
+						final int cell2 = Integer.parseInt(entry2[colIndex]);
+						return cell2 > cell1 ? 1 : (cell1 == cell2 ? 0 : -1);
+					}
+				});
+				break;
+			case 3:
+				Arrays.sort(statistics, new Comparator<String[]>() {
+					@Override
+					public int compare(final String[] entry1, final String[] entry2) {
+						final double cell1 = Double.parseDouble(entry1[colIndex]);
+						final double cell2 = Double.parseDouble(entry2[colIndex]);
+						return cell2 > cell1 ? 1 : (cell1 == cell2 ? 0 : -1);
+					}
+				});
+				break;
+			case 6:
+				Arrays.sort(statistics, new Comparator<String[]>() {
+					@Override
+					public int compare(final String[] entry1, final String[] entry2) {
+						final long cell1 = Long.parseLong(entry1[colIndex]);
+						final long cell2 = Long.parseLong(entry2[colIndex]);
+						return cell2 > cell1 ? 1 : (cell1 == cell2 ? 0 : -1);
+					}
+				});
+				break;
+			default:
+				break;
+			}
+			StatisticsBoard.this.setTableData(statistics);
 		}
 	}
 
