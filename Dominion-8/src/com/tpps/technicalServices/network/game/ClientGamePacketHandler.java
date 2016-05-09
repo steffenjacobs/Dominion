@@ -286,7 +286,13 @@ public class ClientGamePacketHandler extends PacketHandler {
 		case SHOW_END_SCREEN:
 			GameLog.log(MsgType.PACKET, "end game packet received");
 			DominionController.getInstance().setTurnFlag(false);
+			
+			System.err.println("vor disconnect");
+			this.gameClient.getListenerManager().unregisterListener(this.gameClient.getGameClientNetworkListener());
+			System.err.println("kein network listener meht");
 			this.gameClient.disconnect();
+			System.err.println("disconnect aufgerufen");
+			
 			GameLog.log(MsgType.INFO, "gameclient disconnected");
 			JOptionPane.showMessageDialog(null, "end game");
 			DominionController.getInstance().finishMatch((PacketShowEndScreen) packet);
