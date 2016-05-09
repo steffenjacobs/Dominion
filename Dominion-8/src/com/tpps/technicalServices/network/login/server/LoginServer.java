@@ -49,7 +49,8 @@ public class LoginServer extends Server {
 		this.setConsoleOutput();
 	}
 
-	/** offline-mode constructor */
+	/** offline-mode constructor 
+	 * @throws IOException */
 	public LoginServer() throws IOException {
 		super(new InetSocketAddress(Addresses.getAllInterfaces(), server_port), new LoginPacketHandler());
 		((LoginPacketHandler) super.getHandler()).setServer(this);

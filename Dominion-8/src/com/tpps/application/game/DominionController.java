@@ -256,7 +256,7 @@ public final class DominionController {
 	 *            the database
 	 */
 	public void loadStatisticsToGui(String[][] statistics) {
-		this.statisticsBoardPanel.setTableData(statistics);
+		this.statisticsBoardPanel.setStatisticsData(statistics);
 	}
 
 	/**
@@ -512,7 +512,7 @@ public final class DominionController {
 	/**
 	 * joins a single-player lobby
 	 */
-	public void playSingleplayer() {
+	public void joinSingleplayer() {
 		DominionController.getInstance().joinLobbyGui(true);
 		try {
 			DominionController.getInstance().getMatchmaker().createPrivateMatch(this.username, this.sessionID);
@@ -534,7 +534,7 @@ public final class DominionController {
 	/**
 	 * opens the community gui
 	 */
-	public void openStatisticsGui() {
+	public void joinStatisticsGui() {
 		this.receiveChatMessageFromChatServer(
 				"             ","*** You  joined  the  communityscreen ***",
 				"             ", Color.GREEN, false);
@@ -557,6 +557,7 @@ public final class DominionController {
 		panel.add(this.globalChatPanel);
 		panel.add(this.statisticsBoardPanel);
 		this.mainFrame.setPanel(panel);
+		this.statisticsBoardPanel.updateFocus();
 	}
 
 	/**
@@ -564,7 +565,7 @@ public final class DominionController {
 	 * 
 	 * @author jhuhn
 	 */
-	public void openCardeditor() {
+	public void joinCardEditor() {
 		this.mainFrame.setVisible(false);
 		this.cardEditor = new CardEditor();
 	}

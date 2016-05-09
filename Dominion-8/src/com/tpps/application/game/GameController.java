@@ -308,7 +308,7 @@ public class GameController {
 	 * @throws WrongSyntaxException
 	 */
 	public synchronized boolean checkBoardCardExistsAppendToDiscardPile(String cardID) throws SynchronisationException, NoSuchElementException, WrongSyntaxException {
-		GameLog.log(MsgType.INFO, "checkBoardCardExists");
+//		GameLog.log(MsgType.INFO, "checkBoardCardExists");
 		LinkedList<Card> cards = this.gameBoard.findCardListFromBoard(cardID);
 		Card card = cards.getLast();
 		Player player = this.getActivePlayer();
@@ -400,7 +400,7 @@ public class GameController {
 			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
 				sendEnableFlag = true;
 
-				if (player.getDeck().cardHandContainsReactionCard()) {
+				if (player.getDeck().cardHandContains(CardType.REACTION)) {
 					player.setReactionCard(true);
 					player.setReactionMode();
 
@@ -460,7 +460,7 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			player.setThief();
 			if (!player.getPlayerName().equals(this.activePlayer.getPlayerName())) {
-				if (player.getDeck().cardHandContainsReactionCard()) {
+				if (player.getDeck().cardHandContains(CardType.REACTION)) {
 					reactivePlayer = true;
 					player.setThiefFalse();
 					try {
@@ -518,7 +518,7 @@ public class GameController {
 			Player player = (Player) iterator.next();
 			player.setSpy();
 			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
-				if (player.getDeck().cardHandContainsReactionCard()) {
+				if (player.getDeck().cardHandContains(CardType.REACTION)) {
 					player.setSpyFalse();
 					try {
 						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable("wait on reaction"));
@@ -565,7 +565,7 @@ public class GameController {
 			player.setWitch();
 			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
 
-				if (player.getDeck().cardHandContainsReactionCard()) {
+				if (player.getDeck().cardHandContains(CardType.REACTION)) {
 					player.setWitchFalse();
 					try {
 						this.gameServer.sendMessage(this.activePlayer.getPort(), new PacketDisable("wait on reaction"));
@@ -613,7 +613,7 @@ public class GameController {
 			player.setBureaucrat();
 			if (!player.getPlayerName().equals(activePlayer.getPlayerName())) {
 
-				if (player.getDeck().cardHandContainsReactionCard()) {
+				if (player.getDeck().cardHandContains(CardType.REACTION)) {
 					player.setBureaucratFalse();
 					if (sendPacketDisable) {
 						sendPacketDisable = false;
@@ -824,7 +824,7 @@ public class GameController {
 				break;
 			}
 		}
-		GameLog.log(MsgType.GAME_INFO, "alle reaktionskarten gespielt? :" + allReactionCardsPlayedFlag);
+//		GameLog.log(MsgType.GAME_INFO, "alle reaktionskarten gespielt? :" + allReactionCardsPlayedFlag);
 		return allReactionCardsPlayedFlag;
 	}
 
@@ -1073,7 +1073,7 @@ public class GameController {
 	 * sets the action phase
 	 */
 	public void setActionPhase() {
-		GameLog.log(MsgType.GAME_INFO, "ActionPhaseWasSet");
+//		GameLog.log(MsgType.GAME_INFO, "ActionPhaseWasSet");
 		this.gamePhase = "actionPhase";
 	}
 
@@ -1081,7 +1081,7 @@ public class GameController {
 	 * sets the buy phase
 	 */
 	public synchronized void setBuyPhase() {
-		GameLog.log(MsgType.GAME_INFO, "BuyPhaseWasSet");
+//		GameLog.log(MsgType.GAME_INFO, "BuyPhaseWasSet");
 		this.gamePhase = "buyPhase";
 	}
 

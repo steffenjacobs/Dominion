@@ -3,20 +3,17 @@ package com.tpps.technicalServices.util;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 
-public class Loader {
+public class FontLoader {
 
-	private static Loader instance = new Loader();
+	private static FontLoader instance = new FontLoader();
 	private Font xenippa;
 
-	public Loader() {
+	public FontLoader() {
 		try {
 			xenippa = importFont();
 		} catch (FontFormatException e) {
@@ -27,8 +24,8 @@ public class Loader {
 		;
 	}
 
-	public static Loader getInstance() {
-		return Loader.instance;
+	public static FontLoader getInstance() {
+		return FontLoader.instance;
 	}
 
 	public Font getXenipa() {
@@ -49,16 +46,5 @@ public class Loader {
 		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, ClassLoader.getSystemResourceAsStream("resources/font/xenippa1.ttf")));
 		return customFont;
-	}
-
-	public static BufferedImage loadingImage(BufferedImage im, String resource) {
-		try {
-			im = ImageIO.read(ClassLoader.getSystemResourceAsStream(resource));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return im;
-
 	}
 }

@@ -30,6 +30,12 @@ public class GameLobby {
 	private MPlayer admin;
 
 	private final boolean isPrivate;
+	
+	
+	/**is called when the game starts*/
+	public void onStart(){
+		this.startTime = System.currentTimeMillis();
+	}
 
 	/**
 	 * constructor, generating its unique lobbyID

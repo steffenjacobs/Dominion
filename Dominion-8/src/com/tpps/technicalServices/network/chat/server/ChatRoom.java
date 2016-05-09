@@ -518,7 +518,7 @@ public class ChatRoom {
 			
 			//SEND PACKET TO GAMESERVER TO VOTEKICK USER
 			new VotekickClient(this.gameserverPort).sendVotekickPacket(getkicked);
-			System.out.println("kicked from chatroom " + id);
+			System.out.println("kicked from chatroom " + id + " GameServerPort: " + this.gameserverPort);
 		}else{
 			this.sendMessageToAll("The player '" + getkicked + "' stays in the match!");
 		}

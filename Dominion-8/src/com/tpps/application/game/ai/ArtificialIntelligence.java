@@ -19,6 +19,7 @@ import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.game.ServerGamePacketHandler;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndActionPhase;
+import com.tpps.technicalServices.network.gameSession.packets.PacketEndTrashMode;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndTurn;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayTreasures;
@@ -51,9 +52,6 @@ public class ArtificialIntelligence {
 
 	private Strategy strategy;
 
-	@SuppressWarnings("unused")
-	private List<Card> boardActionCards;
-
 	private List<String> buySequence;
 	private List<String> blacklist;
 
@@ -74,9 +72,6 @@ public class ArtificialIntelligence {
 	 * how many times the AI has been in discardMode
 	 */
 	private int discardModeCount;
-
-	@SuppressWarnings("unused")
-	private static final int ENDPHASE_TURN = 22;
 
 	private static final int TIME_DELAY = 600;
 
@@ -190,8 +185,14 @@ public class ArtificialIntelligence {
 	 * @throws InterruptedException
 	 */
 	private void playActionCards() throws InterruptedException {
+		
+		GameLog.log(MsgType.GAME_INFO, "playActionCards(), cardPrint:");
+		this.player.getDeck().debugCardHandPrint();
+		
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
 			sleep();
+			GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife?, cardHand:");
+			this.player.getDeck().debugCardHandPrint();
 			/**
 			 * in BIG_MONEY(_..) strategies, the execution of an action card
 			 * will not give more buying power if there is already a treasure
@@ -201,29 +202,71 @@ public class ArtificialIntelligence {
 			 */
 			if (!this.strategy.equals(Strategy.DRAW_ADD_ACTION) && this.getTreasureCardsValue(getCardHand()) >= 8) {
 				return;
-			} else if (addActionCardAvailable()) {
+			}
+			/**
+			 * if there is an action card in cardHand which gives the player +1
+			 * action (ADD_ACTION_TO_PLAYER), play this card first
+			 */
+			if (addActionCardAvailable()) {
 				play(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
-			} else if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName()) && canBeTrashedByChapel() > 0) {
-				LinkedList<Card> trashCards = getTrashWorthyCards();
-				play(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
-				if (!endPhase) {
-					//trash estates
-//					this.player.getDeck().(CardName.ESTATE.getName())== 1
-					while (this.player.isTrashMode()) {
-						
+				continue;
+			}
+			/**
+			 * otherwise, if there is only 1 ACTION card on hand, play it
+			 */
+			if (this.player.getDeck().containsAmountOf(CardType.ACTION) == 1) {
+				GameLog.log(MsgType.ERROR, "immer wieder hier");
+				if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
+					playChapel();
+					continue;
+				} else {
+					play(this.player.getDeck().getCardByTypeFromHand(CardType.ACTION));
+					continue;
+				}
+			}
+			/**
+			 * if there are more than one ACTION cards on hand, decide depending
+			 * on the strategy and on the trashWorthyCards, what to play
+			 */
+			if (this.player.getDeck().containsAmountOf(CardType.ACTION) > 2) {
+				/**
+				 * if there are 3 trashWorthy cards or more (but the amount of
+				 * coppers in hand is less than 3) play Chapel
+				 */
+				if (getTrashWorthyCards().size() >= 3 && this.player.getDeck().cardHandAmount(CardName.COPPER.getName()) < 3 && this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
+					playChapel();
+					continue;
+				} else {
+					switch (this.strategy) {
+					case BIG_MONEY:
+					case BIG_MONEY_CHAPEL:
+					case BIG_MONEY_CHAPEL_MILITIA:
+						if (this.player.getDeck().cardHandContains(CardName.MILITIA.getName())) {
+							play(this.player.getDeck().getCardByNameFromHand(CardName.MILITIA.getName()));
+							continue;
+						}
+					case BIG_MONEY_CHAPEL_WITCH:
+					case BIG_MONEY_WITCH:
+						if (this.player.getDeck().cardHandContains(CardName.WITCH.getName())) {
+							play(this.player.getDeck().getCardByNameFromHand(CardName.WITCH.getName()));
+							continue;
+						}
+					case DRAW_ADD_ACTION:
+					default:
+						if (this.player.getDeck().cardHandContains(CardName.WITCH.getName())) {
+							play(this.player.getDeck().getCardByNameFromHand(CardName.WITCH.getName()));
+							continue;
+						} else if (this.player.getDeck().cardHandContains(CardName.MILITIA.getName())) {
+							play(this.player.getDeck().getCardByNameFromHand(CardName.MILITIA.getName()));
+							continue;
+						} else {
+							LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
+							play(remainingActionCards.get(new Random().nextInt(remainingActionCards.size())));
+							continue;
+						}
 					}
 				}
 			}
-
-			// Logik + Strategy, chapel handlen
-
-			// ein estate nicht trashen
-
-			// feast handlen
-
-			LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
-			Card tbp = this.player.getDeck().cardWithHighestCost(remainingActionCards);
-			play(tbp);
 		}
 	}
 
@@ -231,18 +274,8 @@ public class ArtificialIntelligence {
 	 * send a PacketEndActionPhase() to end the actionPhase and start the
 	 * buyPhase
 	 */
-	private void setBuyPhase() {
+	public void setBuyPhase() {
 		sendPacket(new PacketEndActionPhase());
-	}
-
-	/**
-	 * 
-	 * @param cardname
-	 *            the cardname to get
-	 * @return the card object with name cardname
-	 */
-	private Card getCardFromBoard(String cardname) throws NoSuchElementException {
-		return this.player.getGameServer().getGameController().getGameBoard().getCardToBuyFromBoardWithName(cardname);
 	}
 
 	/**
@@ -274,12 +307,21 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * send a PacketEndTurn() if the AI want's to end the turn 'manually' before
+	 * send a PacketEndTurn() if the AI wants to end the turn 'manually' before
 	 * it is ended automatically (e.g. if the player has no more buys left)
 	 */
 	private void endTurn() {
-		GameLog.log(MsgType.AI, this.player.getPlayerName() + " ended Turn by itself.");
+//		GameLog.log(MsgType.AI, this.player.getPlayerName() + " ended Turn by itself.");
 		sendPacket(new PacketEndTurn());
+	}
+
+	/**
+	 * send a PacketEndTrashMode() if the AI wants to end the trashMode
+	 * 'manually' before it is ended automatically (e.g. if it already discarded
+	 * 4 cards with chapel)
+	 */
+	private void endTrash() {
+		sendPacket(new PacketEndTrashMode());
 	}
 
 	/**
@@ -348,6 +390,7 @@ public class ArtificialIntelligence {
 	 */
 	private void executeMove() {
 		GameLog.log(MsgType.AI, this.player.getPlayerName() + " is executing a turn");
+		this.player.getDeck().debugCardHandPrint();
 		try {
 			sleep();
 			this.playActionCards();
@@ -387,7 +430,7 @@ public class ArtificialIntelligence {
 				this.buy(cardToBuy);
 				GameLog.log(MsgType.AI_DEBUG, "buy inner: " + buy);
 			} catch (NoSuchElementException nsee) {
-				GameLog.log(MsgType.AI_DEBUG, "buy NSEE <<<<< " + buy);
+				GameLog.log(MsgType.AI_DEBUG, "buy NoSuchElementException <<<<< " + buy);
 				if (this.player.getCoins() >= 6 && this.player.getGameServer().getGameController().getGameBoard().getTableForTreasureCards().containsKey(CardName.GOLD.getName()))
 					this.buy(this.getCardFromBoard(CardName.GOLD.getName()));
 				else if (this.player.getCoins() >= 3 && this.player.getGameServer().getGameController().getGameBoard().getTableForTreasureCards().containsKey(CardName.SILVER.getName()))
@@ -415,20 +458,29 @@ public class ArtificialIntelligence {
 				treasureValue -= purchaseCost;
 			}
 			result.add(purchase);
-			GameLog.log(MsgType.AI_DEBUG, "getting PurchaseSequence... Strategy: " + this.strategy + ", treasureValue: " + getTreasureCardsValue(getCardHand()) + ", purchase: " + purchase
+			GameLog.log(MsgType.AI_DEBUG, "getting PurchaseSequence: Strategy: " + this.strategy + ", treasureValue: " + getTreasureCardsValue(getCardHand()) + ", purchase: " + purchase
 					+ ", new treasureValue: " + treasureValue);
 		}
 		return result;
 	}
 
+	/**
+	 * depending on the start, strategy and board situation, AI determines the
+	 * next purchase
+	 * 
+	 * @param treasureValue
+	 *            the available value of coins for this purchase
+	 * @return the computed purchase
+	 */
 	private String determinePurchase(int treasureValue) {
 
 		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
 
-		int attacksOriginally = attacks * GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue();
-		int attacksBoughtByEnemies = attacksOriginally - board.getSizeOfPilesOnBoardWithType(CardType.ATTACK) - this.player.getDeck().containsAmountOf(CardType.ATTACK);
-		int attacksAvailableRatio = attacksBoughtByEnemies / attacksOriginally;
-
+		double attacksOriginally = attacks * GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue();
+		double attacksBoughtByEnemies = attacksOriginally - board.getSizeOfPilesOnBoardWithType(CardType.ATTACK) - this.player.getDeck().containsAmountOf(CardType.ATTACK);
+		double attacksAvailableRatio = (attacksOriginally - attacksBoughtByEnemies) / attacksOriginally;
+		GameLog.log(MsgType.AI_DEBUG, "attacksAvailableRatio: " + attacksAvailableRatio);
+		
 		/**
 		 * first two turns are handled seperately, because they are a crucial
 		 * part in the game and the rules on how to behave in this turns differ
@@ -492,12 +544,17 @@ public class ArtificialIntelligence {
 					} else
 						return ArtificialIntelligence.NO_BUY;
 				} else {
+					/**
+					 * no FEAST support yet
+					 */
 					if (treasureValue == 4) {
-						if (board.getTableForActionCards().containsKey(CardName.FEAST.getName())) {
-							return CardName.FEAST.getName();
-						} else {
-							return CardName.SILVER.getName();
-						}
+						// if
+						// (board.getTableForActionCards().containsKey(CardName.FEAST.getName()))
+						// {
+						// return CardName.FEAST.getName();
+						// } else {
+						return CardName.SILVER.getName();
+						// }
 					} else {
 						if (board.getTableForActionCards().containsKey(CardName.VILLAGE.getName())) {
 							return CardName.VILLAGE.getName();
@@ -510,131 +567,210 @@ public class ArtificialIntelligence {
 				return ArtificialIntelligence.NO_BUY;
 			}
 		} else {
+			if (treasureValue >= 8) {
+				return CardName.PROVINCE.getName();
+			} else if (treasureValue >= 6 && !this.strategy.equals(Strategy.BIG_MONEY_CHAPEL)) {
+				return CardName.GOLD.getName();
+			}
 			switch (strategy) {
 			case BIG_MONEY: // 2 Moats (first has to be bought before silver)
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
-					return CardName.GOLD.getName();
-				} else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5) {
+				/**
+				 * if there are at least 5 coins available and <= 5 PROVINCEs on
+				 * the board, start to buy DUCHYs because they won't have a huge
+				 * impact on the deck anymore in this phase of the game
+				 */
+				if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5)
 					return CardName.DUCHY.getName();
-				} else if (treasureValue >= 4 && this.player.getTurnNr() >= 6 && board.getTableForActionCards().containsKey(CardName.SMITHY.getName())
-						&& this.player.getDeck().containsAmountOf(CardType.ACTION) < 2) {
+				/**
+				 * special case for a second smithy, because it's only in a few
+				 * situations really good
+				 */
+				else if (treasureValue >= 4 && this.player.getTurnNr() >= 6 && board.getTableForActionCards().containsKey(CardName.SMITHY.getName())
+						&& this.player.getDeck().containsAmountOf(CardType.ACTION) < 2)
 					return CardName.SMITHY.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 2 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1)) {
+				/**
+				 * if other players buy ATTACKs, the player has already a CURSE
+				 * in deck or was already more than 2 times in discard mode, the
+				 * first MOAT will be bought
+				 */
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+						&& (discardModeCount > 2 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
-				} else if (treasureValue >= 3) {
+				/**
+				 * classic SILVER with 3 coins
+				 */
+				else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
-						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 2) {
+				/**
+				 * if MOAT_RATIO_2*100% of the ATTACKs are left on the board,
+				 * buy a second MOAT (also not too good for BM, but necessary if
+				 * there are so many ATTACKs played)
+				 */
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
+						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 2)
 					return CardName.MOAT.getName();
-				} else
-					return CardName.ESTATE.getName();
 			case BIG_MONEY_CHAPEL: // 2 Moats
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
+				/**
+				 * ADVENTURER if the special case is available, GOLD otherwise
+				 */
+				if (treasureValue >= 6) {
 					if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName()) >= 5 && board.getTableForActionCards().containsKey(CardName.ADVENTURER.getName())
 							&& !this.player.getDeck().contains(CardName.ADVENTURER.getName())) {
 						return CardName.ADVENTURER.getName();
 					} else
 						return CardName.GOLD.getName();
-				} else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5) {
+				}
+				/**
+				 * if there are at least 5 coins available and <= 5 PROVINCEs on
+				 * the board, start to buy DUCHYs because they won't have a huge
+				 * impact on the deck anymore in this phase of the game
+				 */
+				else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5)
 					return CardName.DUCHY.getName();
-				} else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName())) {
+				/**
+				 * if no chapel has been bought yet, buy the first and only one
+				 */
+				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName()))
 					return CardName.CHAPEL.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1)) {
+				/**
+				 * if other players buy ATTACKs, the player has already a CURSE
+				 * in deck or was already more than 3 times in discard mode, the
+				 * first MOAT will be bought
+				 */
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
-				} else if (treasureValue >= 3) {
+				/**
+				 * classic SILVER with 3 coins
+				 */
+				else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
-						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 2) {
+				/**
+				 * if MOAT_RATIO_2*100% of the ATTACKs are left on the board,
+				 * buy a second MOAT (also not too good for BM, but necessary if
+				 * there are so many ATTACKs played)
+				 */
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
+						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 2)
 					return CardName.MOAT.getName();
-				} else
-					return CardName.ESTATE.getName();
 			case BIG_MONEY_CHAPEL_MILITIA: // 1 Moat and 2 Militias
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
-					return CardName.GOLD.getName();
-				} else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5) {
+				/**
+				 * if there are at least 5 coins available and <= 5 PROVINCEs on
+				 * the board, start to buy DUCHYs because they won't have a huge
+				 * impact on the deck anymore in this phase of the game
+				 */
+				if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5)
 					return CardName.DUCHY.getName();
-				} else if (treasureValue >= 4 && this.player.getDeck().containsAmountOf(CardName.MILITIA.getName()) < 2 && board.getTableForActionCards().containsKey(CardName.MILITIA.getName())) {
+				/**
+				 * if there are <2 MILITIAs in the deck, buy one
+				 */
+				else if (treasureValue >= 4 && this.player.getDeck().containsAmountOf(CardName.MILITIA.getName()) < 2 && board.getTableForActionCards().containsKey(CardName.MILITIA.getName()))
 					return CardName.MILITIA.getName();
-				} else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName())) {
+				/**
+				 * if no chapel has been bought yet, buy the first and only one
+				 */
+				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName()))
 					return CardName.CHAPEL.getName();
-				} else if (treasureValue >= 3) {
+				/**
+				 * classic SILVER with 3 coins
+				 */
+				else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1)) {
+				/**
+				 * if MOAT_RATIO_2*100% of the ATTACKs are left on the board,
+				 * buy a second MOAT (also not too good for BM, but necessary if
+				 * there are so many ATTACKs played)
+				 */
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
-				} else
-					return CardName.ESTATE.getName();
 			case BIG_MONEY_CHAPEL_WITCH: // No Moats and 2 Witches
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
-					return CardName.GOLD.getName();
-				} else if (treasureValue >= 5) {
+				/**
+				 * if there are <2 WITCHES, buy one OR <= 5 PROVINCEs on the
+				 * board, start to buy DUCHYs because they won't have a huge
+				 * impact on the deck anymore in this phase of the game. If both
+				 * conditions are false, buy SILVER
+				 */
+				if (treasureValue >= 5) {
 					if (this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2 && board.getTableForActionCards().containsKey(CardName.WITCH.getName()))
 						return CardName.WITCH.getName();
 					else if (this.getPileSize(CardName.PROVINCE.getName()) <= 5)
 						return CardName.DUCHY.getName();
 					else
 						return CardName.SILVER.getName();
-				} else if (treasureValue >= 2 && !this.getPlayer().getDeck().contains(CardName.CHAPEL.getName())) {
+				}
+				/**
+				 * if no chapel has been bought yet, buy the first and only one
+				 */
+				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName()))
 					return CardName.CHAPEL.getName();
-				} else if (treasureValue >= 3) {
+				/**
+				 * classic SILVER with 3 coins
+				 */
+				else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
-				} else
-					return CardName.ESTATE.getName();
 			case BIG_MONEY_WITCH: // 1 Moat and 2 Witches
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
-					return CardName.GOLD.getName();
-				} else if (treasureValue >= 5) {
+				/**
+				 * if there are <2 WITCHES, buy one OR <= 5 PROVINCEs on the
+				 * board, start to buy DUCHYs because they won't have a huge
+				 * impact on the deck anymore in this phase of the game. If both
+				 * conditions are false, buy SILVER
+				 */
+				if (treasureValue >= 5) {
 					if (this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2 && board.getTableForActionCards().containsKey(CardName.WITCH.getName()))
 						return CardName.WITCH.getName();
 					else if (this.getPileSize(CardName.PROVINCE.getName()) <= 5)
 						return CardName.DUCHY.getName();
 					else
 						return CardName.SILVER.getName();
-				} else if (treasureValue >= 3) {
+				}
+				/**
+				 * classic SILVER with 3 coins
+				 */
+				else if (treasureValue >= 3)
 					return CardName.SILVER.getName();
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1)) {
+				/**
+				 * if other players buy ATTACKs, the player has already a CURSE
+				 * in deck or was already more than 3 times in discard mode, the
+				 * first MOAT will be bought
+				 */
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
-				} else
-					return CardName.ESTATE.getName();
 			case DRAW_ADD_ACTION: // 3 Moats Max.
-				if (treasureValue >= 8) {
-					return CardName.PROVINCE.getName();
-				} else if (treasureValue >= 6) {
-					return CardName.GOLD.getName();
-				} else if (treasureValue >= 5) {
+				/**
+				 * with 5 coins, buy an action card (random) which has either
+				 * +ACTIONs, +DRAW_CARDs or both.
+				 */
+				if (treasureValue >= 5) {
 					LinkedList<String> addAndDrawList = CollectionsUtil.join(board.getActionCardsWithActionWhichCost(CardAction.ADD_ACTION_TO_PLAYER, 5),
 							board.getActionCardsWithActionWhichCost(CardAction.DRAW_CARD, 5));
 					return addAndDrawList.get(new Random().nextInt(addAndDrawList.size()));
-				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1)) {
+				}
+				/**
+				 * if other players buy ATTACKs, the player has already a CURSE
+				 * in deck or was already more than 3 times in discard mode, the
+				 * first MOAT will be bought
+				 */
+				else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
-				} else if (treasureValue >= 4 && !this.player.getDeck().contains(CardName.MILITIA.getName()) && board.getTableForActionCards().containsKey(CardName.MILITIA.getName())
-						&& this.player.getTurnNr() >= 7) {
+				/**
+				 * try to play FESTIVAL, LABORATORY, COUNCILROOM etc.. and in
+				 * the end a MILITIA. that's why this is bought here.
+				 */
+				else if (treasureValue >= 4 && !this.player.getDeck().contains(CardName.MILITIA.getName()) && board.getTableForActionCards().containsKey(CardName.MILITIA.getName())
+						&& this.player.getTurnNr() >= 7)
 					// punish potential Councilroom with Militia
 					return CardName.MILITIA.getName();
-				} else if (treasureValue >= 3) {
+				else if (treasureValue >= 3) {
 					if (Math.random() < 0.5)
 						if (board.getTableForActionCards().containsKey(CardName.VILLAGE.getName()))
 							return CardName.VILLAGE.getName();
 					return CardName.SILVER.getName();
 				} else if (treasureValue >= 2 && board.getTableForActionCards().containsKey(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
-						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 3) {
+						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 3)
 					return CardName.MOAT.getName();
-				} else
-					return CardName.ESTATE.getName();
 			default:
 				return CardName.ESTATE.getName();
 			}
@@ -708,6 +844,91 @@ public class ArtificialIntelligence {
 	}
 
 	/**
+	 * 
+	 * @return whether there is a card on the players cardhand which adds at
+	 *         least 1 action to the players remaining actions when played (e.g.
+	 *         Market)
+	 */
+	private boolean addActionCardAvailable() {
+		return !this.player.getDeck().cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()).isEmpty();
+	}
+
+	/**
+	 * 
+	 * @return whether the AI is the only non-human player
+	 */
+	private boolean iAmTheOnlyAI() {
+		return this.player.getGameServer().getGameController().getArtificialPlayers().size() == 1;
+	}
+
+	/**
+	 * @param turn
+	 *            the turn to ask for
+	 * @return whether it is the first turn of the AI
+	 */
+	private boolean turn(int turn) {
+		return this.player.getTurnNr() == turn;
+	}
+
+	/**
+	 * 
+	 * @return whether the strategy DRAW_ADD_ACTION will can be successful
+	 */
+	private boolean drawAddActionStrategyPossible() {
+		int count = 0;
+		GameBoard board = player.getGameServer().getGameController().getGameBoard();
+		ArrayList<String> cardNames = CollectionsUtil.getArrayList(new String[] { CardName.COUNCILROOM.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(), CardName.MARKET.getName(),
+				CardName.VILLAGE.getName(), CardName.WITCH.getName() });
+	
+		for (String name : cardNames) {
+			if (board.getTableForActionCards().containsKey(name)) {
+				count++;
+			}
+		}
+		return count >= 3;
+	}
+
+	/**
+	 * 
+	 * @param name
+	 *            the name of the card
+	 * @param type
+	 *            the type of the card
+	 * @return whether the
+	 */
+	private boolean cardAvailableOnBoard(String name, CardType type) {
+		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
+		switch (type) {
+		case ACTION:
+			return board.getTableForActionCards().containsKey(name) && !board.getTableForActionCards().get(name).isEmpty();
+		case TREASURE:
+			return board.getTableForTreasureCards().containsKey(name) && !board.getTableForTreasureCards().get(name).isEmpty();
+		case VICTORY:
+			return board.getTableForVictoryCards().containsKey(name) && !board.getTableForVictoryCards().get(name).isEmpty();
+		default:
+			return false;
+		}
+	}
+
+	/**
+	 * 
+	 * @return whether there is only one estate left in the deck
+	 */
+	private boolean lastEstateInDeck() {
+		return this.player.getDeck().containsAmountOf(CardName.ESTATE.getName()) == 1;
+	}
+
+	/**
+	 * 
+	 * @param card
+	 *            the card to check if its worth to trash
+	 * @return whether the card is worth to trash or not
+	 */
+	private boolean isTrashWorthy(Card card) {
+		return (card.getName().equals(CardName.ESTATE.getName()) && !lastEstateInDeck()) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName());
+	}
+
+	/**
 	 * check different game(board) states and set the endPhase if necessary
 	 */
 	private void checkEndPhase() {
@@ -719,6 +940,66 @@ public class ArtificialIntelligence {
 	}
 
 	/**
+	 * 
+	 * @param cards
+	 *            the cardList to check
+	 * @return the value of all treasure cards in the given list
+	 */
+	private int getTreasureCardsValue(LinkedList<Card> cards) {
+		return this.player.getDeck().getTreasureValueOfList(cards);
+	}
+
+	/**
+	 * 
+	 * @return the amount of Provinces left on the board
+	 */
+	private int getPileSize(String cardname) {
+		return this.player.getGameServer().getGameController().getGameBoard().getTableForVictoryCards().get(cardname).size();
+	}
+
+	/**
+	 * 
+	 * @param cardname
+	 *            the cardname to get
+	 * @return the card object with name cardname
+	 */
+	private Card getCardFromBoard(String cardname) throws NoSuchElementException {
+		return this.player.getGameServer().getGameController().getGameBoard().getCardToBuyFromBoardWithName(cardname);
+	}
+
+	/**
+	 * 
+	 * @param cardType
+	 *            the CardType to search for
+	 * @return all cards from the players deck with type cardType
+	 */
+	private LinkedList<Card> getAllCardsFromType(CardType cardType) {
+		return this.player.getDeck().getCardsByTypeFrom(cardType, getCardHand());
+	}
+
+	/**
+	 * 
+	 * @return the cardHand of the player
+	 */
+	private LinkedList<Card> getCardHand() {
+		return this.player.getDeck().getCardHand();
+	}
+
+	/**
+	 * 
+	 * @return list of cards on hand that can be trashed by the chapel
+	 */
+	private LinkedList<Card> getTrashWorthyCards() {
+		LinkedList<Card> resultList = new LinkedList<Card>();
+		for (Card c : getCardHand()) {
+			if (this.isTrashWorthy(c)) {
+				resultList.add(c);
+			}
+		}
+		return resultList;
+	}
+
+	/**
 	 * the least valuable card of the players cardhand will be discarded
 	 * 
 	 * method had to cover several cases which are very important for the AI if
@@ -727,11 +1008,11 @@ public class ArtificialIntelligence {
 	 * it can win). That's why there are so many if/elses
 	 */
 	private void discardLeastValuableCard() {
-		GameLog.log(MsgType.GAME_INFO, "In AI.discardLeastValuableCard(), see next line for debugCardHandPrint()");
+		GameLog.log(MsgType.GAME_INFO, "discardLeastValuableCard(), cardPrint:");
 		this.player.getDeck().debugCardHandPrint();
-
+	
 		int treasureValue = getTreasureCardsValue(getCardHand());
-
+	
 		/** BIG_MONEY(_..) discarding */
 		if (!this.strategy.equals(Strategy.DRAW_ADD_ACTION)) {
 			/** if card hand doesn't contain a Chapel */
@@ -765,7 +1046,7 @@ public class ArtificialIntelligence {
 				 * treasureValue on card hand is >= 7, discard the action card
 				 * with the lowest cost
 				 */
-				if (canBeTrashedByChapel() < 2 || treasureValue >= 7) {
+				if (getTrashWorthyCards().size() < 2 || treasureValue >= 7) {
 					discard(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
 					return;
 				}
@@ -823,122 +1104,87 @@ public class ArtificialIntelligence {
 	}
 
 	/**
+	 * trashes the cards according to game situation and strategy
 	 * 
-	 * @param cards
-	 *            the cardList to check
-	 * @return the value of all treasure cards in the given list
+	 * @param trashCards
+	 *            the cards to trash (CURSE, COPPER, ESTATE)
 	 */
-	private int getTreasureCardsValue(LinkedList<Card> cards) {
-		return this.player.getDeck().getTreasureValueOfList(cards);
-	}
-
-	/**
-	 * 
-	 * @param cardType
-	 *            the CardType to search for
-	 * @return all cards from the players deck with type cardType
-	 */
-	private LinkedList<Card> getAllCardsFromType(CardType cardType) {
-		return this.player.getDeck().getCardsByTypeFrom(cardType, getCardHand());
-	}
-
-	/**
-	 * 
-	 * @return whether there is a card on the players cardhand which adds at
-	 *         least 1 action to the players remaining actions when played (e.g.
-	 *         Market)
-	 */
-	private boolean addActionCardAvailable() {
-		return !this.player.getDeck().cardsWithAction(CardAction.ADD_ACTION_TO_PLAYER, this.player.getDeck().getCardHand()).isEmpty();
-	}
-
-	/**
-	 * 
-	 * @return the amount of Provinces left on the board
-	 */
-	private int getPileSize(String cardname) {
-		return this.player.getGameServer().getGameController().getGameBoard().getTableForVictoryCards().get(cardname).size();
-	}
-
-	/**
-	 * 
-	 * @return whether the AI is the only non-human player
-	 */
-	private boolean iAmTheOnlyAI() {
-		return this.player.getGameServer().getGameController().getArtificialPlayers().size() == 1;
-	}
-
-	/**
-	 * @param turn
-	 *            the turn to ask for
-	 * @return whether it is the first turn of the AI
-	 */
-	private boolean turn(int turn) {
-		return this.player.getTurnNr() == turn;
-	}
-
-	/**
-	 * 
-	 * @return the cardHand of the player
-	 */
-	private LinkedList<Card> getCardHand() {
-		return this.player.getDeck().getCardHand();
-	}
-
-	/**
-	 * 
-	 * @return whether the strategy DRAW_ADD_ACTION will can be successful
-	 */
-	private boolean drawAddActionStrategyPossible() {
-		int count = 0;
-		GameBoard board = player.getGameServer().getGameController().getGameBoard();
-		ArrayList<String> cardNames = CollectionsUtil.getArrayList(new String[] { CardName.COUNCILROOM.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(), CardName.MARKET.getName(),
-				CardName.VILLAGE.getName(), CardName.WITCH.getName() });
-
-		for (String name : cardNames) {
-			if (board.getTableForActionCards().containsKey(name)) {
-				count++;
-			}
+	private void trash(LinkedList<Card> trashCards) {
+		int treasureCardsValue = getTreasureCardsValue(getCardHand());
+		if (trashCards.isEmpty())
+			return;
+		for (Card c : trashCards) {
+			if (this.player.isTrashMode()) {
+				if (c.getName().equals(CardName.CURSE.getName())) {
+					play(c);
+				} else if (c.getName().equals(CardName.ESTATE.getName())) {
+					if (!endPhase)
+						play(c);
+				} else if (c.getName().equals(CardName.COPPER.getName())) {
+					if (treasureCardsValue >= 6)
+						continue;
+					else if (treasureCardsValue >= 5) {
+						switch (this.strategy) {
+						case BIG_MONEY:
+						case BIG_MONEY_CHAPEL:
+						case BIG_MONEY_CHAPEL_MILITIA:
+							if (!(this.getPileSize(CardName.PROVINCE.getName()) <= 5))
+								play(c);
+							break;
+						case BIG_MONEY_WITCH:
+						case BIG_MONEY_CHAPEL_WITCH:
+							if (!(this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2
+									&& this.player.getGameServer().getGameController().getGameBoard().getTableForActionCards().containsKey(CardName.WITCH.getName()))
+									&& !(this.getPileSize(CardName.PROVINCE.getName()) <= 5))
+								play(c);
+							break;
+						case DRAW_ADD_ACTION:
+							continue;
+						}
+					} else if (treasureCardsValue >= 4) {
+						switch (this.strategy) {
+						case BIG_MONEY_CHAPEL_MILITIA:
+							if (!(this.player.getDeck().containsAmountOf(CardName.MILITIA.getName()) < 2
+									&& this.player.getGameServer().getGameController().getGameBoard().getTableForActionCards().containsKey(CardName.MILITIA.getName())))
+								play(c);
+							break;
+						case BIG_MONEY:
+						case BIG_MONEY_CHAPEL:
+						case BIG_MONEY_CHAPEL_WITCH:
+						case BIG_MONEY_WITCH:
+						case DRAW_ADD_ACTION:
+						default:
+							play(c);
+							break;
+						}
+					} else if (treasureCardsValue == 3) {
+						continue;
+					} else if (treasureCardsValue <= 2) {
+						play(c);
+					}
+				}
+			} else
+				return;
 		}
-		return count >= 3;
 	}
 
 	/**
+	 * before calling this method, it has to be made sure that there is a chapel
+	 * on hand
 	 * 
-	 * @return how many cards on card hand are trash worthy and would be trashed
-	 *         by the chapel
+	 * the method plays the chapel card and all of its dependencies
 	 */
-	private int canBeTrashedByChapel() {
-		LinkedList<Card> cards = getCardHand();
-		int canBeTrashed = 0;
-		for (Card card : cards) {
-			if ((card.getName().equals(CardName.ESTATE.getName()) && !lastEstateInDeck(card)) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName())) {
-				canBeTrashed++;
-			}
+	private void playChapel() {
+		LinkedList<Card> trashCards = getTrashWorthyCards();
+		play(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
+		trash(trashCards);
+		if (this.player.isTrashMode()) {
+			endTrash();
 		}
-		return canBeTrashed;
-	}
-	
-	private LinkedList<Card> getTrashWorthyCards() {
-		LinkedList<Card> resultList = new LinkedList<Card>();
-		for (Card c : getCardHand()) {
-			if (this.player.getDeck().containsAmountOf(CardName.ESTATE.getName()) > 1) {
-				
-			}
-		}
-		return resultList;
-	}
-	
-	private boolean lastEstateInDeck(Card c) {
-		return this.player.getDeck().containsAmountOf(CardName.ESTATE.getName()) == 1;
-	}
-	
-	private boolean isTrashWorthy(Card card) {
-		return (card.getName().equals(CardName.ESTATE.getName()) && !lastEstateInDeck(card)) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName());
 	}
 
-	/* ---------- getters & setters ---------- */
-
+	/* getters & setters, needed for JUnit */
+	
 	/**
 	 * @return the packetHandler
 	 */
@@ -947,8 +1193,7 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param packetHandler
-	 *            the packetHandler to set
+	 * @param packetHandler the packetHandler to set
 	 */
 	public void setPacketHandler(ServerGamePacketHandler packetHandler) {
 		this.packetHandler = packetHandler;
@@ -962,8 +1207,7 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param player
-	 *            the player to set
+	 * @param player the player to set
 	 */
 	public void setPlayer(Player player) {
 		this.player = player;
@@ -977,8 +1221,7 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param strategy
-	 *            the strategy to set
+	 * @param strategy the strategy to set
 	 */
 	public void setStrategy(Strategy strategy) {
 		this.strategy = strategy;
@@ -992,8 +1235,7 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param buySequence
-	 *            the buySequence to set
+	 * @param buySequence the buySequence to set
 	 */
 	public void setBuySequence(List<String> buySequence) {
 		this.buySequence = buySequence;
@@ -1007,8 +1249,7 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param blacklist
-	 *            the blacklist to set
+	 * @param blacklist the blacklist to set
 	 */
 	public void setBlacklist(List<String> blacklist) {
 		this.blacklist = blacklist;
@@ -1022,10 +1263,79 @@ public class ArtificialIntelligence {
 	}
 
 	/**
-	 * @param endPhase
-	 *            the endPhase to set
+	 * @param endPhase the endPhase to set
 	 */
 	public void setEndPhase(boolean endPhase) {
 		this.endPhase = endPhase;
+	}
+
+	/**
+	 * @return the fiveTwoStart
+	 */
+	public boolean isFiveTwoStart() {
+		return fiveTwoStart;
+	}
+
+	/**
+	 * @param fiveTwoStart the fiveTwoStart to set
+	 */
+	public void setFiveTwoStart(boolean fiveTwoStart) {
+		this.fiveTwoStart = fiveTwoStart;
+	}
+
+	/**
+	 * @return the attacks
+	 */
+	public int getAttacks() {
+		return attacks;
+	}
+
+	/**
+	 * @param attacks the attacks to set
+	 */
+	public void setAttacks(int attacks) {
+		this.attacks = attacks;
+	}
+
+	/**
+	 * @return the discardModeCount
+	 */
+	public int getDiscardModeCount() {
+		return discardModeCount;
+	}
+
+	/**
+	 * @param discardModeCount the discardModeCount to set
+	 */
+	public void setDiscardModeCount(int discardModeCount) {
+		this.discardModeCount = discardModeCount;
+	}
+
+	/**
+	 * @return the timeDelay
+	 */
+	public static int getTimeDelay() {
+		return TIME_DELAY;
+	}
+
+	/**
+	 * @return the moatRatio1
+	 */
+	public static double getMoatRatio1() {
+		return MOAT_RATIO_1;
+	}
+
+	/**
+	 * @return the moatRatio2
+	 */
+	public static double getMoatRatio2() {
+		return MOAT_RATIO_2;
+	}
+
+	/**
+	 * @return the noBuy
+	 */
+	public static String getNoBuy() {
+		return NO_BUY;
 	}
 }

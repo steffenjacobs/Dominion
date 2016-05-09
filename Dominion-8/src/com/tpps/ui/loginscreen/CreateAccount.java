@@ -1,5 +1,6 @@
 package com.tpps.ui.loginscreen;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -14,6 +15,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.Box;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,7 +28,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.tpps.technicalServices.util.GraphicsUtil;
-import com.tpps.technicalServices.util.Loader;
+import com.tpps.technicalServices.util.FontLoader;
 
 /**
  * 
@@ -36,10 +39,7 @@ import com.tpps.technicalServices.util.Loader;
 public class CreateAccount extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private int width;
-	private int height;
-	private Container c;
-	private ImageIcon loading;
+	// private ImageIcon loading;
 	private BufferedImage background;
 	private JButton createAccount;
 	private JTextField email, username;
@@ -48,28 +48,30 @@ public class CreateAccount extends JFrame {
 	private JLabel header;
 	private JLabel all;
 	private JPanel[] panels;
-	private Font smallfont, customFont;
+	private Font smallfont, bigfont, customFont;
 	BufferedImage blackBeauty;
 	LoginGUIController guicontroller;
 	private BufferedImage walterWhite;
 	private Color textAndLabelColor;
+
+	private JPanel content;
+
+	private static final Dimension size = new Dimension(680, 450);
 
 	/**
 	 * simple constructor (first call) merging all elements
 	 */
 
 	public CreateAccount(LoginGUIController guicontroller) {
-		width = Toolkit.getDefaultToolkit().getScreenSize().width;
-		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		this.guicontroller = guicontroller;
 
 		loadImage();
-		resizeImage();
+		// resizeImage();
 		try {
 			if (customFont == null) {
-				customFont = Loader.getInstance().getXenipa();
+				customFont = FontLoader.getInstance().getXenipa();
 				if (customFont == null) {
-					customFont = new Loader().importFont();
+					customFont = new FontLoader().importFont();
 				}
 			}
 		} catch (FontFormatException e1) {
@@ -104,16 +106,34 @@ public class CreateAccount extends JFrame {
 	 */
 
 	private void init() {
-		c = this.getContentPane();
-		all = new JLabel(loading);
+		content = new JPanel() {
+			private static final long serialVersionUID = -2340670434638379812L;
+
+			@Override
+			public void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(background, 0, 0, null);
+			}
+		};
+		BorderLayout bl = new BorderLayout();
+		content.setLayout(bl);
+
+		this.setContentPane(content);
+
+		bl.addLayoutComponent(Box.createHorizontalStrut(30), BorderLayout.LINE_START);
+		bl.addLayoutComponent(Box.createHorizontalStrut(30), BorderLayout.LINE_END);
+
+		all = new JLabel();
 		all.setLayout(new GridLayout(6, 1, 0, 30));
-		this.setSize(width / 4, height / 2);
+
+		this.setSize(size);
 		this.setLocationRelativeTo(null);
 		this.setTitle("Create Account");
 		this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		smallfont = new Font("Calibri", Font.BOLD, 19);
+		bigfont = new Font("Calibri", Font.BOLD, 25);
 		try {
 			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
 		} catch (IOException e) {
@@ -135,8 +155,9 @@ public class CreateAccount extends JFrame {
 
 	private void loadImage() {
 		try {
-			this.background = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+			this.background = GraphicsUtil.resize(
+					ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg")),
+					size.width, size.height);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -155,15 +176,16 @@ public class CreateAccount extends JFrame {
 		}
 	}
 
-	/**
-	 * background resize method
-	 */
-
-	private void resizeImage() {
-		loading = new ImageIcon(background);
-		Image newing = background.getScaledInstance(width / 4, height / 2, java.awt.Image.SCALE_SMOOTH);
-		loading = new ImageIcon(newing);
-	}
+	// /**
+	// * background resize method
+	// */
+	//
+	// private void resizeImage() {
+	// loading = new ImageIcon(background);
+	// Image newing = background.getScaledInstance(size.width, size.height,
+	// java.awt.Image.SCALE_SMOOTH);
+	// loading = new ImageIcon(newing);
+	// }
 
 	/**
 	 * first panel created as a header
@@ -191,7 +213,7 @@ public class CreateAccount extends JFrame {
 
 		description[0] = new JLabel("Email: ");
 		description[0].setFont(smallfont);
-		description[0].setHorizontalAlignment(JLabel.CENTER);
+		description[0].setHorizontalAlignment(JLabel.RIGHT);
 		email = new JTextField() {
 			private static final long serialVersionUID = 1L;
 
@@ -203,7 +225,8 @@ public class CreateAccount extends JFrame {
 		};
 		email.setForeground(textAndLabelColor);
 		email.setOpaque(false);
-		email.setFont(smallfont);
+		email.setFont(bigfont);
+		
 		panels[1].add(description[0]);
 		panels[1].add(email);
 		panels[1].setOpaque(false);
@@ -221,7 +244,7 @@ public class CreateAccount extends JFrame {
 
 		description[1] = new JLabel("Username: ");
 		description[1].setFont(smallfont);
-		description[1].setHorizontalAlignment(JLabel.CENTER);
+		description[1].setHorizontalAlignment(JLabel.RIGHT);
 		username = new JTextField() {
 			private static final long serialVersionUID = 1L;
 
@@ -233,7 +256,7 @@ public class CreateAccount extends JFrame {
 		};
 		username.setForeground(textAndLabelColor);
 		username.setOpaque(false);
-		username.setFont(smallfont);
+		username.setFont(bigfont);
 		panels[2].add(description[1]);
 		panels[2].add(username);
 		panels[2].setOpaque(false);
@@ -251,7 +274,7 @@ public class CreateAccount extends JFrame {
 
 		description[2] = new JLabel("Password: ");
 		description[2].setFont(smallfont);
-		description[2].setHorizontalAlignment(JLabel.CENTER);
+		description[2].setHorizontalAlignment(JLabel.RIGHT);
 		passwordbox = new JPasswordField() {
 			private static final long serialVersionUID = 1L;
 
@@ -263,6 +286,7 @@ public class CreateAccount extends JFrame {
 		};
 		passwordbox.setForeground(textAndLabelColor);
 		passwordbox.setOpaque(false);
+		passwordbox.setFont(bigfont);
 		panels[3].add(description[2]);
 		panels[3].add(passwordbox);
 		panels[3].setOpaque(false);
@@ -280,7 +304,7 @@ public class CreateAccount extends JFrame {
 
 		description[3] = new JLabel("Retype Password: ");
 		description[3].setFont(smallfont);
-		description[3].setHorizontalAlignment(JLabel.CENTER);
+		description[3].setHorizontalAlignment(JLabel.RIGHT);
 		passwordboxRetype = new JPasswordField() {
 			private static final long serialVersionUID = 1L;
 
@@ -292,6 +316,7 @@ public class CreateAccount extends JFrame {
 		};
 		passwordboxRetype.setForeground(textAndLabelColor);
 		passwordboxRetype.setOpaque(false);
+		passwordboxRetype.setFont(bigfont);
 		panels[4].add(description[3]);
 		panels[4].add(passwordboxRetype);
 		panels[4].setOpaque(false);
@@ -349,7 +374,7 @@ public class CreateAccount extends JFrame {
 		panels[5].add(createAccount);
 		panels[5].setOpaque(false);
 		all.add(panels[5]);
-		c.add(all);
+		this.getContentPane().add(all);
 
 		createAccount.addMouseListener(new CreateAccountListener(this, guicontroller));
 

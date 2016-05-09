@@ -31,21 +31,23 @@ public class GameBoardTest {
 	@Before
 	public void setUp() throws Exception {
 		;
-		this.gameBoard = new GameBoard(new String[] { CardName.MOAT.getName(), CardName.MILITIA.getName(), CardName.WITCH.getName(), CardName.THIEF.getName(), CardName.SPY.getName(), CardName.THRONEROOM.getName(), CardName.COUNCILROOM.getName(), CardName.ADVENTURER.getName(), CardName.CELLAR.getName(), CardName.CHAPEL.getName() });
+		this.gameBoard = new GameBoard(new String[] { CardName.MOAT.getName(), CardName.MILITIA.getName(), CardName.WITCH.getName(), CardName.THIEF.getName(), CardName.SPY.getName(),
+				CardName.THRONEROOM.getName(), CardName.COUNCILROOM.getName(), CardName.ADVENTURER.getName(), CardName.CELLAR.getName(), CardName.CHAPEL.getName() });
 	}
 
 	@Test
 	public void test() {
 
 		LinkedList<Card> startSet = this.gameBoard.getStartSet();
-		assertTrue(startSet.size() == 8);
+		assertThat(startSet.size(), is(8));
 		for (int i = 0; i < GameConstant.INIT_COPPER_CARDS_ON_HAND.getValue(); i++) {
 			assertTrue(startSet.get(i).getTypes().contains(CardType.TREASURE));
 			assertTrue(startSet.get(i).getCost() == GameConstant.COPPER_COST.getValue());
 		}
 
 		for (int i = GameConstant.INIT_COPPER_CARDS_ON_HAND.getValue(); i < GameConstant.INIT_COPPER_CARDS_ON_HAND.getValue() + GameConstant.INIT_ESTATE_CARDS_ON_HAND.getValue(); i++) {
-			// assertTrue(startSet.get(i).getId().equals(CardName.ESTATE.getName() + (i -
+			// assertTrue(startSet.get(i).getId().equals(CardName.ESTATE.getName()
+			// + (i -
 			// GameConstant.INIT_COPPER_CARDS_ON_HAND.getValue())));
 			assertTrue(startSet.get(i).getTypes().contains(CardType.VICTORY));
 			assertTrue(startSet.get(i).getCost() == GameConstant.ESTATE_COST.getValue());
@@ -99,7 +101,8 @@ public class GameBoardTest {
 	@Test
 	public void findCardListFromBoardTest() {
 
-		this.gameBoard = new GameBoard(new String[] { CardName.MOAT.getName(), CardName.MILITIA.getName(), CardName.WITCH.getName(), CardName.THIEF.getName(), CardName.SPY.getName(), CardName.THRONEROOM.getName(), CardName.COUNCILROOM.getName(), CardName.ADVENTURER.getName(), CardName.CELLAR.getName(), CardName.CHAPEL.getName() });
+		this.gameBoard = new GameBoard(new String[] { CardName.MOAT.getName(), CardName.MILITIA.getName(), CardName.WITCH.getName(), CardName.THIEF.getName(), CardName.SPY.getName(),
+				CardName.THRONEROOM.getName(), CardName.COUNCILROOM.getName(), CardName.ADVENTURER.getName(), CardName.CELLAR.getName(), CardName.CHAPEL.getName() });
 		LinkedList<Card> testList;
 		boolean exceptionFlag = false;
 		try {
@@ -158,7 +161,8 @@ public class GameBoardTest {
 
 	@Test
 	public void findAndRemoveCardFromBoard() {
-		this.gameBoard = new GameBoard(new String[] { CardName.MOAT.getName(), CardName.MILITIA.getName(), CardName.WITCH.getName(), CardName.THIEF.getName(), CardName.SPY.getName(), CardName.THRONEROOM.getName(), CardName.COUNCILROOM.getName(), CardName.ADVENTURER.getName(), CardName.CELLAR.getName(), CardName.CHAPEL.getName() });
+		this.gameBoard = new GameBoard(new String[] { CardName.MOAT.getName(), CardName.MILITIA.getName(), CardName.WITCH.getName(), CardName.THIEF.getName(), CardName.SPY.getName(),
+				CardName.THRONEROOM.getName(), CardName.COUNCILROOM.getName(), CardName.ADVENTURER.getName(), CardName.CELLAR.getName(), CardName.CHAPEL.getName() });
 		Class<? extends GameBoard> gameBoardClass = this.gameBoard.getClass();
 		boolean exceptionFlag = false;
 		try {

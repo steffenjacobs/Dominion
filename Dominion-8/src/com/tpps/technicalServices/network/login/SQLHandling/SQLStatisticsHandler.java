@@ -84,7 +84,7 @@ public class SQLStatisticsHandler {
 			stmt.setString(1, nickname);
 			ResultSet rs = stmt.executeQuery();
 			rs.next();
-			return rs.getInt("playtime");
+			return rs.getLong("playtime");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -182,10 +182,13 @@ public class SQLStatisticsHandler {
 			updateWinLoss(nickname);
 			incrementOverallGamesPlayed(nickname);
 			System.out.println("Updated Wins and Losses");
+			Ranking.udpatePlayerRank(nickname);
+			System.out.println("Updated Rank");
 		} catch (SQLException e) {
 			System.err.println("Error while updating win/loss db");
 			e.printStackTrace();
 		}
+		
 	}
 
 	/**
