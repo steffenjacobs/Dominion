@@ -52,6 +52,7 @@ public class CreateAccount extends JFrame {
 	private LoginGUIController guicontroller;
 
 	private JPanel content;
+	private JButton cancel;
 
 	private static final Dimension size = new Dimension(500, 350);
 
@@ -151,8 +152,7 @@ public class CreateAccount extends JFrame {
 	 */
 
 	private void loadImage() {
-		this.background = GraphicsUtil.resize(
-				ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg"),
+		this.background = GraphicsUtil.resize(ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg"),
 				size.width, size.height);
 
 		// try {
@@ -362,18 +362,39 @@ public class CreateAccount extends JFrame {
 				super.paint(g);
 			}
 		};
+		cancel = new JButton("Cancel") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
+				super.paint(g);
+			}
+		};
+
 		createAccount.setOpaque(false);
 		createAccount.setForeground(textAndLabelColor);
 		createAccount.setBorderPainted(true);
 		createAccount.setContentAreaFilled(false);
 		createAccount.setFont(customFont.deriveFont(15f));
 		createAccount.setPreferredSize(new Dimension(180, 30));
+
+		cancel.setOpaque(false);
+		cancel.setForeground(textAndLabelColor);
+		cancel.setBorderPainted(true);
+		cancel.setContentAreaFilled(false);
+		cancel.setFont(customFont.deriveFont(15f));
+		cancel.setPreferredSize(new Dimension(180, 30));
+
 		panels[5].add(createAccount);
+		panels[5].add(cancel);
 		panels[5].setOpaque(false);
 		all.add(panels[5]);
 		this.getContentPane().add(all);
 
 		createAccount.addMouseListener(new CreateAccountListener(this, guicontroller));
+		cancel.addMouseListener(new CreateAccountListener(this, guicontroller));
 
 		panels[5].revalidate();
 	}
@@ -426,5 +447,15 @@ public class CreateAccount extends JFrame {
 
 	public JButton getCreateAccount() {
 		return createAccount;
+	}
+
+	/**
+	 * Button getter
+	 * 
+	 * @return cancel
+	 */
+
+	public JButton getCancel() {
+		return cancel;
 	}
 }
