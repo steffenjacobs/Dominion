@@ -26,6 +26,7 @@ public class GameServer extends Server {
 	private SessionClient sessionClient;
 	private LinkedList<Player> disconnectedUser;
 	private final String[] selectedActionCards;
+	private GameServerNetworkListener gameServerNetworkListener;
 
 	public GameServer(int port, String[] selectedActionCards) throws IOException {
 		// TODO: implement selectedActionCards
@@ -36,7 +37,8 @@ public class GameServer extends Server {
 		this.selectedActionCards = selectedActionCards;
 		this.gameController = new GameController(this, this.selectedActionCards);
 		instance = this;
-		this.getListenerManager().registerListener(new GameServerNetworkListener(this));
+		this.gameServerNetworkListener = new GameServerNetworkListener(this);
+		this.getListenerManager().registerListener(this.gameServerNetworkListener);
 		this.disconnectedUser = new LinkedList<Player>();
 		setConsoleInput();
 	}
@@ -98,6 +100,10 @@ public class GameServer extends Server {
 	 */
 	public synchronized GameController getGameController() {
 		return this.gameController;
+	}
+	
+	public GameServerNetworkListener getGameServerNetworkListener() {
+		return this.gameServerNetworkListener;
 	}
 
 	/**
