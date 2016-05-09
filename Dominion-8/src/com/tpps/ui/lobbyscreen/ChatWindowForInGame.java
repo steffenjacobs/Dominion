@@ -194,7 +194,7 @@ public class ChatWindowForInGame extends JPanel {
 		this.createChatInputPart(" " + sdf.format(new Date()), whiteColor);
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
 		this.createChatInputPart(msg + "\n", whiteColor);
-		DominionController.getInstance().sendChatMessage(chatmessage.trim());
+		DominionController.getInstance().sendChatMessage(msg.trim());
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
