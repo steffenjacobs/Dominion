@@ -17,7 +17,7 @@ public class GameServerNetworkListener implements NetworkListener {
 
 	public GameServerNetworkListener(GameServer gameServer) {
 		this.gameServer = gameServer;
-		this.packetSend.set(false);
+		this.packetSend = new AtomicBoolean(false);
 	}
 	
 	public AtomicBoolean getPacketSend() {
