@@ -802,16 +802,4 @@ public class Deck {
 		}
 		return sBuf.append(">").toString();
 	}
-
-	/**
-	 * prints only the cardHand in a short format for debugging purposes
-	 */
-	public void debugCardHandPrint() {
-		StringBuffer logString = new StringBuffer();
-		logString.append("Cardnames: - ");
-		for (Card card : this.getCardHand()) {
-			logString.append( card.getName() + " - ");
-		}
-		GameLog.log(MsgType.AI_DEBUG, logString.toString());
-	}
 }
