@@ -10,101 +10,120 @@ import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.login.client.LoginClient;
 
 /**
- * Tis class is used as an interface between LoginGUI and 
+ * Tis class is used as an interface between LoginGUI and
+ * 
  * @author jhuhn - Johannes Huhn
  */
-public class LoginGUIController{
-	
+public class LoginGUIController {
+
 	private LogInGUI logingui;
 	private CreateAccount createaccount;
 	private LoginClient loginclient;
-	
+
 	/**
 	 * Initializes this object
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 */
-	public LoginGUIController(){
+	public LoginGUIController() {
 		logingui = new LogInGUI(this);
 		loginclient = new LoginClient(this);
 		GameLog.log(MsgType.INIT, "LoginGUIController");
 	}
-	
+
 	/**
-	 * This method sends a packet to the LoginServer to validate the accountinformation.
-	 * Initialize the the LoginClient
+	 * This method sends a packet to the LoginServer to validate the
+	 * accountinformation. Initialize the the LoginClient
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param nickname a String representation of the accountname
-	 * @param plaintext a String representation as a plaintext of the password
+	 * @param nickname
+	 *            a String representation of the accountname
+	 * @param plaintext
+	 *            a String representation as a plaintext of the password
 	 */
-	public void createLoginClient(String nickname, String plaintext){
+	public void createLoginClient(String nickname, String plaintext) {
 		loginclient.handlelogin(nickname, plaintext);
 	}
-	
+
 	/**
-	 * This method closes the Loginwindow and opens the window for accountcreation
+	 * This method closes the Loginwindow and opens the window for
+	 * accountcreation
+	 * 
 	 * @author jhuhn - Johannes Huhn
 	 */
-	public void createAccountGUI(){
+	public void createAccountGUI() {
 		this.logingui.dispose();
 		createaccount = new CreateAccount(this, logingui.getLocation());
 	}
-	
+
 	/**
 	 * cerates an account
-	 * @param username String representation of the username
-	 * @param plaintext String representation of the password
-	 * @param email String representation of the email
+	 * 
+	 * @param username
+	 *            String representation of the username
+	 * @param plaintext
+	 *            String representation of the password
+	 * @param email
+	 *            String representation of the email
 	 */
-	public void createAccountWithServer(String username, String plaintext, String email){		
+	public void createAccountWithServer(String username, String plaintext, String email) {
 		loginclient.handleAccountCreation(username, plaintext, email);
 	}
-	
+
 	/**
-	 * This method opens a small messagebox (JOptionPane) which contains the state of your Accountcreation
+	 * This method opens a small messagebox (JOptionPane) which contains the
+	 * state of your Accountcreation
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param state an Integer which represents the status quo of the accountcreation
-	 * 			1 account creates successfully
-	 * 			2 the desired nickname is already in use
-	 * 			3 the desired email adress is already in use
-	 * @param nickname a String representation of the desires user account
-	 * @param plaintext a String representation as plaintext of the password
+	 * @param state
+	 *            an Integer which represents the status quo of the
+	 *            accountcreation 1 account creates successfully 2 the desired
+	 *            nickname is already in use 3 the desired email adress is
+	 *            already in use
+	 * @param nickname
+	 *            a String representation of the desires user account
+	 * @param plaintext
+	 *            a String representation as plaintext of the password
 	 */
-	public void getStateOfAccountCreation(int state, String nickname, String plaintext){
-		if(state == 1) {
-		//	JOptionPane.showMessageDialog(null, "Account created succesfully", "Create Account", JOptionPane.INFORMATION_MESSAGE);
+	public void getStateOfAccountCreation(int state, String nickname, String plaintext) {
+		if (state == 1) {
+			// JOptionPane.showMessageDialog(null, "Account created
+			// succesfully", "Create Account", JOptionPane.INFORMATION_MESSAGE);
 			this.createaccount.dispose();
 			this.logingui = new LogInGUI(this, nickname, plaintext);
-		} else if(state == 2) {
+		} else if (state == 2) {
 			JOptionPane.showMessageDialog(null, "Nickname already in use", "Create Account", JOptionPane.ERROR_MESSAGE);
-		} else if(state == 3){
+		} else if (state == 3) {
 			JOptionPane.showMessageDialog(null, "EMAIL already in use", "Create Account", JOptionPane.ERROR_MESSAGE);
-		}
-		else if (state ==4){
-			JOptionPane.showMessageDialog(null, "You can not create accounts in offline-mode", "Create Account", JOptionPane.ERROR_MESSAGE);			
+		} else if (state == 4) {
+			JOptionPane.showMessageDialog(null, "You can not create accounts in offline-mode", "Create Account",
+					JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+
 	/**
-	 * This method opens a small messagebox(JOptionPane)  which contains the state of your Login request.
+	 * This method opens a small messagebox(JOptionPane) which contains the
+	 * state of your Login request.
+	 * 
 	 * @author jhuhn - Johannes Huhn
-	 * @param state true if your login request ellaborated correctly, false else
+	 * @param state
+	 *            true if your login request ellaborated correctly, false else
 	 */
-	public void getStateOfLoginRequest(int state){
-		if (state ==1) { // logged in successfully
-		//	JOptionPane.showMessageDialog(null, "You logged in successfully", "Login", JOptionPane.INFORMATION_MESSAGE);
+	public void getStateOfLoginRequest(int state) {
+		if (state == 1) { // logged in successfully
+			// JOptionPane.showMessageDialog(null, "You logged in successfully",
+			// "Login", JOptionPane.INFORMATION_MESSAGE);
 			this.logingui.dispose();
 			DominionController.getInstance().setUsername(this.loginclient.getUsername());
-			DominionController.getInstance().endLogin();			
-		} else if(state == 2) {
-			//already logged in
+			DominionController.getInstance().endLogin();
+		} else if (state == 2) {
+			// already logged in
 			JOptionPane.showMessageDialog(null, "Already logged in", "Login", JOptionPane.ERROR_MESSAGE);
-		}
-		else{//login request failed 
+		} else {// login request failed
 			JOptionPane.showMessageDialog(null, "Wrong Password or nickname", "Login", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
-	
+
 	/**
 	 * @author jhuhn
 	 * @return the loginclient instance
@@ -112,12 +131,12 @@ public class LoginGUIController{
 	public LoginClient getLoginclient() {
 		return loginclient;
 	}
-	
+
 	/**
 	 * @author jhuhn
 	 * @return the uuid of the session
 	 */
-	public UUID getUUID(){
+	public UUID getUUID() {
 		return this.loginclient.getSessionid();
 	}
 }
