@@ -114,16 +114,87 @@ public class ArtificialIntelligence {
 	}
 
 	/**
+	 * basic method which buys the given card
+	 * 
+	 * @param card
+	 *            the card to buy
+	 */
+	private void buy(Card card) {
+		if (card != null && this.player.getBuys() > 0 && this.player.getCoins() >= card.getCost()) {
+			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
+		} else {
+			GameLog.log(MsgType.ERROR, this.player.getPlayerName() + " tried to buy 'null' card or player had no buys left.");
+		}
+	}
+
+	/**
 	 * basic method which plays the given card
 	 * 
 	 * @param card
 	 *            the card to play
 	 */
-	private void play(Card card) {
+	private void playAction(Card card) {
 		if (card != null && this.player.getActions() > 0) {
 			sendPacket(new PacketPlayCard(card.getId(), this.player.getClientID()));
 		} else {
 			GameLog.log(MsgType.ERROR, this.player.getPlayerName() + " tried to play 'null' card or had no actions left.");
+		}
+	}
+	
+	/**
+	 * basic method which plays a reaction card if the AI is not the active player at the moment
+	 * 
+	 * @param card
+	 *            the card to play
+	 */
+	private void playReaction(Card card) {
+		if (card != null && card.getTypes().contains(CardType.REACTION)) {
+			sendPacket(new PacketPlayCard(card.getId(), this.player.getClientID()));
+		} else {
+			GameLog.log(MsgType.ERROR, this.player.getPlayerName() + " tried to play 'null' card or had no actions left.");
+		}
+	}
+	
+	/**
+	 * basic method which discards the given card
+	 * 
+	 * @param card
+	 *            the card to discard
+	 */
+	private void playDiscard(Card card) {
+		if (card != null && this.player.isDiscardMode()) {
+			sendPacket(new PacketPlayCard(card.getId(), this.player.getClientID()));
+		} else {
+			GameLog.log(MsgType.ERROR, this.player.getPlayerName() + " tried to discard 'null' card or player was not in discard mode.");
+		}
+	}
+	
+	/**
+	 * basic method which trashes the given card
+	 * 
+	 * @param card
+	 *            the card to discard
+	 */
+	private void playTrash(Card card) {
+		if (card != null && this.player.isTrashMode()) {
+			sendPacket(new PacketPlayCard(card.getId(), this.player.getClientID()));
+		} else {
+			GameLog.log(MsgType.ERROR, this.player.getPlayerName() + " tried to discard 'null' card or player was not in discard mode.");
+		}
+	}
+
+	/**
+	 * before calling this method, it has to be made sure that there is a chapel
+	 * on hand
+	 * 
+	 * the method plays the chapel card and all of its dependencies
+	 */
+	private void playChapel() {
+		LinkedList<Card> trashCards = getTrashWorthyCards();
+		playAction(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
+		trash(trashCards);
+		if (this.player.isTrashMode()) {
+			endTrash();
 		}
 	}
 
@@ -139,41 +210,7 @@ public class ArtificialIntelligence {
 		if (cards != null && cards.size() > 0) {
 			for (Card card : cards) {
 				sleep();
-				play(card);
-			}
-		}
-	}
-
-	/**
-	 * send a PacketPlayTreasures() to play all treasure cards from the players
-	 * cardHand
-	 */
-	private void playTreasures() {
-		sendPacket(new PacketPlayTreasures());
-	}
-
-	/**
-	 * method should play only as few as possible treasure cards (e.g. to not
-	 * reveal to other players that AI has a gold on hand, if there is already
-	 * enough money for a desired purchase even without playing the gold)
-	 * 
-	 * @param amountNeeded
-	 *            the amount of treasures needed
-	 */
-	@SuppressWarnings("unused")
-	private void playTreasures(int amountNeeded) {
-		int amountAvailable = this.getTreasureCardsValue(getCardHand());
-		if (amountAvailable <= amountNeeded) {
-			playTreasures();
-		} else {
-			LinkedList<Card> allTreasureCards = this.getAllCardsFromType(CardType.TREASURE);
-			int alreadyPlayed = 0;
-			for (Card card : allTreasureCards) {
-				if (alreadyPlayed < amountNeeded) {
-					play(card);
-					alreadyPlayed += Integer.valueOf(card.getActions().get(CardAction.IS_TREASURE));
-				} else
-					return;
+				playAction(card);
 			}
 		}
 	}
@@ -208,7 +245,7 @@ public class ArtificialIntelligence {
 			 * action (ADD_ACTION_TO_PLAYER), play this card first
 			 */
 			if (addActionCardAvailable()) {
-				play(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
+				playAction(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
 				continue;
 			}
 			/**
@@ -216,14 +253,14 @@ public class ArtificialIntelligence {
 			 */
 			GameLog.log(MsgType.DEBUG, "cardHandAmount ACTION: " + this.player.getDeck().cardHandAmount(CardType.ACTION));
 			if (this.player.getDeck().cardHandAmount(CardType.ACTION) == 1) {
-				GameLog.log(MsgType.ERROR, "1 action");
+				GameLog.log(MsgType.INFO, "1 action");
 				if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
-					GameLog.log(MsgType.ERROR, "and it is played");
+					GameLog.log(MsgType.INFO, "and it is played");
 					playChapel();
 					continue;
 				} else {
-					GameLog.log(MsgType.ERROR, "and it is played");
-					play(this.player.getDeck().getCardByTypeFromHand(CardType.ACTION));
+					GameLog.log(MsgType.INFO, "and it is played");
+					playAction(this.player.getDeck().getCardByTypeFromHand(CardType.ACTION));
 					continue;
 				}
 			}
@@ -245,26 +282,26 @@ public class ArtificialIntelligence {
 					case BIG_MONEY_CHAPEL:
 					case BIG_MONEY_CHAPEL_MILITIA:
 						if (this.player.getDeck().cardHandContains(CardName.MILITIA.getName())) {
-							play(this.player.getDeck().getCardByNameFromHand(CardName.MILITIA.getName()));
+							playAction(this.player.getDeck().getCardByNameFromHand(CardName.MILITIA.getName()));
 							continue;
 						}
 					case BIG_MONEY_CHAPEL_WITCH:
 					case BIG_MONEY_WITCH:
 						if (this.player.getDeck().cardHandContains(CardName.WITCH.getName())) {
-							play(this.player.getDeck().getCardByNameFromHand(CardName.WITCH.getName()));
+							playAction(this.player.getDeck().getCardByNameFromHand(CardName.WITCH.getName()));
 							continue;
 						}
 					case DRAW_ADD_ACTION:
 					default:
 						if (this.player.getDeck().cardHandContains(CardName.WITCH.getName())) {
-							play(this.player.getDeck().getCardByNameFromHand(CardName.WITCH.getName()));
+							playAction(this.player.getDeck().getCardByNameFromHand(CardName.WITCH.getName()));
 							continue;
 						} else if (this.player.getDeck().cardHandContains(CardName.MILITIA.getName())) {
-							play(this.player.getDeck().getCardByNameFromHand(CardName.MILITIA.getName()));
+							playAction(this.player.getDeck().getCardByNameFromHand(CardName.MILITIA.getName()));
 							continue;
 						} else {
 							LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
-							play(remainingActionCards.get(new Random().nextInt(remainingActionCards.size())));
+							playAction(remainingActionCards.get(new Random().nextInt(remainingActionCards.size())));
 							continue;
 						}
 					}
@@ -274,39 +311,45 @@ public class ArtificialIntelligence {
 	}
 
 	/**
+	 * method should play only as few as possible treasure cards (e.g. to not
+	 * reveal to other players that AI has a gold on hand, if there is already
+	 * enough money for a desired purchase even without playing the gold)
+	 * 
+	 * @param amountNeeded
+	 *            the amount of treasures needed
+	 */
+	@SuppressWarnings("unused")
+	private void playTreasures(int amountNeeded) {
+		int amountAvailable = this.getTreasureCardsValue(getCardHand());
+		if (amountAvailable <= amountNeeded) {
+			playTreasures();
+		} else {
+			LinkedList<Card> allTreasureCards = this.getAllCardsFromType(CardType.TREASURE);
+			int alreadyPlayed = 0;
+			for (Card card : allTreasureCards) {
+				if (alreadyPlayed < amountNeeded) {
+					playAction(card);
+					alreadyPlayed += Integer.valueOf(card.getActions().get(CardAction.IS_TREASURE));
+				} else
+					return;
+			}
+		}
+	}
+
+	/**
+	 * send a PacketPlayTreasures() to play all treasure cards from the players
+	 * cardHand
+	 */
+	private void playTreasures() {
+		sendPacket(new PacketPlayTreasures());
+	}
+
+	/**
 	 * send a PacketEndActionPhase() to end the actionPhase and start the
 	 * buyPhase
 	 */
 	private void setBuyPhase() {
 		sendPacket(new PacketEndActionPhase());
-	}
-
-	/**
-	 * basic method which buys the given card
-	 * 
-	 * @param card
-	 *            the card to buy
-	 */
-	private void buy(Card card) {
-		if (card != null && this.player.getBuys() > 0 && this.player.getCoins() >= card.getCost()) {
-			sendPacket(new PacketPlayCard(card.getId(), player.getClientID()));
-		} else {
-			GameLog.log(MsgType.ERROR, this.player.getPlayerName() + " tried to buy 'null' card or player had no buys left.");
-		}
-	}
-
-	/**
-	 * basic method which discards the given card
-	 * 
-	 * @param card
-	 *            the card to discard
-	 */
-	private void discard(Card card) {
-		if (card != null && this.player.isDiscardMode()) {
-			sendPacket(new PacketPlayCard(card.getId(), this.player.getClientID()));
-		} else {
-			GameLog.log(MsgType.ERROR, this.player.getPlayerName() + " tried to discard 'null' card or player was not in discard mode.");
-		}
 	}
 
 	/**
@@ -376,8 +419,8 @@ public class ArtificialIntelligence {
 
 			executeMove();
 		} else if (this.player.isReactionMode()) {
-			if (this.player.playsReactionCard()) {
-				play(this.player.getDeck().getCardByTypeFromHand(CardType.REACTION));
+			if (this.player.getDeck().cardHandContains(CardType.REACTION)) {
+				playReaction(this.player.getDeck().getCardByTypeFromHand(CardType.REACTION));
 			} else if (this.player.isDiscardMode()) {
 				discardModeCount++;
 				while (this.player.isDiscardMode()) {
@@ -434,11 +477,11 @@ public class ArtificialIntelligence {
 				GameLog.log(MsgType.AI_DEBUG, "buy inner: " + buy);
 			} catch (NoSuchElementException nsee) {
 				GameLog.log(MsgType.AI_DEBUG, "buy NoSuchElementException <<<<< " + buy);
-				if (this.player.getCoins() >= 6 && this.player.getGameServer().getGameController().getGameBoard().getTableForTreasureCards().containsKey(CardName.GOLD.getName()))
+				if (this.player.getCoins() >= 6 && !buy.equals(CardName.GOLD.getName()) && cardAvailableOnBoard(CardName.GOLD.getName()))
 					this.buy(this.getCardFromBoard(CardName.GOLD.getName()));
-				else if (this.player.getCoins() >= 3 && this.player.getGameServer().getGameController().getGameBoard().getTableForTreasureCards().containsKey(CardName.SILVER.getName()))
+				else if (this.player.getCoins() >= 3 && !buy.equals(CardName.SILVER.getName()) && cardAvailableOnBoard(CardName.SILVER.getName()))
 					this.buy(this.getCardFromBoard(CardName.SILVER.getName()));
-				else if (endPhase && this.player.getCoins() >= 2 && this.player.getGameServer().getGameController().getGameBoard().getTableForVictoryCards().containsKey(CardName.ESTATE.getName())) {
+				else if (endPhase && this.player.getCoins() >= 2 && !buy.equals(CardName.ESTATE.getName()) && cardAvailableOnBoard(CardName.ESTATE.getName())) {
 					this.buy(this.getCardFromBoard(CardName.ESTATE.getName()));
 				} else
 					return;
@@ -476,13 +519,19 @@ public class ArtificialIntelligence {
 	 * @return the computed purchase
 	 */
 	private String determinePurchase(int treasureValue) {
-
 		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
 
 		double attacksOriginally = attacks * GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue();
 		double attacksBoughtByEnemies = attacksOriginally - board.getSizeOfPilesOnBoardWithType(CardType.ATTACK) - this.player.getDeck().containsAmountOf(CardType.ATTACK);
 		double attacksAvailableRatio = (attacksOriginally - attacksBoughtByEnemies) / attacksOriginally;
 		GameLog.log(MsgType.AI_DEBUG, "attacksOriginally: " + attacksOriginally + ", attacksEnemies: " + attacksBoughtByEnemies + ", attacksAvailableRatio: " + attacksAvailableRatio);
+		/**
+		 * if a the ratio is not computed accurately, set its value to 1 so
+		 * there won't be any exceptions or false positive buys
+		 */
+		if(attacksAvailableRatio > 1.0 || attacksAvailableRatio < 0.1) {
+			attacksAvailableRatio = 1;
+		}
 		
 		/**
 		 * first two turns are handled seperately, because they are a crucial
@@ -899,18 +948,15 @@ public class ArtificialIntelligence {
 	 *            the type of the card
 	 * @return whether the
 	 */
-	private boolean cardAvailableOnBoard(String name, CardType type) {
+	private boolean cardAvailableOnBoard(String name) {
 		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
-		switch (type) {
-		case ACTION:
-			return board.getTableForActionCards().containsKey(name) && !board.getTableForActionCards().get(name).isEmpty();
-		case TREASURE:
-			return board.getTableForTreasureCards().containsKey(name) && !board.getTableForTreasureCards().get(name).isEmpty();
-		case VICTORY:
-			return board.getTableForVictoryCards().containsKey(name) && !board.getTableForVictoryCards().get(name).isEmpty();
-		default:
-			return false;
-		}
+		if (board.getTableForActionCards().containsKey(name) && !board.getTableForActionCards().get(name).isEmpty())
+			return true;
+		else if (board.getTableForTreasureCards().containsKey(name) && !board.getTableForTreasureCards().get(name).isEmpty())
+			return true;
+		else if (board.getTableForVictoryCards().containsKey(name) && !board.getTableForVictoryCards().get(name).isEmpty())
+			return true;
+		else return false;
 	}
 
 	/**
@@ -1022,12 +1068,12 @@ public class ArtificialIntelligence {
 			if (!this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
 				/** discard a CURSE */
 				if (this.player.getDeck().cardHandContains(CardType.CURSE)) {
-					discard(this.player.getDeck().getCardByTypeFromHand(CardType.CURSE));
+					playDiscard(this.player.getDeck().getCardByTypeFromHand(CardType.CURSE));
 					return;
 				}
 				/** discard a random VICTORY card */
 				if (this.player.getDeck().cardHandContains(CardType.VICTORY)) {
-					discard(this.player.getDeck().getCardByTypeFromHand(CardType.VICTORY));
+					playDiscard(this.player.getDeck().getCardByTypeFromHand(CardType.VICTORY));
 					return;
 				}
 				/**
@@ -1036,7 +1082,7 @@ public class ArtificialIntelligence {
 				 */
 				if (treasureValue >= 6) {
 					if (this.player.getDeck().cardHandContains(CardType.ACTION)) {
-						discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.ACTION));
+						playDiscard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.ACTION));
 						return;
 					}
 				}
@@ -1050,7 +1096,7 @@ public class ArtificialIntelligence {
 				 * with the lowest cost
 				 */
 				if (getTrashWorthyCards().size() < 2 || treasureValue >= 7) {
-					discard(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
+					playDiscard(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
 					return;
 				}
 				/** discard any VICTORY card but Estate */
@@ -1058,7 +1104,7 @@ public class ArtificialIntelligence {
 				if (victoryOnCardHand != null && victoryOnCardHand.size() > 0) {
 					for (Card c : victoryOnCardHand) {
 						if (!c.getName().equals(CardName.ESTATE.getName())) {
-							discard(c);
+							playDiscard(c);
 							return;
 						}
 					}
@@ -1066,41 +1112,41 @@ public class ArtificialIntelligence {
 			}
 			/** discard a COPPER */
 			if (this.player.getDeck().cardHandContains(CardName.COPPER.getName())) {
-				discard(this.player.getDeck().getCardByNameFromHand(CardName.COPPER.getName()));
+				playDiscard(this.player.getDeck().getCardByNameFromHand(CardName.COPPER.getName()));
 				return;
 			}
 			/** discard another TREASURE card */
 			if (this.player.getDeck().cardHandContains(CardType.TREASURE)) {
 				GameLog.log(MsgType.ERROR, "the method must not get here (unless it has a card hand like 5x gold");
-				discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.TREASURE));
+				playDiscard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.TREASURE));
 				return;
 			}
 			/** DRAW_ADD_ACTION discarding */
 		} else {
 			/** discard a CURSE */
 			if (this.player.getDeck().cardHandContains(CardType.CURSE)) {
-				discard(this.player.getDeck().getCardByTypeFromHand(CardType.CURSE));
+				playDiscard(this.player.getDeck().getCardByTypeFromHand(CardType.CURSE));
 				return;
 			}
 			/** discard a random VICTORY card */
 			if (this.player.getDeck().cardHandContains(CardType.VICTORY)) {
-				discard(this.player.getDeck().getCardByTypeFromHand(CardType.VICTORY));
+				playDiscard(this.player.getDeck().getCardByTypeFromHand(CardType.VICTORY));
 				return;
 			}
 			/** discard a COPPER */
 			if (this.player.getDeck().cardHandContains(CardName.COPPER.getName())) {
-				discard(this.player.getDeck().getCardByNameFromHand(CardName.COPPER.getName()));
+				playDiscard(this.player.getDeck().getCardByNameFromHand(CardName.COPPER.getName()));
 				return;
 			}
 			/** discard the ACTION card with lowest cost on hand */
 			if (this.player.getDeck().cardHandContains(CardType.ACTION)) {
-				discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.ACTION));
+				playDiscard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.ACTION));
 				return;
 			}
 			/** discard another TREASURE card */
 			if (this.player.getDeck().cardHandContains(CardType.TREASURE)) {
 				GameLog.log(MsgType.ERROR, "the method must not get here (unless it has a card hand like 5x gold");
-				discard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.TREASURE));
+				playDiscard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.TREASURE));
 				return;
 			}
 		}
@@ -1114,16 +1160,16 @@ public class ArtificialIntelligence {
 	 */
 	private void trash(LinkedList<Card> trashCards) {
 		int treasureCardsValue = getTreasureCardsValue(getCardHand());
-		debugCardPrint("trashCards", trashCards);
+		debugCardPrint(">>>>>>>>>>>>>>>> trashCards", trashCards);
 		if (trashCards.isEmpty())
 			return;
 		for (Card c : trashCards) {
 			if (this.player.isTrashMode()) {
 				if (c.getName().equals(CardName.CURSE.getName())) {
-					play(c);
+					playTrash(c);
 				} else if (c.getName().equals(CardName.ESTATE.getName())) {
 					if (!endPhase)
-						play(c);
+						playTrash(c);
 				} else if (c.getName().equals(CardName.COPPER.getName())) {
 					if (treasureCardsValue >= 6)
 						continue;
@@ -1133,14 +1179,14 @@ public class ArtificialIntelligence {
 						case BIG_MONEY_CHAPEL:
 						case BIG_MONEY_CHAPEL_MILITIA:
 							if (!(this.getPileSize(CardName.PROVINCE.getName()) <= 5))
-								play(c);
+								playTrash(c);
 							break;
 						case BIG_MONEY_WITCH:
 						case BIG_MONEY_CHAPEL_WITCH:
 							if (!(this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2
 									&& this.player.getGameServer().getGameController().getGameBoard().getTableForActionCards().containsKey(CardName.WITCH.getName()))
 									&& !(this.getPileSize(CardName.PROVINCE.getName()) <= 5))
-								play(c);
+								playTrash(c);
 							break;
 						case DRAW_ADD_ACTION:
 							continue;
@@ -1150,7 +1196,7 @@ public class ArtificialIntelligence {
 						case BIG_MONEY_CHAPEL_MILITIA:
 							if (!(this.player.getDeck().containsAmountOf(CardName.MILITIA.getName()) < 2
 									&& this.player.getGameServer().getGameController().getGameBoard().getTableForActionCards().containsKey(CardName.MILITIA.getName())))
-								play(c);
+								playTrash(c);
 							break;
 						case BIG_MONEY:
 						case BIG_MONEY_CHAPEL:
@@ -1158,32 +1204,17 @@ public class ArtificialIntelligence {
 						case BIG_MONEY_WITCH:
 						case DRAW_ADD_ACTION:
 						default:
-							play(c);
+							playTrash(c);
 							break;
 						}
 					} else if (treasureCardsValue == 3) {
 						continue;
 					} else if (treasureCardsValue <= 2) {
-						play(c);
+						playTrash(c);
 					}
 				}
 			} else
 				return;
-		}
-	}
-
-	/**
-	 * before calling this method, it has to be made sure that there is a chapel
-	 * on hand
-	 * 
-	 * the method plays the chapel card and all of its dependencies
-	 */
-	private void playChapel() {
-		LinkedList<Card> trashCards = getTrashWorthyCards();
-		play(this.player.getDeck().getCardByNameFromHand(CardName.CHAPEL.getName()));
-		trash(trashCards);
-		if (this.player.isTrashMode()) {
-			endTrash();
 		}
 	}
 
@@ -1193,7 +1224,7 @@ public class ArtificialIntelligence {
 	 */
 	private void debugCardPrint(String prefix, LinkedList<Card> cards) {
 		StringBuffer logString = new StringBuffer();
-		logString.append("Cardnames, " + prefix + ": -");
+		logString.append("Cardnames, " + prefix + ": - ");
 		for (Card card : cards) {
 			logString.append( card.getName() + " - ");
 		}
