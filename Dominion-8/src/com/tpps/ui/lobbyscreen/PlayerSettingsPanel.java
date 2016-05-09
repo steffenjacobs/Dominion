@@ -127,8 +127,9 @@ public class PlayerSettingsPanel extends JPanel {
 		// this.add(this.bottomAreaPanel());
 		this.bottomAreaPanel = this.bottomAreaPanel();
 
-		this.aiNameList = CollectionsUtil.getArrayList(new String[]{"Sir Lancelot", "Ritter der Kokosnuss", "Wizard of Oz",
-				"King Arthur", "Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne", "Harvey Specter"});
+		this.aiNameList = CollectionsUtil
+				.getArrayList(new String[] { "Sir Lancelot", "Ritter der Kokosnuss", "Wizard of Oz", "King Arthur",
+						"Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne", "Harvey Specter" });
 		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
 	}
 
@@ -208,9 +209,9 @@ public class PlayerSettingsPanel extends JPanel {
 		return panel;
 	}
 
-
 	/**
-	 * @param enable boolean to enable and disable startbutton
+	 * @param enable
+	 *            boolean to enable and disable startbutton
 	 */
 	public void setStartButtonEnabled(boolean enable) {
 		this.startButton.setEnabled(enable);
@@ -268,7 +269,7 @@ public class PlayerSettingsPanel extends JPanel {
 			} else {
 				DominionController.getInstance().receiveChatMessageFromChatServer(
 						"You are not ready to start the match\n" + "         selected cards: "
-								+ PlayerSettingsPanel.this.cardNamesSelected.size() + "/10"+ "\n"
+								+ PlayerSettingsPanel.this.cardNamesSelected.size() + "/10" + "\n"
 								+ "         connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers() + "/4",
 						"BOT", "", Color.YELLOW);
 			}
@@ -276,8 +277,6 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void mouseClicked(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
@@ -296,14 +295,10 @@ public class PlayerSettingsPanel extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
 		}
 	}
 
@@ -348,7 +343,7 @@ public class PlayerSettingsPanel extends JPanel {
 		if (this.cardNamesSelected.size() != 10) {
 			return false;
 		}
-		GameLog.log(MsgType.GAME_INFO ,"connectedplayers: " + this.connectedPlayers());
+		GameLog.log(MsgType.GAME_INFO, "connectedplayers: " + this.connectedPlayers());
 		if (this.connectedPlayers() != 4) {
 			return false;
 		}
@@ -366,7 +361,7 @@ public class PlayerSettingsPanel extends JPanel {
 			this.remove(midpanel);
 			this.remove(bottomAreaPanel);
 		}
-		this.midScroller = middleAreaPanel();
+		this.midScroller = cardAreaPanel();
 
 		midpanel = new JPanel(new BorderLayout());
 		midpanel.setOpaque(false);
@@ -466,7 +461,7 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @author jhuhn, sjacobs
 	 * @return a JPanel to select cardsets
 	 */
-	private JScrollPane middleAreaPanel() {
+	private JScrollPane cardAreaPanel() {
 
 		panelMid = new JPanel();
 		panelMid.setOpaque(false);
@@ -697,7 +692,7 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @return the selected picture
 	 */
 	public BufferedImage getSelectedPicture() {
-		GameLog.log(MsgType.GUI ,"ZERO: " + this.selectedImage);
+		GameLog.log(MsgType.GUI, "ZERO: " + this.selectedImage);
 		return this.selectedImage;
 	}
 
@@ -748,7 +743,7 @@ public class PlayerSettingsPanel extends JPanel {
 	public synchronized boolean removePlayer(String player) {
 		for (int i = 0; i < connectedPlayers.length; i++) {
 			if (connectedPlayers[i].getText().startsWith(player)) {
-				GameLog.log(MsgType.GUI ,"removed Player: " + connectedPlayers[i].getText());
+				GameLog.log(MsgType.GUI, "removed Player: " + connectedPlayers[i].getText());
 				connectedPlayers[i].resetSearchingField();
 				this.handleStartButton();
 				return true;
@@ -765,7 +760,7 @@ public class PlayerSettingsPanel extends JPanel {
 	 */
 	public synchronized void clearAllPlayers() {
 		for (int i = 0; i < connectedPlayers.length; i++) {
-			GameLog.log(MsgType.GUI ,"removed Player(all): " + connectedPlayers[i].getText());
+			GameLog.log(MsgType.GUI, "removed Player(all): " + connectedPlayers[i].getText());
 			connectedPlayers[i].resetSearchingField();
 		}
 	}
