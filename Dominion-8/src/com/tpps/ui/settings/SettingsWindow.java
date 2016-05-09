@@ -131,9 +131,10 @@ public final class SettingsWindow {
 	 *            a change-listener
 	 * @param headerText
 	 *            the text for the header
+	 * @param type the type of the slider
 	 * @return a volume-slider with header-text and displayed value
 	 */
-	private JPanel createVolumeSlider(Font font, ChangeListener listener, String headerText) {
+	private JPanel createVolumeSlider(Font font, ChangeListener listener, String headerText, VolumeSliderType type) {
 		JPanel res = new JPanel();
 		res.setOpaque(false);
 		res.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -149,6 +150,19 @@ public final class SettingsWindow {
 		lblSlider.setFont(font);
 
 		JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, 100, 20);
+
+		switch (type) {
+		case FX:
+			slider.setValue(SettingsController.volumeFX);
+			break;
+		case GAME:
+			slider.setValue(SettingsController.volumeIngame);
+			break;
+		case MENU:
+			slider.setValue(SettingsController.volumeMenu);
+			break;
+		}
+
 		slider.addChangeListener(listener);
 		slider.addChangeListener(new ChangeListener() {
 
@@ -246,7 +260,10 @@ public final class SettingsWindow {
 			}
 		};
 
-		gridPane.add(createFullscreenCheckbox(dragListener, dl2, settingsFont), BorderLayout.CENTER);
+		JCheckBox chkFullScreen = createFullscreenCheckbox(dragListener, dl2, settingsFont);
+		chkFullScreen.setSelected(SettingsController.fullScreen);
+
+		gridPane.add(chkFullScreen, BorderLayout.CENTER);
 
 		ChangeListener mainVolumeSliderChangeListener = new ChangeListener() {
 
@@ -272,12 +289,13 @@ public final class SettingsWindow {
 			}
 		};
 
-		gridPane.add(createVolumeSlider(settingsFont, mainVolumeSliderChangeListener, "Main Volume   "),
+		gridPane.add(createVolumeSlider(settingsFont, mainVolumeSliderChangeListener, "Main Volume   ",
+				VolumeSliderType.MENU), BorderLayout.CENTER);
+		gridPane.add(
+				createVolumeSlider(settingsFont, gameVolumeSliderChangeListener, "Game Volume ", VolumeSliderType.GAME),
 				BorderLayout.CENTER);
-		gridPane.add(createVolumeSlider(settingsFont, gameVolumeSliderChangeListener, "Game Volume "),
-				BorderLayout.CENTER);
-		gridPane.add(createVolumeSlider(settingsFont, effectsVolumeSliderChangeListener, "Effects Volume	"),
-				BorderLayout.CENTER);
+		gridPane.add(createVolumeSlider(settingsFont, effectsVolumeSliderChangeListener, "Effects Volume	",
+				VolumeSliderType.FX), BorderLayout.CENTER);
 
 		panel.add(gridPane);
 		panel.setOpaque(false);

@@ -3,12 +3,14 @@ package com.tpps.ui.settings;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.io.File;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import com.tpps.application.game.DominionController;
+import com.tpps.technicalServices.util.AutoCreatingProperties;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.gameplay.GameWindow;
 
@@ -19,12 +21,10 @@ import com.tpps.ui.gameplay.GameWindow;
  */
 public final class SettingsController {
 
-	private static final String SETTINGS_FILE = "settings.cfg";
-
 	/**
 	 * standard settings-window size
 	 */
-	public static final Dimension SETTINGS_WINDOW_SIZE = new Dimension(600, 310);
+	public static final Dimension SETTINGS_WINDOW_SIZE = new Dimension(610, 300);
 
 	/**
 	 * standard settings-button size
@@ -36,8 +36,13 @@ public final class SettingsController {
 	 */
 	static boolean fullScreen;
 
-	private static int volumeMenu, volumeIngame, volumeFX;
+	@SuppressWarnings("javadoc")
+	static int volumeMenu, volumeIngame, volumeFX;
+	
 	private static final Dimension STANDARD_WINDOW_SIZE = new Dimension(1280, 720);
+	private static final String SETTINGS_FILE = "settings.cfg";
+
+	private static AutoCreatingProperties conf;
 
 	/** @return the fully working settings-button */
 	public static JPanel getSettingsButton() {
@@ -63,6 +68,7 @@ public final class SettingsController {
 	public static void changeVolumeMenu(int newVolume) {
 		volumeMenu = newVolume;
 		MyAudioPlayer.setMainMenuVolume(newVolume);
+		conf.setProperty("VOLUME_MAIN", "" + newVolume);
 	}
 
 	/**
@@ -74,6 +80,7 @@ public final class SettingsController {
 	public static void changeVolumeIngame(int newVolume) {
 		volumeIngame = newVolume;
 		MyAudioPlayer.setGameVolume(newVolume);
+		conf.setProperty("VOLUME_GAME", "" + newVolume);
 	}
 
 	/**
@@ -85,7 +92,8 @@ public final class SettingsController {
 	public static void changeVolumeFX(int newVolume) {
 		volumeFX = newVolume;
 		MyAudioPlayer.setEffectsVolume(newVolume);
-	}
+		conf.setProperty("VOLUME_FX", "" + newVolume);
+	}	
 
 	/**
 	 * enables or disables fullscreen-mode or game-window
@@ -107,6 +115,7 @@ public final class SettingsController {
 			GameWindow.getInstance().setVisible(true);
 			GameWindow.getInstance().setContentPane(windowPane);
 		}
+		conf.setProperty("FULLSCREEN", "" + state);
 	}
 
 	/**
@@ -156,6 +165,7 @@ public final class SettingsController {
 	 *            true: enable fullscreen-mode, false: go to window-mode
 	 */
 	public static void changeFullscreen(boolean state) {
+		fullScreen = state;
 		changeFullScreenMenu(state);
 		changeFullScreenGameWindow(state);
 	}
@@ -172,14 +182,42 @@ public final class SettingsController {
 		});
 	}
 
-	private static void save() {
-		// TODO: save everything to file
-	}
-
+	/** loads everything from file */
 	public static void load() {
+		conf = new AutoCreatingProperties();
+		conf.load(new File(SETTINGS_FILE));
 
-		Runtime.getRuntime().addShutdownHook(new Thread(() -> save()));
-		// TODO: load everything from file
+		// set fullscreen-mode
+		try {
+			boolean fullscreen = Boolean.parseBoolean(conf.getProperty("FULLSCREEN", "0"));
+			SettingsController.changeFullscreen(fullscreen);
+		} catch (NumberFormatException nfe) {
+			SettingsController.changeFullscreen(false);
+		}
+
+		// set menu-audio-volume
+		try {
+			int volumeMain = Integer.parseInt(conf.getProperty("VOLUME_MAIN", "20"));
+			SettingsController.changeVolumeMenu(volumeMain);
+		} catch (NumberFormatException nfe) {
+			SettingsController.changeVolumeMenu(20);
+		}
+
+		// set game-audio-volume
+		try {
+			int volumeGame = Integer.parseInt(conf.getProperty("VOLUME_GAME", "20"));
+			SettingsController.changeVolumeIngame(volumeGame);
+		} catch (NumberFormatException nfe) {
+			SettingsController.changeVolumeIngame(20);
+		}
+
+		// set FX-audio-volume
+		try {
+			int volumeFX = Integer.parseInt(conf.getProperty("VOLUME_FX", "20"));
+			SettingsController.changeVolumeFX(volumeFX);
+		} catch (NumberFormatException nfe) {
+			SettingsController.changeVolumeFX(20);
+		}
 	}
 
 }
