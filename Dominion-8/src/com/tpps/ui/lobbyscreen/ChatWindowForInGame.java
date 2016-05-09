@@ -15,6 +15,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -192,7 +194,7 @@ public class ChatWindowForInGame extends JPanel {
 		this.createChatInputPart(" " + sdf.format(new Date()), whiteColor);
 		this.createChatInputPart(DominionController.getInstance().getUsername() + ": ", ownColor);
 		this.createChatInputPart(msg + "\n", whiteColor);
-		DominionController.getInstance().sendChatMessage(chatmessage.trim());
+		DominionController.getInstance().sendChatMessage(msg.trim());
 		try {
 			Thread.sleep(10);
 		} catch (InterruptedException e) {
@@ -262,8 +264,9 @@ public class ChatWindowForInGame extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (!ChatWindowForInGame.this.chatInputLine.getText().equals("")) {
-				ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());
+			if (!ChatWindowForInGame.this.chatInputLine.getText().trim().equals("") 
+				&& ChatWindowForInGame.this.checkChatString(chatInputLine.getText())) {
+					ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());
 			}
 			ChatWindowForInGame.this.chatInputLine.requestFocus();
 		}
@@ -276,8 +279,10 @@ public class ChatWindowForInGame extends JPanel {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_ENTER && !ChatWindowForInGame.this.chatInputLine.getText().equals("")) {
-				ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());
+			if (e.getKeyCode() == KeyEvent.VK_ENTER 
+				&& !ChatWindowForInGame.this.chatInputLine.getText().trim().equals("") 
+				&& ChatWindowForInGame.this.checkChatString(chatInputLine.getText())) {
+					ChatWindowForInGame.this.appendChatGlobal(ChatWindowForInGame.this.chatInputLine.getText());
 			}
 		}
 
@@ -292,6 +297,26 @@ public class ChatWindowForInGame extends JPanel {
 	
 	public JTextField getChatInputLine() {
 		return chatInputLine;
+	}
+	
+	/**
+	 * This method checks if a given String contains of Whitespaces
+	 * 
+	 * @author jhuhn
+	 * @param text
+	 *            String representation of the text to check
+	 * @return true, if the given String is allowed to send
+	 */
+	private boolean checkChatString(String text){
+		Pattern pattern = Pattern.compile("\\s");
+		Matcher matcher = pattern.matcher(text);
+		boolean whitespaces = matcher.find();
+		
+		if(text.length() > 22 && !whitespaces){
+			return false;
+		}else{
+			return true;
+		}
 	}
 
 	public static void main(String[] args) {

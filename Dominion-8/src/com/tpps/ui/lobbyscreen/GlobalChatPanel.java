@@ -17,6 +17,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -406,14 +408,36 @@ public class GlobalChatPanel extends JPanel {
 
 		@Override
 		public void mousePressed(MouseEvent e) {
-			if (!GlobalChatPanel.this.chatInputLine.getText().trim().equals("")) {
-				GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());
+			
+			if (!GlobalChatPanel.this.chatInputLine.getText().trim().equals("")
+				&& GlobalChatPanel.this.checkChatString(chatInputLine.getText())) {
+					GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());
 			}
 			GlobalChatPanel.this.chatInputLine.requestFocus();
 		}
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+		}
+	}
+	
+	/**
+	 * This method checks if a given String contains of Whitespaces
+	 * 
+	 * @author jhuhn
+	 * @param text
+	 *            String representation of the text to check
+	 * @return true, if the given String is allowed to send
+	 */
+	private boolean checkChatString(String text){
+		Pattern pattern = Pattern.compile("\\s");
+		Matcher matcher = pattern.matcher(text);
+		boolean whitespaces = matcher.find();
+		
+		if(text.length() > 30 && !whitespaces){
+			return false;
+		}else{
+			return true;
 		}
 	}
 
@@ -427,8 +451,10 @@ public class GlobalChatPanel extends JPanel {
 
 		@Override
 		public void keyPressed(KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_ENTER && !GlobalChatPanel.this.chatInputLine.getText().trim().equals("")) {
-				GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());
+			if (e.getKeyCode() == KeyEvent.VK_ENTER
+				&& !GlobalChatPanel.this.chatInputLine.getText().trim().equals("")
+				&& GlobalChatPanel.this.checkChatString(chatInputLine.getText())) {
+					GlobalChatPanel.this.appendChatGlobal(GlobalChatPanel.this.chatInputLine.getText());
 			}
 		}
 

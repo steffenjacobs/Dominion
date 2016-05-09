@@ -172,7 +172,8 @@ public class GlobalChat {
 		switch(command.trim()){
 		case help_servercommand1: //send answer packet back to user, with all comands servercommand1 == /help
 			String allcomands = "Commands: \n/" + help_servercommand1 + "\n/" + showClients_servercommand2 + "\n/"
-			+ showPorts_servercommand3 + "\n/" + showClientsAndPorts_servercommand4 + "\n/" + statistic_servercommand5 + "<nickname>";			
+			+ showPorts_servercommand3 + "\n/" + showClientsAndPorts_servercommand4 + "\n/" + statistic_servercommand5 + "<nickname>"
+			+ "\n/" + "@<user> <PM>";			
 			PacketSendAnswer answer = new PacketSendAnswer("", "BOT", allcomands, ColorPool.commandAndErrorColor); 
 			try {
 				server.sendMessage(port, answer);
