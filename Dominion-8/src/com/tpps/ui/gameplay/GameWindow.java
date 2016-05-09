@@ -36,6 +36,7 @@ import com.tpps.ui.components.DisplayValue;
 import com.tpps.ui.components.GFButton;
 import com.tpps.ui.components.GameBackground;
 import com.tpps.ui.lobbyscreen.ChatWindowForInGame;
+import com.tpps.ui.settings.SettingsController;
 
 /**
  * Main GUI Window where all components are merged together and ready for
@@ -71,7 +72,7 @@ public class GameWindow extends JFrame {
 
 	private BufferedImage displayImageTurnGreen, muteImage, playImage;
 
-	private static ButtonClass muteButton, playButton;
+//	private static ButtonClass muteButton, playButton;
 
 	private static final double CORRECTION_16TO9 = 16 / (double) 9;
 
@@ -137,6 +138,7 @@ public class GameWindow extends JFrame {
 		this.framework.setLayout(null);
 
 		this.add(this.framework);
+		this.framework.add(SettingsController.getSettingsButton());
 
 		// this.backgroundImage = this.loadingImage(backgroundImage,
 		// "resources/img/gamePlay/GameBackground.jpg");
@@ -159,10 +161,10 @@ public class GameWindow extends JFrame {
 
 		GameWindow.closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
 				this.closeImage, this.framework, "", "exit");
-		GameWindow.muteButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
-				this.muteImage, this.framework, "", "mute");
-		GameWindow.playButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
-				this.playImage, this.framework, "", "play");
+//		GameWindow.muteButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
+//				this.muteImage, this.framework, "", "mute");
+//		GameWindow.playButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
+//				this.playImage, this.framework, "", "play");
 		GameWindow.endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
 				this.buttonImage, this.framework, "End ActionPhase");
 		GameWindow.playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
@@ -202,7 +204,7 @@ public class GameWindow extends JFrame {
 
 		this.framework.addComponent(new GameBackground(0, 0, 1, 1, 0, this.backgroundImage, this.framework));
 		this.framework.addComponent(new GameBackground(0.31, 0.05, 0.38, 0.38, 2, this.tableImage, this.framework));
-		this.framework.addComponent(GameWindow.playButton);
+//		this.framework.addComponent(GameWindow.playButton);
 		this.framework.addComponent(GameWindow.closeButton);
 		this.framework.addComponent(GameWindow.endActionPhase);
 		this.framework.addComponent(GameWindow.endTurn);
@@ -1123,26 +1125,26 @@ public class GameWindow extends JFrame {
 		return coinButtons;
 	}
 
-	/**
-	 * getter Method
-	 * 
-	 * @return the mute button
-	 */
-
-	public ButtonClass getMuteButton() {
-		return muteButton;
-	}
-
-	/**
-	 * 
-	 * getter Method
-	 * 
-	 * @return the play button
-	 */
-
-	public ButtonClass getPlayButton() {
-		return playButton;
-	}
+//	/**
+//	 * getter Method
+//	 * 
+//	 * @return the mute button
+//	 */
+//
+//	public ButtonClass getMuteButton() {
+//		return muteButton;
+//	}
+//
+//	/**
+//	 * 
+//	 * getter Method
+//	 * 
+//	 * @return the play button
+//	 */
+//
+//	public ButtonClass getPlayButton() {
+//		return playButton;
+//	}
 
 	/**
 	 * 

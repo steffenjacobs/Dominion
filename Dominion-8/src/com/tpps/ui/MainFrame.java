@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.ImageLoader;
+import com.tpps.ui.settings.SettingsController;
 
 /**
  * 
@@ -33,14 +34,24 @@ public class MainFrame extends JFrame {
 		int height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		this.setSize(width, height);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.fullscreenmode();
+		this.changeFullscreenMode(SettingsController.isFullscreen());
 		this.setMinimumSize(new Dimension(1280, 720));
 		GameLog.log(MsgType.INIT, "MainFrame");
 	}
 
-	private void fullscreenmode() {
-		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-	//	this.setUndecorated(true);
+	/**
+	 * changes the full-screen-mode
+	 * 
+	 * @param fullscreen
+	 *            whether the window should fill the entire screen
+	 */
+	public void changeFullscreenMode(boolean fullscreen) {
+		if (fullscreen) {
+			this.setUndecorated(true);
+			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		} else {
+			this.setSize(1280, 720);
+		}
 	}
 
 	public void setPanel(JPanel panel) {

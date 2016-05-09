@@ -3,6 +3,7 @@ package com.tpps.technicalServices.network.game;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Iterator;
+import java.util.UUID;
 
 import com.tpps.application.game.Player;
 import com.tpps.technicalServices.logger.GameLog;
@@ -61,6 +62,38 @@ public class ObserverThread extends Thread {
 				Player player1 = this.gameServer.getGameController().getPlayerByPort(port);
 				this.gameServer.getGameController().getPlayers().remove(player1);
 				this.gameServer.getDisconnectedUser().remove(player1);
+				
+				boolean kiFlag = true;
+				for (Iterator<Player> iterator = this.gameServer.getGameController().getPlayers().iterator(); iterator.hasNext();) {
+					Player player = (Player) iterator.next();
+					if (!player.getSessionID().equals(UUID.fromString("00000000-0000-0000-0000-000000000000"))){
+						kiFlag = false;
+					}
+				}
+				
+				if (kiFlag) {
+					Client client;
+					try {
+						client = new Client(
+								new InetSocketAddress(Addresses.getLocalHost(), MatchmakingServer.getStandardPort()),
+								new PacketHandler() {
+
+									@Override
+									public void handleReceivedPacket(int port, Packet packet) {
+
+									}
+								}, false);
+						GameLog.log(MsgType.MM, "send message to matchmakingserver");
+						client.sendMessage(new PacketGameEnd(this.gameServer.getGameController().getPlayerNames(),
+								this.gameServer.getGameController().getWinningPlayer().getPlayerName(),
+								this.gameServer.getPort()));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					return;
+				}
+				
+				
 				this.gameServer.getGameController().resetSpyList();
 				this.gameServer.getGameController().resetThiefList();
 				for (Iterator<Player> iterator = this.gameServer.getGameController().getPlayers().iterator(); iterator

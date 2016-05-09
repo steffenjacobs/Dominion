@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -37,6 +38,7 @@ import com.tpps.ui.endscreen.EndPanel;
 import com.tpps.ui.lobbyscreen.GlobalChatPanel;
 import com.tpps.ui.lobbyscreen.PlayerSettingsPanel;
 import com.tpps.ui.loginscreen.LoginGUIController;
+import com.tpps.ui.settings.SettingsController;
 import com.tpps.ui.statisticsscreen.StatisticsBoard;
 
 /**
@@ -253,6 +255,17 @@ public final class DominionController {
 		}
 	}
 
+	public void showSettings() {
+		SettingsController.showSettingsWindow(getCenter(SettingsController.SETTINGS_WINDOW_SIZE.width,
+				SettingsController.SETTINGS_WINDOW_SIZE.height));
+	}
+
+	private Point getCenter(int width, int height) {
+		return new Point(
+				(int) (getMainFrame().getLocation().getX() + getMainFrame().getSize().getWidth() / 2 - width / 2),
+				(int) (getMainFrame().getLocation().getY() + getMainFrame().getSize().getHeight() / 2 - height / 2));
+	}
+
 	/**
 	 * stops searching a match
 	 * 
@@ -359,11 +372,12 @@ public final class DominionController {
 	 * @author jhuhn
 	 */
 	public void endLogin() {
+		this.showSettings();
 		this.mainFrame.setTitle("Dominion by TPPS - Playing as " + this.username + (offlineMode ? " (OFFLINE) " : ""));
 
 		this.loadPanels();
 		this.initClients();
-		
+
 		if (!isOffline()) {
 			storageController.checkStandardCards(true);
 		}
