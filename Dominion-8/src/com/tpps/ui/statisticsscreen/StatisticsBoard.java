@@ -47,7 +47,7 @@ public class StatisticsBoard extends JPanel {
 	private static final float BLACK_TRANSPARENCY = 0.6F;
 	private static final int CELL_ROW_HEIGHT = 50;
 	private BufferedImage blackBeauty;
-	private final Font font = new Font("Calibri", Font.PLAIN, 15);
+	private final Font font = new Font("Calibri", Font.PLAIN, 20);
 	private final Font headFont = new Font("Arial Black", Font.BOLD, 14);
 	private final Font fontSearch = new Font("Calibri", Font.PLAIN, 45);
 	private JTable table;
