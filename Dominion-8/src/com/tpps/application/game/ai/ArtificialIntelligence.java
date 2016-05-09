@@ -231,7 +231,9 @@ public class ArtificialIntelligence {
 		debugCardPrint("cardHand", getCardHand());
 
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
-			// if (this.player.getGameServer().getGameController().playerStillInReactionMode() {}
+			// if
+			// (this.player.getGameServer().getGameController().playerStillInReactionMode()
+			// {}
 			sleep();
 			GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife?, cardHand:");
 			debugCardPrint("cardHand", getCardHand());
@@ -535,6 +537,7 @@ public class ArtificialIntelligence {
 	 */
 	private String determinePurchase(int treasureValue) {
 		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
+		LinkedList<Card> cardHandBeforeTurn = getCardHand();
 
 		double attacksOriginally = attacks * GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue();
 		double attacksBoughtByEnemies = attacksOriginally - board.getSizeOfPilesOnBoardWithType(CardType.ATTACK) - this.player.getDeck().containsAmountOf(CardType.ATTACK);
@@ -637,7 +640,10 @@ public class ArtificialIntelligence {
 			if (treasureValue >= 8) {
 				return CardName.PROVINCE.getName();
 			} else if (treasureValue >= 6 && !this.strategy.equals(Strategy.BIG_MONEY_CHAPEL)) {
-				return CardName.GOLD.getName();
+				if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName()) > 7 && this.getPileSize(CardName.PROVINCE.getName()) < 7 && cardAvailableOnBoard(CardName.DUCHY.getName())) {
+					return CardName.DUCHY.getName();
+				} else if (cardAvailableOnBoard(CardName.GOLD.getName()))
+					return CardName.GOLD.getName();
 			}
 			switch (strategy) {
 			case BIG_MONEY: // 2 Moats (first has to be bought before silver)
@@ -659,8 +665,8 @@ public class ArtificialIntelligence {
 				 * in deck or was already more than 2 times in discard mode, the
 				 * first MOAT will be bought
 				 */
-				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 2 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
+				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName(), this.player.getPlayedCards())
+						&& (discardModeCount > 2 || this.player.getDeck().contains(CardName.CURSE.getName(), this.player.getPlayedCards()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
 				/**
 				 * classic SILVER with 3 coins
@@ -681,7 +687,7 @@ public class ArtificialIntelligence {
 				 */
 				if (treasureValue >= 6) {
 					if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName()) >= 5 && cardAvailableOnBoard(CardName.ADVENTURER.getName())
-							&& !this.player.getDeck().contains(CardName.ADVENTURER.getName())) {
+							&& !this.player.getDeck().contains(CardName.ADVENTURER.getName(), this.player.getPlayedCards())) {
 						return CardName.ADVENTURER.getName();
 					} else
 						return CardName.GOLD.getName();
@@ -696,15 +702,15 @@ public class ArtificialIntelligence {
 				/**
 				 * if no chapel has been bought yet, buy the first and only one
 				 */
-				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName()))
+				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName(), this.player.getPlayedCards()))
 					return CardName.CHAPEL.getName();
 				/**
 				 * if other players buy ATTACKs, the player has already a CURSE
 				 * in deck or was already more than 3 times in discard mode, the
 				 * first MOAT will be bought
 				 */
-				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
+				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName(), this.player.getPlayedCards())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName(), this.player.getPlayedCards()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
 				/**
 				 * classic SILVER with 3 coins
@@ -735,7 +741,7 @@ public class ArtificialIntelligence {
 				/**
 				 * if no chapel has been bought yet, buy the first and only one
 				 */
-				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName()))
+				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName(), this.player.getPlayedCards()))
 					return CardName.CHAPEL.getName();
 				/**
 				 * classic SILVER with 3 coins
@@ -747,8 +753,8 @@ public class ArtificialIntelligence {
 				 * buy a second MOAT (also not too good for BM, but necessary if
 				 * there are so many ATTACKs played)
 				 */
-				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
+				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName(), this.player.getPlayedCards())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName(), this.player.getPlayedCards()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
 			case BIG_MONEY_CHAPEL_WITCH: // No Moats and 2 Witches
 				/**
@@ -768,7 +774,7 @@ public class ArtificialIntelligence {
 				/**
 				 * if no chapel has been bought yet, buy the first and only one
 				 */
-				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName()))
+				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName(), this.player.getPlayedCards()))
 					return CardName.CHAPEL.getName();
 				/**
 				 * classic SILVER with 3 coins
@@ -800,8 +806,8 @@ public class ArtificialIntelligence {
 				 * in deck or was already more than 3 times in discard mode, the
 				 * first MOAT will be bought
 				 */
-				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
+				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName(), this.player.getPlayedCards())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName(), this.player.getPlayedCards()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
 			case DRAW_ADD_ACTION: // 3 Moats Max.
 				/**
@@ -818,14 +824,14 @@ public class ArtificialIntelligence {
 				 * in deck or was already more than 3 times in discard mode, the
 				 * first MOAT will be bought
 				 */
-				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName())
-						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName()) || attacksAvailableRatio < MOAT_RATIO_1))
+				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName(), this.player.getPlayedCards())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName(), this.player.getPlayedCards()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
 				/**
 				 * try to play FESTIVAL, LABORATORY, COUNCILROOM etc.. and in
 				 * the end a MILITIA. that's why this is bought here.
 				 */
-				else if (treasureValue >= 4 && !this.player.getDeck().contains(CardName.MILITIA.getName()) && cardAvailableOnBoard(CardName.MILITIA.getName()) && this.player.getTurnNr() >= 7)
+				else if (treasureValue >= 4 && !this.player.getDeck().contains(CardName.MILITIA.getName(), this.player.getPlayedCards()) && cardAvailableOnBoard(CardName.MILITIA.getName()) && this.player.getTurnNr() >= 7)
 					// punish potential Councilroom with Militia
 					return CardName.MILITIA.getName();
 				else if (treasureValue >= 3) {
@@ -991,6 +997,21 @@ public class ArtificialIntelligence {
 	 */
 	private boolean isTrashWorthy(Card card) {
 		return (card.getName().equals(CardName.ESTATE.getName()) && !lastEstateInDeck()) || card.getName().equals(CardName.COPPER.getName()) || card.getName().equals(CardName.CURSE.getName());
+	}
+
+	/**
+	 * 
+	 * @param name
+	 *            the name to search for
+	 * @param list
+	 *            the list to search in
+	 * @return whether the card with name is contained in list
+	 */
+	private boolean listContains(String name, LinkedList<Card> list) {
+		for (Card c : list)
+			if (c.getName().equals(name))
+				return true;
+		return false;
 	}
 
 	/**
