@@ -41,8 +41,7 @@ public class CreateAccountListener implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 
 		if (ca.getCancel().equals(e.getSource())) {
-			this.ca.dispose();
-			new LogInGUI(guicontroller);
+			this.guicontroller.backtoLogin();
 			return;
 		}
 
@@ -100,8 +99,7 @@ public class CreateAccountListener implements MouseListener {
 	public void mousePressed(MouseEvent e) {
 
 		if (ca.getCancel().equals(e.getSource())) {
-			this.ca.dispose();
-			new LogInGUI(guicontroller);
+			this.guicontroller.backtoLogin();
 			return;
 		}
 
