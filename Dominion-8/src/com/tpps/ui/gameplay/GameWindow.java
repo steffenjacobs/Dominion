@@ -8,7 +8,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -67,12 +66,11 @@ public class GameWindow extends JFrame {
 	private ChatWindowForInGame chatWindow;
 	private GameLogTextPane loggerPane;
 	private BufferedImage clickImage;
-	private final int WIDTH, HEIGHT;
 	private int reactionCounter, gameBackgroundCounter, topGap;
 
 	private BufferedImage displayImageTurnGreen, muteImage, playImage;
 
-//	private static ButtonClass muteButton, playButton;
+	// private static ButtonClass muteButton, playButton;
 
 	private static final double CORRECTION_16TO9 = 16 / (double) 9;
 
@@ -103,10 +101,8 @@ public class GameWindow extends JFrame {
 	 * 
 	 * @throws IOException
 	 */
-	public GameWindow() throws IOException {
+	public GameWindow() {
 		GameWindow.instance = this;
-		this.WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
-		this.HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 
 		GameLog.log(MsgType.INIT, "GameWindow");
 		this.loggerPane = GameLog.getTextPane();
@@ -130,18 +126,19 @@ public class GameWindow extends JFrame {
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setIconImage(ImageLoader.getImage("resources/img/loginScreen/Icon.png"));
-		// this.setExtendedState(Frame.MAXIMIZED_BOTH);
-		// this.setUndecorated(true);
+		
+		if (SettingsController.isFullscreen()) {
+			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+			this.setUndecorated(true);
+		}
+		
 		this.setMinimumSize(new Dimension(1280, 720));
-		// this.setVisible(true);
 		this.framework = new GraphicFramework(this);
 		this.framework.setLayout(null);
 
 		this.add(this.framework);
 		this.framework.add(SettingsController.getSettingsButton());
 
-		// this.backgroundImage = this.loadingImage(backgroundImage,
-		// "resources/img/gamePlay/GameBackground.jpg");
 		this.backgroundImage = DominionController.selectedGameImage;
 		GameLog.log(MsgType.GUI, "THIRD: " + this.backgroundImage);
 		this.closeImage = this.loadingImage(this.closeImage, "resources/img/gameObjects/close.png");
@@ -161,10 +158,12 @@ public class GameWindow extends JFrame {
 
 		GameWindow.closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
 				this.closeImage, this.framework, "", "exit");
-//		GameWindow.muteButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
-//				this.muteImage, this.framework, "", "mute");
-//		GameWindow.playButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
-//				this.playImage, this.framework, "", "play");
+		// GameWindow.muteButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 *
+		// CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
+		// this.muteImage, this.framework, "", "mute");
+		// GameWindow.playButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 *
+		// CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
+		// this.playImage, this.framework, "", "play");
 		GameWindow.endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
 				this.buttonImage, this.framework, "End ActionPhase");
 		GameWindow.playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
@@ -204,7 +203,7 @@ public class GameWindow extends JFrame {
 
 		this.framework.addComponent(new GameBackground(0, 0, 1, 1, 0, this.backgroundImage, this.framework));
 		this.framework.addComponent(new GameBackground(0.31, 0.05, 0.38, 0.38, 2, this.tableImage, this.framework));
-//		this.framework.addComponent(GameWindow.playButton);
+		// this.framework.addComponent(GameWindow.playButton);
 		this.framework.addComponent(GameWindow.closeButton);
 		this.framework.addComponent(GameWindow.endActionPhase);
 		this.framework.addComponent(GameWindow.endTurn);
@@ -1125,26 +1124,26 @@ public class GameWindow extends JFrame {
 		return coinButtons;
 	}
 
-//	/**
-//	 * getter Method
-//	 * 
-//	 * @return the mute button
-//	 */
-//
-//	public ButtonClass getMuteButton() {
-//		return muteButton;
-//	}
-//
-//	/**
-//	 * 
-//	 * getter Method
-//	 * 
-//	 * @return the play button
-//	 */
-//
-//	public ButtonClass getPlayButton() {
-//		return playButton;
-//	}
+	// /**
+	// * getter Method
+	// *
+	// * @return the mute button
+	// */
+	//
+	// public ButtonClass getMuteButton() {
+	// return muteButton;
+	// }
+	//
+	// /**
+	// *
+	// * getter Method
+	// *
+	// * @return the play button
+	// */
+	//
+	// public ButtonClass getPlayButton() {
+	// return playButton;
+	// }
 
 	/**
 	 * 

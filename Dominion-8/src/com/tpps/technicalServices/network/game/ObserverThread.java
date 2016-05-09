@@ -38,7 +38,7 @@ public class ObserverThread extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (this.gameServer.getDisconnectedUser().size() >= 3) {
+		if (this.gameServer.getDisconnectedUser().size() >= 3 || this.gameServer.getGameController().getPlayers().size() == 1) {
 			GameLog.log(MsgType.MM, "end game because three users are disconnected");
 //			Client client;
 //			try {
@@ -53,7 +53,10 @@ public class ObserverThread extends Thread {
 //						}, false);
 //				client.sendMessage(new PacketGameEnd(this.gameServer.getGameController().getPlayerNames(),
 //						this.gameServer.getGameController().getWinningPlayer().getPlayerName(), gameServer.getPort()));
+			if (!this.gameServer.getGameServerNetworkListener().getPacketSend().get()){
 				this.gameServer.getGameController().endGame();
+				this.gameServer.getGameServerNetworkListener().getPacketSend().set(true);
+			}
 //			} catch (IOException e) {
 //				e.printStackTrace();
 //			}
@@ -113,7 +116,7 @@ public class ObserverThread extends Thread {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			} catch (IndexOutOfBoundsException e) {
+			} catch (IndexOutOfBoundsException | NullPointerException e) {
 				e.printStackTrace();
 			}
 		}
