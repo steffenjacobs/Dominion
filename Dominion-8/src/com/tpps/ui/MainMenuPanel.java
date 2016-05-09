@@ -1,6 +1,7 @@
 package com.tpps.ui;
 
 import java.awt.AlphaComposite;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
@@ -20,6 +21,7 @@ import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.ImageLoader;
 import com.tpps.technicalServices.util.MyAudioPlayer;
 import com.tpps.ui.components.MainMenuButton;
+import com.tpps.ui.settings.SettingsController;
 
 /**
  * 
@@ -31,30 +33,32 @@ public class MainMenuPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final float INITIALIZE_ALPHA;
 	private BufferedImage originalBackground, actualBackground;
-	
+
 	private float[] alpha;
-	private MainMenuButton[] buttons;	
+	private MainMenuButton[] buttons;
 	private final MainFrame parent;
 	private final int gapFactor, topGap;
 
 	/**
 	 * Constructor for the MainMenuPanell
-	 * @param the MainMenu which holds this panel
+	 * 
+	 * @param the
+	 *            MainMenu which holds this panel
 	 */
 	public MainMenuPanel(MainFrame parent) {
 		this.gapFactor = 7;
 		this.parent = parent;
-		this.topGap = Toolkit.getDefaultToolkit().getScreenSize().height / 6;
+		this.topGap = parent.getSize().height / 6;
 		this.INITIALIZE_ALPHA = 0.6F;
 		MyAudioPlayer.init();
 		loadBackgroundImage();
-		initializeAlpha();				
+		initializeAlpha();
 		createButtons(this.parent);
 		registrateMouseListener();
-//		MyAudioPlayer.handleMainMusic(true);
+		// MyAudioPlayer.handleMainMusic(true);
 		this.addComponentListener(new MyComponentAdapter());
 		repaint();
-		if(DominionController.isOffline()){
+		if (DominionController.isOffline()) {
 			try {
 				this.buttons[1].setEnabled(false);
 				this.buttons[2].setEnabled(false);
@@ -63,39 +67,46 @@ public class MainMenuPanel extends JPanel {
 				e.printStackTrace();
 			}
 		}
+
+		this.setLayout(new FlowLayout(FlowLayout.LEFT));
+		this.add(SettingsController.getSettingsButton());
+		this.setOpaque(false);
+		
+		
 		GameLog.log(MsgType.INIT, "MainMenuPanel");
 	}
 
 	/**
 	 * creates the Button on the Jpanel
+	 * 
 	 * @param parent
 	 */
 	private void createButtons(MainFrame parent) {
-	
-			buttons = new MainMenuButton[4];
-			String[] names = new String[]{"Single Player", "Multi Player", "Card Editor", "Community"};
-			try {
-				for (int i = 0; i < buttons.length; i++) {
-					buttons[i] = new MainMenuButton((parent.getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1) + topGap,
-							names[i]);
-				}				
-				
-			} catch (IOException e) {
-				e.printStackTrace();
+
+		buttons = new MainMenuButton[4];
+		String[] names = new String[] { "Single Player", "Multi Player", "Card Editor", "Community" };
+		try {
+			for (int i = 0; i < buttons.length; i++) {
+				buttons[i] = new MainMenuButton((parent.getWidth() / 2),
+						(parent.getHeight() / gapFactor) * (i + 1) + topGap, names[i]);
 			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
-	
+
 	/**
 	 * loads the backgroundImage from filesystem
 	 */
 	private void loadBackgroundImage() {
 		this.originalBackground = ImageLoader.getImage("resources/img/mainMenu/Dominion.jpg");
-		
+
 		int newWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
-		int newHeight = Toolkit.getDefaultToolkit().getScreenSize().height;			
+		int newHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 		this.actualBackground = GraphicsUtil.resize(this.originalBackground, newWidth, newHeight);
 	}
-	
+
 	/**
 	 * initializes the alpha value of each button.
 	 */
@@ -106,9 +117,10 @@ public class MainMenuPanel extends JPanel {
 			alpha[i] = INITIALIZE_ALPHA;
 		}
 	}
-	
+
 	/**
 	 * changes the alpha value of the button if the mouse is on the button
+	 * 
 	 * @param e
 	 */
 	protected void changeAlphaForButton(MouseEvent e) {
@@ -127,7 +139,7 @@ public class MainMenuPanel extends JPanel {
 			}
 		}
 	}
-	
+
 	/**
 	 * registrates the MouseListener on the panel
 	 */
@@ -136,19 +148,19 @@ public class MainMenuPanel extends JPanel {
 		this.addMouseListener(m);
 		this.addMouseMotionListener(m);
 	}
-	
-	protected void onResize(double sizeFactorWidth, double sizeFactorHeight){
-		this.actualBackground = GraphicsUtil.resize((BufferedImage) this.originalBackground,
-				this.parent.getWidth(), this.parent.getHeight());
-		for (int i = 0; i < buttons.length; i++) {			
-			buttons[i].onResize((parent.getWidth() / 2)
-					, (parent.getHeight() / gapFactor) * (i + 1) + topGap,
+
+	protected void onResize(double sizeFactorWidth, double sizeFactorHeight) {
+		this.actualBackground = GraphicsUtil.resize((BufferedImage) this.originalBackground, this.parent.getWidth(),
+				this.parent.getHeight());
+		for (int i = 0; i < buttons.length; i++) {
+			buttons[i].onResize((parent.getWidth() / 2), (parent.getHeight() / gapFactor) * (i + 1) + topGap,
 					sizeFactorWidth, sizeFactorHeight);
-		}				
+		}
 	}
 
 	/**
 	 * inner class for listening mouseEvents
+	 * 
 	 * @author Lukas
 	 *
 	 */
@@ -162,22 +174,21 @@ public class MainMenuPanel extends JPanel {
 			MyAudioPlayer.doClick();
 			if (buttons[0].isOn(e.getX(), e.getY()) && buttons[0].isEnabled()) {
 				DominionController.getInstance().joinSingleplayer();
-				
+
 			}
-			if (buttons[1].isOn(e.getX(), e.getY()) && buttons[1].isEnabled()) {								
+			if (buttons[1].isOn(e.getX(), e.getY()) && buttons[1].isEnabled()) {
 				DominionController.getInstance().joinLobbyGui(false);
 				DominionController.getInstance().sendPacketToGetStatistics();
 				DominionController.getInstance().findMatch();
 			}
-			if (buttons[2].isOn(e.getX(), e.getY())&& buttons[2].isEnabled()) {
+			if (buttons[2].isOn(e.getX(), e.getY()) && buttons[2].isEnabled()) {
 				DominionController.getInstance().joinCardEditor();
 			}
-			if (buttons[3].isOn(e.getX(), e.getY()) && buttons[3].isEnabled()) {				
+			if (buttons[3].isOn(e.getX(), e.getY()) && buttons[3].isEnabled()) {
 				DominionController.getInstance().joinStatisticsGui();
 				DominionController.getInstance().sendPacketToGetStatistics();
 			}
 		}
-		
 
 		/**
 		 * reacts on mouseMoved event
@@ -187,9 +198,10 @@ public class MainMenuPanel extends JPanel {
 			MainMenuPanel.this.changeAlphaForButton(e);
 		}
 	}
-	
+
 	/**
 	 * inner class which reacts on resize events of the gui
+	 * 
 	 * @author Lukas Adler
 	 *
 	 */
@@ -215,8 +227,7 @@ public class MainMenuPanel extends JPanel {
 	 * draws the background and the buttons
 	 */
 	@Override
-	public void paint(Graphics g) {
-
+	public void paintComponent(Graphics g) {
 		g.drawImage(actualBackground, 0, 0, null);
 		Graphics2D g2 = (Graphics2D) g;
 
@@ -225,5 +236,6 @@ public class MainMenuPanel extends JPanel {
 			g2.setComposite(ac);
 			g2.drawImage(buttons[i].getActualImage(), buttons[i].getX(), buttons[i].getY(), null);
 		}
+		super.paintComponent(g);
 	}
 }

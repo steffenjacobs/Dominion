@@ -31,6 +31,38 @@ public class MyAudioPlayer {
 	}
 
 	/**
+	 * sets the volume of the main-menu-audio
+	 * 
+	 * @param value
+	 *            the new volume
+	 */
+	public static void setMainMenuVolume(int value) {
+		MyAudioPlayer.mainMusicPlayer.setVolume(value);
+	}
+
+	/**
+	 * sets the volume of the game-audio
+	 * 
+	 * @param value
+	 *            the new volume
+	 */
+	public static void setGameVolume(int value) {
+		MyAudioPlayer.gameMusicPlayer.setVolume(value);
+	}
+
+	/**
+	 * sets the volume of the effects-audio
+	 * 
+	 * @param value
+	 *            the new volume
+	 */
+	public static void setEffectsVolume(int value) {
+		MyAudioPlayer.mp32.setVolume(value);
+		MyAudioPlayer.mp33.setVolume(value);
+		MyAudioPlayer.mp34.setVolume(value);
+	}
+
+	/**
 	 * startet die HintergrundMusik und setzt den Player auf wiederholen
 	 */
 	public static void play() {
