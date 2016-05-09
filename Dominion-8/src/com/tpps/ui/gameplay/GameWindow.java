@@ -378,7 +378,7 @@ public class GameWindow extends JFrame {
 							0.07, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 
 					GFButton button = new ButtonClass(shiftCard += 0.06, 0.07, 0.015, 0.015 * CORRECTION_16TO9,
-							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number);
+							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number,"NumberButton");
 
 					framework.addComponent(button);
 					framework.addComponent(card);
@@ -389,7 +389,7 @@ public class GameWindow extends JFrame {
 							serializedCard.getName(), serializedCard.getCost(), actionCardlds.get(i),
 							shiftBottom += 0.06, 0.25, 0.05, 0.15, k++, serializedCard.getImage(), framework);
 					GFButton button = new ButtonClass(shiftCardBottom += 0.06, 0.25, 0.015, 0.015 * CORRECTION_16TO9,
-							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number);
+							getWIDTH(), getHEIGHT(), l, buttonGameImage, framework, number,"NumberButton");
 
 					framework.addComponent(button);
 					framework.addComponent(card);
@@ -512,7 +512,7 @@ public class GameWindow extends JFrame {
 					GraphicsUtil.rotate(serializedCard.getImage(), 270), framework, "Coins");
 
 			GFButton button = new ButtonClass(0.935, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
-					getHEIGHT(), l, buttonGameImage, framework, number);
+					getHEIGHT(), l, buttonGameImage, framework, number,"NumberButton");
 			framework.addComponent(button);
 			framework.addComponent(card);
 			this.coinCards.add(card);
@@ -698,7 +698,7 @@ public class GameWindow extends JFrame {
 					serializedCard.getCost(), actionCardlds.get(i), -0.05, shift += 0.12, 0.1, 0.1, k++,
 					GraphicsUtil.rotate(serializedCard.getImage(), 90), framework, "Victory");
 			GFButton button = new ButtonClass(0.04, shiftCard += 0.12, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(),
-					getWIDTH(), l, buttonGameImage, framework, number);
+					getWIDTH(), l, buttonGameImage, framework, number,"NumberButton");
 			framework.addComponent(button);
 			framework.addComponent(card);
 

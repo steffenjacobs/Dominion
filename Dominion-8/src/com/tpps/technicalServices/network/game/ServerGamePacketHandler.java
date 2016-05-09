@@ -29,7 +29,6 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketClientShould
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
-import com.tpps.technicalServices.network.gameSession.packets.PacketEndActionPhase;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEndReactions;
 import com.tpps.technicalServices.network.gameSession.packets.PacketOpenGuiAndEnableOne;
 import com.tpps.technicalServices.network.gameSession.packets.PacketPlayCard;
@@ -373,8 +372,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 			if (votekickPacket.getUser().equals(this.server.getGameController().getActivePlayerName())) {
 				this.server.getGameController().setNextActivePlayer();
 
-				System.out.println("old active player: " + votekickPacket.getUser());
-				System.out.println("new active Player: " + this.server.getGameController().getActivePlayer().getPlayerName());
 				this.server.broadcastMessage(this.server.getGameController().getPlayerByUserName(votekickPacket.getUser()).getPort(),
 						new PacketEnableDisable(this.server.getGameController().getActivePlayer().getClientID(), this.server.getGameController().getActivePlayerName(), true));
 			}
@@ -392,6 +389,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 				this.server.getGameController().resetThiefList();
 				this.server.getGameController().resetSpyList();
 			}
+			this.server.sendMessage(port, votekickPacket);
 		}
 	}
 

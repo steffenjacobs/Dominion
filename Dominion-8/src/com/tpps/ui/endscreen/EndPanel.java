@@ -68,9 +68,13 @@ public class EndPanel extends JPanel {
 
 
 		playerOnePanel = new JPanel();
+		playerOnePanel.setOpaque(false);
 		playerTwoPanel = new JPanel();
+		playerTwoPanel.setOpaque(false);
 		playerThreePanel = new JPanel();
+		playerThreePanel.setOpaque(false);
 		playerFourPanel= new JPanel();
+		playerFourPanel.setOpaque(false);
 //		this.playerOne("die Schweinepriester", 20);
 //		this.playerTwo("die Steffenverehrer", 19);
 //		this.playerThree("die Möchtegernwifos", 22);
