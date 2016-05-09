@@ -238,14 +238,7 @@ public class GameBoard {
 				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.CURSE_VALUE.getValue())), CollectionsUtil.linkedList(CardType.CURSE), CardName.CURSE
 						.getName(), GameConstant.CURSE_COST.getValue()), GameConstant.INIT_CURSE_PILE_SIZE.getValue(), curseList);
 		this.tableForVictoryCards.put(CardName.CURSE.getName(), curseList);
-		Card.resetClassID();
-		
-		LinkedList<Card> gardenList = new LinkedList<Card>();
-		CollectionsUtil.cloneCardToList(
-				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.GARDEN_VALUE.getValue())), CollectionsUtil.linkedList(CardType.VICTORY), CardName.GARDENS
-						.getName(), GameConstant.GARDEN_COST.getValue()), GameConstant.INIT_GARDEN_PILE_SIZE.getValue(), gardenList);
-		this.tableForVictoryCards.put(CardName.GARDENS.getName(), gardenList);
-		Card.resetClassID();
+		Card.resetClassID();		
 	}
 
 	/**
@@ -461,6 +454,14 @@ public class GameBoard {
 				new Card(CollectionsUtil.linkedHashMapAction(CardAction.REVEAL_UNTIL_TREASURES, "2"), CollectionsUtil.linkedList(CardType.ACTION), CardName.ADVENTURER.getName(), 6),
 				GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), adventurerList);
 		this.tableForAllActionCards.put(CardName.ADVENTURER.getName(), adventurerList);
+		Card.resetClassID();
+		
+//		Garden
+		LinkedList<Card> gardenList = new LinkedList<Card>();
+		CollectionsUtil.cloneCardToList(
+				new Card(CollectionsUtil.linkedHashMapAction(CardAction.IS_VICTORY, Integer.toString(GameConstant.GARDEN_VALUE.getValue())), CollectionsUtil.linkedList(CardType.VICTORY), CardName.GARDENS
+						.getName(), GameConstant.GARDEN_COST.getValue()), GameConstant.INIT_GARDEN_PILE_SIZE.getValue(), gardenList);
+		this.tableForVictoryCards.put(CardName.GARDENS.getName(), gardenList);
 		Card.resetClassID();
 	}
 
