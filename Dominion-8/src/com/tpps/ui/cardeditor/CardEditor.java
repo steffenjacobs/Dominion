@@ -177,7 +177,6 @@ public class CardEditor extends JFrame implements ActionListener {
 		testImage = new JLabel("");
 	}
 
-	// TODO : Radiobutton ActionListener - als Checkbox machen?
 	// TODO : Documentation und Formatierung
 	// TODO : Textfield, Namesabfrage ändern
 	// TODO : Upload in die Cloud
@@ -632,6 +631,11 @@ public class CardEditor extends JFrame implements ActionListener {
         createCard.setBorderPainted(false);
 		createCard.setFont(customFont.deriveFont(15f));
 		createCard.setPreferredSize(d);
+		createCard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ActionQuery(comboBoxListe);
+			}
+		});
 		untenLinks.add(createCard);
 		c.add(untenLinks, gbc);
 
