@@ -268,11 +268,27 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.gridwidth = 1;
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;
-		gbc.weightx = 0.35;
+		gbc.weightx = 0.27;
 		gbc.weighty = 1;
 		gbc.anchor = GridBagConstraints.SOUTH;
 		uImage.setLayout(new BorderLayout());
-		uploadImage = new JButton("Upload Image");
+		uploadImage = new JButton("Upload Image") {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void paint(Graphics g) {
+			g.drawImage(buttonIcon, 0, 0, null);
+			super.paint(g);
+		}
+	};
+	uploadImage.setOpaque(false);
+	uploadImage.setContentAreaFilled(false);
+	uploadImage.setBackground(null);
+	uploadImage.setBorder(null);
+	uploadImage.setBorderPainted(false);
+	uploadImage.setFont(customFont.deriveFont(15f));
+	uploadImage.setPreferredSize(d);
 		testImage = new JLabel("");
 		uploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -312,9 +328,58 @@ public class CardEditor extends JFrame implements ActionListener {
 		mitte.add(price, gbc2);
 		// gbc.anchor = GridBagConstraints.FIRST_LINE_END;
 		// gbc.fill = GridBagConstraints.HORIZONTAL;
-		increasePrice = new JButton("Increase Price");
-		standartPrice = new JButton("Standart Price");
-		decreasePrice = new JButton("Decreace Price");
+		increasePrice = new JButton("Increase Price") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(buttonIcon, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		increasePrice.setOpaque(false);
+		increasePrice.setContentAreaFilled(false);
+		increasePrice.setBackground(null);
+		increasePrice.setBorder(null);
+		increasePrice.setBorderPainted(false);
+		increasePrice.setFont(customFont.deriveFont(15f));
+		increasePrice.setPreferredSize(d);
+		standartPrice = new JButton("Standart Price") {
+
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(buttonIcon, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		standartPrice.setOpaque(false);
+		standartPrice.setContentAreaFilled(false);
+		standartPrice.setBackground(null);
+		standartPrice.setBorder(null);
+		standartPrice.setBorderPainted(false);
+		standartPrice.setFont(customFont.deriveFont(15f));
+		standartPrice.setPreferredSize(d);
+		
+		decreasePrice = new JButton("Decreace Price") {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void paint(Graphics g) {
+				g.drawImage(buttonIcon, 0, 0, null);
+				super.paint(g);
+			}
+		};
+		decreasePrice.setOpaque(false);
+		decreasePrice.setContentAreaFilled(false);
+		decreasePrice.setBackground(null);
+		decreasePrice.setBorder(null);
+		decreasePrice.setBorderPainted(false);
+		decreasePrice.setFont(customFont.deriveFont(15f));
+		decreasePrice.setPreferredSize(d);		
+		
 
 		/**
 		 * change the price preview when clicking on button
@@ -483,6 +548,9 @@ public class CardEditor extends JFrame implements ActionListener {
 		createCard.setOpaque(false);
 //		createCard.setBorderPainted(true);
 		createCard.setContentAreaFilled(false);
+        createCard.setBackground(null);
+        createCard.setBorder(null);
+        createCard.setBorderPainted(false);
 		createCard.setFont(customFont.deriveFont(15f));
 		createCard.setPreferredSize(d);
 		untenLinks.add(createCard);
@@ -501,23 +569,25 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.31;
-		cancel = new JButton("Cancel");
+		cancel = new JButton("Cancel") {
 
-		ImageIcon back;  //TODO Vorlage erstellen für Buttons
-		try {
-			
-			back = new ImageIcon (ImageIO.read(ClassLoader.getSystemResource("resources/img/cardEditor/cEbutton.png")));
-//			Dimension d = new Dimension(back.getIconWidth(), back.getIconHeight());
-			cancel.setOpaque(false);
-			cancel.setContentAreaFilled(false);
-			cancel.setBorderPainted(false);
-			cancel.setPreferredSize(d);
-			cancel.setIcon(back);
-		
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void paint(Graphics g) {
+			g.drawImage(buttonIcon, 0, 0, null);
+			super.paint(g);
 		}
+	};
+	cancel.setOpaque(false);
+//	createCard.setBorderPainted(true);
+	cancel.setContentAreaFilled(false);
+    cancel.setBackground(null);
+    cancel.setBorder(null);
+    cancel.setBorderPainted(false);
+	cancel.setFont(customFont.deriveFont(15f));
+	cancel.setPreferredSize(d);
 
 		/*
 		 * ImageIcon back; //TODO Vorlage erstellen für Buttons try {
