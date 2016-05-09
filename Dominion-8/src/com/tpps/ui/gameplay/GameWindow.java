@@ -48,9 +48,9 @@ public class GameWindow extends JFrame {
 
 	private static final long serialVersionUID = -5389003835573453281L;
 
-	private GraphicFramework framework;
+	private final GraphicFramework framework;
 	private static GameWindow instance;
-	public static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack, takeThiefCards,
+	static GFButton closeButton, endActionPhase, playTreasures, endTurn, takeCards, putBack, takeThiefCards,
 			putBackThiefCards, takeDrawedCard, setAsideDrawedCard;
 
 	private GameBackground table;
@@ -69,23 +69,16 @@ public class GameWindow extends JFrame {
 	private final int WIDTH, HEIGHT;
 	private int reactionCounter, gameBackgroundCounter, topGap;
 
-	private BufferedImage displayImageTurnGreen;
+	private BufferedImage displayImageTurnGreen, muteImage, playImage;
 
-	private BufferedImage muteImage;
-
-	private BufferedImage playImage;
-	// private int heightRelative, widthRelative, leftGap;
-	public static String coins, buys, actions;
-
-	public static ButtonClass muteButton;
-
-	public static ButtonClass playButton;
+	private static ButtonClass muteButton, playButton;
+	
 	private static final double CORRECTION_16TO9 = 16 / (double) 9;
 
 	/**
 	 * getter Method for GameWindow
 	 * 
-	 * @return
+	 * @return the instance of the game-window
 	 */
 
 	public static GameWindow getInstance() {
@@ -95,7 +88,7 @@ public class GameWindow extends JFrame {
 	/**
 	 * getter Method for framework
 	 * 
-	 * @return
+	 * @return the graphic-framework
 	 */
 
 	public GraphicFramework getGraphicFramework() {
@@ -138,9 +131,6 @@ public class GameWindow extends JFrame {
 		this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
 		// this.setExtendedState(Frame.MAXIMIZED_BOTH);
 		// this.setUndecorated(true);
-		GameWindow.coins = "Coins: ";
-		GameWindow.buys = "Buys: ";
-		GameWindow.actions = "Actions: ";
 		this.setMinimumSize(new Dimension(1280, 720));
 		// this.setVisible(true);
 		this.framework = new GraphicFramework(this);
@@ -997,7 +987,7 @@ public class GameWindow extends JFrame {
 	 * 
 	 * getter Method for background Image
 	 * 
-	 * @return
+	 * @return hte background image
 	 */
 
 	public BufferedImage getBackgroundImage() {
@@ -1019,7 +1009,7 @@ public class GameWindow extends JFrame {
 	 * 
 	 * get Screen resolution Width
 	 * 
-	 * @return
+	 * @return the width
 	 */
 
 	public int getWIDTH() {
@@ -1029,7 +1019,7 @@ public class GameWindow extends JFrame {
 	/**
 	 * get Screen resolution Height
 	 * 
-	 * @return
+	 * @return the height
 	 */
 
 	public int getHEIGHT() {
@@ -1061,7 +1051,7 @@ public class GameWindow extends JFrame {
 	 * 
 	 * getter of ReactionCounter
 	 * 
-	 * @return
+	 * @return the reaction counter
 	 */
 
 	public int getReactionCounter() {
@@ -1072,7 +1062,7 @@ public class GameWindow extends JFrame {
 	 * 
 	 * getter Method for GameBackgroundCounter
 	 * 
-	 * @return
+	 * @return the backgroundcounter
 	 */
 
 	public int getGameBackgroundCounter() {
@@ -1103,7 +1093,7 @@ public class GameWindow extends JFrame {
 	/**
 	 * getter method
 	 * 
-	 * @return
+	 * @return the click image
 	 */
 
 	public BufferedImage getClickImage() {
@@ -1113,7 +1103,7 @@ public class GameWindow extends JFrame {
 	/**
 	 * getter method for ChatWindow
 	 * 
-	 * @return
+	 * @return the chat window
 	 */
 
 	public ChatWindowForInGame getChatWindow() {
@@ -1130,7 +1120,7 @@ public class GameWindow extends JFrame {
 	/**
 	 * getter Method
 	 * 
-	 * @return
+	 * @return the coin buttons
 	 */
 
 	public LinkedList<GFButton> getCoinButtons() {
@@ -1140,7 +1130,7 @@ public class GameWindow extends JFrame {
 	/**
 	 * getter Method
 	 * 
-	 * @return
+	 * @return the mute button
 	 */
 
 	public ButtonClass getMuteButton() {
@@ -1151,7 +1141,7 @@ public class GameWindow extends JFrame {
 	 * 
 	 * getter Method
 	 * 
-	 * @return
+	 * @return the play button
 	 */
 
 	public ButtonClass getPlayButton() {
@@ -1162,7 +1152,7 @@ public class GameWindow extends JFrame {
 	 * 
 	 * getter Method
 	 * 
-	 * @return
+	 * @return the victory buttons
 	 */
 
 	public LinkedList<GFButton> getVictoryButtons() {

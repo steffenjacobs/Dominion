@@ -11,8 +11,7 @@ public abstract class Animation {
 
 	protected GameObject gameObject;
 	protected final int durationMillis;
-	protected boolean isRunning = false;
-	protected boolean isPaused = false, skip = false, reset = false;
+	protected boolean isRunning = false, isPaused = false, skip = false, reset = false;
 
 	/**
 	 * constructor
@@ -55,6 +54,17 @@ public abstract class Animation {
 	}
 
 	/**
+	 * stops the animation without resetting
+	 */
+	public void stop() {
+		if (this.isRunning) {
+			this.onStop();
+		} else {
+			System.err.println("Error: " + this.toString() + " is not running or already stopped.");
+		}
+	}
+
+	/**
 	 * skips the animation
 	 */
 	public void skip() {
@@ -90,6 +100,11 @@ public abstract class Animation {
 	 * is called when the animation was paused
 	 */
 	protected abstract void onPause();
+
+	/**
+	 * is called when the animation was stopped
+	 */
+	protected abstract void onStop();
 
 	/** @return a readable representation of the object */
 	@Override

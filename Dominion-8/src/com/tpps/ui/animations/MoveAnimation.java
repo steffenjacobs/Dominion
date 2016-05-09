@@ -36,7 +36,8 @@ public class MoveAnimation extends Animation {
 	 * @param y
 	 *            the y of the destination
 	 */
-	public MoveAnimation(GraphicFramework gf, GameObject gameObject, int durationMillis, Callable<?> callWhenDone, double x, double y) {
+	public MoveAnimation(GraphicFramework gf, GameObject gameObject, int durationMillis, Callable<?> callWhenDone,
+			double x, double y) {
 		super(gameObject, durationMillis);
 		this.maxFrames = durationMillis / DELAY_MILLIS;
 		this.frameCounter = 0;
@@ -67,14 +68,18 @@ public class MoveAnimation extends Animation {
 
 					// check if done
 					if (frameCounter >= maxFrames) {
-						// GameLog.log(MsgType. ,frameCounter + "/" + maxFrames);
+						// GameLog.log(MsgType. ,frameCounter + "/" +
+						// maxFrames);
 						framework.moveGameObjectTo(gameObject, destX, destY);
 
-						try {
-							callOnDone.call();
-						} catch (Exception e) {
-							e.printStackTrace();
+						if (callOnDone != null) {
+							try {
+								callOnDone.call();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
 						}
+
 						return;
 					}
 					// check reset-flag
@@ -93,7 +98,8 @@ public class MoveAnimation extends Animation {
 					try {
 						Thread.sleep(DELAY_MILLIS);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						//this is normal
+						System.out.println("Animation stopped.");
 					}
 				}
 
@@ -119,6 +125,12 @@ public class MoveAnimation extends Animation {
 	@Override
 	protected void onStart() {
 		this.playAnimationThread.start();
+	}
+
+	/** is called on stop */
+	@Override
+	protected void onStop(){
+		this.playAnimationThread.interrupt();
 	}
 
 	/** is called on resume */
