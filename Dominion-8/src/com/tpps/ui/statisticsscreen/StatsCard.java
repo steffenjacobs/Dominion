@@ -54,6 +54,7 @@ public class StatsCard {
 		frame.setResizable(false);
 		frame.setUndecorated(true);
 		frame.setVisible(true);
+		frame.setAlwaysOnTop(true);
 		frame.setLayout(new FlowLayout());
 		frame.setLocation(
 				(int) (parent.getLocation().getX() + parent.getSize().getWidth() / 2 - frame.getSize().getWidth() / 2),
