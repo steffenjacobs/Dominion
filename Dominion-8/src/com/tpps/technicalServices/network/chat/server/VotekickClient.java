@@ -48,11 +48,15 @@ public class VotekickClient extends PacketHandler{
 			e.printStackTrace();
 		}
 		System.out.println("sent packet to gameserver to kick client " + username);
-//		this.gameclient.disconnect();
 	}
 	
 
 	@Override
-	public void handleReceivedPacket(int port, Packet packet) {	}
+	/**
+	 * receives packet to disconnect
+	 */
+	public void handleReceivedPacket(int port, Packet packet) {
+		this.gameclient.disconnect();
+	}
 
 }
