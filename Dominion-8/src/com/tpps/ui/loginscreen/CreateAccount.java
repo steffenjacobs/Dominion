@@ -2,22 +2,18 @@ package com.tpps.ui.loginscreen;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,8 +23,9 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.FontLoader;
+import com.tpps.technicalServices.util.GraphicsUtil;
+import com.tpps.technicalServices.util.ImageLoader;
 
 /**
  * 
@@ -48,21 +45,21 @@ public class CreateAccount extends JFrame {
 	private JLabel header;
 	private JLabel all;
 	private JPanel[] panels;
-	private Font smallfont, bigfont, customFont;
-	BufferedImage blackBeauty;
-	LoginGUIController guicontroller;
-	private BufferedImage walterWhite;
+	private Font smallfont, customFont;
+	// private BufferedImage walterWhite;
 	private Color textAndLabelColor;
+
+	private LoginGUIController guicontroller;
 
 	private JPanel content;
 
-	private static final Dimension size = new Dimension(680, 450);
+	private static final Dimension size = new Dimension(500, 350);
 
 	/**
 	 * simple constructor (first call) merging all elements
 	 */
 
-	public CreateAccount(LoginGUIController guicontroller) {
+	public CreateAccount(LoginGUIController guicontroller, Point location) {
 		this.guicontroller = guicontroller;
 
 		loadImage();
@@ -98,6 +95,7 @@ public class CreateAccount extends JFrame {
 		this.createpanel4();
 		this.createpanel5();
 		this.createpanel6();
+		this.setLocation(location);
 		this.revalidate();
 	}
 
@@ -133,7 +131,6 @@ public class CreateAccount extends JFrame {
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		smallfont = new Font("Calibri", Font.BOLD, 19);
-		bigfont = new Font("Calibri", Font.BOLD, 25);
 		try {
 			this.setIconImage((ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/Icon.png"))));
 		} catch (IOException e) {
@@ -154,26 +151,26 @@ public class CreateAccount extends JFrame {
 	 */
 
 	private void loadImage() {
-		try {
-			this.background = GraphicsUtil.resize(
-					ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg")),
-					size.width, size.height);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.background = GraphicsUtil.resize(
+				ImageLoader.getImage("resources/img/loginScreen/LoginBackground.jpg"),
+				size.width, size.height);
 
-		try {
-			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			this.walterWhite = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/walterWhite.jpg"));
-			walterWhite = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		// try {
+		// this.blackBeauty =
+		// ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
+		// blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty,
+		// 0.4F);
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
+		// try {
+		// this.walterWhite =
+		// ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/walterWhite.jpg"));
+		// walterWhite = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty,
+		// 0.4F);
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 	}
 
 	// /**
@@ -213,20 +210,20 @@ public class CreateAccount extends JFrame {
 
 		description[0] = new JLabel("Email: ");
 		description[0].setFont(smallfont);
-		description[0].setHorizontalAlignment(JLabel.RIGHT);
+		description[0].setHorizontalAlignment(JLabel.CENTER);
 		email = new JTextField() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(walterWhite, 0, 0, null);
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
 				super.paint(g);
 			}
 		};
 		email.setForeground(textAndLabelColor);
 		email.setOpaque(false);
-		email.setFont(bigfont);
-		
+		email.setFont(smallfont);
+
 		panels[1].add(description[0]);
 		panels[1].add(email);
 		panels[1].setOpaque(false);
@@ -244,19 +241,19 @@ public class CreateAccount extends JFrame {
 
 		description[1] = new JLabel("Username: ");
 		description[1].setFont(smallfont);
-		description[1].setHorizontalAlignment(JLabel.RIGHT);
+		description[1].setHorizontalAlignment(JLabel.CENTER);
 		username = new JTextField() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(walterWhite, 0, 0, null);
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
 				super.paint(g);
 			}
 		};
 		username.setForeground(textAndLabelColor);
 		username.setOpaque(false);
-		username.setFont(bigfont);
+		username.setFont(smallfont);
 		panels[2].add(description[1]);
 		panels[2].add(username);
 		panels[2].setOpaque(false);
@@ -274,19 +271,19 @@ public class CreateAccount extends JFrame {
 
 		description[2] = new JLabel("Password: ");
 		description[2].setFont(smallfont);
-		description[2].setHorizontalAlignment(JLabel.RIGHT);
+		description[2].setHorizontalAlignment(JLabel.CENTER);
 		passwordbox = new JPasswordField() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(walterWhite, 0, 0, null);
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
 				super.paint(g);
 			}
 		};
 		passwordbox.setForeground(textAndLabelColor);
 		passwordbox.setOpaque(false);
-		passwordbox.setFont(bigfont);
+		passwordbox.setFont(smallfont);
 		panels[3].add(description[2]);
 		panels[3].add(passwordbox);
 		panels[3].setOpaque(false);
@@ -304,19 +301,19 @@ public class CreateAccount extends JFrame {
 
 		description[3] = new JLabel("Retype Password: ");
 		description[3].setFont(smallfont);
-		description[3].setHorizontalAlignment(JLabel.RIGHT);
+		description[3].setHorizontalAlignment(JLabel.CENTER);
 		passwordboxRetype = new JPasswordField() {
 			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(walterWhite, 0, 0, null);
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
 				super.paint(g);
 			}
 		};
 		passwordboxRetype.setForeground(textAndLabelColor);
 		passwordboxRetype.setOpaque(false);
-		passwordboxRetype.setFont(bigfont);
+		passwordboxRetype.setFont(smallfont);
 		panels[4].add(description[3]);
 		panels[4].add(passwordboxRetype);
 		panels[4].setOpaque(false);
@@ -361,7 +358,7 @@ public class CreateAccount extends JFrame {
 
 			@Override
 			public void paint(Graphics g) {
-				g.drawImage(blackBeauty, 0, 0, null);
+				g.drawImage(ImageLoader.getImage("black_0.4"), 0, 0, null);
 				super.paint(g);
 			}
 		};
