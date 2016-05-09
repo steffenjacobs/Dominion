@@ -14,8 +14,7 @@ import java.util.regex.Pattern;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
-import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
+import com.tpps.application.game.card.Tuple;
 import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.game.WrongSyntaxException;
 import com.tpps.technicalServices.util.CollectionsUtil;
@@ -162,7 +161,7 @@ public class GameBoard {
 			if (cardList.size() > 0) {
 				cardIds.add(cardList.getLast().getId());
 			} else {
-				GameLog.log(MsgType.INFO, "nil added");
+//				GameLog.log(MsgType.INFO, "nil added");
 				cardIds.add(string + "#");
 			}
 		}
@@ -506,9 +505,16 @@ public class GameBoard {
 	}
 
 	private void setSet(String[] selectedActionCards) {
-		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
+		LinkedList<Tuple<String>> sortList = new LinkedList<Tuple<String>>();
 		for (int i = 0; i < selectedActionCards.length; i++) {
-			String string = selectedActionCards[i];
+			sortList.add(new Tuple<String>(selectedActionCards[i], this.tableForAllActionCards.get(selectedActionCards[i]).getFirst().getCost()));
+		}	
+		
+		Collections.sort(sortList, (Tuple<String> a, Tuple<String> b) -> new Integer(a.getSecondEntry()).compareTo(b.getSecondEntry()));
+		
+		this.tableForActionCards = new LinkedHashMap<String, LinkedList<Card>>();
+		for (int i = 0; i < sortList.size(); i++) {
+			String string = sortList.get(i).getFirstEntry();
 			this.tableForActionCards.put(string, new LinkedList<Card>(this.tableForAllActionCards.get(string)));
 		}
 	}

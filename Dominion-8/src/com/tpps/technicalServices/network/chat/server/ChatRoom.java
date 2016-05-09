@@ -291,7 +291,7 @@ public class ChatRoom {
 				+ clients_servercommand2 + "\n/" + ports_servercommand3 + "\n/"
 				+ clientsAndPort_servercommand4 + "\n/" + votekick_servercommand5 + "\n/"
 				+ vote_servercommand6 + "\n/" + votekickresult_servercommand7 + "\n/"
-				+ statistics_servercommand8;
+				+ statistics_servercommand8 + "\n/" + "@<user> <PM>";
 //		PacketSendAnswer answer = new PacketSendAnswer(msg);
 		PacketSendAnswer answer = new PacketSendAnswer("", "BOT", msg, ColorPool.commandAndErrorColor);
 		try {

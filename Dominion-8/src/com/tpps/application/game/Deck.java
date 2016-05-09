@@ -9,8 +9,6 @@ import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.technicalServices.logger.DrawAndShuffle;
-import com.tpps.technicalServices.logger.GameLog;
-import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.util.CollectionsUtil;
 
 /**
@@ -218,7 +216,7 @@ public class Deck {
 		LinkedList<Card> victoryCards = getCardsByTypeFromDeck(CardType.VICTORY);
 		for (Iterator<Card> iterator = victoryCards.iterator(); iterator.hasNext();) {
 			Card card = (Card) iterator.next();
-			if (card.getName().equals("Garden")){
+			if (card.getName().equals(CardName.GARDENS.getName())){
 				victoryPoints += (int)(this.getDeckSize() / 10);
 				
 			}else{

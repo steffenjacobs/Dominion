@@ -61,7 +61,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	private JComboBox selectCardType;
 	private ImageIcon loading;
 	private int width, gridwidth;
-	private int height, gridheight;
+	private int height, gridheight, schleifenZaehler = 0;
 	private Font smallfont,radioFont,priceFont,customFont;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc, gbc2;
@@ -75,8 +75,9 @@ public class CardEditor extends JFrame implements ActionListener {
 	private final int baseSize = 128;
 	private BufferedImage back;
 	private BackButton backButton;
-    private boolean showPic;
+    private boolean rbp1,rbp2,rbp3,rbp4,rbp5,rbp6,rbp7,rbp8,rbp9,rbp10,rbp11,rbp12;
     private Dimension d;
+    
 
 
 
@@ -106,7 +107,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		// all.setLayout(new GridLayout(4, 1, 0, 30));
 		// all.setLayout(new GridBagLayout());
 
-		this.setSize(width / 5, height / 2);
+		this.setSize(width / 5, (int) (height / 1.8));
 		this.setLocationRelativeTo(null);
 		this.setTitle("Card Editor !");
 		this.setResizable(false);
@@ -171,13 +172,11 @@ public class CardEditor extends JFrame implements ActionListener {
 
 	private void createLabels() {
 		enterName = new JLabel("Geben Sie den Kartennamen ein");
-		price = new JLabel("");
+		price = new JLabel(""); 
 		cardType = new JLabel("Cardtype");
 		testImage = new JLabel("");
 	}
 
-	// TODO : ButtonIcons
-	// TODO : Upload Image verschiebt Radiobuttons
 	// TODO : Radiobutton ActionListener - als Checkbox machen?
 	// TODO : Documentation und Formatierung
 	// TODO : Textfield, Namesabfrage ändern
@@ -269,7 +268,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.gridheight = 1;
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 0.27;
-		gbc.weighty = 1;
+		gbc.weighty = 0.5;
 		gbc.anchor = GridBagConstraints.SOUTH;
 		uImage.setLayout(new BorderLayout());
 		uploadImage = new JButton("Upload Image") {
@@ -290,6 +289,14 @@ public class CardEditor extends JFrame implements ActionListener {
 	uploadImage.setFont(customFont.deriveFont(15f));
 	uploadImage.setPreferredSize(d);
 		testImage = new JLabel("");
+		testImage.setSize(baseSize, baseSize);
+		try {
+			testImage.setIcon(new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("resources/img/cardEditor/placeHolder.png"))));
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		uploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				uploadImageActionPerformed(e);
@@ -484,18 +491,18 @@ public class CardEditor extends JFrame implements ActionListener {
 		isVictory = new JRadioButton("Is Victory");
 		isVictory.setFont(radioFont);
 		isVictory.setForeground(Color.WHITE);
-		actionSelect.add(addAction);
-		actionSelect.add(addMoney);
-		actionSelect.add(addPurchase);
-		actionSelect.add(drawCard);
-		actionSelect.add(drawCardUntil);
-		actionSelect.add(putBack);
-		actionSelect.add(gainCard);
-		actionSelect.add(discardCard);
-		actionSelect.add(trashCard);
-		actionSelect.add(revealCard);
-		actionSelect.add(isTreasure);
-		actionSelect.add(isVictory);
+//		actionSelect.add(addAction);
+//		actionSelect.add(addMoney);
+//		actionSelect.add(addPurchase);
+//		actionSelect.add(drawCard);
+//		actionSelect.add(drawCardUntil);
+//		actionSelect.add(putBack);
+//		actionSelect.add(gainCard);
+//		actionSelect.add(discardCard);
+//		actionSelect.add(trashCard);
+//		actionSelect.add(revealCard);
+//		actionSelect.add(isTreasure);
+//		actionSelect.add(isVictory);
 		addAction.setOpaque(false);
 		addMoney.setOpaque(false);
 		addPurchase.setOpaque(false);
@@ -508,6 +515,78 @@ public class CardEditor extends JFrame implements ActionListener {
 		revealCard.setOpaque(false);
 		isTreasure.setOpaque(false);
 		isVictory.setOpaque(false);
+		addAction.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp1 = addAction.isSelected();
+				radioButtonSelect(rbp1);
+			}
+				});
+		addMoney.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp2 = addMoney.isSelected();
+				radioButtonSelect(rbp2);
+			}
+				});
+		addPurchase.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp3 = addPurchase.isSelected();
+				radioButtonSelect(rbp3);
+			}
+				});
+		drawCard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp4 = drawCard.isSelected();
+				radioButtonSelect(rbp4);
+			}
+				});
+		drawCardUntil.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp5 = drawCardUntil.isSelected();
+				radioButtonSelect(rbp5);
+			}
+				});
+		putBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp6 = putBack.isSelected();
+				radioButtonSelect(rbp6);
+			}
+				});
+		gainCard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp7 = gainCard.isSelected();
+				radioButtonSelect(rbp7);
+			}
+				});
+		discardCard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp8 = discardCard.isSelected();
+				radioButtonSelect(rbp8);
+			}
+				});
+		trashCard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp9 = trashCard.isSelected();
+				radioButtonSelect(rbp9);
+			}
+				});
+		revealCard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp10 = revealCard.isSelected();
+				radioButtonSelect(rbp10);
+			}
+				});
+		isTreasure.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp11 = isTreasure.isSelected();
+				radioButtonSelect(rbp11);
+			}
+				});
+		isVictory.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				rbp12 = isVictory.isSelected();
+				radioButtonSelect(rbp12);
+			}
+				});
 		radio.add(addAction);
 		radio.add(addMoney);
 		radio.add(addPurchase);
@@ -588,22 +667,7 @@ public class CardEditor extends JFrame implements ActionListener {
     cancel.setBorderPainted(false);
 	cancel.setFont(customFont.deriveFont(15f));
 	cancel.setPreferredSize(d);
-
-		/*
-		 * ImageIcon back; //TODO Vorlage erstellen für Buttons try {
-		 * 
-		 * back = new ImageIcon (ImageIO.read(ClassLoader.getSystemResource(
-		 * "resources/img/cardEditor/Vorlage.jpg"))); Dimension d = new
-		 * Dimension(back.getIconWidth(), back.getIconHeight());
-		 * cancel.setOpaque(false); cancel.setContentAreaFilled(false);
-		 * cancel.setBorderPainted(false); cancel.setPreferredSize(d);
-		 * cancel.setIcon(back);
-		 * 
-		 * } catch (IOException e1) { // TODO Auto-generated catch block
-		 * e1.printStackTrace(); }
-		 */
-
-		cancel.addActionListener((new ActionListener() {
+	cancel.addActionListener((new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
 				DominionController.getInstance().joinMainMenu();
@@ -614,6 +678,21 @@ public class CardEditor extends JFrame implements ActionListener {
 		c.add(untenRechts, gbc);
 
 		}
+
+	private void radioButtonSelect(boolean pruefer) {
+		if (pruefer == true) {
+		schleifenZaehler = schleifenZaehler + 1;
+		System.out.println("You have selected " + Integer.toString(schleifenZaehler) + " of three possible actions");
+		pruefer = false;
+		
+		} else if (pruefer == false) {
+				schleifenZaehler = schleifenZaehler - 1;
+				System.out.println("You have selected " + Integer.toString(schleifenZaehler) + " of three possible actions");
+				pruefer = true;
+		}
+			}
+	
+	
 	
 	private void loadButtonIcon() {
 		try {
