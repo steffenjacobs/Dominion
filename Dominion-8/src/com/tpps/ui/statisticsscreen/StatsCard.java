@@ -35,9 +35,7 @@ import com.tpps.technicalServices.util.MathUtil;
 public class StatsCard {
 
 	private static final Dimension STATSCARD_SIZE = new Dimension(540, 350);
-
 	private final StatisticsBoard parent;
-
 	private int locX, locY;
 
 	/**
@@ -133,9 +131,14 @@ public class StatsCard {
 						dragListener));
 	}
 
+	/**
+	 * @return the panel with the information
+	 * @param playerName
+	 *            the name of the player
+	 * @param dragListener
+	 *            ...
+	 */
 	private JPanel createStatisticsCard(String playerName, MouseMotionAdapter dragListener) {
-		System.out.println("creating stats-card for " + playerName);
-
 		JPanel panel = new JPanel(new BorderLayout()) {
 			private static final long serialVersionUID = 1511323112772019677L;
 
@@ -197,39 +200,27 @@ public class StatsCard {
 
 		try {
 			doc.insertString(doc.getLength(), " Wins:			" + stats[1][0], styleWhite);
-			doc.insertString(doc.getLength(), "		" + formatPercentage(stats[1][1]), styleGray);
+			doc.insertString(doc.getLength(), "		" + formatTopPercentage(stats[1][1]), styleGray);
 			doc.insertString(doc.getLength(), " Losses:			" + stats[2][0], styleWhite);
-			doc.insertString(doc.getLength(), "		" + formatPercentage(stats[2][1]), styleGray);
+			doc.insertString(doc.getLength(), "		" + formatTopPercentage(stats[2][1]), styleGray);
 			doc.insertString(doc.getLength(), " Win-Loss-Ration:		" + stats[3][0], styleWhite);
-			doc.insertString(doc.getLength(), "		" + formatPercentage(stats[3][1]), styleGray);
+			doc.insertString(doc.getLength(), "		" + formatTopPercentage(stats[3][1]), styleGray);
 			doc.insertString(doc.getLength(), " Total Matches:		" + stats[4][0], styleWhite);
-			doc.insertString(doc.getLength(), "		" + formatPercentage(stats[4][1]), styleGray);
+			doc.insertString(doc.getLength(), "		" + formatTopPercentage(stats[4][1]), styleGray);
 
 			String rankString = Ranking.getRankByScore(stats[0][0], Integer.parseInt(stats[5][0]));
 			doc.insertString(doc.getLength(), " Rank:			" + rankString, styleWhite);
 			doc.insertString(doc.getLength(),
-					"	" + (rankString.length() < 9 ? "	" : "") + formatPercentage(stats[5][1]), styleGray);
+					"	" + (rankString.length() < 9 ? "	" : "") + formatTopPercentage(stats[5][1]), styleGray);
 
 			String timeString = MathUtil.getTimeString(Long.parseLong(stats[6][0]));
 			doc.insertString(doc.getLength(), " Playtime:		" + timeString, styleWhite);
 			doc.insertString(doc.getLength(),
-					"	" + (timeString.length() < 9 ? "	" : "") + formatPercentage(stats[6][1]), styleGray);
+					"	" + (timeString.length() < 9 ? "	" : "") + formatTopPercentage(stats[6][1]), styleGray);
 			doc.setParagraphAttributes(0, doc.getLength(), styleWhite, false);
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-
-		// for (int i = 0; i < 1; i++) {
-		// txts[i] = new JLabel(stats[i][0] + " - " + stats[i][1] + 1);
-		// lbls[i].setOpaque(false);
-		// lbls[i].setForeground(Color.WHITE);
-		// lbls[i].setHorizontalAlignment(JLabel.CENTER);
-		// gridPane.add(lbls[i]);
-		// }
-		// txts[5].setText(Ranking.getRankByScore(playerName,
-		// Integer.valueOf(stats[5][0])));
-
-		// layout.addLayoutComponent(gridPane, BorderLayout.CENTER);
 
 		gridPane.add(textPane, BorderLayout.CENTER);
 
@@ -240,6 +231,12 @@ public class StatsCard {
 		return panel;
 	}
 
+	/**
+	 * @return a String-Array of statistics paired with top-percentage for a
+	 *         specific player
+	 * @param playerName
+	 *            the name of the player to get the stats for
+	 */
 	private String[][] getStatsOf(String playerName) {
 		String[][] statistics = this.parent.getStatistics();
 		if (statistics.length < 1) {
@@ -261,7 +258,12 @@ public class StatsCard {
 		return result;
 	}
 
-	private static String formatPercentage(String value) {
+	/**
+	 * @return a formatted top-percentage or "best"
+	 * @param value
+	 *            the value to format
+	 */
+	private static String formatTopPercentage(String value) {
 		if (value.equals("0"))
 			return "(Best)\n";
 		return "(Top " + value + "%)\n";

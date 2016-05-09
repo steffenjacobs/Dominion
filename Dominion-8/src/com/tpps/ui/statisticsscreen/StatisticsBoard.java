@@ -125,14 +125,12 @@ public class StatisticsBoard extends JPanel {
 		for (int i = 0; i < statistics.length; i++) {
 
 			this.model.setValueAt(
-					MathUtil.getTimeString(Long.valueOf((String) model.getValueAt(i, this.model.getColumnCount() - 1))), i,
-					this.model.getColumnCount() - 1);
+					MathUtil.getTimeString(Long.valueOf((String) model.getValueAt(i, this.model.getColumnCount() - 1))),
+					i, this.model.getColumnCount() - 1);
 			this.model.setValueAt(Ranking.getRankByScore((String) this.model.getValueAt(i, 0),
 					Integer.parseInt((String) this.model.getValueAt(i, 5))), i, 5);
 		}
 	}
-
-	
 
 	/**
 	 * sets the statistics-data
@@ -183,31 +181,32 @@ public class StatisticsBoard extends JPanel {
 			this.model.addColumn(columnNames[i]);
 		}
 	}
-	
+
 	/**
 	 * @return the current column by which the table is sorted
 	 */
-	int getSortColumn(){
+	int getSortColumn() {
 		return sortColumn;
 	}
-	
+
 	/**
 	 * @return all loaded statistics
 	 */
-	String[][] getStatistics(){
+	String[][] getStatistics() {
 		return statistics;
 	}
-	
+
 	/**
 	 * @return the current displayed table
 	 */
-	JTable getTable(){
+	JTable getTable() {
 		return this.table;
 	}
 
 	/**
 	 * 
-	 * @param parentPanel the parent panel
+	 * @param parentPanel
+	 *            the parent panel
 	 * @return a JScrollpane with all table data
 	 */
 	private JScrollPane createTable(JPanel parentPanel) {
