@@ -369,7 +369,7 @@ public class GameBoard {
 		LinkedList<Card> spyList = new LinkedList<Card>();
 		CollectionsUtil.cloneCardToList(
 				new Card(CollectionsUtil.linkedHashMapAction(CollectionsUtil.linkedList(new CardAction[] { CardAction.DRAW_CARD, CardAction.ADD_ACTION_TO_PLAYER, CardAction.REVEAL_CARD_ALL }),
-						CollectionsUtil.linkedList(new String[] { "1", "1", "NIL" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION }), CardName.SPY.getName(), 4),
+						CollectionsUtil.linkedList(new String[] { "1", "1", "NIL" })), CollectionsUtil.linkedList(new CardType[] { CardType.ACTION, CardType.ATTACK }), CardName.SPY.getName(), 4),
 				GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue(), spyList);
 		this.tableForAllActionCards.put(CardName.SPY.getName(), spyList);
 		Card.resetClassID();
@@ -686,7 +686,7 @@ public class GameBoard {
 	 * 
 	 * @param lowest
 	 *            the amount of smallest piles to consider
-	 * @return the size of the #lowest smallest piles on board
+	 * @return the size of the #lowest smallest (actioncard)piles on board
 	 */
 	public int getSizeOfSmallestPilesOnBoard(int lowest) {
 		int result = 0;
