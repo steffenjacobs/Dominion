@@ -1,13 +1,10 @@
 package com.tpps.technicalServices.network.gameSession.packets;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 
 import com.tpps.application.game.card.Tuple;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
-
-import sun.awt.image.ImageWatched.Link;
 
 /**
  * This packet is send from a server to the client every time there are already
