@@ -16,4 +16,17 @@ public final class MathUtil {
 		else
 			return 0;
 	}
+	
+	/**
+	 * @return a time-sting hh:mm:ss
+	 * @param milliseconds
+	 *            delta-time
+	 */
+	public static String getTimeString(long milliseconds) {
+		long second = (milliseconds / 1000) % 60;
+		long minute = (milliseconds / (1000 * 60)) % 60;
+		long hour = (milliseconds / (1000 * 60 * 60));
+
+		return String.format("%02d:%02d:%02d", hour, minute, second);
+	}
 }
