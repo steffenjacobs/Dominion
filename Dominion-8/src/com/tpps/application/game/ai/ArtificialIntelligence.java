@@ -464,6 +464,7 @@ public class ArtificialIntelligence {
 			sleep();
 			this.playTreasures();
 			sleep();
+			sleep();
 			for (String buy : this.buySequence) {
 				checkAndBuy(buy);
 			}
@@ -549,6 +550,15 @@ public class ArtificialIntelligence {
 		if (attacksAvailableRatio > 1.0 || attacksAvailableRatio < 0.1) {
 			attacksAvailableRatio = 1;
 		}
+		/**
+		 * a bound at which point of the game, duchys will be bought by the AI:
+		 * if the attacks are still all available (or there is no attack on the
+		 * board ofc), the bound is at 5 because the AI can start to buy duchies
+		 * earlier (without Militia/Witch the game is faster and the duchies
+		 * have not that much of a negative impact) if attacks have been bought,
+		 * the bound is at 3, because it is harder to compensate duchies
+		 */
+		int provinceBound = attacksAvailableRatio == 1.0 ? 5 : 3;
 
 		/**
 		 * first two turns are handled seperately, because they are a crucial
@@ -639,7 +649,8 @@ public class ArtificialIntelligence {
 			if (treasureValue >= 8 && cardAvailableOnBoard(CardName.PROVINCE.getName())) {
 				return CardName.PROVINCE.getName();
 			} else if (treasureValue >= 6 && !this.strategy.equals(Strategy.BIG_MONEY_CHAPEL)) {
-				if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName()) > 7 && this.getPileSize(CardName.PROVINCE.getName()) < 7 && cardAvailableOnBoard(CardName.DUCHY.getName())) {
+				if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName(), this.player.getPlayedCards()) > 7 && this.getPileSize(CardName.PROVINCE.getName()) < 6
+						&& cardAvailableOnBoard(CardName.DUCHY.getName())) {
 					return CardName.DUCHY.getName();
 				} else if (cardAvailableOnBoard(CardName.GOLD.getName()))
 					return CardName.GOLD.getName();
@@ -651,7 +662,7 @@ public class ArtificialIntelligence {
 				 * the board, start to buy DUCHYs because they won't have a huge
 				 * impact on the deck anymore in this phase of the game
 				 */
-				if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5 && cardAvailableOnBoard(CardName.DUCHY.getName()))
+				if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= provinceBound && cardAvailableOnBoard(CardName.DUCHY.getName()))
 					return CardName.DUCHY.getName();
 				/**
 				 * special case for a second smithy, because it's only in a few
@@ -678,17 +689,17 @@ public class ArtificialIntelligence {
 				 * there are so many ATTACKs played)
 				 */
 				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
-						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 2)
+						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName(), this.player.getPlayedCards()) < 2)
 					return CardName.MOAT.getName();
 			case BIG_MONEY_CHAPEL: // 2 Moats
 				/**
 				 * ADVENTURER if the special case is available, GOLD otherwise
 				 */
 				if (treasureValue >= 6) {
-					if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName()) >= 5 && cardAvailableOnBoard(CardName.ADVENTURER.getName())
+					if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName(), this.player.getPlayedCards()) >= 5 && cardAvailableOnBoard(CardName.ADVENTURER.getName())
 							&& !this.player.getDeck().contains(CardName.ADVENTURER.getName(), this.player.getPlayedCards())) {
 						return CardName.ADVENTURER.getName();
-					} else if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName()) > 7 && this.getPileSize(CardName.PROVINCE.getName()) < 7
+					} else if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName(), this.player.getPlayedCards()) > 7 && this.getPileSize(CardName.PROVINCE.getName()) < 6
 							&& cardAvailableOnBoard(CardName.DUCHY.getName())) {
 						return CardName.DUCHY.getName();
 					} else if (cardAvailableOnBoard(CardName.GOLD.getName()))
@@ -699,7 +710,7 @@ public class ArtificialIntelligence {
 				 * the board, start to buy DUCHYs because they won't have a huge
 				 * impact on the deck anymore in this phase of the game
 				 */
-				else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5 && cardAvailableOnBoard(CardName.DUCHY.getName()))
+				else if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= provinceBound && cardAvailableOnBoard(CardName.DUCHY.getName()))
 					return CardName.DUCHY.getName();
 				/**
 				 * if no chapel has been bought yet, buy the first and only one
@@ -725,7 +736,7 @@ public class ArtificialIntelligence {
 				 * there are so many ATTACKs played)
 				 */
 				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
-						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 2)
+						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName(), this.player.getPlayedCards()) < 2)
 					return CardName.MOAT.getName();
 			case BIG_MONEY_CHAPEL_MILITIA: // 1 Moat and 2 Militias
 				/**
@@ -733,12 +744,12 @@ public class ArtificialIntelligence {
 				 * the board, start to buy DUCHYs because they won't have a huge
 				 * impact on the deck anymore in this phase of the game
 				 */
-				if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= 5 && cardAvailableOnBoard(CardName.DUCHY.getName()))
+				if (treasureValue >= 5 && this.getPileSize(CardName.PROVINCE.getName()) <= provinceBound && cardAvailableOnBoard(CardName.DUCHY.getName()))
 					return CardName.DUCHY.getName();
 				/**
 				 * if there are <2 MILITIAs in the deck, buy one
 				 */
-				else if (treasureValue >= 4 && this.player.getDeck().containsAmountOf(CardName.MILITIA.getName()) < 2 && cardAvailableOnBoard(CardName.MILITIA.getName()))
+				else if (treasureValue >= 4 && this.player.getDeck().containsAmountOf(CardName.MILITIA.getName(), this.player.getPlayedCards()) < 2 && cardAvailableOnBoard(CardName.MILITIA.getName()))
 					return CardName.MILITIA.getName();
 				/**
 				 * if no chapel has been bought yet, buy the first and only one
@@ -751,14 +762,14 @@ public class ArtificialIntelligence {
 				else if (treasureValue >= 3 && cardAvailableOnBoard(CardName.SILVER.getName()))
 					return CardName.SILVER.getName();
 				/**
-				 * if MOAT_RATIO_2*100% of the ATTACKs are left on the board,
-				 * buy a second MOAT (also not too good for BM, but necessary if
-				 * there are so many ATTACKs played)
+				 * if other players buy ATTACKs, the player has already a CURSE
+				 * in deck or was already more than 3 times in discard mode, the
+				 * first MOAT will be bought
 				 */
 				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName(), this.player.getPlayedCards())
 						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName(), this.player.getPlayedCards()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
-			case BIG_MONEY_CHAPEL_WITCH: // No Moats and 2 Witches
+			case BIG_MONEY_CHAPEL_WITCH: // 1 Moat and 2 Witches
 				/**
 				 * if there are <2 WITCHES, buy one OR <= 5 PROVINCEs on the
 				 * board, start to buy DUCHYs because they won't have a huge
@@ -766,9 +777,9 @@ public class ArtificialIntelligence {
 				 * conditions are false, buy SILVER
 				 */
 				if (treasureValue >= 5) {
-					if (this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2 && cardAvailableOnBoard(CardName.WITCH.getName()))
+					if (this.player.getDeck().containsAmountOf(CardName.WITCH.getName(), this.player.getPlayedCards()) < 2 && cardAvailableOnBoard(CardName.WITCH.getName()))
 						return CardName.WITCH.getName();
-					else if (this.getPileSize(CardName.PROVINCE.getName()) <= 5 && cardAvailableOnBoard(CardName.DUCHY.getName()))
+					else if (this.getPileSize(CardName.PROVINCE.getName()) <= provinceBound && cardAvailableOnBoard(CardName.DUCHY.getName()))
 						return CardName.DUCHY.getName();
 					else if (cardAvailableOnBoard(CardName.SILVER.getName()))
 						return CardName.SILVER.getName();
@@ -778,6 +789,14 @@ public class ArtificialIntelligence {
 				 */
 				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName(), this.player.getPlayedCards()) && cardAvailableOnBoard(CardName.CHAPEL.getName()))
 					return CardName.CHAPEL.getName();
+				/**
+				 * if other players buy ATTACKs, the player has already a CURSE
+				 * in deck or was already more than 3 times in discard mode, the
+				 * first MOAT will be bought
+				 */
+				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName(), this.player.getPlayedCards())
+						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName(), this.player.getPlayedCards()) || attacksAvailableRatio < MOAT_RATIO_1))
+					return CardName.MOAT.getName();
 				/**
 				 * classic SILVER with 3 coins
 				 */
@@ -791,9 +810,9 @@ public class ArtificialIntelligence {
 				 * conditions are false, buy SILVER
 				 */
 				if (treasureValue >= 5) {
-					if (this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2 && cardAvailableOnBoard(CardName.WITCH.getName()))
+					if (this.player.getDeck().containsAmountOf(CardName.WITCH.getName(), this.player.getPlayedCards()) < 2 && cardAvailableOnBoard(CardName.WITCH.getName()))
 						return CardName.WITCH.getName();
-					else if (this.getPileSize(CardName.PROVINCE.getName()) <= 5 && cardAvailableOnBoard(CardName.DUCHY.getName()))
+					else if (this.getPileSize(CardName.PROVINCE.getName()) <= provinceBound && cardAvailableOnBoard(CardName.DUCHY.getName()))
 						return CardName.DUCHY.getName();
 					else if (cardAvailableOnBoard(CardName.SILVER.getName()))
 						return CardName.SILVER.getName();
@@ -848,7 +867,7 @@ public class ArtificialIntelligence {
 					if (cardAvailableOnBoard(CardName.SILVER.getName()))
 						return CardName.SILVER.getName();
 				} else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && attacksAvailableRatio < MOAT_RATIO_2
-						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName()) < 3)
+						&& this.player.getDeck().containsAmountOf(CardName.MOAT.getName(), this.player.getPlayedCards()) < 3)
 					return CardName.MOAT.getName();
 			default:
 				if (cardAvailableOnBoard(CardName.ESTATE.getName())) {
@@ -997,7 +1016,7 @@ public class ArtificialIntelligence {
 	 * @return whether there is only one estate left in the deck
 	 */
 	private boolean lastEstateInDeck() {
-		return this.player.getDeck().containsAmountOf(CardName.ESTATE.getName()) == 1;
+		return this.player.getDeck().containsAmountOf(CardName.ESTATE.getName(), this.player.getPlayedCards()) == 1;
 	}
 
 	/**
@@ -1239,7 +1258,7 @@ public class ArtificialIntelligence {
 							break;
 						case BIG_MONEY_WITCH:
 						case BIG_MONEY_CHAPEL_WITCH:
-							if (!(this.player.getDeck().containsAmountOf(CardName.WITCH.getName()) < 2 && cardAvailableOnBoard(CardName.WITCH.getName()))
+							if (!(this.player.getDeck().containsAmountOf(CardName.WITCH.getName(), this.player.getPlayedCards()) < 2 && cardAvailableOnBoard(CardName.WITCH.getName()))
 									&& !(this.getPileSize(CardName.PROVINCE.getName()) <= 5))
 								playTrash(c);
 							break;
@@ -1249,7 +1268,7 @@ public class ArtificialIntelligence {
 					} else if (treasureCardsValue >= 4) {
 						switch (this.strategy) {
 						case BIG_MONEY_CHAPEL_MILITIA:
-							if (!(this.player.getDeck().containsAmountOf(CardName.MILITIA.getName()) < 2 && cardAvailableOnBoard(CardName.MILITIA.getName())))
+							if (!(this.player.getDeck().containsAmountOf(CardName.MILITIA.getName(), this.player.getPlayedCards()) < 2 && cardAvailableOnBoard(CardName.MILITIA.getName())))
 								playTrash(c);
 							break;
 						case BIG_MONEY:

@@ -8,6 +8,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -116,7 +117,6 @@ public class GameWindow extends JFrame {
 		this.tabbedComponent();
 
 		this.setTopGap(Toolkit.getDefaultToolkit().getScreenSize().height / 4);
-		// this.leftGap = Toolkit.getDefaultToolkit().getScreenSize().width / 7;
 
 		this.handCards = new LinkedList<Card>();
 		this.tableCards = new LinkedList<Card>();
@@ -164,12 +164,6 @@ public class GameWindow extends JFrame {
 
 		GameWindow.closeButton = new ButtonClass(0.97, 0.01, 0.015, 0.015 * CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
 				this.closeImage, this.framework, "", "exit");
-		// GameWindow.muteButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 *
-		// CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
-		// this.muteImage, this.framework, "", "mute");
-		// GameWindow.playButton = new ButtonClass(0.03, 0.01, 0.02, 0.02 *
-		// CORRECTION_16TO9, getWIDTH(), getWIDTH(), 1,
-		// this.playImage, this.framework, "", "play");
 		GameWindow.endActionPhase = new ButtonClass(0.75, 0.05, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1,
 				this.buttonImage, this.framework, "End ActionPhase");
 		GameWindow.playTreasures = new ButtonClass(0.75, 0.15, 0.12, 0.05, getWIDTH(), getHEIGHT(), 1, this.buttonImage,
@@ -209,7 +203,6 @@ public class GameWindow extends JFrame {
 
 		this.framework.addComponent(new GameBackground(0, 0, 1, 1, 0, this.backgroundImage, this.framework));
 		this.framework.addComponent(new GameBackground(0.31, 0.05, 0.38, 0.38, 2, this.tableImage, this.framework));
-		// this.framework.addComponent(GameWindow.playButton);
 		this.framework.addComponent(GameWindow.closeButton);
 		this.framework.addComponent(GameWindow.endActionPhase);
 		this.framework.addComponent(GameWindow.endTurn);
@@ -218,8 +211,6 @@ public class GameWindow extends JFrame {
 		this.framework.addComponent(this.buy);
 		this.framework.addComponent(this.turn);
 
-		// this.framework.add(this.chatWindow);
-		// this.framework.add(this.loggerPane);
 		this.framework.add(this.jTabbedPane);
 
 		this.addComponentListener(new MyComponentAdapter());
@@ -359,7 +350,6 @@ public class GameWindow extends JFrame {
 			} else {
 				SerializedCard serializedCard = table.get(actionCardlds.get(i));
 
-				// // Example For nishit
 				Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 				matcher.find();
 				String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
@@ -593,9 +583,6 @@ public class GameWindow extends JFrame {
 			double start = 0.1 - shift;
 			double startsmall = 0.2 - shiftsmall;
 
-			// double shiftSmall = shift - 0.03;
-			// double shiftOne = shiftSmall - 0.03;
-
 			for (Iterator<Card> iterator = this.handCards.iterator(); iterator.hasNext();) {
 				Card card = (Card) iterator.next();
 				this.framework.removeComponent(card);
@@ -604,14 +591,6 @@ public class GameWindow extends JFrame {
 			for (int i = 0; i < handCards.size(); i++) {
 
 				SerializedCard serializedCard = handCards.get(actionCardIds.get(i));
-
-				// Example For nishit
-				// Matcher matcher =
-				// Pattern.compile("\\d+").matcher(actionCardIds.get(i));
-				// matcher.find();
-				// String number =
-				// actionCardIds.get(i).substring(matcher.start(),
-				// matcher.end());
 
 				if (sub > 7) {
 					if (i == 0) {
@@ -629,9 +608,6 @@ public class GameWindow extends JFrame {
 						this.handCards.add(card);
 					}
 				} else {
-					// GameLog.log(MsgType.GUI, "Wie viel handkarten: " +
-					// handCards.size() + "serialized Card "
-					// + serializedCard.getImage());
 					if (i == 0) {
 						Card card = new Card(serializedCard.getActions(), serializedCard.getTypes(),
 								serializedCard.getName(), serializedCard.getCost(), actionCardIds.get(i),
@@ -680,7 +656,6 @@ public class GameWindow extends JFrame {
 
 		for (int i = 0; i < victory.size(); i++) {
 
-			// TODO Lukas commented section. Please verify first this class.
 			Matcher matcher = Pattern.compile("\\d+").matcher(actionCardlds.get(i));
 			matcher.find();
 			String number = actionCardlds.get(i).substring(matcher.start(), matcher.end());
@@ -710,7 +685,6 @@ public class GameWindow extends JFrame {
 		framework.removeComponent(coin);
 		coin = new DisplayValue(0.1, 0.46, 0.12, 0.12, 1, 1, 1, displayImageCoins, framework, caption);
 		framework.addComponent(coin);
-		// coin.renewCaption(caption);
 	}
 
 	/**
@@ -720,11 +694,9 @@ public class GameWindow extends JFrame {
 	 */
 
 	public void setCaptionActions(String caption) {
-		// action.renewCaption(caption);
 		framework.removeComponent(action);
 		action = new DisplayValue(0.1, 0.38, 0.12, 0.12, 1, 1, 1, displayImageActions, framework, caption);
 		framework.addComponent(action);
-		// action.renewCaption(caption);
 	}
 
 	/**
@@ -735,7 +707,6 @@ public class GameWindow extends JFrame {
 	 */
 
 	public void setCaptionTurn(String caption) {
-		// turn.renewCaption(caption);
 		framework.removeComponent(turn);
 		if (caption.equals("my turn") || caption.equals("react")) {
 			turn = new DisplayValue(0.31, 0, 0.38, 0.05, 1, 1, 20, displayImageTurnGreen, framework, caption);
@@ -756,7 +727,6 @@ public class GameWindow extends JFrame {
 		framework.removeComponent(buy);
 		buy = new DisplayValue(0.1, 0.54, 0.12, 0.12, 1, 1, 1, displayImageBuys, framework, caption);
 		framework.addComponent(buy);
-		// buy.renewCaption(caption);
 	}
 
 	/**
@@ -977,9 +947,6 @@ public class GameWindow extends JFrame {
 		double height = (relativeHeight * HEIGHT) / 4;
 		int y = this.getHeight();
 		int x = this.getWidth();
-		// GameLog.log(MsgType.GUI, "width: "+width + "height "+height +
-		// "relativeWidth "+relativeWidth + "relativeHeight "+relativeHeight
-		// +"WIDTH "+ WIDTH + "HEIGHT "+ HEIGHT);
 		this.jTabbedPane.setBounds(x - (int) ((WIDTH / 3.5) * relativeWidth),
 				y - (int) ((HEIGHT * (1 - 0.65)) * relativeHeight), (int) (width), (int) height);
 		repaint();
@@ -1129,27 +1096,6 @@ public class GameWindow extends JFrame {
 	public LinkedList<GFButton> getCoinButtons() {
 		return coinButtons;
 	}
-
-	// /**
-	// * getter Method
-	// *
-	// * @return the mute button
-	// */
-	//
-	// public ButtonClass getMuteButton() {
-	// return muteButton;
-	// }
-	//
-	// /**
-	// *
-	// * getter Method
-	// *
-	// * @return the play button
-	// */
-	//
-	// public ButtonClass getPlayButton() {
-	// return playButton;
-	// }
 
 	/**
 	 * 

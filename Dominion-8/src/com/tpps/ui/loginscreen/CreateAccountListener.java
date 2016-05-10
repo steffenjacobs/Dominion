@@ -62,10 +62,6 @@ public class CreateAccountListener implements MouseListener {
 			JOptionPane.showMessageDialog(null, "Email invalid. Please recheck");
 			return;
 		}
-		// if (ca.getDescribing().getText().length() > 40) {
-		// JOptionPane.showMessageDialog(null, "Your Description is too long");
-		// return;
-		// }
 
 		if (CharMatcher.WHITESPACE.matchesAnyOf(ca.getUsername().getText())) {
 			JOptionPane.showMessageDialog(null, "Username has Whitespaces");
@@ -85,14 +81,6 @@ public class CreateAccountListener implements MouseListener {
 		// --------------------------------------
 		guicontroller.createAccountWithServer(ca.getUsername().getText(),
 				String.valueOf(ca.getPasswordbox().getPassword()), ca.getEmail().getText());
-		// new
-		// LoginClient().handleAccountCreation(ca.getUsername().getText(),
-		// String.valueOf(ca.getPasswordbox().getPassword()),ca.getEmail().getText());
-		// --------------------------------------
-
-		// new LogInGUI(ca.getUsername().getText(),
-		// ca.getPasswordbox().getPassword());
-		// ca.dispose();
 	}
 
 	@Override
@@ -120,10 +108,6 @@ public class CreateAccountListener implements MouseListener {
 			JOptionPane.showMessageDialog(null, "Email invalid. Please recheck");
 			return;
 		}
-		// if (ca.getDescribing().getText().length() > 40) {
-		// JOptionPane.showMessageDialog(null, "Your Description is too long");
-		// return;
-		// }
 
 		if (CharMatcher.WHITESPACE.matchesAnyOf(ca.getUsername().getText())) {
 			JOptionPane.showMessageDialog(null, "Your Username consists of Whitespaces");
@@ -145,14 +129,6 @@ public class CreateAccountListener implements MouseListener {
 			guicontroller.createAccountWithServer(ca.getUsername().getText(),
 					String.valueOf(ca.getPasswordbox().getPassword()), ca.getEmail().getText());
 		}
-		// new
-		// LoginClient().handleAccountCreation(ca.getUsername().getText(),
-		// String.valueOf(ca.getPasswordbox().getPassword()),ca.getEmail().getText());
-		// --------------------------------------
-
-		// new LogInGUI(ca.getUsername().getText(),
-		// ca.getPasswordbox().getPassword());
-		// ca.dispose();
 
 	}
 

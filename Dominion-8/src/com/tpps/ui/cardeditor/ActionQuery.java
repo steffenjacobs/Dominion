@@ -7,6 +7,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -18,9 +20,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.network.Addresses;
+import com.tpps.technicalServices.network.card.CardClient;
+import com.tpps.technicalServices.network.card.CardPacketHandlerClient;
+import com.tpps.technicalServices.network.card.CardServer;
+import com.tpps.technicalServices.network.core.SuperCallable;
 
 public class ActionQuery extends JFrame implements ActionListener  {
 	/**
@@ -49,6 +57,7 @@ public class ActionQuery extends JFrame implements ActionListener  {
 
 	
 	public ActionQuery(ArrayList<String> radioButtons){
+		
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		this.setVisible(true);
@@ -60,6 +69,8 @@ public class ActionQuery extends JFrame implements ActionListener  {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		c2 = this.getContentPane();
 		System.out.println(radioButtons);
+		
+		//Ordnet rbsx den xten Wert aus der radioButtons Arrayliste zu
 		rbs1 = radioButtons.get(0);
 		if (radioButtons.size() > 1 )
 		rbs2 = radioButtons.get(1);
@@ -79,6 +90,7 @@ public class ActionQuery extends JFrame implements ActionListener  {
 	 */
 	
 	public void iniateGUI() {
+		
 		c2.setLayout(new GridLayout(3,3,30,10));
 		JPanel labels = new JPanel();
     	labels.setLayout(new FlowLayout(10,20,5));
@@ -114,7 +126,9 @@ public class ActionQuery extends JFrame implements ActionListener  {
 			    aktionswert = (String) cb1.getSelectedItem();
 			    aktionswert2 = (String) cb2.getSelectedItem();
 			    aktionswert3 = (String) cb3.getSelectedItem();
-				if (rbs1 == "AddAction")	
+				
+			    //Ersten Aktionstypen bestimmen
+			    if (rbs1 == "AddAction")	
 			    actions.put(CardAction.ADD_ACTION_TO_PLAYER,aktionswert);
 				if (rbs1 == "addMoney")
 					actions.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN,aktionswert);
@@ -139,7 +153,7 @@ public class ActionQuery extends JFrame implements ActionListener  {
 				if (rbs1 == "isVictory")
 					actions.put(CardAction.IS_VICTORY,aktionswert);
 				
-				
+				//Zweiten möglichen Aktionstypen bestimmen
 				if (rbs2 != null) {
 						if (rbs2 == "AddAction")	
 					    actions.put(CardAction.ADD_ACTION_TO_PLAYER,aktionswert2);
@@ -166,6 +180,8 @@ public class ActionQuery extends JFrame implements ActionListener  {
 						if (rbs2 == "isVictory")
 							actions.put(CardAction.IS_VICTORY,aktionswert2);
 						}
+				
+				//Dritten möglichen Aktionstypen bestimmen
 				if (rbs3 != null) {
 					if (rbs3 == "AddAction")	
 				    actions.put(CardAction.ADD_ACTION_TO_PLAYER,aktionswert3);
@@ -192,6 +208,8 @@ public class ActionQuery extends JFrame implements ActionListener  {
 					if (rbs3 == "isVictory")
 						actions.put(CardAction.IS_VICTORY,aktionswert3);
 					}
+				
+				//Kartentypen bestimmen aus der Combobox
 				types = new LinkedList();
 				String hilfstring = new String();
 				hilfstring = CardEditor.getCardtype();
@@ -222,11 +240,19 @@ public class ActionQuery extends JFrame implements ActionListener  {
 				if (hilfstring == "Curse")
 				types.add(CardType.CURSE);
 				
+				//Name Kosten und das Bild zuordnen
 				name = CardEditor.getCardname();
 				cost = CardEditor.getPrize();
 		        image = CardEditor.getImage();
 				newCard = new SerializedCard(actions, types, cost, name, image);
-			
+				try {
+					uploadCard();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			   System.out.println("Karte erstellt!");
+			   backtomain();
 			}
 		});
 		button.add(okbutton);
@@ -234,6 +260,35 @@ public class ActionQuery extends JFrame implements ActionListener  {
 	}
 	
 
+	private void uploadCard() throws IOException {
+		CardPacketHandlerClient cHandler = new CardPacketHandlerClient();
+		CardClient client = new CardClient(new InetSocketAddress(Addresses.getRemoteAddress(), CardServer.getStandardPort()), cHandler, false, DominionController.getInstance());
+		client.askIfCardnameExists(newCard.getName(), new SuperCallable<Boolean>() {
+		                    @Override
+		                    public Boolean callMeMaybe(Boolean object) {
+		                        if (!object.booleanValue()) {
+		                            //card did not exist
+		                            client.addCardToRemoteStorage(newCard);
+		                            DominionController.getInstance().getCardRegistry().addCard(newCard);
+		                            try {
+		                                Thread.sleep(100);
+		                            } catch (InterruptedException e) {
+		                                e.printStackTrace();
+		                            }
+		                        } else {
+		                                //card already existed -> display error
+		                        }
+		                        return null;
+		                    }
+		                });
+	}
+	
+	private void backtomain() {
+		DominionController.getInstance().joinMainMenu();
+		ActionQuery.this.dispose();
+		
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 //		new ActionQuery(args).setVisible(true);
