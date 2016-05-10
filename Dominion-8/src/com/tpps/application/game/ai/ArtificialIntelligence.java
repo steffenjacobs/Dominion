@@ -1213,7 +1213,6 @@ public class ArtificialIntelligence {
 	private void trash(LinkedList<Card> trashCards) throws InterruptedException {
 		int treasureCardsValue;
 		debugCardPrint(">>>>>>>>>>>>>>>> trashCards", trashCards);
-		GameLog.log(MsgType.DEBUG, "treasureCardsValue: " + treasureCardsValue);
 		if (trashCards.isEmpty())
 			return;
 		for (Card c : trashCards) {
