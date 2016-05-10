@@ -4,8 +4,7 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
 /**
- * This packet is send from the client to the server everytime the client draws
- * a card. The Server then distributes the packet to the other clients.
+ * This packet is send from the server to the cliend to send the client id. 
  * 
  * @author Steffen Jacobs
  */

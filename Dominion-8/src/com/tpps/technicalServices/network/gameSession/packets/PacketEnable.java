@@ -4,8 +4,7 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
 /**
- * This packet is send from a server to the client every time there are already
- * too much player on the server
+ * packet is send to enable a gui
  * 
  * @author ladler - Lukas Adler
  */

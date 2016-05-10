@@ -7,8 +7,7 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
 /**
- * This packet is send from a server to the client every time there are already
- * too much player on the server
+ * This packet is send from a client to server to show the end screen
  * 
  * @author ladler - Lukas Adler
  */
@@ -30,19 +29,35 @@ public class PacketShowEndScreen extends Packet {
 		
 	}
 	
+	/**
+	 * add al player to the player list
+	 */
 	public void add(String player, String name, int points) {
 		namePoints.put(player, new Tuple<String>(name, points));
 	
 	}
 	
+	/**
+	 * @param player
+	 * @return name for a player
+	 */
 	public String getNameForPlayer(String player) {
 		return this.namePoints.get(player).getFirstEntry();
 	}
 	
+	/**
+	 * 
+	 * @param player
+	 * @return points for a player
+	 */
 	public int getPointsForPlayer(String player) {
 		return this.namePoints.get(player).getSecondEntry();
 	}
 	
+	/**
+	 * 
+	 * @return the amount of players in the linkedhashmap
+	 */
 	public int getPlayerAmount() {
 		return this.namePoints.size();
 	}
