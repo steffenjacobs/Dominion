@@ -138,13 +138,12 @@ public class PlayerSettingsPanel extends JPanel {
 	}
 
 	/**
-	 * init the aiNameList()
+	 * init the aiNameList. Random names from this list will be chosen for AI
+	 * names in the multi- and single player modes
 	 */
 	public void initAiNameList() {
-		this.aiNameList = CollectionsUtil.getArrayList(new String[] { "Sir Lancelot", "Ritter der Kokosnuss",
-				"Wizard of Oz", "King Arthur", "Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne", "Black Beauty",
-				"Walter White", "Harry Potter", "Alice bei 1&1", "Larry der Lachs", "John the Ripper",
-				"Sherlock Holmes", "BEST AI EU", "L as Looser", "Mark Cykaberg" });
+		this.aiNameList = CollectionsUtil.getArrayList(new String[] { "Sir Lancelot", "Ritter der Kokosnuss", "Wizard of Oz", "King Arthur", "Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne",
+				"Black Beauty", "Walter White", "Harry Potter", "Alice bei 1&1", "Larry der Lachs", "John the Ripper", "Sherlock Holmes", "L as Looser", "Mark Zuckerberg" });
 		this.aiNames = new ArrayList<String>();
 	}
 
@@ -274,20 +273,16 @@ public class PlayerSettingsPanel extends JPanel {
 				cardNamesSelected.toArray(selCards);
 
 				try {
-					DominionController.getInstance().getMatchmaker().sendStartPacket(
-							DominionController.getInstance().getUsername(),
-							DominionController.getInstance().getSessionID(),
+					DominionController.getInstance().getMatchmaker().sendStartPacket(DominionController.getInstance().getUsername(), DominionController.getInstance().getSessionID(),
 							DominionController.getInstance().getLobbyID(), selCards);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 				GameLog.log(MsgType.INFO, "Starting game...");
 			} else {
-				DominionController.getInstance().receiveChatMessageFromChatServer(
-						"You are not ready to start the match\n" + "         selected cards: "
-								+ PlayerSettingsPanel.this.cardNamesSelected.size() + "/10" + "\n"
-								+ "         connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers() + "/4",
-						"BOT", "", Color.YELLOW);
+				DominionController.getInstance().receiveChatMessageFromChatServer("You are not ready to start the match\n" + "         selected cards: "
+						+ PlayerSettingsPanel.this.cardNamesSelected.size() + "/10" + "\n" + "         connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers() + "/4", "BOT", "",
+						Color.YELLOW);
 			}
 		}
 
@@ -393,8 +388,7 @@ public class PlayerSettingsPanel extends JPanel {
 	private Dimension getCardSize(int wdt, int hght) {
 
 		return new Dimension((int) (DominionController.getInstance().getMainFrame().getHeight() / 3d / hght * wdt),
-				DominionController.getInstance().getMainFrame().getHeight() / 3 - SPACE_PANEL_TO_PANEL * 2
-						- scrollBarHeight);
+				DominionController.getInstance().getMainFrame().getHeight() / 3 - SPACE_PANEL_TO_PANEL * 2 - scrollBarHeight);
 	}
 
 	private class CardDisplayButton extends JButton implements ActionListener {
