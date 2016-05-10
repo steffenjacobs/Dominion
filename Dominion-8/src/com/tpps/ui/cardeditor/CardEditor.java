@@ -253,8 +253,10 @@ public class CardEditor extends JFrame implements ActionListener {
 		cardType.setFont(smallfont);
 		cardType.setForeground(Color.WHITE);
 		obenLinks.add(cardType);
-		String comboBoxListe[] = { "Action", "Treasure", "Victory", "Point" };
+		String comboBoxListe[] = { "Action", "Treasure", "Victory", "Reaction", "Attack", "Prize", "Curse","Ruins", "Shelter", 	"Knight", 
+								   "Traveller","Reserve", };
 		selectCardType = new JComboBox(comboBoxListe);
+		selectCardType.setMaximumRowCount(5);
 		selectCardType.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -372,10 +374,6 @@ public class CardEditor extends JFrame implements ActionListener {
 				if (localZaehler == 3) {
 					
 				}
-				if (localZaehler == 4) {
-						
-					}
-				
 				}
 				
 			}
