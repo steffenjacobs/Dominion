@@ -64,19 +64,16 @@ public class GameBackground extends GameObject {
 
 	@Override
 	public GameObject clone() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void onMouseEnter() {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void onMouseExit() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -109,7 +106,5 @@ public class GameBackground extends GameObject {
 	public void onResize(int absWidth, int absHeight) {
 		super.setRenderedImage(GraphicsUtil.resize((BufferedImage) super.getBufferedImage(),
 				super.dimension.getAbsoluteX(absWidth), super.dimension.getAbsoluteY(absHeight)));
-		// TODO Auto-generated method stub
-
 	}
 }

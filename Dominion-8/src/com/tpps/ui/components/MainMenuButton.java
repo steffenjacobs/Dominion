@@ -95,10 +95,8 @@ public class MainMenuButton {
 			g.drawString(this.name, (originalImage.getWidth() / 2) - this.name.length() * 22,
 					(int) (originalImage.getHeight() / 1.5));
 		} catch (FontFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

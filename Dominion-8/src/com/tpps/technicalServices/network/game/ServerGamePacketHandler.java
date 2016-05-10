@@ -870,7 +870,6 @@ public class ServerGamePacketHandler extends PacketHandler {
 				GameLog.log(MsgType.AI, "created a new artificial intelligence");
 			}
 			if (server.getGameController().getPlayers().size() == GameConstant.PLAYERS.getValue()) {
-				// TODO: connect chatroom correctly "without AI"
 				LinkedList<Player> serverPlayers = this.server.getGameController().getPlayers();
 				ArrayList<String> chatPlayers = new ArrayList<String>();
 				for (Iterator<Player> iterator = serverPlayers.iterator(); iterator.hasNext();) {

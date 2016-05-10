@@ -544,7 +544,6 @@ public class SQLStatisticsHandler {
 			boolean[] lastWinsAndLosses = SQLStatisticsHandler.getLastTimeWinsParsed(text);
 			return lastWinsAndLosses;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return new boolean[0];

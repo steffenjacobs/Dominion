@@ -337,7 +337,6 @@ public class ClientGamePacketHandler extends PacketHandler {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			GameLog.log(MsgType.MM, "clientId not set. please wait a moment");

@@ -15,7 +15,6 @@ import com.tpps.technicalServices.logger.DrawAndShuffle;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
 import com.tpps.technicalServices.network.game.GameServer;
-import com.tpps.technicalServices.network.game.SynchronisationException;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDisable;
 import com.tpps.technicalServices.network.gameSession.packets.PacketDiscardDeck;

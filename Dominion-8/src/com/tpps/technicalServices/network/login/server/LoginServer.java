@@ -83,7 +83,7 @@ public class LoginServer extends Server {
 					SQLHandler.closeConnection();
 					System.exit(0);
 					break;
-				} else if (line.startsWith("create account")) { // TODO: update
+				} else if (line.startsWith("create account")) {
 					String[] words = line.split("\\s+");
 					Password temp1 = new Password(words[3], new String("defsalt"));
 					String firsthash = temp1.getHashedPassword();

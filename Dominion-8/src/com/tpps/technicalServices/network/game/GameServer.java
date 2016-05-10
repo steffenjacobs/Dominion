@@ -29,7 +29,6 @@ public class GameServer extends Server {
 	private GameServerNetworkListener gameServerNetworkListener;
 
 	public GameServer(int port, String[] selectedActionCards) throws IOException {
-		// TODO: implement selectedActionCards
 		super(new InetSocketAddress("0.0.0.0", port), new ServerGamePacketHandler());
 		((ServerGamePacketHandler) super.getHandler()).setServer(this);
 		this.sessionClient = new SessionClient(

@@ -20,7 +20,6 @@ public class ObserverThread extends Thread {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		super.run();
 
 		System.out.println("observer thread started");

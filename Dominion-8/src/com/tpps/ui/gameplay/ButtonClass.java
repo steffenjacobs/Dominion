@@ -111,26 +111,15 @@ public class ButtonClass extends GFButton {
 	 */
 
 	public void onMouseClick() {
-//		if (parameter.equals("play")) {
-//			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
-//			SettingsController.changeVolumeIngame(50);
-//			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getMuteButton());
-//			return;
-//		}
-//		if (parameter.equals("mute")) {
-//			GameWindow.getInstance().getGraphicFramework().removeComponent(this);
-//			SettingsController.changeVolumeIngame(0);
-//			GameWindow.getInstance().getGraphicFramework().addComponent(GameWindow.getInstance().getPlayButton());
-//			return;
-//		}
 		if (parameter.equals("NumberButton")) {
 			return;
+		}		
+
+		if (parameter.equals("exit")) {
+			System.exit(0);
 		}
 
 		if (DominionController.getInstance().isTurnFlag()) {
-			if (parameter.equals("exit")) {
-				System.exit(0);
-			}
 			DominionController.getInstance().setTurnFlag(false);
 			DominionController.getInstance().getGameClient().getGameWindow().setCaptionTurn("execute");
 
@@ -150,7 +139,6 @@ public class ButtonClass extends GFButton {
 					this.getFramework().removeComponent(this);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -200,7 +188,6 @@ public class ButtonClass extends GFButton {
 					this.getFramework().addComponent(GameWindow.endActionPhase);
 					this.getFramework().addComponent(GameWindow.endTurn);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -294,7 +281,6 @@ public class ButtonClass extends GFButton {
 					this.getFramework().removeComponent(this);
 					DominionController.getInstance().getGameClient().sendMessage(new PacketPlayTreasures());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -344,7 +330,6 @@ public class ButtonClass extends GFButton {
 					this.getFramework().addComponent(GameWindow.endActionPhase);
 					this.getFramework().addComponent(GameWindow.endTurn);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -355,7 +340,6 @@ public class ButtonClass extends GFButton {
 					this.getFramework().removeComponent(this);
 					this.getFramework().removeComponent(GameWindow.putBack);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}

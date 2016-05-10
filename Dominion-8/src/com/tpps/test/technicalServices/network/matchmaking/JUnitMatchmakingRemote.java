@@ -68,7 +68,6 @@ public class JUnitMatchmakingRemote {
 		for (int i = 0; i < countClients; i++) {
 
 			// Setup match-makers
-			//TODO: fix test
 			Matchmaker mm = Matchmaker.getInstance();
 			matchmakers.put(username + i, mm);
 
