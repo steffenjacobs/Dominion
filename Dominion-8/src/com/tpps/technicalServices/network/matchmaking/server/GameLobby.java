@@ -176,6 +176,9 @@ public class GameLobby {
 	 *            the player who quits the lobby
 	 */
 	public void quitPlayer(MPlayer player) {
+		if(this.hasStarted()){
+			return;
+		}
 		this.players.remove(player);
 		this.updateLobbyScore();
 
@@ -185,6 +188,7 @@ public class GameLobby {
 				MatchmakingServer.getInstance().sendQuitPacket(mplayer, player.getPlayerName(), isAdmin(player));
 			}
 		}
+		
 		if (isAdmin(player)) {
 			this.admin = null;
 			ArrayList<MPlayer> removeAI = new ArrayList<>();

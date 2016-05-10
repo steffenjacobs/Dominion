@@ -368,46 +368,53 @@ public final class MatchmakingController {
 	 *            the port the ended server was running on
 	 */
 	public static void onGameEnd(PacketGameEnd endPacket, int port) {
-		GameLobby lobby = getLobbyFromPlayerName(endPacket.getWinner());
-		if (lobby != null) {
-			GameLog.log(MsgType.INFO, "Received end-packet: " + endPacket.toString());
-		} else {
-			GameLog.log(MsgType.ERROR, "Received bad end-packet: " + endPacket.toString());
-			return;
-		}
-		for (String playerName : endPacket.getPlayers()) {
-
-			MPlayer player = playersByName.get(playerName);
-
-			if (player != null && player.isAI()) {
-				continue;
+		GameLobby lobby = runningLobbiesByPort.get(endPacket.getPort());
+		
+		synchronized (lobby) {
+			lobby = runningLobbiesByPort.get(endPacket.getPort());
+			
+			if (lobby != null) {
+				GameLog.log(MsgType.INFO, "Received end-packet: " + endPacket.toString());
+			} else {
+				GameLog.log(MsgType.ERROR, "Received bad end-packet, no server found on port: " + endPacket.getPort());
+				return;
 			}
 
+			// deal with winner
+			String winner = endPacket.getWinner();
+
 			if (!DominionController.isOffline()) {
-				// Every player except AIs
-				SQLStatisticsHandler.addOverallPlaytime(playerName, System.currentTimeMillis() - lobby.getStartTime());
-				if (!playerName.equals(endPacket.getWinner())) {
-					// player lost
-					SQLStatisticsHandler.addWinOrLoss(playerName, false);
+				if (winner != null) {
+					MPlayer player = playersByName.get(winner);
+					if (!player.isAI()) {
+						SQLStatisticsHandler.addWinOrLoss(endPacket.getWinner(), true);
+					}
+				}
+
+				for (MPlayer pls : lobby.getPlayers()) {
+					if (pls.isAI()) {
+						continue;
+					} else {
+						SQLStatisticsHandler.addOverallPlaytime(pls.getPlayerName(),
+								System.currentTimeMillis() - lobby.getStartTime());
+						if (!pls.getPlayerName().equals(winner)) {
+							SQLStatisticsHandler.addWinOrLoss(pls.getPlayerName(), false);
+						}
+						try {
+							MatchmakingServer.getInstance().disconnect(pls.getConnectionPort());
+						} catch (NullPointerException ex) {
+							System.err.println("Error while disconnecting: not connected!");
+						}
+					}
 				}
 			}
 
-			// int port = connectedPortsByPlayer.get(player);
-			try {
-				MatchmakingServer.getInstance().disconnect(player.getConnectionPort());
-			} catch (NullPointerException ex) {
-				System.err.println("Error while disconnecting: not connected!");
-			}
-		}
-		if (!DominionController.isOffline()) {
-			// Add win for player who won
-			SQLStatisticsHandler.addWinOrLoss(endPacket.getWinner(), true);
-		}
+			lobby.getServer().stopSrv();
 
-		lobby.getServer().stopSrv();
-
-		lobbiesByID.remove(lobby.getLobbyID());
-		lobbies.remove(lobby);
+			lobbiesByID.remove(lobby.getLobbyID());
+			lobbies.remove(lobby);
+			runningLobbiesByPort.remove(endPacket.getPort());
+		}
 	}
 
 	/** @return a readable representation of all active lobbies */
