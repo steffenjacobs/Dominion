@@ -391,6 +391,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 			}
 			this.server.sendMessage(port, votekickPacket);
 		}
+		
+		if (this.server.getGameController().getPlayers().size() <= 1) {
+			this.server.getGameController().endGame();
+		}
+		
 	}
 
 	/**
