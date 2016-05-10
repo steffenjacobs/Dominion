@@ -1,8 +1,13 @@
 package com.tpps.ui.cardeditor;
 
+import java.awt.Color;
 import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +18,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -49,6 +55,7 @@ public class ActionQuery extends JFrame implements ActionListener  {
 	private int cost;
 	private String name,aktionswert,aktionswert2,aktionswert3;
 	private BufferedImage image;
+	private Font smallfont;
 	
 	/**
 	 * 
@@ -67,6 +74,8 @@ public class ActionQuery extends JFrame implements ActionListener  {
 		this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		smallfont = new Font("Calibri", Font.BOLD, 15);
+		initComponents();
 		c2 = this.getContentPane();
 		System.out.println(radioButtons);
 		
@@ -80,7 +89,6 @@ public class ActionQuery extends JFrame implements ActionListener  {
 		rbs3 = radioButtons.get(2);
 		else 
 	    rbs3 = "";
-		
 		iniateGUI();
 		
 	}
@@ -93,15 +101,23 @@ public class ActionQuery extends JFrame implements ActionListener  {
 		
 		c2.setLayout(new GridLayout(3,3,30,10));
 		JPanel labels = new JPanel();
+        labels.setOpaque(false);
     	labels.setLayout(new FlowLayout(10,20,5));
         lb1 = new JLabel(rbs1);
         lb2 = new JLabel(rbs2);
         lb3 = new JLabel(rbs3);
+        lb1.setFont(smallfont);
+        lb1.setForeground(Color.WHITE);
+		lb2.setFont(smallfont);
+		lb2.setForeground(Color.WHITE);
+		lb3.setFont(smallfont);
+		lb3.setForeground(Color.WHITE);
         labels.add(lb1);
         labels.add(lb2);
         labels.add(lb3);
 		c2.add(labels);
 		JPanel checkboxes = new JPanel();
+        checkboxes.setOpaque(false);
 		checkboxes.setLayout(new FlowLayout(40,50,5));
 		String actionBoxListe[] = {"1", "2", "3", "4"}; 
 		cb1 = new JComboBox(actionBoxListe);
@@ -114,6 +130,7 @@ public class ActionQuery extends JFrame implements ActionListener  {
 		checkboxes.add(cb3);
 		c2.add(checkboxes);
 		JPanel button = new JPanel();
+        button.setOpaque(false);
 		okbutton = new JButton("Confirm");
 		
 		/**
@@ -259,6 +276,9 @@ public class ActionQuery extends JFrame implements ActionListener  {
 		c2.add(button);
 	}
 	
+	/**
+	 *  loads the serialized Card into the Storage, added into Registry
+	 */
 
 	private void uploadCard() throws IOException {
 		CardPacketHandlerClient cHandler = new CardPacketHandlerClient();
@@ -283,8 +303,52 @@ public class ActionQuery extends JFrame implements ActionListener  {
 		                });
 	}
 	
+	/**
+	 * loading the background, using the paint method
+	 */
+	
+	private void initComponents() {
+
+		try {
+			setContentPane(new JPanel() {
+
+				private Image img;
+
+				{
+					img = ImageIO.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
+
+					MediaTracker mt = new MediaTracker(this);
+					mt.addImage(img, 1);
+					try {
+						mt.waitForAll();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+
+				/*
+				 * (non-Javadoc)
+				 * 
+				 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+				 */
+				@Override
+				protected void paintComponent(Graphics g) {
+					g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+				}
+			});
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * closes the window after it created the card
+	 */
+	
 	private void backtomain() {
-		DominionController.getInstance().joinMainMenu();
+		CardEditor.resetEditor();           //CardEditor ist wieder auf Ausgangspositon
+//		DominionController.getInstance().joinMainMenu();
 		ActionQuery.this.dispose();
 		
 	}

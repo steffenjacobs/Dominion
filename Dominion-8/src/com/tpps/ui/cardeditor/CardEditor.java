@@ -56,10 +56,13 @@ public class CardEditor extends JFrame implements ActionListener {
 	private BufferedImage background;
 	private JButton uploadImage, increasePrice, decreasePrice, standartPrice, createCard, cancel;
 	private ButtonGroup actionSelect;
-	private JRadioButton addAction, addMoney, addPurchase, drawCard, drawCardUntil, putBack, gainCard, discardCard,
-			trashCard, revealCard, isTreasure, isVictory;
+	private static JRadioButton addAction,addMoney,addPurchase,drawCard,drawCardUntil,putBack,gainCard;
+	private static JRadioButton discardCard,trashCard,revealCard,isTreasure,isVictory;
 	private Container c;
-	private JLabel all, enterName, price, cardType, testImage;
+	private JLabel all, enterName;
+	private static JLabel price;
+	private JLabel cardType;
+	private static JLabel testImage;
 	private static JTextField nameField;
 	private static JComboBox selectCardType;
 	private ImageIcon loading;
@@ -79,10 +82,10 @@ public class CardEditor extends JFrame implements ActionListener {
 	private BufferedImage buttonIcon;
 	private File targetFile;
 	private final int baseSize = 128;
-	private BufferedImage back;
 	private BackButton backButton;
     private boolean rbp1,rbp2,rbp3,rbp4,rbp5,rbp6,rbp7,rbp8,rbp9,rbp10,rbp11,rbp12;
     private Dimension d;
+	private int imageloaded = 0;
     
 
 
@@ -137,9 +140,6 @@ public class CardEditor extends JFrame implements ActionListener {
 		// this.setUndecorated(true);
 	}
 
-
-	// TODO : Documentation und Formatierung
-	// TODO : Upload in die Cloud
 
 	private void initComponents() {
 		/**
@@ -205,6 +205,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		enterName.setForeground(Color.WHITE);
 		obenLinks.add(enterName);
 		nameField = new JTextField(1);      //Hier kann der User den Namen der Karte eingeben
+		nameField.setText("");
 		obenLinks.add(nameField);
 		cardType = new JLabel("Choose Cardtype");
 		cardType.setFont(smallfont);
@@ -706,13 +707,18 @@ public class CardEditor extends JFrame implements ActionListener {
 		createCard.setFont(customFont.deriveFont(15f));
 		createCard.setPreferredSize(d);
 		createCard.addActionListener(new ActionListener() {      
+			
+	
 		
 			/**
 			 * falls die RadioButtons selektiert sind werden sie zur RadioButton Arraylist hinzugefügt, diese wird dann an ActionQuery übergeben für die LinkedHashmap
 			 */
 			
 			public void actionPerformed(ActionEvent e) {
-				if (schleifenZaehler < 4 && schleifenZaehler > 0) {
+				if (imageloaded > 0) {
+				if (!nameField.getText().equals("")) {                        //TextField ist nicht leer
+									
+				if (schleifenZaehler < 4 && schleifenZaehler > 0) {           //Zwischen 1-3 RadioButton
 				ArrayList<String> radioButtons = new ArrayList<String>();
 				if (rbp1 == true)
 				radioButtons.add(addAction.getText());				
@@ -745,8 +751,17 @@ public class CardEditor extends JFrame implements ActionListener {
 					JOptionPane.showMessageDialog(null, "You have to choose between 1 and 3 Actions", "Error!",
 							JOptionPane.WARNING_MESSAGE);
 				}
-				
 			}
+				else  {
+					JOptionPane.showMessageDialog(null, "Please enter a name", "Error!",
+							JOptionPane.WARNING_MESSAGE);
+				}
+				}
+				else  {
+					JOptionPane.showMessageDialog(null, "Please upload an Image", "Error!",
+							JOptionPane.WARNING_MESSAGE);
+			}
+		}
 		});
 		untenLinks.add(createCard);
 		c.add(untenLinks, gbc);
@@ -800,7 +815,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	 * this method enables all the radiobuttons and unselects them
 	 */
 
-	private void setRadiobuttons() {                     
+	private static void setRadiobuttons() {                     
 		addAction.setEnabled(true);
 		addMoney.setEnabled(true);
 		addPurchase.setEnabled(true);
@@ -919,6 +934,7 @@ public class CardEditor extends JFrame implements ActionListener {
 	
 
 	public void setTarget(File reference) {
+		imageloaded = imageloaded  +1;
 		try {
 			targetFile = reference;
 			targetImg = rescale(ImageIO.read(reference));
@@ -954,9 +970,28 @@ public class CardEditor extends JFrame implements ActionListener {
 		} catch (Exception iOException) {
 
 		}
-
 	}
-
+	
+	/**
+	 * after a card is created, the user goes back to the editor which is then reseted
+	 */
+	
+	 static void resetEditor() {
+		nameField.setText("");
+		try {
+			testImage.setIcon(new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("resources/img/cardEditor/placeHolder.png"))));
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		setRadiobuttons();
+		priceint = 2;                                     
+		price.setText(Integer.toString(priceint));
+		
+		
+	}
+	 
 	public static void main(String[] args) {
 		new CardEditor().setVisible(true);
 	}
@@ -964,7 +999,6 @@ public class CardEditor extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
 }
