@@ -34,17 +34,24 @@ public class GameClient extends Client {
 		super.getListenerManager().registerListener(this.gameClientNetworkListener);
 		registrateByServer();
 	}
-	
+	/**
+	 * 
+	 * @return the gameWindow
+	 */
 	public GameWindow getGameWindow() {
 		return gameWindow;
 	}
 	
+	/**
+	 * 
+	 * @return the gameClientNetworkListener
+	 */
 	public GameClientNetworkListener getGameClientNetworkListener() {
 		return this.gameClientNetworkListener;
 	}
 
 	/**
-	 * 
+	 * registrates a player by the server
 	 * @throws IOException
 	 */
 	private void registrateByServer() throws IOException {
