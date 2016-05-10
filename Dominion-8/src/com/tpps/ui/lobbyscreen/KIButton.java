@@ -126,6 +126,7 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 			if(this.playerSettingsPanel.getAllPlayers() < 4){
 				PlayerSettingsPanel.kicount++;
 				String aiName = this.playerSettingsPanel.getAiName();
+				System.out.println("aiName: " + aiName);
 				try {
 					DominionController.getInstance().getMatchmaker().sendAIPacket(aiName + " (AI)", DominionController.getInstance().getLobbyID(), false);
 				} catch (IOException e1) {

@@ -393,7 +393,7 @@ public class ArtificialIntelligence {
 	 * send a PacketEndActionPhase() to end the actionPhase and start the
 	 * buyPhase
 	 */
-	public void setBuyPhase() {
+	private void setBuyPhase() {
 		sendPacket(new PacketEndActionPhase());
 	}
 
