@@ -226,20 +226,4 @@ public class EndPanel extends JPanel {
 			e1.printStackTrace();
 		}
 	}
-
-	// public static void main(String[] args) {
-	// JFrame jf = new JFrame();
-	// jf.setSize(1280, 720);
-	//
-	// PacketShowEndScreen packetShowEndScreen = new PacketShowEndScreen();
-	// packetShowEndScreen.add("player1", "Kevin", 14);
-	// packetShowEndScreen.add("player2", "Peter", 45);
-	// packetShowEndScreen.add("player3", "Gudrun", 1);
-	// packetShowEndScreen.add("player4", "Siegfried", 94);
-	//
-	// jf.add(new EndPanel(packetShowEndScreen));
-	// jf.setMinimumSize(new Dimension(1280, 720));
-	// jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	// jf.setVisible(true);
-	// }
 }

@@ -35,7 +35,6 @@ import com.tpps.technicalServices.util.ImageLoader;
 public class CreateAccount extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	// private ImageIcon loading;
 	private BufferedImage background;
 	private JButton createAccount;
 	private JTextField email, username;
@@ -45,7 +44,6 @@ public class CreateAccount extends JFrame {
 	private JLabel all;
 	private JPanel[] panels;
 	private Font smallfont, customFont;
-	// private BufferedImage walterWhite;
 	private Color textAndLabelColor;
 
 	private LoginGUIController guicontroller;
@@ -57,14 +55,14 @@ public class CreateAccount extends JFrame {
 
 	/**
 	 * simple constructor (first call) merging all elements
-	 * @param guicontroller 
-	 * @param location 
+	 * 
+	 * @param guicontroller
+	 * @param location
 	 */
 	public CreateAccount(LoginGUIController guicontroller, Point location) {
 		this.guicontroller = guicontroller;
 
 		loadImage();
-		// resizeImage();
 		try {
 			if (customFont == null) {
 				customFont = FontLoader.getInstance().getXenipa();
@@ -139,7 +137,6 @@ public class CreateAccount extends JFrame {
 		for (int i = 0; i < panels.length; i++) {
 			panels[i] = new JPanel(new FlowLayout());
 		}
-		// this.setContentPane(new JLabel(loading));
 		this.textAndLabelColor = System.getProperty("os.name").startsWith("Windows") ? Color.WHITE : Color.BLACK;
 	}
 
@@ -165,9 +162,7 @@ public class CreateAccount extends JFrame {
 
 		panels[0].add(header);
 		panels[0].setOpaque(false);
-		// panels[0].setBorder(BorderFactory.createLineBorder(Color.GREEN, 4));
 		all.add(panels[0]);
-		// c.add(panels[0]);
 	}
 
 	/**
@@ -196,7 +191,6 @@ public class CreateAccount extends JFrame {
 		panels[1].add(description[0]);
 		panels[1].add(email);
 		panels[1].setOpaque(false);
-		// panels[1].setBorder(BorderFactory.createLineBorder(Color.RED, 4));
 		all.add(panels[1]);
 		panels[0].revalidate();
 	}
@@ -226,7 +220,6 @@ public class CreateAccount extends JFrame {
 		panels[2].add(description[1]);
 		panels[2].add(username);
 		panels[2].setOpaque(false);
-		// panels[1].setBorder(BorderFactory.createLineBorder(Color.RED, 4));
 		all.add(panels[2]);
 		panels[2].revalidate();
 	}
@@ -256,7 +249,6 @@ public class CreateAccount extends JFrame {
 		panels[3].add(description[2]);
 		panels[3].add(passwordbox);
 		panels[3].setOpaque(false);
-		// panels[2].setBorder(BorderFactory.createLineBorder(Color.CYAN, 4));
 		all.add(panels[3]);
 		panels[3].revalidate();
 	}
@@ -286,32 +278,9 @@ public class CreateAccount extends JFrame {
 		panels[4].add(description[3]);
 		panels[4].add(passwordboxRetype);
 		panels[4].setOpaque(false);
-		// panels[2].setBorder(BorderFactory.createLineBorder(Color.CYAN, 4));
 		all.add(panels[4]);
 		panels[4].revalidate();
 	}
-
-	// /**
-	// * User-Description panel.
-	// */
-	//
-	// private void createpanel6() {
-	// panels[5].setLayout(new GridLayout(1, 2));
-	//
-	// description[4] = new JLabel("Description: ");
-	// description[4].setFont(smallfont);
-	// description[4].setHorizontalAlignment(JLabel.CENTER);
-	// describing = new JTextField();
-	//
-	// describing.setOpaque(false);
-	// describing.setFont(smallfont);
-	// panels[5].add(description[4]);
-	// panels[5].add(describing);
-	// panels[5].setOpaque(false);
-	// // panels[1].setBorder(BorderFactory.createLineBorder(Color.RED, 4));
-	// all.add(panels[5]);
-	// panels[5].revalidate();
-	// }
 
 	/**
 	 * Create Account button with specific listener.
@@ -319,7 +288,6 @@ public class CreateAccount extends JFrame {
 
 	private void createpanel6() {
 		panels[5].setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
-		// panels[3].setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
 
 		createAccount = new JButton("Create New Account") {
 
