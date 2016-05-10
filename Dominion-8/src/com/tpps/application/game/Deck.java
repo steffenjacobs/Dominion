@@ -505,9 +505,10 @@ public class Deck {
 	 * 
 	 * @param name
 	 *            the cardname to search
+	 * @param playedCards the played cards of the player in this turn
 	 * @return the amount of found cards in the deck with the given name
 	 */
-	public int containsAmountOf(String name) {
+	public int containsAmountOf(String name, LinkedList<Card> playedCards) {
 		int count = 0;
 		for (Card c : this.drawPile) {
 			if (c.getName().equals(name))
@@ -519,6 +520,10 @@ public class Deck {
 		}
 		for (Card c : this.cardHand) {
 			if (c.getName().equals(name))
+				count++;
+		}
+		for (Card c : playedCards) {
+			if (c.getName().equals(name)) 
 				count++;
 		}
 		return count;
