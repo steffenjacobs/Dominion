@@ -13,6 +13,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.Server;
@@ -50,6 +51,7 @@ public class JUnitNetworkTest {
 	 * @throws InterruptedException */
 	@BeforeClass
 	public static void setupNetwork() throws IOException, InterruptedException {
+		GameLog.init();
 		// initialize variables
 		serverPacketHandler = new TestPacketHandler();
 		clientPacketHandler = new TestPacketHandler();

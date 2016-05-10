@@ -6,6 +6,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.junit.Test;
 
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 import com.tpps.technicalServices.network.login.client.LoginClient;
@@ -31,6 +32,7 @@ public class JUnitLoginTest {
 	 */
 	@Test
 	public void test() throws InterruptedException {
+		GameLog.init();
 
 		LoginGUIController cont = new LoginGUIController();
 

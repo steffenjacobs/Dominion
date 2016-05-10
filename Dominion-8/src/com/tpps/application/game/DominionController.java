@@ -432,7 +432,7 @@ public final class DominionController {
 		this.receiveChatMessageFromChatServer("             ", "****** You joined the lobbyscreen ******",
 				"             ", Color.GREEN, false);
 		this.globalChatPanel.getBackButton().setLobby(true);
-		this.playerSettingsPanel.setStartButtonEnabled(true);		
+		this.playerSettingsPanel.setStartButtonEnabled(true);
 		JPanel panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -610,7 +610,9 @@ public final class DominionController {
 	 *            the Id of the lobby the player is in
 	 */
 	public void setLobbyID(UUID lobbyID) {
-		waitForLobby.release(1);
+		if (lobbyID != null) {
+			waitForLobby.release(1);
+		}
 		this.lobbyID = lobbyID;
 	}
 
@@ -647,10 +649,12 @@ public final class DominionController {
 	 * @throws InterruptedException
 	 */
 	public void waitForLobby() throws InterruptedException {
-		waitForLobby.drainPermits();
-		waitForLobby.acquire(1);
+		if (this.lobbyID == null) {
+			waitForLobby.drainPermits();
+			waitForLobby.acquire(1);
+		}
 	}
-	
+
 	public PlayerSettingsPanel getPlayerSettingsPanel() {
 		return playerSettingsPanel;
 	}

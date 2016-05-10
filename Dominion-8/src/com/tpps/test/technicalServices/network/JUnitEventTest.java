@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import org.junit.Test;
 
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.core.Client;
 import com.tpps.technicalServices.network.core.PacketHandler;
@@ -36,6 +37,7 @@ public class JUnitEventTest {
 	 */
 	@Test
 	public void test() throws IOException, InterruptedException {
+		GameLog.init();
 
 		// setup generic server
 		Server server = new Server(new InetSocketAddress(Addresses.getLocalHost(), 13), new PacketHandler() {
