@@ -231,11 +231,11 @@ public class ArtificialIntelligence {
 		debugCardPrint("cardHand", getCardHand());
 
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
+			sleep();
 			if (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
 				GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
 				continue;
 			}
-			sleep();
 			debugCardPrint("cardHand", getCardHand());
 			/**
 			 * in BIG_MONEY(_..) strategies, the execution of an action card
@@ -958,8 +958,8 @@ public class ArtificialIntelligence {
 	 */
 	private boolean drawAddActionStrategyPossible() {
 		int count = 0;
-		ArrayList<String> cardNames = CollectionsUtil.getArrayList(new String[] { CardName.COUNCILROOM.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(), CardName.MARKET.getName(),
-				CardName.VILLAGE.getName(), CardName.WITCH.getName() });
+		ArrayList<String> cardNames = CollectionsUtil.getArrayList(new String[] { CardName.COUNCILROOM.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(),
+				CardName.MARKET.getName(), CardName.VILLAGE.getName(), CardName.WITCH.getName() });
 
 		for (String name : cardNames) {
 			if (cardAvailableOnBoard(name)) {
@@ -1018,6 +1018,7 @@ public class ArtificialIntelligence {
 	 *            the list to search in
 	 * @return whether the card with name is contained in list
 	 */
+	@SuppressWarnings("unused")
 	private boolean listContains(String name, LinkedList<Card> list) {
 		for (Card c : list)
 			if (c.getName().equals(name))
@@ -1210,12 +1211,14 @@ public class ArtificialIntelligence {
 	 * @throws InterruptedException
 	 */
 	private void trash(LinkedList<Card> trashCards) throws InterruptedException {
-		int treasureCardsValue = getTreasureCardsValue(getCardHand());
+		int treasureCardsValue;
 		debugCardPrint(">>>>>>>>>>>>>>>> trashCards", trashCards);
 		if (trashCards.isEmpty())
 			return;
 		for (Card c : trashCards) {
 			sleep();
+			treasureCardsValue = getTreasureCardsValue(getCardHand());
+			GameLog.log(MsgType.INFO, "treasureCardsValue in trash for: " + treasureCardsValue);
 			if (this.player.isTrashMode() && c.getName().equals(CardName.ESTATE.getName()) || c.getName().equals(CardName.COPPER.getName()) || c.getName().equals(CardName.CURSE.getName())) {
 				GameLog.log(MsgType.INFO, "trashin dem cards here");
 				if (c.getName().equals(CardName.CURSE.getName())) {
