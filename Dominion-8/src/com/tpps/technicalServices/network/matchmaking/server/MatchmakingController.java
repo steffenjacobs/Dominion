@@ -369,10 +369,10 @@ public final class MatchmakingController {
 	 */
 	public static void onGameEnd(PacketGameEnd endPacket, int port) {
 		GameLobby lobby = runningLobbiesByPort.get(endPacket.getPort());
-		
+
 		synchronized (lobby) {
 			lobby = runningLobbiesByPort.get(endPacket.getPort());
-			
+
 			if (lobby != null) {
 				GameLog.log(MsgType.INFO, "Received end-packet: " + endPacket.toString());
 			} else {
@@ -385,9 +385,13 @@ public final class MatchmakingController {
 
 			if (!DominionController.isOffline()) {
 				if (winner != null) {
-					MPlayer player = playersByName.get(winner);
-					if (!player.isAI()) {
-						SQLStatisticsHandler.addWinOrLoss(endPacket.getWinner(), true);
+					for (MPlayer player : lobby.getPlayers()) {
+						if (player.getPlayerName().equals(winner)) {
+							if (!player.isAI()) {
+								SQLStatisticsHandler.addWinOrLoss(winner, true);
+								break;
+							}
+						}
 					}
 				}
 
