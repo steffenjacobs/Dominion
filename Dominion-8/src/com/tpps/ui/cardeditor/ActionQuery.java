@@ -7,6 +7,8 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -18,9 +20,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import com.tpps.application.game.DominionController;
 import com.tpps.application.game.card.CardAction;
 import com.tpps.application.game.card.CardType;
 import com.tpps.application.storage.SerializedCard;
+import com.tpps.technicalServices.network.Addresses;
+import com.tpps.technicalServices.network.card.CardClient;
+import com.tpps.technicalServices.network.card.CardPacketHandlerClient;
+import com.tpps.technicalServices.network.card.CardServer;
+import com.tpps.technicalServices.network.core.SuperCallable;
 
 public class ActionQuery extends JFrame implements ActionListener  {
 	/**
@@ -237,7 +245,14 @@ public class ActionQuery extends JFrame implements ActionListener  {
 				cost = CardEditor.getPrize();
 		        image = CardEditor.getImage();
 				newCard = new SerializedCard(actions, types, cost, name, image);
-			
+				try {
+					uploadCard();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			   System.out.println("Karte erstellt!");
+			   backtomain();
 			}
 		});
 		button.add(okbutton);
@@ -245,6 +260,35 @@ public class ActionQuery extends JFrame implements ActionListener  {
 	}
 	
 
+	private void uploadCard() throws IOException {
+		CardPacketHandlerClient cHandler = new CardPacketHandlerClient();
+		CardClient client = new CardClient(new InetSocketAddress(Addresses.getRemoteAddress(), CardServer.getStandardPort()), cHandler, false, DominionController.getInstance());
+		client.askIfCardnameExists(newCard.getName(), new SuperCallable<Boolean>() {
+		                    @Override
+		                    public Boolean callMeMaybe(Boolean object) {
+		                        if (!object.booleanValue()) {
+		                            //card did not exist
+		                            client.addCardToRemoteStorage(newCard);
+		                            DominionController.getInstance().getCardRegistry().addCard(newCard);
+		                            try {
+		                                Thread.sleep(100);
+		                            } catch (InterruptedException e) {
+		                                e.printStackTrace();
+		                            }
+		                        } else {
+		                                //card already existed -> display error
+		                        }
+		                        return null;
+		                    }
+		                });
+	}
+	
+	private void backtomain() {
+		DominionController.getInstance().joinMainMenu();
+		ActionQuery.this.dispose();
+		
+	}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 //		new ActionQuery(args).setVisible(true);
