@@ -637,29 +637,29 @@ public class CardEditor extends JFrame implements ActionListener {
 				if (schleifenZaehler < 4 && schleifenZaehler > 0) {
 				ArrayList<String> radioButtons = new ArrayList<String>();
 				if (rbp1 == true)
-				radioButtons.add(addAction.getName());
+				radioButtons.add(addAction.getText());				
 				if (rbp2 == true)
-				radioButtons.add(addMoney.getName());
+				radioButtons.add(addMoney.getText());
 				if (rbp3 == true)
-				radioButtons.add(addPurchase.getName());
+				radioButtons.add(addPurchase.getText());
 				if (rbp4 == true)
-				radioButtons.add(drawCard.getName());
+				radioButtons.add(drawCard.getText());
 				if (rbp5 == true)
-				radioButtons.add(drawCardUntil.getName());	
+				radioButtons.add(drawCardUntil.getText());	
 				if (rbp6 == true)
-				radioButtons.add(putBack.getName());	
+				radioButtons.add(putBack.getText());	
 				if (rbp7 == true)
-				radioButtons.add(gainCard.getName());
+				radioButtons.add(gainCard.getText());
 				if (rbp8 == true)
-				radioButtons.add(discardCard.getName());
+				radioButtons.add(discardCard.getText());
 				if (rbp9 == true)
-				radioButtons.add(trashCard.getName());	
+				radioButtons.add(trashCard.getText());	
                 if (rbp10 == true)	
-                radioButtons.add(revealCard.getName());
+                radioButtons.add(revealCard.getText());
 				if (rbp11 == true)
-				radioButtons.add(isTreasure.getName());
+				radioButtons.add(isTreasure.getText());
 				if (rbp12 == true)
-				radioButtons.add(isVictory.getName());
+				radioButtons.add(isVictory.getText());
 				
 				new ActionQuery(radioButtons);
 				}
