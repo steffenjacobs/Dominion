@@ -74,6 +74,10 @@ public class ActionQuery extends JFrame implements ActionListener  {
 		
 	}
 	
+	/**
+	 * Startet die Grafische Oberfläche
+	 */
+	
 	public void iniateGUI() {
 		c2.setLayout(new GridLayout(3,3,30,10));
 		JPanel labels = new JPanel();
@@ -99,6 +103,11 @@ public class ActionQuery extends JFrame implements ActionListener  {
 		c2.add(checkboxes);
 		JPanel button = new JPanel();
 		okbutton = new JButton("Confirm");
+		
+		/**
+		 * Bei Click auf Confirm wird die Karte erstellt, vorher werden die Werte der Karte geladen
+		 */
+		
 		okbutton.addActionListener(new ActionListener() {			
 			public void actionPerformed(ActionEvent e) {
 			    actions = new LinkedHashMap<CardAction, String>();
@@ -183,8 +192,40 @@ public class ActionQuery extends JFrame implements ActionListener  {
 					if (rbs3 == "isVictory")
 						actions.put(CardAction.IS_VICTORY,aktionswert3);
 					}
-		
-				newCard = new SerializedCard(actions, types, priceint, name, image);
+				types = new LinkedList();
+				String hilfstring = new String();
+				hilfstring = CardEditor.getCardtype();
+				if (hilfstring == "Action")
+				types.add(CardType.ACTION);
+				if (hilfstring == "Reaction")
+				types.add(CardType.REACTION);
+				if (hilfstring == "Attack")
+				types.add(CardType.ATTACK);
+				if (hilfstring == "Duration")
+				types.add(CardType.DURATION);
+				if (hilfstring == "Prize")
+				types.add(CardType.PRIZE);
+				if (hilfstring == "Ruins")
+				types.add(CardType.RUINS);
+				if (hilfstring == "Shelter")
+				types.add(CardType.SHELTER);
+				if (hilfstring == "Looter")
+				types.add(CardType.LOOTER);
+				if (hilfstring == "Traveller")
+				types.add(CardType.TRAVELLER);
+				if (hilfstring == "Reserve")
+				types.add(CardType.RESERVE);
+				if (hilfstring == "Treasure")
+				types.add(CardType.TREASURE);
+				if (hilfstring == "Victory")
+				types.add(CardType.VICTORY);
+				if (hilfstring == "Curse")
+				types.add(CardType.CURSE);
+				
+				name = CardEditor.getCardname();
+				cost = CardEditor.getPrize();
+		        image = CardEditor.getImage();
+				newCard = new SerializedCard(actions, types, cost, name, image);
 			
 			}
 		});
@@ -192,9 +233,6 @@ public class ActionQuery extends JFrame implements ActionListener  {
 		c2.add(button);
 	}
 	
-   private void kartenwerteladen() {
-	  
-   }
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
