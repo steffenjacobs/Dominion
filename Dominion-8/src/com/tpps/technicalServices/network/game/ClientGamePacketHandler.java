@@ -45,6 +45,9 @@ public class ClientGamePacketHandler extends PacketHandler {
 	private GameWindow gameWindow;
 	private GameStorageInterface gameStorageInterface;
 
+	/**
+	 * executes the action for the type of the incomming packet
+	 */
 	@Override
 	public synchronized void handleReceivedPacket(int port, Packet packet) {
 		if (packet == null) {
@@ -304,8 +307,8 @@ public class ClientGamePacketHandler extends PacketHandler {
 	}
 
 	/**
-	 * 
-	 * @param packet
+	 *enable the active player disable the rest
+	 * @param packet containing the client id of the active player
 	 */
 	private void enableDisable(Packet packet) {
 		// if (this.gameClient.getClientId() == -1){
@@ -326,7 +329,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 	}
 
 	/**
-	 * 
+	 * does the same as the enableDisable method but opens the gui in the beginning
 	 * @param packet
 	 */
 	private void openGuiAndEnableOne(Packet packet) {
@@ -363,14 +366,14 @@ public class ClientGamePacketHandler extends PacketHandler {
 	}
 
 	/**
-	 * 
+	 * sets the gameWindo
 	 */
 	public void setGameWindow(GameWindow gameWindow) {
 		this.gameWindow = gameWindow;
 	}
 
 	/**
-	 * 
+	 * sets the gameStorage interface
 	 * @param gameStorageInterface
 	 */
 	public void setGameStorageInterface(GameStorageInterface gameStorageInterface) {
@@ -378,7 +381,7 @@ public class ClientGamePacketHandler extends PacketHandler {
 	}
 
 	/**
-	 * 
+	 * sets the gameClient
 	 * @param gameClient
 	 */
 	public void setGameClient(GameClient gameClient) {
