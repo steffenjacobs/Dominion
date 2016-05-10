@@ -8,6 +8,7 @@ import java.net.InetSocketAddress;
 
 import org.junit.Test;
 
+import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.network.Addresses;
 import com.tpps.technicalServices.network.clientSession.client.SessionClient;
 import com.tpps.technicalServices.network.clientSession.client.SessionPacketSenderAPI;
@@ -33,6 +34,7 @@ public class JUnitTestDoubleLogin {
 	 */
 	@Test
 	public void test() throws IOException, InterruptedException {
+		GameLog.init();
 		new Thread(() -> {
 			try {
 				new SessionServer();
@@ -48,7 +50,7 @@ public class JUnitTestDoubleLogin {
 		SessionPacketSenderAPI.sendGetRequest(client, nickname, new SuperCallable<PacketSessionGetAnswer>() {
 			@Override
 			public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer answer) {
-				assertEquals(0, answer.getAnswerCode());
+				assertEquals(1, answer.getAnswerCode());
 				test1 = true;
 				return null;
 			}
@@ -59,13 +61,13 @@ public class JUnitTestDoubleLogin {
 		SessionPacketSenderAPI.sendGetRequest(client, nickname, new SuperCallable<PacketSessionGetAnswer>() {
 			@Override
 			public PacketSessionGetAnswer callMeMaybe(PacketSessionGetAnswer answer) {
-				assertEquals(1, answer.getAnswerCode());
+				assertEquals(2, answer.getAnswerCode());
 				test2 = true;
 				return null;
 			}
 		});
 
-		Thread.sleep(250);
+		Thread.sleep(500);
 
 		assertTrue(test1);
 		assertTrue(test2);
