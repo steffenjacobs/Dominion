@@ -27,6 +27,7 @@ import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.network.gameSession.packets.PacketShowEndScreen;
 import com.tpps.technicalServices.util.FontLoader;
 import com.tpps.technicalServices.util.ImageLoader;
+import com.tpps.technicalServices.util.MyAudioPlayer;
 
 /**
  * 
@@ -56,6 +57,7 @@ public class EndPanel extends JPanel {
 	 *            packet that has player statistics from match
 	 */
 	public EndPanel(PacketShowEndScreen packetShowEndScreen) {
+		MyAudioPlayer.handleGameMusic(false);
 		this.setLayout(new BorderLayout());
 		this.setOpaque(false);
 		this.fontLoading();
