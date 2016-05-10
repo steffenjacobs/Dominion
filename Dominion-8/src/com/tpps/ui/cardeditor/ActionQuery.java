@@ -45,11 +45,11 @@ public class ActionQuery extends JFrame {
 		c2 = this.getContentPane();
 		System.out.println(radioButtons);
 		rbs1 = radioButtons.get(0);
-		if (radioButtons.get(1) != null)
+		if (radioButtons.size() > 1 )
 		rbs2 = radioButtons.get(1);
 		else
 		rbs2 = "";
-		if (radioButtons.get(2) != null)
+		if (radioButtons.size() > 2)
 		rbs3 = radioButtons.get(2);
 		else 
 	    rbs3 = "";
@@ -59,13 +59,12 @@ public class ActionQuery extends JFrame {
 	}
 	
 	public void iniateGUI() {
-		c2.setLayout(new GridLayout(3,1,30,10));
+		c2.setLayout(new GridLayout(3,3,30,10));
 		JPanel labels = new JPanel();
-		labels.setLayout(new FlowLayout(10,20,5));
+    	labels.setLayout(new FlowLayout(10,20,5));
         lb1 = new JLabel(rbs1);
         lb2 = new JLabel(rbs2);
         lb3 = new JLabel(rbs3);
-        System.out.println(rbs1);
         labels.add(lb1);
         labels.add(lb2);
         labels.add(lb3);
@@ -77,7 +76,9 @@ public class ActionQuery extends JFrame {
 		cb2 = new JComboBox(actionBoxListe);
 		cb3 = new JComboBox(actionBoxListe);
 		checkboxes.add(cb1);
+		if (rbs2 != "")
 		checkboxes.add(cb2);
+		if (rbs3 != "")
 		checkboxes.add(cb3);
 		c2.add(checkboxes);
 		JPanel button = new JPanel();

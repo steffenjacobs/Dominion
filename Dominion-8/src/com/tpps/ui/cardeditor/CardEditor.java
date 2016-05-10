@@ -663,6 +663,10 @@ public class CardEditor extends JFrame implements ActionListener {
 				
 				new ActionQuery(radioButtons);
 				}
+				else {
+					JOptionPane.showMessageDialog(null, "You have to choose between 1 and 3 Actions", "Error!",
+							JOptionPane.WARNING_MESSAGE);
+				}
 				
 			}
 		});
