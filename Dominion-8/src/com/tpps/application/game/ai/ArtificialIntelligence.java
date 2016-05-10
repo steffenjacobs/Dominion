@@ -229,12 +229,13 @@ public class ArtificialIntelligence {
 
 		GameLog.log(MsgType.GAME_INFO, "playActionCards(), cardPrint:");
 		debugCardPrint("cardHand", getCardHand());
-
+		
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
+			GameLog.log(MsgType.DEBUG, "erste While in playActionCards()");
 			sleep();
-			if (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
+			while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
 				GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
-				continue;
+				sleep();
 			}
 			debugCardPrint("cardHand", getCardHand());
 			/**
@@ -542,7 +543,9 @@ public class ArtificialIntelligence {
 		double attacksOriginally = attacks * GameConstant.INIT_ACTIONCARD_PILE_SIZE.getValue();
 		double attacksBoughtByEnemies = attacksOriginally - board.getSizeOfPilesOnBoardWithType(CardType.ATTACK) - this.player.getDeck().containsAmountOf(CardType.ATTACK);
 		double attacksAvailableRatio = (attacksOriginally - attacksBoughtByEnemies) / attacksOriginally;
-		GameLog.log(MsgType.AI_DEBUG, "attacksOriginally: " + attacksOriginally + ", attacksEnemies: " + attacksBoughtByEnemies + ", attacksAvailableRatio: " + attacksAvailableRatio);
+		// GameLog.log(MsgType.AI_DEBUG, "attacksOriginally: " +
+		// attacksOriginally + ", attacksEnemies: " + attacksBoughtByEnemies +
+		// ", attacksAvailableRatio: " + attacksAvailableRatio);
 		/**
 		 * if a the ratio is not computed accurately, set its value to 1 so
 		 * there won't be any exceptions or false positive buys
@@ -977,8 +980,8 @@ public class ArtificialIntelligence {
 	 */
 	private boolean drawAddActionStrategyPossible() {
 		int count = 0;
-		ArrayList<String> cardNames = CollectionsUtil.getArrayList(new String[] { CardName.COUNCILROOM.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(),
-				CardName.MARKET.getName(), CardName.VILLAGE.getName(), CardName.WITCH.getName() });
+		ArrayList<String> cardNames = CollectionsUtil.getArrayList(new String[] { CardName.COUNCILROOM.getName(), CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(), CardName.MARKET.getName(),
+				CardName.VILLAGE.getName(), CardName.WITCH.getName() });
 
 		for (String name : cardNames) {
 			if (cardAvailableOnBoard(name)) {
@@ -999,13 +1002,16 @@ public class ArtificialIntelligence {
 	private boolean cardAvailableOnBoard(String name) {
 		GameBoard board = this.player.getGameServer().getGameController().getGameBoard();
 		if (board.getTableForActionCards().containsKey(name) && !board.getTableForActionCards().get(name).isEmpty()) {
-			GameLog.log(MsgType.AI_DEBUG, "<<###########++++++++++++++ WICHTIG, card available on board: " + name);
+			// GameLog.log(MsgType.AI_DEBUG, "<< card available on board: " +
+			// name);
 			return true;
 		} else if (board.getTableForTreasureCards().containsKey(name) && !board.getTableForTreasureCards().get(name).isEmpty()) {
-			GameLog.log(MsgType.AI_DEBUG, "<<###########++++++++++++++ WICHTIG, card available on board: " + name);
+			// GameLog.log(MsgType.AI_DEBUG, "<< card available on board: " +
+			// name);
 			return true;
 		} else if (board.getTableForVictoryCards().containsKey(name) && !board.getTableForVictoryCards().get(name).isEmpty()) {
-			GameLog.log(MsgType.AI_DEBUG, "<<###########++++++++++++++ WICHTIG, card available on board: " + name);
+			// GameLog.log(MsgType.AI_DEBUG, "<< card available on board: " +
+			// name);
 			return true;
 		} else
 			return false;

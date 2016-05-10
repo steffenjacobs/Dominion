@@ -784,28 +784,28 @@ public class Player {
 		boolean dontRemoveFlag = false, trashFlag = false;
 		Card serverCard = this.getDeck().getCardFromHand(cardID);
 
-		/*
-		 * this.gameServer.broadcastMessage(new
-		 * PacketBroadcastLog("",this.getPlayerName()," - plays " +
-		 * serverCard.getName(),
-		 * ((ServerGamePacketHandler)this.gameServer.getHandler
-		 * ()).getActivePlayerColor()));
-		 */
-		GameLog.log(MsgType.DEBUG, "discardMode: " + String.valueOf(this.isDiscardMode()) + ", trashMode: " + String.valueOf(this.isTrashMode()));
+		// this.gameServer.broadcastMessage(
+		// new PacketBroadcastLog("", this.getPlayerName(), " - plays " +
+		// serverCard.getName(), ((ServerGamePacketHandler)
+		// this.gameServer.getHandler()).getActivePlayerColor()));
+
+		// GameLog.log(MsgType.DEBUG, "discardMode: " +
+		// String.valueOf(this.isDiscardMode()) + ", trashMode: " +
+		// String.valueOf(this.isTrashMode()));
 		if (this.isDiscardMode()) {
 			if (serverCard.getName().equals(CardName.MOAT.getName())) {
 				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
-				GameLog.log(MsgType.DEBUG, " >>> - plays MOAT <<<");
+				// GameLog.log(MsgType.DEBUG, " >>> - plays MOAT <<<");
 			} else {
 				this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - discards " + serverCard.getName(), this.getLogColor()));
-				GameLog.log(MsgType.DEBUG, " >>> - discards <<<");
+				// GameLog.log(MsgType.DEBUG, " >>> - discards <<<");
 			}
 		} else if (this.isTrashMode()) {
 			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - trashes " + serverCard.getName(), this.getLogColor()));
-			GameLog.log(MsgType.DEBUG, " >>> - trashes <<<");
+			// GameLog.log(MsgType.DEBUG, " >>> - trashes <<<");
 		} else {
 			this.gameServer.broadcastMessage(new PacketBroadcastLog("", this.getPlayerName(), " - plays " + serverCard.getName(), this.getLogColor()));
-			GameLog.log(MsgType.DEBUG, " >>> - plays <<<");
+			// GameLog.log(MsgType.DEBUG, " >>> - plays <<<");
 		}
 		// GameLog.log(MsgType.INFO, "The Playername is: " +
 		// this.getPlayerName());
