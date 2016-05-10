@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -135,7 +134,7 @@ public class PlayerSettingsPanel extends JPanel {
 		this.bottomAreaPanel = this.bottomAreaPanel();
 
 		this.aiNameList = CollectionsUtil.getArrayList(new String[] { "Sir Lancelot", "Ritter der Kokosnuss", "Wizard of Oz", "King Arthur", "Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne",
-				"Black Beauty", "Charles", "Bob", "Alice", "Eve", "John the Ripper", "Sherlock Holmes", "Donald", "Wolfgang", "Goofy" });
+				"Black Beauty", "Walter White", "Harry Potter", "Alice bei 1&1", "Larry der Lachs", "John the Ripper", "Sherlock Holmes", "BEST AI EU", "L as Looser", "Mark Cykaberg" });
 		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
 		kicount = 0;
 	}
@@ -825,8 +824,19 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @author nwipfler
 	 * @return a String representation of a random AI
 	 */
-	public String getAiName() {
-		String randomName = this.aiNameList.get(new Random().nextInt(aiNameList.size()));
+	public synchronized String getAiName() {
+		try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) {		
+			e.printStackTrace();
+		}
+		String randomName;
+		try{
+			randomName = this.aiNameList.get((int)(Math.random()*aiNameList.size()));
+		}catch(IndexOutOfBoundsException e){
+			e.printStackTrace();
+			randomName = "Random Nr: " + ((int )Math.random() * 30);
+		}
 		this.aiNames.add(randomName);
 		this.aiNameList.remove(randomName);
 		return randomName;
