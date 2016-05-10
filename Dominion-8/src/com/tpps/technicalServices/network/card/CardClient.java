@@ -157,7 +157,7 @@ public class CardClient extends Client {
 				@Override
 				public SerializedCard callMeMaybe(SerializedCard object) {
 					GameLog.log(MsgType.INFO ,"Received card from server: " + object.getName());
-					DominionController.getInstance().updateLoadingScrenSubtext(object.getName());
+					DominionController.getInstance().updateLoadingScreenSubtext(object.getName());
 					parent.getCardRegistry().addCard(object);
 					sem.release();
 					return null;

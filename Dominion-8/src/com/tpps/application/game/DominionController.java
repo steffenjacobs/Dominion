@@ -106,7 +106,7 @@ public final class DominionController {
 	 * @param subtext
 	 *            the new subtext
 	 */
-	public void updateLoadingScrenSubtext(String subtext) {
+	public void updateLoadingScreenSubtext(String subtext) {
 		if (this.loadingScreen != null) {
 			this.loadingScreen.setSubText(subtext);
 		}
