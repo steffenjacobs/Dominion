@@ -40,7 +40,7 @@ public class MainMenuPanel extends JPanel {
 	private final int gapFactor, topGap;
 
 	/**
-	 * Constructor for the MainMenuPanell
+	 * Constructor for the MainMenuPanel
 	 * 
 	 * @param the
 	 *            MainMenu which holds this panel
