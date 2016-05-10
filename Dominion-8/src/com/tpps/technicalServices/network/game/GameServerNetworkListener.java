@@ -20,6 +20,10 @@ public class GameServerNetworkListener implements NetworkListener {
 		this.packetSend = new AtomicBoolean(false);
 	}
 	
+	/**
+	 * 
+	 * @return return if a packet was send
+	 */
 	public AtomicBoolean getPacketSend() {
 		return this.packetSend;
 	}
@@ -30,6 +34,9 @@ public class GameServerNetworkListener implements NetworkListener {
 
 	}
 
+	/**
+	 * reacts on disconnect events disables guis
+	 */
 	@Override
 	public void onClientDisconnect(int port) {
 		
