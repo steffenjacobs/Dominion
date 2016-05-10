@@ -60,24 +60,24 @@ public class EndPanel extends JPanel {
 		this.setOpaque(false);
 		this.fontLoading();
 		this.loadingImages();
-		
+
 		this.setVisible(true);
 		createPanelHeader();
 
 		createPanelButton();
 		userPanels = new ArrayList<JPanel>();
 		for (int i = 0; i < packetShowEndScreen.getPlayerAmount(); i++) {
-			userPanels.add(this.createPlayerJPanel(
-					packetShowEndScreen.getNameForPlayer("player" + (i+1)),
-					packetShowEndScreen.getPointsForPlayer("player" + (i+1))));
-			System.out.println( "PLAYER:_" + packetShowEndScreen.getNameForPlayer("player" + (i+1)) + "POINTS: " + packetShowEndScreen.getPointsForPlayer("player" + (i+1)));
+			userPanels.add(this.createPlayerJPanel(packetShowEndScreen.getNameForPlayer("player" + (i + 1)),
+					packetShowEndScreen.getPointsForPlayer("player" + (i + 1))));
+			System.out.println("PLAYER:_" + packetShowEndScreen.getNameForPlayer("player" + (i + 1)) + "POINTS: "
+					+ packetShowEndScreen.getPointsForPlayer("player" + (i + 1)));
 		}
 		addUserPanels();
-		
+
 		this.add(Box.createHorizontalStrut(50), BorderLayout.LINE_START);
 		this.add(Box.createHorizontalStrut(50), BorderLayout.LINE_END);
 	}
-	
+
 	@Override
 	/**
 	 * override paint for background
@@ -89,7 +89,7 @@ public class EndPanel extends JPanel {
 		h.drawImage(originalBackground, 0, 0, this.getWidth(), this.getHeight(), null);
 		super.paint(h);
 	}
-	
+
 	/**
 	 * inserts a player with matchinfo to GUI
 	 * 
@@ -99,7 +99,7 @@ public class EndPanel extends JPanel {
 	 *            integer of points that the player reached during the match
 	 * @return a JPanel that contains userinfo from last match
 	 */
-	public JPanel createPlayerJPanel(String playerOne, int points) {		
+	public JPanel createPlayerJPanel(String playerOne, int points) {
 		JPanel panel = new JPanel(new GridLayout(1, 2)) {
 
 			private static final long serialVersionUID = 1L;
@@ -110,14 +110,14 @@ public class EndPanel extends JPanel {
 				super.paint(g);
 			}
 		};
-		
-		panel.setOpaque(false);		
+
+		panel.setOpaque(false);
 
 		JLabel name = new JLabel(playerOne);
 		name.setHorizontalAlignment(JLabel.CENTER);
 		name.setOpaque(false);
 		name.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 5, Color.BLACK));
-		
+
 		JLabel tempPoints = new JLabel(Integer.toString(points) + " Points");
 		tempPoints.setHorizontalAlignment(JLabel.CENTER);
 		tempPoints.setBorder(BorderFactory.createMatteBorder(0, 5, 0, 0, Color.BLACK));
@@ -183,7 +183,7 @@ public class EndPanel extends JPanel {
 		returnButton.setOpaque(false);
 		Font returnButtonFont = new Font("Tahoma", Font.PLAIN + Font.BOLD, 20);
 		returnButton.setFont(returnButtonFont);
-		
+
 		returnButton.setOpaque(false);
 		returnButton.setBorderPainted(false);
 		returnButton.setContentAreaFilled(false);
@@ -205,8 +205,9 @@ public class EndPanel extends JPanel {
 		});
 
 	}
+
 	/**
-	 * creates font 
+	 * creates font
 	 */
 	public void fontLoading() {
 		try {
@@ -226,19 +227,19 @@ public class EndPanel extends JPanel {
 		}
 	}
 
-//	public static void main(String[] args) {
-//		JFrame jf = new JFrame();
-//		jf.setSize(1280, 720);
-//		
-//		PacketShowEndScreen packetShowEndScreen = new PacketShowEndScreen();
-//		packetShowEndScreen.add("player1", "kevin1", 14);
-//		packetShowEndScreen.add("player2", "kevin2", 45);
-//		packetShowEndScreen.add("player3", "kevin3", 1);
-//		packetShowEndScreen.add("player4", "kevin4", 94);
-//		
-//		jf.add(new EndPanel(packetShowEndScreen));
-////		jf.setMinimumSize(new Dimension(1280, 720));
-//		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		jf.setVisible(true);
-//	}
+	// public static void main(String[] args) {
+	// JFrame jf = new JFrame();
+	// jf.setSize(1280, 720);
+	//
+	// PacketShowEndScreen packetShowEndScreen = new PacketShowEndScreen();
+	// packetShowEndScreen.add("player1", "Kevin", 14);
+	// packetShowEndScreen.add("player2", "Peter", 45);
+	// packetShowEndScreen.add("player3", "Gudrun", 1);
+	// packetShowEndScreen.add("player4", "Siegfried", 94);
+	//
+	// jf.add(new EndPanel(packetShowEndScreen));
+	// jf.setMinimumSize(new Dimension(1280, 720));
+	// jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	// jf.setVisible(true);
+	// }
 }
