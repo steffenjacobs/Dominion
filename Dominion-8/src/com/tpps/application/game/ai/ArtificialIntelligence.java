@@ -1018,6 +1018,7 @@ public class ArtificialIntelligence {
 	 *            the list to search in
 	 * @return whether the card with name is contained in list
 	 */
+	@SuppressWarnings("unused")
 	private boolean listContains(String name, LinkedList<Card> list) {
 		for (Card c : list)
 			if (c.getName().equals(name))
@@ -1212,6 +1213,7 @@ public class ArtificialIntelligence {
 	private void trash(LinkedList<Card> trashCards) throws InterruptedException {
 		int treasureCardsValue = getTreasureCardsValue(getCardHand());
 		debugCardPrint(">>>>>>>>>>>>>>>> trashCards", trashCards);
+		GameLog.log(MsgType.DEBUG, "treasureCardsValue: " + treasureCardsValue);
 		if (trashCards.isEmpty())
 			return;
 		for (Card c : trashCards) {
