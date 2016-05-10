@@ -70,6 +70,8 @@ public class GameWindow extends JFrame {
 
 	private BufferedImage displayImageTurnGreen, muteImage, playImage;
 
+	private static int WIDTH, HEIGHT;
+
 	// private static ButtonClass muteButton, playButton;
 
 	private static final double CORRECTION_16TO9 = 16 / (double) 9;
@@ -102,6 +104,8 @@ public class GameWindow extends JFrame {
 	 * @throws IOException
 	 */
 	public GameWindow() {
+		WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
+		HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
 		GameWindow.instance = this;
 
 		GameLog.log(MsgType.INIT, "GameWindow");
@@ -126,12 +130,14 @@ public class GameWindow extends JFrame {
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setIconImage(ImageLoader.getImage("resources/img/loginScreen/Icon.png"));
-		
+
 		if (SettingsController.isFullscreen()) {
 			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 			this.setUndecorated(true);
+		} else {
+			this.setSize(DominionController.getInstance().getMainFrame().getSize());
 		}
-		
+
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.framework = new GraphicFramework(this);
 		this.framework.setLayout(null);

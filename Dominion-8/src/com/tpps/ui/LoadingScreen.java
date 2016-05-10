@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 import javax.swing.Box;
@@ -14,7 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import com.tpps.application.game.DominionController;
 import com.tpps.technicalServices.util.GraphicsUtil;
 import com.tpps.technicalServices.util.ImageLoader;
 
@@ -54,11 +54,9 @@ public class LoadingScreen {
 		loadingFrame.setSize(loadingSize);
 
 		loadingFrame.setLocation(
-				(int) (DominionController.getInstance().getMainFrame().getLocation().getX()
-						+ DominionController.getInstance().getMainFrame().getSize().getWidth() / 2
+				(int) (Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 2
 						- loadingFrame.getSize().getWidth() / 2),
-				(int) (DominionController.getInstance().getMainFrame().getLocation().getY()
-						+ DominionController.getInstance().getMainFrame().getSize().getHeight() / 2
+				(int) (Toolkit.getDefaultToolkit().getScreenSize().getHeight() / 2
 						- loadingFrame.getSize().getHeight() / 2));
 
 		JPanel content = new JPanel() {

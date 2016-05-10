@@ -106,7 +106,7 @@ public final class DominionController {
 	 * @param subtext
 	 *            the new subtext
 	 */
-	public void updateLoadingScrenSubtext(String subtext) {
+	public void updateLoadingScreenSubtext(String subtext) {
 		if (this.loadingScreen != null) {
 			this.loadingScreen.setSubText(subtext);
 		}
@@ -494,7 +494,6 @@ public final class DominionController {
 	 *            new session-id
 	 */
 	public void setSessionID(UUID sessionID) {
-		System.out.println("session set");
 		this.sessionID = sessionID;
 		waitForSession.release();
 	}
