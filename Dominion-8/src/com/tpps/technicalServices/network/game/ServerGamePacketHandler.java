@@ -390,11 +390,14 @@ public class ServerGamePacketHandler extends PacketHandler {
 				this.server.getGameController().resetSpyList();
 			}
 			this.server.sendMessage(port, votekickPacket);
+			
+			if (this.server.getGameController().getPlayers().size() <= 1) {
+				this.server.getGameController().endGame();
+			}
+			
 		}
 		
-		if (this.server.getGameController().getPlayers().size() <= 1) {
-			this.server.getGameController().endGame();
-		}
+		
 		
 	}
 
