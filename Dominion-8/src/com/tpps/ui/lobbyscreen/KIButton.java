@@ -121,24 +121,31 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		MyAudioPlayer.doClick();
-		//add ki
+		//add ki		
 		if (aiAdd) {
-			String aiName = this.playerSettingsPanel.getAiName();
-			try {
-				DominionController.getInstance().getMatchmaker().sendAIPacket(aiName + " (AI)", DominionController.getInstance().getLobbyID(), false);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			this.playerSettingsPanel.handleStartButton();
+			if(this.playerSettingsPanel.getAllplayers() < 4){
+				PlayerSettingsPanel.kicount++;
+				String aiName = this.playerSettingsPanel.getAiName();
+				try {
+					DominionController.getInstance().getMatchmaker().sendAIPacket(aiName + " (AI)", DominionController.getInstance().getLobbyID(), false);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				this.playerSettingsPanel.handleStartButton();
+			}					
 		//remove ki	
 		} else {
 			try {
-				DominionController.getInstance().getMatchmaker()
-						.sendAIPacket(this.playerSettingsPanel.getAiNames().remove(this.playerSettingsPanel.getAiNames().size() - 1) + " (AI)", DominionController.getInstance().getLobbyID(), true);
+				if(PlayerSettingsPanel.kicount > 0){
+					PlayerSettingsPanel.kicount--;
+					DominionController.getInstance().getMatchmaker()
+					.sendAIPacket(this.playerSettingsPanel.getAiNames().remove(this.playerSettingsPanel.getAiNames().size() - 1) + " (AI)", DominionController.getInstance().getLobbyID(), true);
+				}								
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 			this.playerSettingsPanel.handleStartButton();
 		}
+		System.err.println("kicount: " + PlayerSettingsPanel.kicount);
 	}
 }

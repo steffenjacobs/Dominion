@@ -275,6 +275,7 @@ public final class Matchmaker {
 			case 3: // Lobby is already full
 				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby is already full", "BOT", "",
 						Color.YELLOW);
+				System.err.println("lobbypacket full :)");
 				break;
 			case 4: // Lobby already started
 				DominionController.getInstance().receiveChatMessageFromChatServer("Lobby already started", "BOT", "",

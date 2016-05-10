@@ -426,10 +426,12 @@ public final class DominionController {
 	 * @param singlePlayer
 	 */
 	public void joinLobbyGui(boolean singlePlayer) {
+		PlayerSettingsPanel.kicount = 0;
+		this.playerSettingsPanel.setAllplayers(0);
 		this.receiveChatMessageFromChatServer("             ", "****** You joined the lobbyscreen ******",
 				"             ", Color.GREEN, false);
 		this.globalChatPanel.getBackButton().setLobby(true);
-		this.playerSettingsPanel.setStartButtonEnabled(true);
+		this.playerSettingsPanel.setStartButtonEnabled(true);		
 		JPanel panel = new JPanel() {
 			private static final long serialVersionUID = 1L;
 
@@ -646,6 +648,10 @@ public final class DominionController {
 	public void waitForLobby() throws InterruptedException {
 		waitForLobby.drainPermits();
 		waitForLobby.acquire(1);
+	}
+	
+	public PlayerSettingsPanel getPlayerSettingsPanel() {
+		return playerSettingsPanel;
 	}
 
 }

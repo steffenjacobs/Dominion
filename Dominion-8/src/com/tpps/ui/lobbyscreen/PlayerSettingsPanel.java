@@ -106,6 +106,10 @@ public class PlayerSettingsPanel extends JPanel {
 
 	private ArrayList<String> aiNames = new ArrayList<>();
 	private ArrayList<String> aiNameList;
+	
+	public static int kicount = 0;
+	
+	private int allplayers;
 
 	// private boolean singlePlayer = false;
 
@@ -115,6 +119,7 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @author jhuhn
 	 */
 	public PlayerSettingsPanel() {
+		this.allplayers = 0;
 		this.fontLoading();
 		this.initOriginalBackgroundImages();
 		this.initTransparentBackgroundImages();
@@ -132,6 +137,7 @@ public class PlayerSettingsPanel extends JPanel {
 		this.aiNameList = CollectionsUtil.getArrayList(new String[] { "Sir Lancelot", "Ritter der Kokosnuss", "Wizard of Oz", "King Arthur", "Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne",
 				"Black Beauty", "Charles", "Bob", "Alice", "Eve", "John the Ripper", "Sherlock Holmes", "Donald", "Wolfgang", "Goofy" });
 		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
+		kicount = 0;
 	}
 
 	/**
@@ -246,8 +252,7 @@ public class PlayerSettingsPanel extends JPanel {
 			Graphics2D h = (Graphics2D) g;
 			h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			h.drawImage(switchimage, 0, 0, this.getWidth(), this.getHeight(), null);
-			super.paint(h);
-			super.paint(g);
+			super.paint(h);			
 		}
 
 		@Override
@@ -716,6 +721,8 @@ public class PlayerSettingsPanel extends JPanel {
 				this.connectedPlayers[i].setPlayer(player);
 				GameLog.log(MsgType.GUI, "inserted Player: " + connectedPlayers[i].getText());
 				this.handleStartButton();
+				this.allplayers++;
+				System.err.println("players " + allplayers);
 				return true;
 			}
 		}
@@ -734,6 +741,8 @@ public class PlayerSettingsPanel extends JPanel {
 				GameLog.log(MsgType.GUI, "removed Player: " + connectedPlayers[i].getText());
 				connectedPlayers[i].resetSearchingField();
 				this.handleStartButton();
+				this.allplayers--;
+				System.err.println("players " + allplayers);
 				return true;
 			}
 		}
@@ -751,6 +760,7 @@ public class PlayerSettingsPanel extends JPanel {
 			GameLog.log(MsgType.GUI, "removed Player(all): " + connectedPlayers[i].getText());
 			connectedPlayers[i].resetSearchingField();
 		}
+		this.allplayers = 0;
 	}
 
 	/**
@@ -854,4 +864,11 @@ public class PlayerSettingsPanel extends JPanel {
 		}).start();
 	}
 
+	public int getAllplayers() {
+		return allplayers;
+	}
+	
+	public void setAllplayers(int allplayers) {
+		this.allplayers = allplayers;
+	}
 }
