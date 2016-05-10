@@ -231,10 +231,10 @@ public class ArtificialIntelligence {
 		debugCardPrint("cardHand", getCardHand());
 
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
-//			if (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
-//				GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
-//				continue;
-//			}
+			if (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
+				GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+				continue;
+			}
 			sleep();
 			debugCardPrint("cardHand", getCardHand());
 			/**
@@ -1196,6 +1196,8 @@ public class ArtificialIntelligence {
 				GameLog.log(MsgType.ERROR, "the method must not get here (unless it has a card hand like 5x gold");
 				playDiscard(this.player.getDeck().cardWithLowestCost(getCardHand(), CardType.TREASURE));
 				return;
+			} else {
+				playDiscard(getCardHand().get(new Random().nextInt(getCardHand().size())));
 			}
 		}
 	}
