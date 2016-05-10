@@ -69,14 +69,14 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 	 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 	 */
 	@Override
-    public void paint(Graphics g) {
-        Graphics2D h = (Graphics2D) g;
-        if (System.getProperty("os.name").startsWith("Windows")) {
-            h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            h.drawImage(switchimage, 0, 0, this.getWidth(), this.getHeight(), null);
-        }
-        super.paint(h);
-    }
+	public void paint(Graphics g) {
+		Graphics2D h = (Graphics2D) g;
+		if (System.getProperty("os.name").startsWith("Windows")) {
+			h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			h.drawImage(switchimage, 0, 0, this.getWidth(), this.getHeight(), null);
+		}
+		super.paint(h);
+	}
 
 	/**
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
@@ -115,6 +115,8 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 	public void mouseReleased(MouseEvent e) {
 	}
 
+	static long lastKIadd = 0l;
+
 	/**
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
@@ -125,27 +127,36 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		MyAudioPlayer.doClick();
-		//add ki		
+		// add ki
 		if (aiAdd) {
-			if(this.playerSettingsPanel.getAllPlayers() < 4){
+			if (this.playerSettingsPanel.getAllPlayers() < 4) {
+
+				if (System.currentTimeMillis() - lastKIadd < 1000) {
+					return;
+				}
+				MyAudioPlayer.doClick();
+
+				lastKIadd = System.currentTimeMillis();
 				PlayerSettingsPanel.kicount++;
 				String aiName = this.playerSettingsPanel.getAiName();
-				System.out.println("aiName: " + aiName);
 				try {
-					DominionController.getInstance().getMatchmaker().sendAIPacket(aiName + " (AI)", DominionController.getInstance().getLobbyID(), false);
+					DominionController.getInstance().getMatchmaker().sendAIPacket(aiName + " (AI)",
+							DominionController.getInstance().getLobbyID(), false);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 				this.playerSettingsPanel.handleStartButton();
-			}					
-		//remove ki	
+			}
+			// remove ki
 		} else {
+			MyAudioPlayer.doClick();
 			try {
-				if(PlayerSettingsPanel.kicount > 0){
+				if (PlayerSettingsPanel.kicount > 0) {
 					PlayerSettingsPanel.kicount--;
-					DominionController.getInstance().getMatchmaker().sendAIPacket(this.playerSettingsPanel.removeAiName() + " (AI)", DominionController.getInstance().getLobbyID(), true);
-				}								
+					DominionController.getInstance().getMatchmaker().sendAIPacket(
+							this.playerSettingsPanel.removeAiName() + " (AI)",
+							DominionController.getInstance().getLobbyID(), true);
+				}
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
