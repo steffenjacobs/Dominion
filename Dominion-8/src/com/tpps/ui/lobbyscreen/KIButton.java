@@ -120,6 +120,11 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		try {
+			DominionController.getInstance().waitForLobby();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 		MyAudioPlayer.doClick();
 		//add ki		
 		if (aiAdd) {
