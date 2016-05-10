@@ -135,6 +135,9 @@ public class GameWindow extends JFrame {
 			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 			this.setUndecorated(true);
 		}
+		else{
+			this.setSize(DominionController.getInstance().getMainFrame().getSize());
+		}
 		
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.framework = new GraphicFramework(this);
