@@ -899,6 +899,11 @@ public class PlayerSettingsPanel extends JPanel {
 			}
 			for (int i = 0; i < 3; i++) {
 				((ActionListener) this.plusKI).actionPerformed(new ActionEvent(this, -1, ""));
+				try {
+					Thread.sleep(1200);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}).start();
 	}
