@@ -498,7 +498,7 @@ public class PlayerSettingsPanel extends JPanel {
 				firstCard = card;
 			}
 
-			if (!card.getTypes().contains(CardType.ACTION)) {
+			if (!card.getTypes().contains(CardType.ACTION) && !card.getName().equals("Gardens")) {
 				continue;
 			}
 
