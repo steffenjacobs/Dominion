@@ -106,8 +106,6 @@ public class PlayerSettingsPanel extends JPanel {
 	private ArrayList<String> aiNames;
 	private ArrayList<String> aiNameList;
 
-	public static int kicount = 0;
-
 	private int allplayers;
 
 	// private boolean singlePlayer = false;
@@ -133,8 +131,6 @@ public class PlayerSettingsPanel extends JPanel {
 		// this.add(this.bottomAreaPanel());
 		this.bottomAreaPanel = this.bottomAreaPanel();
 		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
-
-		kicount = 0;
 	}
 
 	/**
@@ -850,7 +846,8 @@ public class PlayerSettingsPanel extends JPanel {
 		}
 		this.aiNames.add(randomName);
 		// this.aiNameList.remove(randomName);
-		System.out.println("aiNameList, size: " + aiNameList.size() + aiNameList.toString());
+		// System.out.println("aiNameList, size: " + aiNameList.size() +
+		// aiNameList.toString());
 		// this.plusKI.setEnabled(true);
 		return randomName;
 	}
@@ -865,7 +862,8 @@ public class PlayerSettingsPanel extends JPanel {
 		// this.minusKI.setEnabled(false);
 		String removed = this.aiNames.remove(aiNames.size() - 1);
 		// this.aiNameList.add(removed);
-		System.out.println("aiNameList, size: " + aiNameList.size() + aiNameList.toString());
+		// System.out.println("aiNameList, size: " + aiNameList.size() +
+		// aiNameList.toString());
 		// this.minusKI.setEnabled(true);
 		return removed;
 	}

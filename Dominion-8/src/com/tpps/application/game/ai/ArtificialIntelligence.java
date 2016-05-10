@@ -229,14 +229,10 @@ public class ArtificialIntelligence {
 
 		GameLog.log(MsgType.GAME_INFO, "playActionCards(), cardPrint:");
 		debugCardPrint("cardHand", getCardHand());
-		
+
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
 			GameLog.log(MsgType.DEBUG, "erste While in playActionCards()");
 			sleep();
-//			while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
-//				GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
-//				sleep();
-//			}
 			debugCardPrint("cardHand", getCardHand());
 			/**
 			 * in BIG_MONEY(_..) strategies, the execution of an action card
@@ -256,7 +252,7 @@ public class ArtificialIntelligence {
 				playAction(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
 				sleep();
 				while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
-					GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+					GameLog.log(MsgType.DEBUG, "Other players still in ReactionMode");
 					sleep();
 				}
 				continue;
@@ -266,18 +262,18 @@ public class ArtificialIntelligence {
 			 */
 			GameLog.log(MsgType.DEBUG, "cardHandAmount ACTION: " + this.player.getDeck().cardHandAmount(CardType.ACTION));
 			if (this.player.getDeck().cardHandAmount(CardType.ACTION) == 1) {
-				GameLog.log(MsgType.INFO, "1 action");
+				GameLog.log(MsgType.INFO, "one action");
 				if (this.player.getDeck().cardHandContains(CardName.CHAPEL.getName())) {
-					GameLog.log(MsgType.INFO, "and it is played");
+					// GameLog.log(MsgType.INFO, "and it is played");
 					playChapel();
 					sleep();
 					continue;
 				} else {
-					GameLog.log(MsgType.INFO, "and it is played");
+					// GameLog.log(MsgType.INFO, "and it is played");
 					playAction(this.player.getDeck().getCardByTypeFromHand(CardType.ACTION));
 					sleep();
 					while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
-						GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+						GameLog.log(MsgType.DEBUG, "Other players still in ReactionMode");
 						sleep();
 					}
 					continue;
@@ -304,7 +300,7 @@ public class ArtificialIntelligence {
 						if (this.player.getDeck().cardHandContains(CardName.MILITIA.getName())) {
 							playAction(this.player.getDeck().getCardByNameFromHand(CardName.MILITIA.getName()));
 							while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
-								GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+								GameLog.log(MsgType.DEBUG, "Other players still in ReactionMode");
 								sleep();
 							}
 							sleep();
@@ -315,7 +311,7 @@ public class ArtificialIntelligence {
 						if (this.player.getDeck().cardHandContains(CardName.WITCH.getName())) {
 							playAction(this.player.getDeck().getCardByNameFromHand(CardName.WITCH.getName()));
 							while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
-								GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+								GameLog.log(MsgType.DEBUG, "Other players still in ReactionMode");
 								sleep();
 							}
 							sleep();
@@ -326,7 +322,7 @@ public class ArtificialIntelligence {
 						if (this.player.getDeck().cardHandContains(CardName.WITCH.getName())) {
 							playAction(this.player.getDeck().getCardByNameFromHand(CardName.WITCH.getName()));
 							while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
-								GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+								GameLog.log(MsgType.DEBUG, "Other players still in ReactionMode");
 								sleep();
 							}
 							sleep();
@@ -334,7 +330,7 @@ public class ArtificialIntelligence {
 						} else if (this.player.getDeck().cardHandContains(CardName.MILITIA.getName())) {
 							playAction(this.player.getDeck().getCardByNameFromHand(CardName.MILITIA.getName()));
 							while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
-								GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+								GameLog.log(MsgType.DEBUG, "Other players still in ReactionMode");
 								sleep();
 							}
 							sleep();
@@ -343,7 +339,7 @@ public class ArtificialIntelligence {
 							LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
 							playAction(remainingActionCards.get(new Random().nextInt(remainingActionCards.size())));
 							while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
-								GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+								GameLog.log(MsgType.DEBUG, "Other players still in ReactionMode");
 								sleep();
 							}
 							sleep();
@@ -677,10 +673,11 @@ public class ArtificialIntelligence {
 				return ArtificialIntelligence.NO_BUY;
 			}
 		} else {
-			if (treasureValue >= 8 && cardAvailableOnBoard(CardName.PROVINCE.getName()) && (this.player.getDeck().containsAmountOf(CardName.GOLD.getName(), this.player.getPlayedCards()) > 2 || this.player.getTurnNr() >= 6) ) {
+			if (treasureValue >= 8 && cardAvailableOnBoard(CardName.PROVINCE.getName())
+					&& (this.player.getDeck().containsAmountOf(CardName.GOLD.getName(), this.player.getPlayedCards()) > 2 || this.player.getTurnNr() >= 6)) {
 				return CardName.PROVINCE.getName();
 			} else if (treasureValue >= 6 && !this.strategy.equals(Strategy.BIG_MONEY_CHAPEL)) {
-				if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName(), this.player.getPlayedCards()) > 7 && this.getPileSize(CardName.PROVINCE.getName()) < 6
+				if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName(), this.player.getPlayedCards()) > 6 && this.getPileSize(CardName.PROVINCE.getName()) < 6
 						&& cardAvailableOnBoard(CardName.DUCHY.getName())) {
 					return CardName.DUCHY.getName();
 				} else if (cardAvailableOnBoard(CardName.GOLD.getName()))
@@ -788,11 +785,6 @@ public class ArtificialIntelligence {
 				else if (treasureValue >= 2 && !this.player.getDeck().contains(CardName.CHAPEL.getName(), this.player.getPlayedCards()) && cardAvailableOnBoard(CardName.CHAPEL.getName()))
 					return CardName.CHAPEL.getName();
 				/**
-				 * classic SILVER with 3 coins
-				 */
-				else if (treasureValue >= 3 && cardAvailableOnBoard(CardName.SILVER.getName()))
-					return CardName.SILVER.getName();
-				/**
 				 * if other players buy ATTACKs, the player has already a CURSE
 				 * in deck or was already more than 3 times in discard mode, the
 				 * first MOAT will be bought
@@ -800,6 +792,11 @@ public class ArtificialIntelligence {
 				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName(), this.player.getPlayedCards())
 						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName(), this.player.getPlayedCards()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
+				/**
+				 * classic SILVER with 3 coins
+				 */
+				else if (treasureValue >= 3 && cardAvailableOnBoard(CardName.SILVER.getName()))
+					return CardName.SILVER.getName();
 			case BIG_MONEY_CHAPEL_WITCH: // 1 Moat and 2 Witches
 				/**
 				 * if there are <2 WITCHES, buy one OR <= 5 PROVINCEs on the
@@ -849,11 +846,6 @@ public class ArtificialIntelligence {
 						return CardName.SILVER.getName();
 				}
 				/**
-				 * classic SILVER with 3 coins
-				 */
-				else if (treasureValue >= 3 && cardAvailableOnBoard(CardName.SILVER.getName()))
-					return CardName.SILVER.getName();
-				/**
 				 * if other players buy ATTACKs, the player has already a CURSE
 				 * in deck or was already more than 3 times in discard mode, the
 				 * first MOAT will be bought
@@ -861,6 +853,11 @@ public class ArtificialIntelligence {
 				else if (treasureValue >= 2 && cardAvailableOnBoard(CardName.MOAT.getName()) && !this.player.getDeck().contains(CardName.MOAT.getName(), this.player.getPlayedCards())
 						&& (discardModeCount > 3 || this.player.getDeck().contains(CardName.CURSE.getName(), this.player.getPlayedCards()) || attacksAvailableRatio < MOAT_RATIO_1))
 					return CardName.MOAT.getName();
+				/**
+				 * classic SILVER with 3 coins
+				 */
+				else if (treasureValue >= 3 && cardAvailableOnBoard(CardName.SILVER.getName()))
+					return CardName.SILVER.getName();
 			case DRAW_ADD_ACTION: // 3 Moats Max.
 				/**
 				 * with 5 coins, buy an action card (random) which has either
