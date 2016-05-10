@@ -297,7 +297,6 @@ public class ClientGamePacketHandler extends PacketHandler {
 			System.err.println("disconnect aufgerufen");
 			
 			GameLog.log(MsgType.INFO, "gameclient disconnected");
-			JOptionPane.showMessageDialog(null, "end game");
 			DominionController.getInstance().finishMatch((PacketShowEndScreen) packet);
 			break;
 		default:
