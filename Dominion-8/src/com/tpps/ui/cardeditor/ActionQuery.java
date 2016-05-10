@@ -49,6 +49,7 @@ public class ActionQuery extends JFrame implements ActionListener  {
 
 	
 	public ActionQuery(ArrayList<String> radioButtons){
+		
 		width = Toolkit.getDefaultToolkit().getScreenSize().width;
 		height = Toolkit.getDefaultToolkit().getScreenSize().height;
 		this.setVisible(true);
@@ -60,6 +61,8 @@ public class ActionQuery extends JFrame implements ActionListener  {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		c2 = this.getContentPane();
 		System.out.println(radioButtons);
+		
+		//Ordnet rbsx den xten Wert aus der radioButtons Arrayliste zu
 		rbs1 = radioButtons.get(0);
 		if (radioButtons.size() > 1 )
 		rbs2 = radioButtons.get(1);
@@ -79,6 +82,7 @@ public class ActionQuery extends JFrame implements ActionListener  {
 	 */
 	
 	public void iniateGUI() {
+		
 		c2.setLayout(new GridLayout(3,3,30,10));
 		JPanel labels = new JPanel();
     	labels.setLayout(new FlowLayout(10,20,5));
@@ -114,7 +118,9 @@ public class ActionQuery extends JFrame implements ActionListener  {
 			    aktionswert = (String) cb1.getSelectedItem();
 			    aktionswert2 = (String) cb2.getSelectedItem();
 			    aktionswert3 = (String) cb3.getSelectedItem();
-				if (rbs1 == "AddAction")	
+				
+			    //Ersten Aktionstypen bestimmen
+			    if (rbs1 == "AddAction")	
 			    actions.put(CardAction.ADD_ACTION_TO_PLAYER,aktionswert);
 				if (rbs1 == "addMoney")
 					actions.put(CardAction.ADD_TEMPORARY_MONEY_FOR_TURN,aktionswert);
@@ -139,7 +145,7 @@ public class ActionQuery extends JFrame implements ActionListener  {
 				if (rbs1 == "isVictory")
 					actions.put(CardAction.IS_VICTORY,aktionswert);
 				
-				
+				//Zweiten möglichen Aktionstypen bestimmen
 				if (rbs2 != null) {
 						if (rbs2 == "AddAction")	
 					    actions.put(CardAction.ADD_ACTION_TO_PLAYER,aktionswert2);
@@ -166,6 +172,8 @@ public class ActionQuery extends JFrame implements ActionListener  {
 						if (rbs2 == "isVictory")
 							actions.put(CardAction.IS_VICTORY,aktionswert2);
 						}
+				
+				//Dritten möglichen Aktionstypen bestimmen
 				if (rbs3 != null) {
 					if (rbs3 == "AddAction")	
 				    actions.put(CardAction.ADD_ACTION_TO_PLAYER,aktionswert3);
@@ -192,6 +200,8 @@ public class ActionQuery extends JFrame implements ActionListener  {
 					if (rbs3 == "isVictory")
 						actions.put(CardAction.IS_VICTORY,aktionswert3);
 					}
+				
+				//Kartentypen bestimmen aus der Combobox
 				types = new LinkedList();
 				String hilfstring = new String();
 				hilfstring = CardEditor.getCardtype();
@@ -222,6 +232,7 @@ public class ActionQuery extends JFrame implements ActionListener  {
 				if (hilfstring == "Curse")
 				types.add(CardType.CURSE);
 				
+				//Name Kosten und das Bild zuordnen
 				name = CardEditor.getCardname();
 				cost = CardEditor.getPrize();
 		        image = CardEditor.getImage();

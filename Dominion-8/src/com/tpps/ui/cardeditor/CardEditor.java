@@ -106,19 +106,15 @@ public class CardEditor extends JFrame implements ActionListener {
 			e1.printStackTrace();
 		}
 		
-		// loadImage();
-		// resizeImage();
-
 		all = new JLabel(loading);
-		// all.setLayout(new GridLayout(4, 1, 0, 30));
-		// all.setLayout(new GridBagLayout());
-
 		this.setSize(width / 5, (int) (height / 1.8));
 		this.setLocationRelativeTo(null);
 		this.setTitle("Card Editor !");
 		this.setResizable(false);
 		this.setVisible(true);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		//Verschiedene Schriftarten für Labels,RadioButtons und den Price
 		smallfont = new Font("Calibri", Font.BOLD, 19);
 		radioFont = new Font("Arial", Font.BOLD, 12);
 		priceFont = new Font("Arial", Font.BOLD, 30);
@@ -132,27 +128,17 @@ public class CardEditor extends JFrame implements ActionListener {
 		c = this.getContentPane();
 		c.setLayout(new GridBagLayout());
 		iniateLayout();
-		// BackgroundPanel bg = new BackgroundPanel();
-		// bg.setSize(new Dimension(width, height));
-		// c.add(bg);
-		// c.add(all);
-	}
 
+	}
+   
+	//nicht benutzt
 	private void fullscreenmode() {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		// this.setUndecorated(true);
 	}
 
-	private void resizeImage() {
-		this.loading = new ImageIcon(this.background);
-		Image newing = this.background.getScaledInstance(width / 5, height / 2, java.awt.Image.SCALE_SMOOTH);
-		this.loading = new ImageIcon(newing);
-		System.out.println(background);
-	}
-
 
 	// TODO : Documentation und Formatierung
-	// TODO : Textfield, Namesabfrage ändern
 	// TODO : Upload in die Cloud
 
 	private void initComponents() {
@@ -218,7 +204,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		enterName.setFont(smallfont);
 		enterName.setForeground(Color.WHITE);
 		obenLinks.add(enterName);
-		nameField = new JTextField(1);
+		nameField = new JTextField(1);      //Hier kann der User den Namen der Karte eingeben
 		obenLinks.add(nameField);
 		cardType = new JLabel("Choose Cardtype");
 		cardType.setFont(smallfont);
@@ -226,8 +212,9 @@ public class CardEditor extends JFrame implements ActionListener {
 		obenLinks.add(cardType);
 		String comboBoxListe[] = { "Action", "Treasure", "Victory", "Reaction", "Attack", "Prize", "Curse","Ruins", "Shelter", 	"Knight", 
 								   "Traveller","Reserve", };
-		selectCardType = new JComboBox(comboBoxListe);
+		selectCardType = new JComboBox(comboBoxListe);  //Hier wird der CardType ausgewählt
 		selectCardType.setMaximumRowCount(5);
+		//Falls Victory oder Treasure ausgewählt ist werden die Radiobuttons disabled und Victory/Treasure ist ausgewählt
 		selectCardType.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
@@ -235,9 +222,11 @@ public class CardEditor extends JFrame implements ActionListener {
 			    int localZaehler;
 			    localZaehler = selectCardType.getSelectedIndex();
 			    if (localZaehler == 0) {
-			    	setRadiobuttons();
+			    	setRadiobuttons();  //Radiobuttons wieder aktiveren
 			    }
 				if (localZaehler == 1) {
+					
+					//Alles deaktiviert und Treasure ausgewählt
 					addAction.setEnabled(false);
 					addMoney.setEnabled(false);
 					addPurchase.setEnabled(false);
@@ -261,7 +250,9 @@ public class CardEditor extends JFrame implements ActionListener {
 					trashCard.setSelected(false);
 					revealCard.setSelected(false);
 					isTreasure.setSelected(true);
-					isVictory.setSelected(false);	
+					isVictory.setSelected(false);
+					
+					//Prüfer setzen, sonst ist zwar der Button ausgewählt aber der Prüfer stimmt nicht überein
 					rbp1 = false;
 					rbp2 = false;
 					rbp3 = false;
@@ -279,6 +270,8 @@ public class CardEditor extends JFrame implements ActionListener {
 
 				}
 				if (localZaehler == 2) {
+					
+					//Alles deaktiviert und Victory ausgewählt
 					addAction.setEnabled(false);
 					addMoney.setEnabled(false);
 					addPurchase.setEnabled(false);
@@ -303,6 +296,8 @@ public class CardEditor extends JFrame implements ActionListener {
 					revealCard.setSelected(false);
 					isTreasure.setSelected(false);
 					isVictory.setSelected(true);
+					
+					//Prüfer setzen, sonst ist zwar der Button ausgewählt aber der Prüfer stimmt nicht überein
 					rbp1 = false;
 					rbp2 = false;
 					rbp3 = false;
@@ -318,7 +313,7 @@ public class CardEditor extends JFrame implements ActionListener {
 					radioButtonSelect(rbp12);	
 				}
 				if (localZaehler >= 3) {
-			 setRadiobuttons();
+			 setRadiobuttons();  //RadioButtons enablen
 				}
 				}
 				
@@ -342,7 +337,9 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.weighty = 0.5;
 		gbc.anchor = GridBagConstraints.SOUTH;
 		uImage.setLayout(new BorderLayout());
-		uploadImage = new JButton("Upload Image") {
+		
+		//ButtonIcon wird gemalt
+		uploadImage = new JButton("Upload Image") {              //Button um ein Bild hochzuladen
 
 		private static final long serialVersionUID = 1L;
 
@@ -361,6 +358,8 @@ public class CardEditor extends JFrame implements ActionListener {
 	uploadImage.setPreferredSize(d);
 		testImage = new JLabel("");
 		testImage.setSize(baseSize, baseSize);
+		
+		//läd ein Placeholder Image, sonst gibt es Probleme mit der Panelgröße
 		try {
 			testImage.setIcon(new ImageIcon(ImageIO.read(ClassLoader.getSystemResource("resources/img/cardEditor/placeHolder.png"))));
 			
@@ -370,7 +369,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		}
 		uploadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				uploadImageActionPerformed(e);
+				uploadImageActionPerformed(e);              //Läd ein ausgewähltes Bild hoch
 			}
 		});
 		uImage.add(testImage, BorderLayout.CENTER);
@@ -399,13 +398,13 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc2.gridwidth = 1;
 		gbc2.ipady = 60;
 		gbc2.anchor = GridBagConstraints.NORTH;
-		price = new JLabel(Integer.toString(priceint));
+		price = new JLabel(Integer.toString(priceint));      //Das Label mit dem der Preis angezeigt wird
 		;
 		price.setFont(priceFont);
 		price.setForeground(Color.WHITE);
 		mitte.add(price, gbc2);
-		// gbc.anchor = GridBagConstraints.FIRST_LINE_END;
-		// gbc.fill = GridBagConstraints.HORIZONTAL;
+		
+		//ButtonIcon malen
 		increasePrice = new JButton("Increase Price") {
 
 			private static final long serialVersionUID = 1L;
@@ -416,6 +415,7 @@ public class CardEditor extends JFrame implements ActionListener {
 				super.paint(g);
 			}
 		};
+		
 		increasePrice.setOpaque(false);
 		increasePrice.setContentAreaFilled(false);
 		increasePrice.setBackground(null);
@@ -423,6 +423,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		increasePrice.setBorderPainted(false);
 		increasePrice.setFont(customFont.deriveFont(15f));
 		increasePrice.setPreferredSize(d);
+		
+		//ButtonIcon malen
 		standartPrice = new JButton("Standart Price") {
 
 			private static final long serialVersionUID = 1L;
@@ -441,6 +443,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		standartPrice.setFont(customFont.deriveFont(15f));
 		standartPrice.setPreferredSize(d);
 		
+		//ButtonIcon malen
 		decreasePrice = new JButton("Decreace Price") {
 			private static final long serialVersionUID = 1L;
 
@@ -466,7 +469,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		increasePrice.addActionListener((new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				priceint = priceint + 1;
+				priceint = priceint + 1;                           //Erhöht den Preis
 				price.setText(Integer.toString(priceint));
 				System.out.println("Cost : " + Integer.toString(priceint));
 			}
@@ -474,7 +477,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		standartPrice.addActionListener((new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				priceint = 2;
+				priceint = 2;                                     //Setzt den Preis auf default(2)
 				price.setText(Integer.toString(priceint));
 				System.out.println("Cost : " + Integer.toString(priceint));
 			}
@@ -483,7 +486,7 @@ public class CardEditor extends JFrame implements ActionListener {
 
 			public void actionPerformed(ActionEvent e) {
 				if (priceint > 0) {
-					priceint = priceint - 1;
+					priceint = priceint - 1;                      //Preis wird runtergesetzt
 					price.setText(Integer.toString(priceint));
 					System.out.println("Cost : " + Integer.toString(priceint));
 				} else {
@@ -510,7 +513,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		 * creates the Panel for setting the Cardaction
 		 */
 
-		JPanel radio = new JPanel(); // Panel für die RadioButtons
+		JPanel radio = new JPanel(); 
 		radio.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 3;
@@ -522,7 +525,7 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.anchor = GridBagConstraints.CENTER;
 
 		/**
-		 * creates the radiobuttons
+		 * creates the radiobuttons, sets their color and the font
 		 */
 
 		actionSelect = new ButtonGroup();
@@ -562,6 +565,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		isVictory = new JRadioButton("Is Victory");
 		isVictory.setFont(radioFont);
 		isVictory.setForeground(Color.WHITE);
+		
+		//Verschönerung der GUI
 		addAction.setOpaque(false);
 		addMoney.setOpaque(false);
 		addPurchase.setOpaque(false);
@@ -574,10 +579,16 @@ public class CardEditor extends JFrame implements ActionListener {
 		revealCard.setOpaque(false);
 		isTreasure.setOpaque(false);
 		isVictory.setOpaque(false);
+		
+		/**
+		 * die RadioButtonPrüfer werden gesetzt und prüft ob der Button selektiert oder nicht ist
+		 */
+		
+		
 		addAction.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				rbp1 = addAction.isSelected();
-				radioButtonSelect(rbp1);
+				rbp1 = addAction.isSelected();                //Prüfer wird gesetzt
+				radioButtonSelect(rbp1);                      //Methode zur Prüfung
 			}
 				});
 		addMoney.addActionListener(new ActionListener() {
@@ -646,6 +657,8 @@ public class CardEditor extends JFrame implements ActionListener {
 				radioButtonSelect(rbp12);
 			}
 				});
+		
+		
 		radio.add(addAction);
 		radio.add(addMoney);
 		radio.add(addPurchase);
@@ -673,6 +686,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.35;
+		
+		//Buttonicon wird gezeichnet
 		createCard = new JButton("Create Card") {
 
 			private static final long serialVersionUID = 1L;
@@ -684,14 +699,18 @@ public class CardEditor extends JFrame implements ActionListener {
 			}
 		};
 		createCard.setOpaque(false);
-//		createCard.setBorderPainted(true);
 		createCard.setContentAreaFilled(false);
         createCard.setBackground(null);
         createCard.setBorder(null);
         createCard.setBorderPainted(false);
 		createCard.setFont(customFont.deriveFont(15f));
 		createCard.setPreferredSize(d);
-		createCard.addActionListener(new ActionListener() {             //TODO : Übergeben
+		createCard.addActionListener(new ActionListener() {      
+		
+			/**
+			 * falls die RadioButtons selektiert sind werden sie zur RadioButton Arraylist hinzugefügt, diese wird dann an ActionQuery übergeben für die LinkedHashmap
+			 */
+			
 			public void actionPerformed(ActionEvent e) {
 				if (schleifenZaehler < 4 && schleifenZaehler > 0) {
 				ArrayList<String> radioButtons = new ArrayList<String>();
@@ -745,6 +764,8 @@ public class CardEditor extends JFrame implements ActionListener {
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 0.5;
 		gbc.weighty = 0.31;
+		
+		//ButtonIcon wird geladen
 		cancel = new JButton("Cancel") {
 
 
@@ -774,8 +795,12 @@ public class CardEditor extends JFrame implements ActionListener {
 		c.add(untenRechts, gbc);
 
 		}
+	
+	/**
+	 * this method enables all the radiobuttons and unselects them
+	 */
 
-	private void setRadiobuttons() {
+	private void setRadiobuttons() {                     
 		addAction.setEnabled(true);
 		addMoney.setEnabled(true);
 		addPurchase.setEnabled(true);
@@ -802,6 +827,10 @@ public class CardEditor extends JFrame implements ActionListener {
 		isVictory.setSelected(false);
 	}
 	
+	/**
+	 * This methods counts the selected radiobuttons, informs the user how many he has selected
+	 */
+	
 	private void radioButtonSelect(boolean pruefer) {
 		if (pruefer == true) {
 		schleifenZaehler = schleifenZaehler + 1;
@@ -816,6 +845,9 @@ public class CardEditor extends JFrame implements ActionListener {
 			}
 	
 	
+	/**
+	 * this method loads the buttonicon and sets its dimension
+	 */
 	
 	private void loadButtonIcon() {
 		try {
@@ -826,18 +858,42 @@ public class CardEditor extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param String
+	 *                gets the name of the card which is written bei the User in the JTextField
+	 */
+	
 	public static String getCardname() {
 		name = nameField.getText();
 		return name;
 	}
 	
+	/**
+	 * 
+	 * @param int
+	 *             gets the price of the card which the user sets with the "increase/decrease" Buttons
+	 */
+	
 	public static int getPrize() {
 		return priceint;
 	}
 	
+	/**
+	 * 
+	 * @param BufferedImage
+	 *             gets the image of the card which the user has uploaded with the "uploadImage" Button and is previewed in the GUI
+	 */
+	
    public static BufferedImage getImage() {
 	   return targetImg;
    }
+   
+	/**
+	 * 
+	 * @param String
+	 *             gets the type of the card which the user selects in the "selectCardTyoe" JComboBox
+	 */
    public static String getCardtype() {
 	   type = (String) selectCardType.getSelectedItem();
 	   return type;
