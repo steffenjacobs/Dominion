@@ -494,7 +494,6 @@ public final class DominionController {
 	 *            new session-id
 	 */
 	public void setSessionID(UUID sessionID) {
-		System.out.println("session set");
 		this.sessionID = sessionID;
 		waitForSession.release();
 	}

@@ -69,7 +69,7 @@ public class GameWindow extends JFrame {
 	private int reactionCounter, gameBackgroundCounter, topGap;
 
 	private BufferedImage displayImageTurnGreen, muteImage, playImage;
-	
+
 	private static int WIDTH, HEIGHT;
 
 	// private static ButtonClass muteButton, playButton;
@@ -130,15 +130,14 @@ public class GameWindow extends JFrame {
 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setIconImage(ImageLoader.getImage("resources/img/loginScreen/Icon.png"));
-		
+
 		if (SettingsController.isFullscreen()) {
 			this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 			this.setUndecorated(true);
-		}
-		else{
+		} else {
 			this.setSize(DominionController.getInstance().getMainFrame().getSize());
 		}
-		
+
 		this.setMinimumSize(new Dimension(1280, 720));
 		this.framework = new GraphicFramework(this);
 		this.framework.setLayout(null);
@@ -222,7 +221,7 @@ public class GameWindow extends JFrame {
 		// this.framework.add(this.chatWindow);
 		// this.framework.add(this.loggerPane);
 		this.framework.add(this.jTabbedPane);
-		
+
 		this.addComponentListener(new MyComponentAdapter());
 		this.setFocusable(true);
 		this.addKeyListener(new KeyListener() {
@@ -264,10 +263,6 @@ public class GameWindow extends JFrame {
 		MyAudioPlayer.handleGameMusic(true);
 		this.revalidate();
 		this.repaint();
-		
-		System.out.println(this.jTabbedPane.getBounds());
-
-		
 	}
 
 	private void tabbedComponent() {
@@ -279,7 +274,6 @@ public class GameWindow extends JFrame {
 		this.jTabbedPane.setOpaque(false);
 		this.jTabbedPane.add("Chat", this.chatWindow);
 		this.jTabbedPane.add("Game Log", this.loggerPane);
-		System.out.println("created panel for chat + gamelog");
 	}
 
 	/**
