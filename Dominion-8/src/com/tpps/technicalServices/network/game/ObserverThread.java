@@ -1,21 +1,13 @@
 package com.tpps.technicalServices.network.game;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.Iterator;
 import java.util.UUID;
 
 import com.tpps.application.game.Player;
 import com.tpps.technicalServices.logger.GameLog;
 import com.tpps.technicalServices.logger.MsgType;
-import com.tpps.technicalServices.network.Addresses;
-import com.tpps.technicalServices.network.core.Client;
-import com.tpps.technicalServices.network.core.PacketHandler;
-import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.gameSession.packets.PacketBroadcastLog;
 import com.tpps.technicalServices.network.gameSession.packets.PacketEnableDisable;
-import com.tpps.technicalServices.network.matchmaking.packets.PacketGameEnd;
-import com.tpps.technicalServices.network.matchmaking.server.MatchmakingServer;
 
 public class ObserverThread extends Thread {
 	private GameServer gameServer;
@@ -38,7 +30,7 @@ public class ObserverThread extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if (this.gameServer.getDisconnectedUser().size() >= 3 || this.gameServer.getGameController().getPlayers().size() == 1) {
+		if (this.gameServer.getDisconnectedUser().size() >= 3 || this.gameServer.getGameController().getPlayers().size() <= 1) {
 			GameLog.log(MsgType.MM, "end game because three users are disconnected");
 //			Client client;
 //			try {
@@ -74,7 +66,7 @@ public class ObserverThread extends Thread {
 					}
 				}
 				
-				if (kiFlag || this.gameServer.getGameController().getPlayers().size() == 1) {
+				if (kiFlag || this.gameServer.getGameController().getPlayers().size() <= 1) {
 					
 						GameLog.log(MsgType.MM, "send message to matchmakingserver");
 						if (!this.gameServer.getGameServerNetworkListener().getPacketSend().get()){

@@ -4,8 +4,7 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
 /**
- * This packet is send from a client to the server every time the player wants
- * to end his turn. The Server then distributes the packet to the other players.
+ * This packet is send from server to client to add the stop trash buttons
  * 
  * @author Lukas Adler
  */

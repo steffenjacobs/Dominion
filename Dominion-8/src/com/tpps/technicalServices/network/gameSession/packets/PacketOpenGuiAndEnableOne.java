@@ -4,8 +4,8 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
 /**
- * This packet is send from a server to the client every time there are already
- * too much player on the server
+ * This packet is send from a server to the client to open all guis and enable the one of the active
+ * player
  * 
  * @author ladler - Lukas Adler
  */

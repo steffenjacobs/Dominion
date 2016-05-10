@@ -42,7 +42,7 @@ public class CardStorageController {
 			CardName.THRONEROOM.getName(), CardName.COUNCILROOM.getName(), CardName.THIEF.getName(),
 			CardName.FESTIVAL.getName(), CardName.LABORATORY.getName(), CardName.LIBRARY.getName(),
 			CardName.MARKET.getName(), CardName.MINE.getName(), CardName.WITCH.getName(), CardName.CURSE.getName(),
-			CardName.ADVENTURER.getName(), CardName.BUREAUCRAT.getName() };
+			CardName.ADVENTURER.getName(), CardName.BUREAUCRAT.getName(), CardName.GARDENS.getName() };
 
 	/**
 	 * sets storage-file-name to default name

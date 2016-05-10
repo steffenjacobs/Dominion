@@ -291,7 +291,7 @@ public final class SettingsWindow {
 			}
 		};
 
-		gridPane.add(createVolumeSlider(settingsFont, mainVolumeSliderChangeListener, "Main Volume   ",
+		gridPane.add(createVolumeSlider(settingsFont, mainVolumeSliderChangeListener, "Menu Volume   ",
 				VolumeSliderType.MENU), BorderLayout.CENTER);
 		gridPane.add(
 				createVolumeSlider(settingsFont, gameVolumeSliderChangeListener, "Game Volume ", VolumeSliderType.GAME),

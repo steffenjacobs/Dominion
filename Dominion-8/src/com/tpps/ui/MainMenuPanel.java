@@ -40,7 +40,7 @@ public class MainMenuPanel extends JPanel {
 	private final int gapFactor, topGap;
 
 	/**
-	 * Constructor for the MainMenuPanell
+	 * Constructor for the MainMenuPanel
 	 * 
 	 * @param the
 	 *            MainMenu which holds this panel
@@ -48,7 +48,7 @@ public class MainMenuPanel extends JPanel {
 	public MainMenuPanel(MainFrame parent) {
 		this.gapFactor = 7;
 		this.parent = parent;
-		this.topGap = parent.getSize().height / 6;
+		this.topGap = parent.getSize().height / 4;
 		this.INITIALIZE_ALPHA = 0.6F;
 		MyAudioPlayer.init();
 		loadBackgroundImage();

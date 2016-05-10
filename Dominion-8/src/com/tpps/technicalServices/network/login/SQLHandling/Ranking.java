@@ -73,13 +73,21 @@ public final class Ranking {
 	 */
 	public static String getRankByScore(String playerName, int score) {
 		if (isSpecial(playerName)) {
-			return "Lama";
+			return "forever Lurch";
 		}
 		if (score < 190)
 			return "Noob";
-		if (score < 200)
-			return "Mediocre";
-		if (score < 250) {
+		if (score < 210)
+			return "Silver-Noob";
+		if (score < 240)
+			return "Gold Nova";
+		if(score < 260)
+			return "Master Guardian";
+		if(score < 280)
+			return "Legendary";
+		if(score < 300)
+			return "Supreme Master";
+		if (score < 350) {
 			return "Global Elite";
 		}
 		return "Blood Diamond";

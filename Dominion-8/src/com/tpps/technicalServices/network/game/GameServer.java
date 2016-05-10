@@ -76,6 +76,9 @@ public class GameServer extends Server {
 		return this.sessionClient.checkSessionSync(username, sessionID);
 	}
 
+	/**
+	 * sends a message to human players not to ais
+	 */
 	@Override
 	public void sendMessage(int port, Packet packet) throws IOException {
 		if (super.clients.containsKey(port)) {
@@ -102,6 +105,10 @@ public class GameServer extends Server {
 		return this.gameController;
 	}
 	
+	/**
+	 * 
+	 * @return the gameServerNetworkListener
+	 */
 	public GameServerNetworkListener getGameServerNetworkListener() {
 		return this.gameServerNetworkListener;
 	}

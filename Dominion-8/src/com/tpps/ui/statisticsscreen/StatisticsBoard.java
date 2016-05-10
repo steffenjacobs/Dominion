@@ -49,6 +49,7 @@ public class StatisticsBoard extends JPanel {
 	private JTable table;
 	private DefaultTableModel model;
 	private JTextField jtf;
+	private Color textAndLabelColor;
 
 	private int sortColumn = 0;
 
@@ -67,6 +68,7 @@ public class StatisticsBoard extends JPanel {
 		BorderLayout l = new BorderLayout();
 		l.setVgap(30);
 		this.setLayout(l);
+		this.textAndLabelColor = System.getProperty("os.name").startsWith("Windows") ? Color.WHITE : Color.BLACK;
 
 		jtf = new JTextField() {
 
@@ -79,7 +81,7 @@ public class StatisticsBoard extends JPanel {
 			}
 		};
 
-		jtf.setForeground(Color.WHITE);
+		jtf.setForeground(this.textAndLabelColor);
 		jtf.setFont(fontSearch);
 
 		jtf.addCaretListener(new CaretListener() {
@@ -124,11 +126,8 @@ public class StatisticsBoard extends JPanel {
 		}
 		for (int i = 0; i < statistics.length; i++) {
 
-			this.model.setValueAt(
-					MathUtil.getTimeString(Long.valueOf((String) model.getValueAt(i, this.model.getColumnCount() - 1))),
-					i, this.model.getColumnCount() - 1);
-			this.model.setValueAt(Ranking.getRankByScore((String) this.model.getValueAt(i, 0),
-					Integer.parseInt((String) this.model.getValueAt(i, 5))), i, 5);
+			this.model.setValueAt(MathUtil.getTimeString(Long.valueOf((String) model.getValueAt(i, this.model.getColumnCount() - 1))), i, this.model.getColumnCount() - 1);
+			this.model.setValueAt(Ranking.getRankByScore((String) this.model.getValueAt(i, 0), Integer.parseInt((String) this.model.getValueAt(i, 5))), i, 5);
 		}
 	}
 

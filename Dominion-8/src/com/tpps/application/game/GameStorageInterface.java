@@ -28,7 +28,7 @@ public class GameStorageInterface {
 	}
 
 	/**
-	 * 
+	 * loads the hand cards and passes it to the gameWindow
 	 * @param handCardIds
 	 */
 	public void loadHandCardsAndPassToGameWindow(LinkedList<String> handCardIds) {
@@ -37,7 +37,7 @@ public class GameStorageInterface {
 	}
 
 	/**
-	 * 
+	 * loads the victory cards and passes it to the gameWindow
 	 * @param victoryCardIds
 	 */
 	public void loadVictoryCardsAndPassToGameWindow(LinkedList<String> victoryCardIds) {
@@ -46,7 +46,7 @@ public class GameStorageInterface {
 	}
 
 	/**
-	 * 
+	 * loads the coin cards and passes it to the gameWindow
 	 * @param coinCardIds
 	 */
 	public void loadCoinCardsAndPassToGameWindow(LinkedList<String> coinCardIds) {
@@ -60,9 +60,9 @@ public class GameStorageInterface {
 	}
 
 	/**
-	 * 
+	 * load the cards for the given cardIds
 	 * @param handCardIds
-	 * @return
+	 * @return a hashmap containing the card id and the serialized card
 	 */
 	private LinkedHashMap<String, SerializedCard> loadCards(LinkedList<String> handCardIds) {
 		CardStorageController cs = new CardStorageController();
@@ -86,7 +86,7 @@ public class GameStorageInterface {
 	}
 
 	/**
-	 * 
+	 * loads the action cards and passes it to the gameWindow
 	 * @param actionCardIds
 	 */
 	public void loadActionCardsAndPassToGameWindow(LinkedList<String> actionCardIds) {
@@ -96,7 +96,7 @@ public class GameStorageInterface {
 	}
 
 	/**
-	 * 
+	 * loads the played cards and passes it to the gameWindow
 	 * @param playedCardIds
 	 */
 	public void loadPlayedCardsAndPassToGameWindow(LinkedList<String> playedCardIds) {

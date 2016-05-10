@@ -4,8 +4,8 @@ import com.tpps.technicalServices.network.core.packet.Packet;
 import com.tpps.technicalServices.network.core.packet.PacketType;
 
 /**
- * This packet is send from the client to the server everytime the client draws
- * a card. The Server then distributes the packet to the other clients.
+ * This packet is send from the server to client to remove the reactions buttons.
+ * or from client to server to show that the reaction mode is finished
  * 
  * @author ladler - Lukas Adler
  */

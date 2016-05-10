@@ -106,6 +106,7 @@ public class PlayerSettingsPanel extends JPanel {
 
 	private ArrayList<String> aiNames = new ArrayList<>();
 	private ArrayList<String> aiNameList;
+
 	// private boolean singlePlayer = false;
 
 	/**
@@ -128,9 +129,8 @@ public class PlayerSettingsPanel extends JPanel {
 		// this.add(this.bottomAreaPanel());
 		this.bottomAreaPanel = this.bottomAreaPanel();
 
-		this.aiNameList = CollectionsUtil
-				.getArrayList(new String[] { "Sir Lancelot", "Ritter der Kokosnuss", "Wizard of Oz", "King Arthur",
-						"Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne", "Harvey Specter" });
+		this.aiNameList = CollectionsUtil.getArrayList(new String[] { "Sir Lancelot", "Ritter der Kokosnuss", "Wizard of Oz", "King Arthur", "Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne",
+				"Black Beauty", "Charles", "Bob", "Alice", "Eve", "John the Ripper", "Sherlock Holmes", "Donald", "Wolfgang", "Goofy" });
 		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
 	}
 
@@ -254,27 +254,23 @@ public class PlayerSettingsPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			if (enabledFlag) {
 				MyAudioPlayer.doClick();
-				
+
 				this.setEnabled(false);
 				this.enabledFlag = false;
 				String[] selCards = new String[cardNamesSelected.size()];
 				cardNamesSelected.toArray(selCards);
 
 				try {
-					DominionController.getInstance().getMatchmaker().sendStartPacket(
-							DominionController.getInstance().getUsername(),
-							DominionController.getInstance().getSessionID(),
-							DominionController.getInstance().getLobbyID(), selCards);
+					DominionController.getInstance().getMatchmaker()
+							.sendStartPacket(DominionController.getInstance().getUsername(), DominionController.getInstance().getSessionID(), DominionController.getInstance().getLobbyID(), selCards);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 				GameLog.log(MsgType.INFO, "Starting game...");
 			} else {
 				DominionController.getInstance().receiveChatMessageFromChatServer(
-						"You are not ready to start the match\n" + "         selected cards: "
-								+ PlayerSettingsPanel.this.cardNamesSelected.size() + "/10" + "\n"
-								+ "         connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers() + "/4",
-						"BOT", "", Color.YELLOW);
+						"You are not ready to start the match\n" + "         selected cards: " + PlayerSettingsPanel.this.cardNamesSelected.size() + "/10" + "\n" + "         connectedplayers: "
+								+ PlayerSettingsPanel.this.connectedPlayers() + "/4", "BOT", "", Color.YELLOW);
 			}
 		}
 
@@ -379,9 +375,8 @@ public class PlayerSettingsPanel extends JPanel {
 
 	private Dimension getCardSize(int wdt, int hght) {
 
-		return new Dimension((int) (DominionController.getInstance().getMainFrame().getHeight() / 3d / hght * wdt),
-				DominionController.getInstance().getMainFrame().getHeight() / 3 - SPACE_PANEL_TO_PANEL * 2
-						- scrollBarHeight);
+		return new Dimension((int) (DominionController.getInstance().getMainFrame().getHeight() / 3d / hght * wdt), DominionController.getInstance().getMainFrame().getHeight() / 3
+				- SPACE_PANEL_TO_PANEL * 2 - scrollBarHeight);
 	}
 
 	private class CardDisplayButton extends JButton implements ActionListener {
@@ -498,7 +493,7 @@ public class PlayerSettingsPanel extends JPanel {
 				firstCard = card;
 			}
 
-			if (!card.getTypes().contains(CardType.ACTION)) {
+			if (!card.getTypes().contains(CardType.ACTION) && !card.getName().equals("Gardens")) {
 				continue;
 			}
 

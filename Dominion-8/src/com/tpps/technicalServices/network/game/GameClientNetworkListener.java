@@ -14,7 +14,9 @@ public class GameClientNetworkListener implements NetworkListener {
 	public GameClientNetworkListener(GameClient gameClient) {
 		this.gameClient = gameClient;
 	}
-	
+	/**
+	 * action when a player tries to reconnect
+	 */
 	@Override
 	public void onClientConnect(int port) {
 		if (this.gameClient.getClientId() > -1) {
@@ -27,6 +29,9 @@ public class GameClientNetworkListener implements NetworkListener {
 		}
 	}
 
+	/**
+	 * action when a player disconnects
+	 */
 	@Override
 	public void onClientDisconnect(int port) {
 		GameLog.log(MsgType.NETWORK_INFO ,"gameClient network listener " );

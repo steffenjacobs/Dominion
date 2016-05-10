@@ -16,6 +16,8 @@ import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -58,8 +60,8 @@ public class CardEditor extends JFrame implements ActionListener {
 			trashCard, revealCard, isTreasure, isVictory;
 	private Container c;
 	private JLabel all, enterName, price, cardType, testImage;
-	private JTextField nameField;
-	private JComboBox selectCardType;
+	private static JTextField nameField;
+	private static JComboBox selectCardType;
 	private ImageIcon loading;
 	private int width, gridwidth;
 	private int height, gridheight, schleifenZaehler = 0;
@@ -67,11 +69,14 @@ public class CardEditor extends JFrame implements ActionListener {
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc, gbc2;
 	private JPanel obenLinks, uImage;
-	private int priceint = 2;
+	private static int priceint = 2;
 	private JFileChooser fc;
 	private final String newline = "\n";
 	private String basePath;
-	private BufferedImage targetImg,buttonIcon;
+	private static String name;
+	private static BufferedImage targetImg;
+	private static String type;
+	private BufferedImage buttonIcon;
 	private File targetFile;
 	private final int baseSize = 128;
 	private BufferedImage back;
@@ -145,38 +150,6 @@ public class CardEditor extends JFrame implements ActionListener {
 		System.out.println(background);
 	}
 
-	/**
-	 * loading an image from resources
-	 */
-
-	private void loadImage() {
-		try {
-			this.background = ImageIO
-					.read(ClassLoader.getSystemResource("resources/img/loginScreen/LoginBackground.jpg"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			this.blackBeauty = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/blackbeauty.png"));
-			blackBeauty = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try {
-			this.walterWhite = ImageIO.read(ClassLoader.getSystemResource("resources/img/lobbyScreen/walterWhite.jpg"));
-			walterWhite = (BufferedImage) GraphicsUtil.setAlpha(blackBeauty, 0.4F);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	private void createLabels() {
-		enterName = new JLabel("Geben Sie den Kartennamen ein");
-		price = new JLabel(""); 
-		cardType = new JLabel("Cardtype");
-		testImage = new JLabel("");
-	}
 
 	// TODO : Documentation und Formatierung
 	// TODO : Textfield, Namesabfrage ändern
@@ -184,7 +157,7 @@ public class CardEditor extends JFrame implements ActionListener {
 
 	private void initComponents() {
 		/**
-		 * loads the backgroundimage
+		 * loading the background, using the paint method
 		 */
 		try {
 			setContentPane(new JPanel() {
@@ -251,8 +224,106 @@ public class CardEditor extends JFrame implements ActionListener {
 		cardType.setFont(smallfont);
 		cardType.setForeground(Color.WHITE);
 		obenLinks.add(cardType);
-		String comboBoxListe[] = { "Action", "Treasure", "Victory", "Point" };
+		String comboBoxListe[] = { "Action", "Treasure", "Victory", "Reaction", "Attack", "Prize", "Curse","Ruins", "Shelter", 	"Knight", 
+								   "Traveller","Reserve", };
 		selectCardType = new JComboBox(comboBoxListe);
+		selectCardType.setMaximumRowCount(5);
+		selectCardType.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+			    int localZaehler;
+			    localZaehler = selectCardType.getSelectedIndex();
+			    if (localZaehler == 0) {
+			    	setRadiobuttons();
+			    }
+				if (localZaehler == 1) {
+					addAction.setEnabled(false);
+					addMoney.setEnabled(false);
+					addPurchase.setEnabled(false);
+					drawCard.setEnabled(false);
+					drawCardUntil.setEnabled(false);
+					putBack.setEnabled(false);
+					gainCard.setEnabled(false);
+					discardCard.setEnabled(false);
+					trashCard.setEnabled(false);
+					revealCard.setEnabled(false);
+					isTreasure.setEnabled(false);
+					isVictory.setEnabled(false);
+					addAction.setSelected(false);
+					addMoney.setSelected(false);
+					addPurchase.setSelected(false);
+					drawCard.setSelected(false);
+					drawCardUntil.setSelected(false);
+					putBack.setSelected(false);
+					gainCard.setSelected(false);
+					discardCard.setSelected(false);
+					trashCard.setSelected(false);
+					revealCard.setSelected(false);
+					isTreasure.setSelected(true);
+					isVictory.setSelected(false);	
+					rbp1 = false;
+					rbp2 = false;
+					rbp3 = false;
+					rbp4 = false;
+					rbp5 = false;
+					rbp6 = false;
+					rbp7 = false;
+					rbp8 = false;
+					rbp9 = false;
+					rbp10 = false;
+					rbp11 = true;
+					rbp12 = false;
+					radioButtonSelect(rbp11);
+
+
+				}
+				if (localZaehler == 2) {
+					addAction.setEnabled(false);
+					addMoney.setEnabled(false);
+					addPurchase.setEnabled(false);
+					drawCard.setEnabled(false);
+					drawCardUntil.setEnabled(false);
+					putBack.setEnabled(false);
+					gainCard.setEnabled(false);
+					discardCard.setEnabled(false);
+					trashCard.setEnabled(false);
+					revealCard.setEnabled(false);
+					isTreasure.setEnabled(false);
+					isVictory.setEnabled(false);
+					addAction.setSelected(false);
+					addMoney.setSelected(false);
+					addPurchase.setSelected(false);
+					drawCard.setSelected(false);
+					drawCardUntil.setSelected(false);
+					putBack.setSelected(false);
+					gainCard.setSelected(false);
+					discardCard.setSelected(false);
+					trashCard.setSelected(false);
+					revealCard.setSelected(false);
+					isTreasure.setSelected(false);
+					isVictory.setSelected(true);
+					rbp1 = false;
+					rbp2 = false;
+					rbp3 = false;
+					rbp4 = false;
+					rbp5 = false;
+					rbp6 = false;
+					rbp7 = false;
+					rbp8 = false;
+					rbp9 = false;
+					rbp10 = false;
+					rbp11 = false;
+					rbp12 = true;
+					radioButtonSelect(rbp12);	
+				}
+				if (localZaehler >= 3) {
+			 setRadiobuttons();
+				}
+				}
+				
+			}
+		});
 		obenLinks.add(selectCardType);
 		c.add(obenLinks, gbc);
 
@@ -491,18 +562,6 @@ public class CardEditor extends JFrame implements ActionListener {
 		isVictory = new JRadioButton("Is Victory");
 		isVictory.setFont(radioFont);
 		isVictory.setForeground(Color.WHITE);
-//		actionSelect.add(addAction);
-//		actionSelect.add(addMoney);
-//		actionSelect.add(addPurchase);
-//		actionSelect.add(drawCard);
-//		actionSelect.add(drawCardUntil);
-//		actionSelect.add(putBack);
-//		actionSelect.add(gainCard);
-//		actionSelect.add(discardCard);
-//		actionSelect.add(trashCard);
-//		actionSelect.add(revealCard);
-//		actionSelect.add(isTreasure);
-//		actionSelect.add(isVictory);
 		addAction.setOpaque(false);
 		addMoney.setOpaque(false);
 		addPurchase.setOpaque(false);
@@ -637,31 +696,35 @@ public class CardEditor extends JFrame implements ActionListener {
 				if (schleifenZaehler < 4 && schleifenZaehler > 0) {
 				ArrayList<String> radioButtons = new ArrayList<String>();
 				if (rbp1 == true)
-				radioButtons.add(addAction.getName());
+				radioButtons.add(addAction.getText());				
 				if (rbp2 == true)
-				radioButtons.add(addMoney.getName());
+				radioButtons.add(addMoney.getText());
 				if (rbp3 == true)
-				radioButtons.add(addPurchase.getName());
+				radioButtons.add(addPurchase.getText());
 				if (rbp4 == true)
-				radioButtons.add(drawCard.getName());
+				radioButtons.add(drawCard.getText());
 				if (rbp5 == true)
-				radioButtons.add(drawCardUntil.getName());	
+				radioButtons.add(drawCardUntil.getText());	
 				if (rbp6 == true)
-				radioButtons.add(putBack.getName());	
+				radioButtons.add(putBack.getText());	
 				if (rbp7 == true)
-				radioButtons.add(gainCard.getName());
+				radioButtons.add(gainCard.getText());
 				if (rbp8 == true)
-				radioButtons.add(discardCard.getName());
+				radioButtons.add(discardCard.getText());
 				if (rbp9 == true)
-				radioButtons.add(trashCard.getName());	
+				radioButtons.add(trashCard.getText());	
                 if (rbp10 == true)	
-                radioButtons.add(revealCard.getName());
+                radioButtons.add(revealCard.getText());
 				if (rbp11 == true)
-				radioButtons.add(isTreasure.getName());
+				radioButtons.add(isTreasure.getText());
 				if (rbp12 == true)
-				radioButtons.add(isVictory.getName());
+				radioButtons.add(isVictory.getText());
 				
 				new ActionQuery(radioButtons);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "You have to choose between 1 and 3 Actions", "Error!",
+							JOptionPane.WARNING_MESSAGE);
 				}
 				
 			}
@@ -694,7 +757,6 @@ public class CardEditor extends JFrame implements ActionListener {
 		}
 	};
 	cancel.setOpaque(false);
-//	createCard.setBorderPainted(true);
 	cancel.setContentAreaFilled(false);
     cancel.setBackground(null);
     cancel.setBorder(null);
@@ -713,6 +775,33 @@ public class CardEditor extends JFrame implements ActionListener {
 
 		}
 
+	private void setRadiobuttons() {
+		addAction.setEnabled(true);
+		addMoney.setEnabled(true);
+		addPurchase.setEnabled(true);
+		drawCard.setEnabled(true);
+		drawCardUntil.setEnabled(true);
+		putBack.setEnabled(true);
+		gainCard.setEnabled(true);
+		discardCard.setEnabled(true);
+		trashCard.setEnabled(true);
+		revealCard.setEnabled(true);
+		isTreasure.setEnabled(true);
+		isVictory.setEnabled(true);
+		addAction.setSelected(false);
+		addMoney.setSelected(false);
+		addPurchase.setSelected(false);
+		drawCard.setSelected(false);
+		drawCardUntil.setSelected(false);
+		putBack.setSelected(false);
+		gainCard.setSelected(false);
+		discardCard.setSelected(false);
+		trashCard.setSelected(false);
+		revealCard.setSelected(false);
+		isTreasure.setSelected(false);
+		isVictory.setSelected(false);
+	}
+	
 	private void radioButtonSelect(boolean pruefer) {
 		if (pruefer == true) {
 		schleifenZaehler = schleifenZaehler + 1;
@@ -737,7 +826,23 @@ public class CardEditor extends JFrame implements ActionListener {
 		}
 	}
 	
-
+	public static String getCardname() {
+		name = nameField.getText();
+		return name;
+	}
+	
+	public static int getPrize() {
+		return priceint;
+	}
+	
+   public static BufferedImage getImage() {
+	   return targetImg;
+   }
+   public static String getCardtype() {
+	   type = (String) selectCardType.getSelectedItem();
+	   return type;
+   }
+	
 
 	/**
 	 * resizing the uploaded image
@@ -750,10 +855,12 @@ public class CardEditor extends JFrame implements ActionListener {
 		g.dispose();
 		return resizedImage;
 	}
+	
 
 	/**
 	 * adds the uploaded image to the layout
 	 */
+	
 
 	public void setTarget(File reference) {
 		try {
