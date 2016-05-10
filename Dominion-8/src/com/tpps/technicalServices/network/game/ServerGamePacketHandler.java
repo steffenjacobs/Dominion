@@ -436,7 +436,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 		this.server.getGameController().isGameFinished();
 	}
-
+	
+	/**
+	 * set reactionmode false for the player who ended his reaction mode
+	 * @param player1
+	 * @throws IOException
+	 */
 	private void reactionFinishedTriggeredThroughThief(Player player1) throws IOException {
 		if (this.server.getGameController().getActivePlayer().isThief()) {
 			player1.setReactionModeFalse();
@@ -447,6 +452,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 	}
 
+	/**
+	 * set reactionmode false for the player who ended his reaction mode
+	 * @param player1
+	 * @throws IOException
+	 */
 	private void reactionFinishedTriggerdThroughSpy(Player player1) throws IOException {
 		if (this.server.getGameController().getActivePlayer().isSpy()) {
 			player1.setReactionModeFalse();
@@ -468,6 +478,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 	}
 
+	/**
+	 * set reactionmode false for the player who ended his reaction mode
+	 * @param player1
+	 * @throws IOException
+	 */
 	private void reactionFinishedTriggeredThroughWitch(Player player1) throws IOException {
 		if (this.server.getGameController().getActivePlayer().isWitch()) {
 			player1.setReactionModeFalse();
@@ -483,7 +498,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 			this.server.getGameController().checkReactionModeFinishedAndEnableGuis();
 		}
 	}
-
+	
+	/**
+	 * set reactionmode false for the player who ended his reaction mode
+	 * 
+	 */
 	private void reactionFinishedTriggeredThroughBureaucrat(Player player) throws IOException {
 		if (this.server.getGameController().getActivePlayer().isBureaucrat()) {
 			player.setReactionModeFalse();
@@ -507,6 +526,9 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 	}
 
+	/**
+	 * add the drawed card to the set aside cards
+	 */
 	private void setAsideDrawedCardStartDrawing() {
 		Player activePlayer = this.server.getGameController().getActivePlayer();
 		activePlayer.getSetAsideCards().add(activePlayer.getDrawedCard());
@@ -514,12 +536,19 @@ public class ServerGamePacketHandler extends PacketHandler {
 		activePlayer.drawUntil();
 	}
 
+	/**
+	 * takes the drawed card
+	 */
 	private void takeDrawedCardStartDrawing() {
 		GameLog.log(MsgType.GAME_INFO, "take drawed card server gamePackethandler");
 		Player activePlayer = this.server.getGameController().getActivePlayer();
 		activePlayer.drawUntil();
 	}
 
+	/**
+	 * put back the cards which stole the thief for all players 
+	 * @param port
+	 */
 	private void putBackThiefCards(int port) {
 		LinkedList<Player> players = this.server.getGameController().getPlayers();
 		for (Iterator<Player> iterator = players.iterator(); iterator.hasNext();) {
@@ -536,6 +565,10 @@ public class ServerGamePacketHandler extends PacketHandler {
 		// }
 	}
 
+	/**
+	 * takes the cards which stole the thief
+	 * @param port
+	 */
 	private void takeThiefCards(int port) {
 		GameLog.log(MsgType.GAME_INFO, "takeThiefCards");
 		LinkedList<Player> players = this.server.getGameController().getPlayers();
@@ -554,6 +587,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 	}
 
+	/**
+	 * executes the action when a card is played
+	 * @param port
+	 * @param packet
+	 * @throws IOException
+	 */
 	private void cardPlayed(int port, Packet packet) throws IOException {
 		String cardID = ((PacketPlayCard) packet).getCardID();
 		int clientID = ((PacketPlayCard) packet).getClientID();
@@ -662,6 +701,12 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 	}
 
+	/**
+	 * executes the action after the card is played
+	 * @param port
+	 * @param player
+	 * @throws IOException
+	 */
 	private void afterCardWasPlayed(int port, Player player) throws IOException {
 		GameLog.log(MsgType.GAME_INFO, "validate turn: " + player.getActions() + "buys: " + player.getBuys() + "coins: " + player.getCoins());
 
@@ -734,6 +779,11 @@ public class ServerGamePacketHandler extends PacketHandler {
 		}
 	}
 
+	/**
+	 * buys a card and sends a packet to update the board
+	 * @param packet
+	 * @throws IOException
+	 */
 	private void buyCardAndUpdateBoards(Packet packet) throws IOException {
 		try {
 			GameBoard gameBoard = this.server.getGameController().getGameBoard();
@@ -788,7 +838,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	}
 
 	/**
-	 * 
+	 * updates the port of the reconnecting player
 	 * @param port
 	 * @param packetReconnect
 	 */
@@ -804,7 +854,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 	}
 
 	/**
-	 * 
+	 * adds a player and checks if already enough players are connected. if enough players are there the game will start
 	 * @param port
 	 * @param clientId
 	 * @throws IOException
@@ -841,7 +891,7 @@ public class ServerGamePacketHandler extends PacketHandler {
 
 	/**
 	 * 
-	 * 
+	 * starts the game after all players are in the chatroom 
 	 * @author jhuhn
 	 * @param colorMap
 	 *            user colors
