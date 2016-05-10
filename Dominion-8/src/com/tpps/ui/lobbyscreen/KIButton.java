@@ -123,7 +123,7 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 		MyAudioPlayer.doClick();
 		//add ki		
 		if (aiAdd) {
-			if(this.playerSettingsPanel.getAllplayers() < 4){
+			if(this.playerSettingsPanel.getAllPlayers() < 4){
 				PlayerSettingsPanel.kicount++;
 				String aiName = this.playerSettingsPanel.getAiName();
 				try {
@@ -138,7 +138,7 @@ public class KIButton extends JButton implements MouseListener, ActionListener {
 			try {
 				if(PlayerSettingsPanel.kicount > 0){
 					PlayerSettingsPanel.kicount--;
-					DominionController.getInstance().getMatchmaker().sendAIPacket(this.playerSettingsPanel.getAiNames().remove(this.playerSettingsPanel.getAiNames().size() - 1) + " (AI)", DominionController.getInstance().getLobbyID(), true);
+					DominionController.getInstance().getMatchmaker().sendAIPacket(this.playerSettingsPanel.removeAiName() + " (AI)", DominionController.getInstance().getLobbyID(), true);
 				}								
 			} catch (IOException e1) {
 				e1.printStackTrace();

@@ -23,7 +23,9 @@ import com.tpps.technicalServices.network.gameSession.packets.PacketRegistratePl
 import com.tpps.test.technicalServices.network.TestPacketHandler;
 
 /**
- * AI Test class
+ * AI Test class.. For AI, GameBoard and Player was tested in other JUnits;
+ * since we were not able to set up a satisfying dummy GameServer to test the AI
+ * with, AI has been debugged and tested without JUnit
  * 
  * @author Nicolas
  *
@@ -36,6 +38,8 @@ public class AITest {
 	static ArtificialIntelligence ai;
 
 	/**
+	 * @throws InterruptedException 
+	 * @throws IOException 
 	 * 
 	 */
 	@BeforeClass
@@ -80,6 +84,6 @@ public class AITest {
 	@Test
 	public void firstTest() {
 		// ai.setBuyPhase();
-		ai.getPlayer().getGameServer().getGameController().getGamePhase().equals("buyPhase");
+		// ai.getPlayer().getGameServer().getGameController().getGamePhase().equals("buyPhase");
 	}
 }

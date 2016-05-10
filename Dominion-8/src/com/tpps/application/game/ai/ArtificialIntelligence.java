@@ -233,10 +233,10 @@ public class ArtificialIntelligence {
 		while (this.player.getDeck().cardHandContains(CardType.ACTION) && this.player.getActions() > 0) {
 			GameLog.log(MsgType.DEBUG, "erste While in playActionCards()");
 			sleep();
-			while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
-				GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
-				sleep();
-			}
+//			while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
+//				GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+//				sleep();
+//			}
 			debugCardPrint("cardHand", getCardHand());
 			/**
 			 * in BIG_MONEY(_..) strategies, the execution of an action card
@@ -255,6 +255,10 @@ public class ArtificialIntelligence {
 			if (addActionCardAvailable()) {
 				playAction(this.player.getDeck().cardWithAction(CardAction.ADD_ACTION_TO_PLAYER, getCardHand()));
 				sleep();
+				while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
+					GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+					sleep();
+				}
 				continue;
 			}
 			/**
@@ -272,6 +276,10 @@ public class ArtificialIntelligence {
 					GameLog.log(MsgType.INFO, "and it is played");
 					playAction(this.player.getDeck().getCardByTypeFromHand(CardType.ACTION));
 					sleep();
+					while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
+						GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+						sleep();
+					}
 					continue;
 				}
 			}
@@ -295,6 +303,10 @@ public class ArtificialIntelligence {
 					case BIG_MONEY_CHAPEL_MILITIA:
 						if (this.player.getDeck().cardHandContains(CardName.MILITIA.getName())) {
 							playAction(this.player.getDeck().getCardByNameFromHand(CardName.MILITIA.getName()));
+							while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
+								GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+								sleep();
+							}
 							sleep();
 							continue;
 						}
@@ -302,6 +314,10 @@ public class ArtificialIntelligence {
 					case BIG_MONEY_WITCH:
 						if (this.player.getDeck().cardHandContains(CardName.WITCH.getName())) {
 							playAction(this.player.getDeck().getCardByNameFromHand(CardName.WITCH.getName()));
+							while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
+								GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+								sleep();
+							}
 							sleep();
 							continue;
 						}
@@ -309,15 +325,27 @@ public class ArtificialIntelligence {
 					default:
 						if (this.player.getDeck().cardHandContains(CardName.WITCH.getName())) {
 							playAction(this.player.getDeck().getCardByNameFromHand(CardName.WITCH.getName()));
+							while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
+								GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+								sleep();
+							}
 							sleep();
 							continue;
 						} else if (this.player.getDeck().cardHandContains(CardName.MILITIA.getName())) {
 							playAction(this.player.getDeck().getCardByNameFromHand(CardName.MILITIA.getName()));
+							while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
+								GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+								sleep();
+							}
 							sleep();
 							continue;
 						} else {
 							LinkedList<Card> remainingActionCards = this.getAllCardsFromType(CardType.ACTION);
 							playAction(remainingActionCards.get(new Random().nextInt(remainingActionCards.size())));
+							while (this.player.getGameServer().getGameController().playerStillInReactionMode()) {
+								GameLog.log(MsgType.DEBUG, "Debug Ausgabe: Endlosschleife? other players are still in reaction mode");
+								sleep();
+							}
 							sleep();
 							continue;
 						}
@@ -649,7 +677,7 @@ public class ArtificialIntelligence {
 				return ArtificialIntelligence.NO_BUY;
 			}
 		} else {
-			if (treasureValue >= 8 && cardAvailableOnBoard(CardName.PROVINCE.getName())) {
+			if (treasureValue >= 8 && cardAvailableOnBoard(CardName.PROVINCE.getName()) && (this.player.getDeck().containsAmountOf(CardName.GOLD.getName(), this.player.getPlayedCards()) > 2 || this.player.getTurnNr() >= 6) ) {
 				return CardName.PROVINCE.getName();
 			} else if (treasureValue >= 6 && !this.strategy.equals(Strategy.BIG_MONEY_CHAPEL)) {
 				if (this.player.getDeck().containsAmountOf(CardName.GOLD.getName(), this.player.getPlayedCards()) > 7 && this.getPileSize(CardName.PROVINCE.getName()) < 6

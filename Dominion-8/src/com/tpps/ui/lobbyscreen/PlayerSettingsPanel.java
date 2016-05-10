@@ -103,11 +103,11 @@ public class PlayerSettingsPanel extends JPanel {
 	private BufferedImage brainCrossed;
 	private BufferedImage brain;
 
-	private ArrayList<String> aiNames = new ArrayList<>();
+	private ArrayList<String> aiNames;
 	private ArrayList<String> aiNameList;
-	
+
 	public static int kicount = 0;
-	
+
 	private int allplayers;
 
 	// private boolean singlePlayer = false;
@@ -132,11 +132,18 @@ public class PlayerSettingsPanel extends JPanel {
 		// this.add(midScroller);
 		// this.add(this.bottomAreaPanel());
 		this.bottomAreaPanel = this.bottomAreaPanel();
+		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
 
+		kicount = 0;
+	}
+
+	/**
+	 * init the aiNameList()
+	 */
+	public void initAiNameList() {
 		this.aiNameList = CollectionsUtil.getArrayList(new String[] { "Sir Lancelot", "Ritter der Kokosnuss", "Wizard of Oz", "King Arthur", "Felix Antoine Blume", "Charlie Chaplin", "Bruce Wayne",
 				"Black Beauty", "Walter White", "Harry Potter", "Alice bei 1&1", "Larry der Lachs", "John the Ripper", "Sherlock Holmes", "BEST AI EU", "L as Looser", "Mark Cykaberg" });
-		GameLog.log(MsgType.INIT, "PlayerSettingsPanel");
-		kicount = 0;
+		this.aiNames = new ArrayList<String>();
 	}
 
 	/**
@@ -251,7 +258,7 @@ public class PlayerSettingsPanel extends JPanel {
 			Graphics2D h = (Graphics2D) g;
 			h.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			h.drawImage(switchimage, 0, 0, this.getWidth(), this.getHeight(), null);
-			super.paint(h);			
+			super.paint(h);
 		}
 
 		@Override
@@ -265,16 +272,16 @@ public class PlayerSettingsPanel extends JPanel {
 				cardNamesSelected.toArray(selCards);
 
 				try {
-					DominionController.getInstance().getMatchmaker()
-							.sendStartPacket(DominionController.getInstance().getUsername(), DominionController.getInstance().getSessionID(), DominionController.getInstance().getLobbyID(), selCards);
+					DominionController.getInstance().getMatchmaker().sendStartPacket(DominionController.getInstance().getUsername(), DominionController.getInstance().getSessionID(),
+							DominionController.getInstance().getLobbyID(), selCards);
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 				GameLog.log(MsgType.INFO, "Starting game...");
 			} else {
-				DominionController.getInstance().receiveChatMessageFromChatServer(
-						"You are not ready to start the match\n" + "         selected cards: " + PlayerSettingsPanel.this.cardNamesSelected.size() + "/10" + "\n" + "         connectedplayers: "
-								+ PlayerSettingsPanel.this.connectedPlayers() + "/4", "BOT", "", Color.YELLOW);
+				DominionController.getInstance().receiveChatMessageFromChatServer("You are not ready to start the match\n" + "         selected cards: "
+						+ PlayerSettingsPanel.this.cardNamesSelected.size() + "/10" + "\n" + "         connectedplayers: " + PlayerSettingsPanel.this.connectedPlayers() + "/4", "BOT", "",
+						Color.YELLOW);
 			}
 		}
 
@@ -379,8 +386,8 @@ public class PlayerSettingsPanel extends JPanel {
 
 	private Dimension getCardSize(int wdt, int hght) {
 
-		return new Dimension((int) (DominionController.getInstance().getMainFrame().getHeight() / 3d / hght * wdt), DominionController.getInstance().getMainFrame().getHeight() / 3
-				- SPACE_PANEL_TO_PANEL * 2 - scrollBarHeight);
+		return new Dimension((int) (DominionController.getInstance().getMainFrame().getHeight() / 3d / hght * wdt),
+				DominionController.getInstance().getMainFrame().getHeight() / 3 - SPACE_PANEL_TO_PANEL * 2 - scrollBarHeight);
 	}
 
 	private class CardDisplayButton extends JButton implements ActionListener {
@@ -825,20 +832,25 @@ public class PlayerSettingsPanel extends JPanel {
 	 * @return a String representation of a random AI
 	 */
 	public synchronized String getAiName() {
-		try {
-			Thread.sleep(50);
-		} catch (InterruptedException e) {		
-			e.printStackTrace();
-		}
+		// try {
+		// Thread.sleep(50);
+		// } catch (InterruptedException e) {
+		// e.printStackTrace();
+		// }
+		// this.plusKI.setEnabled(false);
 		String randomName;
-		try{
-			randomName = this.aiNameList.get((int)(Math.random()*aiNameList.size()));
-		}catch(IndexOutOfBoundsException e){
+		try {
+			randomName = this.aiNameList.get((int) (Math.random() * aiNameList.size()));
+			while (aiNames.contains(randomName))
+				randomName = this.aiNameList.get((int) (Math.random() * aiNameList.size()));
+		} catch (IndexOutOfBoundsException e) {
 			e.printStackTrace();
-			randomName = "Random Nr: " + ((int )Math.random() * 30);
+			randomName = "Random Nr: " + ((int) (Math.random() * 30));
 		}
 		this.aiNames.add(randomName);
-		this.aiNameList.remove(randomName);
+		// this.aiNameList.remove(randomName);
+		System.out.println("aiNameList, size: " + aiNameList.size() + aiNameList.toString());
+		// this.plusKI.setEnabled(true);
 		return randomName;
 	}
 
@@ -846,10 +858,15 @@ public class PlayerSettingsPanel extends JPanel {
 	 * removes the last AI name
 	 * 
 	 * @author nwipfler
+	 * @return the removed AI Name
 	 */
-	public void removeAiName() {
+	public String removeAiName() {
+		// this.minusKI.setEnabled(false);
 		String removed = this.aiNames.remove(aiNames.size() - 1);
-		this.aiNameList.add(removed);
+		// this.aiNameList.add(removed);
+		System.out.println("aiNameList, size: " + aiNameList.size() + aiNameList.toString());
+		// this.minusKI.setEnabled(true);
+		return removed;
 	}
 
 	/**
@@ -874,10 +891,17 @@ public class PlayerSettingsPanel extends JPanel {
 		}).start();
 	}
 
-	public int getAllplayers() {
+	/**
+	 * @return all players
+	 */
+	public int getAllPlayers() {
 		return allplayers;
 	}
-	
+
+	/**
+	 * @param allplayers
+	 *            set all players
+	 */
 	public void setAllplayers(int allplayers) {
 		this.allplayers = allplayers;
 	}

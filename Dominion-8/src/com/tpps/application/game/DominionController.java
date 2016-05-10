@@ -427,6 +427,7 @@ public final class DominionController {
 	 */
 	public void joinLobbyGui(boolean singlePlayer) {
 		PlayerSettingsPanel.kicount = 0;
+		this.playerSettingsPanel.initAiNameList();
 		this.playerSettingsPanel.setAllplayers(0);
 		this.receiveChatMessageFromChatServer("             ", "****** You joined the lobbyscreen ******",
 				"             ", Color.GREEN, false);
