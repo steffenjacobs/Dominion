@@ -1,9 +1,7 @@
 package com.tpps.test.application.game;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +9,6 @@ import org.junit.Test;
 import com.tpps.application.game.CardName;
 import com.tpps.application.game.Deck;
 import com.tpps.application.game.GameBoard;
-import com.tpps.application.game.Player;
 import com.tpps.application.game.card.Card;
 import com.tpps.application.game.card.CardType;
 

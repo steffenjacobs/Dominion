@@ -5,8 +5,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.junit.Before;
